@@ -1,13 +1,13 @@
 class github{
 	static url:="https://api.github.com",http:=[]
-	tree(repo){
+	tree(repo,name,email){
 		url:=this.url "/repos/" this.owner "/" repo "/git/trees" this.token
 		this.http.Open("POST",url)
 		json={"tree":[
 		list:=sn(current(1),"file/@file")
 		while,ll:=list.item[A_Index-1].text{
 			SplitPath,ll,filename
-			IniRead,sha,github\AHK-Studio.ini,%filename%,sha,0
+			IniRead,sha,github\%repo%.ini,%filename%,sha,0
 			add=
 			(
 			{"path":"%filename%","mode":"100644","type":"blob","sha":"%sha%"},
@@ -19,7 +19,6 @@ class github{
 		this.http.send(json)
 		sha:=this.json("sha",this.http.ResponseText)
 		url:=this.url "/repos/" this.owner "/" repo "/git/commits" this.token
-		name:="Chad Wilson",email:="maestrith@gmail.com"
 		json=
 		(
 		{"message":"Initial Commit","author":{"name":"%name%","email":"%email%"},"tree":"%sha%"}
@@ -27,7 +26,6 @@ class github{
 		this.http.Open("POST",url)
 		this.http.send(json)
 		sha:=this.json("sha",this.http.ResponseText)
-		
 		url:=this.url "/repos/" this.owner "/" repo "/git/refs/heads/master" this.token
 		this.http.Open("PATCH",url)
 		json=
@@ -48,15 +46,10 @@ class github{
 				return
 			settings.Add({path:"github",att:{token:token}})
 		}
-		
-		
 		for a,b in ["name","email"]{
 			info:=settings.ssn("//github/@" a).text
 			this[a]:=info
 		}
-		
-		
-		
 		this.http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
 		this.token:="?access_token=" token
 		this.owner:=owner
