@@ -1,3 +1,0 @@
-woot(){
-	MsgBox,yay me!
-}
