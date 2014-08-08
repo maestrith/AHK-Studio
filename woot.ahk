@@ -1,0 +1,3 @@
+woot(){
+	MsgBox,yay me!
+}
