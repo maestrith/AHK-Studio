@@ -33,7 +33,6 @@ class github{
 		{"sha":"%sha%","force":true}
 		)
 		this.http.send(json)
-		m("Created with results",this.http.ResponseText)
 	}
 	__New(owner){
 		token:=settings.ssn("//github/@token").text
