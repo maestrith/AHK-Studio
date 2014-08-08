@@ -14,7 +14,8 @@ Github_Repository(){
 	git:=new github(gitinfo.owner)
 	if !FileExist("github")
 		FileCreateDir,github
-	if !rep:=vversion.ssn("//*[@file='" file:=ssn(current(1),"@file").text "']")
+	file:=ssn(current(1),"@file").text
+	if !rep:=vversion.ssn("//*[@file='" file "']")
 		rep:=vversion.Add({path:"info",att:{file:file},dup:1})
 	repo:=ssn(rep,"@repo").text
 	if !(repo){
@@ -26,6 +27,7 @@ Github_Repository(){
 			rep.SetAttribute("repo",name)
 		Else
 			return m("An error occured")
+		repo:=name
 	}
 	if !FileExist("github\" repo)
 		FileCreateDir,github\%repo%
