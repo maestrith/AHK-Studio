@@ -15,12 +15,13 @@ Github_Repository(){
 	if !FileExist("github")
 		FileCreateDir,github
 	if !rep:=vversion.ssn("//*[@file='" file:=ssn(current(1),"@file").text "']")
-		rep:=vversion.Add({path:"info",att:{file:file}})
+		rep:=vversion.Add({path:"info",att:{file:file},dup:1})
 	repo:=ssn(rep,"@repo").text
 	if !(repo){
 		InputBox,repo,Please name this repo,Enter a name for this repo.
 		if ErrorLevel
 			return
+		compile:=1
 		if name:=git.CreateRepo(repo)
 			rep.SetAttribute("repo",name)
 		Else
@@ -54,5 +55,7 @@ Github_Repository(){
 			git.update(repo,filename,text,comment)
 		}
 	}
+	if compile
+		git.tree(repo,gitinfo.name,gitinfo.email)
 	SplashTextOff
 }
