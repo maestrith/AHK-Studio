@@ -36,13 +36,13 @@ Github_Repository(){
 			uplist[file]:=text
 		}
 	}
-	filez:=[]
+	upload:=[]
 	for a,text in uplist{
 		blob:=git.blob(repo,text)
 		SplashTextOn,200,150,Updating,%a%
-		filez[a]:=blob
+		upload[a]:=blob
 	}
-	tree:=git.Tree(repo,current_commit,filez)
+	tree:=git.Tree(repo,current_commit,upload)
 	commit:=git.commit(repo,tree,current_commit,commitmsg,ea.name,ea.email)
 	info:=git.ref(repo,commit)
 	if info=200
