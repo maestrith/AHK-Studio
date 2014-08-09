@@ -10,7 +10,9 @@ Github_Repository(){
 			return
 		rep.SetAttribute("repo",repo)
 	}
-	ea:=settings.ea("//github")
+	ea:=settings.ea("//github") ;
+	if !(ea.name&&ea.email&&ea.token&&ea.owner)
+		return update_github_info()
 	git:=new github(ea.owner,ea.token)
 	InputBox,commitmsg,New Commit Message,Please enter a commit message for this commit
 	if ErrorLevel
@@ -18,7 +20,7 @@ Github_Repository(){
 	current_commit:=git.getref(repo)
 	if !(current_commit){
 		git.CreateRepo(repo)
-		git.CreateFile(repo,"README.md",";Readme.md","First Commit",name,email)
+		git.CreateFile(repo,"README.md",";Readme.md","First Commit",ea.name,ea.email)
 		Sleep,500
 		current_commit:=git.getref(repo)
 	}
