@@ -10,7 +10,7 @@ Github_Repository(){
 			return
 		rep.SetAttribute("repo",repo)
 	}
-	ea:=settings.ea("//github") ;
+	ea:=settings.ea("//github")
 	if !(ea.name&&ea.email&&ea.token&&ea.owner)
 		return update_github_info()
 	git:=new github(ea.owner,ea.token)
@@ -35,9 +35,11 @@ Github_Repository(){
 		if (text!=compare){
 			FileDelete,github\%repo%\%file%
 			FileAppend,%text%,github\%repo%\%file%,utf-8
-			uplist[file]:=text
+			uplist[file]:=text,up:=1
 		}
 	}
+	if !up
+		return m("Nothing new to upload")
 	upload:=[]
 	for a,text in uplist{
 		blob:=git.blob(repo,text)
