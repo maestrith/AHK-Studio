@@ -60,7 +60,8 @@ class github{
 		{"sha":"%sha%","force":true}
 		)
 		this.http.send(json)
-		m(this.http.responseheaders)
+		SplashTextOff
+		m(this.http.status)
 		return this.http.ResponseText
 		;m("New Commit Created",this.http.ResponseText)
 	}
