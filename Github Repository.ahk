@@ -45,4 +45,8 @@ Github_Repository(){
 	tree:=git.Tree(repo,current_commit,filez)
 	commit:=git.commit(repo,tree,current_commit,commitmsg,ea.name,ea.email)
 	info:=git.ref(repo,commit)
+	if info=200
+		TrayTip,GitHub Update Complete
+	Else
+		m("An Error Occured")
 }

@@ -61,9 +61,7 @@ class github{
 		)
 		this.http.send(json)
 		SplashTextOff
-		m(this.http.status)
-		return this.http.ResponseText
-		;m("New Commit Created",this.http.ResponseText)
+		return this.http.status
 	}
 	Limit(){
 		url:=this.url "/rate_limit" this.token
