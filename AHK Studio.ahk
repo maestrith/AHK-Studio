@@ -3,7 +3,7 @@
 ;Clipboard:=A_AhkVersion
 /*
 	get github working
-	tidy up script:u
+	tidy up script:
 	-Arrows.ahk is where I left off.
 	KeyboardCat
 	closing files should only close main not includes
@@ -237,6 +237,7 @@ return
 #Include traymenu.ahk
 #Include tv.ahk
 #Include undo.ahk
+#Include update github info.ahk
 #Include update.ahk
 #Include upload.ahk
 #Include uppos.ahk

@@ -23,7 +23,9 @@ new_segment(new="",text=""){
 	select:=files.under({node:"file",att:{file:new,filename:file,include:Chr(35) "Include " incfilename,tv:top},under:current(1)})
 	v.filelist[new]:=1
 	mainfile:=ssn(current(1),"@file").text
-	main:=update({get:mainfile}),main.="`n#Include " incfilename
+	SplitPath,mainfile,,outdir
+	StringReplace,newinclude,incfilename,%outdir%,,All
+	main:=update({get:mainfile}),main.="`n#Include " Trim(newinclude,"\")
 	update({file:mainfile,text:main})
 	current(1).firstchild.removeattribute("sc")
 	if (text=""){

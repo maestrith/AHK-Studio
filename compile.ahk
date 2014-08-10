@@ -6,8 +6,13 @@ compile(main=""){
 		file:=A_LoopFileFullPath
 	FileDelete,temp.upload
 	FileAppend,% publish(1),temp.upload
+	/*
+		if FileExist("ahkstudio.ico"){
+			add:="/icon " Chr(34) A_ScriptDir "\AHKStudio.ico" Chr(34)
+		}
+	*/
 	SplashTextOn,200,100,Compiling,Please wait.
-	RunWait,%file% /in temp.upload /out "%dir%\%name%.exe"
+	RunWait,%file% /in temp.upload /out "%dir%\%name%.exe" %add%
 	If FileExist("upx.exe"){
 		SplashTextOn,,50,Compressing EXE,Please wait...
 		RunWait,upx.exe -9 "%dir%\%name%.exe",,Hide

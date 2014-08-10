@@ -5,7 +5,7 @@ Github_Repository(){
 	repo:=ssn(rep,"@repo").text
 	if !(repo){
 		InputBox,repo,Please name this repo,Enter a name for this repo.
-		repo:=RegExReplace(RegExReplace(repo," ","-"),"\W")
+		repo:=RegExReplace(repo," ","-")
 		if ErrorLevel
 			return
 		rep.SetAttribute("repo",repo)
@@ -26,16 +26,23 @@ Github_Repository(){
 	}
 	if !FileExist("github\" repo)
 		FileCreateDir,github\%repo%
-	uplist:=[],save(),cfiles:=sn(current(1),"file/@file")
-	while,filename:=cfiles.item[A_Index-1].text{
-		text:=update({get:filename})
-		SplitPath,filename,file
-		FileRead,compare,github\%repo%\%file%
+	uplist:=[],save(),filelist:=sn(current(1),"file/@file")
+	while,ff:=filelist.item[A_Index-1].text{
+		SplitPath,ff,file,dir
+		if A_Index=1
+			dircheck:=dir,newfile:=file
+		text:=update({get:ff})
+		StringReplace,newdir,dir,%dircheck%,,All
+		localdir:="github\" repo newdir
+		if !FileExist(localdir)
+			FileCreateDir,%localdir%
+		FileRead,compare,%localdir%\%file%
 		StringReplace,compare,compare,`r`n,`n,All
 		if (text!=compare){
-			FileDelete,github\%repo%\%file%
-			FileAppend,%text%,github\%repo%\%file%,utf-8
-			uplist[file]:=text,up:=1
+			FileDelete,%localdir%\%file%
+			FileAppend,%text%,%localdir%\%file%,utf-8
+			StringReplace,gitdir,newdir,\,/,All
+			uplist[Trim(gitdir "/" file,"/")]:=text,up:=1
 		}
 	}
 	if !up
