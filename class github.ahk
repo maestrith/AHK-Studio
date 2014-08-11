@@ -1,13 +1,39 @@
 class github{
 	static url:="https://api.github.com",http:=[]
+	delete(repo,filenames){
+		url:=this.url "/repos/" this.owner "/" repo "/commits" this.token ;get the tree sha
+		tree:=this.sha(this.Send("GET",url))
+		url:=this.url "/repos/" this.owner "/" repo "/git/trees/" tree this.token ;full tree info
+		info:=this.Send("GET",url)
+		for c in filenames{
+			for a,b in strsplit(info,"{"){
+				if instr(b,chr(34) c chr(34)){
+					sha:=this.find("sha",b)
+					url:=this.url "/repos/" this.owner "/" repo "/contents/" c this.token
+					json=
+					(
+						{"message":"Deleted","sha":"%sha%"}
+					)
+					this.http.Open("DELETE",url)
+					this.http.send(json)
+					if (this.http.status!=200)
+						m("Error deleting " c,this.http.ResponseText)
+				}
+			}		
+		}
+	}
 	__New(owner,token){
 		this.http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
 		this.token:="?access_token=" token
 		this.owner:=owner
 		return this
 	}
+	find(search,text){
+		RegExMatch(text,"U)" Chr(34) search Chr(34) ":(.*),",found)
+		return Trim(found1,Chr(34))
+	}
 	sha(text){
-		RegExMatch(this.http.ResponseText,"U)"Chr(34) "sha" Chr(34) ":(.*),",found)
+		RegExMatch(this.http.ResponseText,"U)" Chr(34) "sha" Chr(34) ":(.*),",found)
 		return Trim(found1,Chr(34))
 	}
 	getref(repo){
