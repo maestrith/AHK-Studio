@@ -2,8 +2,7 @@ replace_selected(){
 	InputBox,replace,Replace Selected,Input text to replace what is selected
 	if ErrorLevel
 		return
-	sc:=csc()
-	clip:=Clipboard
+	sc:=csc(),clip:=Clipboard
 	strip:="``r,``n,``r``n,\r,\n,\r\n"
 	for a,b in StrSplit(strip,","){
 		replace:=RegExReplace(replace,"i)\Q" b "\E",Chr(13))

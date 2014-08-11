@@ -12,7 +12,7 @@ Sort_Selected(){
 	Gui,Show,,Sort Selected
 	return
 	sortbyslash:
-	Sort,text,\ ;%del%
+	Sort,text,\
 	StringReplace,text,text,`n,`r`n,all
 	ControlSetText,Edit2,%text%,% hwnd([18])
 	Return

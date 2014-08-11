@@ -19,7 +19,6 @@ close(){
 		udf.Remove(ea.file)
 		v.filelist.remove(ea.file)
 	}
-	;TV_Modify(TV_GetNext(0),"Select Vis Focus")
 	tv(TV_GetNext(0))
 	main.ParentNode.RemoveChild(main)
 	if files.sn("//*").length=1

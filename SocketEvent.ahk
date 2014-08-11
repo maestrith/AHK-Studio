@@ -1,5 +1,4 @@
 receive(){
-	;socket:=debug("check")
 	socket:=debug.socket
 	;Thank you Lexikos and fincs http://ahkscript.org/download/tools/DBGP.ahk
 	Critical

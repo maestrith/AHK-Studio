@@ -13,10 +13,6 @@ keywords(){
 	v.color.Personal:=Trim(per)
 	v.indentregex:=RegExReplace(v.color.indent," ","|")
 	command:=commands.ssn("//Commands/Commands").text
-	/*
-		for a,b in StrSplit(commands.ssn("//Commands/Color/Functions").text," ")
-			v.kw.functions[b]:=b
-	*/
 	Sleep,4
 	Loop,Parse,command,%A_Space%,%A_Space%
 		v.kw[A_LoopField]:=A_LoopField,all.=" " A_LoopField

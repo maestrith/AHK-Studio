@@ -162,7 +162,7 @@ return
 #Include New Scintilla Window.ahk
 #Include new segment.ahk
 #Include new.ahk
-#Include newwin.ahk
+
 #Include Next Found.ahk
 #Include notify.ahk
 #Include omni search.ahk

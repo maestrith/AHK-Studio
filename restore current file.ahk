@@ -27,7 +27,6 @@ restore_current_file(){
 	file:=ssn(current(),"@file").text
 	SplitPath,file,filename,dir
 	LV_GetText(bdir,LV_GetNext())
-	;FileRead,contents,% dir "\backup\" bdir "\" filename
 	oldfile:=dir "\backup\" bdir "\" filename
 	fff:=FileOpen(oldfile,"RW","utf-8")
 	contents1:=fff.read(fff.length)

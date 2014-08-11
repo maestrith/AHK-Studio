@@ -101,7 +101,6 @@ class toolbar{
 		SendMessage,0x400+25,% button.id,0,,% this.ahkid
 		SendMessage,0x400+22,%ErrorLevel%,0,,% this.ahkid
 		this.buttons[button.id]:=""
-		;button.id button.index
 	}
 	notify(){
 		toolbar:

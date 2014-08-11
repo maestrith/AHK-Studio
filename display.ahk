@@ -84,12 +84,7 @@ display(store){
 			m("more info")
 		ea:=recieve.ea(command)
 		if (ea.status="stopped"&&ea.command="run"&&ea.reason="ok")
-			debug.Off() ;,m(recieve[])
-		/*
-			if (ea.status="break"){
-				
-			}
-		*/
+			debug.Off()
 		disp:="Command:"
 		for a,b in ea
 			if (a&&b)
