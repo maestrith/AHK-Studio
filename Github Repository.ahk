@@ -10,10 +10,29 @@ Github_Repository(){
 			return
 		rep.SetAttribute("repo",repo)
 	}
+	delete:=[],current:=[]
+	main:=ssn(current(1),"@file").text
+	SplitPath,main,,dir
+	fl:=sn(current(1),"file/@file")
+	while,ff:=fl.item[A_Index-1].Text{
+		StringReplace,file,ff,%dir%\
+		current[file]:=1
+	}
+	replace:="github\" repo "\"
+	Loop,github\%repo%\*.*,0,1
+	{
+		if !A_LoopFileExt
+			Continue
+		StringReplace,file,A_LoopFileFullPath,%replace%
+		if !current[file]
+			Delete[file]:=1,del:=1
+	}
 	ea:=settings.ea("//github")
 	if !(ea.name&&ea.email&&ea.token&&ea.owner)
 		return update_github_info()
 	git:=new github(ea.owner,ea.token)
+	if del
+		git.Delete(repo,delete)
 	InputBox,commitmsg,New Commit Message,Please enter a commit message for this commit
 	if ErrorLevel
 		return m("Commit message is required")

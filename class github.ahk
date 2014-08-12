@@ -3,29 +3,31 @@ class github{
 	delete(repo,filenames){
 		url:=this.url "/repos/" this.owner "/" repo "/commits" this.token ;get the tree sha
 		tree:=this.sha(this.Send("GET",url))
-		url:=this.url "/repos/" this.owner "/" repo "/git/trees/" tree this.token ;full tree info
+		url:=this.url "/repos/" this.owner "/" repo "/git/trees/" tree "?recursive=1" this.tok ;full tree info
 		info:=this.Send("GET",url)
+		fz:=[]
+		info:=SubStr(info,InStr(info,"tree" Chr(34)))
+		for a,b in strsplit(info,"{"){
+			if path:=this.find("path",b)
+				fz[path]:=this.find("sha",b)
+		}
 		for c in filenames{
-			for a,b in strsplit(info,"{"){
-				if instr(b,chr(34) c chr(34)){
-					sha:=this.find("sha",b)
-					url:=this.url "/repos/" this.owner "/" repo "/contents/" c this.token
-					json=
-					(
-						{"message":"Deleted","sha":"%sha%"}
-					)
-					this.http.Open("DELETE",url)
-					this.http.send(json)
-					if (this.http.status!=200)
-						m("Error deleting " c,this.http.ResponseText)
-				}
-			}		
+			StringReplace,cc,c,\,/,All
+			url:=this.url "/repos/" this.owner "/" repo "/contents/" cc this.token
+			sha:=fz[c]
+			json={"message":"Deleted","sha":"%sha%"}
+			this.http.Open("DELETE",url)
+			this.http.send(json)
+			if (this.http.status!=200)
+				m("Error deleting " c,this.http.ResponseText)
+			FileDelete,github\%repo%\%c%
 		}
 	}
 	__New(owner,token){
 		this.http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
 		this.token:="?access_token=" token
 		this.owner:=owner
+		this.tok:="&access_token=" token
 		return this
 	}
 	find(search,text){
