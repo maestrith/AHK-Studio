@@ -2,6 +2,25 @@
 ;download complete
 ;Clipboard:=A_AhkVersion
 /*
+	possible_windows_to_replace(){
+		upload
+		find
+		Themes
+		Code Vault
+		Split Code
+		Scratch Pad
+		
+		Personal Variable List
+		ftp server settings
+		Edit Replacements
+	}
+	video(){
+		Omni-Search (Files,Menu items,)
+		Multiple Segments (discuss how segments work and show them)
+		Quick Find
+		GitHub Integration
+		
+	}
 	get github working
 	tidy up script:
 	-Arrows.ahk is where I left off.
