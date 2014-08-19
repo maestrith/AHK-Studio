@@ -3,7 +3,8 @@ notify(csc=""){
 	static last,lastline
 	fn:=[],info:=A_EventInfo
 	if (info=512){
-		SetTimer,setfocus,100
+		if !hwnd(14)
+			SetTimer,setfocus,100
 		return
 	}
 	for a,b in {0:"Obj",2:"Code",3:"position",4:"ch",5:"mod",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",17:"listType",22:"updated"}
@@ -133,9 +134,9 @@ notify(csc=""){
 	setfocus:
 	sc:=csc({hwnd:NumGet(A_EventInfo+0)})
 	filename:=files.ssn("//*[@sc='" sc.2357 "']/@file").text
-	SplitPath,filename,file
-	if file
-		WinSetTitle,% hwnd([1]),,AHK Studio - %file%
+	;SplitPath,filename,file
+	if filename
+		WinSetTitle,% hwnd([1]),,AHK Studio - %filename%
 	return
 	sendenter:
 	SetTimer,sendenter,Off
