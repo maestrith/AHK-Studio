@@ -46,7 +46,9 @@ open(filelist="",show=""){
 	StringReplace,file,file,`r`n,`n,All
 	StringReplace,file,file,`r,`n,All
 	file1:=file
-	files.under({under:top,node:"file",att:{file:filename,tv:root,filename:fn}})
+	new:=files.under({under:top,node:"file",att:{file:filename,tv:root,filename:fn}})
+	FileGetTime,time,%filename%
+	new.SetAttribute("time",time)
 	for a,b in strsplit(file1,"`n"){
 		if InStr(b,"#include"){
 			b:=RegExReplace(b,"\/","\")
@@ -61,9 +63,8 @@ open(filelist="",show=""){
 					Break
 			}
 		}
-		if (newfn){
+		if (newfn)
 			StringReplace,file1,file1,%b%,,All
-		}
 		if !newfn
 			continue
 		if ssn(top,"file[@file='" newfn "']")
@@ -71,7 +72,9 @@ open(filelist="",show=""){
 		SplitPath,newfn,fn
 		child:=TV_Add(fn,root,"Sort")
 		top:=files.ssn("//main[@file='" filename "']")
-		files.under({under:top,node:"file",att:{file:newfn,include:b,tv:child,filename:fn}})
+		new:=files.under({under:top,node:"file",att:{file:newfn,include:b,tv:child,filename:fn}})
+		FileGetTime,time,%newfn%
+		new.SetAttribute("time",time)
 		v.filelist[newfn]:=1
 		ffff:=FileOpen(newfn,"RW","utf-8")
 		text:=ffff.read(ffff.length)

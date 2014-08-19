@@ -56,6 +56,7 @@ notify(csc=""){
 			update({sc:sc.2357})
 		}
 		if (fn.modtype&0x02){
+			update({sc:sc.2357})
 		}
 		if fn.linesadded
 			marginwidth(sc)

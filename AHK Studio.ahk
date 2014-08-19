@@ -149,6 +149,7 @@ return
 #Include find.ahk
 #Include fix after.ahk
 #Include fix indent.ahk
+#Include focus.ahk
 #Include ftp servers.ahk
 #Include full backup.ahk
 #Include function search.ahk
@@ -188,6 +189,7 @@ return
 #Include new segment.ahk
 #Include new.ahk
 #Include Next Found.ahk
+#Include next-prev file.ahk
 #Include notify.ahk
 #Include omni search.ahk
 #Include open folder.ahk
@@ -271,4 +273,3 @@ return
 #Include window.ahk
 #Include WM COPYDATA.ahk
 #Include Words In Document.ahk
-#Include next-prev file.ahk

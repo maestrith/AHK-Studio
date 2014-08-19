@@ -54,6 +54,7 @@ options(){
 	v.options[A_ThisLabel]:=onoff
 	return
 	;set bit only
+	Check_For_Edited_Files_On_Focus:
 	Auto_Advance_Quote:
 	Auto_Set_Area_On_Quick_Find:
 	onoff:=settings.ssn("//options/@ " A_ThisLabel).text?0:1

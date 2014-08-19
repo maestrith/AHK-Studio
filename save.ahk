@@ -29,6 +29,10 @@ save(){
 			if sc.2533(A_Index-1)=30
 				sc.2532(A_Index-1,31)
 		}
+		FileGetTime,time,%filename%
+		ff:=files.sn("//*[@file='" filename "']")
+		while,fff:=ff.item[A_Index-1]
+			fff.SetAttribute("time",time)
 	}
 	GuiControl,+Redraw,% sc.sc
 	sc.2358(0,currentdoc)

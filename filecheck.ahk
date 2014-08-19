@@ -1,5 +1,5 @@
 filecheck(){
-	commandsdate:=20140416,menusdate:=20140819,scilexerdate:=20140801123000
+	commandsdate:=20140416,menusdate:=201408191,scilexerdate:=20140801123000
 	if !settings.ssn("//autoadd")
 		for a,b in {60:62,123:125,34:34,39:39,91:93,40:41}
 			settings.add({path:"autoadd/key",att:{trigger:a,add:b},dup:1})
