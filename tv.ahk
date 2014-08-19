@@ -39,7 +39,7 @@ tv(tv=0,open=""){
 		current(1).SetAttribute("last",ssn(file,"@file").text)
 		current:=ssn(current(1),"@file").text
 		GuiControl,1:+Redraw,% sc.sc
-		setpos(ei)
+		setpos(ei),uppos()
 		lastcurrent:=current
 	}
 	return
