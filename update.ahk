@@ -23,7 +23,7 @@ update(info){
 			return
 		if (updated[info.file]=""){
 			Gui,1:TreeView,% hwnd("fe")
-			TV_Modify(ea.tv,"",ea.filename "*")
+			TV_Modify(ea.tv,"","*" ea.filename)
 			sc:=csc()
 		}
 		pos:=posinfo(),line:=sc.2166(pos.start),end:=sc.2166(pos.end)
