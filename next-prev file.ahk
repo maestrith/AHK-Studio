@@ -18,7 +18,6 @@ next_prev_file(){
 		while,search:=TV_GetNext(search)
 			last:=search
 		tv(last)
-		;if tv:=tv_get
 	}Else if tv:=TV_GetPrev(TV_GetSelection()){
 		tv(tv)
 	}
