@@ -16,9 +16,10 @@ uppos(){
 		v.bracestart:=v.braceend:=""
 		sc.2351(-1,-1),v.highlight:=0
 	}
-	text:="Line:" sc.2166(sc.2008)+1 " Column:" sc.2129(sc.2008)
+	text:="Line:" sc.2166(sc.2008)+1 " Column:" sc.2129(sc.2008) " Length:" sc.2006
 	if (sc.2008!=sc.2009)
 		text.=" Selected Count:" Abs(sc.2008-sc.2009)
 	width:=sc.2276(32,"a")
+	v.lastwidth:=width*StrLen(text)+4
 	SB_SetText(text)
 }

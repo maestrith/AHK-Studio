@@ -47,7 +47,7 @@ brace(){
 	}
 	width:=sc.2276(32,"a")
 	text1:="Last Entered Character: " A_ThisHotkey " Code:" Asc(A_ThisHotkey)
-	SB_SetText(text1,2),SB_SetParts(first,width*StrLen(text1 1),40)
+	SB_SetText(text1,2),SB_SetParts(v.lastwidth,width*StrLen(text1 1),40)
 	last:=width*StrLen(text1 1)
 	replace()
 	return

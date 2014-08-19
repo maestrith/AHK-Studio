@@ -118,7 +118,7 @@ notify(csc=""){
 	}
 	if (fn.code=2001){
 		width:=sc.2276(32,"aaa"),text1:="Last Entered Character: " Chr(fn.ch) " Code:" fn.ch
-		last:=width*StrLen(text1 1),SB_SetParts(first,last,40),SB_SetText(text1,2)
+		last:=width*StrLen(text1 1),SB_SetParts(v.lastwidth,last,40),SB_SetText(text1,2)
 	}
 	if (fn.code=2007)
 		uppos()
@@ -134,7 +134,6 @@ notify(csc=""){
 	setfocus:
 	sc:=csc({hwnd:NumGet(A_EventInfo+0)})
 	filename:=files.ssn("//*[@sc='" sc.2357 "']/@file").text
-	;SplitPath,filename,file
 	if filename
 		WinSetTitle,% hwnd([1]),,AHK Studio - %filename%
 	return
