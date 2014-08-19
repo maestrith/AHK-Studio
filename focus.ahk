@@ -1,5 +1,4 @@
 Focus(a*){
-	static last
 	if (a.1&&a.2=0&&v.options.Check_For_Edited_Files_On_Focus){
 		up:=update("get").1
 		for a,b in up{
