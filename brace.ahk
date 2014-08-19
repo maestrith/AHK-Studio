@@ -18,7 +18,7 @@ brace(){
 	}
 	for a,b in pos
 		rev.Insert(pos[a])
-	if (A_ThisHotkey=Chr(34)){
+	if (A_ThisHotkey=Chr(34)&&v.options.Auto_Advance_Quote){
 		if (sc.2007(sc.2008)=34)
 			return sc.2025(sc.2008+1)
 	}

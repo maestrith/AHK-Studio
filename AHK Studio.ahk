@@ -21,6 +21,9 @@
 		GitHub Integration
 		
 	}
+	Don_Corleon(){
+		Multiple Scintilla windows over/under rather than side by side.
+	}
 	get github working
 	tidy up script:
 	-Arrows.ahk is where I left off.

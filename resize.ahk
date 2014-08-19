@@ -10,21 +10,33 @@ resize(info*){
 		rheight:=ErrorLevel
 	}
 	ControlGetPos,,y,,h,,% "ahk_id" rebar.hw.1.hwnd
-	yoffset:=y+h
 	ControlMove,,,,%width%,,% "ahk_id" rebar.hw.1.hwnd
 	hh:=(height-h-v.StatusBar-2),max:=s.main.MaxIndex()
 	x:=v.options.Hide_Project_Explorer?0:settings.get("//gui/@projectwidth",200)
 	GuiControl,1:Move,SysTreeView321,x0 y%h% w%x% h%hh%
-	add:=v.options.Hide_Code_Explorer?0:settings.get("//gui/@codewidth",200)
+	ow:=add:=v.options.Hide_Code_Explorer?0:settings.get("//gui/@codewidth",200)
 	add+=x
 	widths:=(width-add)/max
-	for a,b in s.main{
-		GuiControl,-Redraw,% b.sc
-		GuiControl,1:Move,% b.sc,% "x" x " y" h "w" widths " h" hh
-		GuiControl,+Redraw,% b.sc
-		x+=widths
+	if (v.options.Split_Horizontal){
+		totalwidth:=width-(x) ;for the width of the controls for horizontal split
+		;hh is the total height available to split
+		;t(totalwidth,x,ow)
+		for a,b in s.main{
+			GuiControl,-Redraw,% b.sc
+			GuiControl,1:Move,% b.sc,% "x" x " y" h " w" widths " h" hh
+			GuiControl,+Redraw,% b.sc
+			;x+=widths
+		}
+		guicontrol,1:move,systreeview322,% "x" totalwidth " y" h "w" ow " h" hh
+	}Else{
+		for a,b in s.main{
+			GuiControl,-Redraw,% b.sc
+			GuiControl,1:Move,% b.sc,% "x" x " y" h "w" widths " h" hh
+			GuiControl,+Redraw,% b.sc
+			x+=widths
+		}
+		guicontrol,1:move,systreeview322,% "x" x " y" h "w" (width-x) " h" hh
 	}
-	guicontrol,1:move,systreeview322,% "x" x " y" h "w" (width-x) " h" hh
 	GuiControl,+Redraw,% v.sbhwnd
 	return
 }

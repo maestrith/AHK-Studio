@@ -23,7 +23,7 @@ Code_Vault(){
 	if ErrorLevel
 		return
 	file:=!InStr(file,".ahk")?file ".ahk":file
-	if FileExist(file)
+	if FileExist(cdir "\" file)
 		return m("File already exists")
 	text:=csc().gettext(),csc({hwnd:v.lastsc.sc}),new_segment(cdir "\" file,text),hwnd({rem:19})
 	return

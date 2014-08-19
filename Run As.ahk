@@ -17,5 +17,5 @@ run_as(ahk){
 	if FileExist(ahk)
 		Run,% ahk " " Chr(34) ssn(current(1),"@file").text Chr(34),%currentdir%
 	Else
-		m("Can not find " ahk)	
+		m("Can not find " ahk)
 }
