@@ -2,6 +2,9 @@
 ;download complete
 ;Clipboard:=A_AhkVersion
 /*
+	djvj(){
+		check for file changes when you focus the window.
+	}
 	possible_windows_to_replace(){
 		upload
 		find
@@ -268,3 +271,4 @@ return
 #Include window.ahk
 #Include WM COPYDATA.ahk
 #Include Words In Document.ahk
+#Include next-prev file.ahk
