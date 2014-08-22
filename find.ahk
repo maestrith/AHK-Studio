@@ -13,7 +13,7 @@ find(){
 	}
 	Gui,5:Add,Button,gsearch Default,% " Search "
 	Gui,5:Add,Button,gcomment,Toggle Comment
-	Gui,5:Show,% Center(5)
+	Gui,5:Show,% Center(5),Find
 	for a,b in ea
 		if b
 			GuiControl,,%a%,%b%

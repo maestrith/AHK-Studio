@@ -17,5 +17,6 @@ Focus(a*){
 				main.SetAttribute("time",time)
 			}
 		}
+		Return 1
 	}
 }

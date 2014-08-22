@@ -2,9 +2,6 @@
 ;download complete
 ;Clipboard:=A_AhkVersion
 /*
-	djvj(){
-		check for file changes when you focus the window.
-	}
 	possible_windows_to_replace(){
 		upload
 		find

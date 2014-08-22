@@ -133,6 +133,7 @@ notify(csc=""){
 	v.options[A_ThisLabel]:=onoff
 	return
 	setfocus:
+	SetTimer,setfocus,Off
 	sc:=csc({hwnd:NumGet(A_EventInfo+0)})
 	filename:=files.ssn("//*[@sc='" sc.2357 "']/@file").text
 	if filename
