@@ -1,5 +1,5 @@
 filecheck(){
-	commandsdate:=20140816,menusdate:=201408191,scilexerdate:=20140801123000
+	commandsdate:=20140821,menusdate:=201408191,scilexerdate:=20140801123000
 	if !settings.ssn("//autoadd")
 		for a,b in {60:62,123:125,34:34,39:39,91:93,40:41}
 			settings.add({path:"autoadd/key",att:{trigger:a,add:b},dup:1})
@@ -56,5 +56,5 @@ filecheck(){
 	if !FileExist("AHKStudio.ico")
 		urldownloadtofile,http://files.maestrith.com/alpha/Studio/AHKStudio.ico,AHKStudio.ico
 	SplashTextOff
-	commands:=new xml("commands","lib\commands.xml")
+	commands:=new xml("commands","lib\commands.xml"),commands.Add({path:"Version/Date",text:commandsdate}),commands.save(1)
 }

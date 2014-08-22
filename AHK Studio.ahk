@@ -9,7 +9,6 @@
 		Code Vault
 		Split Code
 		Scratch Pad
-		
 		Personal Variable List
 		ftp server settings
 		Edit Replacements
