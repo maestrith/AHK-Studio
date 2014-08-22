@@ -47,8 +47,10 @@ filecheck(){
 	FileInstall,lib\commands.xml,lib\commands.xml
 	if !(FileExist("lib\commands.xml")&&FileExist("scilexer.dll"))
 		SplashTextOn,,40,Downloading Required Files,Please Wait...
-	if (commands.ssn("//Date").text!=commandsdate)
+	if (commands.ssn("//Date").text!=commandsdate){
 		FileDelete,lib\commands.xml
+		updatedate:=1
+	}
 	if !FileExist("lib\commands.xml")
 		FileAppend,% URLDownloadToVar("http://files.maestrith.com/alpha/Studio/commands.xml"),lib\commands.xml
 	if !FileExist("scilexer.dll")
@@ -56,5 +58,7 @@ filecheck(){
 	if !FileExist("AHKStudio.ico")
 		urldownloadtofile,http://files.maestrith.com/alpha/Studio/AHKStudio.ico,AHKStudio.ico
 	SplashTextOff
-	commands:=new xml("commands","lib\commands.xml"),commands.Add({path:"Version/Date",text:commandsdate}),commands.save(1)
+	commands:=new xml("commands","lib\commands.xml")
+	if updatedate
+		commands.Add({path:"Version/Date",text:commandsdate}),commands.save(1)
 }
