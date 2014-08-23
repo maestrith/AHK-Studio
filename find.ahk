@@ -1,12 +1,9 @@
 find(){
 	static
-	file:=ssn(current(1),"@file").text
-	infopos:=positions.ssn("//*[@file='" file "']")
-	last:=ssn(infopos,"@search").text
-	hwfind:=setup(5)
-	search:=last?last:"Type in your query here"
+	file:=ssn(current(1),"@file").text,infopos:=positions.ssn("//*[@file='" file "']")
+	last:=ssn(infopos,"@search").text,hwfind:=setup(5),search:=last?last:"Type in your query here"
 	ea:=settings.ea(settings.ssn("//search/find"))
-	for a,b in ["Edit,gfindcheck w500 vfind r1," search ,"TreeView,w500 h300 AltSubmit gstate","Checkbox,vregex,Regex Search","Checkbox,vgr x+10,Greed","Checkbox,xm vcs,Case Sensitive","Checkbox,vsort gfsort,Sort by Segment","Checkbox,vallfiles,Search in All Files"]{
+	for a,b in ["Edit,gfindcheck w500 vfind r1," debug.decode(search) ,"TreeView,w500 h300 AltSubmit gstate","Checkbox,vregex,Regex Search","Checkbox,vgr x+10,Greed","Checkbox,xm vcs,Case Sensitive","Checkbox,vsort gfsort,Sort by Segment","Checkbox,vallfiles,Search in All Files"]{
 		StringSplit,b,b,`,
 		Gui,5:Add,%b1%,%b2%,%b3%
 		b2:=b3:=""
@@ -32,53 +29,30 @@ find(){
 		Gui,5:Submit,Nohide
 		if !find
 			return
-		ff:="",ff.=gr?"":"U"
-		ff.=cs?"O)":"Oi)",refreshing:=1,foundinfo:=[]
-		main:=regex=0?"(.*)(\Q" find "\E)(.*)":"(" find ")"
-		f:=gr&&regex?ff "(" find ")":ff main
-		infopos.setattribute("search",find)
+		infopos.setattribute("search",debug.encode(find)),foundinfo:=[]
 		Gui,5:Default
 		GuiControl,5:-Redraw,SysTreeView321
-		if allfiles
-			list:=files.sn("//@file")
-		else
-			list:=sn(current(1),"*/@file")
+		list:=allfiles?files.sn("//@file"):sn(current(1),"*/@file")
 		contents:=update("get").1,TV_Delete()
+		pre:="`nO",pre.=cs?"":"i",pre.=greed?"":"U",parent:=0
 		while,l:=list.item(A_Index-1){
 			out:=contents[l.text],found=1,r=0,fn:=l.text
 			SplitPath,fn,file
-			if !regex{
-				while,found:=RegExMatch(out,"`n" ff main,fo,found){
-					r:=sort&&A_Index=1?TV_Add(l.text):r
-					parent:=TV_Add(fo.value(),r)
-					foundinfo[parent]:={pos:fo.pos(2)-1,file:l.text,found:fo.len(2)}
-					found:=fo.pos(3)+StrLen(fo.value())
+			ff:=regex?find:"\Q" find "\E"
+			while,found:=RegExMatch(out,pre ")(.*" ff ".*\n)",pof,found){
+				if (sort&&lastl!=fn)
+					parent:=TV_Add(fn)
+				np:=StrPut(SubStr(out,1,found),"utf-8")-1,length:=StrPut(pof.1,"utf-8")-1
+				np:=StrLen(pof.1)=length?np-=1:np-=StrPut(SubStr(pof.1,1,1),"utf-8")-1
+				fpos:=1
+				while,fpos:=RegExMatch(pof.value(),pre ")(" find ")",loof,fpos){
+					add:=StrPut(SubStr(pof.value(),1,fpos),"utf-8")-1,length:=StrPut(loof.1,"utf-8")-1
+					add:=StrLen(loof.1)=length?add-=1:add-=StrPut(SubStr(loof.1,1,1),"utf-8")-1
+					foundinfo[TV_Add(loof.1 " : " Trim(pof.1,"`t"),parent)]:={start:np+add,end:np+add+length,file:l.text}
+					fpos+=StrLen(find)
 				}
-			}
-			else
-			{
-				while,found:=RegExMatch(out,"`nOi)(.*" find ".*)",pof,found){
-					
-					/*
-						np:=StrPut(SubStr(out,1,found),"utf-8")-1,length:=StrPut(pof.value(1),"utf-8")-1
-						np:=StrLen(pof.value(1))=length?np-=1:np-=StrPut(SubStr(pof.value(1),1,1),"utf-8")-1
-						;t(np,length)
-						;niños
-						;canofspamcanofspam
-						fff:=1,r:=sort&&A_Index=1?TV_Add(l.text):r
-						m(np,pof.len(0),pof.value(1))
-						foundinfo[parent]:={pos:found+fo.pos(1)-2,file:l.text,found:fo.len(1),parent:ssn(l.ParentNode.ParentNode,"@file").text}
-					*/
-					
-					while,fff:=RegExMatch(pof.value(),ff main,fo,fff){
-						parent:=TV_Add(fo.value(1) " : " pof.value(),r)
-						foundinfo[parent]:={pos:found+fo.pos(1)-2,file:l.text,found:fo.len(1),parent:ssn(l.ParentNode.ParentNode,"@file").text}
-						fff:=fo.pos(1)+fo.len(1)
-					}
-					/*
-					*/
-					found+=pof.len(0)
-				}
+				found+=pof.len(0)
+				lastl:=fn
 			}
 		}
 		if TV_GetCount()
@@ -93,7 +67,7 @@ find(){
 		sc:=csc()
 		tv(files.ssn("//*[@file='" ea.file "']/@tv").text)
 		Sleep,100
-		sc.2160(ea.pos,ea.pos+ea.found)
+		sc.2160(ea.start,ea.end)
 		sc.2169
 	}
 	else
@@ -128,7 +102,7 @@ find(){
 	5GuiEscape:
 	5GuiClose:
 	Gui,5:Submit,NoHide
-	settings.add({path:"search/find",att:{regex:regex,cs:cs,sort:sort,gr:gr}}),foundinfo:=""
+	settings.add({path:"search/find",att:{regex:regex,cs:cs,sort:sort,gr:gr,allfiles:allfiles}}),foundinfo:=""
 	hwnd({rem:5})
 	return
 	comment:

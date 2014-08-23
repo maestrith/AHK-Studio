@@ -35,7 +35,7 @@ color(con){
 		con.2082(7,0xff00ff)
      con.2498(1,7),con.2212,con.2371
 	con.2080(2,8),con.2082(2,0xff00ff),con.2636(1)
-     if zoom:=settings.ssn("//gui/@zoom").text
+	if zoom:=settings.ssn("//gui/@zoom").text
 		con.2373(zoom)
      for a,b in options
 		if v.options[a]

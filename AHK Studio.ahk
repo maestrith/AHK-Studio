@@ -2,6 +2,9 @@
 ;download complete
 ;Clipboard:=A_AhkVersion
 /*
+	Fix 
+	-offset for omni
+	-offsets for find window
 	
 	utf chars saving to xml breaks the xml
 	-make it encode and give it a flag for encode
