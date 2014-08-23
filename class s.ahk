@@ -47,15 +47,20 @@ class s{
 	__Get(x*){
 		return DllCall(this.fn,"Ptr",this.ptr,"UInt",x.1,int,0,int,0,"Cdecl")
 	}
-	__Call(code,lparam=0,wparam=0){
+	__Call(code,lparam=0,wparam=0,extra=""){
 		if (code="getseltext"){
 			VarSetCapacity(text,this.2161),length:=this.2161(0,&text)
 			return StrGet(&text,length,"cp0")
 		}
 		if (code="textrange"){
-			VarSetCapacity(text,abs(lparam-wparam)),VarSetCapacity(textrange,12,0),NumPut(lparam,textrange,0),NumPut(wparam,textrange,4),NumPut(&text,textrange,8)
+			cap:=VarSetCapacity(text,abs(lparam-wparam)),VarSetCapacity(textrange,12,0),NumPut(lparam,textrange,0),NumPut(wparam,textrange,4),NumPut(&text,textrange,8)
 			this.2162(0,&textrange)
-			return strget(&text,"","cp0")
+			if extra
+				return strget(&text,cap,"utf-8")
+			else
+				Return strget(&text,cap,"cp0")
+			
+			return _:=extra?strget(&text,"","utf-8"):strget(&text,"","cp0")
 		}
 		if (code="getline"){
 			length:=this.2350(lparam)

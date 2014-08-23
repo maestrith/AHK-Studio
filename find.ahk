@@ -58,12 +58,25 @@ find(){
 			else
 			{
 				while,found:=RegExMatch(out,"`nOi)(.*" find ".*)",pof,found){
-					fff:=1,r:=sort&&A_Index=1?TV_Add(l.text):r
+					
+					/*
+						np:=StrPut(SubStr(out,1,found),"utf-8")-1,length:=StrPut(pof.value(1),"utf-8")-1
+						np:=StrLen(pof.value(1))=length?np-=1:np-=StrPut(SubStr(pof.value(1),1,1),"utf-8")-1
+						;t(np,length)
+						;niños
+						;canofspamcanofspam
+						fff:=1,r:=sort&&A_Index=1?TV_Add(l.text):r
+						m(np,pof.len(0),pof.value(1))
+						foundinfo[parent]:={pos:found+fo.pos(1)-2,file:l.text,found:fo.len(1),parent:ssn(l.ParentNode.ParentNode,"@file").text}
+					*/
+					
 					while,fff:=RegExMatch(pof.value(),ff main,fo,fff){
 						parent:=TV_Add(fo.value(1) " : " pof.value(),r)
 						foundinfo[parent]:={pos:found+fo.pos(1)-2,file:l.text,found:fo.len(1),parent:ssn(l.ParentNode.ParentNode,"@file").text}
 						fff:=fo.pos(1)+fo.len(1)
 					}
+					/*
+					*/
 					found+=pof.len(0)
 				}
 			}
