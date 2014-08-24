@@ -49,6 +49,7 @@ find(){
 					foundinfo[TV_Add(loof.1 " : " Trim(pof.1,"`t"),parent)]:={start:np+add,end:np+add+StrPut(loof.1,"Utf-8")-1,file:l.text}
 					fpos+=StrLen(find)
 				}
+				m(found,pof.len(0),pof.1)
 				found+=pof.len(0)
 				lastl:=fn
 			}

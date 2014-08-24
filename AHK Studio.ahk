@@ -1,6 +1,12 @@
 #SingleInstance,Off
 ;download complete
 ;Clipboard:=A_AhkVersion
+
+
+{
+	
+						MethodName:=1
+}
 /*
 	utf chars saving to xml breaks the xml
 	-make it encode and give it a flag for encode

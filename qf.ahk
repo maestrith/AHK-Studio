@@ -34,8 +34,7 @@ qf(){
 	if IsObject(minmax){
 		index:=1
 		for a,b in MinMax{
-			start:=b.min
-			search:=sc.textrange(b.min,b.max,1),pos:=1
+			start:=b.min,search:=sc.textrange(b.min,b.max,1),pos:=1
 			while,pos:=RegExMatch(search,find1,found,pos){
 				np:=StrPut(SubStr(search,1,found.Pos(1)),"utf-8")-1-(StrPut(SubStr(found.1,1,1),"utf-8")-1)
 				if index=1
@@ -61,8 +60,7 @@ qf(){
 	}
 	if mainsel>=0
 		sc.2574(mainsel)
-	sc.2169
-	lastfind:=find
+	sc.2169(),lastfind:=find
 	return
 	next:
 	sc:=csc()
