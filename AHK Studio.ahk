@@ -1,6 +1,5 @@
 #SingleInstance,Off
 ;download complete
-;Clipboard:=A_AhkVersion
 /*
 	utf chars saving to xml breaks the xml
 	-make it encode and give it a flag for encode
@@ -8,11 +7,6 @@
 	--set the flag and encode store to store it.
 	or
 	-just encode everything.
-	
-	off_by_one(){
-		when doing search try to do the pos:=StrPut(doc before find,"utf-8")
-		then length:=StrPut(found,"utf-8")
-	}
 	possible_windows_to_replace(){
 		upload
 		find
