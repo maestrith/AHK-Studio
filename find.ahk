@@ -32,11 +32,11 @@ find(){
 		infopos.setattribute("search",debug.encode(find)),foundinfo:=[]
 		Gui,5:Default
 		GuiControl,5:-Redraw,SysTreeView321
-		list:=allfiles?files.sn("//@file"):sn(current(1),"*/@file")
+		list:=allfiles?files.sn("//file/@file"):sn(current(1),"*/@file")
 		contents:=update("get").1,TV_Delete()
 		pre:="m`nO",pre.=cs?"":"i",pre.=greed?"":"U",parent:=0
 		while,l:=list.item(A_Index-1){
-			out:=contents[l.text],found=1,r=0,fn:=l.text
+			out:=contents[l.text],found:=1,r:=0,fn:=l.text
 			SplitPath,fn,file
 			ff:=regex?find:"\Q" find "\E"
 			while,found:=RegExMatch(out,pre ")(^.*" ff ".*\n)",pof,found){
@@ -44,13 +44,12 @@ find(){
 					parent:=TV_Add(fn)
 				np:=found=1?0:StrPut(SubStr(out,1,found),"utf-8")-1-(StrPut(SubStr(pof.1,1,1),"utf-8")-1)
 				fpos:=1
-				while,fpos:=RegExMatch(pof.value(1),pre ")[^.*]?(" ff ")",loof,fpos){
+				while,fpos:=RegExMatch(pof.1,pre ")[^.*]?(" ff ")",loof,fpos){
 					add:=loof.Pos(1)-1
 					foundinfo[TV_Add(loof.1 " : " Trim(pof.1,"`t"),parent)]:={start:np+add,end:np+add+StrPut(loof.1,"Utf-8")-1,file:l.text}
-					fpos+=StrLen(find)
+					fpos+=StrLen(loof.1)
 				}
-				m(found,pof.len(0),pof.1)
-				found+=pof.len(0)
+				found:=found+add
 				lastl:=fn
 			}
 		}
