@@ -14,7 +14,7 @@ qf(){
 	find1:=v.options.regex?find:"\Q" find "\E"
 	pre.=v.options.greed?"":"U"
 	pre.=v.options.case_sensitive?"":"i"
-	pre.=v.options.multi_line?"m":""
+	pre.=v.options.multi_line?"m`n":""
 	find1:=pre ")(" find1 ")"
 	if (find=""||find="."||find=".*"||find="\"){
 		sc.2571
@@ -51,7 +51,6 @@ qf(){
 	}
 	Else
 	while,pos:=RegExMatch(text,find1,found,pos){
-		
 		np:=StrPut(SubStr(text,1,found.pos(1)),"utf-8")-1,length:=StrPut(found.value(1),"utf-8")-1
 		np:=StrLen(found.value(1))=length?np-=1:np-=StrPut(SubStr(found.value(1),1,1),"utf-8")-1
 		if (begin<np&&!mainsel)
