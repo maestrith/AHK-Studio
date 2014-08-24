@@ -37,12 +37,11 @@ qf(){
 			start:=b.min
 			search:=sc.textrange(b.min,b.max,1),pos:=1
 			while,pos:=RegExMatch(search,find1,found,pos){
-				np:=StrPut(SubStr(search,1,found.Pos(1)),"utf-8")-1,length:=StrPut(found.value(1),"utf-8")-1
-				np:=StrLen(found.value(1))=length?np-=1:np-=StrPut(SubStr(found.value(1),1,1),"utf-8")-1
+				np:=StrPut(SubStr(search,1,found.Pos(1)),"utf-8")-1-(StrPut(SubStr(found.1,1,1),"utf-8")-1)
 				if index=1
-					sc.2160(start+np,start+np+length),index++
+					sc.2160(start+np,start+np+StrPut(found.1,"utf-8")-1),index++
 				Else
-					sc.2573(start+np+length,start+np)
+					sc.2573(start+np+StrPut(found.1,"utf-8")-1,start+np)
 				if !found.len()
 					break
 				pos+=found.len()
@@ -51,14 +50,13 @@ qf(){
 	}
 	Else
 	while,pos:=RegExMatch(text,find1,found,pos){
-		np:=StrPut(SubStr(text,1,found.pos(1)),"utf-8")-1,length:=StrPut(found.value(1),"utf-8")-1
-		np:=StrLen(found.value(1))=length?np-=1:np-=StrPut(SubStr(found.value(1),1,1),"utf-8")-1
+		np:=StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-1-(StrPut(SubStr(found.1,1,1),"utf-8")-1)
 		if (begin<np&&!mainsel)
 			mainsel:=sc.2570=1?0:sc.2570
 		if A_Index=1
-			sc.2160(np,np+length)
+			sc.2160(np,np+StrPut(found.1,"utf-8")-1)
 		Else
-			sc.2573(np+length,np)
+			sc.2573(np+StrPut(found.1,"utf-8")-1,np)
 		pos+=found.len()
 	}
 	if mainsel>=0
