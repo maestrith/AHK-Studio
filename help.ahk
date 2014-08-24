@@ -28,6 +28,6 @@ Auto Indent:
 	hwnd({rem:11}),csc({hwnd:s.main.1})
 	return
 	11buttononlinehelp:
-	Run,http://code.google.com/p/ahk-studio
+	Run,http://github.com/maestrith/AHK-Studio/wiki
 	return
 }
