@@ -1,54 +1,62 @@
 class code_explorer{
-	static explore:=[],TreeView:=[],sort:=[]
+	static explore:=[],TreeView:=[],sort:=[],function:="Oim`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{"
 	scan(node){
-		explore:=[]
+		explore:=[],bits:=[]
 		for a,b in ["menu","file","label","method","function","hotkey","class"]
 			explore[b]:=[]
 		filename:=ssn(node,"@file").text,parentfile:=ssn(node.ParentNode,"@file").text
 		code:=update({get:filename}),pos:=1
+		method:=[]
 		for type,find in {hotkey:"Om`n)^\s*([#|!|^|\+|~|\$|&|<|>|*]*?\w+)::",label:"Om`n)^\s*(\w*):[\s+;]"}{
 			pos:=1
 			while,pos:=RegExMatch(code,find,fun,pos){
-				explore[type].Insert({type:type,file:filename,pos:fun.Pos(1)-1,text:fun.value(1),root:parentfile})
-				len:=fun.len(1)?fun.len(1):1
-				pos:=fun.Pos(1)+len
+				np:=StrPut(SubStr(code,1,fun.Pos(1)),"utf-8")-1-(StrPut(SubStr(fun.1,1,1),"utf-8")-1)
+				explore[type].Insert({type:type,file:filename,pos:np,text:fun.1,root:parentfile})
+				pos:=fun.pos(1)+1
 			}
 		}
-		pos:=1
+		lastpos:=pos:=1
 		Loop
 		{
-			fpos:=[]
-			for type,find in {class:"^\s*class[\s*]((\w+))",function:"\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s*;.*\s*]?\s*{"}{
-				if pp:=RegExMatch(code,"Oim`n)" find,fun,pos)
-					fpos[fun.Pos(1)]:={type:type,fun:fun,pos:fun.Pos(1),args:fun.value(3)}
-			}
-			if !fpos.minindex()
-				break
-			findit:=SubStr(code,fpos[fpos.minindex()].pos)
-			left:="",count:=0,foundone:=0
-			for a,b in StrSplit(findit,"`n"){
-				orig:=b,left.=orig "`n"
-				b:=RegExReplace(b,"i)(\s+" Chr(59) ".*)"),b:=RegExReplace(b,"U)(" Chr(34) ".*" Chr(34) ")","_")
-				RegExReplace(b,"{","",open),count+=open
-				if open
-					foundone:=1
-				RegExReplace(b,"}","",close),count-=close
-				if (count=0&&foundone)
-					break
-			}
-			type:=fpos[fpos.MinIndex()].type,treeview:=fpos[fpos.MinIndex()].fun.value(1)
-			if (treeview!=lastfun)
-				explore[type].insert({file:filename,pos:fpos.MinIndex()-1,text:treeview,args:fpos[fpos.MinIndex()].args,root:parentfile})
-			if (fpos[fpos.minindex()].type="class"){
-				pp:=1
-				while,pp:=RegExMatch(left,"Om`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{",method,pp){
-					explore.Method.Insert({file:filename,pos:method.Pos(1)+fpos.minindex()-2,text:method.value(1),args:method.value(3),class:TreeView,root:parentfile})
-					pp:=method.Pos(1)+1
+			test:=[]
+			for type,find in {class:"Om`ni)^[\s*]?(class[\s*]\w+)",function:this.function}{
+				if pos:=RegExMatch(code,find,fun,pos){
+					np:=StrPut(SubStr(code,1,fun.Pos(1)),"utf-8")-1-(StrPut(SubStr(fun.1,1,1),"utf-8")-1)
+					if pos
+						test[pos]:={type:type,file:filename,pos:np,text:fun.1,root:parentfile,cpos:pos}
+					pos:=fun.pos(1)+1
 				}
+				pos:=lastpos
 			}
-			pos:=fpos.MinIndex()+StrLen(left)
-			lastfun:=TreeView
+			min:=test[test.MinIndex()]
+			if(min.type="class"){
+				cl:=SubStr(code,min.cpos),left:="",foundone:="",count:=0
+				for a,b in StrSplit(cl,"`n"){
+					line:=RegExReplace(RegExReplace(b,"(\s+" Chr(59) ".*)\n"),"U)(" Chr(34) ".*" Chr(34) ")")
+					RegExReplace(line,"{","",open),count+=open
+					if (open&&foundone="")
+						foundone:=1
+					RegExReplace(line,"}","",close),count-=close
+					if (count=0&&foundone)
+						break
+					left.=b "`n"
+				}
+				pos:=lastpos:=min.cpos+StrLen(left)
+				explore.class.Insert({type:"class",file:filename,pos:min.pos,text:min.text,root:min.root})
+				npos:=1
+				while,npos:=RegExMatch(left,this.function,method,npos){
+					np:=StrPut(SubStr(left,1,method.Pos(1)),"utf-8")-1-(StrPut(SubStr(method.1,1,1),"utf-8")-1)
+					explore.Method.Insert({file:filename,pos:np+min.pos,text:method.1,args:method.value(3),class:min.text,root:min.root})
+					npos:=method.Pos(1)+1
+				}
+				continue
+			}else if(min.type="function"&&min.text!="if"){
+				explore.function.Insert(min)
+			}if !(test.MinIndex())
+			break
+			lastpos:=pos:=test.MinIndex()+StrLen(min.text)
 		}
+		pos:=fun.Pos(1)+len
 		this.explore[filename]:=explore
 		for a,b in ["Hotkey","Label","Function","Class","Method"]
 			this.sort[parentfile,b]:=explore[b]
@@ -81,8 +89,7 @@ class code_explorer{
 			return
 		Gui,1:TreeView,SysTreeView322
 		GuiControl,1:-Redraw,SysTreeView322
-		code_explorer.scan(current())
-		TV_Delete(),this.treeview:=[],roots:=[]
+		code_explorer.scan(current()),TV_Delete(),this.treeview:=[],roots:=[]
 		this.TreeView.filename:=[],this.TreeView.type:=[],this.TreeView.class:=[],this.TreeView.obj:=[]
 		for a,b in code_explorer.explore
 			for c,f in b

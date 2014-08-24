@@ -10,7 +10,7 @@ receive(){
 	}
 	VarSetCapacity(packet,++length)
 	received:=0
-	While(received<length){
+	While,(received<length){
 		r:=DllCall("ws2_32\recv","ptr",socket,"ptr",&packet+received,"int",length-received,"int",0)
 		if (r<1)
 			return m("An error occured",DllCall("GetLastError"))

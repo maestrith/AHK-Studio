@@ -3,7 +3,7 @@ omni_search(start=""){
 		return
 	static menulist:=[],searchin,rated
 	code_explorer.scan(current())
-	Setup(20),hotkeys([20],{up:"omniup",down:"omnidown"})
+	Setup(20),hotkeys([20],{up:"omniup",down:"omnidown","^Backspace":"deleteback"})
 	Gui,Margin,0,0
 	list:=menus.sn("//@clean")
 	menulist:=[]
@@ -38,7 +38,6 @@ omni_search(start=""){
 	Gui,Add,Button,Default gmsgo w500 Hide,Execute Command
 	Gui,Show,% Center(20),Omni-Search
 	ControlSend,Edit1,^{End},% hwnd([20])
-	hotkeys([20],{"^Backspace":"deleteback"})
 	goto sortmenu
 	return
 	deleteback:
@@ -76,9 +75,12 @@ omni_search(start=""){
 				if (count=d)
 					rating+=10
 			}
-			for index,word in StrSplit(find," ")
+			for index,word in StrSplit(find," "){
 				if InStr(r.name,word)
 					rating+=40
+				if(RegExMatch(r.name,"i)\b" word))
+					rating+=20
+			}
 			rating+=InStr("abcdefghijklmnopqrstuvwxyz",SubStr(r.name,1,1))
 			if RegExMatch(r.name,"i)^" find)
 				rating+=200
@@ -123,7 +125,7 @@ omni_search(start=""){
 	if RegExMatch(ob.type,"i)(label|method|function|hotkey|class)"){
 		TV(files.ssn("//*[@file='" ob.file "']/@tv").text)
 		Sleep,200
-		csc().2160(ob.pos,ob.pos+StrLen(ob.text)),v.sc.2169,getpos(),v.sc.2400
+		csc().2160(ob.pos,ob.pos+StrPut(ob.text,"Utf-8")-1),v.sc.2169,getpos(),v.sc.2400
 	}
 	omniend:
 	hwnd({rem:20})

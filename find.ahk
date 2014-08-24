@@ -34,21 +34,19 @@ find(){
 		GuiControl,5:-Redraw,SysTreeView321
 		list:=allfiles?files.sn("//@file"):sn(current(1),"*/@file")
 		contents:=update("get").1,TV_Delete()
-		pre:="`nO",pre.=cs?"":"i",pre.=greed?"":"U",parent:=0
+		pre:="m`nO",pre.=cs?"":"i",pre.=greed?"":"U",parent:=0
 		while,l:=list.item(A_Index-1){
 			out:=contents[l.text],found=1,r=0,fn:=l.text
 			SplitPath,fn,file
 			ff:=regex?find:"\Q" find "\E"
-			while,found:=RegExMatch(out,pre ")(.*" ff ".*\n)",pof,found){
+			while,found:=RegExMatch(out,pre ")(^.*" ff ".*\n)",pof,found){
 				if (sort&&lastl!=fn)
 					parent:=TV_Add(fn)
-				np:=StrPut(SubStr(out,1,found),"utf-8")-1,length:=StrPut(pof.1,"utf-8")-1
-				np:=StrLen(pof.1)=length?np-=1:np-=StrPut(SubStr(pof.1,1,1),"utf-8")-1
+				np:=found=1?0:StrPut(SubStr(out,1,found),"utf-8")-1-(StrPut(SubStr(pof.1,1,1),"utf-8")-1)
 				fpos:=1
-				while,fpos:=RegExMatch(pof.value(),pre ")(" find ")",loof,fpos){
-					add:=StrPut(SubStr(pof.value(),1,fpos),"utf-8")-1,length:=StrPut(loof.1,"utf-8")-1
-					add:=StrLen(loof.1)=length?add-=1:add-=StrPut(SubStr(loof.1,1,1),"utf-8")-1
-					foundinfo[TV_Add(loof.1 " : " Trim(pof.1,"`t"),parent)]:={start:np+add,end:np+add+length,file:l.text}
+				while,fpos:=RegExMatch(pof.value(1),pre ")[^.*]?(" ff ")",loof,fpos){
+					add:=loof.Pos(1)-1
+					foundinfo[TV_Add(loof.1 " : " Trim(pof.1,"`t"),parent)]:={start:np+add,end:np+add+StrPut(loof.1,"Utf-8")-1,file:l.text}
 					fpos+=StrLen(find)
 				}
 				found+=pof.len(0)

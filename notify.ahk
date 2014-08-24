@@ -118,6 +118,7 @@ notify(csc=""){
 		}
 	}
 	if (fn.code=2001){
+		uppos()
 		width:=sc.2276(32,"aaa"),text1:="Last Entered Character: " Chr(fn.ch) " Code:" fn.ch
 		last:=width*StrLen(text1 1),SB_SetParts(v.lastwidth,last,40),SB_SetText(text1,2)
 	}
