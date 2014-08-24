@@ -1,7 +1,7 @@
 options(){
 	static list:={Virtual_Space:[2596,3],show_eol:2356,Show_Caret_Line:2096,show_whitespace:2021,word_wrap:2268,center_caret:[2403,0x15,75]}
-	list:=settings.sn("//Quick_Find_Settings/@*|//options/@*")
-	while,ll:=list.item[A_Index-1]
+	optionslist:=settings.sn("//Quick_Find_Settings/@*|//options/@*")
+	while,ll:=optionslist.item[A_Index-1]
 		v.options[ll.nodename]:=ll.text
 	Show_EOL:
 	Show_Caret_Line:
