@@ -1,6 +1,7 @@
 ftp_servers(){
+	static listview
 	setup(9)
-	Gui,Add,ListView,w300 h300,Server|Username|Password|Port
+	Gui,Add,ListView,w300 h300 hwndlistview,Server|Username|Password|Port
 	Gui,Add,Button,gnewserver,New Server
 	Gui,Add,Button,gdeleteserver,Delete Server
 	popftp()
@@ -11,18 +12,18 @@ ftp_servers(){
 	hwnd({rem:9})
 	return
 	newserver:
-	InputBox,address,Server Address,Input the address of the server
+	address:=InputBox(listview,"Server Address","Input the address of the server")
 	if ErrorLevel
 		return
 	if settings.ssn("//ftp/server[@name='" name "']")
 		return m("Server Already Exists")
-	InputBox,username,Username,Username
+	username:=InputBox(listview,"Username","Username")
 	if ErrorLevel
 		return
-	InputBox,password,Password,Password
+	password:=InputBox(listview,"Password","Password")
 	if ErrorLevel
 		return
-	InputBox,port,Port,Port,,,,,,,,21
+	port:=InputBox(listview,"Port","Port",21)
 	if ErrorLevel
 		return
 	settings.add({path:"ftp/server",att:{address:address,name:address,password:password,port:port,username:username},dup:1})

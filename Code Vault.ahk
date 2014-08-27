@@ -19,7 +19,7 @@ Code_Vault(){
 	Return
 	createnewsegment:
 	SplitPath,mainfile,,cdir
-	InputBox,file,New Segment,Enter a name for this new file.`nIt will be created in %cdir%
+	file:=InputBox(csc().sc,"New Segment","Enter a name for this new file","")
 	if ErrorLevel
 		return
 	file:=!InStr(file,".ahk")?file ".ahk":file
@@ -35,7 +35,7 @@ Code_Vault(){
 	hwnd({rem:19}),vault.save(1),csc({hwnd:v.lastsc.sc})
 	Return
 	addcode:
-	InputBox,newcode,Name for code snippet,Please enter a name for a new code snippet.
+	newcode:=InputBox(csc().sc,"Name for code snippet","Please enter a name for a new code snippet.","") 
 	newcode:=RegExReplace(newcode," ","_")
 	if ErrorLevel
 		return

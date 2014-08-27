@@ -89,7 +89,7 @@ menu_editor(x=0){
 	addmenu:
 	Gui,2:Default
 	top:=menus.ssn("//*[@tv='" TV_GetSelection() "']")
-	InputBox,newname,New Menu Item,Enter a new name (`&File for &File)
+	newname:=InputBox(csc().sc,"New Menu Item","Enter a new name (`&File for &File)")
 	if ErrorLevel
 		return
 	if (ssn(top,"@menu").text="")
@@ -153,7 +153,7 @@ menu_editor(x=0){
 	current:=TV_GetSelection()
 	item:=menus.ssn("//*[@tv='" current "']")
 	item.setattribute("last",1)
-	InputBox,newitem,Change Menu Name,Input a new name,,,,,,,,% ssn(item,"@name").text
+	newitem:=InputBox(csc().sc,"Change Menu Name","Input a new name",ssn(item,"@name").text)
 	if ErrorLevel
 		return
 	menus.ssn("//*[@tv='" current "']/@name").text:=newitem

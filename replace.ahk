@@ -6,7 +6,7 @@ replace(){
 	while,pos:=RegExMatch(rep,"U)\$.+\b",found,pos)
 		List.Insert(found),pos++
 	for a,b in List{
-		InputBox,value,Value for %b%,Insert value %b%`n%rep%
+		value:=InputBox(csc().sc,"Value for " b,"Insert value: "  b "`n" rep)
 		if ErrorLevel
 			return
 		StringReplace,rep,rep,%b%,%value%,All

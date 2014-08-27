@@ -1,15 +1,12 @@
 #SingleInstance,Off
 ;download complete
 /*
-	
-	warn on overwrite
-	
-	utf chars saving to xml breaks the xml
-	-make it encode and give it a flag for encode
-	-if StrLen(store)!=StrPut(store,"utf-8")
-	--set the flag and encode store to store it.
-	or
-	-just encode everything.
+	TODO LIST:
+	;uri encode files I think.
+	for context sensitive
+		replace the text inside ".*" first before trying to parse it with _ to keep the spacing. get rid of () issues
+	add window class and Resize
+	make windows show up inititally inside of the main window. centered.
 	possible_windows_to_replace(){
 		upload
 		find
@@ -90,6 +87,7 @@ tv(open(A_GuiEvent))
 return
 #Include %A_ScriptDir%
 #Include about.ahk
+#Include activesc.ahk
 #Include Add Spaces After Commas.ahk
 #Include add spaces before and after commas.ahk
 #Include Add Spaces Before Commas.ahk
@@ -279,3 +277,4 @@ return
 #Include window.ahk
 #Include WM COPYDATA.ahk
 #Include Words In Document.ahk
+#Include inputbox.ahk

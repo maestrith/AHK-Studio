@@ -1,5 +1,5 @@
 replace_selected(){
-	InputBox,replace,Replace Selected,Input text to replace what is selected
+	replace:=InputBox(csc().sc,"Replace Selected","Input text to replace what is selected")
 	if ErrorLevel
 		return
 	sc:=csc(),clip:=Clipboard

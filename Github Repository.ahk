@@ -4,7 +4,7 @@ Github_Repository(){
 		rep:=vversion.Add({path:"info",att:{file:file},dup:1})
 	repo:=ssn(rep,"@repo").text
 	if !(repo){
-		InputBox,repo,Please name this repo,Enter a name for this repo.
+		repo:=InputBox(csc().sc,"Please name this repo","Enter a name for this repo.")
 		repo:=RegExReplace(repo," ","-")
 		if ErrorLevel
 			return
@@ -33,7 +33,7 @@ Github_Repository(){
 	git:=new github(ea.owner,ea.token)
 	if del
 		git.Delete(repo,delete)
-	InputBox,commitmsg,New Commit Message,Please enter a commit message for this commit
+	commitmsg:=InputBox(csc().sc,"New Commit Message","Please enter a commit message for this commit","")
 	if ErrorLevel
 		return m("Commit message is required")
 	current_commit:=git.getref(repo)

@@ -102,14 +102,14 @@ Theme(info=""){
 		event:="Save Theme"
 	}if (event="Edit Author"){
 		author:=settings.ssn("//fonts/author")
-		InputBox,newauthor,New Author,Enter your name,,,,,,,,% author.text
+		newauthor:=InputBox(csc().sc,"New Author","Enter your name",author.text)
 		if ErrorLevel
 			return event:=""
 		author.text:=newauthor
 		csc().2181(0,themetext())
 	}if (event="Edit Theme Name"){
 		themename:=settings.ssn("//fonts/name")
-		InputBox,newtheme,New Theme Name,Enter the new theme name,,,,,,,,% themename.Text
+		newtheme:=InputBox(csc().sc,"New Theme Name","Enter the new theme name",themename.Text)
 		if ErrorLevel
 			return event:=""
 		themename.text:=newtheme
