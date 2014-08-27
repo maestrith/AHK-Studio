@@ -1,6 +1,9 @@
 #SingleInstance,Off
 ;download complete
 /*
+	
+	warn on overwrite
+	
 	utf chars saving to xml breaks the xml
 	-make it encode and give it a flag for encode
 	-if StrLen(store)!=StrPut(store,"utf-8")
@@ -164,6 +167,7 @@ return
 #Include help.ahk
 #Include helpfile.ahk
 #Include Highlight to Matching Brace.ahk
+#Include hk.ahk
 #Include hltline.ahk
 #Include Hotkey Search.ahk
 #Include hotkeys.ahk

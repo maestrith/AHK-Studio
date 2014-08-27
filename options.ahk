@@ -11,6 +11,7 @@ options(){
 	Hide_Code_Explorer:
 	Hide_Project_Explorer:
 	Virtual_Space:
+	Warn_Overwrite_On_Export:
 	sc:=csc()
 	onoff:=settings.ssn("//options/@" A_ThisLabel).text?0:1
 	att:=[],att[A_ThisLabel]:=onoff

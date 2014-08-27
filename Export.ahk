@@ -1,6 +1,7 @@
 Export(){
 	indir:=settings.ssn("//export/file[@file='" ssn(current(1),"@file").text "']")
-	FileSelectFile,filename,S16,% indir.text,Export Compiled AHK,*.ahk
+	warn:=settings.ssn("//options/@Warn_Overwrite_On_Export").text?"S16":""
+	FileSelectFile,filename,%warn%,% indir.text,Export Compiled AHK,*.ahk
 	SplitPath,filename,,outdir
 	filename:=InStr(filename,".ahk")?filename:filename ".ahk"
 	FileDelete,%filename%
