@@ -34,10 +34,9 @@ class ftp{
 		;vversion.ssn("//info[@file='" name "']").text
 		
 		
-		upinfo:="",info:=sn(node,"//info[@file='" name "']/versions/version")
+		upinfo:="",info:=vversion.sn("//info[@file='" name "']/versions/version")
 		while,in:=info.item[A_Index-1]
 			upinfo.=in.text "`r`n"
-		
 		file.write(upinfo)
 		file.seek(0)
 		List[namenoext ".text"]:=file
