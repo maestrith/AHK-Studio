@@ -50,7 +50,7 @@ upload(winname="Upload"){
 	f:=new ftp(info.server)
 	if f.Error
 		return
-	r:=f.put(file,w.dir,w.compile)
+	r:=f.put(file,info.dir,info.compile)
 	if r
 		m("Transfer complete")
 	if info.upgithub
