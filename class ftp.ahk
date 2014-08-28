@@ -28,7 +28,17 @@ class ftp{
 		List[filename]:=file
 		FileDelete,% "temp\" namenoext ".text"
 		file:=FileOpen("temp\" namenoext ".text",2)
-		file.write(RegExReplace(vversion.ssn("//info[@file='" name "']").text,"\n","`r`n"))
+		
+		
+		;RegExReplace(vversion.ssn("//info[@file='" name "']").text,"\n","`r`n")
+		;vversion.ssn("//info[@file='" name "']").text
+		
+		
+		upinfo:="",info:=sn(node,"//info[@file='" name "']/versions/version")
+		while,in:=info.item[A_Index-1]
+			upinfo.=in.text "`r`n"
+		
+		file.write(upinfo)
 		file.seek(0)
 		List[namenoext ".text"]:=file
 		return list
@@ -45,6 +55,13 @@ class ftp{
 		if compile
 			list[namenoext ".exe"]:=FileOpen(dir "\" namenoext ".exe","r")
 		upver:=vversion.ssn("//*[@file='" ssn(current(1),"@file").text "']/@upver").text
+		
+		upver:="",info:=sn(node,"versions/version")
+		while,in:=info.item[A_Index-1]
+			upver.=in.text "`r`n"		
+		
+		
+		
 		for a,b in list{
 			if upver{
 				ff:=!InStr(a,".exe")?A_ScriptDir "\temp\" a:dir "\" namenoext ".exe"

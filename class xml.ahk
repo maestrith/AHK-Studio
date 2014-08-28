@@ -86,7 +86,8 @@ class xml{
 		new:=info.under.appendchild(this.xml.createelement(info.node))
 		for a,b in info.att
 			new.SetAttribute(a,b)
-		new.text:=info.text
+		if info.text
+			new.text:=info.text
 		return new
 	}
 	ssn(node){

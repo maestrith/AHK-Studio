@@ -278,3 +278,4 @@ return
 #Include WM COPYDATA.ahk
 #Include Words In Document.ahk
 #Include inputbox.ahk
+#Include class windowtracker.ahk
