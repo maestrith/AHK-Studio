@@ -3,7 +3,7 @@ find(){
 	file:=ssn(current(1),"@file").text,infopos:=positions.ssn("//*[@file='" file "']")
 	last:=ssn(infopos,"@search").text,hwfind:=setup(5),search:=last?last:"Type in your query here"
 	ea:=settings.ea(settings.ssn("//search/find"))
-	for a,b in ["Edit,gfindcheck w500 vfind r1," debug.decode(search) ,"TreeView,w500 h300 AltSubmit gstate","Checkbox,vregex,Regex Search","Checkbox,vgr x+10,Greed","Checkbox,xm vcs,Case Sensitive","Checkbox,vsort gfsort,Sort by Segment","Checkbox,vallfiles,Search in All Files"]{
+	for a,b in ["Edit,gfindcheck w500 vfind r1," search ,"TreeView,w500 h300 AltSubmit gstate","Checkbox,vregex,Regex Search","Checkbox,vgr x+10,Greed","Checkbox,xm vcs,Case Sensitive","Checkbox,vsort gfsort,Sort by Segment","Checkbox,vallfiles,Search in All Files"]{
 		StringSplit,b,b,`,
 		Gui,5:Add,%b1%,%b2%,%b3%
 		b2:=b3:=""
@@ -29,7 +29,7 @@ find(){
 		Gui,5:Submit,Nohide
 		if !find
 			return
-		infopos.setattribute("search",debug.encode(find)),foundinfo:=[]
+		infopos.setattribute("search",find),foundinfo:=[]
 		Gui,5:Default
 		GuiControl,5:-Redraw,SysTreeView321
 		list:=allfiles?files.sn("//file/@file"):sn(current(1),"*/@file")

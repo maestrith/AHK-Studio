@@ -6,6 +6,7 @@ menu_editor(x=0){
 		Gui,2:+hwndhwnd +Owner1
 		setup(2)
 		Gui,2:Add,Text,,Control+UP/DOWN/LEFT/RIGHT will move items
+		Gui,2:Add,ComboBox,gmesearch w200
 		hotkeys([2],{"Del":"deletenode"})
 		Hotkey,^up,moveup,On
 		Hotkey,^down,movedown,On
@@ -25,7 +26,7 @@ menu_editor(x=0){
 	list:=menus.sn("//main/descendant::*")
 	root:=0
 	GuiControl,2:-Redraw,SysTreeView321
-	del:=[],next:=0
+	del:=[],next:=0,lll:=""
 	TV_Delete()
 	while,ll:=list.item[A_Index-1]{
 		hotkey:=ssn(ll,"@hotkey").text
@@ -33,12 +34,13 @@ menu_editor(x=0){
 		hot:=hot?" - Hotkey = " hot:""
 		hotkey:=hotkey?"`t" convert_hotkey(hotkey):""
 		parent:=ssn(ll.ParentNode,"@tv").text?ssn(ll.ParentNode,"@tv").text:0
-		root:=TV_Add(ssn(ll,"@name").text hot,parent)
+		root:=TV_Add(RegExReplace(ssn(ll,"@clean").text,"_"," ") hot,parent),lll.=RegExReplace(ssn(ll,"@clean").text,"_"," ") "|"
 		ll.SetAttribute("tv",root)
 		deletelist.Insert(clean(ssn(ll,"@name").text))
 		if ssn(ll,"@last").text
 			count:=A_Index
 	}
+	GuiControl,2:,ComboBox1,%lll%
 	while,ll:=list.item[A_Index-1]
 		TV_Modify(ssn(ll,"@tv").text,"Expand")
 	if !x{
@@ -85,6 +87,11 @@ menu_editor(x=0){
 	}
 	Menu,main,Delete
 	Gui,1:Menu,% menu("main")
+	return
+	mesearch:
+	ControlGetText,edit,Edit1,% hwnd([2])
+	if tv:=menus.ssn("//*[@clean='" RegExReplace(edit," ","_") "']/@tv").text
+		TV_Modify(tv,"Select Vis Focus")
 	return
 	addmenu:
 	Gui,2:Default

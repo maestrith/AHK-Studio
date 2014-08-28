@@ -1,5 +1,34 @@
 resize(info*){
-	static width,height,rheight,band
+	static width,height,rheight,band,size:=[]
+	if(info.1="other")
+		return size
+	if (A_Gui!=1){
+		if(info.1="get")
+			return size
+		gui:=A_Gui?A_Gui:info.1,win:=WindowTracker.winlist[gui]
+		if (info.1=0&&info.2=0&&win.ahkid){
+			WinGetPos,x,y,,,% win.ahkid
+			size[gui,"x"]:=x,size[gui,"y"]:=y
+			return
+		}
+		static flip:={x:"w",y:"h"}
+		if (info.2>>16){
+			w:=info.2&0xffff,h:=info.2>>16
+			if info.1!=2
+				size[gui,"w"]:=w,size[gui,"h"]:=h
+		}
+		for a,b in win.tracker{
+			orig:=win[b.control]
+			for c,d in StrSplit(b.pos){
+				if (d~="(w|h)")
+					GuiControl,MoveDraw,% b.control,% d %d%-(b[d]-orig[d])
+				if (d~="(x|y)"){
+					val:=flip[d],offset:=orig[d]-b[val]
+					GuiControl,MoveDraw,% b.control,% d %val%+offset
+				}
+			}
+		}
+	}
 	if (info.1="get"){
 		WinGetPos,x,y,,,% hwnd([1])
 		return size:="x" x " y" y " w" width " h" height

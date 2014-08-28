@@ -127,7 +127,7 @@ class xml{
 		if x.1=1
 			this.Transform()
 		filename:=this.file?this.file:x.1.1
-		file:=fileopen(filename,"rw")
+		file:=fileopen(filename,"rw","Utf-8")
 		file.seek(0)
 		file.write(this[])
 		file.length(file.position)

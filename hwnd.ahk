@@ -5,6 +5,7 @@ hwnd(win,hwnd=""){
 	if (win.rem){
 		Gui,1:-Disabled
 		Gui,1:Default
+		WindowTracker.Exit(win.rem)
 		if !window[win.rem]
 			Gui,% win.rem ":Destroy"
 		Else
