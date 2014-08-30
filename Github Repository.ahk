@@ -4,7 +4,7 @@ Github_Repository(){
 	if !settings.ssn("//github")
 		settings.Add({path:"github",att:{owner:"",email:"",name:"",token:""}})
 	list:=sn(verfile.node,"versions/version"),info:=settings.ea("//github"),setup(25),newwin:=new WindowTracker(25)
-	newwin.add(["TreeView,w200 h200 AltSubmit geditgr,,w","Text,,Version Number:","Edit,w200 ggrvn","Button,ggraddver -TabStop,Add Version","Text,,Version Info:","Edit,w200 r5 -Wrap,,wh","Button,gcommit Default,Commit,y"])
+	newwin.add(["TreeView,w200 h200 AltSubmit geditgr,,w","Text,,Version Number:","Edit,w200 ggrvn","Button,ggraddver -TabStop,Add Version","Text,,Commit Info:","Edit,w200 r5 -Wrap,,wh","Button,gcommit Default,Commit,y"])
 	newwin.Show("Github"),tv:=[],githubinfo:=TV_Add("Github Info"),hotkeys([25],{up:"grup",down:"grdown"})
 	change:={email:"Github Email",name:"Your Name (for commits)",owner:"Username for Github",token:"API Token for Github"}
 	for a,b in info
@@ -92,17 +92,20 @@ Github_Repository(){
 }
 commit(commitmsg){
 	if !commitmsg
-		return m("Please Select a commit message")
+		return m("Please Select a commit message from the list of versions, or enter a commit message in the space provided")
 	file:=ssn(current(1),"@file").text
 	if !rep:=vversion.ssn("//*[@file='" file "']")
 		rep:=vversion.Add({path:"info",att:{file:file},dup:1})
 	repo:=ssn(rep,"@repo").text
 	if !(repo){
-		repo:=InputBox(csc().sc,"Please name this repo","Enter a name for this repo.")
-		repo:=RegExReplace(repo," ","-")
-		if ErrorLevel
-			return
-		rep.SetAttribute("repo",repo)
+		return m("Please setup a repo name in the GUI by clicking Repository Name:")
+		/*
+			repo:=InputBox(csc().sc,"Please name this repo","Enter a name for this repo.")
+			repo:=RegExReplace(repo," ","-")
+			if ErrorLevel
+				return
+			rep.SetAttribute("repo",repo)
+		*/
 	}
 	delete:=[],current:=[]
 	main:=ssn(current(1),"@file").text
@@ -127,11 +130,6 @@ commit(commitmsg){
 	git:=new github(ea.owner,ea.token)
 	if del
 		git.Delete(repo,delete)
-	/*
-		commitmsg:=InputBox(csc().sc,"New Commit Message","Please enter a commit message for this commit","")
-		if ErrorLevel
-			return m("Commit message is required")
-	*/
 	current_commit:=git.getref(repo)
 	if !(current_commit){
 		git.CreateRepo(repo)
