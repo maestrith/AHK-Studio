@@ -41,7 +41,11 @@ class github{
 	getref(repo){
 		;GET /repos/:owner/:repo/git/refs
 		url:=this.url "/repos/" this.owner "/" repo "/git/refs" this.token
-		return this.sha(this.Send("GET",url))
+		this.cmtsha:=this.sha(this.Send("GET",url))
+		url:=this.url "/repos/" this.owner "/" repo "/commits/" this.cmtsha this.token
+		info:=this.Send("GET",url)
+		RegExMatch(info,"U)tree.:\{.sha.:.(.*)" Chr(34),found)
+		return found1
 	}
 	blob(repo,text){
 		;POST /repos/:owner/:repo/git/blobs
@@ -66,19 +70,27 @@ class github{
 		{"base_tree":"%parent%","tree":[
 		)
 		for a,blob in blobs{
-			add={"path":"%a%","mode":"100644","type":"blob","sha":"%blob%"},
+			add={"path":"%a%","mode":"100644","type":"blob","sha":"%blob%"}, 
 			json.=add
 		}
 		json:=Trim(json,",") "]}"
-		return this.sha(this.Send("POST",url,json))
+		ret:=this.Send("POST",url,json)
+		m(ret,json),Clipboard:=json
+		return this.sha(ret)
 	}
 	commit(repo,tree,parent,message="Updated the file",name="placeholder",email="placeholder@gmail.com"){
+		;message:=RegExReplace(message,"\r\n","\\n")
+		message:="Testing upload"
+		parent:=this.cmtsha
 		url:=this.url "/repos/" this.owner "/" repo "/git/commits" this.token
 		json=
 		(
 		{"message":"%message%","author":{"name": "%name%","email": "%email%"},"parents":["%parent%"],"tree":"%tree%"}
 		)
-		return this.sha(this.Send("POST",url,json))
+		m("HRERERERER!",json)
+		info:=this.Send("POST",url,json)
+		m(info)
+		return this.sha(info)
 	}
 	ref(repo,sha){
 		url:=this.url "/repos/" this.owner "/" repo "/git/refs/heads/master" this.token
@@ -89,6 +101,7 @@ class github{
 		)
 		this.http.send(json)
 		SplashTextOff
+		m(this.http.ResponseText,sha)
 		return this.http.status
 	}
 	Limit(){
