@@ -74,9 +74,7 @@ class github{
 			json.=add
 		}
 		json:=Trim(json,",") "]}"
-		ret:=this.Send("POST",url,json)
-		m(ret,json),Clipboard:=json
-		return this.sha(ret)
+		return this.sha(this.Send("POST",url,json))
 	}
 	commit(repo,tree,parent,message="Updated the file",name="placeholder",email="placeholder@gmail.com"){
 		message:=this.utf8(message)
@@ -86,10 +84,7 @@ class github{
 		(
 		{"message":"%message%","author":{"name": "%name%","email": "%email%"},"parents":["%parent%"],"tree":"%tree%"}
 		)
-		m("HRERERERER!",json)
-		info:=this.Send("POST",url,json)
-		m(info)
-		return this.sha(info)
+		return this.sha(this.Send("POST",url,json))
 	}
 	ref(repo,sha){
 		url:=this.url "/repos/" this.owner "/" repo "/git/refs/heads/master" this.token
@@ -100,7 +95,6 @@ class github{
 		)
 		this.http.send(json)
 		SplashTextOff
-		m(this.http.ResponseText,sha)
 		return this.http.status
 	}
 	Limit(){
