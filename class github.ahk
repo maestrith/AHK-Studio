@@ -79,8 +79,7 @@ class github{
 		return this.sha(ret)
 	}
 	commit(repo,tree,parent,message="Updated the file",name="placeholder",email="placeholder@gmail.com"){
-		;message:=RegExReplace(message,"\r\n","\\n")
-		message:="Testing upload"
+		message:=RegExReplace(message,"\r\n","\\n")
 		parent:=this.cmtsha
 		url:=this.url "/repos/" this.owner "/" repo "/git/commits" this.token
 		json=
