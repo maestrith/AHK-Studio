@@ -60,6 +60,7 @@ class github{
 	send(verb,url,data=""){
 		this.http.Open(verb,url)
 		this.http.send(data)
+		FileAppend,% this.http.GetAllResponseHeaders "`n",response.txt
 		return this.http.ResponseText
 	}
 	tree(repo,parent,blobs){
