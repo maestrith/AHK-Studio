@@ -1,6 +1,8 @@
 Github_Repository(){
 	static
 	verfile:=new versionkeep
+	if !settings.ssn("//github")
+		settings.Add({path:"github",att:{owner:"",email:"",name:"",token:""}})
 	list:=sn(verfile.node,"versions/version"),info:=settings.ea("//github"),setup(25),newwin:=new WindowTracker(25)
 	newwin.add(["TreeView,w200 h200 AltSubmit geditgr,,w","Text,,Version Number:","Edit,w200 ggrvn","Button,ggraddver -TabStop,Add Version","Text,,Version Info:","Edit,w200 r5 -Wrap,,wh","Button,gcommit Default,Commit,y"])
 	newwin.Show("Github"),tv:=[],githubinfo:=TV_Add("Github Info"),hotkeys([25],{up:"grup",down:"grdown"})
