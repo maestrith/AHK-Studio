@@ -58,6 +58,8 @@ filecheck(){
 	if !FileExist("AHKStudio.ico")
 		urldownloadtofile,http://files.maestrith.com/alpha/Studio/AHKStudio.ico,AHKStudio.ico
 	SplashTextOff
+	if !settings.ssn("//options")
+		settings.Add({path:"options",att:{}})
 	commands:=new xml("commands","lib\commands.xml")
 	if updatedate
 		commands.Add({path:"Version/Date",text:commandsdate}),commands.save(1)

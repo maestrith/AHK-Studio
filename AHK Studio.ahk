@@ -279,3 +279,4 @@ return
 #Include Words In Document.ahk
 #Include inputbox.ahk
 #Include class windowtracker.ahk
+#Include class versionkeep.ahk

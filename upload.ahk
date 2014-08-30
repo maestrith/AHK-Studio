@@ -1,45 +1,52 @@
 upload(winname="Upload"){
 	static
-	static ControlList:={compile:"Button2",version:"Edit1",increment:"Edit2",dir:"Edit4",gistversion:"Button3",upver:"Button4",versstyle:"Button5",upgithub:"Button6"}
+	static ControlList:={compile:"Button3",version:"Edit1",dir:"Edit4",gistversion:"Button4",upver:"Button5",versstyle:"Button6",upgithub:"Button7"}
 	uphwnd:=setup(10),lastver:=""
 	list:=settings.sn("//ftp/server/@name"),lst:="Choose a server...|"
 	while,ll:=list.item[A_Index-1]
 		lst.="|" ll.text
 	newwin:=new WindowTracker(10)
-	newwin.Add(["Text,Section,Version:","Edit,x+5 ys-2 w263 vversion,,w,1","text,x+5,.,x","Edit,x+5 w50,,x","UpDown,gincrement vincrement Range0-2000 0x80,,x,1","Text,xs,Version Information:","ListView,w100 h200 guplv AltSubmit NoSortHdr -TabStop,Version,h","Edit,x+10 w280 h200 -Wrap gupadd,,wh","Button,xm gremver -TabStop,Remove Selected Versions,y"
-	,"Text,xm Section,Upload directory:,y","Edit,vdir w200 x+10 ys-2,,yw,1","Text,section xm,Ftp Server:,y","DDL,x+10 ys-2 w200 vserver," lst ",yw","Checkbox,vcompile xm,Compile,y","Checkbox,vgistversion xm Disabled,Update Gist Version,y","Checkbox,vupver,Upload without progress bar (a bit more stable),y","Checkbox,vversstyle,Remove (Version=) from the " chr(59) "auto_version,y"
-	,"Checkbox,vupgithub,Update GitHub,y","Button,w200 gupload1 xm Default,Upload,y"])
+	newwin.Add(["Text,Section,Version:","Edit,x+5 ys-2 w150 vversion,,w,1","Button,guladd x+5 -TabStop,Add Version,x","Text,xs,Versions:","TreeView,w360 h100 guplv AltSubmit -TabStop,,w","Button,xm gremver -TabStop,Remove Selected Version","Text,xs,Version Information:","Edit,xm w360 h200 -Wrap gupadd,,wh"
+	,"Text,xm Section,Upload directory:,y","Edit,vdir w100 x+10 ys-2,,yw,1","Text,section xm,Ftp Server:,y","DDL,x+10 ys-2 w200 vserver," lst ",yw","Checkbox,vcompile xm,Compile,y","Checkbox,vgistversion xm Disabled,Update Gist Version,y","Checkbox,vupver,Upload without progress bar (a bit more stable),y","Checkbox,vversstyle,Remove (Version=) from the " chr(59) "auto_version,y"
+	,"Checkbox,vupgithub,Update GitHub,y","Button,w200 gupload1 xm Default,Upload,y"]),hotkeys([10],{up:"uup",down:"udown",Delete:"uldel",Backspace:"uldel"})
 	file:=ssn(current(1),"@file").text
 	newwin.Show("Upload"),info:=""
 	node:=vversion.ssn("//info[@file='" file "']")
 	for a,b in vversion.ea(node)
 		GuiControl,10:,% ControlList[a],%b%
-	if !versions:=ssn(node,"versions"){
-		if !FileExist("lib\version backup.xml")
-			FileCopy,lib\version.xml,lib\version backup.xml,1
-		info:=node.text,node.text:=""
-		versions:=vversion.under({under:node,node:"versions"}),vn:="",top:=""
-		for a,b in StrSplit(info,"`n","`r`n"){
-			if !RegExReplace(b,"(\d|\.)"){
-				vn:=b
-				top:=vversion.under({under:versions,node:"version",att:{number:b}})
-			}else{
-				if !top
-					top:=vversion.under({under:versions,node:"version",att:{number:"1.0"}})
-				top.text:=top.text "`r`n" b
-			}
-		}
-	}
+	vers:=new versionkeep
+	node:=vers.node
 	Gosub uploadpopulate
 	LV_Modify(1,"Vis Focus Select")
-	ControlFocus,Edit3,% hwnd([10])
+	ControlFocus,Edit2,% hwnd([10])
 	return
+	uldel:
+	ControlGetFocus,focus,% hwnd([10])
+	if (Focus!="SysTreeView321"){
+		ControlSend,%focus%,{%A_ThisHotkey%},% hwnd([10])
+		Return
+	}
+	else
+		goto remver
+	Return
+	uup:
+	udown:
+	uladd:
+	if (A_ThisLabel="uladd")
+		ControlFocus,Edit1,% hwnd([10])
+	if start:=vers.UpDown(10,"Edit1",A_ThisLabel)
+		node:=vers.Add(start)
+	goto uploadpopulate
+	Return
 	upadd:
-	ControlGetText,text,Edit3,% hwnd([10])
-	info:=newwin[],ver:=info.version "." info.increment
-	if !cnode:=ssn(node,"versions/version[@number='" ver "']")
-		Goto increment
-	cnode.text:=text
+	ControlGetText,cv,Edit1,% hwnd([10])
+	if !ssn(node,"versions/version[@number='" cv "']"){
+		Gosub uladd
+		ControlFocus,Edit2,% hwnd([10])
+	}
+	ControlGetText,text,Edit2,% hwnd([10])
+	set:=ssn(node,"versions/version[@version='" cv "']")
+	vers.settext(cv,text)
 	return
 	upload1:
 	info:=newwin[]
@@ -63,54 +70,27 @@ upload(winname="Upload"){
 		node.SetAttribute(a,b)
 	ftp.cleanup(),hwnd({rem:10})
 	return
-	increment:
-	info:=newwin[],ver:=info.version "." info.increment,cv:=RegExReplace(ver,"(\.|\D)"),list:=sn(node,"versions/version")
-	node:=vversion.ssn("//info[@file='" file "']")
-	if ssn(node,"versions/version[@number='" ver "']")
-		Return
-	root:=ssn(node,"versions"),new:=vversion.under({under:root,node:"version",att:{number:ver}})
-	while,ll:=list.item[A_Index-1]{
-		vv:=RegExReplace(ssn(ll,"@number").Text,"(\.|\D)")
-		if (cv>vv){
-			root.insertbefore(new,ll)
-			Break
-		}
-	}
 	uploadpopulate:
 	Gui,10:Default
-	list:=sn(node,"versions/*"),LV_Delete()
+	GuiControl,10:-Redraw,SysTreeView321
+	list:=vers.list(),TV_Delete(),value:=newwin[].version
 	while,ll:=list.item[A_Index-1]
-		num:=ssn(ll,"@number").text,LV_Add("",num)
-	LV_Modify(1,"Select Vis Focus AutoHDR")
+		num:=ssn(ll,"@number").text,tv:=TV_Add(num),tt:=num=value?tv:tt
+	GuiControl,10:+Redraw,SysTreeView321
+	TV_Modify(_:=tt?tt:TV_GetChild(0),"Select Vis Focus")
 	return
 	uplv:
-	if !LV_GetNext()
-		return
-	LV_GetText(ver,LV_GetNext()),main:=SubStr(ver,1,InStr(ver,".",0,0,1)-1),inc:=RegExReplace(ver,main ".")
-	if (ver!=lastver)
-		lastver:=ver
-	else
-		return
-	if (main=""&&inc="")
-		return
-	for a,b in [main,inc]
-		ControlSetText,Edit%A_Index%,%b%,% hwnd([10])
-	info:=vversion.ssn("//info[@file='" file "']/versions/version[@number='" ver "']")
-	GuiControl,10:-Redraw,Edit3
-	text:=info.text?RegExReplace(info.text,"\n","`r`n") "`r`n":""
-	ControlSetText,Edit3,% text,% hwnd([10])
-	ControlFocus,Edit3,% hwnd([10])
-	Sleep,100
-	ControlSend,Edit3,^{End},% hwnd([10])
-	GuiControl,10:+Redraw,Edit3
+	TV_GetText(ver,TV_GetSelection())
+	ControlSetText,Edit2,% vers.getver(ver),% hwnd([10])
+	ControlSetText,Edit1,%ver%,% hwnd([10])
+	ControlSend,Edit2,^{End},% hwnd([10])
 	return
 	remver:
+	Gui,10:Default
 	node:=vversion.ssn("//info[@file='" file "']")
-	while,LV_GetNext(){
-		LV_GetText(vn,LV_GetNext())
-		rem:=ssn(node,"versions/version[@number='" vn "']")
-		rem.ParentNode.RemoveChild(rem),LV_Delete(LV_GetNext())
-	}
-	goto uploadpopulate
+	TV_GetText(ver,TV_GetSelection())
+	rem:=ssn(node,"versions/version[@number='" ver "']")
+	rem.ParentNode.RemoveChild(rem)
+	TV_Delete(TV_GetSelection())
 	return
 }

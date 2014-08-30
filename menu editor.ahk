@@ -101,7 +101,7 @@ menu_editor(x=0){
 		return
 	if (ssn(top,"@menu").text="")
 		main:=top.ParentNode
-	new:=menus.under({under:main,node:"menu",att:{name:newname,last:1}})
+	new:=menus.under({under:main,node:"menu",att:{name:newname,last:1,clean:clean(newname)}})
 	main.insertbefore(new,top)
 	under.insertbefore(above,move)
 	menu_editor(1)

@@ -28,15 +28,9 @@ class ftp{
 		List[filename]:=file
 		FileDelete,% "temp\" namenoext ".text"
 		file:=FileOpen("temp\" namenoext ".text",2)
-		
-		
-		;RegExReplace(vversion.ssn("//info[@file='" name "']").text,"\n","`r`n")
-		;vversion.ssn("//info[@file='" name "']").text
-		
-		
 		upinfo:="",info:=vversion.sn("//info[@file='" name "']/versions/version")
 		while,in:=info.item[A_Index-1]
-			upinfo.=in.text "`r`n"
+			upinfo.=ssn(in,"@number").text "`r`n" in.text "`r`n"
 		file.write(upinfo)
 		file.seek(0)
 		List[namenoext ".text"]:=file
