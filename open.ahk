@@ -51,6 +51,8 @@ open(filelist="",show=""){
 	new.SetAttribute("time",time)
 	for a,b in strsplit(file1,"`n"){
 		if InStr(b,"#include"){
+			if InStr(b,";*")
+				Continue
 			b:=RegExReplace(b,"\/","\")
 			while,(d:=substr(b,instr(b," ",0,1,a_index)+1))&&instr(b," ",0,1,a_index){
 				newfn:=FileExist(dir "\" d)?dir "\" d:FileExist(d)?d:""
