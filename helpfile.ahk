@@ -10,7 +10,7 @@ command_help(){
 		Gui,45:+Resize -Caption +hwndmain
 		Gui,45:Add,ActiveX,% "w" w-20 " h" h-40 " vstuff hwndhwnd",explorer
 		WinGet,max,MinMax,% hwnd([1])
-		Gui,45:show,% Resize("get")
+		Gui,45:show,x%x% y%y% w%w% h%h%
 		if max
 			WinMaximize,ahk_id%main%
 		if (found1~="(FileExist|GetKeyState|InStr|SubStr|StrLen|StrSplit|WinActive|WinExist|Asc|Chr|GetKeyName|IsByRef|IsFunc|IsLabel|IsObject|NumGet|NumPut|StrGet|StrPut|RegisterCallback|Trim|Abs|Ceil|Exp|Floor|Log|Ln|Mod|Round|Sqrt|Sin|ASin|ACos|ATan)"){
