@@ -39,7 +39,7 @@ commit(commitmsg){
 	}
 	if !FileExist("github\" repo)
 		FileCreateDir,github\%repo%
-	uplist:=[],save(),filelist:=sn(current(1),"file/@file")
+	uplist:=[],save(),filelist:=sn(current(1),"file/@file"),safe:=[]
 	while,ff:=filelist.item[A_Index-1].text{
 		SplitPath,ff,file,dir
 		if A_Index=1
@@ -52,8 +52,7 @@ commit(commitmsg){
 		FileRead,compare,%localdir%\%file%
 		StringReplace,compare,compare,`r`n,`n,All
 		if (text!=compare){
-			FileDelete,%localdir%\%file%
-			FileAppend,%text%,%localdir%\%file%,utf-8
+			safe[localdir "\" file]:=text
 			StringReplace,gitdir,newdir,\,/,All
 			uplist[Trim(gitdir "/" file,"/")]:=text,up:=1
 		}
@@ -69,8 +68,13 @@ commit(commitmsg){
 	tree:=git.Tree(repo,current_commit,upload)
 	commit:=git.commit(repo,tree,current_commit,commitmsg,ea.name,ea.email)
 	info:=git.ref(repo,commit)
-	if info=200
+	if (info=200){
 		TrayTip,GitHub Update Complete,Updated files
+		for a,text in safe{
+			FileDelete,%a%
+			FileAppend,%text%,%a%,utf-8
+		}
+	}
 	Else
 		m("An Error Occured")
 }
