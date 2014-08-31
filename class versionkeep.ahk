@@ -58,10 +58,6 @@ class versionkeep{
 		Gui,%win%:Default
 		ControlGetText,start,%control%,% hwnd([win])
 		ControlGetFocus,Focus,% hwnd([win])
-		if (focus!=control){
-			ControlSend,%Focus%,{%A_ThisHotkey%},% hwnd([win])
-			Exit
-		}
 		RegExMatch(start,"^(.*\D)?(\d*)$",ver)
 		add:=InStr(direction,"up")?1:InStr(direction,"down")?-1:0
 		start:=ver1 ver2+add
