@@ -127,7 +127,7 @@ gui(){
 		csc({hwnd:s.main.1.sc}).2400
 	}
 	SplashTextOn,200,50,Indexing Files,Please Wait...
-	code_explorer.populate()
+	code_explorer.populate(),hotkeys([1],{"^c":"copy"})
 	SplashTextOff
 	Gui,1:TreeView,SysTreeView321
 }

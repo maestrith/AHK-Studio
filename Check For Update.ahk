@@ -14,10 +14,10 @@ Check_For_Update(){
 	setup(55)
 	info:=http.responsetext?http.responsetext:"Nothing new to download"
 	Gui,Add,Edit,w500 h500 ReadOnly,%info%
-	if (http.status)
-		Gui,Add,Button,gautoupdate,Update
+	Gui,Add,Button,gautoupdate,Update
+	Gui,Add,Button,x+5 gextrainfo,Changlog History
 	Gui,Show,,AHK Studio Version %version%
-	sleep,200
+		sleep,200
 	ControlSend,55:Edit1,^{Home}
 	return
 	autoupdate:
@@ -48,4 +48,7 @@ Check_For_Update(){
 	55GuiClose:
 	hwnd({rem:55})
 	return
+	extrainfo:
+	Run,https://github.com/maestrith/AHK-Studio/wiki/Version-Update-History
+	Return
 }

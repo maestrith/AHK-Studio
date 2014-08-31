@@ -1,3 +1,5 @@
 copy(){
-	Send,^c
+	copy:
+	Clipboard:=RegExReplace(csc().getseltext(),"\n","`r`n")
+	Return
 }
