@@ -5,6 +5,7 @@ class code_explorer{
 		for a,b in ["menu","file","label","method","function","hotkey","class"]
 			explore[b]:=[]
 		filename:=ssn(node,"@file").text,parentfile:=ssn(node.ParentNode,"@file").text
+		skip:=ssn(node,"@skip").text?1:0
 		code:=update({get:filename}),pos:=1
 		method:=[]
 		for type,find in {hotkey:"Om`n)^\s*([#|!|^|\+|~|\$|&|<|>|*]*?\w+)::",label:"Om`n)^\s*(\w*):[\s+;]"}{
@@ -58,6 +59,7 @@ class code_explorer{
 		}
 		pos:=fun.Pos(1)+len
 		this.explore[filename]:=explore
+		this.skip[filename]:=skip
 		for a,b in ["Hotkey","Label","Function","Class","Method"]
 			this.sort[parentfile,b]:=explore[b]
 	}
@@ -91,27 +93,33 @@ class code_explorer{
 		GuiControl,1:-Redraw,SysTreeView322
 		code_explorer.scan(current()),TV_Delete(),this.treeview:=[],roots:=[]
 		this.TreeView.filename:=[],this.TreeView.type:=[],this.TreeView.class:=[],this.TreeView.obj:=[]
+		SplashTextOff
 		for a,b in code_explorer.explore
-			for c,f in b
-				for _,d in f
+		for c,f in b{
+			for _,d in f
+			{
+				file:=d.root
+				if this.skip[d.file]
+					continue
+				if this.skip[file]
+					Continue
+				SplitPath,file,filename
+				if !this.TreeView.filename[filename]
+					this.TreeView.filename[filename]:=TV_Add(filename)
+				if (c!="method")
+					if !item:=this.TreeView.type[filename,c]
+						item:=this.TreeView.type[filename,c]:=TV_Add(c,this.TreeView.filename[filename])
+				if (c="method")
+					this.treeview.obj[TV_Add(d.text,this.TreeView.class[filename,d.class],"Sort")]:=d
+				Else if (c="class")
 				{
-					file:=d.root
-					SplitPath,file,filename
-					if !this.TreeView.filename[filename]
-						this.TreeView.filename[filename]:=TV_Add(filename)
-					if (c!="method")
-						if !item:=this.TreeView.type[filename,c]
-							item:=this.TreeView.type[filename,c]:=TV_Add(c,this.TreeView.filename[filename])
-						if (c="method")
-							this.treeview.obj[TV_Add(d.text,this.TreeView.class[filename,d.class],"Sort")]:=d
-						Else if (c="class")
-						{
-						if !this.TreeView.class[filename,d.text]
-							this.TreeView.obj[this.TreeView.class[filename,d.text]:=TV_Add(d.text,item,"Sort")]:=d
-						}
-					else if (c!="method")
-						this.TreeView.obj[TV_Add(d.text,item,"Sort")]:=d
+					if !this.TreeView.class[filename,d.text]
+						this.TreeView.obj[this.TreeView.class[filename,d.text]:=TV_Add(d.text,item,"Sort")]:=d
 				}
+				else if (c!="method")
+					this.TreeView.obj[TV_Add(d.text,item,"Sort")]:=d
+			}
+		}
 		GuiControl,1:+Redraw,SysTreeView322
 		return
 		GuiContextMenu:

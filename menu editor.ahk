@@ -205,7 +205,7 @@ menu_editor(x=0){
 	menu_editor(1)
 	return
 	sortmenus:
-	for a,b in StrSplit("File,Edit,Options,Quick_Find_Settings,Auto_Indent,Special_Menu,Help",","){
+	for a,b in StrSplit("File,Edit,Options,Quick_Find_Settings,Auto_Indent,Tools,Special_Menu,Help",","){
 		root:=menus.ssn("//*[@clean='" b "']")
 		list:=menus.sn("//*[@clean='" b "']/*"),order:=[]
 		while,ll:=list.item[A_Index-1]

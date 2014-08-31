@@ -86,7 +86,7 @@ GuiDropFiles:
 tv(open(A_GuiEvent))
 return
 #Include %A_ScriptDir%
-#Include about.ahk
+#Include about.ahk ;*
 #Include activesc.ahk
 #Include Add Spaces After Commas.ahk
 #Include add spaces before and after commas.ahk

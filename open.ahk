@@ -51,10 +51,13 @@ open(filelist="",show=""){
 	new.SetAttribute("time",time)
 	for a,b in strsplit(file1,"`n"){
 		if InStr(b,"#include"){
-			if InStr(b,";*")
-				Continue
+			skip:=InStr(b,";*")?1:0
 			b:=RegExReplace(b,"\/","\")
 			while,(d:=substr(b,instr(b," ",0,1,a_index)+1))&&instr(b," ",0,1,a_index){
+				if (skip){
+					StringReplace,d,d,`;*,,All
+					d:=Trim(d)
+				}
 				newfn:=FileExist(dir "\" d)?dir "\" d:FileExist(d)?d:""
 				SplitPath,newfn,ff
 				if (ff=".."){
@@ -74,7 +77,7 @@ open(filelist="",show=""){
 		SplitPath,newfn,fn
 		child:=TV_Add(fn,root,"Sort")
 		top:=files.ssn("//main[@file='" filename "']")
-		new:=files.under({under:top,node:"file",att:{file:newfn,include:b,tv:child,filename:fn}})
+		new:=files.under({under:top,node:"file",att:{file:newfn,include:b,tv:child,filename:fn,skip:skip}})
 		FileGetTime,time,%newfn%
 		new.SetAttribute("time",time)
 		v.filelist[newfn]:=1
