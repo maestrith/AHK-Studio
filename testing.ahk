@@ -5,11 +5,9 @@ testing(){
 	if !(ea.name&&ea.email&&ea.token&&ea.owner)
 		return update_github_info()
 	git:=new github(ea.owner,ea.token)
+	return sha:=git.getref(repo)
 	
-	sha:=git.getref(repo)
 	;GET /repos/:owner/:repo/git/trees/:sha
-	;send(verb,url,data="")
-	;this.token
 	url:=git.url "/repos/" git.owner "/" repo "/git/commits/" sha git.token
 	;"tree":{"sha":"135a292d692fc79ab48f8f0cbbda201d81b20af1"
 	;url:=git.url "/repos/" git.owner "/" repo "/git/trees/" sha git.token ;get the tree sha

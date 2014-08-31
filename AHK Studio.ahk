@@ -110,12 +110,15 @@ return
 #Include class s.ahk
 #Include class search.ahk
 #Include class toolbar.ahk
+#Include class versionkeep.ahk
+#Include class windowtracker.ahk
 #Include class xml.ahk
 #Include clean.ahk
 #Include Clear Line Status.ahk
 #Include close.ahk
 #Include Code Vault.ahk
 #Include color.ahk
+#Include commit.ahk
 #Include Compare.ahk
 #Include compile main gist.ahk
 #Include compile.ahk
@@ -170,6 +173,7 @@ return
 #Include Hotkey Search.ahk
 #Include hotkeys.ahk
 #Include hwnd.ahk
+#Include inputbox.ahk
 #Include Insert Code Vault.ahk
 #Include json.ahk
 #Include jump to project.ahk
@@ -277,6 +281,3 @@ return
 #Include window.ahk
 #Include WM COPYDATA.ahk
 #Include Words In Document.ahk
-#Include inputbox.ahk
-#Include class windowtracker.ahk
-#Include class versionkeep.ahk

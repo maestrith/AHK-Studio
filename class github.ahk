@@ -43,8 +43,7 @@ class github{
 		url:=this.url "/repos/" this.owner "/" repo "/git/refs" this.token
 		this.cmtsha:=this.sha(this.Send("GET",url))
 		url:=this.url "/repos/" this.owner "/" repo "/commits/" this.cmtsha this.token
-		info:=this.Send("GET",url)
-		RegExMatch(info,"U)tree.:\{.sha.:.(.*)" Chr(34),found)
+		RegExMatch(this.Send("GET",url),"U)tree.:\{.sha.:.(.*)" Chr(34),found)
 		return found1
 	}
 	blob(repo,text){
@@ -60,7 +59,6 @@ class github{
 	send(verb,url,data=""){
 		this.http.Open(verb,url)
 		this.http.send(data)
-		FileAppend,% this.http.GetAllResponseHeaders "`n",response.txt
 		return this.http.ResponseText
 	}
 	tree(repo,parent,blobs){

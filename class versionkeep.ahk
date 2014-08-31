@@ -30,21 +30,21 @@ class versionkeep{
 		return sn(node,"versions/*")
 	}
 	settext(cv,text){
-		node:=vversion.ssn("//info[@file='" ssn(current(1),"@file").text "']/versions/version[@number='" cv "']")
+		if !node:=vversion.ssn("//info[@file='" ssn(current(1),"@file").text "']/versions/version[@number='" cv "']")
+			node:=this.Add(cv),ret:="update"
 		node.text:=text
+		return ret
 	}
 	Add(vers){
 		node:=this.node
 		if ssn(node,"versions/version[@number='" vers "']")
-			return 0
+			return node
 		cv:=RegExReplace(vers,"(\.|\D)"),list:=sn(node,"versions/version")
-		if ssn(node,"versions/version[@number='" vers "']")
-			Return
-		root:=ssn(node,"versions"),new:=vversion.under({under:root,node:"version",att:{number:vers}})
+		root:=ssn(node,"versions"),node:=vversion.under({under:root,node:"version",att:{number:vers}})
 		while,ll:=list.item[A_Index-1]{
 			vv:=RegExReplace(ssn(ll,"@number").Text,"(\.|\D)")
 			if (cv>vv){
-				root.insertbefore(new,ll)
+				root.insertbefore(node,ll)
 				Break
 			}
 		}
