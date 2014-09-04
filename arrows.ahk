@@ -5,13 +5,10 @@ arrows(){
 	if selcount>1
 		loop,%selcount%
 			pos[A_Index-1]:={caret:sc.2577(A_Index-1),anchor:sc.2579(A_Index-1)}
-	
 	ControlGetFocus,Focus,A
- 	if !InStr(Focus,"scintilla"){
- 		Send,{%A_ThisLabel%}
- 		return
-	}
 	Send,{%A_ThisLabel%}
+ 	if !InStr(Focus,"scintilla")
+		return
 	uppos()
 	for a,b in pos{
 		add:=A_ThisLabel="left"?-1:1
@@ -32,11 +29,9 @@ arrows(){
 	+left:
 	+right:
 	ControlGetFocus,Focus,A
-	if !InStr(Focus,"scintilla"){
-		Send,{%A_ThisLabel%}
-		return
-	}
 	Send,{%A_ThisLabel%}
+	if !InStr(Focus,"scintilla")
+		return
 	sc:=csc()
 	selcount:=sc.2570,pos:=[]
 	if (selcount>1){

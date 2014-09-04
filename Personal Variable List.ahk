@@ -1,12 +1,9 @@
 Personal_Variable_List(){
 	static
-	qf:=setup(6)
-	Gui,Add,ListView,w200 h400,Variables
-	Gui,Add,Edit,w200 vvariable
-	Gui,Add,Button,gaddvar Default,Add
-	Gui,Add,Button,x+10 gvdelete,Delete Selected
+	newwin:=new windowtracker(6)
+	newwin.Add(["ListView,w200 h400,Variables,wh","Edit,w200 vvariable,,yw","Button,gaddvar Default,Add,y","Button,x+10 gvdelete,Delete Selected,y"])
+	newwin.Show("Variables")
 	ControlFocus,Edit1,% hwnd([6])
-	Gui,Show,,Variables
 	vars:=settings.sn("//Variables/*")
 	while,vv:=vars.item(A_Index-1)
 		LV_Add("",vv.text)
@@ -14,15 +11,12 @@ Personal_Variable_List(){
 	return
 	vdelete:
 	while,LV_GetNext(){
-		LV_GetText(string,LV_GetNext())
-		this:=settings.ssn("//Variable[text()='" string "']")
-		this.parentnode.removechild(this)
-		LV_Delete(LV_GetNext())
+		LV_GetText(string,LV_GetNext()),rem:=settings.ssn("//Variable[text()='" string "']")
+		rem.parentnode.removechild(rem),LV_Delete(LV_GetNext())
 	}
 	return
 	addvar:
-	Gui,6:Submit,Nohide
-	if !variable
+	if !variable:=newwin[].variable
 		return
 	if !settings.ssn("//Variables/Variable[text()='" variable "']")
 		settings.add({path:"Variables/Variable",text:variable,dup:1}),LV_Add("",variable)
@@ -31,7 +25,6 @@ Personal_Variable_List(){
 	return
 	6GuiClose:
 	6GuiEscape:
-	keywords(),hwnd({rem:6})
-	refreshthemes()
+	keywords(),hwnd({rem:6}),refreshthemes()
 	return
 }

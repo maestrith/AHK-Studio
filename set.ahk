@@ -1,4 +1,3 @@
 set(){
-	sc:=csc()
-	color(sc)
+	sc:=csc(),color(sc)
 }

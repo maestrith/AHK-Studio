@@ -1,33 +1,18 @@
 menu_editor(x=0){
-	static hwnd
-	main:="main"
+	static hwnd,newwin,main:="main",TreeView
 	if !x{
-		Gui,2:destroy
-		Gui,2:+hwndhwnd +Owner1
-		setup(2)
-		Gui,2:Add,Text,,Control+UP/DOWN/LEFT/RIGHT will move items
-		Gui,2:Add,ComboBox,gmesearch w200
-		hotkeys([2],{"Del":"deletenode"})
-		Hotkey,^up,moveup,On
-		Hotkey,^down,movedown,On
-		Hotkey,^left,moveover,On
-		Hotkey,^right,moveunder,On
-		Gui,2:Add,TreeView,w500 h400 hwndhwnd
-		Gui,2:Add,Button,gaddmenu,Add A New Menu
-		Gui,2:Add,Button,x+10 gchangeitem,Change Item
-		Gui,2:Add,Button,x+10 gaddsep,Add Separator
-		Gui,2:Add,Button,x+10 gedithotkey Default,Edit Hotkey
-		Gui,2:Add,Button,xm gmenudefault,Re-Load Defaults
-		Gui,2:Add,Button,x+10 gsortmenus,Sort Menus Alphabetically
-		Gui,2:Show,% Center(2),Menu Editor
+		newwin:=new windowtracker(2)
+		newwin.Add(["Text,,Control+UP/DOWN/LEFT/RIGHT will move items","ComboBox,gmesearch w200","TreeView,w500 h400 hwndhwnd,,wh","Button,gaddmenu,Add A New Menu,y","Button,x+10 gchangeitem,Change Item,y","Button,x+10 gaddsep,Add Separator,y","Button,x+10 gedithotkey Default,Edit Hotkey,y","Button,xm gmenudefault,Re-Load Defaults,y","Button,x+10 gsortmenus,Sort Menus Alphabetically,y"])
+		hotkeys([2],{"Del":"deletenode","^up":"moveup","^down":"movedown","^left":"moveover","^right":"moveunder"})
+		newwin.Show("Menu Editor")
+		ControlGet,TreeView,hwnd,,SysTreeView321,% hwnd([2])
 	}
 	Gui,1:Menu
 	Gui,2:Default
 	list:=menus.sn("//main/descendant::*")
 	root:=0
 	GuiControl,2:-Redraw,SysTreeView321
-	del:=[],next:=0,lll:=""
-	TV_Delete()
+	del:=[],next:=0,lll:="",TV_Delete()
 	while,ll:=list.item[A_Index-1]{
 		hotkey:=ssn(ll,"@hotkey").text
 		hot:=convert_hotkey(hotkey)
@@ -96,7 +81,7 @@ menu_editor(x=0){
 	addmenu:
 	Gui,2:Default
 	top:=menus.ssn("//*[@tv='" TV_GetSelection() "']")
-	newname:=InputBox(csc().sc,"New Menu Item","Enter a new name (`&File for &File)")
+	newname:=InputBox(TreeView,"New Menu Item","Enter a new name for a menu/item")
 	if ErrorLevel
 		return
 	if (ssn(top,"@menu").text="")
@@ -160,7 +145,7 @@ menu_editor(x=0){
 	current:=TV_GetSelection()
 	item:=menus.ssn("//*[@tv='" current "']")
 	item.setattribute("last",1)
-	newitem:=InputBox(csc().sc,"Change Menu Name","Input a new name",ssn(item,"@name").text)
+	newitem:=InputBox(TreeView,"Change Menu Name","Input a new name",ssn(item,"@name").text)
 	if ErrorLevel
 		return
 	menus.ssn("//*[@tv='" current "']/@name").text:=newitem

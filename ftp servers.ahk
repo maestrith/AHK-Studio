@@ -1,11 +1,10 @@
 ftp_servers(){
 	static listview
-	setup(9)
-	Gui,Add,ListView,w300 h300 hwndlistview,Server|Username|Password|Port
-	Gui,Add,Button,gnewserver,New Server
-	Gui,Add,Button,gdeleteserver,Delete Server
+	newwin:=new windowtracker(9)
+	newwin.Add(["ListView,w300 h300 hwndlistview -Multi,Server|Username|Password|Port,wh","Button,gnewserver,New Server,y","Button,gdeleteserver,Delete Server,y"])
+	ControlGet,listview,hwnd,,SysListView321,% hwnd([9])
 	popftp()
-	Gui,Show,,FTP Server Settings
+	newwin.Show("FTP Server Settings")
 	return
 	9GuiEscape:
 	9GuiClose:

@@ -52,9 +52,6 @@ class ftp{
 		upver:="",info:=sn(node,"versions/version")
 		while,in:=info.item[A_Index-1]
 			upver.=in.text "`r`n"		
-		
-		
-		
 		for a,b in list{
 			if upver{
 				ff:=!InStr(a,".exe")?A_ScriptDir "\temp\" a:dir "\" namenoext ".exe"

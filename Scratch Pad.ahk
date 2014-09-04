@@ -1,5 +1,6 @@
 Scratch_Pad(){
 	static file
+	;class-ify
 	if !IsObject(file){
 		FileCreateDir,Projects
 		file:=FileOpen("projects\Scratch Pad.ahk","rw")

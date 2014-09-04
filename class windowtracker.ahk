@@ -2,8 +2,7 @@ class WindowTracker{
 	static winlist:=[],set:=[],defaulttext:="i)(versioninfo)"
 	__New(win){
 		DetectHiddenWindows,On
-		OnMessage(0x232,"Resize")
-		Gui,%win%:+hwndhwnd
+		OnMessage(0x232,"Resize"),hwnd:=setup(win)
 		this.win:=win,this.hwnd:=hwnd,this.ahkid:="ahk_id" hwnd,this.type:=[]
 		this.tracker:=[],this.resize:=[],WindowTracker.winlist[win]:=this,this.varlist:=[]
 		WindowTracker.set:=new xml("window","lib\Window.xml")
@@ -33,17 +32,17 @@ class WindowTracker{
 		for a,b in this.resize
 			this.track(b.control,b.pos)
 		Gui,% this.win ":+MinSize"
+		root:=this.root()
 		for a,b in ["x","y","w","h"]{
-			var:=WindowTracker.set.ssn("//window[@name='" this.win "']/@" b).text
-			if (var="error"||var=""){
+			var:=ssn(root,"@" b).text
+			if (var=""){
 				pos:=""
 				Break
 			}
 			pos.=b var " "
 		}
 		Gui,% this.win ":Show",%pos%,%title%
-		MinMax:=WindowTracker.set.ssn("//window[@name='" this.win "']/@minmax").text
-		if MinMax
+		if ssn(root,"@minmax").text
 			WinMaximize,% this.ahkid
 	}
 	track(control,pos){
@@ -59,14 +58,6 @@ class WindowTracker{
 		for a,b in Control{
 			b:=StrSplit(b,",")
 			RegExMatch(b.2,"U)\bv(.*)\b",variable)
-			info:=WindowTracker.set.ssn("//window[@name='" this.win "']/variables/@" variable1).text
-			if (variable1~=WindowTracker.defaulttext)
-				info:=WindowTracker.set.ssn("//window[@name='" this.win "']/variables").text
-			if (b.5&&b.1!="Checkbox"){
-				b.3:=info="Error"?"":info
-			}Else if (b.1~="i)(Checkbox|Radio)"&&info!="Error"){
-				b.2.=info?" Checked":""
-			}
 			if (variable1)
 				hwnd:=this.vars(b,variable1)
 			Else
@@ -105,26 +96,14 @@ class WindowTracker{
 	}
 	Exit(win){
 		size:=Resize("other")
-		for a,b in WindowTracker.winlist{
-			if (a!=win)
-				continue
-			window:=b.root()
-			if !vars:=ssn(window,"variables")
-				vars:=WindowTracker.set.under({under:window,node:"variables"})
-			for c,d in b.vars{
-				if (b.type[c]~="i)(Checkbox|Radio)")
-					ControlGet,d,Checked,,,% "ahk_id" b[c]
-				if (c~=WindowTracker.defaulttext)
-					vars.text:=d
-				else
-					vars.SetAttribute(c,d)
-			}
-			WinGet,MinMax,MinMax,% b.ahkid
-			window.SetAttribute("minmax",minmax)
-			for c,d in size[b.win]
-				window.SetAttribute(c,d)
-			WindowTracker.set.save(1)
-			Break
-		}
+		if !WindowTracker.winlist[win]
+			Return
+		cw:=WindowTracker.winlist[win]
+		root:=cw.root()
+		for a,b in size[win]
+			root.SetAttribute(a,b)
+		WinGet,MinMax,MinMax,% cw.ahkid
+		root.SetAttribute("minmax",minmax)
+		WindowTracker.set.save(1)
 	}
 }

@@ -130,4 +130,8 @@ omni_search(start=""){
 	omniend:
 	hwnd({rem:20})
 	return
+	20GuiClose:
+	20GuiEscape:
+	hwnd({rem:20})
+	Return
 }

@@ -23,13 +23,11 @@
 		Multiple Segments (discuss how segments work and show them)
 		Quick Find
 		GitHub Integration
-		
 	}
 	Don_Corleon(){
 		Multiple Scintilla windows over/under rather than side by side.
 		resizable windows (all)
 	}
-	get github working
 	tidy up script:
 	-Arrows.ahk is where I left off.
 	KeyboardCat
@@ -86,8 +84,8 @@ GuiDropFiles:
 tv(open(A_GuiEvent))
 return
 #Include %A_ScriptDir%
-#Include about.ahk ;*
-#Include activesc.ahk
+#Include about.ahk
+
 #Include Add Spaces After Commas.ahk
 #Include add spaces before and after commas.ahk
 #Include Add Spaces Before Commas.ahk

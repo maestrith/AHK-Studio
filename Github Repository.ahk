@@ -3,8 +3,8 @@ Github_Repository(){
 	verfile:=new versionkeep
 	if !settings.ssn("//github")
 		settings.Add({path:"github",att:{owner:"",email:"",name:"",token:""}})
-	list:=sn(verfile.node,"versions/version"),info:=settings.ea("//github"),setup(25),newwin:=new WindowTracker(25)
-	newwin.add(["Text,,Use Ctrl+Up/Down to increment the version","TreeView,w200 h200 AltSubmit geditgr,,w","Text,,Version Number:","Edit,w200 ggrvn","Button,ggraddver -TabStop,Add Version","Text,,Commit Info:","Edit,w200 r5 -Wrap ggredit,,wh","Button,gcommit Default,Commit,y"])
+	list:=sn(verfile.node,"versions/version"),info:=settings.ea("//github"),newwin:=new WindowTracker(25)
+	newwin.add(["Text,,Use Ctrl+Up/Down to increment the version","TreeView,w300 h200 AltSubmit geditgr,,w","Text,,Version Number:","Edit,w300 ggrvn","Button,ggraddver -TabStop,Add Version","Text,,Commit Info:","Edit,w300 r5 -Wrap ggredit,,wh","Button,gcommit Default,Commit,y"])
 	newwin.Show("Github Repository"),tv:=[],githubinfo:=TV_Add("Github Info"),hotkeys([25],{"^up":"grup","^down":"grdown"})
 	change:={email:"Github Email",name:"Your Name (for commits)",owner:"Username for Github",token:"API Token for Github"}
 	for a,b in info

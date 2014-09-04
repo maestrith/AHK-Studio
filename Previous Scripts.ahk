@@ -8,15 +8,11 @@ Previous_Scripts(filename=""){
 		if !settings.ssn("//previous_scripts/script[Text()='" filename "']")
 			settings.Add({path:"previous_scripts/script",text:filename,dup:1})
 	}Else if (filename=""){
-		setup(21)
-		Gui,Add,Edit,w400 gpss vfind
-		Gui,Add,ListView,w400 h300 gpreviousscript Multi,Past Scripts
-		scripts:=settings.sn("//previous_scripts/*")
-		Gui,Add,Button,gpssel Default,Open
-		Gui,Add,Button,x+10 gcleanup,Clean up files
- 		Gui,Add,Button,x+10 gdeleteps,Delete Selected
+		newwin:=new windowtracker(21)
+		newwin.Add(["Edit,w400 gpss vfind,,w","ListView,w400 h300 gpreviousscript Multi,Previous Scripts,wh","Button,gpssel Default,Open,y","Button,x+10 gcleanup,Clean up files,y","Button,x+10 gdeleteps,Delete Selected,y"])
+		newwin.Show("Previous Scripts")
 		gosub,populateps
-		Gui,Show,,Previous Scripts
+		scripts:=settings.sn("//previous_scripts/*")
 		Return
 		21GuiClose:
 		21GuiEscape:

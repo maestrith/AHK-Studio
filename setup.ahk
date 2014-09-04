@@ -1,8 +1,6 @@
 setup(window,nodisable=""){
-	ea:=settings.ea(settings.ssn("//fonts/font[@style='5']"))
-	Background:=ea.Background,font:=ea.font,color:=RGB(ea.color)
-	Background:=Background?Background:0
-	size:=10
+	ea:=settings.ea(settings.ssn("//fonts/font[@style='5']")),size:=10
+	Background:=ea.Background,font:=ea.font,color:=RGB(ea.color),Background:=Background?Background:0
 	Gui,%window%:Destroy
 	Gui,%window%:Default
 	Gui,+hwndhwnd

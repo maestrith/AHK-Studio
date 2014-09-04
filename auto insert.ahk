@@ -1,17 +1,12 @@
 Auto_Insert(){
 	static
-	setup(20)
-	Gui,Add,ListView,w200 h200 AltSubmit gchange,Entered Key|Added Key
-	Gui,Add,Text,,Entered Key:
-	Gui,Add,Edit,venter x+10 w50
-	Gui,Add,Text,xm,Added Key:
-	Gui,Add,Edit,vadd x+10 w50
-	Gui,Add,Button,xm gaddkey Default,Add Keys
-	Gui,Add,Button,x+10 gremkey,Remove Selected
+	wname:="Auto_Insert"
+	newwin:=new windowtracker(wname)
+	newwin.Add(["ListView,w200 h200 AltSubmit gchange,Entered Key|Added Key,wh","Text,,Entered Key:,y","Edit,venter x+10 w50,,yw","Text,xm,Added Key:,y","Edit,vadd x+10 w50,,yw","Button,xm gaddkey Default,Add Keys,y","Button,x+10 gremkey,Remove Selected,y"])
+	newwin.Show("Auto Insert")
 	autoadd:=settings.sn("//autoadd/*")
 	while,aa:=autoadd.item(a_index-1)
 		ea:=xml.ea(aa),LV_Add("",Chr(ea.trigger),Chr(ea.add))
-	Gui,Show,,Auto Insert
 	return
 	change:
 	if A_GuiEvent not in Normal,i
@@ -19,11 +14,11 @@ Auto_Insert(){
 	if !LV_GetNext()
 		return
 	LV_GetText(in,LV_GetNext()),LV_GetText(out,LV_GetNext(),2)
-	ControlSetText,Edit1,%in%,% hwnd([20])
-	ControlSetText,Edit2,%out%,% hwnd([20])
+	ControlSetText,Edit1,%in%,% hwnd([wname])
+	ControlSetText,Edit2,%out%,% hwnd([wname])
 	return
 	addkey:
-	Gui,Submit,Nohide
+	value:=newwin[],enter:=value.enter,add:=value.add
 	if !(enter&&add)
 		return m("Both values need to be filled in")
 	if StrLen(enter)!=1||StrLen(add)!=1
@@ -34,8 +29,8 @@ Auto_Insert(){
 	settings.add({path:"autoadd/key",att:{trigger:Asc(enter),add:Asc(add)},dup:dup})
 	LV_Add("",enter,add)
 	Loop,2
-		ControlSetText,Edit%A_Index%,,% hwnd([20])
-	ControlFocus,Edit1,% hwnd([20])
+		ControlSetText,Edit%A_Index%,,% hwnd([wname])
+	ControlFocus,Edit1,% hwnd([wname])
 	bracesetup()
 	return
 	remkey:
@@ -48,10 +43,10 @@ Auto_Insert(){
 		LV_Delete(LV_GetNext())
 	}
 	Loop,2
-		ControlSetText,Edit%A_Index%,,% hwnd([20])
+		ControlSetText,Edit%A_Index%,,% hwnd([wname])
 	return
-	20GuiClose:
-	20GuiEscape:
-	hwnd({rem:20})
+	Auto_InsertGuiClose:
+	Auto_InsertGuiEscape:
+	hwnd({rem:wname})
 	return
 }

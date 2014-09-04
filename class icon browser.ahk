@@ -1,15 +1,11 @@
 class icon_browser{
-	static start:="",window:=[],keep:=[]
+	static start:="",window:=[],keep:=[],newwin
 	__New(info){
 		win=85
-		Gui,%win%:Destroy
-		Gui,%win%:Default
-		Gui,Add,ListView,w700 h500 hwndlv gselect AltSubmit,Icons
-		Gui,Add,Button,gibprev,Previous 50 Icons
-		Gui,Add,Button,x+10 gibnext,Next 50 Icons
-		Gui,Add,Button,xm gloadfile,Load File
-		Gui,Add,Button,x+10 gloaddefault,Load Default Icons
-		Gui,Show,,Icon Browser
+		newwin:=new windowtracker(win)
+		newwin.Add(["ListView,w700 h500 hwndlv gselect AltSubmit,Icons,wh","Button,gibprev,Previous 50 Icons,y","Button,x+10 gibnext,Next 50 Icons,y","Button,xm gloadfile,Load File,y","Button,x+10 gloaddefault,Load Default Icons,y"])
+		ControlGet,lv,hwnd,,SysListView321,% hwnd([85])
+		newwin.Show("Icon Browser")
 		this.file:=info.1.file?info.1.file:"shell32.dll"
 		this.file:=InStr(this.file,".ahk")?A_AhkPath:this.file
 		GuiControl,+Icon,%lv%
@@ -24,7 +20,9 @@ class icon_browser{
 		this.id:=info.2,this.ahkid:=info.3,this.tb:=info.4
 		return
 		85GuiEscape:
-		Gui,85:Destroy
+		85GuiClose:
+		hwnd({rem:85})
+		;Gui,85:Destroy
 		return
 		loaddefault:
 		this:=icon_browser.keep[1]

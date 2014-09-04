@@ -1,6 +1,6 @@
 upload(winname="Upload"){
 	static
-	static ControlList:={compile:"Button4",version:"Edit1",dir:"Edit4",gistversion:"Button5",upver:"Button6",versstyle:"Button7",upgithub:"Button8"}
+	static ControlList:={compile:"Button4",version:"Edit1",dir:"Edit3",gistversion:"Button5",upver:"Button6",versstyle:"Button7",upgithub:"Button8"}
 	uphwnd:=setup(10),lastver:="",compilever:=""
 	list:=settings.sn("//ftp/server/@name"),lst:="Choose a server...|"
 	while,ll:=list.item[A_Index-1]
@@ -14,6 +14,7 @@ upload(winname="Upload"){
 	node:=vversion.ssn("//info[@file='" file "']")
 	for a,b in vversion.ea(node)
 		GuiControl,10:,% ControlList[a],%b%
+	GuiControl,10:ChooseString,ComboBox1,% ssn(node,"@server").text
 	vers:=new versionkeep,node:=vers.node
 	Gosub uploadpopulate
 	LV_Modify(1,"Vis Focus Select")
