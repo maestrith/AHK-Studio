@@ -1,5 +1,5 @@
 Previous_Scripts(filename=""){
-	static files:=[],find
+	static files:=[],find,newwin
 	if (filename){
 		scripts:=settings.sn("//previous_scripts/*")
 		while,scr:=scripts.item[A_Index-1]
@@ -57,8 +57,7 @@ Previous_Scripts(filename=""){
 	}
 	Return
 	pss:
-	Gui,21:Submit,Nohide
-	LV_Delete()
+	LV_Delete(),find:=newwin[].find
 	for a,b in files
 		if InStr(a,find)
 			LV_Add("",b)
