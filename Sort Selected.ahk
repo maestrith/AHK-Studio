@@ -4,7 +4,7 @@ Sort_Selected(){
 	if !Text
 		return m("Please select some text first.")
 	newwin:=new windowtracker(18)
-	newwin.Add(["Edit,w200 vdel,,w","Button,x+10 gsortdel,Sort By Delimeter,x","Button,x+10 gsortbyslash,Sort By \,x","Edit,xm w500 h500,,wh","Button,greplace,Replace Selected,y"])
+	newwin.Add(["Edit,w200 vdel,,w","Button,x+10 gsortdel,Sort By Delimeter,x","Button,x+10 gsortbyslash,Sort By \,x","Edit,xm w500 h500 vtext,,wh","Button,greplace,Replace Selected,y"])
 	StringReplace,text,text,`n,`r`n,All
 	ControlSetText,Edit2,%text%,% hwnd([18])
 	newwin.Show("Sort Selected")
@@ -16,7 +16,6 @@ Sort_Selected(){
 	Return
 	sortdel:
 	nw:=newwin[],del:=nw.del,text:=nw.text
-	Gui,18:Submit,Nohide
 	Sort,text,D%del%
 	StringReplace,text,text,`n,`r`n,all
 	ControlSetText,Edit2,%text%,% hwnd([18])
@@ -26,7 +25,7 @@ Sort_Selected(){
 	hwnd({rem:18})
 	Return
 	replace:
-	Gui,18:Submit
+	text:=newwin[].text
 	StringReplace,text,text,`r`n,`n,all
 	csc().2170(0,text)
 	hwnd({rem:18})
