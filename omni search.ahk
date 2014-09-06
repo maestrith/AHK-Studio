@@ -73,7 +73,7 @@ omni_search(start=""){
 	osgo:
 	Gui,20:Default
 	LV_GetText(num,LV_GetNext(),6)
-	item:=Select[num]
+	item:=Select[num],search:=newwin[].search,pre:=SubStr(search,1,1),pre:=omni_search_class.prefix[pre]?pre:""
 	if (type:=item.launch){
 		text:=item.text
 		if (type="label")
