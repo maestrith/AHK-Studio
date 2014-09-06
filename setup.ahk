@@ -8,6 +8,9 @@ setup(window,nodisable=""){
 		Gui,+Owner1 -0x20000
 		Gui,1:+Disabled
 	}
+	WinGet,ExStyle,ExStyle,% hwnd([1])
+	if (ExStyle & 0x8)
+		Gui,%window%:+AlwaysOnTop
 	Gui,+Owner1
 	Gui,color,% RGB(Background),% RGB(Background)
 	Gui,Font,% "s" size " c" color " bold",%font%

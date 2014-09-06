@@ -105,6 +105,7 @@ qf(){
 	onoff:=settings.ssn("//Quick_Find_Settings/@ " A_ThisLabel).text?0:1
 	att:=[],att[A_ThisLabel]:=onoff
 	settings.add({path:"Quick_Find_Settings",att:att})
+	;issues with quick find stuff.
 	togglemenu(A_ThisLabel)
 	v.options[A_ThisLabel]:=onoff
 	lastfind:=""

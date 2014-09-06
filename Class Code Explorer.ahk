@@ -1,5 +1,5 @@
 class code_explorer{
-	static explore:=[],TreeView:=[],sort:=[],function:="Oim`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{"
+	static explore:=[],TreeView:=[],sort:=[],function:="Om`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{"
 	scan(node){
 		explore:=[],bits:=[]
 		for a,b in ["menu","file","label","method","function","hotkey","class"]
@@ -12,7 +12,7 @@ class code_explorer{
 			pos:=1
 			while,pos:=RegExMatch(code,find,fun,pos){
 				np:=StrPut(SubStr(code,1,fun.Pos(1)),"utf-8")-1-(StrPut(SubStr(fun.1,1,1),"utf-8")-1)
-				explore[type].Insert({type:type,file:filename,pos:np,text:fun.1,root:parentfile})
+				explore[type].Insert({type:type,file:filename,pos:np,text:fun.1,root:parentfile,order:"text,type,file"})
 				pos:=fun.pos(1)+1
 			}
 		}
@@ -22,9 +22,11 @@ class code_explorer{
 			test:=[]
 			for type,find in {class:"Om`ni)^[\s*]?(class[\s*]\w+)",function:this.function}{
 				if pos:=RegExMatch(code,find,fun,pos){
+					if (type="function"&&fun.1="if")
+						Continue
 					np:=StrPut(SubStr(code,1,fun.Pos(1)),"utf-8")-1-(StrPut(SubStr(fun.1,1,1),"utf-8")-1)
 					if pos
-						test[pos]:={type:type,file:filename,pos:np,text:fun.1,root:parentfile,cpos:pos}
+						test[pos]:={type:type,file:filename,pos:np,text:fun.1,root:parentfile,cpos:pos,args:fun.3}
 					pos:=fun.pos(1)+1
 				}
 				pos:=lastpos
@@ -43,15 +45,16 @@ class code_explorer{
 					left.=b "`n"
 				}
 				pos:=lastpos:=min.cpos+StrLen(left)
-				explore.class.Insert({type:"class",file:filename,pos:min.pos,text:min.text,root:min.root})
+				explore.class.Insert({type:"class",file:filename,pos:min.pos,text:min.text,root:min.root,order:"text,type,root"})
 				npos:=1
 				while,npos:=RegExMatch(left,this.function,method,npos){
 					np:=StrPut(SubStr(left,1,method.Pos(1)),"utf-8")-1-(StrPut(SubStr(method.1,1,1),"utf-8")-1)
-					explore.Method.Insert({file:filename,pos:np+min.pos,text:method.1,args:method.value(3),class:min.text,root:min.root})
+					explore.Method.Insert({file:filename,pos:np+min.pos,text:method.1,args:method.value(3),class:min.text,root:min.root,type:"method",order:"text,type,file,args"})
 					npos:=method.Pos(1)+1
 				}
 				continue
 			}else if(min.type="function"&&min.text!="if"){
+				min.order:="text,type,file,args"
 				explore.function.Insert(min)
 			}if !(test.MinIndex())
 			break

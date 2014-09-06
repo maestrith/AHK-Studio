@@ -2,6 +2,10 @@
 ;download complete
 /*
 	TODO LIST:
+	
+	hotkey for adding selected words to a word list for the program	
+	
+	
 	;uri encode files I think.
 	for context sensitive
 		replace the text inside ".*" first before trying to parse it with _ to keep the spacing. get rid of () issues
@@ -85,7 +89,7 @@ tv(open(A_GuiEvent))
 return
 #Include %A_ScriptDir%
 #Include about.ahk
-
+#Include Add Function Call.ahk
 #Include Add Spaces After Commas.ahk
 #Include add spaces before and after commas.ahk
 #Include Add Spaces Before Commas.ahk
@@ -104,6 +108,7 @@ return
 #Include class ftp.ahk
 #Include class github.ahk
 #Include class icon browser.ahk
+#Include Class Omni_search_class.ahk
 #Include class rebar.ahk
 #Include class s.ahk
 #Include class search.ahk

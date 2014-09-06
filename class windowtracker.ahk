@@ -27,7 +27,7 @@ class WindowTracker{
 			GuiControl,% this.win ":font",%b%
 		}
 	}
-	Show(title:=""){
+	Show(title:="",position=""){
 		Gui,% this.win ":Show",Hide
 		for a,b in this.resize
 			this.track(b.control,b.pos)
@@ -41,7 +41,8 @@ class WindowTracker{
 			}
 			pos.=b var " "
 		}
-		Gui,% this.win ":Show",%pos%,%title%
+		pos:=position?position:pos
+		Gui,% this.win ":Show",%pos% %AutoSize%,%title%
 		if ssn(root,"@minmax").text
 			WinMaximize,% this.ahkid
 	}
