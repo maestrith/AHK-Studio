@@ -1,3 +1,3 @@
-testing(){
+testing(flan=""){
 	m("testing")
 }

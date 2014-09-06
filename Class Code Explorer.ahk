@@ -1,5 +1,5 @@
 class code_explorer{
-	static explore:=[],TreeView:=[],sort:=[],function:="Om`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{"
+	static explore:=[],TreeView:=[],sort:=[],function:="Om`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{",functions:=[]
 	scan(node){
 		explore:=[],bits:=[]
 		for a,b in ["menu","file","label","method","function","hotkey","class"]
@@ -56,6 +56,7 @@ class code_explorer{
 			}else if(min.type="function"&&min.text!="if"){
 				min.order:="text,type,file,args"
 				explore.function.Insert(min)
+				code_explorer.functions[ParentFile,min.text]:=min
 			}if !(test.MinIndex())
 			break
 			lastpos:=pos:=test.MinIndex()+StrLen(min.text)

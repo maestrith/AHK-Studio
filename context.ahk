@@ -1,14 +1,14 @@
 context(return=""){
+	static lasttip
 	sc:=csc()
 	if sc.2102
 		return
 	cp:=sc.2008,kw:=v.kw,add:=0,pos:=cp-1,start:=sc.2128(sc.2166(cp))
 	if (start>=pos+1)
 		return
-	content:=sc.textrange(start,pos+1)
-	RegExMatch(content,"(#?\w+)",word)
-	cb:=RegExReplace(content,"U)" Chr(34) "(.*)" Chr(34))
-	cou:=[],cbb:=cb,ccc:=0
+	content:=sc.textrange(start,pos+1),RegExMatch(content,"(#?\w+)",word)
+	cb:=RegExReplace(content,"U)"  Chr(34) "(.*)" Chr(34))
+	cb:=InStr(cb,Chr(34))?SubStr(cb,1,InStr(cb,Chr(34))):cb,cou:=[],cbb:=cb,ccc:=0
 	for a,b in StrSplit(cb){
 		if (b="(")
 			ccc++
@@ -19,8 +19,11 @@ context(return=""){
 	found:=kw[command1]?kw[command1]:kw[word1]
 	if Return
 		return found
-	if !found
+	if !(found){
+		if cmd:=code_explorer.functions[current(2).file,command1]
+			sc.2200(sc.2128(sc.2166(sc.2008)),command1 "(" cmd.args ")")
 		return
+	}
 	if syn:=commands.ssn("//Commands/*[text()='" found "']/@syntax").text
 		info:=found " " syn
 	else
@@ -38,9 +41,11 @@ context(return=""){
 	RegExReplace(info,",","",count)
 	if !count
 		return sc.2207(0),sc.2200(start,info),sc.2204(0,StrLen(info))
-	newstr:=RegExReplace(SubStr(cb,InStr(cb,found)+StrLen(found)),"U)\((.*)\)")
+	newstr:=RegExReplace(SubStr(cb,InStr(cb,found)+StrLen(found)+1),"U)\((.*)\)")
 	newstr:=Trim(newstr,"("),RegExReplace(newstr,",","",count)
 	ss:=InStr(info,",",0,1,count),ee:=InStr(info,",",0,1,count+1)
+	if(lasttip!=info)
+		sc.2200(start,info)
 	if !sc.2202
 		sc.2200(start,info),sc.2207(0xFF0000)
 	if (ss&&ee)
@@ -51,6 +56,7 @@ context(return=""){
 		sc.2204(ss,ee)
 	else
 		sc.2207(0x0000FF),sc.2204(0,StrLen(info))
+	lasttip:=info
 	return
 	context:
 	SetTimer,context,Off

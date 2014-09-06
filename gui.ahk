@@ -1,4 +1,4 @@
-gui(){
+gui(futureuse=""){
 	Gui,+Resize +hwndhwnd
 	OnMessage(5,"Resize"),hwnd(1,hwnd),ComObjError(0),v.startup:=1
 	OnMessage(6,"focus")
