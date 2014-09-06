@@ -20,8 +20,13 @@ context(return=""){
 	if Return
 		return found
 	if !(found){
-		if cmd:=code_explorer.functions[current(2).file,command1]
-			sc.2200(sc.2128(sc.2166(sc.2008)),command1 "(" cmd.args ")")
+		if cmd:=code_explorer.functions[current(2).file,command1]{
+			syn:=command1 "(" cmd.args ")"
+			;sc.2200(sc.2128(sc.2166(sc.2008)),command1 "(" cmd.args ")")
+			found:=command1
+			info:=found syn
+			goto conbottom
+		}
 		return
 	}
 	if syn:=commands.ssn("//Commands/*[text()='" found "']/@syntax").text
@@ -38,12 +43,12 @@ context(return=""){
 			return
 		info:=SubStr(cb,1,cc+StrLen(ff)-1) " " info
 	}
+	conbottom:
 	RegExReplace(info,",","",count)
 	if !count
 		return sc.2207(0),sc.2200(start,info),sc.2204(0,StrLen(info))
-	newstr:=RegExReplace(SubStr(cb,InStr(cb,found)+StrLen(found)+1),"U)\((.*)\)")
-	newstr:=Trim(newstr,"("),RegExReplace(newstr,",","",count)
-	ss:=InStr(info,",",0,1,count),ee:=InStr(info,",",0,1,count+1)
+	newstr:=RegExReplace(SubStr(cb,InStr(cb,found)+StrLen(found)+1),"U)\((.*)\)"),newstr:=Trim(newstr,"("),RegExReplace(newstr,",","",count)
+	ss:=InStr(info,",",0,1,count),ee:=InStr(info,",",0,1,count+1),ss:=count=0&&InStr(info,"(")?InStr(info,"("):ss
 	if(lasttip!=info)
 		sc.2200(start,info)
 	if !sc.2202
