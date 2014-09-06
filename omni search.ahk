@@ -91,6 +91,7 @@ omni_search(start=""){
 		for a,b in StrSplit(args,","){
 			comma:=a_index>1?",":""
 			value:=InputBox(sc.sc,"Add Function Call","Insert a value for : " b " :`n" item.text "(" item.args ")`n" build,"")
+			value:=value?value:Chr(34) Chr(34)
 			build.=comma value
 		}
 		build.=")"
