@@ -22,12 +22,13 @@ class omni_search_class{
 			SplitPath,ff,fn,dir
 			list.Insert({filename:ff,dir:dir,name:fn,type:"file",order:"name,dir"})
 		}
-		if !(prefix~="(\+|@|\^)"){
-			for a,b in code_explorer.explore
-				for c,d in b
-					for e,f in d
-						list.Insert(f)
-		}
+		for a,b in code_explorer.explore
+			for c,d in b
+				for e,f in d
+					list.Insert(f)
+		list.fun:=[]
+		for a,b in code_explorer.functions[current(2).file]
+			list.fun[a]:=b
 		return list
 	}
 }

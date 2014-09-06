@@ -23,7 +23,8 @@ omni_search(start=""){
 	stext:=[]
 	for a,b in StrSplit(search)
 		stext[b]:=stext[b]=""?1:stext[b]+1
-	for a,b in obj{
+	object:=pre="+"?obj.fun:obj
+	for a,b in object{
 		if (pre&&omni_search_class.prefix[pre]!=b.type)
 			Continue
 		info:=StrSplit(b.order,",")
