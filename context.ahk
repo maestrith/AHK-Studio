@@ -21,10 +21,7 @@ context(return=""){
 		return found
 	if !(found){
 		if cmd:=code_explorer.functions[current(2).file,command1]{
-			syn:=command1 "(" cmd.args ")"
-			;sc.2200(sc.2128(sc.2166(sc.2008)),command1 "(" cmd.args ")")
-			found:=command1
-			info:=found syn
+			syn:=command1 "(" cmd.args ")",found:=command1,info:=syn
 			goto conbottom
 		}
 		return
