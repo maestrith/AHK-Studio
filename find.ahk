@@ -1,10 +1,8 @@
 find(){
 	static
 	file:=ssn(current(1),"@file").text,infopos:=positions.ssn("//*[@file='" file "']")
-	last:=ssn(infopos,"@search").text
-	search:=last?last:"Type in your query here"
-	ea:=settings.ea("//search/find")
-	newwin:=new windowtracker(5),value:=[]
+	last:=ssn(infopos,"@search").text,search:=last?last:"Type in your query here"
+	ea:=settings.ea("//search/find"),newwin:=new windowtracker(5),value:=[]
 	for a,b in ea
 		value[a]:=b?"Checked":""
 	newwin.Add(["Edit,gfindcheck w500 vfind r1," search ",w","TreeView,w500 h300 AltSubmit gstate,,wh","Checkbox,vregex " value.regex ",Regex Search,y","Checkbox,vgr x+10 " value.gr ",Greed,y","Checkbox,xm vcs " value.cs ",Case Sensitive,y","Checkbox,vsort gfsort " value.sort ",Sort by Segment,y","Checkbox,vallfiles " value.allfiles ",Search in All Files,y","Button,gsearch Default,Search,y","Button,gcomment,Toggle Comment,y"])

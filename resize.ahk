@@ -1,10 +1,10 @@
 resize(info*){
 	static width,height,rheight,band,size:=[]
 	if(info.1="other")
-		return size
+		return size.clone()
 	if (A_Gui!=1){
 		if(info.1="get")
-			return size
+			return size.clone()
 		gui:=A_Gui?A_Gui:info.1,win:=WindowTracker.winlist[gui]
 		if (info.1=0&&info.2=0&&win.ahkid){
 			WinGetPos,x,y,,,% win.ahkid

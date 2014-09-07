@@ -1,10 +1,10 @@
 savegui(){
 	WinGet,max,MinMax,% hwnd([1])
-	text:=max
-	text:=max?settings.ssn("//gui/position[@window='1']").text:resize("get")
+	info:=Resize("get"),text:=max?settings.ssn("//gui/position[@window='1']").text:info
 	top:=settings.ssn("//gui/position[@window='1']")
 	if !top.text
 		top:=settings.add({path:"gui/position",att:{window:1}})
-	top.text:=text
+	if (IsObject(text)=0&&text!="")
+		top.text:=text
 	top.SetAttribute("max",max)
 }

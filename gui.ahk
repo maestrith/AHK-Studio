@@ -98,6 +98,7 @@ gui(futureuse=""){
 		Menu,% clean(parent),DeleteAll
 	}
 	Gui,1:Menu,% Menu("main")
+	;m(pos:=settings.ssn("//gui/position[@window='1']").text,settings.ssn("//position").xml)
 	Gui,1:Show,%pos% %max%,AHK Studio
 	while,oo:=open.item[A_Index-1]{
 		if FileExist(oo.text)

@@ -1,6 +1,9 @@
 testing(){
 	m("testing")
 }
+test_plugin(){
+	save(),Exit(1,1)
+}
 plugins:
 FileRead,plugins,plugins\plugins.ahk
 if !FileExist("plugins")
@@ -35,11 +38,4 @@ addmenu(menu,notify=""){
 	if IsFunc(menu)
 		%menu%()
 	return
-}
-plugin(fn){
-	static notify:=[]
-	if !IsObject(fn)
-		return notify.Insert(clean(fn) "_notify")
-	for a,b in notify
-		%b%(fn)
 }
