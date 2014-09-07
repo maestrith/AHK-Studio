@@ -1,0 +1,1 @@
+#Include *i plugins\testing.ahk

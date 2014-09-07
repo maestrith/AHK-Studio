@@ -7,15 +7,13 @@ notify(csc=""){
 			SetTimer,setfocus,100
 		return
 	}
+	;{15:"foldLevelPrev",16:"margin",17:"listType",18:"x",19:"y",21:"token",22:"annotLinesAdded",23:"updated"}
 	for a,b in {0:"Obj",2:"Code",3:"position",4:"ch",5:"mod",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",17:"listType",22:"updated"}
 		fn[b]:=NumGet(Info+(A_PtrSize*a))
 	if (fn.code=""||fn.code=2013||Info=256)
 		return
 	sc:=csc?csc:csc()
 	csc:=""
-	;,2:"id",4:"position",5:"ch",6:"modifiers",7:"modType",8:"text",9:"length",10:"linesAdded",11:"macMessage",12:"macwParam",13:"maclParam",14:"line",15:"foldLevelNow",16:"foldLevelPrev",17:"margin",18:"listType",19:"x",20:"y",21:"token",22:"annotLinesAdded",23:"updated"}
-	if (fn.code=2013)
-		Return
 	if (fn.code=2002){
 		Gui,1:TreeView,% hwnd("fe")
 		ea:=xml.ea(current())
@@ -124,6 +122,7 @@ notify(csc=""){
 	}
 	if (fn.code=2007)
 		uppos()
+	plugin(fn)
 	return
 	Full_Auto:
 	Fix_Next_Line:

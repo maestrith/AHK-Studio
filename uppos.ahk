@@ -18,4 +18,5 @@ uppos(){
 	if (sc.2008!=sc.2009)
 		text.=" Selected Count:" Abs(sc.2008-sc.2009)
 	v.lastwidth:=sc.2276(32,text "AA"),SB_SetParts(v.lastwidth),SB_SetText(text,1)
+	plugin([])
 }
