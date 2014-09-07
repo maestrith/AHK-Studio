@@ -47,7 +47,7 @@ context(return=""){
 	newstr:=RegExReplace(SubStr(cb,InStr(cb,found)+StrLen(found)),"U)\((.*)\)"),newstr:=Trim(newstr,"("),RegExReplace(newstr,",","",count)
 	ss:=InStr(info,",",0,1,count),ee:=InStr(info,",",0,1,count+1),ss:=count=0&&InStr(info,"(")?InStr(info,"("):ss
 	if(lasttip!=info)
-		sc.2200(start,info)
+		sc.2201(),sc.2200(start,info)
 	if !sc.2202
 		sc.2200(start,info),sc.2207(0xFF0000)
 	if (ss&&ee)
