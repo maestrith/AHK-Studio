@@ -45,7 +45,6 @@ context(return=""){
 	if !count
 		return sc.2207(0),sc.2200(start,info),sc.2204(0,StrLen(info))
 	newstr:=RegExReplace(SubStr(cb,InStr(cb,found)+StrLen(found)),"U)\((.*)\)"),newstr:=Trim(newstr,"("),RegExReplace(newstr,",","",count)
-	t(newstr)
 	ss:=InStr(info,",",0,1,count),ee:=InStr(info,",",0,1,count+1),ss:=count=0&&InStr(info,"(")?InStr(info,"("):ss
 	if(lasttip!=info)
 		sc.2200(start,info)

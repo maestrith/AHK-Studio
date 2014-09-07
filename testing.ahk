@@ -1,14 +1,16 @@
 testing(){
 	m("testing")
 }
+plugins:
+#Include *i plugins\plugins.ahk
+return
 addmenu(menu,notify=""){
 	static init
+	Menu,Plugins,Add,%menu%,menuhandler
 	if !(init){
-		Menu,Plugins,Add,Plugins
 		Menu,main,Add,Plugins,:Plugins
 		init:=1
 	}
-	Menu,Plugins,Add,%menu%,menuhandler
 	if notify
 		plugin(menu)
 	menuhandler:

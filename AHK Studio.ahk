@@ -79,11 +79,11 @@ filecheck(),v.quick:=[]
 Menu,Tray,Icon,AHKStudio.ico
 openfile=%1%
 keywords(),gui()
-#Include *i plugins\plugins.ahk
 if (openfile){
 	open(openfile),TV(files.ssn("//main[@file='" openfile "']/file/@tv").text)
 	return
 }
+goto plugins
 return
 GuiDropFiles:
 tv(open(A_GuiEvent))
