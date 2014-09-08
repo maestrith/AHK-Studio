@@ -2,7 +2,7 @@ scintilla(return:=""){
 	static list
 	if !FileExist("lib\scintilla.xml"){
 		SplashTextOn,300,100,Downloading definitions,Please wait
-		URLDownloadToFile,http://files.maestrith.com/scintilla/scintilla.xml,lib\scintilla.xml
+		URLDownloadToFile,http://files.maestrith.com/alpha/Studio/scintilla.xml,lib\scintilla.xml
 		SplashTextOff
 	}
 	if !IsObject(scintilla){
