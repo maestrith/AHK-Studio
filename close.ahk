@@ -16,7 +16,7 @@ close(){
 			sc.2377(0,ea.sc)
 		udf.Remove(ea.file),v.filelist.remove(ea.file)
 	}
-	tv(TV_GetNext(0)),main.ParentNode.RemoveChild(main)
+	main.ParentNode.RemoveChild(main)
 	if files.sn("//*").length=1
 		new(1)
 	code_explorer.Refresh_Code_Explorer()

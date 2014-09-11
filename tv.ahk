@@ -1,7 +1,6 @@
 tv(tv=0,open=""){
-	static lastcurrent
 	Gui,1:Default
-	Gui,1:TreeView,% hwnd("fe")
+	Gui,1:TreeView,SysTreeView321
 	TV_Modify(tv,"Select Vis Focus")
 	if !open
 		return
@@ -41,7 +40,6 @@ tv(tv=0,open=""){
 		current:=ssn(current(1),"@file").text
 		GuiControl,1:+Redraw,% sc.sc
 		setpos(ei),uppos()
-		lastcurrent:=current
 		WinSetTitle,% hwnd([1]),,% "AHK Studio - " ssn(file,"@file").text
 	}
 	return

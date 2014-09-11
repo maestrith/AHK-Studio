@@ -99,6 +99,7 @@ class code_explorer{
 			for c,f in r{
 				for _,d in f
 				{
+					Gui,1:TreeView,SysTreeView322
 					file:=d.root
 					if this.skip[d.file]
 						continue
