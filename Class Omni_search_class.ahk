@@ -17,15 +17,17 @@ class omni_search_class{
 	}
 	search(){
 		list:=this.menulist.menu.clone()
-		fl:=files.sn("//file/@file")
-		while,ff:=fl.item[A_Index-1].text{
-			SplitPath,ff,fn,dir
-			list.Insert({filename:ff,dir:dir,name:fn,type:"file",order:"name,dir"})
+		fl:=files.sn("//file")
+		while,ff:=fl.item[A_Index-1]{
+			file:=ssn(ff,"@file").text
+			SplitPath,file,fn,dir
+			list.Insert({root:ssn(ff.parentnode,"@file").text,filename:file,dir:dir,name:fn,type:"file",order:"name,dir"})
 		}
 		for a,b in code_explorer.explore
-			for c,d in b
-				for e,f in d
-					list.Insert(f)
+			for q,r in b
+				for c,d in r
+					for e,f in d
+						list.Insert(f)
 		list.fun:=[]
 		for a,b in code_explorer.functions[current(2).file]
 			list.fun[a]:=b

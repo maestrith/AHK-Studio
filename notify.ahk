@@ -3,8 +3,11 @@ notify(csc=""){
 	static last,lastline
 	fn:=[],info:=A_EventInfo
 	if (info=512){
-		if !hwnd(14)
-			SetTimer,setfocus,100
+		ControlGetFocus,con,% hwnd([A_Gui])
+		ControlGet,hwnd,hwnd,,%con%,% hwnd([A_Gui])
+		sc:=csc({hwnd:hwnd}),filename:=files.ssn("//*[@sc='" sc.2357 "']/@file").text
+		if filename
+			WinSetTitle,% hwnd([1]),,AHK Studio - %filename%
 		return
 	}
 	;{15:"foldLevelPrev",16:"margin",17:"listType",18:"x",19:"y",21:"token",22:"annotLinesAdded",23:"updated"}
@@ -111,8 +114,8 @@ notify(csc=""){
 		if v.options.Autocomplete_Enter_Newline
 			SetTimer,sendenter,100
 		Else{
-			v.word:=StrGet(fn.text,"utf-8")
-			SetTimer,automenu,100
+			v.word:=StrGet(fn.text,"utf-8")			
+			SetTimer,automenu,100			
 		}
 	}
 	if (fn.code=2001){
@@ -132,13 +135,17 @@ notify(csc=""){
 	togglemenu(A_ThisLabel)
 	v.options[A_ThisLabel]:=onoff
 	return
-	setfocus:
-	SetTimer,setfocus,Off
-	sc:=csc({hwnd:NumGet(A_EventInfo+0)})
-	filename:=files.ssn("//*[@sc='" sc.2357 "']/@file").text
-	if filename
-		WinSetTitle,% hwnd([1]),,AHK Studio - %filename%
-	return
+	/*
+		setfocus:
+		SetTimer,setfocus,Off
+		if !lastfocus
+			return
+		sc:=csc({hwnd:lastfocus})
+		filename:=files.ssn("//*[@sc='" sc.2357 "']/@file").text
+		if filename
+			WinSetTitle,% hwnd([1]),,AHK Studio - %filename%
+		return
+	*/
 	sendenter:
 	SetTimer,sendenter,Off
 	Send,{Enter}

@@ -18,14 +18,22 @@ update(info){
 		return update[info.get]
 	if (info.sc){
 		fn:=files.ssn("//*[@sc='" info.sc "']")
+		fi:=files.sn("//file[@file='" ssn(fn,"@file").text "']")
 		ea:=xml.ea(fn),fn:=ssn(fn,"@file").text
 		if !fn
 			return
-		if (updated[info.file]=""){
-			Gui,1:TreeView,% hwnd("fe")
-			TV_Modify(ea.tv,"","*" ea.filename)
-			sc:=csc()
+		while,ff:=fi.item[A_Index-1]{
+			ea:=xml.ea(ff)
+			if (updated[ssn(ff,"@file").text]=""){
+				Gui,1:TreeView,% hwnd("fe")
+				TV_Modify(ea.tv,"","*" ea.filename)
+				sc:=csc()
+			}
 		}
+		/*
+			if (updated[info.file]=""){
+			}
+		*/
 		pos:=posinfo(),line:=sc.2166(pos.start),end:=sc.2166(pos.end)
 		if (line!=end){
 			Loop,% end-line

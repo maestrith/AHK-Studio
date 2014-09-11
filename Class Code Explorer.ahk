@@ -5,8 +5,7 @@ class code_explorer{
 		for a,b in ["menu","file","label","method","function","hotkey","class"]
 			explore[b]:=[]
 		filename:=ssn(node,"@file").text,parentfile:=ssn(node.ParentNode,"@file").text
-		skip:=ssn(node,"@skip").text?1:0
-		code:=update({get:filename}),pos:=1
+		skip:=ssn(node,"@skip").text?1:0,code:=update({get:filename}),pos:=1
 		if pos:=InStr(code,"/*"){
 			while,pos:=RegExMatch(code,"UOms`n)^(\/\*.*\*\/)",found,pos){
 				rep:=RegExReplace(found.1,"(:|\(|\))","_"),pos:=found.Pos(1)+1,rp:=found.1
@@ -37,7 +36,7 @@ class code_explorer{
 				pos:=lastpos
 			}
 			min:=test[test.MinIndex()]
-			if(min.type="class"){
+			if (min.type="class"){
 				cl:=SubStr(code,min.cpos),left:="",foundone:="",count:=0
 				for a,b in StrSplit(cl,"`n"){
 					line:=RegExReplace(RegExReplace(b,"(\s+" Chr(59) ".*)\n"),"U)(" Chr(34) ".*" Chr(34) ")")
@@ -67,10 +66,15 @@ class code_explorer{
 			lastpos:=pos:=test.MinIndex()+StrLen(min.text)
 		}
 		pos:=fun.Pos(1)+len
-		this.explore[filename]:=explore
+		this.explore[parentfile,filename]:=explore
 		this.skip[filename]:=skip
-		for a,b in ["Hotkey","Label","Function","Class","Method"]
-			this.sort[parentfile,b]:=explore[b]
+		/*
+			for a,b in ["Hotkey","Label","Function","Class","Method"]{
+				this.sort[parentfile].Remove(b)
+				if explore[b].maxindex()
+					this.sort[parentfile,b]:=explore[b]
+			}
+		*/
 	}
 	remove(filename){
 		this.explore.remove(ssn(filename,"@file").text)
@@ -82,19 +86,6 @@ class code_explorer{
 		code_explorer.Refresh_Code_Explorer()
 		Gui,1:TreeView,SysTreeView321
 	}
-	cej(){
-		cej:
-		if (A_GuiEvent="S"&&A_GuiEvent!="RightClick"){
-			list:=""
-			obj:=code_explorer.TreeView.obj[A_EventInfo]
-			if (obj.file){
-				TV(files.ssn("//*[@file='" obj.file "']/@tv").text)
-				Sleep,200
-				csc().2160(obj.pos,obj.pos+StrLen(obj.text)),v.sc.2169,v.sc.2400
-			}
-		}
-		return
-	}
 	Refresh_Code_Explorer(){
 		if v.options.Hide_Code_Explorer
 			return
@@ -103,30 +94,32 @@ class code_explorer{
 		code_explorer.scan(current()),TV_Delete(),this.treeview:=[],roots:=[]
 		this.TreeView.filename:=[],this.TreeView.type:=[],this.TreeView.class:=[],this.TreeView.obj:=[]
 		SplashTextOff
-		for a,b in code_explorer.explore
-		for c,f in b{
-			for _,d in f
-			{
-				file:=d.root
-				if this.skip[d.file]
-					continue
-				if this.skip[file]
-					Continue
-				SplitPath,file,filename
-				if !this.TreeView.filename[filename]
-					this.TreeView.filename[filename]:=TV_Add(filename)
-				if (c!="method")
-					if !item:=this.TreeView.type[filename,c]
-						item:=this.TreeView.type[filename,c]:=TV_Add(c,this.TreeView.filename[filename])
-				if (c="method")
-					this.treeview.obj[TV_Add(d.text,this.TreeView.class[filename,d.class],"Sort")]:=d
-				Else if (c="class")
+		for a,b in code_explorer.explore{
+			for q,r in b
+			for c,f in r{
+				for _,d in f
 				{
-					if !this.TreeView.class[filename,d.text]
-						this.TreeView.obj[this.TreeView.class[filename,d.text]:=TV_Add(d.text,item,"Sort")]:=d
+					file:=d.root
+					if this.skip[d.file]
+						continue
+					if this.skip[file]
+						Continue
+					SplitPath,file,filename
+					if !this.TreeView.filename[file]
+						this.TreeView.filename[file]:=TV_Add(filename)
+					if (c!="method")
+						if !item:=this.TreeView.type[file,c]
+							item:=this.TreeView.type[file,c]:=TV_Add(c,this.TreeView.filename[file])
+					if (c="method")
+						this.treeview.obj[TV_Add(d.text,this.TreeView.class[file,d.class],"Sort")]:=d
+					Else if (c="class")
+					{
+						if !this.TreeView.class[file,d.text]
+							this.TreeView.obj[this.TreeView.class[file,d.text]:=TV_Add(d.text,item,"Sort")]:=d
+					}
+					else if (c!="method")
+						this.TreeView.obj[TV_Add(d.text,item,"Sort")]:=d
 				}
-				else if (c!="method")
-					this.TreeView.obj[TV_Add(d.text,item,"Sort")]:=d
 			}
 		}
 		GuiControl,1:+Redraw,SysTreeView322
@@ -137,6 +130,19 @@ class code_explorer{
 			code_explorer.Refresh_Code_Explorer()
 		if (Focus="SysTreeView321")
 			new()
+		return
+	}
+	cej(){
+		cej:
+		if (A_GuiEvent="S"&&A_GuiEvent!="RightClick"){
+			list:=""
+			obj:=code_explorer.TreeView.obj[A_EventInfo]
+			if (obj.file){
+				TV(files.ssn("//main[@file='" obj.root "']/file[@file='" obj.file "']/@tv").text)
+				Sleep,200
+				csc().2160(obj.pos,obj.pos+StrLen(obj.text)),v.sc.2169,v.sc.2400
+			}
+		}
 		return
 	}
 }

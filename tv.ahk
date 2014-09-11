@@ -9,8 +9,7 @@ tv(tv=0,open=""){
 	if (A_GuiEvent="S"||open){
 		if !v.startup
 			getpos(),count:=0
-		ei:=open?tv:a_eventinfo,sc:=csc()
-		file:=files.ssn("//*[@tv='" ei "']")
+		ei:=open?tv:a_eventinfo,sc:=csc(),file:=files.ssn("//*[@tv='" ei "']")
 		if !ssn(file,"@tv").text
 			return
 		if !doc:=ssn(file,"@sc"){
@@ -32,7 +31,9 @@ tv(tv=0,open=""){
 			length:=VarSetCapacity(text,strput(tt,"utf-8"))
 			StrPut(tt,&text,length,"utf-8")
 			sc.2037(65001),sc.2181(0,&text),set(),sc.2175
-			file.SetAttribute("sc",doc)
+			dup:=files.sn("//file[@file='" fn "']")
+			while,dd:=dup.item[A_Index-1]
+				dd.SetAttribute("sc",doc)
 		}else
 		sc.2358(0,doc.text)
 		marginwidth(sc)
@@ -41,6 +42,7 @@ tv(tv=0,open=""){
 		GuiControl,1:+Redraw,% sc.sc
 		setpos(ei),uppos()
 		lastcurrent:=current
+		WinSetTitle,% hwnd([1]),,% "AHK Studio - " ssn(file,"@file").text
 	}
 	return
 }

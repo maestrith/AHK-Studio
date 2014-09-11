@@ -72,8 +72,7 @@ omni_search(start=""){
 			%text%()
 		hwnd({rem:20})
 	}else if(item.filename){
-		hwnd({rem:20})
-		tv(files.ssn("//file[@file='" item.filename "']/@tv").text)
+		hwnd({rem:20}),tv(files.ssn("//main[@file='" item.root "']/file[@file='" item.filename "']/@tv").text)
 	}else if(pre="+"){
 		hwnd({rem:20}),args:=item.args,sc:=csc(),args:=RegExReplace(args,"U)=?" chr(34) "(.*)" chr(34)),build:=item.text "("
 		for a,b in StrSplit(args,","){

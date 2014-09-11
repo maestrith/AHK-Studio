@@ -18,11 +18,12 @@
 		Quick Find
 		GitHub Integration
 	}
+	hoppfrosch(){
+		changing #includes manually causes issues with the file explorer
+		-Create a "Refresh Project Explorer" option.
+	}
 	Don_Corleon(){
 		Multiple Scintilla windows over/under rather than side by side.
-	}
-	KeyboardCat(){
-		closing files should only close main not includes
 	}
 	Suggested_by_bgm(){
 		Code_Vault(){
@@ -70,7 +71,7 @@ if (openfile){
 goto plugins
 return
 GuiDropFiles:
-tv(open(A_GuiEvent))
+tv(open(A_GuiEvent),1)
 return
 #Include %A_ScriptDir%
 #Include about.ahk
