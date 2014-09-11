@@ -118,6 +118,7 @@ notify(csc=""){
 					if !node:=bookmarks.ssn("//file[@file='" file "']")
 						node:=bookmarks.Add({path:"file",att:{file:file},dup:1})
 					bookmarks.under({under:node,node:"mark",att:{line:line,name:bookmark}})
+					code_explorer.scan(current())
 				}
 			}else{
 				if (sc.2046(line)&1)
