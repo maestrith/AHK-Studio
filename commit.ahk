@@ -1,5 +1,4 @@
 commit(commitmsg){
-	m(commitmsg)
 	if !commitmsg
 		return m("Please Select a commit message from the list of versions, or enter a commit message in the space provided")
 	file:=ssn(current(1),"@file").text
