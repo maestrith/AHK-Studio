@@ -111,7 +111,7 @@ notify(csc=""){
 					parent:=rem.ParentNode,rem.ParentNode.RemoveChild(rem)
 					if !parent.firstchild
 						parent.ParentNode.RemoveChild(parent)
-					
+					code_explorer.scan(current())
 				}else{
 					sc.2043(line,4)
 					bookmark:=InputBox(sc.sc,"New Bookmark","Enter a name for this bookmark","")
