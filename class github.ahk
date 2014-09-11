@@ -55,10 +55,7 @@ class github{
 			add={"path":"%a%","mode":"100644","type":"blob","sha":"%blob%"}, 
 			json.=add
 		}
-		info:=this.Send("POST",url,Trim(json,",") "]}")
-		FileAppend,%info%,flapper.txt
-		return this.sha(info)
-		;return this.sha(this.Send("POST",url,Trim(json,",") "]}"))
+		return this.sha(this.Send("POST",url,Trim(json,",") "]}"))
 	}
 	commit(repo,tree,parent,message="Updated the file",name="placeholder",email="placeholder@gmail.com"){
 		message:=this.utf8(message)
