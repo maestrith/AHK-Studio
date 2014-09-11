@@ -120,7 +120,7 @@ class code_explorer{
 				}
 				for a,b in code_explorer.bookmarks[q]{
 					if !root
-						root:=TV_Add("Bookmarks",this.TreeView.filename[file],"Sort")
+						root:=TV_Add("Bookmarks",0,"Sort")
 					this.treeview.obj[TV_Add(b.text,root,"Sort")]:=b
 				}
 			}
