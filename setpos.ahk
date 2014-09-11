@@ -11,5 +11,16 @@ setpos(tv){
 		sc.2043(A_LoopField,0)
 	if ea.start&&ea.end
 		sc.2613(ea.scroll),sc.2160(ea.start,ea.end)
+	bm:=bookmarks.sn("//file[@file='" file "']/mark")
+	while,bb:=bm.item[A_Index-1]
+		sc.2043(ssn(bb,"@line").text,4)
+	;t(bm.length)
 	GuiControl,+Redraw,% sc.sc
 }
+
+/*
+	(
+	<file file="D:\AHK-Studio\notify.ahk">
+		<mark line="113" name="fdsfsa"></mark></file>
+	)
+*/

@@ -10,7 +10,7 @@ Loop,plugins\*.ahk
 {
 	if (A_LoopFileName!="plugins.ahk"){
 		if !RegExMatch(plugins,"i)\bplugins\\" A_LoopFileName){
-			enter:=plugins?"`r`n":""
+			enter:=plugins||A_Index>1?"`r`n":""
 			FileAppend,% Enter Chr(35) "Include *i plugins\" A_LoopFileName,plugins\plugins.ahk
 			Reload:=1
 		}

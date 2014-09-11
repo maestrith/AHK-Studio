@@ -101,12 +101,30 @@ notify(csc=""){
 		modifier:=NumGet(info+20)
 		if margin=3
 			sc.2231(sc.2166(scpos))
-		if (Margin=2){
+		if (Margin=1){
 			line:=sc.2166(scpos)
-			if sc.2046(line)
-				sc.2044(line,0)
-			else
-				sc.2043(line,0)
+			if GetKeyState("Shift","P"){
+				file:=ssn(current(),"@file").text
+				if (sc.2046(line)&16){
+					sc.2044(line,4)
+					rem:=bookmarks.ssn("//file[@file='" file "']/mark[@line='" line "']")
+					parent:=rem.ParentNode,rem.ParentNode.RemoveChild(rem)
+					if !parent.firstchild
+						parent.ParentNode.RemoveChild(parent)
+					
+				}else{
+					sc.2043(line,4)
+					bookmark:=InputBox(sc.sc,"New Bookmark","Enter a name for this bookmark","")
+					if !node:=bookmarks.ssn("//file[@file='" file "']")
+						node:=bookmarks.Add({path:"file",att:{file:file},dup:1})
+					bookmarks.under({under:node,node:"mark",att:{line:line,name:bookmark}})
+				}
+			}else{
+				if (sc.2046(line)&1)
+					sc.2044(line,0)
+				else
+					sc.2043(line,0)
+			}
 			getpos()
 		}
 	}
@@ -135,17 +153,6 @@ notify(csc=""){
 	togglemenu(A_ThisLabel)
 	v.options[A_ThisLabel]:=onoff
 	return
-	/*
-		setfocus:
-		SetTimer,setfocus,Off
-		if !lastfocus
-			return
-		sc:=csc({hwnd:lastfocus})
-		filename:=files.ssn("//*[@sc='" sc.2357 "']/@file").text
-		if filename
-			WinSetTitle,% hwnd([1]),,AHK Studio - %filename%
-		return
-	*/
 	sendenter:
 	SetTimer,sendenter,Off
 	Send,{Enter}

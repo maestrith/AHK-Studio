@@ -1,5 +1,5 @@
 class code_explorer{
-	static explore:=[],TreeView:=[],sort:=[],function:="Om`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{",label:="Om`n)^\s*(\w*):[\s+;]",functions:=[]
+	static explore:=[],TreeView:=[],sort:=[],function:="Om`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{",label:="Om`n)^\s*(\w*):[\s+;]",functions:=[],bookmarks:=[]
 	scan(node){
 		explore:=[],bits:=[],method:=[]
 		for a,b in ["menu","file","label","method","function","hotkey","class"]
@@ -65,16 +65,12 @@ class code_explorer{
 			break
 			lastpos:=pos:=test.MinIndex()+StrLen(min.text)
 		}
-		pos:=fun.Pos(1)+len
-		this.explore[parentfile,filename]:=explore
-		this.skip[filename]:=skip
-		/*
-			for a,b in ["Hotkey","Label","Function","Class","Method"]{
-				this.sort[parentfile].Remove(b)
-				if explore[b].maxindex()
-					this.sort[parentfile,b]:=explore[b]
-			}
-		*/
+		pos:=fun.Pos(1)+len,this.explore[parentfile,filename]:=explore,this.skip[filename]:=skip
+		bm:=bookmarks.sn("//file[@file='" filename "']/mark")
+		code_explorer.bookmarks.Remove(filename)
+		code_explorer.bookmarks[filename]:=[]
+		while,bb:=bm.item[A_Index-1]
+			ea:=bookmarks.ea(bb),code_explorer.bookmarks[filename].Insert({type:"Bookmark",text:ea.name,line:ea.line,file:filename,order:"text,type,file",root:parentfile})
 	}
 	remove(filename){
 		this.explore.remove(ssn(filename,"@file").text)
@@ -95,31 +91,37 @@ class code_explorer{
 		this.TreeView.filename:=[],this.TreeView.type:=[],this.TreeView.class:=[],this.TreeView.obj:=[]
 		SplashTextOff
 		for a,b in code_explorer.explore{
-			for q,r in b
-			for c,f in r{
-				for _,d in f
-				{
-					Gui,1:TreeView,SysTreeView322
-					file:=d.root
-					if this.skip[d.file]
-						continue
-					if this.skip[file]
-						Continue
-					SplitPath,file,filename
-					if !this.TreeView.filename[file]
-						this.TreeView.filename[file]:=TV_Add(filename)
-					if (c!="method")
-						if !item:=this.TreeView.type[file,c]
-							item:=this.TreeView.type[file,c]:=TV_Add(c,this.TreeView.filename[file])
-					if (c="method")
-						this.treeview.obj[TV_Add(d.text,this.TreeView.class[file,d.class],"Sort")]:=d
-					Else if (c="class")
+			for q,r in b{
+				for c,f in r{
+					for _,d in f
 					{
-						if !this.TreeView.class[file,d.text]
-							this.TreeView.obj[this.TreeView.class[file,d.text]:=TV_Add(d.text,item,"Sort")]:=d
+						Gui,1:TreeView,SysTreeView322
+						file:=d.root
+						if this.skip[d.file]
+							continue
+						if this.skip[file]
+							Continue
+						SplitPath,file,filename
+						if !this.TreeView.filename[file]
+							this.TreeView.filename[file]:=TV_Add(filename,0,"Sort")
+						if (c!="method")
+							if !item:=this.TreeView.type[file,c]
+								item:=this.TreeView.type[file,c]:=TV_Add(c,this.TreeView.filename[file],"Sort")
+						if (c="method")
+							this.treeview.obj[TV_Add(d.text,this.TreeView.class[file,d.class],"Sort")]:=d
+						Else if (c="class")
+						{
+							if !this.TreeView.class[file,d.text]
+								this.TreeView.obj[this.TreeView.class[file,d.text]:=TV_Add(d.text,item,"Sort")]:=d
+						}
+						else if (c!="method")
+							this.TreeView.obj[TV_Add(d.text,item,"Sort")]:=d
 					}
-					else if (c!="method")
-						this.TreeView.obj[TV_Add(d.text,item,"Sort")]:=d
+				}
+				for a,b in code_explorer.bookmarks[q]{
+					if !root
+						root:=TV_Add("Bookmarks",this.TreeView.filename[file],"Sort")
+					this.treeview.obj[TV_Add(b.text,root,"Sort")]:=b
 				}
 			}
 		}
@@ -141,7 +143,12 @@ class code_explorer{
 			if (obj.file){
 				TV(files.ssn("//main[@file='" obj.root "']/file[@file='" obj.file "']/@tv").text)
 				Sleep,200
-				csc().2160(obj.pos,obj.pos+StrLen(obj.text)),v.sc.2169,v.sc.2400
+				if (obj.type="bookmark"){
+					csc().2024(obj.line)
+					ControlFocus,,% "ahk_id"csc().sc
+				}
+				else
+					csc().2160(obj.pos,obj.pos+StrLen(obj.text)),v.sc.2169,v.sc.2400
 			}
 		}
 		return

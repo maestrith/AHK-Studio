@@ -1,5 +1,5 @@
 class omni_search_class{
-	static prefix:={"@":"menu","^":"file",":":"label","(":"function","{":"class","[":"method","&":"hotkey","+":"function"}
+	static prefix:={"@":"menu","^":"file",":":"label","(":"function","{":"class","[":"method","&":"hotkey","+":"function","#":"bookmark"}
 	__New(){
 		this.menus()
 		return this
@@ -23,6 +23,10 @@ class omni_search_class{
 			SplitPath,file,fn,dir
 			list.Insert({root:ssn(ff.parentnode,"@file").text,filename:file,dir:dir,name:fn,type:"file",order:"name,dir"})
 		}
+		list.bookmarks:=[]
+		for a,b in code_explorer.bookmarks
+			for c,d in b
+				list.Insert(d)
 		for a,b in code_explorer.explore
 			for q,r in b
 				for c,d in r

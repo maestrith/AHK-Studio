@@ -7,7 +7,7 @@ exit(x="",reload=0){
 			settings.add({path:"last/file",text:file,dup:1})
 	}
 	toolbar.save(),rebar.save(),save(),menus.save(1)
-	settings.add({path:"gui",att:{zoom:csc().2374}}),settings.save(1)
+	settings.add({path:"gui",att:{zoom:csc().2374}}),settings.save(1),bookmarks.save(1)
 	if (reload){
 		Reload
 		ExitApp

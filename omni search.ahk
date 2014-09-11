@@ -71,6 +71,11 @@ omni_search(start=""){
 		else
 			%text%()
 		hwnd({rem:20})
+	}else if(item.type="bookmark"){
+		tv(files.ssn("//main[@file='" item.root "']/file[@file='" item.file "']/@tv").text)
+		Sleep,200
+		csc().2024(item.line)
+		hwnd({rem:20})
 	}else if(item.filename){
 		hwnd({rem:20}),tv(files.ssn("//main[@file='" item.root "']/file[@file='" item.filename "']/@tv").text)
 	}else if(pre="+"){
