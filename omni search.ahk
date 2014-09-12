@@ -11,7 +11,7 @@ omni_search(start=""){
 	WinGetPos,x,y,w,h,% hwnd([1])
 	width:=w-50,newwin.Add(["Edit,goss w" width " vsearch," start,"ListView,w" width " r15 -hdr -Multi gosgo,Menu Command|Additional|1|2|Rating|index"])
 	Gui,20:-Caption
-	hotkeys([20],{up:"omniup",down:"omnidown","^Backspace":"deleteback",Enter:"osgo"}),select:=[]
+	hotkeys([20],{up:"omniup",down:"omnidown","^Backspace":"deleteback",Enter:"osgo"})
 	newwin.Show("Omni-Search",Center(20))
 	ControlSend,Edit1,^{End},% hwnd([20])
 	obj:=omni.search()
@@ -19,8 +19,7 @@ omni_search(start=""){
 	Gui,20:Default
 	GuiControl,20:-Redraw,SysListView321
 	search:=newwin[].search,Select:=[],LV_Delete(),pre:=SubStr(search,1,1)
-	pre:=omni_search_class.prefix[pre]?pre:"",search:=pre?SubStr(search,2):search,sort:=[]
-	stext:=[]
+	pre:=omni_search_class.prefix[pre]?pre:"",search:=pre?SubStr(search,2):search,sort:=[],stext:=[]
 	for a,b in StrSplit(search)
 		stext[b]:=stext[b]=""?1:stext[b]+1
 	object:=pre="+"?obj.fun:obj
