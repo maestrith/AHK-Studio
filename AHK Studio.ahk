@@ -19,6 +19,7 @@
 		GitHub Integration
 	}
 	hoppfrosch(){
+		Version info in github posts
 		changing #includes manually causes issues with the file explorer
 		-Create a "Refresh Project Explorer" option.
 	}

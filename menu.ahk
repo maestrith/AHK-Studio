@@ -1,54 +1,51 @@
 menu(menuname){
-	menu:=menus.sn("//" menuname "/descendant::*"),list:=[]
+	menu:=menus.sn("//" menuname "/descendant::*"),topmenu:=menus.sn("//" menuname "/*")
 	Menu,main,UseErrorLevel,On
-	while,mm:=menu.item[A_Index-1]{
-		route:="",ea:=xml.ea(mm)
-		if !ea.clean
-			mm.SetAttribute("clean",clean(ea.name))
-		if IsLabel(clean(ea.name))
-			route:=clean(ea.name)
-		else if IsFunc(clean(ea.name))
-			route:="menuroute"
-		hotkey:=ea.hotkey?"`t" convert_hotkey(ea.hotkey):""
-		if mm.childnodes.length>0
-			list.Insert({menu:ea.name,under:clean(ssn(mm.ParentNode,"@name").Text)})
-		else	if !clean(ssn(mm.ParentNode,"@name").text){
-			list.Insert({top:ea.name,route:route})
-			continue
-		}else{
-			name:=clean(ssn(mm.ParentNode,"@name").text)
-			if (mm.nodename="separator"){
-				Menu,%name%,Add
-				continue
-			}
-			if !route
-				Continue
-			Menu,%name%,Add,% ea.name hotkey,%route%
-			if value:=settings.ssn("//*/@" clean(ea.name)).text{
-				Menu,%name%,Check,% ea.name hotkey
-				v.options[clean(ea.name)]:=value
+	while,mm:=topmenu.item[A_Index-1]{
+		children:=sn(mm,"*")
+		while,cc:=children.item[A_Index-1]{
+			if cc.haschildnodes(){
+				list:=[],sub:=sn(cc,"descendant-or-self::*")
+				while,pp:=sub.item[A_Index-1]
+					if pp.haschildnodes()
+						list.Insert(pp)
+				Loop,% list.MaxIndex(){
+					item:=List[list.MaxIndex()-(A_Index-1)],lll:=sn(item,"*")
+					while,ll:=lll.item[A_Index-1]{
+						parent:=ssn(ll.ParentNode,"@name").text,current:=ssn(ll,"@name").text
+						if ll.haschildnodes()
+							Menu,%parent%,Add,%current%,:%current%
+						else{
+							hotkey:=ssn(ll,"@hotkey").text,hotkey:=hotkey?"`t" convert_hotkey(hotkey):""
+							Menu,%parent%,Add,% current hotkey,menuroute
+							if value:=settings.ssn("//*/@" clean(current)).text{
+								Menu,%parent%,Check,% current hotkey
+								v.options[clean(current)]:=value
+							}
+						}
+					}
+				}
+				Menu,% ssn(cc.ParentNode,"@name").text,Add,%parent%,:%parent%
+			}else{
+				current:=ssn(cc,"@name").text,parent:=ssn(cc.ParentNode,"@name").text,hotkey:=ssn(cc,"@hotkey").text,hotkey:=hotkey?"`t" convert_hotkey(hotkey):""
+				Menu,%parent%,Add,% current hotkey,menuroute
+				if value:=settings.ssn("//*/@" clean(current)).text{
+					Menu,%parent%,Check,% current hotkey
+					v.options[clean(current)]:=value
+				}
 			}
 		}
 	}
-	for a,b in list{
-		if b.top{
-			Menu,%menuname%,Add,% b.top,% b.route
-			continue
-		}
-		b.under:=b.under?b.under:menuname
-		Menu,% b.under,Add,% b.menu,% ":" clean(b.menu)
-	}
-	list:=menus.sn("//*[@filename!='']")
-	while,ll:=list.item[A_Index-1]{
-		ea:=menus.ea(ll),parent:=menus.ea(ll.ParentNode),parent.name:=parent.name?parent.name:"main",hotkey:=ea.hotkey?"`t" convert_hotkey(ea.hotkey):""
-		Menu,% clean(parent.name),icon,% ea.name hotkey,% ea.filename,% ea.icon
+	while,tt:=topmenu.item[A_Index-1]{
+		menu:=ssn(tt,"@name").text
+		Menu,%menuname%,Add,%menu%,:%menu%
 	}
 	return menuname
 	menuroute:
 	item:=clean(A_ThisMenuItem)
-	%item%()
-	return
-	show:
-	WinActivate,% hwnd([1])
+	if IsFunc(item)
+		%item%()
+	else
+		SetTimer,%item%,-1
 	return
 }

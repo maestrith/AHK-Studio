@@ -3,6 +3,14 @@ menu_editor(x=0){
 	if (x="tvlist")
 		return {tvlist:tvlist,il:il,icons:icons}
 	if !x{
+		Gui,1:menu
+		all:=menus.sn("//*")
+		while,aa:=all.item[A_Index-1]{
+			parent:=ssn(aa.ParentNode,"@name").text
+			hotkey:=ssn(aa,"@hotkey").text,hotkey:=hotkey?"`t" convert_hotkey(hotkey):""
+			current:=ssn(aa,"@name").text
+			Menu,%parent%,Delete,% current hotkey
+		}		
 		newwin:=new windowtracker(2),icons:=[]
 		list:=menus.sn("//*[@icon!='']")
 		if (list.length){
@@ -19,7 +27,6 @@ menu_editor(x=0){
 		newwin.Show("Menu Editor")
 		ControlGet,TreeView,hwnd,,SysTreeView321,% hwnd([2])
 	}
-	Gui,1:Menu
 	Gui,2:Default
 	GuiControl,2:-Redraw,SysTreeView321
 	list:=menus.sn("//main/descendant::*")
@@ -39,14 +46,7 @@ menu_editor(x=0){
 	GuiControl,2:,ComboBox1,%lll%
 	while,ll:=list.item[A_Index-1]
 		TV_Modify(ssn(ll,"@tv").text,"Expand")
-	if !x{
-		while,ll:=list.item[A_Index-1]{
-			menu:=ssn(ll,"@name").text,parent:=ssn(ll.ParentNode,"@name").text
-			parent:=parent?parent:main
-			Menu,% clean(Parent),Delete,% ssn(ll,"@name").text
-			Menu,% clean(parent),DeleteAll
-		}
-	}
+	ll:=[]
 	top:=count>10?count-10:0
 	tv:=ssn(list.item[top],"@tv").text
 	TV_Modify(tv,"VisFirst")
@@ -96,15 +96,6 @@ menu_editor(x=0){
 	while,rem:=list.item[A_Index-1]
 		rem.removeattribute("tv")
 	menus.save(1)
-	all:=menus.sn("//*")
-	main:="main"
-	Gui,1:Menu
-	while,aa:=all.item[A_Index-1]{
-		menu:=ssn(aa,"@name").text,parent:=ssn(aa.ParentNode,"@name").text
-		parent:=parent?parent:"main"
-		Menu,% clean(Parent),Delete,% ssn(aa,"@name").text
-	}
-	Menu,main,Delete
 	Gui,1:Menu,% menu("main")
 	for a,b in v.plugins
 		Menu,Plugins,Add,%b%,menuhandler
