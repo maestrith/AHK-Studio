@@ -4,6 +4,7 @@ setpos(tv){
 	sc:=csc()
 	GuiControl,-Redraw,% sc.sc
 	node:=files.ssn("//*[@tv='" tv "']"),file:=ssn(node,"@file").text,parent:=ssn(node,"../@file").text
+	ubp(csc(),file)
 	posinfo:=positions.ssn("//main[@file='" parent "']/file[@file='" file "']"),doc:=ssn(node,"@sc").text,ea:=xml.ea(posinfo),fold:=ea.fold,breakpoint:=ea.breakpoint
 	Loop,Parse,fold,`,
 		sc.2231(A_LoopField)
@@ -14,13 +15,5 @@ setpos(tv){
 	bm:=bookmarks.sn("//file[@file='" file "']/mark")
 	while,bb:=bm.item[A_Index-1]
 		sc.2043(ssn(bb,"@line").text,4)
-	;t(bm.length)
 	GuiControl,+Redraw,% sc.sc
 }
-
-/*
-	(
-	<file file="D:\AHK-Studio\notify.ahk">
-		<mark line="113" name="fdsfsa"></mark></file>
-	)
-*/

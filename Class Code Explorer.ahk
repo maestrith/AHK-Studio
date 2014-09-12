@@ -65,6 +65,7 @@ class code_explorer{
 			break
 			lastpos:=pos:=test.MinIndex()+StrLen(min.text)
 		}
+		ubp(csc(),filename)
 		pos:=fun.Pos(1)+len,this.explore[parentfile,filename]:=explore,this.skip[filename]:=skip
 		bm:=bookmarks.sn("//file[@file='" filename "']/mark")
 		code_explorer.bookmarks.Remove(filename)
@@ -87,7 +88,7 @@ class code_explorer{
 			return
 		Gui,1:TreeView,SysTreeView322
 		GuiControl,1:-Redraw,SysTreeView322
-		code_explorer.scan(current()),TV_Delete(),this.treeview:=[],roots:=[]
+		code_explorer.scan(current()),TV_Delete(),this.treeview:=[],bookmark:=[]
 		this.TreeView.filename:=[],this.TreeView.type:=[],this.TreeView.class:=[],this.TreeView.obj:=[]
 		SplashTextOff
 		for a,b in code_explorer.explore{
@@ -118,12 +119,14 @@ class code_explorer{
 							this.TreeView.obj[TV_Add(d.text,item,"Sort")]:=d
 					}
 				}
-				for a,b in code_explorer.bookmarks[q]{
-					if !root
-						root:=TV_Add("Bookmarks",0,"Sort")
-					this.treeview.obj[TV_Add(b.text,root,"Sort")]:=b
-				}
+				for a,b in code_explorer.bookmarks[q]
+					bookmark.Insert(b)
 			}
+		}
+		for a,b in bookmark{
+			if A_Index=1
+				root:=TV_Add("Bookmarks",0)
+			this.treeview.obj[TV_Add(b.text,root,"Sort")]:=b
 		}
 		GuiControl,1:+Redraw,SysTreeView322
 		return

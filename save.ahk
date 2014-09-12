@@ -1,5 +1,5 @@
 save(){
-	getpos(),info:=update("get"),now:=A_Now,sc:=csc(),currentdoc:=sc.2357
+	sc:=csc(),getpos(),info:=update("get"),now:=A_Now,currentdoc:=sc.2357
 	GuiControl,-Redraw,% sc.sc
 	for filename in info.2{
 		text:=info.1[filename],main:=ssn(current(1),"@file").text
