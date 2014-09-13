@@ -7,7 +7,7 @@ compile(main=""){
 	FileDelete,temp.upload
 	FileAppend,% publish(1),temp.upload
 	SplashTextOn,200,100,Compiling,Please wait.
-	Loop,*.ico
+	Loop,%dir%\*.ico
 		icon:=A_LoopFileFullPath
 	if icon
 		add=/icon "%icon%"
