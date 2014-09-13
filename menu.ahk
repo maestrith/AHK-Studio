@@ -38,7 +38,10 @@ menu(menuname){
 	}
 	while,tt:=topmenu.item[A_Index-1]{
 		menu:=ssn(tt,"@name").text
-		Menu,%menuname%,Add,%menu%,:%menu%
+		if tt.haschildnodes()
+			Menu,%menuname%,Add,%menu%,:%menu%
+		else
+			Menu,%menuname%,Add,%menu%,menuroute
 	}
 	return menuname
 	menuroute:

@@ -3,7 +3,10 @@
 /*
 	TODO LIST:
 	tidy up script:
-	-hotkey for adding selected words to a word list for the program	
+	Toolbars
+	-Make it work on xml natively
+	-Add the ability to add more toolbars.
+	hotkey for adding selected words to a word list for the program	
 	-make windows show up inititally inside of the main window. centered.
 	-Change the version script to add tags for <changed> and so on.
 	windows_to_replace(){
@@ -32,9 +35,6 @@
 		}
 		backup(){
 			Create an Option/Disable Backup for saving files
-		}
-		compile(){
-			Add ability to insert icons into compiled exe
 		}
 	}
 */

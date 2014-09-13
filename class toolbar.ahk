@@ -1,20 +1,16 @@
 class toolbar{
 	static keep:=[],order:=[],list:=[],imagelist:=""
+	;change this so that all you need to do is pass it an xml and it does everything.
+	;save updates the info and writes it to the settings.xml
 	__New(win,parent,id,mask=""){
 		static count:=0
 		count++
 		mask:=mask?mask:0x800|0x0800|0x0100|0x0040|0x0008|0x0004|0x10|0x20
 		Gui,Add,Custom,ClassToolbarWindow32 hwndhwnd +%mask% Background0 gtoolbar
-		this.iconlist:=[]
-		this.hwnd:=hwnd,this.count:=count
-		this.buttons:=[],this.returnbutton:=[]
-		this.keep[hwnd]:=this,this.ahkid:="ahk_id" hwnd
-		this.parent:=parent,this.order[count]:=this
-		onoff:=settings.ssn("//options/@Small_Icons").text?0:1
-		this.imagelist:=IL_Create(20,1,onoff)
-		this.SetImageList()
-		this.list[id]:=this,this.id:=id
-		this.setmaxtextrows()
+		this.iconlist:=[],this.hwnd:=hwnd,this.count:=count,this.buttons:=[],this.returnbutton:=[],this.keep[hwnd]:=this
+		this.ahkid:="ahk_id" hwnd,this.parent:=parent,this.order[count]:=this
+		onoff:=settings.ssn("//options/@Small_Icons").text?0:1,this.imagelist:=IL_Create(20,1,onoff),this.SetImageList()
+		this.list[id]:=this,this.id:=id,this.setmaxtextrows()
 		return this
 	}
 	setstate(button,state){
@@ -133,7 +129,7 @@ class toolbar{
 				}
 			}
 			else if button.runfile
-				runfile(button.runfile)
+				Return runfile(button.runfile)
 		} 
 		if (code=-708) ;toolbar change
 			this.ideal()
