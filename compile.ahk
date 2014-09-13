@@ -7,6 +7,10 @@ compile(main=""){
 	FileDelete,temp.upload
 	FileAppend,% publish(1),temp.upload
 	SplashTextOn,200,100,Compiling,Please wait.
+	Loop,*.ico
+		icon:=A_LoopFileFullPath
+	if icon
+		add=/icon "%icon%"
 	RunWait,%file% /in temp.upload /out "%dir%\%name%.exe" %add%
 	If FileExist("upx.exe"){
 		SplashTextOn,,50,Compressing EXE,Please wait...
