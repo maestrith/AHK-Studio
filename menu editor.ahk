@@ -10,7 +10,7 @@ menu_editor(x=0){
 			hotkey:=ssn(aa,"@hotkey").text,hotkey:=hotkey?"`t" convert_hotkey(hotkey):""
 			current:=ssn(aa,"@name").text
 			Menu,%parent%,Delete,% current hotkey
-		}		
+		}
 		newwin:=new windowtracker(2),icons:=[]
 		list:=menus.sn("//*[@icon!='']")
 		if (list.length){
@@ -23,7 +23,6 @@ menu_editor(x=0){
 			mil:="ImageList" il
 		}
 		newwin.Add(["Text,,Control+UP/DOWN/LEFT/RIGHT will move items","Edit,gmesearch w500,,w","ListView,w500 r5 gmego -TabStop AltSubmit ReadOnly,Menu Item Search,w","TreeView,w500 h400 hwndhwnd " mil ",,wh","Button,gaddmenu,Add A New Menu,y","Button,x+10 gchangeitem,Change Item,y","Button,x+10 gaddsep,Add Separator,y","Button,x+10 gedithotkey Default,Edit Hotkey,y","Button,xm gmenudefault,Re-Load Defaults,y","Button,x+10 gsortmenus,Sort Menus Alphabetically,y","Button,xm gmeci,Change Icon,y","Button,x+10 gmeri,Remove Icon,y","Button,x+10 gmerai,Remove All Icons From Current Menu,y"])
-		;newwin.Add(["Text,,Control+UP/DOWN/LEFT/RIGHT will move items","ComboBox,gmesearch w200","TreeView,w500 h400 hwndhwnd " mil ",,wh","Button,gaddmenu,Add A New Menu,y","Button,x+10 gchangeitem,Change Item,y","Button,x+10 gaddsep,Add Separator,y","Button,x+10 gedithotkey Default,Edit Hotkey,y","Button,xm gmenudefault,Re-Load Defaults,y","Button,x+10 gsortmenus,Sort Menus Alphabetically,y","Button,xm gmeci,Change Icon,y","Button,x+10 gmeri,Remove Icon,y","Button,x+10 gmerai,Remove All Icons From Current Menu,y"])
 		hotkeys([2],{"Del":"deletenode","^up":"moveup","^down":"movedown","^left":"moveover","^right":"moveunder"})
 		newwin.Show("Menu Editor")
 		ControlGet,TreeView,hwnd,,SysTreeView321,% hwnd([2])

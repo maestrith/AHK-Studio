@@ -51,4 +51,7 @@ menu(menuname){
 	else
 		SetTimer,%item%,-1
 	return
+	show:
+	WinActivate,% hwnd([1])
+	return
 }

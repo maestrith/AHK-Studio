@@ -1,12 +1,12 @@
 class toolbar{
-	static keep:=[],order:=[],list:=[],imagelist:=""
+	static keep:=[],order:=[],list:=[],imagelist:="",toolbar1,toolbar2,toolbar3
 	;change this so that all you need to do is pass it an xml and it does everything.
 	;save updates the info and writes it to the settings.xml
 	__New(win,parent,id,mask=""){
-		static count:=0
+		static count:=0,toolbar1,toolbar2,toolbar3
 		count++
-		mask:=mask?mask:0x800|0x0800|0x0100|0x0040|0x0008|0x0004|0x10|0x20
-		Gui,Add,Custom,ClassToolbarWindow32 hwndhwnd +%mask% Background0 gtoolbar
+		mask:=mask?mask:0x800|0x0800|0x100|0x0040|0x0008|0x0004|0x10|0x20
+		Gui,Add,Custom,ClassToolbarWindow32 hwndhwnd +%mask% Background0 gtoolbar vtoolbar%count%
 		this.iconlist:=[],this.hwnd:=hwnd,this.count:=count,this.buttons:=[],this.returnbutton:=[],this.keep[hwnd]:=this
 		this.ahkid:="ahk_id" hwnd,this.parent:=parent,this.order[count]:=this
 		onoff:=settings.ssn("//options/@Small_Icons").text?0:1,this.imagelist:=IL_Create(20,1,onoff),this.SetImageList()
@@ -53,11 +53,7 @@ class toolbar{
 		}
 		if (IsFunc(info.func)=0&&IsLabel(info.func)=0)
 			return
-		NumPut(info.icon,Button,0,"int")
-		NumPut(info.id,Button,4,"int")
-		NumPut(info.state,button,8,"char")
-		NumPut(info.style,button,9,"char")
-		NumPut(info.Index,button,8+(A_PtrSize*2),"ptr")
+		NumPut(info.icon,Button,0,"int"),NumPut(info.id,Button,4,"int"),NumPut(info.state,button,8,"char"),NumPut(info.style,button,9,"char"),NumPut(info.Index,button,8+(A_PtrSize*2),"ptr")
 		SendMessage,1044,1,&button,,% "ahk_id" this.hwnd ;TB_ADDBUTTONSW
 	}
 	SetMaxTextRows(MaxRows=0){
@@ -69,8 +65,7 @@ class toolbar{
 		return (ErrorLevel = "FAIL") ? False : True
 	}
 	barinfo(){
-		VarSetCapacity(size,8)
-		VarSetCapacity(rect,16)
+		VarSetCapacity(size,8),VarSetCapacity(rect,16)
 		WinGetPos,,,w,,% "ahk_id" this.hwnd
 		SendMessage,0x400+29,0,&rect,,% "ahk_id" this.hwnd
 		height:=NumGet(rect,12)
@@ -86,22 +81,18 @@ class toolbar{
 		SendMessage,0x400+16,% this.id,0,,% parent
 		bandnum:=ErrorLevel
 		SendMessage,0x400+28,%bandnum%,&band,,% parent ;getbandinfo
-		NumPut(0x200|0x40,band,4)
-		NumPut(NumGet(&size),&band,68)
-		NumPut(NumGet(&size)+20,&band,44)
+		NumPut(0x200|0x40,band,4),NumPut(NumGet(&size),&band,68),NumPut(NumGet(&size)+20,&band,44)
 		SendMessage,0x400+11,%bandnum%,&band,,% parent ;setbandinfow
 	}
 	delete(button){
-		rem:=settings.ssn("//toolbar/bar[@id='" this.id "']/button[@id='" button.id "']")
-		rem.ParentNode.RemoveChild(rem)
+		rem:=settings.ssn("//toolbar/bar[@id='" this.id "']/button[@id='" button.id "']"),rem.ParentNode.RemoveChild(rem)
 		SendMessage,0x400+25,% button.id,0,,% this.ahkid
 		SendMessage,0x400+22,%ErrorLevel%,0,,% this.ahkid
 		this.buttons[button.id]:=""
 	}
 	notify(){
 		toolbar:
-		code:=NumGet(A_EventInfo+8,0,"Int"),Hwnd:=NumGet(A_EventInfo)
-		this:=toolbar.keep[hwnd]
+		code:=NumGet(A_EventInfo+8,0,"Int"),Hwnd:=NumGet(A_EventInfo),this:=toolbar.keep[hwnd]
 		If(Hwnd!=this.Hwnd)
 			return
 		if (code=-5){ ;right click
