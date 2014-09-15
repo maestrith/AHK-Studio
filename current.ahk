@@ -5,5 +5,7 @@ current(parent=""){
 		return node.ParentNode
 	if parent=2
 		return xml.ea(node.ParentNode)
+	if parent=3
+		return xml.ea(node)
 	return node
 }

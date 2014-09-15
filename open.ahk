@@ -74,6 +74,7 @@ open(filelist="",show=""){
 					Break
 			}
 		}
+		newfn:=Trim(newfn)
 		if (newfn)
 			StringReplace,file1,file1,%b%,,All
 		if !newfn

@@ -27,6 +27,13 @@ tv(tv=0,open=""){
 			sc.2358(0,doc)
 			fn:=ssn(file,"@file").text
 			tt:=update({get:fn})
+			if !(tt){
+				m(file.xml)
+				FileRead,qqq,%fn%
+				update({file:fn,text:qqq,load:1})
+				m("here")
+				goto tvtop
+			}
 			length:=VarSetCapacity(text,strput(tt,"utf-8"))
 			StrPut(tt,&text,length,"utf-8")
 			sc.2037(65001),sc.2181(0,&text),set(),sc.2175

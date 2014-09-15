@@ -62,9 +62,7 @@ gui(){
 	Gui,1:Menu,% Menu("main")
 	all:=menus.sn("//*")
 	while,aa:=all.item[A_Index-1]{
-		parent:=ssn(aa.ParentNode,"@name").text
-		hotkey:=ssn(aa,"@hotkey").text,hotkey:=hotkey?"`t" convert_hotkey(hotkey):""
-		current:=ssn(aa,"@name").text
+		parent:=ssn(aa.ParentNode,"@name").text,hotkey:=ssn(aa,"@hotkey").text,hotkey:=hotkey?"`t" convert_hotkey(hotkey):"",current:=ssn(aa,"@name").text
 		Menu,%parent%,Delete,% current hotkey
 	}
 	Gui,1:Menu,% Menu("main")

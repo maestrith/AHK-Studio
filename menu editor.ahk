@@ -37,9 +37,7 @@ menu_editor(x=0){
 		parent:=ssn(ll.ParentNode,"@tv").text?ssn(ll.ParentNode,"@tv").text:0
 		icon:=icons[ssn(ll,"@filename").text,ssn(ll,"@icon").text]?"icon" icons[ssn(ll,"@filename").text,ssn(ll,"@icon").text]:"icon-1"
 		root:=TV_Add(RegExReplace(ssn(ll,"@clean").text,"_"," ") hot,parent,icon),lll.=RegExReplace(ssn(ll,"@clean").text,"_"," ") "|"
-		tvlist[root]:=ll
-		ll.SetAttribute("tv",root)
-		deletelist.Insert(clean(ssn(ll,"@name").text))
+		tvlist[root]:=ll,ll.SetAttribute("tv",root),deletelist.Insert(clean(ssn(ll,"@name").text))
 		if ssn(ll,"@last").text
 			count:=A_Index
 	}
@@ -127,30 +125,20 @@ menu_editor(x=0){
 	if (ssn(top,"@menu").text="")
 		main:=top.ParentNode
 	new:=menus.under({under:main,node:"menu",att:{name:newname,last:1,clean:clean(newname)}})
-	main.insertbefore(new,top)
-	under.insertbefore(above,move)
-	menu_editor(1)
+	main.insertbefore(new,top),under.insertbefore(above,move),menu_editor(1)
 	return
 	moveup:
 	Gui,2:Default
 	if prev:=TV_GetPrev(TV_GetSelection()){
-		move:=menus.ssn("//*[@tv='" TV_GetSelection() "']")
-		above:=menus.ssn("//*[@tv='" prev "']")
-		move.SetAttribute("last",1)
-		under:=move.parentnode
-		under.insertbefore(move,above)
-		menu_editor(1)
+		move:=menus.ssn("//*[@tv='" TV_GetSelection() "']"),above:=menus.ssn("//*[@tv='" prev "']")
+		move.SetAttribute("last",1),under:=move.parentnode,under.insertbefore(move,above),menu_editor(1)
 	}
 	return
 	movedown:
 	Gui,2:Default
 	if next:=TV_GetNext(TV_GetSelection()){
-		move:=menus.ssn("//*[@tv='" TV_GetSelection() "']")
-		above:=menus.ssn("//*[@tv='" next "']")
-		move.SetAttribute("last",1)
-		under:=move.parentnode
-		under.insertbefore(above,move)
-		menu_editor(1)
+		move:=menus.ssn("//*[@tv='" TV_GetSelection() "']"),above:=menus.ssn("//*[@tv='" next "']")
+		move.SetAttribute("last",1),under:=move.parentnode,under.insertbefore(above,move),menu_editor(1)
 	}
 	return
 	deletenode:
