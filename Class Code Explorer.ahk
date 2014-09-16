@@ -138,8 +138,11 @@ class code_explorer{
 		return
 		GuiContextMenu:
 		ControlGetFocus,Focus,% hwnd([1])
-		if (Focus="SysTreeView322")
+		if (Focus="SysTreeView322"){
+			GuiControl,+g,SysTreeView322
 			code_explorer.Refresh_Code_Explorer()
+			GuiControl,+gcej,SysTreeView322
+		}
 		if (Focus="SysTreeView321")
 			new()
 		return

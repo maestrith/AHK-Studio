@@ -9,7 +9,7 @@ Lexikos - For all of the amazing work on AHK 1.1
 	All of the people who helped him.
 
 Help from friends who have given me great ideas and bug reports
-	Uberi,Coco,Tidbit,GeekDude,joedf,budRich,tomoe_uehara,Run1e and everyone who I have not listed I am thankful.
+	Uberi,Coco,Tidbit,GeekDude,joedf,budRich,tomoe_uehara,hoppfrosch,Run1e and everyone who I have not listed I am thankful.
 	
 All of the editors that I have used for giving me ideas for this project
 

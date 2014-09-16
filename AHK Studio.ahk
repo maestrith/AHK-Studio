@@ -76,6 +76,7 @@ tv(open(A_GuiEvent),1)
 return
 #Include %A_ScriptDir%
 #Include about.ahk
+#Include add bookmark.ahk
 #Include Add Function Call.ahk
 #Include Add Spaces After Commas.ahk
 #Include add spaces before and after commas.ahk
@@ -127,6 +128,7 @@ return
 #Include debug.ahk
 #Include Default.ahk
 #Include defaultfont.ahk
+#Include Delete Bookmark.ahk
 #Include delete matching brace.ahk
 #Include detach.ahk
 #Include display.ahk
@@ -167,6 +169,7 @@ return
 #Include inputbox.ahk
 #Include Insert Code Vault.ahk
 #Include json.ahk
+#Include Jump To Next Bookmark.ahk
 #Include jump to project.ahk
 #Include Jump to Segment.ahk
 #Include keywords.ahk
@@ -202,6 +205,7 @@ return
 #Include posinfo.ahk
 #Include post all in one gist.ahk
 #Include Post Multiple Segment Gist.ahk
+#Include Previous Bookmark.ahk
 #Include previous found.ahk
 #Include Previous Scripts.ahk
 #Include publish.ahk
@@ -262,6 +266,7 @@ return
 #Include togglemenu.ahk
 #Include traymenu.ahk
 #Include tv.ahk
+#Include ubp.ahk
 #Include undo.ahk
 #Include update github info.ahk
 #Include update.ahk
@@ -273,6 +278,3 @@ return
 #Include window.ahk
 #Include WM COPYDATA.ahk
 #Include Words In Document.ahk
-#Include add bookmark.ahk
-#Include ubp.ahk
-#Include Previous Bookmark.ahk

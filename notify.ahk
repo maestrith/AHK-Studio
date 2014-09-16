@@ -104,20 +104,11 @@ notify(csc=""){
 		if (Margin=1){
 			line:=sc.2166(scpos)
 			if GetKeyState("Shift","P"){
-				file:=ssn(current(),"@file").text
-				ubp(sc,file)
-				if (sc.2046(line)&16){
-					;m("get the line number first and then create the object.","then figure it out from there","then delete this marker")
-					sc.2044(line,4),rem:=bookmarks.ssn("//file[@file='" file "']/mark[@line='" line "']"),parent:=rem.ParentNode,rem.ParentNode.RemoveChild(rem)
-					if !parent.firstchild
-						parent.ParentNode.RemoveChild(parent)
-					code_explorer.scan(current())
-				}else{
-					bookmark:=InputBox(sc.sc,"New Bookmark","Enter a name for this bookmark",""),sc.2043(line,4)
-					if !node:=bookmarks.ssn("//file[@file='" file "']")
-						node:=bookmarks.Add({path:"file",att:{file:file},dup:1})
-					bookmarks.under({under:node,node:"mark",att:{line:line,name:bookmark}}),code_explorer.scan(current())
-				}
+				file:=current(3).file,ubp(sc,file)
+				if (sc.2046(line)&16)
+					Delete_Bookmark(line)
+				else
+					Add_Bookmark(line)
 			}else{
 				if (sc.2046(line)&1)
 					sc.2044(line,0)
