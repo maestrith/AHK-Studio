@@ -20,6 +20,15 @@ omni_search(start=""){
 	GuiControl,20:-Redraw,SysListView321
 	search:=newwin[].search,Select:=[],LV_Delete(),pre:=SubStr(search,1,1)
 	pre:=omni_search_class.prefix[pre]?pre:"",search:=pre?SubStr(search,2):search,sort:=[],stext:=[]
+	if (search="?"){
+		LV_Delete()
+		for a,b in omni_search_class.prefix{
+			info:=a="+"?"Add Function Call":b
+			LV_Add("",a,info)
+		}
+		GuiControl,20:+Redraw,SysListView321
+		return
+	}
 	for a,b in StrSplit(search)
 		stext[b]:=stext[b]=""?1:stext[b]+1
 	object:=pre="+"?obj.fun:obj
@@ -87,7 +96,7 @@ omni_search(start=""){
 		}
 		build.=")"
 		sc.2003(sc.2008,build)
-	}else if(item.type~="i)(label|method|function|hotkey|class)"){
+	}else if(item.type~="i)(label|method|function|hotkey|class|property)"){
 		hwnd({rem:20})
 		TV(files.ssn("//*[@file='" item.file "']/@tv").text)
 		Sleep,200

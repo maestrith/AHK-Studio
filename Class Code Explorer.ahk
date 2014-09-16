@@ -2,7 +2,7 @@ class code_explorer{
 	static explore:=[],TreeView:=[],sort:=[],function:="Om`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{",label:="Om`n)^\s*(\w*):[\s+;]",functions:=[],bookmarks:=[]
 	scan(node){
 		explore:=[],bits:=[],method:=[]
-		for a,b in ["menu","file","label","method","function","hotkey","class"]
+		for a,b in ["menu","file","label","method","function","hotkey","class","property"]
 			explore[b]:=[]
 		filename:=ssn(node,"@file").text,parentfile:=ssn(node.ParentNode,"@file").text
 		skip:=ssn(node,"@skip").text?1:0,code:=update({get:filename}),pos:=1
@@ -56,6 +56,12 @@ class code_explorer{
 					explore.Method.Insert({file:filename,pos:np+min.pos,text:method.1,args:method.value(3),class:min.text,root:min.root,type:"method",order:"text,type,file,args"})
 					npos:=method.Pos(1)+1
 				}
+				npos:=1
+				while,npos:=RegExMatch(left,"Om`n)^\s*((\w|[^\x00-\x7F])+)\[(.*)?\][\s+;.*\s+]?[\s*]?{",Property,npos){
+					np:=StrPut(SubStr(left,1,Property.Pos(1)),"utf-8")-1-(StrPut(SubStr(Property.1,1,1),"utf-8")-1)
+					explore.Property.Insert({file:filename,pos:np+min.pos,text:Property.1,args:Property.value(3),class:min.text,root:min.root,type:"Property",order:"text,type,file,args"})
+					npos:=Property.Pos(1)+1
+				}
 				continue
 			}else if(min.type="function"&&min.text!="if"){
 				min.order:="text,type,file,args"
@@ -105,10 +111,10 @@ class code_explorer{
 						SplitPath,file,filename
 						if !this.TreeView.filename[file]
 							this.TreeView.filename[file]:=TV_Add(filename,0,"Sort")
-						if (c!="method")
+						if (c!="method"&&c!="property")
 							if !item:=this.TreeView.type[file,c]
 								item:=this.TreeView.type[file,c]:=TV_Add(c,this.TreeView.filename[file],"Sort")
-						if (c="method")
+						if (c~="(method|property)")
 							this.treeview.obj[TV_Add(d.text,this.TreeView.class[file,d.class],"Sort")]:=d
 						Else if (c="class")
 						{

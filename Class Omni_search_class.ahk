@@ -1,5 +1,5 @@
 class omni_search_class{
-	static prefix:={"@":"menu","^":"file",":":"label","(":"function","{":"class","[":"method","&":"hotkey","+":"function","#":"bookmark"}
+	static prefix:={"@":"Menu","^":"File",":":"Label","(":"Function","{":"Class","[":"Method","&":"Hotkey","+":"Function","#":"Bookmark",".":"Property"}
 	__New(){
 		this.menus()
 		return this
