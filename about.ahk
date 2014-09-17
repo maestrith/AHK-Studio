@@ -34,10 +34,10 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"})
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}) ;testing
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
-	Gui,Show,,AHK Studio Help Version: ;github_version
+	Gui,Show,,AHK Studio Help Version: 1.0.8
 	sc.2181(0,about),sc.2025(0),sc.2268(1)
 	return
 }
