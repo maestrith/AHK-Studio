@@ -17,6 +17,8 @@ menu(menuname){
 							Menu,%parent%,Add,%current%,:%current%
 						else{
 							hotkey:=ssn(ll,"@hotkey").text,hotkey:=hotkey?"`t" convert_hotkey(hotkey):""
+							if !(IsFunc(clean(current))||IsLabel(clean(current)))
+								Continue
 							Menu,%parent%,Add,% current hotkey,menuroute
 							if value:=settings.ssn("//*/@" clean(current)).text{
 								Menu,%parent%,Check,% current hotkey
@@ -28,6 +30,8 @@ menu(menuname){
 				Menu,% ssn(cc.ParentNode,"@name").text,Add,%parent%,:%parent%
 			}else{
 				current:=ssn(cc,"@name").text,parent:=ssn(cc.ParentNode,"@name").text,hotkey:=ssn(cc,"@hotkey").text,hotkey:=hotkey?"`t" convert_hotkey(hotkey):""
+				if !(IsFunc(clean(current))||IsLabel(clean(current)))
+					Continue
 				Menu,%parent%,Add,% current hotkey,menuroute
 				if value:=settings.ssn("//*/@" clean(current)).text{
 					Menu,%parent%,Check,% current hotkey

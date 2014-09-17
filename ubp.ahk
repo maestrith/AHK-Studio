@@ -1,6 +1,8 @@
 ubp(sc,file){
-	Pos:=0,bml:=[],sort:=[]
+	Pos:=0,bml:=[],sort:=[],sc:=csc()
 	ll:=bookmarks.sn("//file[@file='" file "']/mark")
+	if (files.ssn("//*[@sc!='" sc.2357 "']/@file").text!=file)
+		return
 	while,node:=ll.item[A_Index-1]{
 		ea:=bookmarks.ea(node)
 		sort[ea.line]:=node
