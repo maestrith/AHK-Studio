@@ -1,4 +1,4 @@
-commit(commitmsg){
+commit(commitmsg,version){
 	if !commitmsg
 		return m("Please Select a commit message from the list of versions, or enter a commit message in the space provided")
 	file:=ssn(current(1),"@file").text
@@ -61,6 +61,8 @@ commit(commitmsg){
 		return m("Nothing new to upload")
 	upload:=[]
 	for a,text in uplist{
+		if InStr(text,Chr(59) "github_version")
+			text:=RegExReplace(text,Chr(59) "github_version",version)
 		blob:=git.blob(repo,text)
 		SplashTextOn,200,150,Updating,%a%
 		upload[a]:=blob

@@ -81,7 +81,7 @@ Github_Repository(){
 	ControlGetText,cm,Edit2,% hwnd([25])
 	if !(version&&cm)
 		return m("Please set a version and create some information for that version.")
-	ok:=commit(cm)
+	ok:=commit(cm,version)
 	ea:=settings.ea("//github")
 	top:=vversion.ssn("//*[@file='" current(2).file "']"),node:=ssn(top,"versions/version[@number='" version "']")
 	repo:=ssn(top,"@repo").text
