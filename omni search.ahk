@@ -26,6 +26,8 @@ omni_search(start=""){
 			info:=a="+"?"Add Function Call":b
 			LV_Add("",a,info)
 		}
+		Loop,2
+			LV_Modify(A_Index,"AutoHDR")
 		GuiControl,20:+Redraw,SysListView321
 		return
 	}

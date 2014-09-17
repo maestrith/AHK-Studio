@@ -1,5 +1,5 @@
 class code_explorer{
-	static explore:=[],TreeView:=[],sort:=[],function:="Om`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{",label:="Om`n)^\s*(\w*):[\s+;]",functions:=[],bookmarks:=[]
+	static explore:=[],TreeView:=[],sort:=[],function:="Om`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{",label:="Om`n)^\s*((\w|[^\x00-\x7F])+):[\s+;]",functions:=[],bookmarks:=[]
 	scan(node){
 		explore:=[],bits:=[],method:=[]
 		for a,b in ["menu","file","label","method","function","hotkey","class","property"]
@@ -160,7 +160,7 @@ class code_explorer{
 					ControlFocus,,% "ahk_id"csc().sc
 				}
 				else
-					csc().2160(obj.pos,obj.pos+StrLen(obj.text)),v.sc.2169,v.sc.2400
+					csc().2160(obj.pos,obj.pos+StrPut(obj.text,"Utf-8")-1),v.sc.2169,v.sc.2400
 			}
 		}
 		return
