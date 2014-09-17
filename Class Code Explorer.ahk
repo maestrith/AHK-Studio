@@ -24,7 +24,7 @@ class code_explorer{
 		Loop
 		{
 			test:=[]
-			for type,find in {class:"Om`ni)^[\s*]?(class[\s*]\w+)",function:this.function}{
+			for type,find in {class:"Om`ni)^[\s*]?(class[\s*](\w|[^\x00-\x7F])+)",function:this.function}{
 				if pos:=RegExMatch(code,find,fun,pos){
 					if (type="function"&&fun.1="if")
 						Continue

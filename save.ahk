@@ -19,8 +19,9 @@ save(){
 		StringReplace,text,text,`n,`r`n,All
 		FileAppend,%text%,%filename%,utf-8
 		Gui,1:TreeView,% hwnd("fe")
-		ea:=xml.ea(files.ssn("//file[@file='" filename "']"))
-		TV_Modify(ea.tv,"",ea.filename)
+		multi:=files.sn("//file[@file='" filename "']")
+		while,mm:=multi.item[A_Index-1]
+			ea:=files.ea(mm),TV_Modify(ea.tv,"",ea.filename)
 		if !ea.sc
 			Continue
 		sc.2358(0,ea.sc)
