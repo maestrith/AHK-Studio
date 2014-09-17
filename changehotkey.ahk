@@ -14,10 +14,8 @@ changehotkey(){
 	Gui,98:Submit,NoHide
 	Hotkey.setattribute("hotkey",hk),Hotkey.setattribute("last",1)
 	Gui,2:Default
-	name:=RegExReplace(ssn(hotkey,"@clean").text,"_"," ")
 	ControlGet,list,list,,SysListView321,% hwnd([2])
-	pos:=RegExMatch(list,"\b" name "\b")
-	text:=SubStr(list,1,pos),RegExReplace(text,"\n","",Count)
+	name:=RegExReplace(ssn(hotkey,"@clean").text,"_"," "),pos:=RegExMatch(list,"\b" name "\b"),text:=SubStr(list,1,pos),RegExReplace(text,"\n","",Count)
 	LV_Modify(count+1,"Col2",convert_hotkey(hk))
 	return
 	clearhk:

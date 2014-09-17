@@ -2,6 +2,10 @@
 ;download complete
 /*
 	TODO LIST:
+	
+	Find/Replace
+	-Current Segment, Current Project, All Files
+	
 	tidy up script:
 	Toolbars
 	-Make it work on xml natively
