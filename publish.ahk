@@ -10,6 +10,8 @@ publish(return=""){
 	newver:=ea.version "." ea.increment
 	if InStr(publish,Chr(59) "auto_version")
 		publish:=RegExReplace(publish,Chr(59) "auto_version",newver)
+	if InStr(publish,Chr(59) "github_version")
+		publish:=RegExReplace(publish,Chr(59) "github_version",newver)
 	aa:=vversion.ea("//info[@file='" ssn(current(1),"@file").text "']")
 	repver:=aa.versstyle?newver:"Version=" newver
 	if InStr(publish,Chr(59) "auto_version")
