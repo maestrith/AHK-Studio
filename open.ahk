@@ -30,7 +30,7 @@ open(filelist="",show=""){
 			filelist:=files.sn("//main[@file='" filename "']/*")
 			while,fn:=filelist.item[A_Index-1]
 				code_explorer.scan(fn)
-			if show
+			if (show=1)
 				tv(root)
 		}
 	}

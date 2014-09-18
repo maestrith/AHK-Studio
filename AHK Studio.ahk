@@ -12,7 +12,7 @@
 	-Add the ability to add more toolbars.
 	hotkey for adding selected words to a word list for the program	
 	-make windows show up inititally inside of the main window. centered.
-	-Change the version script to add tags for <changed> and so on.
+	Change the version script to add tags for <changed> and <fixed> and so on.
 	windows_to_replace(){
 		Themes
 		Code Vault
@@ -26,7 +26,6 @@
 		GitHub Integration
 	}
 	hoppfrosch(){
-		Version info in github posts
 		changing #includes manually causes issues with the file explorer
 		-Create a "Refresh Project Explorer" option.
 	}
@@ -36,9 +35,6 @@
 	Suggested_by_bgm(){
 		Code_Vault(){
 			Add an area for comments for snippets
-		}
-		backup(){
-			Create an Option/Disable Backup for saving files
 		}
 	}
 */
@@ -89,6 +85,7 @@ return
 #Include arrows.ahk
 #Include auto insert.ahk
 #Include automenu.ahk
+#Include Back.ahk
 #Include brace.ahk
 #Include bracesetup.ahk
 #Include center.ahk
@@ -153,6 +150,7 @@ return
 #Include fix indent.ahk
 #Include focus.ahk
 #Include fold.ahk
+#Include Forward.ahk
 #Include ftp servers.ahk
 #Include full backup.ahk
 #Include function search.ahk
@@ -165,6 +163,7 @@ return
 #Include help.ahk
 #Include helpfile.ahk
 #Include Highlight to Matching Brace.ahk
+#Include History.ahk
 #Include hk.ahk
 #Include hltline.ahk
 #Include Hotkey Search.ahk
@@ -182,6 +181,7 @@ return
 #Include local.ahk
 #Include LV Select.ahk
 #Include m.ahk
+#Include Manage Bookmarks.ahk
 #Include marginwidth.ahk
 #Include menu editor.ahk
 #Include menu search.ahk
@@ -209,7 +209,6 @@ return
 #Include posinfo.ahk
 #Include post all in one gist.ahk
 #Include Post Multiple Segment Gist.ahk
-#Include Previous Bookmark.ahk
 #Include previous found.ahk
 #Include Previous Scripts.ahk
 #Include publish.ahk
@@ -282,4 +281,3 @@ return
 #Include window.ahk
 #Include WM COPYDATA.ahk
 #Include Words In Document.ahk
-#Include Manage Bookmarks.ahk

@@ -8,7 +8,7 @@ tv(tv=0,open=""){
 	if (A_GuiEvent="S"||open){
 		if !v.startup
 			getpos(),count:=0
-		ei:=open?tv:a_eventinfo,sc:=csc(),file:=files.ssn("//*[@tv='" ei "']")
+		ei:=open?tv:a_eventinfo,sc:=csc(),file:=files.ssn("//*[@tv='" ei "']"),fn:=ssn(file,"@file").text
 		if !ssn(file,"@tv").text
 			return
 		if !doc:=ssn(file,"@sc"){
@@ -25,7 +25,6 @@ tv(tv=0,open=""){
 				goto tvtop
 			}
 			sc.2358(0,doc)
-			fn:=ssn(file,"@file").text
 			tt:=update({get:fn})
 			length:=VarSetCapacity(text,strput(tt,"utf-8"))
 			StrPut(tt,&text,length,"utf-8")
@@ -34,13 +33,10 @@ tv(tv=0,open=""){
 			while,dd:=dup.item[A_Index-1]
 				dd.SetAttribute("sc",doc)
 		}else
-		sc.2358(0,doc.text)
-		marginwidth(sc)
-		current(1).SetAttribute("last",ssn(file,"@file").text)
-		current:=ssn(current(1),"@file").text
+		sc.2358(0,doc.text),marginwidth(sc),current(1).SetAttribute("last",fn)
 		GuiControl,1:+Redraw,% sc.sc
-		setpos(ei),uppos()
-		WinSetTitle,% hwnd([1]),,% "AHK Studio - " ssn(file,"@file").text
+		setpos(ei),uppos(),history(fn)
+		WinSetTitle,% hwnd([1]),,AHK Studio - %fn%
 	}
 	return
 }

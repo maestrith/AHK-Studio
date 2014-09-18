@@ -22,7 +22,7 @@ menu_editor(x=0){
 			}
 			mil:="ImageList" il
 		}
-		newwin.Add(["Text,,Control+UP/DOWN/LEFT/RIGHT will move items","Edit,gmesearch w500,,w","ListView,w500 r9 gmego -TabStop AltSubmit ReadOnly,Menu Item Search|Hotkey,w","TreeView,w500 r10 hwndhwnd " mil ",,wh","Button,gaddmenu,Add A New Menu,y","Button,x+10 gchangeitem,Change Item,y","Button,x+10 gaddsep,Add Separator,y","Button,x+10 gedithotkey Default,Edit Hotkey,y","Button,xm gmenudefault,Re-Load Defaults,y","Button,x+10 gsortmenus,Sort Menus,y","Button,x+10 gsortsubmenus,Sort Sub-Menus,y","Button,xm gmeci,Change Icon,y","Button,x+10 gmeri,Remove Icon,y","Button,x+10 gmerai,Remove All Icons From Current Menu,y"])
+		newwin.Add(["Text,,Control+UP/DOWN/LEFT/RIGHT will move items","Edit,gmesearch w500,,w","ListView,w500 r9 gmego AltSubmit ReadOnly,Menu Item Search|Hotkey,w","TreeView,w500 r10 hwndhwnd " mil ",,wh","Button,gaddmenu,Add A New Menu,y","Button,x+10 gchangeitem,Change Item,y","Button,x+10 gaddsep,Add Separator,y","Button,x+10 gedithotkey Default,Edit Hotkey,y","Button,xm gmenudefault,Re-Load Defaults,y","Button,x+10 gsortmenus,Sort Menus,y","Button,x+10 gsortsubmenus,Sort Sub-Menus,y","Button,xm gmeci,Change Icon,y","Button,x+10 gmeri,Remove Icon,y","Button,x+10 gmerai,Remove All Icons From Current Menu,y"])
 		hotkeys([2],{"Del":"deletenode","^up":"moveup","^down":"movedown","^left":"moveover","^right":"moveunder"})
 		newwin.Show("Menu Editor")
 		ControlGet,TreeView,hwnd,,SysTreeView321,% hwnd([2])
@@ -67,8 +67,6 @@ menu_editor(x=0){
 	LV_ModifyCol(2,"SortDesc")
 	Return
 	mego:
-	if (A_GuiEvent!="Normal")
-		return
 	LV_GetText(edit,LV_GetNext())
 	if tv:=menus.ssn("//*[@clean='" RegExReplace(edit," ","_") "']/@tv").text
 		TV_Modify(tv,"Select Vis Focus")
@@ -124,10 +122,8 @@ menu_editor(x=0){
 	return
 	addmenu:
 	Gui,2:Default
-	top:=menus.ssn("//*[@|Hotkeytv='" TV_GetSelection() "']")
+	top:=menus.ssn("//*[@tv='" TV_GetSelection() "']")
 	newname:=InputBox(TreeView,"New Menu Item","Enter a new name for a menu/item")
-	if ErrorLevel
-		return
 	if (ssn(top,"@menu").text="")
 		main:=top.ParentNode
 	new:=menus.under({under:main,node:"menu",att:{name:newname,last:1,clean:clean(newname)}})

@@ -69,7 +69,7 @@ gui(){
 	Gui,1:Show,%pos% %max%,AHK Studio
 	while,oo:=open.item[A_Index-1]{
 		if FileExist(oo.text)
-			open(oo.text),last:=oo.text
+			open(oo.text,2),last:=oo.text
 		else{
 			rem:=settings.sn("//file[text()='" oo.text "']")
 			while,rr:=rem.item[A_Index-1]

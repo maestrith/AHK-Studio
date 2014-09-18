@@ -12,6 +12,8 @@ options(){
 	Hide_Project_Explorer:
 	Virtual_Space:
 	Warn_Overwrite_On_Export:
+	Disable_Backup:
+	Disable_Autosave:
 	sc:=csc()
 	onoff:=settings.ssn("//options/@" A_ThisLabel).text?0:1
 	att:=[],att[A_ThisLabel]:=onoff

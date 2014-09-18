@@ -1,6 +1,15 @@
-save(){
+save(option=""){
 	sc:=csc(),getpos(),info:=update("get"),now:=A_Now,currentdoc:=sc.2357
 	GuiControl,-Redraw,% sc.sc
+	if (option=1){
+		for a,b in info.2{
+			MsgBox,35,Save File?,File contents have been updated for %a%.`nWould you like to save the updates?
+			IfMsgBox,No
+				info.2.Remove(a)
+			IfMsgBox,Cancel
+				return
+		}
+	}
 	for filename in info.2{
 		text:=info.1[filename],main:=ssn(current(1),"@file").text
 		if settings.ssn("//options/@Enable_Close_On_Save").text
@@ -11,11 +20,15 @@ save(){
 					Process,Close,% process.processid
 		}
 		SplitPath,filename,file,dir
-		if !FileExist(dir "\backup")
-			FileCreateDir,% dir "\backup"
-		if !FileExist(dir "\backup\" now)
-			FileCreateDir,% dir "\backup\" now
-		FileMove,%filename%,% dir "\backup\" now "\" file,1
+		if !(v.options.disable_backup){
+			if !FileExist(dir "\backup")
+				FileCreateDir,% dir "\backup"
+			if !FileExist(dir "\backup\" now)
+				FileCreateDir,% dir "\backup\" now
+			FileMove,%filename%,% dir "\backup\" now "\" file,1
+		}else{
+			FileDelete,%filename%
+		}
 		StringReplace,text,text,`n,`r`n,All
 		FileAppend,%text%,%filename%,utf-8
 		Gui,1:TreeView,% hwnd("fe")
@@ -36,9 +49,7 @@ save(){
 			fff.SetAttribute("time",time)
 	}
 	GuiControl,+Redraw,% sc.sc
-	sc.2358(0,currentdoc)
-	cd:=files.ssn("//file[@sc='" currentdoc "']")
-	posinfo:=positions.ssn("//main[@file='" ssn(cd.ParentNode,"@file").text "']/file[@file='" ssn(cd,"@file").text "']")
+	sc.2358(0,currentdoc),cd:=files.ssn("//file[@sc='" currentdoc "']"),posinfo:=positions.ssn("//main[@file='" ssn(cd.ParentNode,"@file").text "']/file[@file='" ssn(cd,"@file").text "']")
 	ea:=xml.ea(posinfo),fold:=ea.fold,breakpoint:=ea.breakpoint
 	Loop,Parse,fold,`,
 		sc.2231(A_LoopField)
@@ -46,7 +57,6 @@ save(){
 		sc.2043(A_LoopField,0)
 	if ea.start&&ea.end
 		sc.2613(ea.scroll),sc.2160(ea.start,ea.end)
-	savegui(),positions.save(1),vversion.save(1)
-	lastfiles()
+	savegui(),positions.save(1),vversion.save(1),lastfiles()
 	update("clearupdated")
 }
