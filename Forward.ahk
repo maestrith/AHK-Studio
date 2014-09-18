@@ -9,5 +9,6 @@ Forward(){
 	}
 	if (next&&next<=list.history.MaxIndex())
 		history({current:next})
+	Sleep,200
 	history({stop:0})
 }

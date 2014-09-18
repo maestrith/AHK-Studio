@@ -10,5 +10,6 @@ Back(){
 	}
 	if prev
 		history({current:prev})
+	Sleep,200
 	history({stop:0})
 }
