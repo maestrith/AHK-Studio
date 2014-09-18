@@ -5,6 +5,9 @@ Back(){
 		if tv:=files.ssn("//file[@file='" file "']/@tv").text{
 			tv(tv)
 			break
+		}else{
+			list.history.Remove(prev)
+			Continue
 		}
 		prev--
 	}

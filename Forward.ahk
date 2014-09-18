@@ -4,6 +4,9 @@ Forward(){
 		if tv:=files.ssn("//file[@file='" list.history[next] "']/@tv").text{
 			tv(tv)
 			break
+		}else{
+			list.history.Remove(next)
+			Continue
 		}
 		next++
 	}
