@@ -61,10 +61,6 @@ commit(commitmsg,version){
 		return m("Nothing new to upload")
 	upload:=[]
 	for a,text in uplist{
-		/*
-			if InStr(text,Chr(59) "github_version")
-				text:=RegExReplace(text,Chr(59) "github_version",version),m(text)
-		*/
 		blob:=git.blob(repo,RegExReplace(text,Chr(59) "github_version",version))
 		SplashTextOn,200,150,Updating,%a%
 		upload[a]:=blob
