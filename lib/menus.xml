@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <menus>
-
 	<main>
 		<menu name="&amp;File" clean="File">
 			<menu name="Chec&amp;k For Update" clean="Check_For_Update" hotkey=""></menu>
