@@ -73,7 +73,7 @@ commit(commitmsg,version){
 		StringReplace,gitfile,newfn,\,/,All
 		safefile:=localdir "\" newfn
 		FileRead,local,%safefile%
-		if RegExReplace(orig,local)
+		if RegExReplace(local,orig)
 			uplist[gitfile]:=orig,safe[safefile]:=orig,up:=1
 	}
 	if !up
