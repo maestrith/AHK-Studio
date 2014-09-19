@@ -52,8 +52,7 @@ commit(commitmsg,version){
 		FileRead,compare,%localdir%\%file%
 		StringReplace,compare,compare,`r`n,`n,All
 		if InStr(text,Chr(59) "github_version")
-			m(RegExReplace(text,Chr(59) "github_version",version))
-		
+			uplist[Trim(gitdir "/" file,"/")]:=RegExReplace(text,Chr(59) "github_version",version)
 		if (text!=compare){
 			safe[localdir "\" file]:=text
 			StringReplace,gitdir,newdir,\,/,All
