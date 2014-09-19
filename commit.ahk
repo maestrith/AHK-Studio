@@ -74,7 +74,7 @@ commit(commitmsg,version){
 		safefile:=localdir "\" newfn
 		FileRead,local,%safefile%
 		;m(safefile)
-		if (local!=orig){
+		if (Trim(local)!=Trim(orig)){
 			uplist[gitfile]:=orig
 			safe[safefile]:=orig,up:=1
 		}
