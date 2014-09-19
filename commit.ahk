@@ -73,13 +73,11 @@ commit(commitmsg,version){
 		StringReplace,gitfile,newfn,\,/,All
 		safefile:=localdir "\" newfn
 		FileRead,local,%safefile%
-		;m(safefile)
-		if (Trim(local)!=Trim(orig)){
+		if (Trim(local,"`r`n")!=Trim(orig,"`r`n")){
 			uplist[gitfile]:=orig
 			safe[safefile]:=orig,up:=1
 		}
 	}
-	;return m("remove this")
 	if !up
 		return m("Nothing new to upload")
 	upload:=[]
