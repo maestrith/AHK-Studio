@@ -64,6 +64,20 @@ commit(commitmsg,version){
 			uplist[Trim(gitdir "/" file,"/")]:=text,up:=1
 		}
 	}
+	node:=vversion.sn("//info[@file='" current(2).file "']/files/file")
+	mainfolder:=current(2).file
+	SplitPath,mainfolder,,checkdir
+	while,nn:=node.item[A_Index-1].text{
+		FileRead,orig,%nn%
+		StringReplace,newfn,nn,%checkdir%\
+		StringReplace,gitfile,newfn,\,/,All
+		safefile:=localdir "\" newfn
+		FileRead,local,%safefile%
+		if (local!=orig){
+			uplist[gitfile]:=orig
+			safe[safefile]:=orig,up:=1
+		}
+	}
 	if !up
 		return m("Nothing new to upload")
 	upload:=[]

@@ -1,0 +1,2682 @@
+<?xml version="1.0"?>
+<scintilla>
+	<date>20140129</date>
+	<commands>
+		<item code="2376" name="ADDREFDOCUMENT" syntax="(0,int doc)"></item>
+		<item code="2573" name="ADDSELECTION" syntax="(int caret,int anchor)"></item>
+		<item code="2002" name="ADDSTYLEDTEXT" syntax="(int length,cells c)"></item>
+		<item code="2001" name="ADDTEXT" syntax="(int length,string text)"></item>
+		<item code="2560" name="ADDUNDOACTION" syntax="(int token,int flags)"></item>
+		<item code="2446" name="ALLOCATE" syntax="(int bytes)"></item>
+		<item code="2553" name="ALLOCATEEXTENDEDSTYLES" syntax="(int numberStyles)"></item>
+		<item code="4020" name="ALLOCATESUBSTYLES" syntax="(int styleBase,int numberStyles)"></item>
+		<item code="2547" name="ANNOTATIONCLEARALL"></item>
+		<item code="2546" name="ANNOTATIONGETLINES" syntax="(int line)"></item>
+		<item code="2543" name="ANNOTATIONGETSTYLE" syntax="(int line)"></item>
+		<item code="2551" name="ANNOTATIONGETSTYLEOFFSET"></item>
+		<item code="2545" name="ANNOTATIONGETSTYLES" syntax="(int line,stringresult styles)"></item>
+		<item code="2541" name="ANNOTATIONGETTEXT" syntax="(int line,stringresult text)"></item>
+		<item code="2549" name="ANNOTATIONGETVISIBLE"></item>
+		<item code="2542" name="ANNOTATIONSETSTYLE" syntax="(int line,int style)"></item>
+		<item code="2550" name="ANNOTATIONSETSTYLEOFFSET" syntax="(int style)"></item>
+		<item code="2544" name="ANNOTATIONSETSTYLES" syntax="(int line,string styles)"></item>
+		<item code="2540" name="ANNOTATIONSETTEXT" syntax="(int line,string text)"></item>
+		<item code="2548" name="ANNOTATIONSETVISIBLE" syntax="(int visible)"></item>
+		<item code="2282" name="APPENDTEXT" syntax="(int length,string text)"></item>
+		<item code="2070" name="ASSIGNCMDKEY" syntax="(keymod km,int msg)"></item>
+		<item code="2102" name="AUTOCACTIVE"></item>
+		<item code="2101" name="AUTOCCANCEL"></item>
+		<item code="2025" name="AUTOCCANCELLED"></item>
+		<item code="2026" name="AUTOCCHARDELETED"></item>
+		<item code="2104" name="AUTOCCOMPLETE"></item>
+		<item code="2119" name="AUTOCGETAUTOHIDE"></item>
+		<item code="2111" name="AUTOCGETCANCELATSTART"></item>
+		<item code="2635" name="AUTOCGETCASEINSENSITIVEBEHAVIOUR"></item>
+		<item code="2114" name="AUTOCGETCHOOSESINGLE"></item>
+		<item code="2445" name="AUTOCGETCURRENT"></item>
+		<item code="2610" name="AUTOCGETCURRENTTEXT" syntax="(0,stringresult s)"></item>
+		<item code="2271" name="AUTOCGETDROPRESTOFWORD"></item>
+		<item code="2116" name="AUTOCGETIGNORECASE"></item>
+		<item code="2211" name="AUTOCGETMAXHEIGHT"></item>
+		<item code="2209" name="AUTOCGETMAXWIDTH"></item>
+		<item code="2637" name="AUTOCGETMULTI"></item>
+		<item code="2661" name="AUTOCGETORDER"></item>
+		<item code="2107" name="AUTOCGETSEPARATOR"></item>
+		<item code="2285" name="AUTOCGETTYPESEPARATOR"></item>
+		<item code="2103" name="AUTOCPOSSTART"></item>
+		<item code="2108" name="AUTOCSELECT" syntax="(0,string text)"></item>
+		<item code="2022" name="AUTOCSELECTION" syntax="(string text,int position)"></item>
+		<item code="2118" name="AUTOCSETAUTOHIDE" syntax="(bool autoHide)"></item>
+		<item code="2110" name="AUTOCSETCANCELATSTART" syntax="(bool cancel)"></item>
+		<item code="2634" name="AUTOCSETCASEINSENSITIVEBEHAVIOUR" syntax="(int behaviour)"></item>
+		<item code="2113" name="AUTOCSETCHOOSESINGLE" syntax="(bool chooseSingle)"></item>
+		<item code="2270" name="AUTOCSETDROPRESTOFWORD" syntax="(bool dropRestOfWord)"></item>
+		<item code="2112" name="AUTOCSETFILLUPS" syntax="(0,string characterSet)"></item>
+		<item code="2115" name="AUTOCSETIGNORECASE" syntax="(bool ignoreCase)"></item>
+		<item code="2210" name="AUTOCSETMAXHEIGHT" syntax="(int rowCount)"></item>
+		<item code="2208" name="AUTOCSETMAXWIDTH" syntax="(int characterCount)"></item>
+		<item code="2636" name="AUTOCSETMULTI" syntax="(int multi)"></item>
+		<item code="2660" name="AUTOCSETORDER" syntax="(int order)"></item>
+		<item code="2106" name="AUTOCSETSEPARATOR" syntax="(int separatorCharacter)"></item>
+		<item code="2286" name="AUTOCSETTYPESEPARATOR" syntax="(int separatorCharacter)"></item>
+		<item code="2100" name="AUTOCSHOW" syntax="(int lenEntered,string itemList)"></item>
+		<item code="2105" name="AUTOCSTOPS" syntax="(0,string characterSet)"></item>
+		<item code="2328" name="BACKTAB"></item>
+		<item code="2078" name="BEGINUNDOACTION"></item>
+		<item code="2352" name="BRACEBADLIGHT" syntax="(position pos)"></item>
+		<item code="2499" name="BRACEBADLIGHTINDICATOR" syntax="(bool useBraceBadLightIndicator,int indicator)"></item>
+		<item code="2351" name="BRACEHIGHLIGHT" syntax="(position pos1,position pos2)"></item>
+		<item code="2498" name="BRACEHIGHLIGHTINDICATOR" syntax="(bool useBraceHighlightIndicator,int indicator)"></item>
+		<item code="2353" name="BRACEMATCH" syntax="(position pos)"></item>
+		<item code="2202" name="CALLTIPACTIVE"></item>
+		<item code="2201" name="CALLTIPCANCEL"></item>
+		<item code="2021" name="CALLTIPCLICK" syntax="(int position)"></item>
+		<item code="2203" name="CALLTIPPOSSTART"></item>
+		<item code="2205" name="CALLTIPSETBACK" syntax="(colour back)"></item>
+		<item code="2206" name="CALLTIPSETFORE" syntax="(colour fore)"></item>
+		<item code="2207" name="CALLTIPSETFOREHLT" syntax="(colour fore)"></item>
+		<item code="2204" name="CALLTIPSETHLT" syntax="(int start,int end)"></item>
+		<item code="2213" name="CALLTIPSETPOSITION" syntax="(bool above)"></item>
+		<item code="2214" name="CALLTIPSETPOSSTART" syntax="(int posStart)"></item>
+		<item code="2200" name="CALLTIPSHOW" syntax="(position pos,string definition)"></item>
+		<item code="2212" name="CALLTIPUSESTYLE" syntax="(int tabSize)"></item>
+		<item code="2325" name="CANCEL"></item>
+		<item code="2173" name="CANPASTE"></item>
+		<item code="2016" name="CANREDO"></item>
+		<item code="2174" name="CANUNDO"></item>
+		<item code="2672" name="CHANGEINSERTION" syntax="(int length,string text)"></item>
+		<item code="2617" name="CHANGELEXERSTATE" syntax="(position start,position end)"></item>
+		<item code="2001" name="CHARADDED" syntax="(int ch)"></item>
+		<item code="2304" name="CHARLEFT"></item>
+		<item code="2305" name="CHARLEFTEXTEND"></item>
+		<item code="2428" name="CHARLEFTRECTEXTEND"></item>
+		<item code="2561" name="CHARPOSITIONFROMPOINT" syntax="(int x,int y)"></item>
+		<item code="2562" name="CHARPOSITIONFROMPOINTCLOSE" syntax="(int x,int y)"></item>
+		<item code="2306" name="CHARRIGHT"></item>
+		<item code="2307" name="CHARRIGHTEXTEND"></item>
+		<item code="2429" name="CHARRIGHTRECTEXTEND"></item>
+		<item code="2399" name="CHOOSECARETX"></item>
+		<item code="2180" name="CLEAR"></item>
+		<item code="2004" name="CLEARALL"></item>
+		<item code="2072" name="CLEARALLCMDKEYS"></item>
+		<item code="2071" name="CLEARCMDKEY" syntax="(keymod km)"></item>
+		<item code="2005" name="CLEARDOCUMENTSTYLE"></item>
+		<item code="2408" name="CLEARREGISTEREDIMAGES"></item>
+		<item code="2667" name="CLEARREPRESENTATION" syntax="(string encodedCharacter)"></item>
+		<item code="2571" name="CLEARSELECTIONS"></item>
+		<item code="4003" name="COLOURISE" syntax="(position start,position end)"></item>
+		<item code="2618" name="CONTRACTEDFOLDNEXT" syntax="(int lineStart)"></item>
+		<item code="2029" name="CONVERTEOLS" syntax="(int eolMode)"></item>
+		<item code="2178" name="COPY"></item>
+		<item code="2519" name="COPYALLOWLINE"></item>
+		<item code="2419" name="COPYRANGE" syntax="(position start,position end)"></item>
+		<item code="2420" name="COPYTEXT" syntax="(int length,string text)"></item>
+		<item code="2633" name="COUNTCHARACTERS" syntax="(int startPos,int endPos)"></item>
+		<item code="2375" name="CREATEDOCUMENT"></item>
+		<item code="2632" name="CREATELOADER" syntax="(int bytes)"></item>
+		<item code="2177" name="CUT"></item>
+		<item code="2326" name="DELETEBACK"></item>
+		<item code="2344" name="DELETEBACKNOTLINE"></item>
+		<item code="2645" name="DELETERANGE" syntax="(position pos,int deleteLength)"></item>
+		<item code="2395" name="DELLINELEFT"></item>
+		<item code="2396" name="DELLINERIGHT"></item>
+		<item code="2335" name="DELWORDLEFT"></item>
+		<item code="2336" name="DELWORDRIGHT"></item>
+		<item code="2518" name="DELWORDRIGHTEND"></item>
+		<item code="4017" name="DESCRIBEKEYWORDSETS" syntax="(0,stringresult descriptions)"></item>
+		<item code="4016" name="DESCRIBEPROPERTY" syntax="(string name,stringresult description)"></item>
+		<item code="4025" name="DISTANCETOSECONDARYSTYLES"></item>
+		<item code="2221" name="DOCLINEFROMVISIBLE" syntax="(int lineDisplay)"></item>
+		<item code="2318" name="DOCUMENTEND"></item>
+		<item code="2319" name="DOCUMENTENDEXTEND"></item>
+		<item code="2316" name="DOCUMENTSTART"></item>
+		<item code="2317" name="DOCUMENTSTARTEXTEND"></item>
+		<item code="2006" name="DOUBLECLICK" syntax="(int modifiers,int position)"></item>
+		<item code="2671" name="DROPSELECTIONN" syntax="(int selection)"></item>
+		<item code="2017" name="DWELLEND" syntax="(int position,int x)"></item>
+		<item code="2016" name="DWELLSTART" syntax="(int position,int x)"></item>
+		<item code="2324" name="EDITTOGGLEOVERTYPE"></item>
+		<item code="2175" name="EMPTYUNDOBUFFER"></item>
+		<item code="2449" name="ENCODEDFROMUTF8" syntax="(string utf8,stringresult encoded)"></item>
+		<item code="2079" name="ENDUNDOACTION"></item>
+		<item code="2232" name="ENSUREVISIBLE" syntax="(int line)"></item>
+		<item code="2234" name="ENSUREVISIBLEENFORCEPOLICY" syntax="(int line)"></item>
+		<item code="2239" name="EXPANDCHILDREN" syntax="(int line,int level)"></item>
+		<item code="2456" name="FINDCOLUMN" syntax="(int line,int column)"></item>
+		<item code="2641" name="FINDINDICATORFLASH" syntax="(position start,position end)"></item>
+		<item code="2642" name="FINDINDICATORHIDE"></item>
+		<item code="2640" name="FINDINDICATORSHOW" syntax="(position start,position end)"></item>
+		<item code="2150" name="FINDTEXT" syntax="(int flags,findtext ft)"></item>
+		<item code="2028" name="FOCUSIN"></item>
+		<item code="2029" name="FOCUSOUT"></item>
+		<item code="2662" name="FOLDALL" syntax="(int action)"></item>
+		<item code="2238" name="FOLDCHILDREN" syntax="(int line,int action)"></item>
+		<item code="2237" name="FOLDLINE" syntax="(int line,int action)"></item>
+		<item code="2151" name="FORMATRANGE" syntax="(bool draw,formatrange fr)"></item>
+		<item code="2330" name="FORMFEED"></item>
+		<item code="4023" name="FREESUBSTYLES"></item>
+		<item code="2605" name="GETADDITIONALCARETFORE"></item>
+		<item code="2568" name="GETADDITIONALCARETSBLINK"></item>
+		<item code="2609" name="GETADDITIONALCARETSVISIBLE"></item>
+		<item code="2603" name="GETADDITIONALSELALPHA"></item>
+		<item code="2566" name="GETADDITIONALSELECTIONTYPING"></item>
+		<item code="2236" name="GETALLLINESVISIBLE"></item>
+		<item code="2009" name="GETANCHOR"></item>
+		<item code="2664" name="GETAUTOMATICFOLD"></item>
+		<item code="2263" name="GETBACKSPACEUNINDENTS"></item>
+		<item code="2034" name="GETBUFFEREDDRAW"></item>
+		<item code="2138" name="GETCARETFORE"></item>
+		<item code="2097" name="GETCARETLINEBACK"></item>
+		<item code="2471" name="GETCARETLINEBACKALPHA"></item>
+		<item code="2095" name="GETCARETLINEVISIBLE"></item>
+		<item code="2654" name="GETCARETLINEVISIBLEALWAYS"></item>
+		<item code="2075" name="GETCARETPERIOD"></item>
+		<item code="2457" name="GETCARETSTICKY"></item>
+		<item code="2513" name="GETCARETSTYLE"></item>
+		<item code="2189" name="GETCARETWIDTH"></item>
+		<item code="2520" name="GETCHARACTERPOINTER"></item>
+		<item code="2007" name="GETCHARAT" syntax="(position pos)"></item>
+		<item code="2137" name="GETCODEPAGE"></item>
+		<item code="2129" name="GETCOLUMN" syntax="(position pos)"></item>
+		<item code="2389" name="GETCONTROLCHARSYMBOL"></item>
+		<item code="2027" name="GETCURLINE" syntax="(int length,stringresult text)"></item>
+		<item code="2008" name="GETCURRENTPOS"></item>
+		<item code="2387" name="GETCURSOR"></item>
+		<item code="2184" name="GETDIRECTFUNCTION"></item>
+		<item code="2185" name="GETDIRECTPOINTER"></item>
+		<item code="2357" name="GETDOCPOINTER"></item>
+		<item code="2364" name="GETEDGECOLOUR"></item>
+		<item code="2360" name="GETEDGECOLUMN"></item>
+		<item code="2362" name="GETEDGEMODE"></item>
+		<item code="2278" name="GETENDATLASTLINE"></item>
+		<item code="2028" name="GETENDSTYLED"></item>
+		<item code="2030" name="GETEOLMODE"></item>
+		<item code="2526" name="GETEXTRAASCENT"></item>
+		<item code="2528" name="GETEXTRADESCENT"></item>
+		<item code="2152" name="GETFIRSTVISIBLELINE"></item>
+		<item code="2381" name="GETFOCUS"></item>
+		<item code="2230" name="GETFOLDEXPANDED" syntax="(int line)"></item>
+		<item code="2223" name="GETFOLDLEVEL" syntax="(int line)"></item>
+		<item code="2225" name="GETFOLDPARENT" syntax="(int line)"></item>
+		<item code="2612" name="GETFONTQUALITY"></item>
+		<item code="2644" name="GETGAPPOSITION"></item>
+		<item code="2135" name="GETHIGHLIGHTGUIDE"></item>
+		<item code="2495" name="GETHOTSPOTACTIVEBACK"></item>
+		<item code="2494" name="GETHOTSPOTACTIVEFORE"></item>
+		<item code="2496" name="GETHOTSPOTACTIVEUNDERLINE"></item>
+		<item code="2497" name="GETHOTSPOTSINGLELINE"></item>
+		<item code="2131" name="GETHSCROLLBAR"></item>
+		<item code="2623" name="GETIDENTIFIER"></item>
+		<item code="2123" name="GETINDENT"></item>
+		<item code="2133" name="GETINDENTATIONGUIDES"></item>
+		<item code="2501" name="GETINDICATORCURRENT"></item>
+		<item code="2503" name="GETINDICATORVALUE"></item>
+		<item code="2522" name="GETKEYSUNICODE"></item>
+		<item code="2224" name="GETLASTCHILD" syntax="(int line,int level)"></item>
+		<item code="2273" name="GETLAYOUTCACHE"></item>
+		<item code="2006" name="GETLENGTH"></item>
+		<item code="4002" name="GETLEXER"></item>
+		<item code="4012" name="GETLEXERLANGUAGE" syntax="(0,stringresult text)"></item>
+		<item code="2153" name="GETLINE" syntax="(int line,stringresult text)"></item>
+		<item code="2154" name="GETLINECOUNT"></item>
+		<item code="2136" name="GETLINEENDPOSITION" syntax="(int line)"></item>
+		<item code="2658" name="GETLINEENDTYPESACTIVE"></item>
+		<item code="2657" name="GETLINEENDTYPESALLOWED"></item>
+		<item code="4018" name="GETLINEENDTYPESSUPPORTED"></item>
+		<item code="2127" name="GETLINEINDENTATION" syntax="(int line)"></item>
+		<item code="2128" name="GETLINEINDENTPOSITION" syntax="(int line)"></item>
+		<item code="2425" name="GETLINESELENDPOSITION" syntax="(int line)"></item>
+		<item code="2424" name="GETLINESELSTARTPOSITION" syntax="(int line)"></item>
+		<item code="2093" name="GETLINESTATE" syntax="(int line)"></item>
+		<item code="2228" name="GETLINEVISIBLE" syntax="(int line)"></item>
+		<item code="2575" name="GETMAINSELECTION"></item>
+		<item code="2249" name="GETMARGINCURSORN" syntax="(int margin)"></item>
+		<item code="2156" name="GETMARGINLEFT"></item>
+		<item code="2245" name="GETMARGINMASKN" syntax="(int margin)"></item>
+		<item code="2557" name="GETMARGINOPTIONS"></item>
+		<item code="2158" name="GETMARGINRIGHT"></item>
+		<item code="2247" name="GETMARGINSENSITIVEN" syntax="(int margin)"></item>
+		<item code="2241" name="GETMARGINTYPEN" syntax="(int margin)"></item>
+		<item code="2243" name="GETMARGINWIDTHN" syntax="(int margin)"></item>
+		<item code="2094" name="GETMAXLINESTATE"></item>
+		<item code="2378" name="GETMODEVENTMASK"></item>
+		<item code="2159" name="GETMODIFY"></item>
+		<item code="2385" name="GETMOUSEDOWNCAPTURES"></item>
+		<item code="2265" name="GETMOUSEDWELLTIME"></item>
+		<item code="2669" name="GETMOUSESELECTIONRECTANGULARSWITCH"></item>
+		<item code="2615" name="GETMULTIPASTE"></item>
+		<item code="2564" name="GETMULTIPLESELECTION"></item>
+		<item code="2187" name="GETOVERTYPE"></item>
+		<item code="2468" name="GETPASTECONVERTENDINGS"></item>
+		<item code="2515" name="GETPOSITIONCACHE"></item>
+		<item code="4028" name="GETPRIMARYSTYLEFROMSTYLE" syntax="(int style)"></item>
+		<item code="2149" name="GETPRINTCOLOURMODE"></item>
+		<item code="2147" name="GETPRINTMAGNIFICATION"></item>
+		<item code="2407" name="GETPRINTWRAPMODE"></item>
+		<item code="4008" name="GETPROPERTY" syntax="(string key,stringresult buf)"></item>
+		<item code="4009" name="GETPROPERTYEXPANDED" syntax="(string key,stringresult buf)"></item>
+		<item code="4010" name="GETPROPERTYINT" syntax="(string key)"></item>
+		<item code="2649" name="GETPUNCTUATIONCHARS" syntax="(0,stringresult characters)"></item>
+		<item code="2643" name="GETRANGEPOINTER" syntax="(int position,int rangeLength)"></item>
+		<item code="2140" name="GETREADONLY"></item>
+		<item code="2591" name="GETRECTANGULARSELECTIONANCHOR"></item>
+		<item code="2595" name="GETRECTANGULARSELECTIONANCHORVIRTUALSPACE"></item>
+		<item code="2589" name="GETRECTANGULARSELECTIONCARET"></item>
+		<item code="2593" name="GETRECTANGULARSELECTIONCARETVIRTUALSPACE"></item>
+		<item code="2599" name="GETRECTANGULARSELECTIONMODIFIER"></item>
+		<item code="2666" name="GETREPRESENTATION" syntax="(string encodedCharacter,stringresult representation)"></item>
+		<item code="2275" name="GETSCROLLWIDTH"></item>
+		<item code="2517" name="GETSCROLLWIDTHTRACKING"></item>
+		<item code="2199" name="GETSEARCHFLAGS"></item>
+		<item code="2477" name="GETSELALPHA"></item>
+		<item code="2650" name="GETSELECTIONEMPTY"></item>
+		<item code="2145" name="GETSELECTIONEND"></item>
+		<item code="2423" name="GETSELECTIONMODE"></item>
+		<item code="2579" name="GETSELECTIONNANCHOR" syntax="(int selection)"></item>
+		<item code="2583" name="GETSELECTIONNANCHORVIRTUALSPACE" syntax="(int selection)"></item>
+		<item code="2577" name="GETSELECTIONNCARET" syntax="(int selection)"></item>
+		<item code="2581" name="GETSELECTIONNCARETVIRTUALSPACE" syntax="(int selection)"></item>
+		<item code="2587" name="GETSELECTIONNEND" syntax="(int selection)"></item>
+		<item code="2585" name="GETSELECTIONNSTART" syntax="(int selection)"></item>
+		<item code="2570" name="GETSELECTIONS"></item>
+		<item code="2143" name="GETSELECTIONSTART"></item>
+		<item code="2479" name="GETSELEOLFILLED"></item>
+		<item code="2161" name="GETSELTEXT" syntax="(0,stringresult text)"></item>
+		<item code="2383" name="GETSTATUS"></item>
+		<item code="2010" name="GETSTYLEAT" syntax="(position pos)"></item>
+		<item code="2091" name="GETSTYLEBITS"></item>
+		<item code="4011" name="GETSTYLEBITSNEEDED"></item>
+		<item code="2015" name="GETSTYLEDTEXT" syntax="(0,textrange tr)"></item>
+		<item code="4027" name="GETSTYLEFROMSUBSTYLE" syntax="(int subStyle)"></item>
+		<item code="4026" name="GETSUBSTYLEBASES" syntax="(0,stringresult styles)"></item>
+		<item code="4022" name="GETSUBSTYLESLENGTH" syntax="(int styleBase)"></item>
+		<item code="4021" name="GETSUBSTYLESSTART" syntax="(int styleBase)"></item>
+		<item code="2261" name="GETTABINDENTS"></item>
+		<item code="2121" name="GETTABWIDTH"></item>
+		<item code="2616" name="GETTAG" syntax="(int tagNumber,stringresult tagValue)"></item>
+		<item code="2193" name="GETTARGETEND"></item>
+		<item code="2191" name="GETTARGETSTART"></item>
+		<item code="2631" name="GETTECHNOLOGY"></item>
+		<item code="2182" name="GETTEXT" syntax="(int length,stringresult text)"></item>
+		<item code="2183" name="GETTEXTLENGTH"></item>
+		<item code="2162" name="GETTEXTRANGE" syntax="(0,textrange tr)"></item>
+		<item code="2283" name="GETTWOPHASEDRAW"></item>
+		<item code="2019" name="GETUNDOCOLLECTION"></item>
+		<item code="2139" name="GETUSEPALETTE"></item>
+		<item code="2125" name="GETUSETABS"></item>
+		<item code="2355" name="GETVIEWEOL"></item>
+		<item code="2020" name="GETVIEWWS"></item>
+		<item code="2597" name="GETVIRTUALSPACEOPTIONS"></item>
+		<item code="2281" name="GETVSCROLLBAR"></item>
+		<item code="2647" name="GETWHITESPACECHARS" syntax="(0,stringresult characters)"></item>
+		<item code="2087" name="GETWHITESPACESIZE"></item>
+		<item code="2646" name="GETWORDCHARS" syntax="(0,stringresult characters)"></item>
+		<item code="2473" name="GETWRAPINDENTMODE"></item>
+		<item code="2269" name="GETWRAPMODE"></item>
+		<item code="2465" name="GETWRAPSTARTINDENT"></item>
+		<item code="2461" name="GETWRAPVISUALFLAGS"></item>
+		<item code="2463" name="GETWRAPVISUALFLAGSLOCATION"></item>
+		<item code="2398" name="GETXOFFSET"></item>
+		<item code="2374" name="GETZOOM"></item>
+		<item code="2024" name="GOTOLINE" syntax="(int line)"></item>
+		<item code="2025" name="GOTOPOS" syntax="(position pos)"></item>
+		<item code="2400" name="GRABFOCUS"></item>
+		<item code="2227" name="HIDELINES" syntax="(int lineStart,int lineEnd)"></item>
+		<item code="2163" name="HIDESELECTION" syntax="(bool normal)"></item>
+		<item code="2312" name="HOME"></item>
+		<item code="2345" name="HOMEDISPLAY"></item>
+		<item code="2346" name="HOMEDISPLAYEXTEND"></item>
+		<item code="2313" name="HOMEEXTEND"></item>
+		<item code="2430" name="HOMERECTEXTEND"></item>
+		<item code="2349" name="HOMEWRAP"></item>
+		<item code="2450" name="HOMEWRAPEXTEND"></item>
+		<item code="2019" name="HOTSPOTCLICK" syntax="(int modifiers,int position)"></item>
+		<item code="2020" name="HOTSPOTDOUBLECLICK" syntax="(int modifiers,int position)"></item>
+		<item code="2027" name="HOTSPOTRELEASECLICK" syntax="(int modifiers,int position)"></item>
+		<item code="2506" name="INDICATORALLONFOR" syntax="(int position)"></item>
+		<item code="2505" name="INDICATORCLEARRANGE" syntax="(int position,int clearLength)"></item>
+		<item code="2023" name="INDICATORCLICK" syntax="(int modifiers,int position)"></item>
+		<item code="2509" name="INDICATOREND" syntax="(int indicator,int position)"></item>
+		<item code="2504" name="INDICATORFILLRANGE" syntax="(int position,int fillLength)"></item>
+		<item code="2024" name="INDICATORRELEASE" syntax="(int modifiers,int position)"></item>
+		<item code="2508" name="INDICATORSTART" syntax="(int indicator,int position)"></item>
+		<item code="2507" name="INDICATORVALUEAT" syntax="(int indicator,int position)"></item>
+		<item code="2524" name="INDICGETALPHA" syntax="(int indicator)"></item>
+		<item code="2083" name="INDICGETFORE" syntax="(int indic)"></item>
+		<item code="2559" name="INDICGETOUTLINEALPHA" syntax="(int indicator)"></item>
+		<item code="2081" name="INDICGETSTYLE" syntax="(int indic)"></item>
+		<item code="2511" name="INDICGETUNDER" syntax="(int indic)"></item>
+		<item code="2523" name="INDICSETALPHA" syntax="(int indicator,int alpha)"></item>
+		<item code="2082" name="INDICSETFORE" syntax="(int indic,colour fore)"></item>
+		<item code="2558" name="INDICSETOUTLINEALPHA" syntax="(int indicator,int alpha)"></item>
+		<item code="2080" name="INDICSETSTYLE" syntax="(int indic,int style)"></item>
+		<item code="2510" name="INDICSETUNDER" syntax="(int indic,bool under)"></item>
+		<item code="2003" name="INSERTTEXT" syntax="(position pos,string text)"></item>
+		<item code="2005" name="KEY" syntax="(int ch,int modifiers)"></item>
+		<item code="2455" name="LINECOPY"></item>
+		<item code="2337" name="LINECUT"></item>
+		<item code="2338" name="LINEDELETE"></item>
+		<item code="2300" name="LINEDOWN"></item>
+		<item code="2301" name="LINEDOWNEXTEND"></item>
+		<item code="2426" name="LINEDOWNRECTEXTEND"></item>
+		<item code="2404" name="LINEDUPLICATE"></item>
+		<item code="2314" name="LINEEND"></item>
+		<item code="2347" name="LINEENDDISPLAY"></item>
+		<item code="2348" name="LINEENDDISPLAYEXTEND"></item>
+		<item code="2315" name="LINEENDEXTEND"></item>
+		<item code="2432" name="LINEENDRECTEXTEND"></item>
+		<item code="2451" name="LINEENDWRAP"></item>
+		<item code="2452" name="LINEENDWRAPEXTEND"></item>
+		<item code="2166" name="LINEFROMPOSITION" syntax="(position pos)"></item>
+		<item code="2350" name="LINELENGTH" syntax="(int line)"></item>
+		<item code="2168" name="LINESCROLL" syntax="(int columns,int lines)"></item>
+		<item code="2342" name="LINESCROLLDOWN"></item>
+		<item code="2343" name="LINESCROLLUP"></item>
+		<item code="2288" name="LINESJOIN"></item>
+		<item code="2370" name="LINESONSCREEN"></item>
+		<item code="2289" name="LINESSPLIT" syntax="(int pixelWidth)"></item>
+		<item code="2339" name="LINETRANSPOSE"></item>
+		<item code="2302" name="LINEUP"></item>
+		<item code="2303" name="LINEUPEXTEND"></item>
+		<item code="2427" name="LINEUPRECTEXTEND"></item>
+		<item code="4007" name="LOADLEXERLIBRARY" syntax="(0,string path)"></item>
+		<item code="2340" name="LOWERCASE"></item>
+		<item code="2009" name="MACRORECORD" syntax="(int message,int wParam)"></item>
+		<item code="2010" name="MARGINCLICK" syntax="(int modifiers,int position)"></item>
+		<item code="2533" name="MARGINGETSTYLE" syntax="(int line)"></item>
+		<item code="2538" name="MARGINGETSTYLEOFFSET"></item>
+		<item code="2535" name="MARGINGETSTYLES" syntax="(int line,stringresult styles)"></item>
+		<item code="2531" name="MARGINGETTEXT" syntax="(int line,stringresult text)"></item>
+		<item code="2532" name="MARGINSETSTYLE" syntax="(int line,int style)"></item>
+		<item code="2537" name="MARGINSETSTYLEOFFSET" syntax="(int style)"></item>
+		<item code="2534" name="MARGINSETSTYLES" syntax="(int line,string styles)"></item>
+		<item code="2530" name="MARGINSETTEXT" syntax="(int line,string text)"></item>
+		<item code="2536" name="MARGINTEXTCLEARALL"></item>
+		<item code="2043" name="MARKERADD" syntax="(int line,int markerNumber)"></item>
+		<item code="2466" name="MARKERADDSET" syntax="(int line,int set)"></item>
+		<item code="2040" name="MARKERDEFINE" syntax="(int markerNumber,int markerSymbol)"></item>
+		<item code="2049" name="MARKERDEFINEPIXMAP" syntax="(int markerNumber,string pixmap)"></item>
+		<item code="2626" name="MARKERDEFINERGBAIMAGE" syntax="(int markerNumber,string pixels)"></item>
+		<item code="2044" name="MARKERDELETE" syntax="(int line,int markerNumber)"></item>
+		<item code="2045" name="MARKERDELETEALL" syntax="(int markerNumber)"></item>
+		<item code="2018" name="MARKERDELETEHANDLE" syntax="(int handle)"></item>
+		<item code="2293" name="MARKERENABLEHIGHLIGHT" syntax="(bool enabled)"></item>
+		<item code="2046" name="MARKERGET" syntax="(int line)"></item>
+		<item code="2017" name="MARKERLINEFROMHANDLE" syntax="(int handle)"></item>
+		<item code="2047" name="MARKERNEXT" syntax="(int lineStart,int markerMask)"></item>
+		<item code="2048" name="MARKERPREVIOUS" syntax="(int lineStart,int markerMask)"></item>
+		<item code="2476" name="MARKERSETALPHA" syntax="(int markerNumber,int alpha)"></item>
+		<item code="2042" name="MARKERSETBACK" syntax="(int markerNumber,colour back)"></item>
+		<item code="2292" name="MARKERSETBACKSELECTED" syntax="(int markerNumber,colour back)"></item>
+		<item code="2041" name="MARKERSETFORE" syntax="(int markerNumber,colour fore)"></item>
+		<item code="2529" name="MARKERSYMBOLDEFINED" syntax="(int markerNumber)"></item>
+		<item code="2008" name="MODIFIED" syntax="(int position,int modificationType)"></item>
+		<item code="2004" name="MODIFYATTEMPTRO"></item>
+		<item code="2401" name="MOVECARETINSIDEVIEW"></item>
+		<item code="2621" name="MOVESELECTEDLINESDOWN"></item>
+		<item code="2620" name="MOVESELECTEDLINESUP"></item>
+		<item code="2011" name="NEEDSHOWN" syntax="(int position,int length)"></item>
+		<item code="2329" name="NEWLINE"></item>
+		<item code="2172" name="NULL"></item>
+		<item code="2322" name="PAGEDOWN"></item>
+		<item code="2323" name="PAGEDOWNEXTEND"></item>
+		<item code="2434" name="PAGEDOWNRECTEXTEND"></item>
+		<item code="2320" name="PAGEUP"></item>
+		<item code="2321" name="PAGEUPEXTEND"></item>
+		<item code="2433" name="PAGEUPRECTEXTEND"></item>
+		<item code="2013" name="PAINTED"></item>
+		<item code="2413" name="PARADOWN"></item>
+		<item code="2414" name="PARADOWNEXTEND"></item>
+		<item code="2415" name="PARAUP"></item>
+		<item code="2416" name="PARAUPEXTEND"></item>
+		<item code="2179" name="PASTE"></item>
+		<item code="2164" name="POINTXFROMPOSITION" syntax="(0,position pos)"></item>
+		<item code="2165" name="POINTYFROMPOSITION" syntax="(0,position pos)"></item>
+		<item code="2418" name="POSITIONAFTER" syntax="(position pos)"></item>
+		<item code="2417" name="POSITIONBEFORE" syntax="(position pos)"></item>
+		<item code="2167" name="POSITIONFROMLINE" syntax="(int line)"></item>
+		<item code="2022" name="POSITIONFROMPOINT" syntax="(int x,int y)"></item>
+		<item code="2023" name="POSITIONFROMPOINTCLOSE" syntax="(int x,int y)"></item>
+		<item code="2670" name="POSITIONRELATIVE" syntax="(position pos,int relative)"></item>
+		<item code="4013" name="PRIVATELEXERCALL" syntax="(int operation,int pointer)"></item>
+		<item code="4014" name="PROPERTYNAMES" syntax="(0,stringresult names)"></item>
+		<item code="4015" name="PROPERTYTYPE" syntax="(string name)"></item>
+		<item code="2011" name="REDO"></item>
+		<item code="2405" name="REGISTERIMAGE" syntax="(int type,string xpmData)"></item>
+		<item code="2627" name="REGISTERRGBAIMAGE" syntax="(int type,string pixels)"></item>
+		<item code="2552" name="RELEASEALLEXTENDEDSTYLES"></item>
+		<item code="2377" name="RELEASEDOCUMENT" syntax="(0,int doc)"></item>
+		<item code="2170" name="REPLACESEL" syntax="(0,string text)"></item>
+		<item code="2194" name="REPLACETARGET" syntax="(int length,string text)"></item>
+		<item code="2195" name="REPLACETARGETRE" syntax="(int length,string text)"></item>
+		<item code="2625" name="RGBAIMAGESETHEIGHT" syntax="(int height)"></item>
+		<item code="2651" name="RGBAIMAGESETSCALE" syntax="(int scalePercent)"></item>
+		<item code="2624" name="RGBAIMAGESETWIDTH" syntax="(int width)"></item>
+		<item code="2606" name="ROTATESELECTION"></item>
+		<item code="2003" name="SAVEPOINTLEFT"></item>
+		<item code="2002" name="SAVEPOINTREACHED"></item>
+		<item code="2169" name="SCROLLCARET"></item>
+		<item code="2569" name="SCROLLRANGE" syntax="(position secondary,position primary)"></item>
+		<item code="2629" name="SCROLLTOEND"></item>
+		<item code="2628" name="SCROLLTOSTART"></item>
+		<item code="2366" name="SEARCHANCHOR"></item>
+		<item code="2197" name="SEARCHINTARGET" syntax="(int length,string text)"></item>
+		<item code="2367" name="SEARCHNEXT" syntax="(int flags,string text)"></item>
+		<item code="2368" name="SEARCHPREV" syntax="(int flags,string text)"></item>
+		<item code="2013" name="SELECTALL"></item>
+		<item code="2469" name="SELECTIONDUPLICATE"></item>
+		<item code="2372" name="SELECTIONISRECTANGLE"></item>
+		<item code="2604" name="SETADDITIONALCARETFORE" syntax="(colour fore)"></item>
+		<item code="2567" name="SETADDITIONALCARETSBLINK" syntax="(bool additionalCaretsBlink)"></item>
+		<item code="2608" name="SETADDITIONALCARETSVISIBLE" syntax="(bool additionalCaretsBlink)"></item>
+		<item code="2602" name="SETADDITIONALSELALPHA" syntax="(int alpha)"></item>
+		<item code="2601" name="SETADDITIONALSELBACK" syntax="(colour back)"></item>
+		<item code="2565" name="SETADDITIONALSELECTIONTYPING" syntax="(bool additionalSelectionTyping)"></item>
+		<item code="2600" name="SETADDITIONALSELFORE" syntax="(colour fore)"></item>
+		<item code="2026" name="SETANCHOR" syntax="(position posAnchor)"></item>
+		<item code="2663" name="SETAUTOMATICFOLD" syntax="(int automaticFold)"></item>
+		<item code="2262" name="SETBACKSPACEUNINDENTS" syntax="(bool bsUnIndents)"></item>
+		<item code="2035" name="SETBUFFEREDDRAW" syntax="(bool buffered)"></item>
+		<item code="2069" name="SETCARETFORE" syntax="(colour fore)"></item>
+		<item code="2098" name="SETCARETLINEBACK" syntax="(colour back)"></item>
+		<item code="2470" name="SETCARETLINEBACKALPHA" syntax="(int alpha)"></item>
+		<item code="2096" name="SETCARETLINEVISIBLE" syntax="(bool show)"></item>
+		<item code="2655" name="SETCARETLINEVISIBLEALWAYS" syntax="(bool alwaysVisible)"></item>
+		<item code="2076" name="SETCARETPERIOD" syntax="(int periodMilliseconds)"></item>
+		<item code="2458" name="SETCARETSTICKY" syntax="(int useCaretStickyBehaviour)"></item>
+		<item code="2512" name="SETCARETSTYLE" syntax="(int caretStyle)"></item>
+		<item code="2188" name="SETCARETWIDTH" syntax="(int pixelWidth)"></item>
+		<item code="2444" name="SETCHARSDEFAULT"></item>
+		<item code="2037" name="SETCODEPAGE" syntax="(int codePage)"></item>
+		<item code="2388" name="SETCONTROLCHARSYMBOL" syntax="(int symbol)"></item>
+		<item code="2141" name="SETCURRENTPOS" syntax="(position pos)"></item>
+		<item code="2386" name="SETCURSOR" syntax="(int cursorType)"></item>
+		<item code="2358" name="SETDOCPOINTER" syntax="(0,int pointer)"></item>
+		<item code="2365" name="SETEDGECOLOUR" syntax="(colour edgeColour)"></item>
+		<item code="2361" name="SETEDGECOLUMN" syntax="(int column)"></item>
+		<item code="2363" name="SETEDGEMODE" syntax="(int mode)"></item>
+		<item code="2556" name="SETEMPTYSELECTION" syntax="(position pos)"></item>
+		<item code="2277" name="SETENDATLASTLINE" syntax="(bool endAtLastLine)"></item>
+		<item code="2031" name="SETEOLMODE" syntax="(int eolMode)"></item>
+		<item code="2525" name="SETEXTRAASCENT" syntax="(int extraAscent)"></item>
+		<item code="2527" name="SETEXTRADESCENT" syntax="(int extraDescent)"></item>
+		<item code="2613" name="SETFIRSTVISIBLELINE" syntax="(int lineDisplay)"></item>
+		<item code="2380" name="SETFOCUS" syntax="(bool focus)"></item>
+		<item code="2229" name="SETFOLDEXPANDED" syntax="(int line,bool expanded)"></item>
+		<item code="2233" name="SETFOLDFLAGS" syntax="(int flags)"></item>
+		<item code="2222" name="SETFOLDLEVEL" syntax="(int line,int level)"></item>
+		<item code="2290" name="SETFOLDMARGINCOLOUR" syntax="(bool useSetting,colour back)"></item>
+		<item code="2291" name="SETFOLDMARGINHICOLOUR" syntax="(bool useSetting,colour fore)"></item>
+		<item code="2611" name="SETFONTQUALITY" syntax="(int fontQuality)"></item>
+		<item code="2134" name="SETHIGHLIGHTGUIDE" syntax="(int column)"></item>
+		<item code="2411" name="SETHOTSPOTACTIVEBACK" syntax="(bool useSetting,colour back)"></item>
+		<item code="2410" name="SETHOTSPOTACTIVEFORE" syntax="(bool useSetting,colour fore)"></item>
+		<item code="2412" name="SETHOTSPOTACTIVEUNDERLINE" syntax="(bool underline)"></item>
+		<item code="2421" name="SETHOTSPOTSINGLELINE" syntax="(bool singleLine)"></item>
+		<item code="2130" name="SETHSCROLLBAR" syntax="(bool show)"></item>
+		<item code="2622" name="SETIDENTIFIER" syntax="(int identifier)"></item>
+		<item code="4024" name="SETIDENTIFIERS" syntax="(int style,string identifiers)"></item>
+		<item code="2122" name="SETINDENT" syntax="(int indentSize)"></item>
+		<item code="2132" name="SETINDENTATIONGUIDES" syntax="(int indentView)"></item>
+		<item code="2500" name="SETINDICATORCURRENT" syntax="(int indicator)"></item>
+		<item code="2502" name="SETINDICATORVALUE" syntax="(int value)"></item>
+		<item code="2521" name="SETKEYSUNICODE" syntax="(bool keysUnicode)"></item>
+		<item code="4005" name="SETKEYWORDS" syntax="(int keywordSet,string keyWords)"></item>
+		<item code="2272" name="SETLAYOUTCACHE" syntax="(int mode)"></item>
+		<item code="2448" name="SETLENGTHFORENCODE" syntax="(int bytes)"></item>
+		<item code="4001" name="SETLEXER" syntax="(int lexer)"></item>
+		<item code="4006" name="SETLEXERLANGUAGE" syntax="(0,string language)"></item>
+		<item code="2656" name="SETLINEENDTYPESALLOWED" syntax="(int lineEndBitSet)"></item>
+		<item code="2126" name="SETLINEINDENTATION" syntax="(int line,int indentSize)"></item>
+		<item code="2092" name="SETLINESTATE" syntax="(int line,int state)"></item>
+		<item code="2574" name="SETMAINSELECTION" syntax="(int selection)"></item>
+		<item code="2248" name="SETMARGINCURSORN" syntax="(int margin,int cursor)"></item>
+		<item code="2155" name="SETMARGINLEFT" syntax="(0,int pixelWidth)"></item>
+		<item code="2244" name="SETMARGINMASKN" syntax="(int margin,int mask)"></item>
+		<item code="2539" name="SETMARGINOPTIONS" syntax="(int marginOptions)"></item>
+		<item code="2157" name="SETMARGINRIGHT" syntax="(0,int pixelWidth)"></item>
+		<item code="2246" name="SETMARGINSENSITIVEN" syntax="(int margin,bool sensitive)"></item>
+		<item code="2240" name="SETMARGINTYPEN" syntax="(int margin,int marginType)"></item>
+		<item code="2242" name="SETMARGINWIDTHN" syntax="(int margin,int pixelWidth)"></item>
+		<item code="2359" name="SETMODEVENTMASK" syntax="(int mask)"></item>
+		<item code="2384" name="SETMOUSEDOWNCAPTURES" syntax="(bool captures)"></item>
+		<item code="2264" name="SETMOUSEDWELLTIME" syntax="(int periodMilliseconds)"></item>
+		<item code="2668" name="SETMOUSESELECTIONRECTANGULARSWITCH" syntax="(bool mouseSelectionRectangularSwitch)"></item>
+		<item code="2614" name="SETMULTIPASTE" syntax="(int multiPaste)"></item>
+		<item code="2563" name="SETMULTIPLESELECTION" syntax="(bool multipleSelection)"></item>
+		<item code="2186" name="SETOVERTYPE" syntax="(bool overtype)"></item>
+		<item code="2467" name="SETPASTECONVERTENDINGS" syntax="(bool convert)"></item>
+		<item code="2514" name="SETPOSITIONCACHE" syntax="(int size)"></item>
+		<item code="2148" name="SETPRINTCOLOURMODE" syntax="(int mode)"></item>
+		<item code="2146" name="SETPRINTMAGNIFICATION" syntax="(int magnification)"></item>
+		<item code="2406" name="SETPRINTWRAPMODE" syntax="(int mode)"></item>
+		<item code="4004" name="SETPROPERTY" syntax="(string key,string value)"></item>
+		<item code="2648" name="SETPUNCTUATIONCHARS" syntax="(0,string characters)"></item>
+		<item code="2171" name="SETREADONLY" syntax="(bool readOnly)"></item>
+		<item code="2590" name="SETRECTANGULARSELECTIONANCHOR" syntax="(position posAnchor)"></item>
+		<item code="2594" name="SETRECTANGULARSELECTIONANCHORVIRTUALSPACE" syntax="(int space)"></item>
+		<item code="2588" name="SETRECTANGULARSELECTIONCARET" syntax="(position pos)"></item>
+		<item code="2592" name="SETRECTANGULARSELECTIONCARETVIRTUALSPACE" syntax="(int space)"></item>
+		<item code="2598" name="SETRECTANGULARSELECTIONMODIFIER" syntax="(int modifier)"></item>
+		<item code="2665" name="SETREPRESENTATION" syntax="(string encodedCharacter,string representation)"></item>
+		<item code="2014" name="SETSAVEPOINT"></item>
+		<item code="2274" name="SETSCROLLWIDTH" syntax="(int pixelWidth)"></item>
+		<item code="2516" name="SETSCROLLWIDTHTRACKING" syntax="(bool tracking)"></item>
+		<item code="2198" name="SETSEARCHFLAGS" syntax="(int flags)"></item>
+		<item code="2160" name="SETSEL" syntax="(position start,position end)"></item>
+		<item code="2478" name="SETSELALPHA" syntax="(int alpha)"></item>
+		<item code="2068" name="SETSELBACK" syntax="(bool useSetting,colour back)"></item>
+		<item code="2572" name="SETSELECTION" syntax="(int caret,int anchor)"></item>
+		<item code="2144" name="SETSELECTIONEND" syntax="(position pos)"></item>
+		<item code="2422" name="SETSELECTIONMODE" syntax="(int mode)"></item>
+		<item code="2578" name="SETSELECTIONNANCHOR" syntax="(int selection,position posAnchor)"></item>
+		<item code="2582" name="SETSELECTIONNANCHORVIRTUALSPACE" syntax="(int selection,int space)"></item>
+		<item code="2576" name="SETSELECTIONNCARET" syntax="(int selection,position pos)"></item>
+		<item code="2580" name="SETSELECTIONNCARETVIRTUALSPACE" syntax="(int selection,int space)"></item>
+		<item code="2586" name="SETSELECTIONNEND" syntax="(int selection,position pos)"></item>
+		<item code="2584" name="SETSELECTIONNSTART" syntax="(int selection,position pos)"></item>
+		<item code="2142" name="SETSELECTIONSTART" syntax="(position pos)"></item>
+		<item code="2480" name="SETSELEOLFILLED" syntax="(bool filled)"></item>
+		<item code="2067" name="SETSELFORE" syntax="(bool useSetting,colour fore)"></item>
+		<item code="2382" name="SETSTATUS" syntax="(int statusCode)"></item>
+		<item code="2090" name="SETSTYLEBITS" syntax="(int bits)"></item>
+		<item code="2033" name="SETSTYLING" syntax="(int length,int style)"></item>
+		<item code="2073" name="SETSTYLINGEX" syntax="(int length,string styles)"></item>
+		<item code="2260" name="SETTABINDENTS" syntax="(bool tabIndents)"></item>
+		<item code="2036" name="SETTABWIDTH" syntax="(int tabWidth)"></item>
+		<item code="2192" name="SETTARGETEND" syntax="(position pos)"></item>
+		<item code="2190" name="SETTARGETSTART" syntax="(position pos)"></item>
+		<item code="2630" name="SETTECHNOLOGY" syntax="(int technology)"></item>
+		<item code="2181" name="SETTEXT" syntax="(0,string text)"></item>
+		<item code="2284" name="SETTWOPHASEDRAW" syntax="(bool twoPhase)"></item>
+		<item code="2012" name="SETUNDOCOLLECTION" syntax="(bool collectUndo)"></item>
+		<item code="2039" name="SETUSEPALETTE" syntax="(bool usePalette)"></item>
+		<item code="2124" name="SETUSETABS" syntax="(bool useTabs)"></item>
+		<item code="2356" name="SETVIEWEOL" syntax="(bool visible)"></item>
+		<item code="2021" name="SETVIEWWS" syntax="(int viewWS)"></item>
+		<item code="2596" name="SETVIRTUALSPACEOPTIONS" syntax="(int virtualSpaceOptions)"></item>
+		<item code="2394" name="SETVISIBLEPOLICY" syntax="(int visiblePolicy,int visibleSlop)"></item>
+		<item code="2280" name="SETVSCROLLBAR" syntax="(bool show)"></item>
+		<item code="2085" name="SETWHITESPACEBACK" syntax="(bool useSetting,colour back)"></item>
+		<item code="2443" name="SETWHITESPACECHARS" syntax="(0,string characters)"></item>
+		<item code="2084" name="SETWHITESPACEFORE" syntax="(bool useSetting,colour fore)"></item>
+		<item code="2086" name="SETWHITESPACESIZE" syntax="(int size)"></item>
+		<item code="2077" name="SETWORDCHARS" syntax="(0,string characters)"></item>
+		<item code="2472" name="SETWRAPINDENTMODE" syntax="(int mode)"></item>
+		<item code="2268" name="SETWRAPMODE" syntax="(int mode)"></item>
+		<item code="2464" name="SETWRAPSTARTINDENT" syntax="(int indent)"></item>
+		<item code="2460" name="SETWRAPVISUALFLAGS" syntax="(int wrapVisualFlags)"></item>
+		<item code="2462" name="SETWRAPVISUALFLAGSLOCATION" syntax="(int wrapVisualFlagsLocation)"></item>
+		<item code="2402" name="SETXCARETPOLICY" syntax="(int caretPolicy,int caretSlop)"></item>
+		<item code="2397" name="SETXOFFSET" syntax="(int newOffset)"></item>
+		<item code="2403" name="SETYCARETPOLICY" syntax="(int caretPolicy,int caretSlop)"></item>
+		<item code="2373" name="SETZOOM" syntax="(int zoom)"></item>
+		<item code="2226" name="SHOWLINES" syntax="(int lineStart,int lineEnd)"></item>
+		<item code="3001" name="STARTRECORD"></item>
+		<item code="2032" name="STARTSTYLING" syntax="(position pos,int mask)"></item>
+		<item code="3002" name="STOPRECORD"></item>
+		<item code="2437" name="STUTTEREDPAGEDOWN"></item>
+		<item code="2438" name="STUTTEREDPAGEDOWNEXTEND"></item>
+		<item code="2435" name="STUTTEREDPAGEUP"></item>
+		<item code="2436" name="STUTTEREDPAGEUPEXTEND"></item>
+		<item code="2050" name="STYLECLEARALL"></item>
+		<item code="2482" name="STYLEGETBACK" syntax="(int style)"></item>
+		<item code="2483" name="STYLEGETBOLD" syntax="(int style)"></item>
+		<item code="2489" name="STYLEGETCASE" syntax="(int style)"></item>
+		<item code="2492" name="STYLEGETCHANGEABLE" syntax="(int style)"></item>
+		<item code="2490" name="STYLEGETCHARACTERSET" syntax="(int style)"></item>
+		<item code="2487" name="STYLEGETEOLFILLED" syntax="(int style)"></item>
+		<item code="2486" name="STYLEGETFONT" syntax="(int style,stringresult fontName)"></item>
+		<item code="2481" name="STYLEGETFORE" syntax="(int style)"></item>
+		<item code="2493" name="STYLEGETHOTSPOT" syntax="(int style)"></item>
+		<item code="2484" name="STYLEGETITALIC" syntax="(int style)"></item>
+		<item code="2485" name="STYLEGETSIZE" syntax="(int style)"></item>
+		<item code="2062" name="STYLEGETSIZEFRACTIONAL" syntax="(int style)"></item>
+		<item code="2488" name="STYLEGETUNDERLINE" syntax="(int style)"></item>
+		<item code="2491" name="STYLEGETVISIBLE" syntax="(int style)"></item>
+		<item code="2064" name="STYLEGETWEIGHT" syntax="(int style)"></item>
+		<item code="2000" name="STYLENEEDED" syntax="(int position)"></item>
+		<item code="2058" name="STYLERESETDEFAULT"></item>
+		<item code="2052" name="STYLESETBACK" syntax="(int style,colour back)"></item>
+		<item code="2053" name="STYLESETBOLD" syntax="(int style,bool bold)"></item>
+		<item code="2060" name="STYLESETCASE" syntax="(int style,int caseForce)"></item>
+		<item code="2099" name="STYLESETCHANGEABLE" syntax="(int style,bool changeable)"></item>
+		<item code="2066" name="STYLESETCHARACTERSET" syntax="(int style,int characterSet)"></item>
+		<item code="2057" name="STYLESETEOLFILLED" syntax="(int style,bool filled)"></item>
+		<item code="2056" name="STYLESETFONT" syntax="(int style,string fontName)"></item>
+		<item code="2051" name="STYLESETFORE" syntax="(int style,colour fore)"></item>
+		<item code="2409" name="STYLESETHOTSPOT" syntax="(int style,bool hotspot)"></item>
+		<item code="2054" name="STYLESETITALIC" syntax="(int style,bool italic)"></item>
+		<item code="2055" name="STYLESETSIZE" syntax="(int style,int sizePoints)"></item>
+		<item code="2061" name="STYLESETSIZEFRACTIONAL" syntax="(int style,int caseForce)"></item>
+		<item code="2059" name="STYLESETUNDERLINE" syntax="(int style,bool underline)"></item>
+		<item code="2074" name="STYLESETVISIBLE" syntax="(int style,bool visible)"></item>
+		<item code="2063" name="STYLESETWEIGHT" syntax="(int style,int weight)"></item>
+		<item code="2607" name="SWAPMAINANCHORCARET"></item>
+		<item code="2327" name="TAB"></item>
+		<item code="2447" name="TARGETASUTF8" syntax="(0,stringresult s)"></item>
+		<item code="2287" name="TARGETFROMSELECTION"></item>
+		<item code="2279" name="TEXTHEIGHT" syntax="(int line)"></item>
+		<item code="2276" name="TEXTWIDTH" syntax="(int style,string text)"></item>
+		<item code="2459" name="TOGGLECARETSTICKY"></item>
+		<item code="2231" name="TOGGLEFOLD" syntax="(int line)"></item>
+		<item code="2176" name="UNDO"></item>
+		<item code="2007" name="UPDATEUI" syntax="(int updated)"></item>
+		<item code="2341" name="UPPERCASE"></item>
+		<item code="2015" name="URIDROPPED" syntax="(string text)"></item>
+		<item code="2371" name="USEPOPUP" syntax="(bool allowPopUp)"></item>
+		<item code="2014" name="USERLISTSELECTION" syntax="(int listType,string text)"></item>
+		<item code="2117" name="USERLISTSHOW" syntax="(int listType,string itemList)"></item>
+		<item code="2331" name="VCHOME"></item>
+		<item code="2652" name="VCHOMEDISPLAY"></item>
+		<item code="2653" name="VCHOMEDISPLAYEXTEND"></item>
+		<item code="2332" name="VCHOMEEXTEND"></item>
+		<item code="2431" name="VCHOMERECTEXTEND"></item>
+		<item code="2453" name="VCHOMEWRAP"></item>
+		<item code="2454" name="VCHOMEWRAPEXTEND"></item>
+		<item code="2619" name="VERTICALCENTRECARET"></item>
+		<item code="2220" name="VISIBLEFROMDOCLINE" syntax="(int line)"></item>
+		<item code="2267" name="WORDENDPOSITION" syntax="(position pos,bool onlyWordCharacters)"></item>
+		<item code="2308" name="WORDLEFT"></item>
+		<item code="2439" name="WORDLEFTEND"></item>
+		<item code="2440" name="WORDLEFTENDEXTEND"></item>
+		<item code="2309" name="WORDLEFTEXTEND"></item>
+		<item code="2390" name="WORDPARTLEFT"></item>
+		<item code="2391" name="WORDPARTLEFTEXTEND"></item>
+		<item code="2392" name="WORDPARTRIGHT"></item>
+		<item code="2393" name="WORDPARTRIGHTEXTEND"></item>
+		<item code="2310" name="WORDRIGHT"></item>
+		<item code="2441" name="WORDRIGHTEND"></item>
+		<item code="2442" name="WORDRIGHTENDEXTEND"></item>
+		<item code="2311" name="WORDRIGHTEXTEND"></item>
+		<item code="2266" name="WORDSTARTPOSITION" syntax="(position pos,bool onlyWordCharacters)"></item>
+		<item code="2235" name="WRAPCOUNT" syntax="(int line)"></item>
+		<item code="2018" name="ZOOM"></item>
+		<item code="2333" name="ZOOMIN"></item>
+		<item code="2334" name="ZOOMOUT"></item>
+	</commands>
+	<constants>
+		<item code="2" name="ANNOTATION_BOXED"></item>
+		<item code="0" name="ANNOTATION_HIDDEN"></item>
+		<item code="1" name="ANNOTATION_STANDARD"></item>
+		<item code="0x08" name="CARET_EVEN"></item>
+		<item code="0x10" name="CARET_JUMPS"></item>
+		<item code="0x01" name="CARET_SLOP"></item>
+		<item code="0x04" name="CARET_STRICT"></item>
+		<item code="2" name="CARETSTYLE_BLOCK"></item>
+		<item code="0" name="CARETSTYLE_INVISIBLE"></item>
+		<item code="1" name="CARETSTYLE_LINE"></item>
+		<item code="2" name="EDGE_BACKGROUND"></item>
+		<item code="1" name="EDGE_LINE"></item>
+		<item code="0" name="EDGE_NONE"></item>
+		<item code="0x20" name="INDIC0_MASK"></item>
+		<item code="0x40" name="INDIC1_MASK"></item>
+		<item code="0x80" name="INDIC2_MASK"></item>
+		<item code="6" name="INDIC_BOX"></item>
+		<item code="14" name="INDIC_COMPOSITIONTHICK"></item>
+		<item code="8" name="INDIC_CONTAINER"></item>
+		<item code="9" name="INDIC_DASH"></item>
+		<item code="3" name="INDIC_DIAGONAL"></item>
+		<item code="12" name="INDIC_DOTBOX"></item>
+		<item code="10" name="INDIC_DOTS"></item>
+		<item code="5" name="INDIC_HIDDEN"></item>
+		<item code="31" name="INDIC_MAX"></item>
+		<item code="0" name="INDIC_PLAIN"></item>
+		<item code="7" name="INDIC_ROUNDBOX"></item>
+		<item code="1" name="INDIC_SQUIGGLE"></item>
+		<item code="11" name="INDIC_SQUIGGLELOW"></item>
+		<item code="13" name="INDIC_SQUIGGLEPIXMAP"></item>
+		<item code="8" name="INDIC_STRAIGHTBOX"></item>
+		<item code="4" name="INDIC_STRIKE"></item>
+		<item code="2" name="INDIC_TT"></item>
+		<item code="0xE0" name="INDICS_MASK"></item>
+		<item code="-1" name="INVALID_POSITION"></item>
+		<item code="8" name="KEYWORDSET_MAX"></item>
+		<item code="31" name="MARKER_MAX"></item>
+		<item code="256" name="SC_ALPHA_NOALPHA"></item>
+		<item code="255" name="SC_ALPHA_OPAQUE"></item>
+		<item code="0" name="SC_ALPHA_TRANSPARENT"></item>
+		<item code="0x0004" name="SC_AUTOMATICFOLD_CHANGE"></item>
+		<item code="0x0002" name="SC_AUTOMATICFOLD_CLICK"></item>
+		<item code="0x0001" name="SC_AUTOMATICFOLD_SHOW"></item>
+		<item code="1" name="SC_CACHE_CARET"></item>
+		<item code="3" name="SC_CACHE_DOCUMENT"></item>
+		<item code="0" name="SC_CACHE_NONE"></item>
+		<item code="2" name="SC_CACHE_PAGE"></item>
+		<item code="0" name="SC_CARETSTICKY_OFF"></item>
+		<item code="1" name="SC_CARETSTICKY_ON"></item>
+		<item code="2" name="SC_CARETSTICKY_WHITESPACE"></item>
+		<item code="2" name="SC_CASE_LOWER"></item>
+		<item code="0" name="SC_CASE_MIXED"></item>
+		<item code="1" name="SC_CASE_UPPER"></item>
+		<item code="1" name="SC_CASEINSENSITIVEBEHAVIOUR_IGNORECASE"></item>
+		<item code="0" name="SC_CASEINSENSITIVEBEHAVIOUR_RESPECTCASE"></item>
+		<item code="1000" name="SC_CHARSET_8859_15"></item>
+		<item code="0" name="SC_CHARSET_ANSI"></item>
+		<item code="178" name="SC_CHARSET_ARABIC"></item>
+		<item code="186" name="SC_CHARSET_BALTIC"></item>
+		<item code="136" name="SC_CHARSET_CHINESEBIG5"></item>
+		<item code="1251" name="SC_CHARSET_CYRILLIC"></item>
+		<item code="1" name="SC_CHARSET_DEFAULT"></item>
+		<item code="238" name="SC_CHARSET_EASTEUROPE"></item>
+		<item code="134" name="SC_CHARSET_GB2312"></item>
+		<item code="161" name="SC_CHARSET_GREEK"></item>
+		<item code="129" name="SC_CHARSET_HANGUL"></item>
+		<item code="177" name="SC_CHARSET_HEBREW"></item>
+		<item code="130" name="SC_CHARSET_JOHAB"></item>
+		<item code="77" name="SC_CHARSET_MAC"></item>
+		<item code="255" name="SC_CHARSET_OEM"></item>
+		<item code="204" name="SC_CHARSET_RUSSIAN"></item>
+		<item code="128" name="SC_CHARSET_SHIFTJIS"></item>
+		<item code="2" name="SC_CHARSET_SYMBOL"></item>
+		<item code="222" name="SC_CHARSET_THAI"></item>
+		<item code="162" name="SC_CHARSET_TURKISH"></item>
+		<item code="163" name="SC_CHARSET_VIETNAMESE"></item>
+		<item code="1" name="SC_CP_DBCS"></item>
+		<item code="65001" name="SC_CP_UTF8"></item>
+		<item code="2" name="SC_CURSORARROW"></item>
+		<item code="-1" name="SC_CURSORNORMAL"></item>
+		<item code="7" name="SC_CURSORREVERSEARROW"></item>
+		<item code="4" name="SC_CURSORWAIT"></item>
+		<item code="2" name="SC_EFF_QUALITY_ANTIALIASED"></item>
+		<item code="0" name="SC_EFF_QUALITY_DEFAULT"></item>
+		<item code="3" name="SC_EFF_QUALITY_LCD_OPTIMIZED"></item>
+		<item code="0xF" name="SC_EFF_QUALITY_MASK"></item>
+		<item code="1" name="SC_EFF_QUALITY_NON_ANTIALIASED"></item>
+		<item code="1" name="SC_EOL_CR"></item>
+		<item code="0" name="SC_EOL_CRLF"></item>
+		<item code="2" name="SC_EOL_LF"></item>
+		<item code="0" name="SC_FOLDACTION_CONTRACT"></item>
+		<item code="1" name="SC_FOLDACTION_EXPAND"></item>
+		<item code="2" name="SC_FOLDACTION_TOGGLE"></item>
+		<item code="0x0040" name="SC_FOLDFLAG_LEVELNUMBERS"></item>
+		<item code="0x0010" name="SC_FOLDFLAG_LINEAFTER_CONTRACTED"></item>
+		<item code="0x0008" name="SC_FOLDFLAG_LINEAFTER_EXPANDED"></item>
+		<item code="0x0004" name="SC_FOLDFLAG_LINEBEFORE_CONTRACTED"></item>
+		<item code="0x0002" name="SC_FOLDFLAG_LINEBEFORE_EXPANDED"></item>
+		<item code="0x0080" name="SC_FOLDFLAG_LINESTATE"></item>
+		<item code="0x400" name="SC_FOLDLEVELBASE"></item>
+		<item code="0x2000" name="SC_FOLDLEVELHEADERFLAG"></item>
+		<item code="0x0FFF" name="SC_FOLDLEVELNUMBERMASK"></item>
+		<item code="0x1000" name="SC_FOLDLEVELWHITEFLAG"></item>
+		<item code="100" name="SC_FONT_SIZE_MULTIPLIER"></item>
+		<item code="3" name="SC_IV_LOOKBOTH"></item>
+		<item code="2" name="SC_IV_LOOKFORWARD"></item>
+		<item code="0" name="SC_IV_NONE"></item>
+		<item code="1" name="SC_IV_REAL"></item>
+		<item code="0x100" name="SC_LASTSTEPINUNDOREDO"></item>
+		<item code="0" name="SC_LINE_END_TYPE_DEFAULT"></item>
+		<item code="1" name="SC_LINE_END_TYPE_UNICODE"></item>
+		<item code="2" name="SC_MARGIN_BACK"></item>
+		<item code="3" name="SC_MARGIN_FORE"></item>
+		<item code="1" name="SC_MARGIN_NUMBER"></item>
+		<item code="5" name="SC_MARGIN_RTEXT"></item>
+		<item code="0" name="SC_MARGIN_SYMBOL"></item>
+		<item code="4" name="SC_MARGIN_TEXT"></item>
+		<item code="0" name="SC_MARGINOPTION_NONE"></item>
+		<item code="1" name="SC_MARGINOPTION_SUBLINESELECT"></item>
+		<item code="2" name="SC_MARK_ARROW"></item>
+		<item code="6" name="SC_MARK_ARROWDOWN"></item>
+		<item code="24" name="SC_MARK_ARROWS"></item>
+		<item code="28" name="SC_MARK_AVAILABLE"></item>
+		<item code="22" name="SC_MARK_BACKGROUND"></item>
+		<item code="31" name="SC_MARK_BOOKMARK"></item>
+		<item code="14" name="SC_MARK_BOXMINUS"></item>
+		<item code="15" name="SC_MARK_BOXMINUSCONNECTED"></item>
+		<item code="12" name="SC_MARK_BOXPLUS"></item>
+		<item code="13" name="SC_MARK_BOXPLUSCONNECTED"></item>
+		<item code="10000" name="SC_MARK_CHARACTER"></item>
+		<item code="0" name="SC_MARK_CIRCLE"></item>
+		<item code="20" name="SC_MARK_CIRCLEMINUS"></item>
+		<item code="21" name="SC_MARK_CIRCLEMINUSCONNECTED"></item>
+		<item code="18" name="SC_MARK_CIRCLEPLUS"></item>
+		<item code="19" name="SC_MARK_CIRCLEPLUSCONNECTED"></item>
+		<item code="23" name="SC_MARK_DOTDOTDOT"></item>
+		<item code="5" name="SC_MARK_EMPTY"></item>
+		<item code="26" name="SC_MARK_FULLRECT"></item>
+		<item code="10" name="SC_MARK_LCORNER"></item>
+		<item code="16" name="SC_MARK_LCORNERCURVE"></item>
+		<item code="27" name="SC_MARK_LEFTRECT"></item>
+		<item code="7" name="SC_MARK_MINUS"></item>
+		<item code="25" name="SC_MARK_PIXMAP"></item>
+		<item code="8" name="SC_MARK_PLUS"></item>
+		<item code="30" name="SC_MARK_RGBAIMAGE"></item>
+		<item code="1" name="SC_MARK_ROUNDRECT"></item>
+		<item code="4" name="SC_MARK_SHORTARROW"></item>
+		<item code="3" name="SC_MARK_SMALLRECT"></item>
+		<item code="11" name="SC_MARK_TCORNER"></item>
+		<item code="17" name="SC_MARK_TCORNERCURVE"></item>
+		<item code="29" name="SC_MARK_UNDERLINE"></item>
+		<item code="9" name="SC_MARK_VLINE"></item>
+		<item code="30" name="SC_MARKNUM_FOLDER"></item>
+		<item code="25" name="SC_MARKNUM_FOLDEREND"></item>
+		<item code="27" name="SC_MARKNUM_FOLDERMIDTAIL"></item>
+		<item code="31" name="SC_MARKNUM_FOLDEROPEN"></item>
+		<item code="26" name="SC_MARKNUM_FOLDEROPENMID"></item>
+		<item code="29" name="SC_MARKNUM_FOLDERSUB"></item>
+		<item code="28" name="SC_MARKNUM_FOLDERTAIL"></item>
+		<item code="0xFE000000" name="SC_MASK_FOLDERS"></item>
+		<item code="4" name="SC_MAX_MARGIN"></item>
+		<item code="0x800" name="SC_MOD_BEFOREDELETE"></item>
+		<item code="0x400" name="SC_MOD_BEFOREINSERT"></item>
+		<item code="0x20000" name="SC_MOD_CHANGEANNOTATION"></item>
+		<item code="0x8" name="SC_MOD_CHANGEFOLD"></item>
+		<item code="0x4000" name="SC_MOD_CHANGEINDICATOR"></item>
+		<item code="0x8000" name="SC_MOD_CHANGELINESTATE"></item>
+		<item code="0x10000" name="SC_MOD_CHANGEMARGIN"></item>
+		<item code="0x200" name="SC_MOD_CHANGEMARKER"></item>
+		<item code="0x4" name="SC_MOD_CHANGESTYLE"></item>
+		<item code="0x40000" name="SC_MOD_CONTAINER"></item>
+		<item code="0x2" name="SC_MOD_DELETETEXT"></item>
+		<item code="0x100000" name="SC_MOD_INSERTCHECK"></item>
+		<item code="0x1" name="SC_MOD_INSERTTEXT"></item>
+		<item code="0x80000" name="SC_MOD_LEXERSTATE"></item>
+		<item code="0x1FFFFF" name="SC_MODEVENTMASKALL"></item>
+		<item code="1" name="SC_MULTIAUTOC_EACH"></item>
+		<item code="0" name="SC_MULTIAUTOC_ONCE"></item>
+		<item code="0x1000" name="SC_MULTILINEUNDOREDO"></item>
+		<item code="1" name="SC_MULTIPASTE_EACH"></item>
+		<item code="0" name="SC_MULTIPASTE_ONCE"></item>
+		<item code="0x80" name="SC_MULTISTEPUNDOREDO"></item>
+		<item code="2" name="SC_ORDER_CUSTOM"></item>
+		<item code="1" name="SC_ORDER_PERFORMSORT"></item>
+		<item code="0" name="SC_ORDER_PRESORTED"></item>
+		<item code="0x40" name="SC_PERFORMED_REDO"></item>
+		<item code="0x20" name="SC_PERFORMED_UNDO"></item>
+		<item code="0x10" name="SC_PERFORMED_USER"></item>
+		<item code="2" name="SC_PRINT_BLACKONWHITE"></item>
+		<item code="3" name="SC_PRINT_COLOURONWHITE"></item>
+		<item code="4" name="SC_PRINT_COLOURONWHITEDEFAULTBG"></item>
+		<item code="1" name="SC_PRINT_INVERTLIGHT"></item>
+		<item code="0" name="SC_PRINT_NORMAL"></item>
+		<item code="2" name="SC_SEL_LINES"></item>
+		<item code="1" name="SC_SEL_RECTANGLE"></item>
+		<item code="0" name="SC_SEL_STREAM"></item>
+		<item code="3" name="SC_SEL_THIN"></item>
+		<item code="0x2000" name="SC_STARTACTION"></item>
+		<item code="2" name="SC_STATUS_BADALLOC"></item>
+		<item code="1" name="SC_STATUS_FAILURE"></item>
+		<item code="0" name="SC_STATUS_OK"></item>
+		<item code="0" name="SC_TECHNOLOGY_DEFAULT"></item>
+		<item code="1" name="SC_TECHNOLOGY_DIRECTWRITE"></item>
+		<item code="10000000" name="SC_TIME_FOREVER"></item>
+		<item code="0" name="SC_TYPE_BOOLEAN"></item>
+		<item code="1" name="SC_TYPE_INTEGER"></item>
+		<item code="2" name="SC_TYPE_STRING"></item>
+		<item code="0x1" name="SC_UPDATE_CONTENT"></item>
+		<item code="0x8" name="SC_UPDATE_H_SCROLL"></item>
+		<item code="0x2" name="SC_UPDATE_SELECTION"></item>
+		<item code="0x4" name="SC_UPDATE_V_SCROLL"></item>
+		<item code="700" name="SC_WEIGHT_BOLD"></item>
+		<item code="400" name="SC_WEIGHT_NORMAL"></item>
+		<item code="600" name="SC_WEIGHT_SEMIBOLD"></item>
+		<item code="2" name="SC_WRAP_CHAR"></item>
+		<item code="0" name="SC_WRAP_NONE"></item>
+		<item code="3" name="SC_WRAP_WHITESPACE"></item>
+		<item code="1" name="SC_WRAP_WORD"></item>
+		<item code="0" name="SC_WRAPINDENT_FIXED"></item>
+		<item code="2" name="SC_WRAPINDENT_INDENT"></item>
+		<item code="1" name="SC_WRAPINDENT_SAME"></item>
+		<item code="0x0001" name="SC_WRAPVISUALFLAG_END"></item>
+		<item code="0x0004" name="SC_WRAPVISUALFLAG_MARGIN"></item>
+		<item code="0x0000" name="SC_WRAPVISUALFLAG_NONE"></item>
+		<item code="0x0002" name="SC_WRAPVISUALFLAG_START"></item>
+		<item code="0x0000" name="SC_WRAPVISUALFLAGLOC_DEFAULT"></item>
+		<item code="0x0001" name="SC_WRAPVISUALFLAGLOC_END_BY_TEXT"></item>
+		<item code="0x0002" name="SC_WRAPVISUALFLAGLOC_START_BY_TEXT"></item>
+		<item code="8" name="SCE_4GL_BLOCK"></item>
+		<item code="24" name="SCE_4GL_BLOCK_"></item>
+		<item code="4" name="SCE_4GL_CHARACTER"></item>
+		<item code="20" name="SCE_4GL_CHARACTER_"></item>
+		<item code="10" name="SCE_4GL_COMMENT1"></item>
+		<item code="26" name="SCE_4GL_COMMENT1_"></item>
+		<item code="11" name="SCE_4GL_COMMENT2"></item>
+		<item code="27" name="SCE_4GL_COMMENT2_"></item>
+		<item code="12" name="SCE_4GL_COMMENT3"></item>
+		<item code="28" name="SCE_4GL_COMMENT3_"></item>
+		<item code="13" name="SCE_4GL_COMMENT4"></item>
+		<item code="29" name="SCE_4GL_COMMENT4_"></item>
+		<item code="14" name="SCE_4GL_COMMENT5"></item>
+		<item code="30" name="SCE_4GL_COMMENT5_"></item>
+		<item code="15" name="SCE_4GL_COMMENT6"></item>
+		<item code="31" name="SCE_4GL_COMMENT6_"></item>
+		<item code="0" name="SCE_4GL_DEFAULT"></item>
+		<item code="16" name="SCE_4GL_DEFAULT_"></item>
+		<item code="9" name="SCE_4GL_END"></item>
+		<item code="25" name="SCE_4GL_END_"></item>
+		<item code="7" name="SCE_4GL_IDENTIFIER"></item>
+		<item code="23" name="SCE_4GL_IDENTIFIER_"></item>
+		<item code="1" name="SCE_4GL_NUMBER"></item>
+		<item code="17" name="SCE_4GL_NUMBER_"></item>
+		<item code="6" name="SCE_4GL_OPERATOR"></item>
+		<item code="22" name="SCE_4GL_OPERATOR_"></item>
+		<item code="5" name="SCE_4GL_PREPROCESSOR"></item>
+		<item code="21" name="SCE_4GL_PREPROCESSOR_"></item>
+		<item code="3" name="SCE_4GL_STRING"></item>
+		<item code="19" name="SCE_4GL_STRING_"></item>
+		<item code="2" name="SCE_4GL_WORD"></item>
+		<item code="18" name="SCE_4GL_WORD_"></item>
+		<item code="1" name="SCE_A68K_COMMENT"></item>
+		<item code="18" name="SCE_A68K_COMMENT_DOXYGEN"></item>
+		<item code="17" name="SCE_A68K_COMMENT_SPECIAL"></item>
+		<item code="16" name="SCE_A68K_COMMENT_WORD"></item>
+		<item code="7" name="SCE_A68K_CPUINSTRUCTION"></item>
+		<item code="0" name="SCE_A68K_DEFAULT"></item>
+		<item code="10" name="SCE_A68K_DIRECTIVE"></item>
+		<item code="8" name="SCE_A68K_EXTINSTRUCTION"></item>
+		<item code="14" name="SCE_A68K_IDENTIFIER"></item>
+		<item code="12" name="SCE_A68K_LABEL"></item>
+		<item code="11" name="SCE_A68K_MACRO_ARG"></item>
+		<item code="15" name="SCE_A68K_MACRO_DECLARATION"></item>
+		<item code="3" name="SCE_A68K_NUMBER_BIN"></item>
+		<item code="2" name="SCE_A68K_NUMBER_DEC"></item>
+		<item code="4" name="SCE_A68K_NUMBER_HEX"></item>
+		<item code="6" name="SCE_A68K_OPERATOR"></item>
+		<item code="9" name="SCE_A68K_REGISTER"></item>
+		<item code="5" name="SCE_A68K_STRING1"></item>
+		<item code="13" name="SCE_A68K_STRING2"></item>
+		<item code="11" name="SCE_ABAQUS_ARGUMENT"></item>
+		<item code="8" name="SCE_ABAQUS_COMMAND"></item>
+		<item code="1" name="SCE_ABAQUS_COMMENT"></item>
+		<item code="2" name="SCE_ABAQUS_COMMENTBLOCK"></item>
+		<item code="0" name="SCE_ABAQUS_DEFAULT"></item>
+		<item code="12" name="SCE_ABAQUS_FUNCTION"></item>
+		<item code="3" name="SCE_ABAQUS_NUMBER"></item>
+		<item code="5" name="SCE_ABAQUS_OPERATOR"></item>
+		<item code="7" name="SCE_ABAQUS_PROCESSOR"></item>
+		<item code="9" name="SCE_ABAQUS_SLASHCOMMAND"></item>
+		<item code="10" name="SCE_ABAQUS_STARCOMMAND"></item>
+		<item code="4" name="SCE_ABAQUS_STRING"></item>
+		<item code="6" name="SCE_ABAQUS_WORD"></item>
+		<item code="5" name="SCE_ADA_CHARACTER"></item>
+		<item code="6" name="SCE_ADA_CHARACTEREOL"></item>
+		<item code="10" name="SCE_ADA_COMMENTLINE"></item>
+		<item code="0" name="SCE_ADA_DEFAULT"></item>
+		<item code="4" name="SCE_ADA_DELIMITER"></item>
+		<item code="2" name="SCE_ADA_IDENTIFIER"></item>
+		<item code="11" name="SCE_ADA_ILLEGAL"></item>
+		<item code="9" name="SCE_ADA_LABEL"></item>
+		<item code="3" name="SCE_ADA_NUMBER"></item>
+		<item code="7" name="SCE_ADA_STRING"></item>
+		<item code="8" name="SCE_ADA_STRINGEOL"></item>
+		<item code="1" name="SCE_ADA_WORD"></item>
+		<item code="11" name="SCE_APDL_ARGUMENT"></item>
+		<item code="8" name="SCE_APDL_COMMAND"></item>
+		<item code="1" name="SCE_APDL_COMMENT"></item>
+		<item code="2" name="SCE_APDL_COMMENTBLOCK"></item>
+		<item code="0" name="SCE_APDL_DEFAULT"></item>
+		<item code="12" name="SCE_APDL_FUNCTION"></item>
+		<item code="3" name="SCE_APDL_NUMBER"></item>
+		<item code="5" name="SCE_APDL_OPERATOR"></item>
+		<item code="7" name="SCE_APDL_PROCESSOR"></item>
+		<item code="9" name="SCE_APDL_SLASHCOMMAND"></item>
+		<item code="10" name="SCE_APDL_STARCOMMAND"></item>
+		<item code="4" name="SCE_APDL_STRING"></item>
+		<item code="6" name="SCE_APDL_WORD"></item>
+		<item code="12" name="SCE_ASM_CHARACTER"></item>
+		<item code="1" name="SCE_ASM_COMMENT"></item>
+		<item code="11" name="SCE_ASM_COMMENTBLOCK"></item>
+		<item code="15" name="SCE_ASM_COMMENTDIRECTIVE"></item>
+		<item code="6" name="SCE_ASM_CPUINSTRUCTION"></item>
+		<item code="0" name="SCE_ASM_DEFAULT"></item>
+		<item code="9" name="SCE_ASM_DIRECTIVE"></item>
+		<item code="10" name="SCE_ASM_DIRECTIVEOPERAND"></item>
+		<item code="14" name="SCE_ASM_EXTINSTRUCTION"></item>
+		<item code="5" name="SCE_ASM_IDENTIFIER"></item>
+		<item code="7" name="SCE_ASM_MATHINSTRUCTION"></item>
+		<item code="2" name="SCE_ASM_NUMBER"></item>
+		<item code="4" name="SCE_ASM_OPERATOR"></item>
+		<item code="8" name="SCE_ASM_REGISTER"></item>
+		<item code="3" name="SCE_ASM_STRING"></item>
+		<item code="13" name="SCE_ASM_STRINGEOL"></item>
+		<item code="7" name="SCE_ASN1_ATTRIBUTE"></item>
+		<item code="1" name="SCE_ASN1_COMMENT"></item>
+		<item code="0" name="SCE_ASN1_DEFAULT"></item>
+		<item code="8" name="SCE_ASN1_DESCRIPTOR"></item>
+		<item code="2" name="SCE_ASN1_IDENTIFIER"></item>
+		<item code="6" name="SCE_ASN1_KEYWORD"></item>
+		<item code="4" name="SCE_ASN1_OID"></item>
+		<item code="10" name="SCE_ASN1_OPERATOR"></item>
+		<item code="5" name="SCE_ASN1_SCALAR"></item>
+		<item code="3" name="SCE_ASN1_STRING"></item>
+		<item code="9" name="SCE_ASN1_TYPE"></item>
+		<item code="6" name="SCE_ASY_CHARACTER"></item>
+		<item code="1" name="SCE_ASY_COMMENT"></item>
+		<item code="2" name="SCE_ASY_COMMENTLINE"></item>
+		<item code="10" name="SCE_ASY_COMMENTLINEDOC"></item>
+		<item code="0" name="SCE_ASY_DEFAULT"></item>
+		<item code="8" name="SCE_ASY_IDENTIFIER"></item>
+		<item code="3" name="SCE_ASY_NUMBER"></item>
+		<item code="7" name="SCE_ASY_OPERATOR"></item>
+		<item code="5" name="SCE_ASY_STRING"></item>
+		<item code="9" name="SCE_ASY_STRINGEOL"></item>
+		<item code="4" name="SCE_ASY_WORD"></item>
+		<item code="11" name="SCE_ASY_WORD2"></item>
+		<item code="1" name="SCE_AU3_COMMENT"></item>
+		<item code="2" name="SCE_AU3_COMMENTBLOCK"></item>
+		<item code="14" name="SCE_AU3_COMOBJ"></item>
+		<item code="0" name="SCE_AU3_DEFAULT"></item>
+		<item code="13" name="SCE_AU3_EXPAND"></item>
+		<item code="4" name="SCE_AU3_FUNCTION"></item>
+		<item code="5" name="SCE_AU3_KEYWORD"></item>
+		<item code="6" name="SCE_AU3_MACRO"></item>
+		<item code="3" name="SCE_AU3_NUMBER"></item>
+		<item code="8" name="SCE_AU3_OPERATOR"></item>
+		<item code="11" name="SCE_AU3_PREPROCESSOR"></item>
+		<item code="10" name="SCE_AU3_SENT"></item>
+		<item code="12" name="SCE_AU3_SPECIAL"></item>
+		<item code="7" name="SCE_AU3_STRING"></item>
+		<item code="15" name="SCE_AU3_UDF"></item>
+		<item code="9" name="SCE_AU3_VARIABLE"></item>
+		<item code="1" name="SCE_AVE_COMMENT"></item>
+		<item code="0" name="SCE_AVE_DEFAULT"></item>
+		<item code="7" name="SCE_AVE_ENUM"></item>
+		<item code="9" name="SCE_AVE_IDENTIFIER"></item>
+		<item code="2" name="SCE_AVE_NUMBER"></item>
+		<item code="10" name="SCE_AVE_OPERATOR"></item>
+		<item code="6" name="SCE_AVE_STRING"></item>
+		<item code="8" name="SCE_AVE_STRINGEOL"></item>
+		<item code="3" name="SCE_AVE_WORD"></item>
+		<item code="11" name="SCE_AVE_WORD1"></item>
+		<item code="12" name="SCE_AVE_WORD2"></item>
+		<item code="13" name="SCE_AVE_WORD3"></item>
+		<item code="14" name="SCE_AVE_WORD4"></item>
+		<item code="15" name="SCE_AVE_WORD5"></item>
+		<item code="16" name="SCE_AVE_WORD6"></item>
+		<item code="13" name="SCE_AVS_CLIPPROP"></item>
+		<item code="1" name="SCE_AVS_COMMENTBLOCK"></item>
+		<item code="2" name="SCE_AVS_COMMENTBLOCKN"></item>
+		<item code="3" name="SCE_AVS_COMMENTLINE"></item>
+		<item code="0" name="SCE_AVS_DEFAULT"></item>
+		<item code="10" name="SCE_AVS_FILTER"></item>
+		<item code="12" name="SCE_AVS_FUNCTION"></item>
+		<item code="6" name="SCE_AVS_IDENTIFIER"></item>
+		<item code="9" name="SCE_AVS_KEYWORD"></item>
+		<item code="4" name="SCE_AVS_NUMBER"></item>
+		<item code="5" name="SCE_AVS_OPERATOR"></item>
+		<item code="11" name="SCE_AVS_PLUGIN"></item>
+		<item code="7" name="SCE_AVS_STRING"></item>
+		<item code="8" name="SCE_AVS_TRIPLESTRING"></item>
+		<item code="14" name="SCE_AVS_USERDFN"></item>
+		<item code="14" name="SCE_B_ASM"></item>
+		<item code="18" name="SCE_B_BINNUMBER"></item>
+		<item code="1" name="SCE_B_COMMENT"></item>
+		<item code="19" name="SCE_B_COMMENTBLOCK"></item>
+		<item code="13" name="SCE_B_CONSTANT"></item>
+		<item code="8" name="SCE_B_DATE"></item>
+		<item code="0" name="SCE_B_DEFAULT"></item>
+		<item code="21" name="SCE_B_DOCBLOCK"></item>
+		<item code="22" name="SCE_B_DOCKEYWORD"></item>
+		<item code="20" name="SCE_B_DOCLINE"></item>
+		<item code="16" name="SCE_B_ERROR"></item>
+		<item code="17" name="SCE_B_HEXNUMBER"></item>
+		<item code="7" name="SCE_B_IDENTIFIER"></item>
+		<item code="3" name="SCE_B_KEYWORD"></item>
+		<item code="10" name="SCE_B_KEYWORD2"></item>
+		<item code="11" name="SCE_B_KEYWORD3"></item>
+		<item code="12" name="SCE_B_KEYWORD4"></item>
+		<item code="15" name="SCE_B_LABEL"></item>
+		<item code="2" name="SCE_B_NUMBER"></item>
+		<item code="6" name="SCE_B_OPERATOR"></item>
+		<item code="5" name="SCE_B_PREPROCESSOR"></item>
+		<item code="4" name="SCE_B_STRING"></item>
+		<item code="9" name="SCE_B_STRINGEOL"></item>
+		<item code="1" name="SCE_BAAN_COMMENT"></item>
+		<item code="2" name="SCE_BAAN_COMMENTDOC"></item>
+		<item code="0" name="SCE_BAAN_DEFAULT"></item>
+		<item code="8" name="SCE_BAAN_IDENTIFIER"></item>
+		<item code="3" name="SCE_BAAN_NUMBER"></item>
+		<item code="7" name="SCE_BAAN_OPERATOR"></item>
+		<item code="6" name="SCE_BAAN_PREPROCESSOR"></item>
+		<item code="5" name="SCE_BAAN_STRING"></item>
+		<item code="9" name="SCE_BAAN_STRINGEOL"></item>
+		<item code="4" name="SCE_BAAN_WORD"></item>
+		<item code="10" name="SCE_BAAN_WORD2"></item>
+		<item code="5" name="SCE_BAT_COMMAND"></item>
+		<item code="1" name="SCE_BAT_COMMENT"></item>
+		<item code="0" name="SCE_BAT_DEFAULT"></item>
+		<item code="4" name="SCE_BAT_HIDE"></item>
+		<item code="6" name="SCE_BAT_IDENTIFIER"></item>
+		<item code="3" name="SCE_BAT_LABEL"></item>
+		<item code="7" name="SCE_BAT_OPERATOR"></item>
+		<item code="2" name="SCE_BAT_WORD"></item>
+		<item code="7" name="SCE_C_CHARACTER"></item>
+		<item code="1" name="SCE_C_COMMENT"></item>
+		<item code="3" name="SCE_C_COMMENTDOC"></item>
+		<item code="17" name="SCE_C_COMMENTDOCKEYWORD"></item>
+		<item code="18" name="SCE_C_COMMENTDOCKEYWORDERROR"></item>
+		<item code="2" name="SCE_C_COMMENTLINE"></item>
+		<item code="15" name="SCE_C_COMMENTLINEDOC"></item>
+		<item code="0" name="SCE_C_DEFAULT"></item>
+		<item code="27" name="SCE_C_ESCAPESEQUENCE"></item>
+		<item code="19" name="SCE_C_GLOBALCLASS"></item>
+		<item code="22" name="SCE_C_HASHQUOTEDSTRING"></item>
+		<item code="11" name="SCE_C_IDENTIFIER"></item>
+		<item code="4" name="SCE_C_NUMBER"></item>
+		<item code="10" name="SCE_C_OPERATOR"></item>
+		<item code="9" name="SCE_C_PREPROCESSOR"></item>
+		<item code="23" name="SCE_C_PREPROCESSORCOMMENT"></item>
+		<item code="24" name="SCE_C_PREPROCESSORCOMMENTDOC"></item>
+		<item code="14" name="SCE_C_REGEX"></item>
+		<item code="6" name="SCE_C_STRING"></item>
+		<item code="12" name="SCE_C_STRINGEOL"></item>
+		<item code="20" name="SCE_C_STRINGRAW"></item>
+		<item code="26" name="SCE_C_TASKMARKER"></item>
+		<item code="21" name="SCE_C_TRIPLEVERBATIM"></item>
+		<item code="25" name="SCE_C_USERLITERAL"></item>
+		<item code="8" name="SCE_C_UUID"></item>
+		<item code="13" name="SCE_C_VERBATIM"></item>
+		<item code="5" name="SCE_C_WORD"></item>
+		<item code="16" name="SCE_C_WORD2"></item>
+		<item code="9" name="SCE_CAML_CHAR"></item>
+		<item code="12" name="SCE_CAML_COMMENT"></item>
+		<item code="13" name="SCE_CAML_COMMENT1"></item>
+		<item code="14" name="SCE_CAML_COMMENT2"></item>
+		<item code="15" name="SCE_CAML_COMMENT3"></item>
+		<item code="0" name="SCE_CAML_DEFAULT"></item>
+		<item code="1" name="SCE_CAML_IDENTIFIER"></item>
+		<item code="3" name="SCE_CAML_KEYWORD"></item>
+		<item code="4" name="SCE_CAML_KEYWORD2"></item>
+		<item code="5" name="SCE_CAML_KEYWORD3"></item>
+		<item code="6" name="SCE_CAML_LINENUM"></item>
+		<item code="8" name="SCE_CAML_NUMBER"></item>
+		<item code="7" name="SCE_CAML_OPERATOR"></item>
+		<item code="11" name="SCE_CAML_STRING"></item>
+		<item code="2" name="SCE_CAML_TAGNAME"></item>
+		<item code="10" name="SCE_CAML_WHITE"></item>
+		<item code="13" name="SCE_CLW_ATTRIBUTE"></item>
+		<item code="11" name="SCE_CLW_BUILTIN_PROCEDURES_FUNCTION"></item>
+		<item code="2" name="SCE_CLW_COMMENT"></item>
+		<item code="9" name="SCE_CLW_COMPILER_DIRECTIVE"></item>
+		<item code="0" name="SCE_CLW_DEFAULT"></item>
+		<item code="16" name="SCE_CLW_DEPRECATED"></item>
+		<item code="15" name="SCE_CLW_ERROR"></item>
+		<item code="5" name="SCE_CLW_INTEGER_CONSTANT"></item>
+		<item code="8" name="SCE_CLW_KEYWORD"></item>
+		<item code="1" name="SCE_CLW_LABEL"></item>
+		<item code="7" name="SCE_CLW_PICTURE_STRING"></item>
+		<item code="6" name="SCE_CLW_REAL_CONSTANT"></item>
+		<item code="10" name="SCE_CLW_RUNTIME_EXPRESSIONS"></item>
+		<item code="14" name="SCE_CLW_STANDARD_EQUATE"></item>
+		<item code="3" name="SCE_CLW_STRING"></item>
+		<item code="12" name="SCE_CLW_STRUCTURE_DATA_TYPE"></item>
+		<item code="4" name="SCE_CLW_USER_IDENTIFIER"></item>
+		<item code="5" name="SCE_CMAKE_COMMANDS"></item>
+		<item code="1" name="SCE_CMAKE_COMMENT"></item>
+		<item code="0" name="SCE_CMAKE_DEFAULT"></item>
+		<item code="10" name="SCE_CMAKE_FOREACHDEF"></item>
+		<item code="11" name="SCE_CMAKE_IFDEFINEDEF"></item>
+		<item code="12" name="SCE_CMAKE_MACRODEF"></item>
+		<item code="14" name="SCE_CMAKE_NUMBER"></item>
+		<item code="6" name="SCE_CMAKE_PARAMETERS"></item>
+		<item code="2" name="SCE_CMAKE_STRINGDQ"></item>
+		<item code="3" name="SCE_CMAKE_STRINGLQ"></item>
+		<item code="4" name="SCE_CMAKE_STRINGRQ"></item>
+		<item code="13" name="SCE_CMAKE_STRINGVAR"></item>
+		<item code="8" name="SCE_CMAKE_USERDEFINED"></item>
+		<item code="7" name="SCE_CMAKE_VARIABLE"></item>
+		<item code="9" name="SCE_CMAKE_WHILEDEF"></item>
+		<item code="7" name="SCE_COFFEESCRIPT_CHARACTER"></item>
+		<item code="1" name="SCE_COFFEESCRIPT_COMMENT"></item>
+		<item code="22" name="SCE_COFFEESCRIPT_COMMENTBLOCK"></item>
+		<item code="3" name="SCE_COFFEESCRIPT_COMMENTDOC"></item>
+		<item code="17" name="SCE_COFFEESCRIPT_COMMENTDOCKEYWORD"></item>
+		<item code="18" name="SCE_COFFEESCRIPT_COMMENTDOCKEYWORDERROR"></item>
+		<item code="2" name="SCE_COFFEESCRIPT_COMMENTLINE"></item>
+		<item code="15" name="SCE_COFFEESCRIPT_COMMENTLINEDOC"></item>
+		<item code="0" name="SCE_COFFEESCRIPT_DEFAULT"></item>
+		<item code="19" name="SCE_COFFEESCRIPT_GLOBALCLASS"></item>
+		<item code="11" name="SCE_COFFEESCRIPT_IDENTIFIER"></item>
+		<item code="4" name="SCE_COFFEESCRIPT_NUMBER"></item>
+		<item code="10" name="SCE_COFFEESCRIPT_OPERATOR"></item>
+		<item code="9" name="SCE_COFFEESCRIPT_PREPROCESSOR"></item>
+		<item code="14" name="SCE_COFFEESCRIPT_REGEX"></item>
+		<item code="6" name="SCE_COFFEESCRIPT_STRING"></item>
+		<item code="12" name="SCE_COFFEESCRIPT_STRINGEOL"></item>
+		<item code="20" name="SCE_COFFEESCRIPT_STRINGRAW"></item>
+		<item code="21" name="SCE_COFFEESCRIPT_TRIPLEVERBATIM"></item>
+		<item code="8" name="SCE_COFFEESCRIPT_UUID"></item>
+		<item code="13" name="SCE_COFFEESCRIPT_VERBATIM"></item>
+		<item code="23" name="SCE_COFFEESCRIPT_VERBOSE_REGEX"></item>
+		<item code="24" name="SCE_COFFEESCRIPT_VERBOSE_REGEX_COMMENT"></item>
+		<item code="5" name="SCE_COFFEESCRIPT_WORD"></item>
+		<item code="16" name="SCE_COFFEESCRIPT_WORD2"></item>
+		<item code="1" name="SCE_CONF_COMMENT"></item>
+		<item code="0" name="SCE_CONF_DEFAULT"></item>
+		<item code="9" name="SCE_CONF_DIRECTIVE"></item>
+		<item code="4" name="SCE_CONF_EXTENSION"></item>
+		<item code="3" name="SCE_CONF_IDENTIFIER"></item>
+		<item code="8" name="SCE_CONF_IP"></item>
+		<item code="2" name="SCE_CONF_NUMBER"></item>
+		<item code="7" name="SCE_CONF_OPERATOR"></item>
+		<item code="5" name="SCE_CONF_PARAMETER"></item>
+		<item code="6" name="SCE_CONF_STRING"></item>
+		<item code="11" name="SCE_CSOUND_ARATE_VAR"></item>
+		<item code="1" name="SCE_CSOUND_COMMENT"></item>
+		<item code="9" name="SCE_CSOUND_COMMENTBLOCK"></item>
+		<item code="0" name="SCE_CSOUND_DEFAULT"></item>
+		<item code="14" name="SCE_CSOUND_GLOBAL_VAR"></item>
+		<item code="7" name="SCE_CSOUND_HEADERSTMT"></item>
+		<item code="5" name="SCE_CSOUND_IDENTIFIER"></item>
+		<item code="4" name="SCE_CSOUND_INSTR"></item>
+		<item code="13" name="SCE_CSOUND_IRATE_VAR"></item>
+		<item code="12" name="SCE_CSOUND_KRATE_VAR"></item>
+		<item code="2" name="SCE_CSOUND_NUMBER"></item>
+		<item code="6" name="SCE_CSOUND_OPCODE"></item>
+		<item code="3" name="SCE_CSOUND_OPERATOR"></item>
+		<item code="10" name="SCE_CSOUND_PARAM"></item>
+		<item code="15" name="SCE_CSOUND_STRINGEOL"></item>
+		<item code="8" name="SCE_CSOUND_USERKEYWORD"></item>
+		<item code="16" name="SCE_CSS_ATTRIBUTE"></item>
+		<item code="2" name="SCE_CSS_CLASS"></item>
+		<item code="9" name="SCE_CSS_COMMENT"></item>
+		<item code="0" name="SCE_CSS_DEFAULT"></item>
+		<item code="12" name="SCE_CSS_DIRECTIVE"></item>
+		<item code="13" name="SCE_CSS_DOUBLESTRING"></item>
+		<item code="19" name="SCE_CSS_EXTENDED_IDENTIFIER"></item>
+		<item code="20" name="SCE_CSS_EXTENDED_PSEUDOCLASS"></item>
+		<item code="21" name="SCE_CSS_EXTENDED_PSEUDOELEMENT"></item>
+		<item code="10" name="SCE_CSS_ID"></item>
+		<item code="6" name="SCE_CSS_IDENTIFIER"></item>
+		<item code="15" name="SCE_CSS_IDENTIFIER2"></item>
+		<item code="17" name="SCE_CSS_IDENTIFIER3"></item>
+		<item code="11" name="SCE_CSS_IMPORTANT"></item>
+		<item code="22" name="SCE_CSS_MEDIA"></item>
+		<item code="5" name="SCE_CSS_OPERATOR"></item>
+		<item code="3" name="SCE_CSS_PSEUDOCLASS"></item>
+		<item code="18" name="SCE_CSS_PSEUDOELEMENT"></item>
+		<item code="14" name="SCE_CSS_SINGLESTRING"></item>
+		<item code="1" name="SCE_CSS_TAG"></item>
+		<item code="7" name="SCE_CSS_UNKNOWN_IDENTIFIER"></item>
+		<item code="4" name="SCE_CSS_UNKNOWN_PSEUDOCLASS"></item>
+		<item code="8" name="SCE_CSS_VALUE"></item>
+		<item code="23" name="SCE_CSS_VARIABLE"></item>
+		<item code="12" name="SCE_D_CHARACTER"></item>
+		<item code="1" name="SCE_D_COMMENT"></item>
+		<item code="3" name="SCE_D_COMMENTDOC"></item>
+		<item code="16" name="SCE_D_COMMENTDOCKEYWORD"></item>
+		<item code="17" name="SCE_D_COMMENTDOCKEYWORDERROR"></item>
+		<item code="2" name="SCE_D_COMMENTLINE"></item>
+		<item code="15" name="SCE_D_COMMENTLINEDOC"></item>
+		<item code="4" name="SCE_D_COMMENTNESTED"></item>
+		<item code="0" name="SCE_D_DEFAULT"></item>
+		<item code="14" name="SCE_D_IDENTIFIER"></item>
+		<item code="5" name="SCE_D_NUMBER"></item>
+		<item code="13" name="SCE_D_OPERATOR"></item>
+		<item code="10" name="SCE_D_STRING"></item>
+		<item code="18" name="SCE_D_STRINGB"></item>
+		<item code="11" name="SCE_D_STRINGEOL"></item>
+		<item code="19" name="SCE_D_STRINGR"></item>
+		<item code="9" name="SCE_D_TYPEDEF"></item>
+		<item code="6" name="SCE_D_WORD"></item>
+		<item code="7" name="SCE_D_WORD2"></item>
+		<item code="8" name="SCE_D_WORD3"></item>
+		<item code="20" name="SCE_D_WORD5"></item>
+		<item code="21" name="SCE_D_WORD6"></item>
+		<item code="22" name="SCE_D_WORD7"></item>
+		<item code="6" name="SCE_DIFF_ADDED"></item>
+		<item code="7" name="SCE_DIFF_CHANGED"></item>
+		<item code="2" name="SCE_DIFF_COMMAND"></item>
+		<item code="1" name="SCE_DIFF_COMMENT"></item>
+		<item code="0" name="SCE_DIFF_DEFAULT"></item>
+		<item code="5" name="SCE_DIFF_DELETED"></item>
+		<item code="3" name="SCE_DIFF_HEADER"></item>
+		<item code="4" name="SCE_DIFF_POSITION"></item>
+		<item code="1" name="SCE_DMAP_COMMENT"></item>
+		<item code="0" name="SCE_DMAP_DEFAULT"></item>
+		<item code="7" name="SCE_DMAP_IDENTIFIER"></item>
+		<item code="2" name="SCE_DMAP_NUMBER"></item>
+		<item code="6" name="SCE_DMAP_OPERATOR"></item>
+		<item code="3" name="SCE_DMAP_STRING1"></item>
+		<item code="4" name="SCE_DMAP_STRING2"></item>
+		<item code="5" name="SCE_DMAP_STRINGEOL"></item>
+		<item code="8" name="SCE_DMAP_WORD"></item>
+		<item code="9" name="SCE_DMAP_WORD2"></item>
+		<item code="10" name="SCE_DMAP_WORD3"></item>
+		<item code="1" name="SCE_DMIS_COMMENT"></item>
+		<item code="0" name="SCE_DMIS_DEFAULT"></item>
+		<item code="4" name="SCE_DMIS_KEYWORD"></item>
+		<item code="9" name="SCE_DMIS_LABEL"></item>
+		<item code="5" name="SCE_DMIS_MAJORWORD"></item>
+		<item code="6" name="SCE_DMIS_MINORWORD"></item>
+		<item code="3" name="SCE_DMIS_NUMBER"></item>
+		<item code="2" name="SCE_DMIS_STRING"></item>
+		<item code="7" name="SCE_DMIS_UNSUPPORTED_MAJOR"></item>
+		<item code="8" name="SCE_DMIS_UNSUPPORTED_MINOR"></item>
+		<item code="24" name="SCE_ECL_ADDED"></item>
+		<item code="26" name="SCE_ECL_CHANGED"></item>
+		<item code="7" name="SCE_ECL_CHARACTER"></item>
+		<item code="1" name="SCE_ECL_COMMENT"></item>
+		<item code="23" name="SCE_ECL_COMMENTDOC"></item>
+		<item code="17" name="SCE_ECL_COMMENTDOCKEYWORD"></item>
+		<item code="18" name="SCE_ECL_COMMENTDOCKEYWORDERROR"></item>
+		<item code="2" name="SCE_ECL_COMMENTLINE"></item>
+		<item code="15" name="SCE_ECL_COMMENTLINEDOC"></item>
+		<item code="0" name="SCE_ECL_DEFAULT"></item>
+		<item code="25" name="SCE_ECL_DELETED"></item>
+		<item code="11" name="SCE_ECL_IDENTIFIER"></item>
+		<item code="27" name="SCE_ECL_MOVED"></item>
+		<item code="3" name="SCE_ECL_NUMBER"></item>
+		<item code="6" name="SCE_ECL_OPERATOR"></item>
+		<item code="9" name="SCE_ECL_PREPROCESSOR"></item>
+		<item code="14" name="SCE_ECL_REGEX"></item>
+		<item code="4" name="SCE_ECL_STRING"></item>
+		<item code="12" name="SCE_ECL_STRINGEOL"></item>
+		<item code="10" name="SCE_ECL_UNKNOWN"></item>
+		<item code="8" name="SCE_ECL_UUID"></item>
+		<item code="13" name="SCE_ECL_VERBATIM"></item>
+		<item code="5" name="SCE_ECL_WORD0"></item>
+		<item code="16" name="SCE_ECL_WORD1"></item>
+		<item code="19" name="SCE_ECL_WORD2"></item>
+		<item code="20" name="SCE_ECL_WORD3"></item>
+		<item code="21" name="SCE_ECL_WORD4"></item>
+		<item code="22" name="SCE_ECL_WORD5"></item>
+		<item code="5" name="SCE_EIFFEL_CHARACTER"></item>
+		<item code="1" name="SCE_EIFFEL_COMMENTLINE"></item>
+		<item code="0" name="SCE_EIFFEL_DEFAULT"></item>
+		<item code="7" name="SCE_EIFFEL_IDENTIFIER"></item>
+		<item code="2" name="SCE_EIFFEL_NUMBER"></item>
+		<item code="6" name="SCE_EIFFEL_OPERATOR"></item>
+		<item code="4" name="SCE_EIFFEL_STRING"></item>
+		<item code="8" name="SCE_EIFFEL_STRINGEOL"></item>
+		<item code="3" name="SCE_EIFFEL_WORD"></item>
+		<item code="7" name="SCE_ERLANG_ATOM"></item>
+		<item code="18" name="SCE_ERLANG_ATOM_QUOTED"></item>
+		<item code="22" name="SCE_ERLANG_BIFS"></item>
+		<item code="9" name="SCE_ERLANG_CHARACTER"></item>
+		<item code="1" name="SCE_ERLANG_COMMENT"></item>
+		<item code="16" name="SCE_ERLANG_COMMENT_DOC"></item>
+		<item code="17" name="SCE_ERLANG_COMMENT_DOC_MACRO"></item>
+		<item code="14" name="SCE_ERLANG_COMMENT_FUNCTION"></item>
+		<item code="15" name="SCE_ERLANG_COMMENT_MODULE"></item>
+		<item code="0" name="SCE_ERLANG_DEFAULT"></item>
+		<item code="8" name="SCE_ERLANG_FUNCTION_NAME"></item>
+		<item code="4" name="SCE_ERLANG_KEYWORD"></item>
+		<item code="10" name="SCE_ERLANG_MACRO"></item>
+		<item code="19" name="SCE_ERLANG_MACRO_QUOTED"></item>
+		<item code="23" name="SCE_ERLANG_MODULES"></item>
+		<item code="24" name="SCE_ERLANG_MODULES_ATT"></item>
+		<item code="13" name="SCE_ERLANG_NODE_NAME"></item>
+		<item code="21" name="SCE_ERLANG_NODE_NAME_QUOTED"></item>
+		<item code="3" name="SCE_ERLANG_NUMBER"></item>
+		<item code="6" name="SCE_ERLANG_OPERATOR"></item>
+		<item code="12" name="SCE_ERLANG_PREPROC"></item>
+		<item code="11" name="SCE_ERLANG_RECORD"></item>
+		<item code="20" name="SCE_ERLANG_RECORD_QUOTED"></item>
+		<item code="5" name="SCE_ERLANG_STRING"></item>
+		<item code="31" name="SCE_ERLANG_UNKNOWN"></item>
+		<item code="2" name="SCE_ERLANG_VARIABLE"></item>
+		<item code="18" name="SCE_ERR_ABSF"></item>
+		<item code="5" name="SCE_ERR_BORLAND"></item>
+		<item code="4" name="SCE_ERR_CMD"></item>
+		<item code="9" name="SCE_ERR_CTAG"></item>
+		<item code="0" name="SCE_ERR_DEFAULT"></item>
+		<item code="11" name="SCE_ERR_DIFF_ADDITION"></item>
+		<item code="10" name="SCE_ERR_DIFF_CHANGED"></item>
+		<item code="12" name="SCE_ERR_DIFF_DELETION"></item>
+		<item code="13" name="SCE_ERR_DIFF_MESSAGE"></item>
+		<item code="15" name="SCE_ERR_ELF"></item>
+		<item code="2" name="SCE_ERR_GCC"></item>
+		<item code="22" name="SCE_ERR_GCC_INCLUDED_FROM"></item>
+		<item code="16" name="SCE_ERR_IFC"></item>
+		<item code="17" name="SCE_ERR_IFORT"></item>
+		<item code="20" name="SCE_ERR_JAVA_STACK"></item>
+		<item code="8" name="SCE_ERR_LUA"></item>
+		<item code="3" name="SCE_ERR_MS"></item>
+		<item code="7" name="SCE_ERR_NET"></item>
+		<item code="6" name="SCE_ERR_PERL"></item>
+		<item code="14" name="SCE_ERR_PHP"></item>
+		<item code="1" name="SCE_ERR_PYTHON"></item>
+		<item code="19" name="SCE_ERR_TIDY"></item>
+		<item code="21" name="SCE_ERR_VALUE"></item>
+		<item code="9" name="SCE_ESCRIPT_BRACE"></item>
+		<item code="1" name="SCE_ESCRIPT_COMMENT"></item>
+		<item code="3" name="SCE_ESCRIPT_COMMENTDOC"></item>
+		<item code="2" name="SCE_ESCRIPT_COMMENTLINE"></item>
+		<item code="0" name="SCE_ESCRIPT_DEFAULT"></item>
+		<item code="8" name="SCE_ESCRIPT_IDENTIFIER"></item>
+		<item code="4" name="SCE_ESCRIPT_NUMBER"></item>
+		<item code="7" name="SCE_ESCRIPT_OPERATOR"></item>
+		<item code="6" name="SCE_ESCRIPT_STRING"></item>
+		<item code="5" name="SCE_ESCRIPT_WORD"></item>
+		<item code="10" name="SCE_ESCRIPT_WORD2"></item>
+		<item code="11" name="SCE_ESCRIPT_WORD3"></item>
+		<item code="1" name="SCE_F_COMMENT"></item>
+		<item code="14" name="SCE_F_CONTINUATION"></item>
+		<item code="0" name="SCE_F_DEFAULT"></item>
+		<item code="7" name="SCE_F_IDENTIFIER"></item>
+		<item code="13" name="SCE_F_LABEL"></item>
+		<item code="2" name="SCE_F_NUMBER"></item>
+		<item code="6" name="SCE_F_OPERATOR"></item>
+		<item code="12" name="SCE_F_OPERATOR2"></item>
+		<item code="11" name="SCE_F_PREPROCESSOR"></item>
+		<item code="3" name="SCE_F_STRING1"></item>
+		<item code="4" name="SCE_F_STRING2"></item>
+		<item code="5" name="SCE_F_STRINGEOL"></item>
+		<item code="8" name="SCE_F_WORD"></item>
+		<item code="9" name="SCE_F_WORD2"></item>
+		<item code="10" name="SCE_F_WORD3"></item>
+		<item code="1" name="SCE_FORTH_COMMENT"></item>
+		<item code="2" name="SCE_FORTH_COMMENT_ML"></item>
+		<item code="4" name="SCE_FORTH_CONTROL"></item>
+		<item code="0" name="SCE_FORTH_DEFAULT"></item>
+		<item code="6" name="SCE_FORTH_DEFWORD"></item>
+		<item code="3" name="SCE_FORTH_IDENTIFIER"></item>
+		<item code="5" name="SCE_FORTH_KEYWORD"></item>
+		<item code="11" name="SCE_FORTH_LOCALE"></item>
+		<item code="9" name="SCE_FORTH_NUMBER"></item>
+		<item code="7" name="SCE_FORTH_PREWORD1"></item>
+		<item code="8" name="SCE_FORTH_PREWORD2"></item>
+		<item code="10" name="SCE_FORTH_STRING"></item>
+		<item code="1" name="SCE_FS_COMMENT"></item>
+		<item code="3" name="SCE_FS_COMMENTDOC"></item>
+		<item code="22" name="SCE_FS_COMMENTDOC_C"></item>
+		<item code="5" name="SCE_FS_COMMENTDOCKEYWORD"></item>
+		<item code="6" name="SCE_FS_COMMENTDOCKEYWORDERROR"></item>
+		<item code="2" name="SCE_FS_COMMENTLINE"></item>
+		<item code="4" name="SCE_FS_COMMENTLINEDOC"></item>
+		<item code="23" name="SCE_FS_COMMENTLINEDOC_C"></item>
+		<item code="18" name="SCE_FS_CONSTANT"></item>
+		<item code="16" name="SCE_FS_DATE"></item>
+		<item code="0" name="SCE_FS_DEFAULT"></item>
+		<item code="21" name="SCE_FS_DEFAULT_C"></item>
+		<item code="20" name="SCE_FS_DISABLEDCODE"></item>
+		<item code="15" name="SCE_FS_IDENTIFIER"></item>
+		<item code="30" name="SCE_FS_IDENTIFIER_C"></item>
+		<item code="7" name="SCE_FS_KEYWORD"></item>
+		<item code="8" name="SCE_FS_KEYWORD2"></item>
+		<item code="25" name="SCE_FS_KEYWORD2_C"></item>
+		<item code="9" name="SCE_FS_KEYWORD3"></item>
+		<item code="10" name="SCE_FS_KEYWORD4"></item>
+		<item code="24" name="SCE_FS_KEYWORD_C"></item>
+		<item code="11" name="SCE_FS_NUMBER"></item>
+		<item code="26" name="SCE_FS_NUMBER_C"></item>
+		<item code="14" name="SCE_FS_OPERATOR"></item>
+		<item code="29" name="SCE_FS_OPERATOR_C"></item>
+		<item code="13" name="SCE_FS_PREPROCESSOR"></item>
+		<item code="28" name="SCE_FS_PREPROCESSOR_C"></item>
+		<item code="12" name="SCE_FS_STRING"></item>
+		<item code="27" name="SCE_FS_STRING_C"></item>
+		<item code="17" name="SCE_FS_STRINGEOL"></item>
+		<item code="31" name="SCE_FS_STRINGEOL_C"></item>
+		<item code="19" name="SCE_FS_WORDOPERATOR"></item>
+		<item code="7" name="SCE_GAP_CHAR"></item>
+		<item code="9" name="SCE_GAP_COMMENT"></item>
+		<item code="0" name="SCE_GAP_DEFAULT"></item>
+		<item code="1" name="SCE_GAP_IDENTIFIER"></item>
+		<item code="2" name="SCE_GAP_KEYWORD"></item>
+		<item code="3" name="SCE_GAP_KEYWORD2"></item>
+		<item code="4" name="SCE_GAP_KEYWORD3"></item>
+		<item code="5" name="SCE_GAP_KEYWORD4"></item>
+		<item code="10" name="SCE_GAP_NUMBER"></item>
+		<item code="8" name="SCE_GAP_OPERATOR"></item>
+		<item code="6" name="SCE_GAP_STRING"></item>
+		<item code="11" name="SCE_GAP_STRINGEOL"></item>
+		<item code="5" name="SCE_GC_ATTRIBUTE"></item>
+		<item code="7" name="SCE_GC_COMMAND"></item>
+		<item code="2" name="SCE_GC_COMMENTBLOCK"></item>
+		<item code="1" name="SCE_GC_COMMENTLINE"></item>
+		<item code="6" name="SCE_GC_CONTROL"></item>
+		<item code="0" name="SCE_GC_DEFAULT"></item>
+		<item code="4" name="SCE_GC_EVENT"></item>
+		<item code="3" name="SCE_GC_GLOBAL"></item>
+		<item code="9" name="SCE_GC_OPERATOR"></item>
+		<item code="8" name="SCE_GC_STRING"></item>
+		<item code="15" name="SCE_H_ASP"></item>
+		<item code="16" name="SCE_H_ASPAT"></item>
+		<item code="3" name="SCE_H_ATTRIBUTE"></item>
+		<item code="4" name="SCE_H_ATTRIBUTEUNKNOWN"></item>
+		<item code="17" name="SCE_H_CDATA"></item>
+		<item code="9" name="SCE_H_COMMENT"></item>
+		<item code="0" name="SCE_H_DEFAULT"></item>
+		<item code="6" name="SCE_H_DOUBLESTRING"></item>
+		<item code="10" name="SCE_H_ENTITY"></item>
+		<item code="5" name="SCE_H_NUMBER"></item>
+		<item code="8" name="SCE_H_OTHER"></item>
+		<item code="18" name="SCE_H_QUESTION"></item>
+		<item code="14" name="SCE_H_SCRIPT"></item>
+		<item code="23" name="SCE_H_SGML_1ST_PARAM"></item>
+		<item code="30" name="SCE_H_SGML_1ST_PARAM_COMMENT"></item>
+		<item code="31" name="SCE_H_SGML_BLOCK_DEFAULT"></item>
+		<item code="22" name="SCE_H_SGML_COMMAND"></item>
+		<item code="29" name="SCE_H_SGML_COMMENT"></item>
+		<item code="21" name="SCE_H_SGML_DEFAULT"></item>
+		<item code="24" name="SCE_H_SGML_DOUBLESTRING"></item>
+		<item code="28" name="SCE_H_SGML_ENTITY"></item>
+		<item code="26" name="SCE_H_SGML_ERROR"></item>
+		<item code="25" name="SCE_H_SGML_SIMPLESTRING"></item>
+		<item code="27" name="SCE_H_SGML_SPECIAL"></item>
+		<item code="7" name="SCE_H_SINGLESTRING"></item>
+		<item code="1" name="SCE_H_TAG"></item>
+		<item code="11" name="SCE_H_TAGEND"></item>
+		<item code="2" name="SCE_H_TAGUNKNOWN"></item>
+		<item code="19" name="SCE_H_VALUE"></item>
+		<item code="20" name="SCE_H_XCCOMMENT"></item>
+		<item code="13" name="SCE_H_XMLEND"></item>
+		<item code="12" name="SCE_H_XMLSTART"></item>
+		<item code="8" name="SCE_HA_CAPITAL"></item>
+		<item code="5" name="SCE_HA_CHARACTER"></item>
+		<item code="6" name="SCE_HA_CLASS"></item>
+		<item code="14" name="SCE_HA_COMMENTBLOCK"></item>
+		<item code="15" name="SCE_HA_COMMENTBLOCK2"></item>
+		<item code="16" name="SCE_HA_COMMENTBLOCK3"></item>
+		<item code="13" name="SCE_HA_COMMENTLINE"></item>
+		<item code="9" name="SCE_HA_DATA"></item>
+		<item code="0" name="SCE_HA_DEFAULT"></item>
+		<item code="1" name="SCE_HA_IDENTIFIER"></item>
+		<item code="10" name="SCE_HA_IMPORT"></item>
+		<item code="12" name="SCE_HA_INSTANCE"></item>
+		<item code="2" name="SCE_HA_KEYWORD"></item>
+		<item code="22" name="SCE_HA_LITERATE_CODEDELIM"></item>
+		<item code="21" name="SCE_HA_LITERATE_COMMENT"></item>
+		<item code="7" name="SCE_HA_MODULE"></item>
+		<item code="3" name="SCE_HA_NUMBER"></item>
+		<item code="11" name="SCE_HA_OPERATOR"></item>
+		<item code="17" name="SCE_HA_PRAGMA"></item>
+		<item code="18" name="SCE_HA_PREPROCESSOR"></item>
+		<item code="20" name="SCE_HA_RESERVED_OPERATOR"></item>
+		<item code="4" name="SCE_HA_STRING"></item>
+		<item code="19" name="SCE_HA_STRINGEOL"></item>
+		<item code="72" name="SCE_HB_COMMENTLINE"></item>
+		<item code="71" name="SCE_HB_DEFAULT"></item>
+		<item code="76" name="SCE_HB_IDENTIFIER"></item>
+		<item code="73" name="SCE_HB_NUMBER"></item>
+		<item code="70" name="SCE_HB_START"></item>
+		<item code="75" name="SCE_HB_STRING"></item>
+		<item code="77" name="SCE_HB_STRINGEOL"></item>
+		<item code="74" name="SCE_HB_WORD"></item>
+		<item code="82" name="SCE_HBA_COMMENTLINE"></item>
+		<item code="81" name="SCE_HBA_DEFAULT"></item>
+		<item code="86" name="SCE_HBA_IDENTIFIER"></item>
+		<item code="83" name="SCE_HBA_NUMBER"></item>
+		<item code="80" name="SCE_HBA_START"></item>
+		<item code="85" name="SCE_HBA_STRING"></item>
+		<item code="87" name="SCE_HBA_STRINGEOL"></item>
+		<item code="84" name="SCE_HBA_WORD"></item>
+		<item code="42" name="SCE_HJ_COMMENT"></item>
+		<item code="44" name="SCE_HJ_COMMENTDOC"></item>
+		<item code="43" name="SCE_HJ_COMMENTLINE"></item>
+		<item code="41" name="SCE_HJ_DEFAULT"></item>
+		<item code="48" name="SCE_HJ_DOUBLESTRING"></item>
+		<item code="47" name="SCE_HJ_KEYWORD"></item>
+		<item code="45" name="SCE_HJ_NUMBER"></item>
+		<item code="52" name="SCE_HJ_REGEX"></item>
+		<item code="49" name="SCE_HJ_SINGLESTRING"></item>
+		<item code="40" name="SCE_HJ_START"></item>
+		<item code="51" name="SCE_HJ_STRINGEOL"></item>
+		<item code="50" name="SCE_HJ_SYMBOLS"></item>
+		<item code="46" name="SCE_HJ_WORD"></item>
+		<item code="57" name="SCE_HJA_COMMENT"></item>
+		<item code="59" name="SCE_HJA_COMMENTDOC"></item>
+		<item code="58" name="SCE_HJA_COMMENTLINE"></item>
+		<item code="56" name="SCE_HJA_DEFAULT"></item>
+		<item code="63" name="SCE_HJA_DOUBLESTRING"></item>
+		<item code="62" name="SCE_HJA_KEYWORD"></item>
+		<item code="60" name="SCE_HJA_NUMBER"></item>
+		<item code="67" name="SCE_HJA_REGEX"></item>
+		<item code="64" name="SCE_HJA_SINGLESTRING"></item>
+		<item code="55" name="SCE_HJA_START"></item>
+		<item code="66" name="SCE_HJA_STRINGEOL"></item>
+		<item code="65" name="SCE_HJA_SYMBOLS"></item>
+		<item code="61" name="SCE_HJA_WORD"></item>
+		<item code="95" name="SCE_HP_CHARACTER"></item>
+		<item code="99" name="SCE_HP_CLASSNAME"></item>
+		<item code="92" name="SCE_HP_COMMENTLINE"></item>
+		<item code="91" name="SCE_HP_DEFAULT"></item>
+		<item code="100" name="SCE_HP_DEFNAME"></item>
+		<item code="102" name="SCE_HP_IDENTIFIER"></item>
+		<item code="93" name="SCE_HP_NUMBER"></item>
+		<item code="101" name="SCE_HP_OPERATOR"></item>
+		<item code="90" name="SCE_HP_START"></item>
+		<item code="94" name="SCE_HP_STRING"></item>
+		<item code="97" name="SCE_HP_TRIPLE"></item>
+		<item code="98" name="SCE_HP_TRIPLEDOUBLE"></item>
+		<item code="96" name="SCE_HP_WORD"></item>
+		<item code="110" name="SCE_HPA_CHARACTER"></item>
+		<item code="114" name="SCE_HPA_CLASSNAME"></item>
+		<item code="107" name="SCE_HPA_COMMENTLINE"></item>
+		<item code="106" name="SCE_HPA_DEFAULT"></item>
+		<item code="115" name="SCE_HPA_DEFNAME"></item>
+		<item code="117" name="SCE_HPA_IDENTIFIER"></item>
+		<item code="108" name="SCE_HPA_NUMBER"></item>
+		<item code="116" name="SCE_HPA_OPERATOR"></item>
+		<item code="105" name="SCE_HPA_START"></item>
+		<item code="109" name="SCE_HPA_STRING"></item>
+		<item code="112" name="SCE_HPA_TRIPLE"></item>
+		<item code="113" name="SCE_HPA_TRIPLEDOUBLE"></item>
+		<item code="111" name="SCE_HPA_WORD"></item>
+		<item code="124" name="SCE_HPHP_COMMENT"></item>
+		<item code="125" name="SCE_HPHP_COMMENTLINE"></item>
+		<item code="104" name="SCE_HPHP_COMPLEX_VARIABLE"></item>
+		<item code="118" name="SCE_HPHP_DEFAULT"></item>
+		<item code="119" name="SCE_HPHP_HSTRING"></item>
+		<item code="126" name="SCE_HPHP_HSTRING_VARIABLE"></item>
+		<item code="122" name="SCE_HPHP_NUMBER"></item>
+		<item code="127" name="SCE_HPHP_OPERATOR"></item>
+		<item code="120" name="SCE_HPHP_SIMPLESTRING"></item>
+		<item code="123" name="SCE_HPHP_VARIABLE"></item>
+		<item code="121" name="SCE_HPHP_WORD"></item>
+		<item code="1" name="SCE_INNO_COMMENT"></item>
+		<item code="7" name="SCE_INNO_COMMENT_PASCAL"></item>
+		<item code="0" name="SCE_INNO_DEFAULT"></item>
+		<item code="12" name="SCE_INNO_IDENTIFIER"></item>
+		<item code="6" name="SCE_INNO_INLINE_EXPANSION"></item>
+		<item code="2" name="SCE_INNO_KEYWORD"></item>
+		<item code="8" name="SCE_INNO_KEYWORD_PASCAL"></item>
+		<item code="9" name="SCE_INNO_KEYWORD_USER"></item>
+		<item code="3" name="SCE_INNO_PARAMETER"></item>
+		<item code="5" name="SCE_INNO_PREPROC"></item>
+		<item code="4" name="SCE_INNO_SECTION"></item>
+		<item code="10" name="SCE_INNO_STRING_DOUBLE"></item>
+		<item code="11" name="SCE_INNO_STRING_SINGLE"></item>
+		<item code="1" name="SCE_KIX_COMMENT"></item>
+		<item code="0" name="SCE_KIX_DEFAULT"></item>
+		<item code="8" name="SCE_KIX_FUNCTIONS"></item>
+		<item code="31" name="SCE_KIX_IDENTIFIER"></item>
+		<item code="7" name="SCE_KIX_KEYWORD"></item>
+		<item code="6" name="SCE_KIX_MACRO"></item>
+		<item code="4" name="SCE_KIX_NUMBER"></item>
+		<item code="9" name="SCE_KIX_OPERATOR"></item>
+		<item code="2" name="SCE_KIX_STRING1"></item>
+		<item code="3" name="SCE_KIX_STRING2"></item>
+		<item code="5" name="SCE_KIX_VAR"></item>
+		<item code="1" name="SCE_KVIRC_COMMENT"></item>
+		<item code="2" name="SCE_KVIRC_COMMENTBLOCK"></item>
+		<item code="0" name="SCE_KVIRC_DEFAULT"></item>
+		<item code="7" name="SCE_KVIRC_FUNCTION"></item>
+		<item code="6" name="SCE_KVIRC_FUNCTION_KEYWORD"></item>
+		<item code="5" name="SCE_KVIRC_KEYWORD"></item>
+		<item code="9" name="SCE_KVIRC_NUMBER"></item>
+		<item code="10" name="SCE_KVIRC_OPERATOR"></item>
+		<item code="3" name="SCE_KVIRC_STRING"></item>
+		<item code="11" name="SCE_KVIRC_STRING_FUNCTION"></item>
+		<item code="12" name="SCE_KVIRC_STRING_VARIABLE"></item>
+		<item code="8" name="SCE_KVIRC_VARIABLE"></item>
+		<item code="4" name="SCE_KVIRC_WORD"></item>
+		<item code="11" name="SCE_L_CMDOPT"></item>
+		<item code="1" name="SCE_L_COMMAND"></item>
+		<item code="4" name="SCE_L_COMMENT"></item>
+		<item code="7" name="SCE_L_COMMENT2"></item>
+		<item code="0" name="SCE_L_DEFAULT"></item>
+		<item code="12" name="SCE_L_ERROR"></item>
+		<item code="3" name="SCE_L_MATH"></item>
+		<item code="6" name="SCE_L_MATH2"></item>
+		<item code="9" name="SCE_L_SHORTCMD"></item>
+		<item code="10" name="SCE_L_SPECIAL"></item>
+		<item code="2" name="SCE_L_TAG"></item>
+		<item code="5" name="SCE_L_TAG2"></item>
+		<item code="8" name="SCE_L_VERBATIM"></item>
+		<item code="1" name="SCE_LISP_COMMENT"></item>
+		<item code="0" name="SCE_LISP_DEFAULT"></item>
+		<item code="9" name="SCE_LISP_IDENTIFIER"></item>
+		<item code="3" name="SCE_LISP_KEYWORD"></item>
+		<item code="4" name="SCE_LISP_KEYWORD_KW"></item>
+		<item code="12" name="SCE_LISP_MULTI_COMMENT"></item>
+		<item code="2" name="SCE_LISP_NUMBER"></item>
+		<item code="10" name="SCE_LISP_OPERATOR"></item>
+		<item code="11" name="SCE_LISP_SPECIAL"></item>
+		<item code="6" name="SCE_LISP_STRING"></item>
+		<item code="8" name="SCE_LISP_STRINGEOL"></item>
+		<item code="5" name="SCE_LISP_SYMBOL"></item>
+		<item code="6" name="SCE_LOT_ABORT"></item>
+		<item code="2" name="SCE_LOT_BREAK"></item>
+		<item code="0" name="SCE_LOT_DEFAULT"></item>
+		<item code="5" name="SCE_LOT_FAIL"></item>
+		<item code="1" name="SCE_LOT_HEADER"></item>
+		<item code="4" name="SCE_LOT_PASS"></item>
+		<item code="3" name="SCE_LOT_SET"></item>
+		<item code="1" name="SCE_LOUT_COMMENT"></item>
+		<item code="0" name="SCE_LOUT_DEFAULT"></item>
+		<item code="9" name="SCE_LOUT_IDENTIFIER"></item>
+		<item code="2" name="SCE_LOUT_NUMBER"></item>
+		<item code="8" name="SCE_LOUT_OPERATOR"></item>
+		<item code="7" name="SCE_LOUT_STRING"></item>
+		<item code="10" name="SCE_LOUT_STRINGEOL"></item>
+		<item code="3" name="SCE_LOUT_WORD"></item>
+		<item code="4" name="SCE_LOUT_WORD2"></item>
+		<item code="5" name="SCE_LOUT_WORD3"></item>
+		<item code="6" name="SCE_LOUT_WORD4"></item>
+		<item code="7" name="SCE_LUA_CHARACTER"></item>
+		<item code="1" name="SCE_LUA_COMMENT"></item>
+		<item code="3" name="SCE_LUA_COMMENTDOC"></item>
+		<item code="2" name="SCE_LUA_COMMENTLINE"></item>
+		<item code="0" name="SCE_LUA_DEFAULT"></item>
+		<item code="11" name="SCE_LUA_IDENTIFIER"></item>
+		<item code="20" name="SCE_LUA_LABEL"></item>
+		<item code="8" name="SCE_LUA_LITERALSTRING"></item>
+		<item code="4" name="SCE_LUA_NUMBER"></item>
+		<item code="10" name="SCE_LUA_OPERATOR"></item>
+		<item code="9" name="SCE_LUA_PREPROCESSOR"></item>
+		<item code="6" name="SCE_LUA_STRING"></item>
+		<item code="12" name="SCE_LUA_STRINGEOL"></item>
+		<item code="5" name="SCE_LUA_WORD"></item>
+		<item code="13" name="SCE_LUA_WORD2"></item>
+		<item code="14" name="SCE_LUA_WORD3"></item>
+		<item code="15" name="SCE_LUA_WORD4"></item>
+		<item code="16" name="SCE_LUA_WORD5"></item>
+		<item code="17" name="SCE_LUA_WORD6"></item>
+		<item code="18" name="SCE_LUA_WORD7"></item>
+		<item code="19" name="SCE_LUA_WORD8"></item>
+		<item code="10" name="SCE_MAGIK_BRACE_BLOCK"></item>
+		<item code="9" name="SCE_MAGIK_BRACKET_BLOCK"></item>
+		<item code="3" name="SCE_MAGIK_CHARACTER"></item>
+		<item code="1" name="SCE_MAGIK_COMMENT"></item>
+		<item code="8" name="SCE_MAGIK_CONTAINER"></item>
+		<item code="0" name="SCE_MAGIK_DEFAULT"></item>
+		<item code="7" name="SCE_MAGIK_FLOW"></item>
+		<item code="16" name="SCE_MAGIK_HYPER_COMMENT"></item>
+		<item code="5" name="SCE_MAGIK_IDENTIFIER"></item>
+		<item code="13" name="SCE_MAGIK_KEYWORD"></item>
+		<item code="4" name="SCE_MAGIK_NUMBER"></item>
+		<item code="6" name="SCE_MAGIK_OPERATOR"></item>
+		<item code="14" name="SCE_MAGIK_PRAGMA"></item>
+		<item code="11" name="SCE_MAGIK_SQBRACKET_BLOCK"></item>
+		<item code="2" name="SCE_MAGIK_STRING"></item>
+		<item code="15" name="SCE_MAGIK_SYMBOL"></item>
+		<item code="12" name="SCE_MAGIK_UNKNOWN_KEYWORD"></item>
+		<item code="1" name="SCE_MAKE_COMMENT"></item>
+		<item code="0" name="SCE_MAKE_DEFAULT"></item>
+		<item code="3" name="SCE_MAKE_IDENTIFIER"></item>
+		<item code="9" name="SCE_MAKE_IDEOL"></item>
+		<item code="4" name="SCE_MAKE_OPERATOR"></item>
+		<item code="2" name="SCE_MAKE_PREPROCESSOR"></item>
+		<item code="5" name="SCE_MAKE_TARGET"></item>
+		<item code="15" name="SCE_MARKDOWN_BLOCKQUOTE"></item>
+		<item code="19" name="SCE_MARKDOWN_CODE"></item>
+		<item code="20" name="SCE_MARKDOWN_CODE2"></item>
+		<item code="21" name="SCE_MARKDOWN_CODEBK"></item>
+		<item code="0" name="SCE_MARKDOWN_DEFAULT"></item>
+		<item code="4" name="SCE_MARKDOWN_EM1"></item>
+		<item code="5" name="SCE_MARKDOWN_EM2"></item>
+		<item code="6" name="SCE_MARKDOWN_HEADER1"></item>
+		<item code="7" name="SCE_MARKDOWN_HEADER2"></item>
+		<item code="8" name="SCE_MARKDOWN_HEADER3"></item>
+		<item code="9" name="SCE_MARKDOWN_HEADER4"></item>
+		<item code="10" name="SCE_MARKDOWN_HEADER5"></item>
+		<item code="11" name="SCE_MARKDOWN_HEADER6"></item>
+		<item code="17" name="SCE_MARKDOWN_HRULE"></item>
+		<item code="1" name="SCE_MARKDOWN_LINE_BEGIN"></item>
+		<item code="18" name="SCE_MARKDOWN_LINK"></item>
+		<item code="14" name="SCE_MARKDOWN_OLIST_ITEM"></item>
+		<item code="12" name="SCE_MARKDOWN_PRECHAR"></item>
+		<item code="16" name="SCE_MARKDOWN_STRIKEOUT"></item>
+		<item code="2" name="SCE_MARKDOWN_STRONG1"></item>
+		<item code="3" name="SCE_MARKDOWN_STRONG2"></item>
+		<item code="13" name="SCE_MARKDOWN_ULIST_ITEM"></item>
+		<item code="2" name="SCE_MATLAB_COMMAND"></item>
+		<item code="1" name="SCE_MATLAB_COMMENT"></item>
+		<item code="0" name="SCE_MATLAB_DEFAULT"></item>
+		<item code="8" name="SCE_MATLAB_DOUBLEQUOTESTRING"></item>
+		<item code="7" name="SCE_MATLAB_IDENTIFIER"></item>
+		<item code="4" name="SCE_MATLAB_KEYWORD"></item>
+		<item code="3" name="SCE_MATLAB_NUMBER"></item>
+		<item code="6" name="SCE_MATLAB_OPERATOR"></item>
+		<item code="5" name="SCE_MATLAB_STRING"></item>
+		<item code="4" name="SCE_METAPOST_COMMAND"></item>
+		<item code="0" name="SCE_METAPOST_DEFAULT"></item>
+		<item code="6" name="SCE_METAPOST_EXTRA"></item>
+		<item code="2" name="SCE_METAPOST_GROUP"></item>
+		<item code="1" name="SCE_METAPOST_SPECIAL"></item>
+		<item code="3" name="SCE_METAPOST_SYMBOL"></item>
+		<item code="5" name="SCE_METAPOST_TEXT"></item>
+		<item code="11" name="SCE_MMIXAL_CHAR"></item>
+		<item code="1" name="SCE_MMIXAL_COMMENT"></item>
+		<item code="14" name="SCE_MMIXAL_HEX"></item>
+		<item code="17" name="SCE_MMIXAL_INCLUDE"></item>
+		<item code="2" name="SCE_MMIXAL_LABEL"></item>
+		<item code="0" name="SCE_MMIXAL_LEADWS"></item>
+		<item code="9" name="SCE_MMIXAL_NUMBER"></item>
+		<item code="3" name="SCE_MMIXAL_OPCODE"></item>
+		<item code="7" name="SCE_MMIXAL_OPCODE_POST"></item>
+		<item code="4" name="SCE_MMIXAL_OPCODE_PRE"></item>
+		<item code="6" name="SCE_MMIXAL_OPCODE_UNKNOWN"></item>
+		<item code="5" name="SCE_MMIXAL_OPCODE_VALID"></item>
+		<item code="8" name="SCE_MMIXAL_OPERANDS"></item>
+		<item code="15" name="SCE_MMIXAL_OPERATOR"></item>
+		<item code="10" name="SCE_MMIXAL_REF"></item>
+		<item code="13" name="SCE_MMIXAL_REGISTER"></item>
+		<item code="12" name="SCE_MMIXAL_STRING"></item>
+		<item code="16" name="SCE_MMIXAL_SYMBOL"></item>
+		<item code="17" name="SCE_MODULA_BADSTR"></item>
+		<item code="7" name="SCE_MODULA_BASENUM"></item>
+		<item code="11" name="SCE_MODULA_CHAR"></item>
+		<item code="12" name="SCE_MODULA_CHARSPEC"></item>
+		<item code="1" name="SCE_MODULA_COMMENT"></item>
+		<item code="0" name="SCE_MODULA_DEFAULT"></item>
+		<item code="2" name="SCE_MODULA_DOXYCOMM"></item>
+		<item code="3" name="SCE_MODULA_DOXYKEY"></item>
+		<item code="8" name="SCE_MODULA_FLOAT"></item>
+		<item code="4" name="SCE_MODULA_KEYWORD"></item>
+		<item code="6" name="SCE_MODULA_NUMBER"></item>
+		<item code="16" name="SCE_MODULA_OPERATOR"></item>
+		<item code="14" name="SCE_MODULA_PRAGMA"></item>
+		<item code="15" name="SCE_MODULA_PRGKEY"></item>
+		<item code="13" name="SCE_MODULA_PROC"></item>
+		<item code="5" name="SCE_MODULA_RESERVED"></item>
+		<item code="9" name="SCE_MODULA_STRING"></item>
+		<item code="10" name="SCE_MODULA_STRSPEC"></item>
+		<item code="8" name="SCE_MSSQL_COLUMN_NAME"></item>
+		<item code="16" name="SCE_MSSQL_COLUMN_NAME_2"></item>
+		<item code="1" name="SCE_MSSQL_COMMENT"></item>
+		<item code="10" name="SCE_MSSQL_DATATYPE"></item>
+		<item code="0" name="SCE_MSSQL_DEFAULT"></item>
+		<item code="15" name="SCE_MSSQL_DEFAULT_PREF_DATATYPE"></item>
+		<item code="13" name="SCE_MSSQL_FUNCTION"></item>
+		<item code="12" name="SCE_MSSQL_GLOBAL_VARIABLE"></item>
+		<item code="6" name="SCE_MSSQL_IDENTIFIER"></item>
+		<item code="2" name="SCE_MSSQL_LINE_COMMENT"></item>
+		<item code="3" name="SCE_MSSQL_NUMBER"></item>
+		<item code="5" name="SCE_MSSQL_OPERATOR"></item>
+		<item code="9" name="SCE_MSSQL_STATEMENT"></item>
+		<item code="14" name="SCE_MSSQL_STORED_PROCEDURE"></item>
+		<item code="4" name="SCE_MSSQL_STRING"></item>
+		<item code="11" name="SCE_MSSQL_SYSTABLE"></item>
+		<item code="7" name="SCE_MSSQL_VARIABLE"></item>
+		<item code="1" name="SCE_MYSQL_COMMENT"></item>
+		<item code="2" name="SCE_MYSQL_COMMENTLINE"></item>
+		<item code="9" name="SCE_MYSQL_DATABASEOBJECT"></item>
+		<item code="0" name="SCE_MYSQL_DEFAULT"></item>
+		<item code="13" name="SCE_MYSQL_DQSTRING"></item>
+		<item code="15" name="SCE_MYSQL_FUNCTION"></item>
+		<item code="21" name="SCE_MYSQL_HIDDENCOMMAND"></item>
+		<item code="16" name="SCE_MYSQL_IDENTIFIER"></item>
+		<item code="8" name="SCE_MYSQL_KEYWORD"></item>
+		<item code="5" name="SCE_MYSQL_KNOWNSYSTEMVARIABLE"></item>
+		<item code="7" name="SCE_MYSQL_MAJORKEYWORD"></item>
+		<item code="6" name="SCE_MYSQL_NUMBER"></item>
+		<item code="14" name="SCE_MYSQL_OPERATOR"></item>
+		<item code="22" name="SCE_MYSQL_PLACEHOLDER"></item>
+		<item code="10" name="SCE_MYSQL_PROCEDUREKEYWORD"></item>
+		<item code="17" name="SCE_MYSQL_QUOTEDIDENTIFIER"></item>
+		<item code="12" name="SCE_MYSQL_SQSTRING"></item>
+		<item code="11" name="SCE_MYSQL_STRING"></item>
+		<item code="4" name="SCE_MYSQL_SYSTEMVARIABLE"></item>
+		<item code="18" name="SCE_MYSQL_USER1"></item>
+		<item code="19" name="SCE_MYSQL_USER2"></item>
+		<item code="20" name="SCE_MYSQL_USER3"></item>
+		<item code="3" name="SCE_MYSQL_VARIABLE"></item>
+		<item code="6" name="SCE_NNCRONTAB_ASTERISK"></item>
+		<item code="1" name="SCE_NNCRONTAB_COMMENT"></item>
+		<item code="0" name="SCE_NNCRONTAB_DEFAULT"></item>
+		<item code="9" name="SCE_NNCRONTAB_ENVIRONMENT"></item>
+		<item code="10" name="SCE_NNCRONTAB_IDENTIFIER"></item>
+		<item code="4" name="SCE_NNCRONTAB_KEYWORD"></item>
+		<item code="5" name="SCE_NNCRONTAB_MODIFIER"></item>
+		<item code="7" name="SCE_NNCRONTAB_NUMBER"></item>
+		<item code="3" name="SCE_NNCRONTAB_SECTION"></item>
+		<item code="8" name="SCE_NNCRONTAB_STRING"></item>
+		<item code="2" name="SCE_NNCRONTAB_TASK"></item>
+		<item code="1" name="SCE_NSIS_COMMENT"></item>
+		<item code="18" name="SCE_NSIS_COMMENTBOX"></item>
+		<item code="0" name="SCE_NSIS_DEFAULT"></item>
+		<item code="5" name="SCE_NSIS_FUNCTION"></item>
+		<item code="17" name="SCE_NSIS_FUNCTIONDEF"></item>
+		<item code="11" name="SCE_NSIS_IFDEFINEDEF"></item>
+		<item code="7" name="SCE_NSIS_LABEL"></item>
+		<item code="12" name="SCE_NSIS_MACRODEF"></item>
+		<item code="14" name="SCE_NSIS_NUMBER"></item>
+		<item code="16" name="SCE_NSIS_PAGEEX"></item>
+		<item code="9" name="SCE_NSIS_SECTIONDEF"></item>
+		<item code="15" name="SCE_NSIS_SECTIONGROUP"></item>
+		<item code="2" name="SCE_NSIS_STRINGDQ"></item>
+		<item code="3" name="SCE_NSIS_STRINGLQ"></item>
+		<item code="4" name="SCE_NSIS_STRINGRQ"></item>
+		<item code="13" name="SCE_NSIS_STRINGVAR"></item>
+		<item code="10" name="SCE_NSIS_SUBSECTIONDEF"></item>
+		<item code="8" name="SCE_NSIS_USERDEFINED"></item>
+		<item code="6" name="SCE_NSIS_VARIABLE"></item>
+		<item code="8" name="SCE_OPAL_BOOL_CONST"></item>
+		<item code="1" name="SCE_OPAL_COMMENT_BLOCK"></item>
+		<item code="2" name="SCE_OPAL_COMMENT_LINE"></item>
+		<item code="32" name="SCE_OPAL_DEFAULT"></item>
+		<item code="3" name="SCE_OPAL_INTEGER"></item>
+		<item code="4" name="SCE_OPAL_KEYWORD"></item>
+		<item code="7" name="SCE_OPAL_PAR"></item>
+		<item code="5" name="SCE_OPAL_SORT"></item>
+		<item code="0" name="SCE_OPAL_SPACE"></item>
+		<item code="6" name="SCE_OPAL_STRING"></item>
+		<item code="2" name="SCE_OSCRIPT_BLOCK_COMMENT"></item>
+		<item code="8" name="SCE_OSCRIPT_CONSTANT"></item>
+		<item code="0" name="SCE_OSCRIPT_DEFAULT"></item>
+		<item code="3" name="SCE_OSCRIPT_DOC_COMMENT"></item>
+		<item code="7" name="SCE_OSCRIPT_DOUBLEQUOTE_STRING"></item>
+		<item code="15" name="SCE_OSCRIPT_FUNCTION"></item>
+		<item code="10" name="SCE_OSCRIPT_GLOBAL"></item>
+		<item code="9" name="SCE_OSCRIPT_IDENTIFIER"></item>
+		<item code="11" name="SCE_OSCRIPT_KEYWORD"></item>
+		<item code="13" name="SCE_OSCRIPT_LABEL"></item>
+		<item code="1" name="SCE_OSCRIPT_LINE_COMMENT"></item>
+		<item code="18" name="SCE_OSCRIPT_METHOD"></item>
+		<item code="5" name="SCE_OSCRIPT_NUMBER"></item>
+		<item code="16" name="SCE_OSCRIPT_OBJECT"></item>
+		<item code="12" name="SCE_OSCRIPT_OPERATOR"></item>
+		<item code="4" name="SCE_OSCRIPT_PREPROCESSOR"></item>
+		<item code="17" name="SCE_OSCRIPT_PROPERTY"></item>
+		<item code="6" name="SCE_OSCRIPT_SINGLEQUOTE_STRING"></item>
+		<item code="14" name="SCE_OSCRIPT_TYPE"></item>
+		<item code="4" name="SCE_P_CHARACTER"></item>
+		<item code="8" name="SCE_P_CLASSNAME"></item>
+		<item code="12" name="SCE_P_COMMENTBLOCK"></item>
+		<item code="1" name="SCE_P_COMMENTLINE"></item>
+		<item code="15" name="SCE_P_DECORATOR"></item>
+		<item code="0" name="SCE_P_DEFAULT"></item>
+		<item code="9" name="SCE_P_DEFNAME"></item>
+		<item code="11" name="SCE_P_IDENTIFIER"></item>
+		<item code="2" name="SCE_P_NUMBER"></item>
+		<item code="10" name="SCE_P_OPERATOR"></item>
+		<item code="3" name="SCE_P_STRING"></item>
+		<item code="13" name="SCE_P_STRINGEOL"></item>
+		<item code="6" name="SCE_P_TRIPLE"></item>
+		<item code="7" name="SCE_P_TRIPLEDOUBLE"></item>
+		<item code="5" name="SCE_P_WORD"></item>
+		<item code="14" name="SCE_P_WORD2"></item>
+		<item code="14" name="SCE_PAS_ASM"></item>
+		<item code="12" name="SCE_PAS_CHARACTER"></item>
+		<item code="2" name="SCE_PAS_COMMENT"></item>
+		<item code="3" name="SCE_PAS_COMMENT2"></item>
+		<item code="4" name="SCE_PAS_COMMENTLINE"></item>
+		<item code="0" name="SCE_PAS_DEFAULT"></item>
+		<item code="8" name="SCE_PAS_HEXNUMBER"></item>
+		<item code="1" name="SCE_PAS_IDENTIFIER"></item>
+		<item code="7" name="SCE_PAS_NUMBER"></item>
+		<item code="13" name="SCE_PAS_OPERATOR"></item>
+		<item code="5" name="SCE_PAS_PREPROCESSOR"></item>
+		<item code="6" name="SCE_PAS_PREPROCESSOR2"></item>
+		<item code="10" name="SCE_PAS_STRING"></item>
+		<item code="11" name="SCE_PAS_STRINGEOL"></item>
+		<item code="9" name="SCE_PAS_WORD"></item>
+		<item code="13" name="SCE_PL_ARRAY"></item>
+		<item code="20" name="SCE_PL_BACKTICKS"></item>
+		<item code="57" name="SCE_PL_BACKTICKS_VAR"></item>
+		<item code="7" name="SCE_PL_CHARACTER"></item>
+		<item code="2" name="SCE_PL_COMMENTLINE"></item>
+		<item code="21" name="SCE_PL_DATASECTION"></item>
+		<item code="0" name="SCE_PL_DEFAULT"></item>
+		<item code="1" name="SCE_PL_ERROR"></item>
+		<item code="42" name="SCE_PL_FORMAT"></item>
+		<item code="41" name="SCE_PL_FORMAT_IDENT"></item>
+		<item code="14" name="SCE_PL_HASH"></item>
+		<item code="22" name="SCE_PL_HERE_DELIM"></item>
+		<item code="23" name="SCE_PL_HERE_Q"></item>
+		<item code="24" name="SCE_PL_HERE_QQ"></item>
+		<item code="61" name="SCE_PL_HERE_QQ_VAR"></item>
+		<item code="25" name="SCE_PL_HERE_QX"></item>
+		<item code="62" name="SCE_PL_HERE_QX_VAR"></item>
+		<item code="11" name="SCE_PL_IDENTIFIER"></item>
+		<item code="19" name="SCE_PL_LONGQUOTE"></item>
+		<item code="4" name="SCE_PL_NUMBER"></item>
+		<item code="10" name="SCE_PL_OPERATOR"></item>
+		<item code="3" name="SCE_PL_POD"></item>
+		<item code="31" name="SCE_PL_POD_VERB"></item>
+		<item code="9" name="SCE_PL_PREPROCESSOR"></item>
+		<item code="8" name="SCE_PL_PUNCTUATION"></item>
+		<item code="17" name="SCE_PL_REGEX"></item>
+		<item code="54" name="SCE_PL_REGEX_VAR"></item>
+		<item code="18" name="SCE_PL_REGSUBST"></item>
+		<item code="55" name="SCE_PL_REGSUBST_VAR"></item>
+		<item code="12" name="SCE_PL_SCALAR"></item>
+		<item code="6" name="SCE_PL_STRING"></item>
+		<item code="26" name="SCE_PL_STRING_Q"></item>
+		<item code="27" name="SCE_PL_STRING_QQ"></item>
+		<item code="64" name="SCE_PL_STRING_QQ_VAR"></item>
+		<item code="29" name="SCE_PL_STRING_QR"></item>
+		<item code="66" name="SCE_PL_STRING_QR_VAR"></item>
+		<item code="30" name="SCE_PL_STRING_QW"></item>
+		<item code="28" name="SCE_PL_STRING_QX"></item>
+		<item code="65" name="SCE_PL_STRING_QX_VAR"></item>
+		<item code="43" name="SCE_PL_STRING_VAR"></item>
+		<item code="40" name="SCE_PL_SUB_PROTOTYPE"></item>
+		<item code="15" name="SCE_PL_SYMBOLTABLE"></item>
+		<item code="16" name="SCE_PL_VARIABLE_INDEXER"></item>
+		<item code="5" name="SCE_PL_WORD"></item>
+		<item code="44" name="SCE_PL_XLAT"></item>
+		<item code="1" name="SCE_PLM_COMMENT"></item>
+		<item code="6" name="SCE_PLM_CONTROL"></item>
+		<item code="0" name="SCE_PLM_DEFAULT"></item>
+		<item code="4" name="SCE_PLM_IDENTIFIER"></item>
+		<item code="7" name="SCE_PLM_KEYWORD"></item>
+		<item code="3" name="SCE_PLM_NUMBER"></item>
+		<item code="5" name="SCE_PLM_OPERATOR"></item>
+		<item code="2" name="SCE_PLM_STRING"></item>
+		<item code="1" name="SCE_PO_COMMENT"></item>
+		<item code="0" name="SCE_PO_DEFAULT"></item>
+		<item code="15" name="SCE_PO_ERROR"></item>
+		<item code="11" name="SCE_PO_FLAGS"></item>
+		<item code="8" name="SCE_PO_FUZZY"></item>
+		<item code="6" name="SCE_PO_MSGCTXT"></item>
+		<item code="7" name="SCE_PO_MSGCTXT_TEXT"></item>
+		<item code="14" name="SCE_PO_MSGCTXT_TEXT_EOL"></item>
+		<item code="2" name="SCE_PO_MSGID"></item>
+		<item code="3" name="SCE_PO_MSGID_TEXT"></item>
+		<item code="12" name="SCE_PO_MSGID_TEXT_EOL"></item>
+		<item code="4" name="SCE_PO_MSGSTR"></item>
+		<item code="5" name="SCE_PO_MSGSTR_TEXT"></item>
+		<item code="13" name="SCE_PO_MSGSTR_TEXT_EOL"></item>
+		<item code="9" name="SCE_PO_PROGRAMMER_COMMENT"></item>
+		<item code="10" name="SCE_PO_REFERENCE"></item>
+		<item code="9" name="SCE_POV_BADDIRECTIVE"></item>
+		<item code="1" name="SCE_POV_COMMENT"></item>
+		<item code="2" name="SCE_POV_COMMENTLINE"></item>
+		<item code="0" name="SCE_POV_DEFAULT"></item>
+		<item code="8" name="SCE_POV_DIRECTIVE"></item>
+		<item code="5" name="SCE_POV_IDENTIFIER"></item>
+		<item code="3" name="SCE_POV_NUMBER"></item>
+		<item code="4" name="SCE_POV_OPERATOR"></item>
+		<item code="6" name="SCE_POV_STRING"></item>
+		<item code="7" name="SCE_POV_STRINGEOL"></item>
+		<item code="10" name="SCE_POV_WORD2"></item>
+		<item code="11" name="SCE_POV_WORD3"></item>
+		<item code="12" name="SCE_POV_WORD4"></item>
+		<item code="13" name="SCE_POV_WORD5"></item>
+		<item code="14" name="SCE_POV_WORD6"></item>
+		<item code="15" name="SCE_POV_WORD7"></item>
+		<item code="16" name="SCE_POV_WORD8"></item>
+		<item code="15" name="SCE_POWERPRO_ALTQUOTE"></item>
+		<item code="1" name="SCE_POWERPRO_COMMENTBLOCK"></item>
+		<item code="2" name="SCE_POWERPRO_COMMENTLINE"></item>
+		<item code="0" name="SCE_POWERPRO_DEFAULT"></item>
+		<item code="8" name="SCE_POWERPRO_DOUBLEQUOTEDSTRING"></item>
+		<item code="16" name="SCE_POWERPRO_FUNCTION"></item>
+		<item code="12" name="SCE_POWERPRO_IDENTIFIER"></item>
+		<item code="10" name="SCE_POWERPRO_LINECONTINUE"></item>
+		<item code="3" name="SCE_POWERPRO_NUMBER"></item>
+		<item code="11" name="SCE_POWERPRO_OPERATOR"></item>
+		<item code="9" name="SCE_POWERPRO_SINGLEQUOTEDSTRING"></item>
+		<item code="13" name="SCE_POWERPRO_STRINGEOL"></item>
+		<item code="14" name="SCE_POWERPRO_VERBATIM"></item>
+		<item code="4" name="SCE_POWERPRO_WORD"></item>
+		<item code="5" name="SCE_POWERPRO_WORD2"></item>
+		<item code="6" name="SCE_POWERPRO_WORD3"></item>
+		<item code="7" name="SCE_POWERPRO_WORD4"></item>
+		<item code="10" name="SCE_POWERSHELL_ALIAS"></item>
+		<item code="3" name="SCE_POWERSHELL_CHARACTER"></item>
+		<item code="9" name="SCE_POWERSHELL_CMDLET"></item>
+		<item code="1" name="SCE_POWERSHELL_COMMENT"></item>
+		<item code="16" name="SCE_POWERSHELL_COMMENTDOCKEYWORD"></item>
+		<item code="13" name="SCE_POWERSHELL_COMMENTSTREAM"></item>
+		<item code="0" name="SCE_POWERSHELL_DEFAULT"></item>
+		<item code="11" name="SCE_POWERSHELL_FUNCTION"></item>
+		<item code="15" name="SCE_POWERSHELL_HERE_CHARACTER"></item>
+		<item code="14" name="SCE_POWERSHELL_HERE_STRING"></item>
+		<item code="7" name="SCE_POWERSHELL_IDENTIFIER"></item>
+		<item code="8" name="SCE_POWERSHELL_KEYWORD"></item>
+		<item code="4" name="SCE_POWERSHELL_NUMBER"></item>
+		<item code="6" name="SCE_POWERSHELL_OPERATOR"></item>
+		<item code="2" name="SCE_POWERSHELL_STRING"></item>
+		<item code="12" name="SCE_POWERSHELL_USER1"></item>
+		<item code="5" name="SCE_POWERSHELL_VARIABLE"></item>
+		<item code="3" name="SCE_PROPS_ASSIGNMENT"></item>
+		<item code="1" name="SCE_PROPS_COMMENT"></item>
+		<item code="0" name="SCE_PROPS_DEFAULT"></item>
+		<item code="4" name="SCE_PROPS_DEFVAL"></item>
+		<item code="5" name="SCE_PROPS_KEY"></item>
+		<item code="2" name="SCE_PROPS_SECTION"></item>
+		<item code="15" name="SCE_PS_BADSTRINGCHAR"></item>
+		<item code="14" name="SCE_PS_BASE85STRING"></item>
+		<item code="1" name="SCE_PS_COMMENT"></item>
+		<item code="0" name="SCE_PS_DEFAULT"></item>
+		<item code="2" name="SCE_PS_DSC_COMMENT"></item>
+		<item code="3" name="SCE_PS_DSC_VALUE"></item>
+		<item code="13" name="SCE_PS_HEXSTRING"></item>
+		<item code="8" name="SCE_PS_IMMEVAL"></item>
+		<item code="6" name="SCE_PS_KEYWORD"></item>
+		<item code="7" name="SCE_PS_LITERAL"></item>
+		<item code="5" name="SCE_PS_NAME"></item>
+		<item code="4" name="SCE_PS_NUMBER"></item>
+		<item code="9" name="SCE_PS_PAREN_ARRAY"></item>
+		<item code="10" name="SCE_PS_PAREN_DICT"></item>
+		<item code="11" name="SCE_PS_PAREN_PROC"></item>
+		<item code="12" name="SCE_PS_TEXT"></item>
+		<item code="3" name="SCE_R_BASEKWORD"></item>
+		<item code="1" name="SCE_R_COMMENT"></item>
+		<item code="0" name="SCE_R_DEFAULT"></item>
+		<item code="9" name="SCE_R_IDENTIFIER"></item>
+		<item code="10" name="SCE_R_INFIX"></item>
+		<item code="11" name="SCE_R_INFIXEOL"></item>
+		<item code="2" name="SCE_R_KWORD"></item>
+		<item code="5" name="SCE_R_NUMBER"></item>
+		<item code="8" name="SCE_R_OPERATOR"></item>
+		<item code="4" name="SCE_R_OTHERKWORD"></item>
+		<item code="6" name="SCE_R_STRING"></item>
+		<item code="7" name="SCE_R_STRING2"></item>
+		<item code="18" name="SCE_RB_BACKTICKS"></item>
+		<item code="7" name="SCE_RB_CHARACTER"></item>
+		<item code="17" name="SCE_RB_CLASS_VAR"></item>
+		<item code="8" name="SCE_RB_CLASSNAME"></item>
+		<item code="2" name="SCE_RB_COMMENTLINE"></item>
+		<item code="19" name="SCE_RB_DATASECTION"></item>
+		<item code="0" name="SCE_RB_DEFAULT"></item>
+		<item code="9" name="SCE_RB_DEFNAME"></item>
+		<item code="1" name="SCE_RB_ERROR"></item>
+		<item code="13" name="SCE_RB_GLOBAL"></item>
+		<item code="20" name="SCE_RB_HERE_DELIM"></item>
+		<item code="21" name="SCE_RB_HERE_Q"></item>
+		<item code="22" name="SCE_RB_HERE_QQ"></item>
+		<item code="23" name="SCE_RB_HERE_QX"></item>
+		<item code="11" name="SCE_RB_IDENTIFIER"></item>
+		<item code="16" name="SCE_RB_INSTANCE_VAR"></item>
+		<item code="15" name="SCE_RB_MODULE_NAME"></item>
+		<item code="4" name="SCE_RB_NUMBER"></item>
+		<item code="10" name="SCE_RB_OPERATOR"></item>
+		<item code="3" name="SCE_RB_POD"></item>
+		<item code="12" name="SCE_RB_REGEX"></item>
+		<item code="40" name="SCE_RB_STDERR"></item>
+		<item code="30" name="SCE_RB_STDIN"></item>
+		<item code="31" name="SCE_RB_STDOUT"></item>
+		<item code="6" name="SCE_RB_STRING"></item>
+		<item code="24" name="SCE_RB_STRING_Q"></item>
+		<item code="25" name="SCE_RB_STRING_QQ"></item>
+		<item code="27" name="SCE_RB_STRING_QR"></item>
+		<item code="28" name="SCE_RB_STRING_QW"></item>
+		<item code="26" name="SCE_RB_STRING_QX"></item>
+		<item code="14" name="SCE_RB_SYMBOL"></item>
+		<item code="41" name="SCE_RB_UPPER_BOUND"></item>
+		<item code="5" name="SCE_RB_WORD"></item>
+		<item code="29" name="SCE_RB_WORD_DEMOTED"></item>
+		<item code="11" name="SCE_REBOL_BINARY"></item>
+		<item code="7" name="SCE_REBOL_BRACEDSTRING"></item>
+		<item code="5" name="SCE_REBOL_CHARACTER"></item>
+		<item code="2" name="SCE_REBOL_COMMENTBLOCK"></item>
+		<item code="1" name="SCE_REBOL_COMMENTLINE"></item>
+		<item code="18" name="SCE_REBOL_DATE"></item>
+		<item code="0" name="SCE_REBOL_DEFAULT"></item>
+		<item code="16" name="SCE_REBOL_EMAIL"></item>
+		<item code="15" name="SCE_REBOL_FILE"></item>
+		<item code="20" name="SCE_REBOL_IDENTIFIER"></item>
+		<item code="13" name="SCE_REBOL_ISSUE"></item>
+		<item code="12" name="SCE_REBOL_MONEY"></item>
+		<item code="8" name="SCE_REBOL_NUMBER"></item>
+		<item code="4" name="SCE_REBOL_OPERATOR"></item>
+		<item code="9" name="SCE_REBOL_PAIR"></item>
+		<item code="3" name="SCE_REBOL_PREFACE"></item>
+		<item code="6" name="SCE_REBOL_QUOTEDSTRING"></item>
+		<item code="14" name="SCE_REBOL_TAG"></item>
+		<item code="19" name="SCE_REBOL_TIME"></item>
+		<item code="10" name="SCE_REBOL_TUPLE"></item>
+		<item code="17" name="SCE_REBOL_URL"></item>
+		<item code="21" name="SCE_REBOL_WORD"></item>
+		<item code="22" name="SCE_REBOL_WORD2"></item>
+		<item code="23" name="SCE_REBOL_WORD3"></item>
+		<item code="24" name="SCE_REBOL_WORD4"></item>
+		<item code="25" name="SCE_REBOL_WORD5"></item>
+		<item code="26" name="SCE_REBOL_WORD6"></item>
+		<item code="27" name="SCE_REBOL_WORD7"></item>
+		<item code="28" name="SCE_REBOL_WORD8"></item>
+		<item code="15" name="SCE_RUST_CHARACTER"></item>
+		<item code="1" name="SCE_RUST_COMMENTBLOCK"></item>
+		<item code="3" name="SCE_RUST_COMMENTBLOCKDOC"></item>
+		<item code="2" name="SCE_RUST_COMMENTLINE"></item>
+		<item code="4" name="SCE_RUST_COMMENTLINEDOC"></item>
+		<item code="0" name="SCE_RUST_DEFAULT"></item>
+		<item code="17" name="SCE_RUST_IDENTIFIER"></item>
+		<item code="20" name="SCE_RUST_LEXERROR"></item>
+		<item code="18" name="SCE_RUST_LIFETIME"></item>
+		<item code="19" name="SCE_RUST_MACRO"></item>
+		<item code="5" name="SCE_RUST_NUMBER"></item>
+		<item code="16" name="SCE_RUST_OPERATOR"></item>
+		<item code="13" name="SCE_RUST_STRING"></item>
+		<item code="14" name="SCE_RUST_STRINGR"></item>
+		<item code="6" name="SCE_RUST_WORD"></item>
+		<item code="7" name="SCE_RUST_WORD2"></item>
+		<item code="8" name="SCE_RUST_WORD3"></item>
+		<item code="9" name="SCE_RUST_WORD4"></item>
+		<item code="10" name="SCE_RUST_WORD5"></item>
+		<item code="11" name="SCE_RUST_WORD6"></item>
+		<item code="12" name="SCE_RUST_WORD7"></item>
+		<item code="8" name="SCE_SCRIPTOL_CHARACTER"></item>
+		<item code="14" name="SCE_SCRIPTOL_CLASSNAME"></item>
+		<item code="5" name="SCE_SCRIPTOL_COMMENTBLOCK"></item>
+		<item code="2" name="SCE_SCRIPTOL_COMMENTLINE"></item>
+		<item code="4" name="SCE_SCRIPTOL_CSTYLE"></item>
+		<item code="0" name="SCE_SCRIPTOL_DEFAULT"></item>
+		<item code="12" name="SCE_SCRIPTOL_IDENTIFIER"></item>
+		<item code="10" name="SCE_SCRIPTOL_KEYWORD"></item>
+		<item code="6" name="SCE_SCRIPTOL_NUMBER"></item>
+		<item code="11" name="SCE_SCRIPTOL_OPERATOR"></item>
+		<item code="3" name="SCE_SCRIPTOL_PERSISTENT"></item>
+		<item code="15" name="SCE_SCRIPTOL_PREPROCESSOR"></item>
+		<item code="7" name="SCE_SCRIPTOL_STRING"></item>
+		<item code="9" name="SCE_SCRIPTOL_STRINGEOL"></item>
+		<item code="13" name="SCE_SCRIPTOL_TRIPLE"></item>
+		<item code="1" name="SCE_SCRIPTOL_WHITE"></item>
+		<item code="11" name="SCE_SH_BACKTICKS"></item>
+		<item code="6" name="SCE_SH_CHARACTER"></item>
+		<item code="2" name="SCE_SH_COMMENTLINE"></item>
+		<item code="0" name="SCE_SH_DEFAULT"></item>
+		<item code="1" name="SCE_SH_ERROR"></item>
+		<item code="12" name="SCE_SH_HERE_DELIM"></item>
+		<item code="13" name="SCE_SH_HERE_Q"></item>
+		<item code="8" name="SCE_SH_IDENTIFIER"></item>
+		<item code="3" name="SCE_SH_NUMBER"></item>
+		<item code="7" name="SCE_SH_OPERATOR"></item>
+		<item code="10" name="SCE_SH_PARAM"></item>
+		<item code="9" name="SCE_SH_SCALAR"></item>
+		<item code="5" name="SCE_SH_STRING"></item>
+		<item code="4" name="SCE_SH_WORD"></item>
+		<item code="9" name="SCE_SML_CHAR"></item>
+		<item code="12" name="SCE_SML_COMMENT"></item>
+		<item code="13" name="SCE_SML_COMMENT1"></item>
+		<item code="14" name="SCE_SML_COMMENT2"></item>
+		<item code="15" name="SCE_SML_COMMENT3"></item>
+		<item code="0" name="SCE_SML_DEFAULT"></item>
+		<item code="1" name="SCE_SML_IDENTIFIER"></item>
+		<item code="3" name="SCE_SML_KEYWORD"></item>
+		<item code="4" name="SCE_SML_KEYWORD2"></item>
+		<item code="5" name="SCE_SML_KEYWORD3"></item>
+		<item code="6" name="SCE_SML_LINENUM"></item>
+		<item code="8" name="SCE_SML_NUMBER"></item>
+		<item code="7" name="SCE_SML_OPERATOR"></item>
+		<item code="11" name="SCE_SML_STRING"></item>
+		<item code="2" name="SCE_SML_TAGNAME"></item>
+		<item code="1" name="SCE_SN_CODE"></item>
+		<item code="2" name="SCE_SN_COMMENTLINE"></item>
+		<item code="3" name="SCE_SN_COMMENTLINEBANG"></item>
+		<item code="0" name="SCE_SN_DEFAULT"></item>
+		<item code="11" name="SCE_SN_IDENTIFIER"></item>
+		<item code="4" name="SCE_SN_NUMBER"></item>
+		<item code="10" name="SCE_SN_OPERATOR"></item>
+		<item code="9" name="SCE_SN_PREPROCESSOR"></item>
+		<item code="13" name="SCE_SN_REGEXTAG"></item>
+		<item code="14" name="SCE_SN_SIGNAL"></item>
+		<item code="6" name="SCE_SN_STRING"></item>
+		<item code="12" name="SCE_SN_STRINGEOL"></item>
+		<item code="19" name="SCE_SN_USER"></item>
+		<item code="5" name="SCE_SN_WORD"></item>
+		<item code="7" name="SCE_SN_WORD2"></item>
+		<item code="8" name="SCE_SN_WORD3"></item>
+		<item code="1" name="SCE_SORCUS_COMMAND"></item>
+		<item code="3" name="SCE_SORCUS_COMMENTLINE"></item>
+		<item code="9" name="SCE_SORCUS_CONSTANT"></item>
+		<item code="0" name="SCE_SORCUS_DEFAULT"></item>
+		<item code="6" name="SCE_SORCUS_IDENTIFIER"></item>
+		<item code="8" name="SCE_SORCUS_NUMBER"></item>
+		<item code="7" name="SCE_SORCUS_OPERATOR"></item>
+		<item code="2" name="SCE_SORCUS_PARAMETER"></item>
+		<item code="4" name="SCE_SORCUS_STRING"></item>
+		<item code="5" name="SCE_SORCUS_STRINGEOL"></item>
+		<item code="8" name="SCE_SPICE_COMMENTLINE"></item>
+		<item code="0" name="SCE_SPICE_DEFAULT"></item>
+		<item code="6" name="SCE_SPICE_DELIMITER"></item>
+		<item code="1" name="SCE_SPICE_IDENTIFIER"></item>
+		<item code="2" name="SCE_SPICE_KEYWORD"></item>
+		<item code="3" name="SCE_SPICE_KEYWORD2"></item>
+		<item code="4" name="SCE_SPICE_KEYWORD3"></item>
+		<item code="5" name="SCE_SPICE_NUMBER"></item>
+		<item code="7" name="SCE_SPICE_VALUE"></item>
+		<item code="7" name="SCE_SQL_CHARACTER"></item>
+		<item code="1" name="SCE_SQL_COMMENT"></item>
+		<item code="3" name="SCE_SQL_COMMENTDOC"></item>
+		<item code="17" name="SCE_SQL_COMMENTDOCKEYWORD"></item>
+		<item code="18" name="SCE_SQL_COMMENTDOCKEYWORDERROR"></item>
+		<item code="2" name="SCE_SQL_COMMENTLINE"></item>
+		<item code="15" name="SCE_SQL_COMMENTLINEDOC"></item>
+		<item code="0" name="SCE_SQL_DEFAULT"></item>
+		<item code="11" name="SCE_SQL_IDENTIFIER"></item>
+		<item code="4" name="SCE_SQL_NUMBER"></item>
+		<item code="10" name="SCE_SQL_OPERATOR"></item>
+		<item code="23" name="SCE_SQL_QUOTEDIDENTIFIER"></item>
+		<item code="8" name="SCE_SQL_SQLPLUS"></item>
+		<item code="13" name="SCE_SQL_SQLPLUS_COMMENT"></item>
+		<item code="9" name="SCE_SQL_SQLPLUS_PROMPT"></item>
+		<item code="6" name="SCE_SQL_STRING"></item>
+		<item code="19" name="SCE_SQL_USER1"></item>
+		<item code="20" name="SCE_SQL_USER2"></item>
+		<item code="21" name="SCE_SQL_USER3"></item>
+		<item code="22" name="SCE_SQL_USER4"></item>
+		<item code="5" name="SCE_SQL_WORD"></item>
+		<item code="16" name="SCE_SQL_WORD2"></item>
+		<item code="14" name="SCE_ST_ASSIGN"></item>
+		<item code="5" name="SCE_ST_BINARY"></item>
+		<item code="6" name="SCE_ST_BOOL"></item>
+		<item code="15" name="SCE_ST_CHARACTER"></item>
+		<item code="3" name="SCE_ST_COMMENT"></item>
+		<item code="0" name="SCE_ST_DEFAULT"></item>
+		<item code="10" name="SCE_ST_GLOBAL"></item>
+		<item code="13" name="SCE_ST_KWSEND"></item>
+		<item code="9" name="SCE_ST_NIL"></item>
+		<item code="2" name="SCE_ST_NUMBER"></item>
+		<item code="11" name="SCE_ST_RETURN"></item>
+		<item code="7" name="SCE_ST_SELF"></item>
+		<item code="16" name="SCE_ST_SPEC_SEL"></item>
+		<item code="12" name="SCE_ST_SPECIAL"></item>
+		<item code="1" name="SCE_ST_STRING"></item>
+		<item code="8" name="SCE_ST_SUPER"></item>
+		<item code="4" name="SCE_ST_SYMBOL"></item>
+		<item code="11" name="SCE_STTXT_CHARACTER"></item>
+		<item code="1" name="SCE_STTXT_COMMENT"></item>
+		<item code="2" name="SCE_STTXT_COMMENTLINE"></item>
+		<item code="16" name="SCE_STTXT_DATETIME"></item>
+		<item code="0" name="SCE_STTXT_DEFAULT"></item>
+		<item code="6" name="SCE_STTXT_FB"></item>
+		<item code="5" name="SCE_STTXT_FUNCTION"></item>
+		<item code="8" name="SCE_STTXT_HEXNUMBER"></item>
+		<item code="15" name="SCE_STTXT_IDENTIFIER"></item>
+		<item code="3" name="SCE_STTXT_KEYWORD"></item>
+		<item code="7" name="SCE_STTXT_NUMBER"></item>
+		<item code="10" name="SCE_STTXT_OPERATOR"></item>
+		<item code="9" name="SCE_STTXT_PRAGMA"></item>
+		<item code="18" name="SCE_STTXT_PRAGMAS"></item>
+		<item code="12" name="SCE_STTXT_STRING1"></item>
+		<item code="13" name="SCE_STTXT_STRING2"></item>
+		<item code="14" name="SCE_STTXT_STRINGEOL"></item>
+		<item code="4" name="SCE_STTXT_TYPE"></item>
+		<item code="17" name="SCE_STTXT_VARS"></item>
+		<item code="3" name="SCE_T3_BLOCK_COMMENT"></item>
+		<item code="20" name="SCE_T3_BRACE"></item>
+		<item code="10" name="SCE_T3_D_STRING"></item>
+		<item code="0" name="SCE_T3_DEFAULT"></item>
+		<item code="15" name="SCE_T3_HTML_DEFAULT"></item>
+		<item code="16" name="SCE_T3_HTML_STRING"></item>
+		<item code="14" name="SCE_T3_HTML_TAG"></item>
+		<item code="8" name="SCE_T3_IDENTIFIER"></item>
+		<item code="6" name="SCE_T3_KEYWORD"></item>
+		<item code="12" name="SCE_T3_LIB_DIRECTIVE"></item>
+		<item code="4" name="SCE_T3_LINE_COMMENT"></item>
+		<item code="13" name="SCE_T3_MSG_PARAM"></item>
+		<item code="7" name="SCE_T3_NUMBER"></item>
+		<item code="5" name="SCE_T3_OPERATOR"></item>
+		<item code="2" name="SCE_T3_PREPROCESSOR"></item>
+		<item code="9" name="SCE_T3_S_STRING"></item>
+		<item code="17" name="SCE_T3_USER1"></item>
+		<item code="18" name="SCE_T3_USER2"></item>
+		<item code="19" name="SCE_T3_USER3"></item>
+		<item code="1" name="SCE_T3_X_DEFAULT"></item>
+		<item code="11" name="SCE_T3_X_STRING"></item>
+		<item code="21" name="SCE_TCL_BLOCK_COMMENT"></item>
+		<item code="1" name="SCE_TCL_COMMENT"></item>
+		<item code="20" name="SCE_TCL_COMMENT_BOX"></item>
+		<item code="2" name="SCE_TCL_COMMENTLINE"></item>
+		<item code="0" name="SCE_TCL_DEFAULT"></item>
+		<item code="11" name="SCE_TCL_EXPAND"></item>
+		<item code="7" name="SCE_TCL_IDENTIFIER"></item>
+		<item code="5" name="SCE_TCL_IN_QUOTE"></item>
+		<item code="10" name="SCE_TCL_MODIFIER"></item>
+		<item code="3" name="SCE_TCL_NUMBER"></item>
+		<item code="6" name="SCE_TCL_OPERATOR"></item>
+		<item code="9" name="SCE_TCL_SUB_BRACE"></item>
+		<item code="8" name="SCE_TCL_SUBSTITUTION"></item>
+		<item code="12" name="SCE_TCL_WORD"></item>
+		<item code="13" name="SCE_TCL_WORD2"></item>
+		<item code="14" name="SCE_TCL_WORD3"></item>
+		<item code="15" name="SCE_TCL_WORD4"></item>
+		<item code="16" name="SCE_TCL_WORD5"></item>
+		<item code="17" name="SCE_TCL_WORD6"></item>
+		<item code="18" name="SCE_TCL_WORD7"></item>
+		<item code="19" name="SCE_TCL_WORD8"></item>
+		<item code="4" name="SCE_TCL_WORD_IN_QUOTE"></item>
+		<item code="10" name="SCE_TCMD_CLABEL"></item>
+		<item code="5" name="SCE_TCMD_COMMAND"></item>
+		<item code="1" name="SCE_TCMD_COMMENT"></item>
+		<item code="0" name="SCE_TCMD_DEFAULT"></item>
+		<item code="8" name="SCE_TCMD_ENVIRONMENT"></item>
+		<item code="9" name="SCE_TCMD_EXPANSION"></item>
+		<item code="4" name="SCE_TCMD_HIDE"></item>
+		<item code="6" name="SCE_TCMD_IDENTIFIER"></item>
+		<item code="3" name="SCE_TCMD_LABEL"></item>
+		<item code="7" name="SCE_TCMD_OPERATOR"></item>
+		<item code="2" name="SCE_TCMD_WORD"></item>
+		<item code="4" name="SCE_TEX_COMMAND"></item>
+		<item code="0" name="SCE_TEX_DEFAULT"></item>
+		<item code="2" name="SCE_TEX_GROUP"></item>
+		<item code="1" name="SCE_TEX_SPECIAL"></item>
+		<item code="3" name="SCE_TEX_SYMBOL"></item>
+		<item code="5" name="SCE_TEX_TEXT"></item>
+		<item code="15" name="SCE_TXT2TAGS_BLOCKQUOTE"></item>
+		<item code="19" name="SCE_TXT2TAGS_CODE"></item>
+		<item code="20" name="SCE_TXT2TAGS_CODE2"></item>
+		<item code="21" name="SCE_TXT2TAGS_CODEBK"></item>
+		<item code="22" name="SCE_TXT2TAGS_COMMENT"></item>
+		<item code="0" name="SCE_TXT2TAGS_DEFAULT"></item>
+		<item code="4" name="SCE_TXT2TAGS_EM1"></item>
+		<item code="5" name="SCE_TXT2TAGS_EM2"></item>
+		<item code="6" name="SCE_TXT2TAGS_HEADER1"></item>
+		<item code="7" name="SCE_TXT2TAGS_HEADER2"></item>
+		<item code="8" name="SCE_TXT2TAGS_HEADER3"></item>
+		<item code="9" name="SCE_TXT2TAGS_HEADER4"></item>
+		<item code="10" name="SCE_TXT2TAGS_HEADER5"></item>
+		<item code="11" name="SCE_TXT2TAGS_HEADER6"></item>
+		<item code="17" name="SCE_TXT2TAGS_HRULE"></item>
+		<item code="1" name="SCE_TXT2TAGS_LINE_BEGIN"></item>
+		<item code="18" name="SCE_TXT2TAGS_LINK"></item>
+		<item code="14" name="SCE_TXT2TAGS_OLIST_ITEM"></item>
+		<item code="23" name="SCE_TXT2TAGS_OPTION"></item>
+		<item code="25" name="SCE_TXT2TAGS_POSTPROC"></item>
+		<item code="12" name="SCE_TXT2TAGS_PRECHAR"></item>
+		<item code="24" name="SCE_TXT2TAGS_PREPROC"></item>
+		<item code="16" name="SCE_TXT2TAGS_STRIKEOUT"></item>
+		<item code="2" name="SCE_TXT2TAGS_STRONG1"></item>
+		<item code="3" name="SCE_TXT2TAGS_STRONG2"></item>
+		<item code="13" name="SCE_TXT2TAGS_ULIST_ITEM"></item>
+		<item code="1" name="SCE_V_COMMENT"></item>
+		<item code="2" name="SCE_V_COMMENTLINE"></item>
+		<item code="3" name="SCE_V_COMMENTLINEBANG"></item>
+		<item code="0" name="SCE_V_DEFAULT"></item>
+		<item code="11" name="SCE_V_IDENTIFIER"></item>
+		<item code="4" name="SCE_V_NUMBER"></item>
+		<item code="10" name="SCE_V_OPERATOR"></item>
+		<item code="9" name="SCE_V_PREPROCESSOR"></item>
+		<item code="6" name="SCE_V_STRING"></item>
+		<item code="12" name="SCE_V_STRINGEOL"></item>
+		<item code="19" name="SCE_V_USER"></item>
+		<item code="5" name="SCE_V_WORD"></item>
+		<item code="7" name="SCE_V_WORD2"></item>
+		<item code="8" name="SCE_V_WORD3"></item>
+		<item code="10" name="SCE_VHDL_ATTRIBUTE"></item>
+		<item code="1" name="SCE_VHDL_COMMENT"></item>
+		<item code="2" name="SCE_VHDL_COMMENTLINEBANG"></item>
+		<item code="0" name="SCE_VHDL_DEFAULT"></item>
+		<item code="6" name="SCE_VHDL_IDENTIFIER"></item>
+		<item code="8" name="SCE_VHDL_KEYWORD"></item>
+		<item code="3" name="SCE_VHDL_NUMBER"></item>
+		<item code="5" name="SCE_VHDL_OPERATOR"></item>
+		<item code="11" name="SCE_VHDL_STDFUNCTION"></item>
+		<item code="9" name="SCE_VHDL_STDOPERATOR"></item>
+		<item code="12" name="SCE_VHDL_STDPACKAGE"></item>
+		<item code="13" name="SCE_VHDL_STDTYPE"></item>
+		<item code="4" name="SCE_VHDL_STRING"></item>
+		<item code="7" name="SCE_VHDL_STRINGEOL"></item>
+		<item code="14" name="SCE_VHDL_USERWORD"></item>
+		<item code="10" name="SCE_VISUALPROLOG_ANONYMOUS"></item>
+		<item code="13" name="SCE_VISUALPROLOG_CHARACTER"></item>
+		<item code="15" name="SCE_VISUALPROLOG_CHARACTER_ESCAPE_ERROR"></item>
+		<item code="14" name="SCE_VISUALPROLOG_CHARACTER_TOO_MANY"></item>
+		<item code="4" name="SCE_VISUALPROLOG_COMMENT_BLOCK"></item>
+		<item code="6" name="SCE_VISUALPROLOG_COMMENT_KEY"></item>
+		<item code="7" name="SCE_VISUALPROLOG_COMMENT_KEY_ERROR"></item>
+		<item code="5" name="SCE_VISUALPROLOG_COMMENT_LINE"></item>
+		<item code="0" name="SCE_VISUALPROLOG_DEFAULT"></item>
+		<item code="8" name="SCE_VISUALPROLOG_IDENTIFIER"></item>
+		<item code="3" name="SCE_VISUALPROLOG_KEY_DIRECTIVE"></item>
+		<item code="1" name="SCE_VISUALPROLOG_KEY_MAJOR"></item>
+		<item code="2" name="SCE_VISUALPROLOG_KEY_MINOR"></item>
+		<item code="11" name="SCE_VISUALPROLOG_NUMBER"></item>
+		<item code="12" name="SCE_VISUALPROLOG_OPERATOR"></item>
+		<item code="16" name="SCE_VISUALPROLOG_STRING"></item>
+		<item code="19" name="SCE_VISUALPROLOG_STRING_EOL_OPEN"></item>
+		<item code="17" name="SCE_VISUALPROLOG_STRING_ESCAPE"></item>
+		<item code="18" name="SCE_VISUALPROLOG_STRING_ESCAPE_ERROR"></item>
+		<item code="20" name="SCE_VISUALPROLOG_STRING_VERBATIM"></item>
+		<item code="22" name="SCE_VISUALPROLOG_STRING_VERBATIM_EOL"></item>
+		<item code="21" name="SCE_VISUALPROLOG_STRING_VERBATIM_SPECIAL"></item>
+		<item code="9" name="SCE_VISUALPROLOG_VARIABLE"></item>
+		<item code="1" name="SCE_YAML_COMMENT"></item>
+		<item code="0" name="SCE_YAML_DEFAULT"></item>
+		<item code="6" name="SCE_YAML_DOCUMENT"></item>
+		<item code="8" name="SCE_YAML_ERROR"></item>
+		<item code="2" name="SCE_YAML_IDENTIFIER"></item>
+		<item code="3" name="SCE_YAML_KEYWORD"></item>
+		<item code="4" name="SCE_YAML_NUMBER"></item>
+		<item code="9" name="SCE_YAML_OPERATOR"></item>
+		<item code="5" name="SCE_YAML_REFERENCE"></item>
+		<item code="7" name="SCE_YAML_TEXT"></item>
+		<item code="768" name="SCEN_CHANGE"></item>
+		<item code="256" name="SCEN_KILLFOCUS"></item>
+		<item code="512" name="SCEN_SETFOCUS"></item>
+		<item code="0x4" name="SCFIND_MATCHCASE"></item>
+		<item code="0x00400000" name="SCFIND_POSIX"></item>
+		<item code="0x00200000" name="SCFIND_REGEXP"></item>
+		<item code="0x2" name="SCFIND_WHOLEWORD"></item>
+		<item code="0x00100000" name="SCFIND_WORDSTART"></item>
+		<item code="4000" name="SCI_LEXER_START"></item>
+		<item code="3000" name="SCI_OPTIONAL_START"></item>
+		<item code="2000" name="SCI_START"></item>
+		<item code="310" name="SCK_ADD"></item>
+		<item code="8" name="SCK_BACK"></item>
+		<item code="308" name="SCK_DELETE"></item>
+		<item code="312" name="SCK_DIVIDE"></item>
+		<item code="300" name="SCK_DOWN"></item>
+		<item code="305" name="SCK_END"></item>
+		<item code="7" name="SCK_ESCAPE"></item>
+		<item code="304" name="SCK_HOME"></item>
+		<item code="309" name="SCK_INSERT"></item>
+		<item code="302" name="SCK_LEFT"></item>
+		<item code="315" name="SCK_MENU"></item>
+		<item code="307" name="SCK_NEXT"></item>
+		<item code="306" name="SCK_PRIOR"></item>
+		<item code="13" name="SCK_RETURN"></item>
+		<item code="303" name="SCK_RIGHT"></item>
+		<item code="314" name="SCK_RWIN"></item>
+		<item code="311" name="SCK_SUBTRACT"></item>
+		<item code="9" name="SCK_TAB"></item>
+		<item code="301" name="SCK_UP"></item>
+		<item code="313" name="SCK_WIN"></item>
+		<item code="100" name="SCLEX_A68K"></item>
+		<item code="84" name="SCLEX_ABAQUS"></item>
+		<item code="20" name="SCLEX_ADA"></item>
+		<item code="61" name="SCLEX_APDL"></item>
+		<item code="113" name="SCLEX_AS"></item>
+		<item code="34" name="SCLEX_ASM"></item>
+		<item code="63" name="SCLEX_ASN1"></item>
+		<item code="85" name="SCLEX_ASYMPTOTE"></item>
+		<item code="60" name="SCLEX_AU3"></item>
+		<item code="1000" name="SCLEX_AUTOMATIC"></item>
+		<item code="19" name="SCLEX_AVE"></item>
+		<item code="104" name="SCLEX_AVS"></item>
+		<item code="31" name="SCLEX_BAAN"></item>
+		<item code="62" name="SCLEX_BASH"></item>
+		<item code="12" name="SCLEX_BATCH"></item>
+		<item code="66" name="SCLEX_BLITZBASIC"></item>
+		<item code="27" name="SCLEX_BULLANT"></item>
+		<item code="65" name="SCLEX_CAML"></item>
+		<item code="45" name="SCLEX_CLW"></item>
+		<item code="46" name="SCLEX_CLWNOCASE"></item>
+		<item code="80" name="SCLEX_CMAKE"></item>
+		<item code="92" name="SCLEX_COBOL"></item>
+		<item code="102" name="SCLEX_COFFEESCRIPT"></item>
+		<item code="17" name="SCLEX_CONF"></item>
+		<item code="0" name="SCLEX_CONTAINER"></item>
+		<item code="3" name="SCLEX_CPP"></item>
+		<item code="35" name="SCLEX_CPPNOCASE"></item>
+		<item code="74" name="SCLEX_CSOUND"></item>
+		<item code="38" name="SCLEX_CSS"></item>
+		<item code="79" name="SCLEX_D"></item>
+		<item code="16" name="SCLEX_DIFF"></item>
+		<item code="112" name="SCLEX_DMAP"></item>
+		<item code="114" name="SCLEX_DMIS"></item>
+		<item code="105" name="SCLEX_ECL"></item>
+		<item code="23" name="SCLEX_EIFFEL"></item>
+		<item code="24" name="SCLEX_EIFFELKW"></item>
+		<item code="53" name="SCLEX_ERLANG"></item>
+		<item code="10" name="SCLEX_ERRORLIST"></item>
+		<item code="41" name="SCLEX_ESCRIPT"></item>
+		<item code="37" name="SCLEX_F77"></item>
+		<item code="73" name="SCLEX_FLAGSHIP"></item>
+		<item code="52" name="SCLEX_FORTH"></item>
+		<item code="36" name="SCLEX_FORTRAN"></item>
+		<item code="75" name="SCLEX_FREEBASIC"></item>
+		<item code="81" name="SCLEX_GAP"></item>
+		<item code="58" name="SCLEX_GUI4CLI"></item>
+		<item code="68" name="SCLEX_HASKELL"></item>
+		<item code="4" name="SCLEX_HTML"></item>
+		<item code="76" name="SCLEX_INNOSETUP"></item>
+		<item code="57" name="SCLEX_KIX"></item>
+		<item code="110" name="SCLEX_KVIRC"></item>
+		<item code="14" name="SCLEX_LATEX"></item>
+		<item code="21" name="SCLEX_LISP"></item>
+		<item code="108" name="SCLEX_LITERATEHASKELL"></item>
+		<item code="47" name="SCLEX_LOT"></item>
+		<item code="40" name="SCLEX_LOUT"></item>
+		<item code="15" name="SCLEX_LUA"></item>
+		<item code="87" name="SCLEX_MAGIK"></item>
+		<item code="11" name="SCLEX_MAKEFILE"></item>
+		<item code="98" name="SCLEX_MARKDOWN"></item>
+		<item code="32" name="SCLEX_MATLAB"></item>
+		<item code="50" name="SCLEX_METAPOST"></item>
+		<item code="44" name="SCLEX_MMIXAL"></item>
+		<item code="101" name="SCLEX_MODULA"></item>
+		<item code="55" name="SCLEX_MSSQL"></item>
+		<item code="89" name="SCLEX_MYSQL"></item>
+		<item code="96" name="SCLEX_NIMROD"></item>
+		<item code="26" name="SCLEX_NNCRONTAB"></item>
+		<item code="43" name="SCLEX_NSIS"></item>
+		<item code="1" name="SCLEX_NULL"></item>
+		<item code="54" name="SCLEX_OCTAVE"></item>
+		<item code="77" name="SCLEX_OPAL"></item>
+		<item code="106" name="SCLEX_OSCRIPT"></item>
+		<item code="18" name="SCLEX_PASCAL"></item>
+		<item code="6" name="SCLEX_PERL"></item>
+		<item code="69" name="SCLEX_PHPSCRIPT"></item>
+		<item code="82" name="SCLEX_PLM"></item>
+		<item code="90" name="SCLEX_PO"></item>
+		<item code="39" name="SCLEX_POV"></item>
+		<item code="51" name="SCLEX_POWERBASIC"></item>
+		<item code="95" name="SCLEX_POWERPRO"></item>
+		<item code="88" name="SCLEX_POWERSHELL"></item>
+		<item code="83" name="SCLEX_PROGRESS"></item>
+		<item code="9" name="SCLEX_PROPERTIES"></item>
+		<item code="42" name="SCLEX_PS"></item>
+		<item code="67" name="SCLEX_PUREBASIC"></item>
+		<item code="2" name="SCLEX_PYTHON"></item>
+		<item code="86" name="SCLEX_R"></item>
+		<item code="71" name="SCLEX_REBOL"></item>
+		<item code="22" name="SCLEX_RUBY"></item>
+		<item code="111" name="SCLEX_RUST"></item>
+		<item code="33" name="SCLEX_SCRIPTOL"></item>
+		<item code="72" name="SCLEX_SMALLTALK"></item>
+		<item code="97" name="SCLEX_SML"></item>
+		<item code="94" name="SCLEX_SORCUS"></item>
+		<item code="59" name="SCLEX_SPECMAN"></item>
+		<item code="78" name="SCLEX_SPICE"></item>
+		<item code="7" name="SCLEX_SQL"></item>
+		<item code="109" name="SCLEX_STTXT"></item>
+		<item code="93" name="SCLEX_TACL"></item>
+		<item code="70" name="SCLEX_TADS3"></item>
+		<item code="91" name="SCLEX_TAL"></item>
+		<item code="25" name="SCLEX_TCL"></item>
+		<item code="103" name="SCLEX_TCMD"></item>
+		<item code="49" name="SCLEX_TEX"></item>
+		<item code="99" name="SCLEX_TXT2TAGS"></item>
+		<item code="8" name="SCLEX_VB"></item>
+		<item code="28" name="SCLEX_VBSCRIPT"></item>
+		<item code="56" name="SCLEX_VERILOG"></item>
+		<item code="64" name="SCLEX_VHDL"></item>
+		<item code="107" name="SCLEX_VISUALPROLOG"></item>
+		<item code="13" name="SCLEX_XCODE"></item>
+		<item code="5" name="SCLEX_XML"></item>
+		<item code="48" name="SCLEX_YAML"></item>
+		<item code="4" name="SCMOD_ALT"></item>
+		<item code="2" name="SCMOD_CTRL"></item>
+		<item code="16" name="SCMOD_META"></item>
+		<item code="0" name="SCMOD_NORM"></item>
+		<item code="1" name="SCMOD_SHIFT"></item>
+		<item code="8" name="SCMOD_SUPER"></item>
+		<item code="0" name="SCVS_NONE"></item>
+		<item code="1" name="SCVS_RECTANGULARSELECTION"></item>
+		<item code="2" name="SCVS_USERACCESSIBLE"></item>
+		<item code="0" name="SCWS_INVISIBLE"></item>
+		<item code="2" name="SCWS_VISIBLEAFTERINDENT"></item>
+		<item code="1" name="SCWS_VISIBLEALWAYS"></item>
+		<item code="35" name="STYLE_BRACEBAD"></item>
+		<item code="34" name="STYLE_BRACELIGHT"></item>
+		<item code="38" name="STYLE_CALLTIP"></item>
+		<item code="36" name="STYLE_CONTROLCHAR"></item>
+		<item code="32" name="STYLE_DEFAULT"></item>
+		<item code="37" name="STYLE_INDENTGUIDE"></item>
+		<item code="39" name="STYLE_LASTPREDEFINED"></item>
+		<item code="33" name="STYLE_LINENUMBER"></item>
+		<item code="255" name="STYLE_MAX"></item>
+		<item code="1" name="UNDO_MAY_COALESCE"></item>
+		<item code="0x01" name="VISIBLE_SLOP"></item>
+		<item code="0x04" name="VISIBLE_STRICT"></item>
+	</constants>
+</scintilla>
