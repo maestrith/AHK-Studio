@@ -4,7 +4,7 @@ Github_Repository(){
 	if !settings.ssn("//github")
 		settings.Add({path:"github",att:{owner:"",email:"",name:"",token:""}})
 	list:=sn(verfile.node,"versions/version"),info:=settings.ea("//github"),newwin:=new WindowTracker(25)
-	newwin.add(["Text,,Use Ctrl+Up/Down to increment the version","TreeView,w300 h200 AltSubmit geditgr,,w","Text,,Version Number:","Edit,w300 ggrvn","Button,ggraddver -TabStop,Add Version","Text,,Commit Info:","Edit,w300 r5 -Wrap ggredit,,wh","Radio,vpre Checked,Pre-Release,y","Radio,vdraft,Draft,y","Radio,vfull,Full Release,y","Button,gcommit Default,Commit,y"])
+	newwin.add(["Text,,Use Ctrl+Up/Down to increment the version","TreeView,w300 h200 AltSubmit geditgr,,w","Text,,Version Number:","Edit,w300 ggrvn","Button,ggraddver -TabStop,Add Version","Button,x+10 ggraddfile -TabStop,Add Files (text based only)","Text,xm,Commit Info:","Edit,w300 r5 -Wrap ggredit,,wh","Radio,vpre Checked,Pre-Release,y","Radio,vdraft,Draft,y","Radio,vfull,Full Release,y","Button,gcommit Default,Commit,y"])
 	newwin.Show("Github Repository"),tv:=[],githubinfo:=TV_Add("Github Info"),hotkeys([25],{"^up":"grup","^down":"grdown"})
 	change:={email:"Github Email",name:"Your Name (for commits)",owner:"Username for Github",token:"API Token for Github"}
 	for a,b in info
@@ -12,9 +12,24 @@ Github_Repository(){
 	for a,b in StrSplit("owner,email,name,token",",")
 		if !info[b]
 			TV_Modify(githubinfo,"Expand")
-	repo:=TV_Add("Repository Name: " ssn(verfile.node,"@repo").text)
+	repo:=TV_Add("Repository Name: " ssn(verfile.node,"@repo").text),fn:=sn(verfile.node,"files/file"),addfiles:=TV_Add("Additional Files")
+	while,ff:=fn.item[A_Index-1]
+		tv[TV_Add(ff.text,addfiles)]:=ff
 	goto popver
 	Return
+	graddfile:
+	Gui,25:Default
+	main:=current(2).file
+	SplitPath,main,,dir
+	FileSelectFile,file,,%dir%,Select A File to Add To This Repo Upload,*.ahk;*.xml
+	if ErrorLevel
+		return
+	node:=vversion.ssn("//info[@file='" main "']")
+	if !extra:=ssn(node,"files")
+		extra:=vversion.under({under:node,node:"files"})
+	if !ssn(extra,"file[text()='" file "']")
+		tv[TV_Add(file,addfiles,"Vis")]:=vversion.under({under:extra,node:"file",text:file})
+	return
 	gredit:
 	ControlGetText,version,Edit1,% hwnd([25])
 	if !version
@@ -69,7 +84,7 @@ Github_Repository(){
 		lastversion:=vn
 	}if (A_EventInfo=repo){
 		ControlGet,hwnd,hwnd,,SysTreeView321,% hwnd([25])
-		newrepo:=InputBox(hwnd,"Enter the new name for your repository","New Repository name",ssn(node,"@repo").text)
+		newrepo:=InputBox(hwnd,"Enter the new name for your repository","New Repository name",ssn(verfile.node,"@repo").text)
 		TV_Modify(TV_GetSelection(),"","Repository Name: " newrepo),verfile.node.SetAttribute("repo",newrepo)
 	}
 	Return

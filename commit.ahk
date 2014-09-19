@@ -15,6 +15,9 @@ commit(commitmsg,version){
 		StringReplace,file,ff,%dir%\
 		current[file]:=1
 	}
+	node:=vversion.sn("//info[@file='" current(2).file "']/files/file")
+	while,nn:=node.item[A_Index-1]
+		current[nn.text]:=1
 	replace:="github\" repo "\"
 	Loop,github\%repo%\*.*,0,1
 	{
@@ -54,7 +57,6 @@ commit(commitmsg,version){
 		if InStr(text,Chr(59) "github_version")
 			text:=RegExReplace(text,Chr(59) "github_version",version)
 		if (text!=compare){
-			
 			safe[localdir "\" file]:=text
 			StringReplace,gitdir,newdir,\,/,All
 			uplist[Trim(gitdir "/" file,"/")]:=text,up:=1
