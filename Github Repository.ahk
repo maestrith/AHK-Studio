@@ -1,11 +1,11 @@
 Github_Repository(){
 	static
-	verfile:=new versionkeep
+	verfile:=new versionkeep,addfile:=[]
 	if !settings.ssn("//github")
 		settings.Add({path:"github",att:{owner:"",email:"",name:"",token:""}})
 	list:=sn(verfile.node,"versions/version"),info:=settings.ea("//github"),newwin:=new WindowTracker(25)
 	newwin.add(["Text,,Use Ctrl+Up/Down to increment the version","TreeView,w300 h200 AltSubmit geditgr,,w","Text,,Version Number:","Edit,w300 ggrvn","Button,ggraddver -TabStop,Add Version","Button,x+10 ggraddfile -TabStop,Add Files (text based only)","Text,xm,Commit Info:","Edit,w300 r5 -Wrap ggredit,,wh","Radio,vpre Checked,Pre-Release,y","Radio,vdraft,Draft,y","Radio,vfull,Full Release,y","Button,gcommit Default,Commit,y"])
-	newwin.Show("Github Repository"),tv:=[],githubinfo:=TV_Add("Github Info"),hotkeys([25],{"^up":"grup","^down":"grdown"})
+	newwin.Show("Github Repository"),tv:=[],githubinfo:=TV_Add("Github Info"),hotkeys([25],{"^up":"grup","^down":"grdown",Delete:"grdelete",BS:"grdelete"})
 	change:={email:"Github Email",name:"Your Name (for commits)",owner:"Username for Github",token:"API Token for Github"}
 	for a,b in info
 		tv[TV_Add(change[a] " - " _:=a!="token"?b:RegExReplace(b,".","*"),githubinfo)]:={node:a,value:b}
@@ -14,9 +14,19 @@ Github_Repository(){
 			TV_Modify(githubinfo,"Expand")
 	repo:=TV_Add("Repository Name: " ssn(verfile.node,"@repo").text),fn:=sn(verfile.node,"files/file"),addfiles:=TV_Add("Additional Files")
 	while,ff:=fn.item[A_Index-1]
-		tv[TV_Add(ff.text,addfiles)]:=ff
+		addfile[TV_Add(ff.text,addfiles)]:=ff
 	goto popver
 	Return
+	grdelete:
+	Gui,25:Default
+	ControlGetFocus,focus,% hwnd([25])
+	if (focus="SysTreeView321"){
+		node:=addfile[TV_GetSelection()]
+		node.ParentNode.RemoveChild(node)
+		TV_Delete(TV_GetSelection())
+	}else
+	ControlSend,%focus%,{%A_ThisHotkey%},% hwnd([25])
+	return
 	graddfile:
 	Gui,25:Default
 	main:=current(2).file
@@ -78,7 +88,8 @@ Github_Repository(){
 		TV_Modify(TV_GetSelection(),"",change[vv.node] " - " newinfo)
 	}else if versioninfo:=ssn(verfile.node,"versions/version[@number='" vn "']"){
 		ControlSetText,Edit2,% RegExReplace(versioninfo.text,"\n","`r`n") _:=versioninfo.text?"`r`n":"",% hwnd([25])
-		ControlFocus,Edit2,% hwnd([25])
+		if !addfile[TV_GetSelection()]
+			ControlFocus,Edit2,% hwnd([25])
 		ControlSend,Edit2,^{End},% hwnd([25])
 		ControlSetText,Edit1,%vn%,% hwnd([25])
 		lastversion:=vn
