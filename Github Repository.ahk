@@ -106,5 +106,6 @@ Github_Repository(){
 		id:=RegExReplace(info,"(.*)\/")
 		node.SetAttribute("id",id)
 	}
+	vversion.save(1)
 	return
 }
