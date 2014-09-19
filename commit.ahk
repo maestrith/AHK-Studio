@@ -73,11 +73,13 @@ commit(commitmsg,version){
 		StringReplace,gitfile,newfn,\,/,All
 		safefile:=localdir "\" newfn
 		FileRead,local,%safefile%
+		;m(safefile)
 		if (local!=orig){
 			uplist[gitfile]:=orig
 			safe[safefile]:=orig,up:=1
 		}
 	}
+	;return m("remove this")
 	if !up
 		return m("Nothing new to upload")
 	upload:=[]
@@ -92,6 +94,9 @@ commit(commitmsg,version){
 	if (info=200){
 		TrayTip,GitHub Update Complete,Updated files
 		for a,text in safe{
+			SplitPath,a,,dir
+			if !FileExist(dir)
+				FileCreateDir,%dir%
 			FileDelete,%a%
 			FileAppend,%text%,%a%,utf-8
 		}
