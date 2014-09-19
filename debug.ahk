@@ -117,3 +117,8 @@ Sock(info*){
 			debug.disconnect() ;("disconnect")
 	}
 }
+debug(text){
+	Gui,55:Destroy
+	Gui,55:Add,Edit,w800 h800 -Wrap,%text%
+	Gui,55:Show
+}

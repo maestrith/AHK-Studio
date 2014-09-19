@@ -4,7 +4,7 @@ Github_Repository(){
 	if !settings.ssn("//github")
 		settings.Add({path:"github",att:{owner:"",email:"",name:"",token:""}})
 	list:=sn(verfile.node,"versions/version"),info:=settings.ea("//github"),newwin:=new WindowTracker(25)
-	newwin.add(["Text,,Use Ctrl+Up/Down to increment the version","TreeView,w300 h200 AltSubmit geditgr,,w","Text,,Version Number:","Edit,w300 ggrvn","Button,ggraddver -TabStop,Add Version","Text,,Commit Info:","Edit,w300 r5 -Wrap ggredit,,wh","Button,gcommit Default,Commit,y"])
+	newwin.add(["Text,,Use Ctrl+Up/Down to increment the version","TreeView,w300 h200 AltSubmit geditgr,,w","Text,,Version Number:","Edit,w300 ggrvn","Button,ggraddver -TabStop,Add Version","Text,,Commit Info:","Edit,w300 r5 -Wrap ggredit,,wh","Radio,vpre Checked,Pre-Release,y","Radio,vdraft,Draft,y","Radio,vfull,Full Release,y","Button,gcommit Default,Commit,y"])
 	newwin.Show("Github Repository"),tv:=[],githubinfo:=TV_Add("Github Info"),hotkeys([25],{"^up":"grup","^down":"grdown"})
 	change:={email:"Github Email",name:"Your Name (for commits)",owner:"Username for Github",token:"API Token for Github"}
 	for a,b in info
@@ -77,26 +77,34 @@ Github_Repository(){
 	ssn(verfile.node,"versions/version[@number='" lastversion "']").text:=newwin[].versioninfo
 	Return
 	commit:
+	info:=newwin[]
+	if (info.draft){
+		draft:="true",pre:="false"
+	}else if(info.pre){
+		draft:="false",pre:="true"
+	}else if(info.full){
+		draft:="false",pre:="false"
+	}
 	TV_GetText(version,TV_GetSelection())
 	ControlGetText,cm,Edit2,% hwnd([25])
 	if !(version&&cm)
 		return m("Please set a version and create some information for that version.")
 	ok:=commit(cm,version)
-	return
-	ea:=settings.ea("//github")
-	top:=vversion.ssn("//*[@file='" current(2).file "']"),node:=ssn(top,"versions/version[@number='" version "']")
-	repo:=ssn(top,"@repo").text
+	ea:=settings.ea("//github"),top:=vversion.ssn("//*[@file='" current(2).file "']"),node:=ssn(top,"versions/version[@number='" version "']"),repo:=ssn(top,"@repo").text
 	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
 	if (release:=ssn(node,"@id").text){
-		url:=github.url "/repos/" ea.owner "/" repo "/releases/" release "?access_token=" ea.token
-		http.Open("DELETE",url),http.send(),node.removeattribute("id")
+		url:=github.url "/repos/" ea.owner "/" repo "/releases/" release "?access_token=" ea.token,body:=github.utf8(cm)
+		json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%body%","draft":%draft%,"prerelease":%pre%}
+		http.open("PATCH",url),http.Send(json)
+		debug(http.ResponseText)
+	}else{
+		url:=github.url "/repos/" ea.owner "/" repo "/releases?access_token=" ea.token
+		notes:=github.utf8(cm)
+		json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%notes%","draft":%draft%,"prerelease":%pre%}
+		http.Open("POST",url),http.send(json)
+		info:=github.find("url",http.ResponseText)
+		id:=RegExReplace(info,"(.*)\/")
+		node.SetAttribute("id",id)
 	}
-	url:=github.url "/repos/" ea.owner "/" repo "/releases?access_token=" ea.token
-	notes:=github.utf8(cm)
-	json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%notes%","draft":false,"prerelease":false}
-	http.Open("POST",url),http.send(json)
-	info:=github.find("url",http.ResponseText)
-	id:=RegExReplace(info,"(.*)\/")
-	node.SetAttribute("id",id)
 	return
 }
