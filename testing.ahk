@@ -1,12 +1,14 @@
 testing(){
 	ea:=settings.ea("//github")
+	version:="1.0.9"
 	top:=vversion.ssn("//*[@file='" current(2).file "']"),node:=ssn(top,"versions/version[@number='" version "']")
 	repo:=ssn(top,"@repo").text
 	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
 	
-	;GET /repos/:owner/:repo/releases	
 	
 	/*
+		;GET /repos/:owner/:repo/releases	
+		;get releases
 		url:=github.url "/repos/" ea.owner "/" repo "/releases?access_token=" ea.token
 		http.open("GET",url),http.Send()
 		Gui,55:Destroy
@@ -21,7 +23,7 @@ testing(){
 		url:=github.url "/repos/" ea.owner "/" repo "/releases/" release "?access_token=" ea.token
 		number:=ssn(node,"@number").text,body:=github.utf8(node.text)
 		json={"tag_name":"%number%","target_commitish":"master","name":"%number%","body":"%body%","draft":false,"prerelease":false}
-		
+		m(body)
 		http.open("PATCH",url),http.Send(json)
 		debug(http.ResponseText)
 		
