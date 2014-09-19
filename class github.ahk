@@ -17,6 +17,7 @@ class github{
 		for c in filenames{
 			StringReplace,cc,c,\,/,All
 			url:=this.url "/repos/" this.owner "/" repo "/contents/" cc this.token,sha:=fz[c]
+			m(cc,sha)
 			json={"message":"Deleted","sha":"%sha%"}
 			this.http.Open("DELETE",url),this.http.send(json)
 			if (this.http.status!=200)
