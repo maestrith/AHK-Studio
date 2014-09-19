@@ -59,7 +59,7 @@ commit(commitmsg,version){
 		if InStr(text,Chr(59) "github_version")
 			text:=RegExReplace(text,Chr(59) "github_version",version)
 		if (text!=compare){
-			safe[localdir "\" file]:=text
+			safe[localdir "\" file]:=ff
 			StringReplace,gitdir,newdir,\,/,All
 			uplist[Trim(gitdir "/" file,"/")]:=text,up:=1
 		}
@@ -73,8 +73,8 @@ commit(commitmsg,version){
 		StringReplace,gitfile,newfn,\,/,All
 		safefile:=localdir "\" newfn
 		FileRead,local,%safefile%
-		if RegExReplace(local,orig)
-			uplist[gitfile]:=orig,safe[safefile]:=orig,up:=1
+		if (local!=orig)
+			uplist[gitfile]:=orig,safe[safefile]:=nn,up:=1
 	}
 	if !up
 		return m("Nothing new to upload")
@@ -89,12 +89,11 @@ commit(commitmsg,version){
 	info:=git.ref(repo,commit)
 	if (info=200){
 		TrayTip,GitHub Update Complete,Updated files
-		for a,text in safe{
+		for a,b in safe{
 			SplitPath,a,,dir
 			if !FileExist(dir)
 				FileCreateDir,%dir%
-			FileDelete,%a%
-			FileAppend,%text%,%a%,utf-8
+			FileCopy,%b%,%a%,1
 		}
 		return 1
 	}
