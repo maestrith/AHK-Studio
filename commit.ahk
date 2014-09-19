@@ -51,8 +51,8 @@ commit(commitmsg,version){
 			FileCreateDir,%localdir%
 		FileRead,compare,%localdir%\%file%
 		StringReplace,compare,compare,`r`n,`n,All
-		if InStr(text,"1.0.9")
-			m(RegExReplace(text,"1.0.9",version))
+		if InStr(text,Chr(59) "github_version")
+			m(RegExReplace(text,Chr(59) "github_version",version))
 		
 		if (text!=compare){
 			safe[localdir "\" file]:=text
