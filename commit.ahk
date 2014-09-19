@@ -16,8 +16,10 @@ commit(commitmsg,version){
 		current[file]:=1
 	}
 	node:=vversion.sn("//info[@file='" current(2).file "']/files/file")
-	while,nn:=node.item[A_Index-1]
-		current[nn.text]:=1
+	while,nn:=node.item[A_Index-1].text{
+		StringReplace,file,nn,%dir%\
+		current[file]:=1
+	}
 	replace:="github\" repo "\"
 	Loop,github\%repo%\*.*,0,1
 	{
