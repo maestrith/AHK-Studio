@@ -96,7 +96,6 @@ Github_Repository(){
 		url:=github.url "/repos/" ea.owner "/" repo "/releases/" release "?access_token=" ea.token,body:=github.utf8(cm)
 		json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%body%","draft":%draft%,"prerelease":%pre%}
 		http.open("PATCH",url),http.Send(json)
-		debug(http.ResponseText)
 	}else{
 		url:=github.url "/repos/" ea.owner "/" repo "/releases?access_token=" ea.token
 		notes:=github.utf8(cm)
