@@ -1,6 +1,9 @@
 commit(commitmsg,version){
 	if !commitmsg
 		return m("Please Select a commit message from the list of versions, or enter a commit message in the space provided")
+	ea:=settings.ea("//github")
+	if !(ea.name&&ea.email&&ea.token&&ea.owner)
+		return update_github_info()
 	file:=ssn(current(1),"@file").text
 	if !rep:=vversion.ssn("//*[@file='" file "']")
 		rep:=vversion.Add({path:"info",att:{file:file},dup:1})
@@ -28,9 +31,6 @@ commit(commitmsg,version){
 		if !current[file]
 			Delete[file]:=1,del:=1
 	}
-	ea:=settings.ea("//github")
-	if !(ea.name&&ea.email&&ea.token&&ea.owner)
-		return update_github_info()
 	git:=new github(ea.owner,ea.token)
 	if del
 		git.Delete(repo,delete)
