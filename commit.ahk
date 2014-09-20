@@ -1,5 +1,4 @@
 commit(commitmsg,version){
-	vznbkup:=version
 	if !commitmsg
 		return m("Please Select a commit message from the list of versions, or enter a commit message in the space provided")
 	file:=ssn(current(1),"@file").text
@@ -8,8 +7,7 @@ commit(commitmsg,version){
 	repo:=ssn(rep,"@repo").text
 	if !(repo)
 		return m("Please setup a repo name in the GUI by clicking Repository Name:")
-	delete:=[],current:=[]
-	main:=ssn(current(1),"@file").text
+	delete:=[],current:=[],main:=ssn(current(1),"@file").text
 	SplitPath,main,,dir
 	fl:=sn(current(1),"file/@file")
 	while,ff:=fl.item[A_Index-1].Text{
@@ -56,10 +54,9 @@ commit(commitmsg,version){
 			FileCreateDir,%localdir%
 		FileRead,compare,%localdir%\%file%
 		FileRead,text,%ff%
-		if (text!=compare||(InStr(text,Chr(59) "github_version")&&ssn(rep,"versions/version[@number='" vznbkup "']/@id").text="")){
-			safe[localdir "\" file]:=ff
+		if (text!=compare||(InStr(text,Chr(59) "github_version")&&ssn(rep,"versions/version[@number='" version "']/@id").text="")){
 			StringReplace,gitdir,newdir,\,/,All
-			uplist[Trim(gitdir "/" file,"/")]:=text,up:=1
+			uplist[Trim(gitdir "/" file,"/")]:=text,up:=1,safe[localdir "\" file]:=ff
 		}
 	}
 	node:=vversion.sn("//info[@file='" current(2).file "']/files/file")
@@ -78,7 +75,7 @@ commit(commitmsg,version){
 		return m("Nothing new to upload")
 	upload:=[]
 	for a,text in uplist{
-		blob:=git.blob(repo,RegExReplace(text,Chr(59) "github_version",vznbkup))
+		blob:=git.blob(repo,RegExReplace(text,Chr(59) "github_version",version))
 		SplashTextOn,200,150,Updating,%a%
 		upload[a]:=blob
 	}
@@ -92,8 +89,6 @@ commit(commitmsg,version){
 			if !FileExist(dir)
 				FileCreateDir,%dir%
 			FileCopy,%b%,%a%,1
-			if ErrorLevel
-				m(ErrorLevel)
 		}
 		return 1
 	}
