@@ -1,4 +1,5 @@
 commit(commitmsg,version){
+	vznbkup:=version
 	if !commitmsg
 		return m("Please Select a commit message from the list of versions, or enter a commit message in the space provided")
 	file:=ssn(current(1),"@file").text
@@ -45,7 +46,6 @@ commit(commitmsg,version){
 	if !FileExist("github\" repo)
 		FileCreateDir,github\%repo%
 	uplist:=[],save(),filelist:=sn(current(1),"file/@file"),safe:=[]
-	;m(ssn(rep,"versions/version[@number='" version "']/@id").text,version,rep.xml)
 	while,ff:=filelist.item[A_Index-1].text{
 		SplitPath,ff,file,dir
 		if A_Index=1
@@ -56,9 +56,7 @@ commit(commitmsg,version){
 			FileCreateDir,%localdir%
 		FileRead,compare,%localdir%\%file%
 		FileRead,text,%ff%
-		if (text!=compare||(InStr(text,Chr(59) "github_version")&&ssn(rep,"versions/version[@number='" version "']/@id").text="")){
-			if InStr(text,Chr(59) "github_version")
-				text:=RegExReplace(text,Chr(59) "github_version",version)
+		if (text!=compare||(InStr(text,Chr(59) "github_version")&&ssn(rep,"versions/version[@number='" vznbkup "']/@id").text="")){
 			safe[localdir "\" file]:=ff
 			StringReplace,gitdir,newdir,\,/,All
 			uplist[Trim(gitdir "/" file,"/")]:=text,up:=1
@@ -80,7 +78,7 @@ commit(commitmsg,version){
 		return m("Nothing new to upload")
 	upload:=[]
 	for a,text in uplist{
-		blob:=git.blob(repo,RegExReplace(text,Chr(59) "github_version",version))
+		blob:=git.blob(repo,RegExReplace(text,Chr(59) "github_version",vznbkup))
 		SplashTextOn,200,150,Updating,%a%
 		upload[a]:=blob
 	}

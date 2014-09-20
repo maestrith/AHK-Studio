@@ -104,7 +104,8 @@ Github_Repository(){
 	Return
 	commit:
 	info:=newwin[]
-	draft:=info.draft?"True":"False",pre:=info.pre?"True":"False",TV_GetText(version,TV_GetSelection())
+	draft:=info.draft?"True":"False",pre:=info.pre?"True":"False"
+	ControlGetText,version,Edit1,% hwnd([25])
 	ControlGetText,cm,Edit2,% hwnd([25])
 	if !(version&&cm)
 		return m("Please set a version and create some information for that version.")
