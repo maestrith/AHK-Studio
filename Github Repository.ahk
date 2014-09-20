@@ -4,7 +4,7 @@ Github_Repository(){
 	if !settings.ssn("//github")
 		settings.Add({path:"github",att:{owner:"",email:"",name:"",token:""}})
 	list:=sn(verfile.node,"versions/version"),info:=settings.ea("//github"),newwin:=new WindowTracker(25)
-	newwin.add(["Text,,Use Ctrl+Up/Down to increment the version","TreeView,w300 h200 AltSubmit geditgr,,w","Text,,Version Number:","Edit,w300 ggrvn","Button,ggraddver -TabStop,Add Version","Button,x+10 ggraddfile -TabStop,Add Files (text based only)","Text,xm,Commit Info:","Edit,w300 r5 -Wrap ggredit,,wh","Radio,vpre Checked,Pre-Release,y","Radio,vdraft,Draft,y","Radio,vfull,Full Release,y","Button,gcommit Default,Commit,y"])
+	newwin.add(["Text,,Use Ctrl+Up/Down to increment the version","TreeView,w300 h200 AltSubmit geditgr,,w","Text,,Version Number:","Edit,w300 ggrvn vversion","Button,ggraddver -TabStop,Add Version","Button,x+10 ggraddfile -TabStop,Add Files (text based only)","Text,xm,Commit Info:","Edit,w300 r5 -Wrap ggredit vcm,,wh","Radio,vpre Checked,Pre-Release,y","Radio,vdraft,Draft,y","Radio,vfull,Full Release,y","Button,gcommit Default,Commit,y","Button,x+10 gchangerelease,Change Release Status,y"])
 	newwin.Show("Github Repository"),tv:=[],githubinfo:=TV_Add("Github Info"),hotkeys([25],{"^up":"grup","^down":"grdown",Delete:"grdelete",BS:"grdelete"})
 	change:={email:"Github Email",name:"Your Name (for commits)",owner:"Username for Github",token:"API Token for Github"}
 	for a,b in info
@@ -102,9 +102,19 @@ Github_Repository(){
 	grc:
 	ssn(verfile.node,"versions/version[@number='" lastversion "']").text:=newwin[].versioninfo
 	Return
+	changerelease:
+	info:=newwin[],cm:=info.cm,version:=info.version,ea:=settings.ea("//github"),top:=vversion.ssn("//*[@file='" current(2).file "']"),node:=ssn(top,"versions/version[@number='" version "']"),repo:=ssn(top,"@repo").text
+	draft:=info.draft?"true":"false",pre:=info.pre?"true":"false"
+	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	if (release:=ssn(node,"@id").text){
+		url:=github.url "/repos/" ea.owner "/" repo "/releases/" release "?access_token=" ea.token,body:=github.utf8(cm)
+		json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%body%","draft":%draft%,"prerelease":%pre%}
+		http.open("PATCH",url),http.Send(json)
+	}else m("No record of this version being uploaded")
+	return
 	commit:
 	info:=newwin[]
-	draft:=info.draft?"True":"False",pre:=info.pre?"True":"False"
+	draft:=info.draft?"true":"false",pre:=info.pre?"true":"false"
 	ControlGetText,version,Edit1,% hwnd([25])
 	ControlGetText,cm,Edit2,% hwnd([25])
 	if !(version&&cm)

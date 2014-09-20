@@ -31,7 +31,7 @@ commit(commitmsg,version){
 		if !current[file]
 			Delete[file]:=1,del:=1
 	}
-	git:=new github(ea.owner,ea.token)
+	git:=new github()
 	if del
 		git.Delete(repo,delete)
 	current_commit:=git.getref(repo)

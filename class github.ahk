@@ -1,8 +1,11 @@
 class github{
 	static url:="https://api.github.com",http:=[]
-	__New(owner,token){
+	__New(){
+		ea:=settings.ea("//github")
+		if !(ea.owner&&ea.token)
+			return m("Please setup your Github info")
 		this.http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
-		this.token:="?access_token=" token,this.owner:=owner,this.tok:="&access_token=" token
+		this.token:="?access_token=" ea.token,this.owner:=ea.owner,this.tok:="&access_token=" ea.token
 		return this
 	}
 	delete(repo,filenames){
