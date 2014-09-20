@@ -45,20 +45,20 @@ commit(commitmsg,version){
 	if !FileExist("github\" repo)
 		FileCreateDir,github\%repo%
 	uplist:=[],save(),filelist:=sn(current(1),"file/@file"),safe:=[]
+	;m(ssn(rep,"versions/version[@number='" version "']/@id").text,version,rep.xml)
 	while,ff:=filelist.item[A_Index-1].text{
 		SplitPath,ff,file,dir
 		if A_Index=1
 			dircheck:=dir,newfile:=file
-		text:=update({get:ff})
 		StringReplace,newdir,dir,%dircheck%,,All
 		localdir:="github\" repo newdir
 		if !FileExist(localdir)
 			FileCreateDir,%localdir%
 		FileRead,compare,%localdir%\%file%
-		StringReplace,compare,compare,`r`n,`n,All
-		if InStr(text,Chr(59) "github_version")
-			text:=RegExReplace(text,Chr(59) "github_version",version)
-		if (text!=compare){
+		FileRead,text,%ff%
+		if (text!=compare||(InStr(text,Chr(59) "github_version")&&ssn(rep,"versions/version[@number='" version "']/@id").text="")){
+			if InStr(text,Chr(59) "github_version")
+				text:=RegExReplace(text,Chr(59) "github_version",version)
 			safe[localdir "\" file]:=ff
 			StringReplace,gitdir,newdir,\,/,All
 			uplist[Trim(gitdir "/" file,"/")]:=text,up:=1
@@ -94,6 +94,8 @@ commit(commitmsg,version){
 			if !FileExist(dir)
 				FileCreateDir,%dir%
 			FileCopy,%b%,%a%,1
+			if ErrorLevel
+				m(ErrorLevel)
 		}
 		return 1
 	}

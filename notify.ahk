@@ -58,9 +58,8 @@ notify(csc=""){
 		if (fn.modtype&0x02){
 			update({sc:sc.2357})
 		}
-		if fn.linesadded{
+		if fn.linesadded
 			marginwidth(sc)
-		}
 		if (sc.sc=v.codevault.sc){
 			LV_GetText(code,LV_GetNext())
 			if !locker:=vault.ssn("//code[@name='" code "']")

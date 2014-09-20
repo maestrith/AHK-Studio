@@ -35,7 +35,7 @@ tv(tv=0,open=""){
 		}else
 		sc.2358(0,doc.text),marginwidth(sc),current(1).SetAttribute("last",fn)
 		GuiControl,1:+Redraw,% sc.sc
-		setpos(ei),uppos(),history(fn)
+		setpos(ei),uppos(),history(fn),marginwidth(sc)
 		WinSetTitle,% hwnd([1]),,AHK Studio - %fn%
 	}
 	return
