@@ -6,6 +6,7 @@ class github{
 			return m("Please setup your Github info")
 		this.http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
 		this.token:="?access_token=" ea.token,this.owner:=ea.owner,this.tok:="&access_token=" ea.token
+		this.repo:=vversion.ssn("//info[@file='" current(2).file "']/@repo").text
 		return this
 	}
 	delete(repo,filenames){
@@ -88,7 +89,7 @@ class github{
 	}
 	CreateFile(repo,filefullpath,text,commit="First Commit",realname="Testing",email="Testing"){
 		SplitPath,filefullpath,filename
-		url:=this.url "/repos/" this.owner "/" repo "/contents/" filename this.token,file:=this.encode(text)
+		url:=this.url "/repos/" this.owner "/" repo "/contents/" filename this.token,file:=this.utf8(text)
 		json={"message":"%commit%","committer":{"name":"%realname%","email":"%email%"},"content": "%file%"}
 		this.http.Open("PUT",url),this.http.send(json),RegExMatch(this.http.ResponseText,"U)"Chr(34) "sha" Chr(34) ":(.*),",found)
 	}

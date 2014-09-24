@@ -1,5 +1,5 @@
 save(option=""){
-	sc:=csc(),getpos(),info:=update("get"),now:=A_Now,currentdoc:=sc.2357
+	sc:=csc(),update({sc:sc.2357}),getpos(),info:=update("get"),now:=A_Now,currentdoc:=sc.2357
 	GuiControl,-Redraw,% sc.sc
 	if (option=1){
 		for a,b in info.2{
