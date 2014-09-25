@@ -3,6 +3,7 @@ menu_editor(x=0){
 	if (x="tvlist")
 		return {tvlist:tvlist,il:il,icons:icons}
 	if !x{
+		;add a button for default menu download but keep your hotkeys
 		Gui,1:menu
 		all:=menus.sn("//*")
 		while,aa:=all.item[A_Index-1]{
@@ -91,6 +92,10 @@ menu_editor(x=0){
 	menus.xml.save("lib\menusbackup " a_now ".xml")
 	URLDownloadToFile,http://files.maestrith.com/AHK-Studio/menus.xml,lib\temp.xml
 	FileRead,menu,lib\temp.xml
+	;add it here
+	;make an object for current menus
+	;-compare the hotkeys from that to the new OnExit
+	;-save it
 	menus.xml.loadxml(menu)
 	menus.save(1)
 	SplashTextOff

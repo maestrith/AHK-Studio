@@ -145,8 +145,7 @@
 			<menu name="Tab To Previous Comma" clean="Tab_To_Previous_Comma" hotkey="+^tab"></menu>
 			<menu clean="Test_Plugin" name="Test Plugin" hotkey="!T"></menu>
 			<menu name="Toggle &amp;Multiple Line Comment" hotkey="+F1" clean="Toggle_Multiple_Line_Comment"></menu>
-			<menu name="Words In Document" clean="Words_In_Document" hotkey="!W"></menu>
-			<menu clean="Add_Selected_To_Personal_Variables" name="Add Selected To Personal Variables"></menu></menu>
+			<menu name="Words In Document" clean="Words_In_Document" hotkey="!W"></menu></menu>
 		<menu name="&amp;Help" clean="Help">
 			<menu name="&amp;About" clean="About"></menu>
 			<menu name="Command Help" hotkey="^H" clean="Command_Help"></menu>

@@ -8,7 +8,7 @@ filecheck(){
 	if (menus.ssn("//date").text!=menusdate){
 		temp:=new xml("temp"),temp.xml.loadxml(URLDownloadToVar("http://files.maestrith.com/AHK-Studio/menus.xml"))
 		if menus.sn("//*").length=1
-			menus.xml.loadxml(menu)
+			menus.xml.loadxml(temp[])
 		else{
 			menu:=temp.sn("//*")
 			while,mm:=menu.item[A_Index-1]{
