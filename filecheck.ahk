@@ -6,37 +6,24 @@ filecheck(){
 	if !settings.ssn("//fonts").xml
 		defaultfont()
 	if (menus.ssn("//date").text!=menusdate){
-		names:=menus.sn("//*/@name")
-		while,nn:=names.item[A_Index-1]
-			list.=nn.text "`r`n"
-		list:=RegExReplace(list,"&")
-		SplashTextOn,,40,Downloading Required Files,Please Wait...
-		URLDownloadToFile,http://files.maestrith.com/AHK-Studio/menus.xml,lib\temp.xml
-		FileRead,menu,lib\temp.xml
-		temp:=new xml("temp")
-		temp.xml.loadxml(menu)
+		temp:=new xml("temp"),temp.xml.loadxml(URLDownloadToVar("http://files.maestrith.com/AHK-Studio/menus.xml"))
 		if menus.sn("//*").length=1
 			menus.xml.loadxml(menu)
 		else{
 			menu:=temp.sn("//*")
 			while,mm:=menu.item[A_Index-1]{
-				parent:=mm.nodename!="menu"?mm:parent
-				name:=ssn(mm,"@name").text
-				check:=RegExReplace(name,"&")
-				if !RegExMatch(list,"i)\b" check "\b"){
-					if !menus.ssn("//" mm.nodename "[@name='" name "']"){
-						top:=menus.ssn("//menu[@name='" ssn(mm.ParentNode,"@name").text "']")
-						top:=top?top:menus.ssn("//" mm.parentnode.nodename)
-						if top.xml
-							top.appendchild(mm.clonenode(1))
-					}
+				ea:=xml.ea(mm)
+				if !ea.clean
+					Continue
+				if !menus.ssn("//*[@clean='" ea.clean "']"){
+					parent:=menus.ssn("//*[@clean='" ssn(mm.ParentNode,"@clean").text "']")
+					menus.under({under:parent,node:"menu",att:ea})
 				}
 			}
 		}
 		SplashTextOff
 		menus.add({path:"date",text:menusdate})
 		menus.save(1)
-		FileDelete,lib\temp.xml
 	}
 	if !FileExist(A_ScriptDir "\lib")
 		FileCreateDir,%A_ScriptDir%\lib
