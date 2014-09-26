@@ -1,11 +1,12 @@
 filecheck(){
-	commandsdate:=20140917,menusdate:=20140918,scilexerdate:=20140801123000
+	commandsdate:=20140917,menusdate:=20140926,scilexerdate:=20140801123000
 	if !settings.ssn("//autoadd")
 		for a,b in {60:62,123:125,34:34,39:39,91:93,40:41}
 			settings.add({path:"autoadd/key",att:{trigger:a,add:b},dup:1})
 	if !settings.ssn("//fonts").xml
 		defaultfont()
 	if (menus.ssn("//date").text!=menusdate){
+		SplashTextOn,300,100,Downloading Menus XML,Please Wait...
 		temp:=new xml("temp"),temp.xml.loadxml(URLDownloadToVar("http://files.maestrith.com/AHK-Studio/menus.xml"))
 		if menus.sn("//*").length=1
 			menus.xml.loadxml(temp[])

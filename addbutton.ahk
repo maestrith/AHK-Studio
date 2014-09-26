@@ -1,5 +1,13 @@
-addbutton(this){
+AddButton(this=""){
 	static bar
+	if !(this){
+		number:=InputBox(csc().sc,"Enter a toolbar number","Enter the toolbar you want to add a button to (1 or 2)","1")
+		if number not in 1,2
+			return m("Please choose 1 or 2")
+		for a,b in toolbar.list
+			if (a="1000" number-1)
+				this:=b
+	}
 	v.bar:=bar:=this,ComObjError(1),setup(12)
 	Gui,Add,ListView,w400 h300,Menu Items
 	menu:=menus.sn("//*")

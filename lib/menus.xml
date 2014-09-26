@@ -145,7 +145,8 @@
 			<menu name="Tab To Previous Comma" clean="Tab_To_Previous_Comma" hotkey="+^tab"></menu>
 			<menu clean="Test_Plugin" name="Test Plugin" hotkey="!T"></menu>
 			<menu name="Toggle &amp;Multiple Line Comment" hotkey="+F1" clean="Toggle_Multiple_Line_Comment"></menu>
-			<menu name="Words In Document" clean="Words_In_Document" hotkey="!W"></menu></menu>
+			<menu name="Words In Document" clean="Words_In_Document" hotkey="!W"></menu>
+			<menu clean="Addbutton" name="Addbutton"></menu></menu>
 		<menu name="&amp;Help" clean="Help">
 			<menu name="&amp;About" clean="About"></menu>
 			<menu name="Command Help" hotkey="^H" clean="Command_Help"></menu>
@@ -155,5 +156,5 @@
 			<menu name="Testing" hotkey="!F1" clean="Testing"></menu></menu>
 		<menu name="Scratch &amp;Pad" clean="Scratch_Pad"></menu>
 	</main>
-	<date>20140918</date>
+	<date>20140926</date>
 </menus>
