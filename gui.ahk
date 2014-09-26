@@ -4,8 +4,8 @@ gui(){
 	for a,b in ["+","!","^","~"]
 		Enter[b "Enter"]:="checkqf"
 	Enter["^c"]:="copy",hotkeys([1],enter)
-	new s(1,{main:1}),v.win2:=win2,v.win3:=win3
 	Gui,Add,StatusBar,hwndsb,StatusBar Info
+	new s(1,{main:1}),v.win2:=win2,v.win3:=win3
 	ControlGetPos,,,,h,,ahk_id%sb%
 	v.StatusBar:=h,v.sbhwnd:=sb,rb:=new rebar(1,hwnd),v.rb:=rb,pos:=settings.ssn("//gui/position[@window='1']")
 	max:=ssn(pos,"@max").text?"Maximize":"",pos:=pos.text?pos.text:"w750 h500",bar:=[],band:=[]

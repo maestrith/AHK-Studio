@@ -6,7 +6,7 @@ class toolbar{
 		static count:=0,toolbar1,toolbar2,toolbar3
 		count++
 		mask:=mask?mask:0x800|0x0800|0x100|0x0040|0x0008|0x0004|0x10|0x20
-		Gui,Add,Custom,ClassToolbarWindow32 hwndhwnd +%mask% Background0 gtoolbar vtoolbar%count%
+		Gui,Add,Custom,ClassToolbarWindow32 hwndhwnd +%mask% gtoolbar vtoolbar%count%
 		this.iconlist:=[],this.hwnd:=hwnd,this.count:=count,this.buttons:=[],this.returnbutton:=[],this.keep[hwnd]:=this
 		this.ahkid:="ahk_id" hwnd,this.parent:=parent,this.order[count]:=this
 		onoff:=settings.ssn("//options/@Small_Icons").text?0:1,this.imagelist:=IL_Create(20,1,onoff),this.SetImageList()
