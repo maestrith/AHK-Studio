@@ -87,6 +87,7 @@
 			<menu name="Post &amp;Multiple Segment Gist" clean="Post_Multiple_Segment_Gist"></menu>
 			<menu name="Update Github Info" clean="Update_Github_Info"></menu></menu>
 		<menu name="&amp;Special Menu" clean="Special_Menu">
+			<menu clean="Addbutton" name="Addbutton"></menu>
 			<menu clean="Bookmarks" name="Bookmarks">
 				<menu clean="Add_Bookmark" name="Add Bookmark" hotkey="!B"></menu>
 				<menu clean="Delete_Bookmark" name="Delete Bookmark"></menu>
@@ -145,8 +146,7 @@
 			<menu name="Tab To Previous Comma" clean="Tab_To_Previous_Comma" hotkey="+^tab"></menu>
 			<menu clean="Test_Plugin" name="Test Plugin" hotkey="!T"></menu>
 			<menu name="Toggle &amp;Multiple Line Comment" hotkey="+F1" clean="Toggle_Multiple_Line_Comment"></menu>
-			<menu name="Words In Document" clean="Words_In_Document" hotkey="!W"></menu>
-			<menu clean="Addbutton" name="Addbutton"></menu></menu>
+			<menu name="Words In Document" clean="Words_In_Document" hotkey="!W"></menu></menu>
 		<menu name="&amp;Help" clean="Help">
 			<menu name="&amp;About" clean="About"></menu>
 			<menu name="Command Help" hotkey="^H" clean="Command_Help"></menu>

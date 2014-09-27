@@ -37,6 +37,7 @@
 			Add an area for comments for snippets
 		}
 	}
+	
 */
 DetectHiddenWindows,On
 OnMessage(0x4a,"WM_COPYDATA")

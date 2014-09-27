@@ -3,7 +3,7 @@ setup(window,nodisable=""){
 	Background:=ea.Background,font:=ea.font,color:=RGB(ea.color),Background:=Background?Background:0
 	Gui,%window%:Destroy
 	Gui,%window%:Default
-	Gui,+hwndhwnd
+	Gui,+hwndhwnd -DPIScale
 	if !nodisable{
 		Gui,+Owner1 -0x20000
 		Gui,1:+Disabled
