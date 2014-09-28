@@ -19,8 +19,9 @@ notify(csc=""){
 	csc:=""
 	if (fn.code=2002){
 		Gui,1:TreeView,% hwnd("fe")
-		ea:=xml.ea(current())
-		TV_Modify(ea.tv,"",ea.filename)
+		list:=files.sn("//*[@file='" current(3).file "']")
+		while,ll:=list.item[A_Index-1],ea:=xml.ea(ll)
+			TV_Modify(ea.tv,"",ea.filename)
 	}
 	if (fn.code=2014){
 		if (fn.listtype=1){
