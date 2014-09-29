@@ -10,4 +10,9 @@ getpos(){
 		list.=fold ",",fold++
 	if list
 		fix.SetAttribute("fold",Trim(list,","))
+	pos:=positions.ssn("//main[@file='" current(2).file "']/file[@file='" current(3).file "']")
+	line:=0,bp:=""
+	while,sc.2047(line,1)>0,line:=sc.2047(line,1)
+		bp.=line ",",line++
+	pos.SetAttribute("breakpoint",Trim(bp,","))
 }
