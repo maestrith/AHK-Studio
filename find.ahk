@@ -28,7 +28,7 @@ find(){
 		while,l:=list.item(A_Index-1){
 			out:=contents[l.text],found:=1,r:=0,fn:=l.text
 			SplitPath,fn,file
-			while,found:=RegExMatch(out,pre ")(^.*" ff ".*\n)",pof,found){
+			while,found:=RegExMatch(out,pre ")(^.*" ff ".*$)",pof,found){
 				if (ea.sort&&lastl!=fn)
 					parent:=TV_Add(fn)
 				np:=found=1?0:StrPut(SubStr(out,1,found),"utf-8")-1-(StrPut(SubStr(pof.1,1,1),"utf-8")-1)
@@ -37,9 +37,7 @@ find(){
 					add:=loof.Pos(1)-1,foundinfo[TV_Add(loof.1 " : " Trim(pof.1,"`t"),parent)]:={start:np+add,end:np+add+StrPut(loof.1,"Utf-8")-1,file:l.text}
 					fpos+=StrLen(loof.1)
 				}
-				if !add
-					break
-				found:=found+add
+				found:=pof.Pos(1)+pof.len(1)-1
 				lastl:=fn
 			}
 		}
