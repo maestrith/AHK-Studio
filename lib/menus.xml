@@ -30,6 +30,7 @@
 			<menu name="Compare" hotkey="" clean="Compare"></menu>
 			<menu name="Copy" clean="Copy"></menu>
 			<menu name="Cut" clean="Cut"></menu>
+			<menu clean="Debug_Settings" name="Debug Settings"></menu>
 			<menu name="&amp;Duplicate Line" hotkey="F2" clean="Duplicate_Line"></menu>
 			<menu name="Ed&amp;it Replacements" clean="Edit_Replacements"></menu>
 			<menu name="&amp;Find" clean="Find" hotkey="^F"></menu>
@@ -156,5 +157,5 @@
 			<menu name="Testing" hotkey="!F1" clean="Testing"></menu></menu>
 		<menu name="Scratch &amp;Pad" clean="Scratch_Pad"></menu>
 	</main>
-	<date>20140926</date>
+	<date>20140929</date>
 </menus>

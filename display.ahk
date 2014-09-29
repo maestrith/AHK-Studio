@@ -35,7 +35,10 @@ display(store){
 	}
 	if init:=recieve.ssn("//init"){
 		v.afterbug:=[]
-		ad:=["stdout -c 2","stderr -c 2","feature_set -n max_depth -v 4"]
+		ad:=["stdout -c 2","stderr -c 2"]
+		ea:=settings.ea("//features")
+		for a,b in ["max_depth","max_children"]
+			value:=ea[b]?ea[b]:4,ad.Insert("feature_set -n " b " -v " value)
 		break:=positions.sn("//main[@file='" v.debugfilename "']/*/@breakpoint/..")
 		while,bb:=Break.item[A_Index-1]{
 			file:=ssn(bb,"@file").text,lines:=ssn(bb,"@breakpoint").Text

@@ -38,6 +38,7 @@
 		}
 	}
 	
+	
 */
 DetectHiddenWindows,On
 OnMessage(0x4a,"WM_COPYDATA")
@@ -284,3 +285,4 @@ return
 #Include window.ahk
 #Include WM COPYDATA.ahk
 #Include Words In Document.ahk
+#Include debug settings.ahk
