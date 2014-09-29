@@ -50,6 +50,8 @@ SetWorkingDir,%A_ScriptDir%
 global v:=[],settings,files,menus,commands,positions,vversion,access_token,vault,preset,cexp,scintilla,bookmarks
 settings:=new xml("settings","lib\settings.xml"),files:=new xml("files"),menus:=new xml("menus","lib\menus.xml"),commands:=new xml("commands","lib\commands.xml"),cexp:=new xml("code_explorer"),bookmarks:=new xml("bookmarks","lib\bookmarks.xml")
 positions:=new xml("positions","lib\positions.xml"),vversion:=new xml("version","lib\version.xml"),access_token:=settings.ssn("//access_token").text
+if !settings.ssn("//Auto_Indent")
+	settings.Add({path:"Auto_Indent",att:{Full_Auto:1}})
 vault:=new xml("vault","lib\vault.xml")
 v.color:=[],preset:=new xml("preset","lib\preset.xml")
 if (A_PtrSize=8&&A_IsCompiled=""){
