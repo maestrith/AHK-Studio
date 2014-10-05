@@ -94,6 +94,6 @@ gui(){
 		}
 		csc({hwnd:s.main.1.sc}).2400
 	}
-	code_explorer.populate(),hk(1)
+	code_explorer.populate(),hk(1),Refresh_Variable_List()
 	Gui,1:TreeView,SysTreeView321
 }

@@ -82,7 +82,7 @@ notify(csc=""){
 		}
 		cpos:=sc.2008,start:=sc.2266(cpos,1),end:=sc.2267(cpos,1),word:=sc.textrange(sc.2266(cpos,1),cpos)
 		if (StrLen(word)>1&&sc.2102=0){
-			list:=Trim(v.keywords[SubStr(word,1,1)])
+			list:=Trim(v.keywords[SubStr(word,1,1)]) code_explorer.varlist[current(2).file]
 			if list&&instr(list,word)
 				sc.2100(StrLen(word),list)
 		}

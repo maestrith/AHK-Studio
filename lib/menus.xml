@@ -130,6 +130,7 @@
 			<menu name="Previous File" hotkey="+!Up" clean="Previous_File"></menu>
 			<menu name="Quick Scintilla Code Lookup" hotkey="+Escape" clean="Quick_Scintilla_Code_Lookup"></menu>
 			<menu name="Refresh Code Explorer" clean="Refresh_Code_Explorer"></menu>
+			<menu clean="Refresh_Variable_List" name="Refresh Variable List"></menu>
 			<menu name="Remove Current Selection" hotkey="^F3" clean="Remove_Current_Selection"></menu>
 			<menu name="&amp;Scintilla Code Lookup" hotkey="F6" clean="Scintilla_Code_Lookup"></menu>
 			<menu name="Select Next Duplicate" clean="Select_Next_Duplicate" hotkey="!F3"></menu>
@@ -157,5 +158,5 @@
 			<menu name="Testing" hotkey="!F1" clean="Testing"></menu></menu>
 		<menu name="Scratch &amp;Pad" clean="Scratch_Pad"></menu>
 	</main>
-	<date>20140929</date>
+	<date>20141005</date>
 </menus>

@@ -1,6 +1,50 @@
 testing(){
 	/*
-		¯\_(ツ)_/¯
+		sc:=csc()
+		text:=sc.gettext(),pos:=1
+		while,pos:=RegExMatch(text,"OU`n)\s(\w+):=",var,pos)
+			list.=var.1 "`n",pos:=var.Pos(1)+var.len(1)
+		m(list)
+	*/
+	;add this list to the auto list that pops up for commands
+	/*
+		static stuff:={"~o":"õ","~n":"ñ"},winhwnd
+		WinGet,winhwnd,id,A
+		Gui,27:Destroy
+		Gui,27:Default
+		Gui,+hwndhwnd
+		hwnd(27,hwnd)
+		Hotkeys([27],{Enter:"insgo"})
+		Gui,Add,Edit,w200 gins
+		Gui,Add,ListView,w200 r6,Input|Replace
+		Gui,Show,,Insert
+		goto popins
+		return
+		insgo:
+		Gui,27:Default
+		LV_GetText(ins,LV_GetNext(),2)
+		WinActivate,ahk_id%winhwnd%
+		Send,%ins%
+		return
+		ins:
+		Gosub,popins
+		return
+		popins:
+		Gui,27:Default
+		ControlGetText,ins,Edit1,% hwnd([27])
+		LV_Delete()
+		for a,b in stuff
+			if InStr(a,ins)
+				LV_Add("",a,b)
+		Loop,2
+			LV_ModifyCol(A_Index,"AutoHDR")
+		LV_Modify(1,"Select Vis Focus")
+		return
+		27GuiEscape:
+		hwnd({rem:27})
+		return
+	*/
+	/*
 		;how to get the info below
 		;GET /user/repos	
 		repo:=new github()
@@ -9,7 +53,6 @@ testing(){
 		cb:=repo.Send("GET",url)
 		FileAppend,%cb%,1info.txt
 	*/
-	
 	/*
 		;how to upload files that are not normal :)
 		FileSelectFile,_from_file,,,,*.dll

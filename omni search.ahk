@@ -98,7 +98,7 @@ omni_search(start=""){
 		}
 		build.=")"
 		sc.2003(sc.2008,build)
-	}else if(item.type~="i)(label|method|function|hotkey|class|property)"){
+	}else if(item.type~="i)(label|method|function|hotkey|class|property|variable)"){
 		hwnd({rem:20})
 		TV(files.ssn("//*[@file='" item.file "']/@tv").text)
 		Sleep,200

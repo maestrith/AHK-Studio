@@ -1,8 +1,8 @@
 class code_explorer{
-	static explore:=[],TreeView:=[],sort:=[],function:="Om`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{",label:="Om`n)^\s*((\w|[^\x00-\x7F])+):[\s+;]",functions:=[],bookmarks:=[]
+	static explore:=[],TreeView:=[],sort:=[],function:="Om`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{",label:="Om`n)^\s*((\w|[^\x00-\x7F])+):[\s+;]",functions:=[],bookmarks:=[],variables:=[],varlist:=[]
 	scan(node){
 		explore:=[],bits:=[],method:=[]
-		for a,b in ["menu","file","label","method","function","hotkey","class","property"]
+		for a,b in ["menu","file","label","method","function","hotkey","class","property","variable"]
 			explore[b]:=[]
 		filename:=ssn(node,"@file").text,parentfile:=ssn(node.ParentNode,"@file").text
 		skip:=ssn(node,"@skip").text?1:0,code:=update({get:filename}),pos:=1
@@ -12,6 +12,9 @@ class code_explorer{
 				StringReplace,code,code,%rp%,%rep%,All
 			}
 		}
+		pos:=1,this.variables[parentfile,filename]:=[]
+		while,pos:=RegExMatch(code,"Om`n)\s(\w+):=",var,pos)
+			this.variables[parentfile,filename,var.1]:=1,pos:=var.Pos(1)+1
 		for type,find in {hotkey:"Om`n)^\s*([#|!|^|\+|~|\$|&|<|>|*]*?\w+)::",label:this.label}{
 			pos:=1
 			while,pos:=RegExMatch(code,find,fun,pos){

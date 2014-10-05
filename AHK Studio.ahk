@@ -286,3 +286,4 @@ return
 #Include WM COPYDATA.ahk
 #Include Words In Document.ahk
 #Include debug settings.ahk
+#Include Refresh Variable List.ahk
