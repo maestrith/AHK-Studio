@@ -1,11 +1,5 @@
 testing(){
-	/*
-		sc:=csc()
-		text:=sc.gettext(),pos:=1
-		while,pos:=RegExMatch(text,"OU`n)\s(\w+):=",var,pos)
-			list.=var.1 "`n",pos:=var.Pos(1)+var.len(1)
-		m(list)
-	*/
+	Refresh_Variable_List()
 	;add this list to the auto list that pops up for commands
 	/*
 		static stuff:={"~o":"õ","~n":"ñ"},winhwnd

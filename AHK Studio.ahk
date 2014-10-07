@@ -2,7 +2,6 @@
 ;download complete
 /*
 	TODO LIST:
-	
 	Find/Replace
 	-Current Segment, Current Project, All Files
 	

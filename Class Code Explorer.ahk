@@ -13,8 +13,12 @@ class code_explorer{
 			}
 		}
 		pos:=1,this.variables[parentfile,filename]:=[]
-		while,pos:=RegExMatch(code,"Om`n)\s(\w+):=",var,pos)
-			this.variables[parentfile,filename,var.1]:=1,pos:=var.Pos(1)+1
+		while,pos:=RegExMatch(code,"Osm`n)(\w*)(\s*)?:=",var,pos){
+			if var.len(1)
+				this.variables[parentfile,filename,var.1]:=1,pos:=var.Pos(1)+var.len(1)
+			else
+				pos+=1
+		}
 		for type,find in {hotkey:"Om`n)^\s*([#|!|^|\+|~|\$|&|<|>|*]*?\w+)::",label:this.label}{
 			pos:=1
 			while,pos:=RegExMatch(code,find,fun,pos){
