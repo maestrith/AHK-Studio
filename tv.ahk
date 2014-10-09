@@ -32,6 +32,10 @@ tv(tv=0,open=""){
 			dup:=files.sn("//file[@file='" fn "']")
 			while,dd:=dup.item[A_Index-1]
 				dd.SetAttribute("sc",doc)
+			/*
+				update:=update("get").1
+				update[fn]:=
+			*/
 		}else
 		sc.2358(0,doc.text),marginwidth(sc),current(1).SetAttribute("last",fn)
 		GuiControl,1:+Redraw,% sc.sc
