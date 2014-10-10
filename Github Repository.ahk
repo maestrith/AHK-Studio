@@ -106,6 +106,8 @@ Github_Repository(){
 	info:=newwin[],cm:=info.cm,version:=info.version,ea:=settings.ea("//github"),top:=vversion.ssn("//*[@file='" current(2).file "']"),node:=ssn(top,"versions/version[@number='" version "']"),repo:=ssn(top,"@repo").text
 	draft:=info.draft?"true":"false",pre:=info.pre?"true":"false"
 	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	if proxy:=settings.ssn("//proxy").text
+		http.setProxy(2,proxy)
 	if (release:=ssn(node,"@id").text){
 		url:=github.url "/repos/" ea.owner "/" repo "/releases/" release "?access_token=" ea.token,body:=github.utf8(cm)
 		json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%body%","draft":%draft%,"prerelease":%pre%}
@@ -122,6 +124,8 @@ Github_Repository(){
 	ok:=commit(cm,version)
 	ea:=settings.ea("//github"),top:=vversion.ssn("//*[@file='" current(2).file "']"),node:=ssn(top,"versions/version[@number='" version "']"),repo:=ssn(top,"@repo").text
 	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	if proxy:=settings.ssn("//proxy").text
+		http.setProxy(2,proxy)
 	if (release:=ssn(node,"@id").text){
 		url:=github.url "/repos/" ea.owner "/" repo "/releases/" release "?access_token=" ea.token,body:=github.utf8(cm)
 		json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%body%","draft":%draft%,"prerelease":%pre%}

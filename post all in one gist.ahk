@@ -10,6 +10,8 @@ post_all_in_one_gist(info=""){
 		StringReplace,info,info,%a%,%b%,All
 	desc=Posted using AHK Studio
 	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	if proxy:=settings.ssn("//proxy").text
+		http.setProxy(2,proxy)
 	json={"description":"%desc%","public":true,"files":{"%filename%":{"content":"%info%"}}}
 	check_id(id)
 	if id

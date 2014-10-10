@@ -5,6 +5,8 @@ class github{
 		if !(ea.owner&&ea.token)
 			return m("Please setup your Github info")
 		this.http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+		if proxy:=settings.ssn("//proxy").text
+			http.setProxy(2,proxy)
 		this.token:="?access_token=" ea.token,this.owner:=ea.owner,this.tok:="&access_token=" ea.token
 		this.repo:=vversion.ssn("//info[@file='" current(2).file "']/@repo").text
 		return this

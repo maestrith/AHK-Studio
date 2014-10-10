@@ -66,6 +66,8 @@ testing(){
 		InputBox,message,Commit Message,Enter a quick message
 		ea:=settings.ea("//github")
 		http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+		if proxy:=settings.ssn("//proxy").text
+			http.setProxy(2,proxy)
 		url:=github.url "/repos/maestrith/AHK-Studio/contents/" filename "?access_token=" ea.token
 		json={"message":"%message%","committer":{"name":"Chad Wilson","email":"maestrith@gmail.com"},"content":
 		json.= Chr(34) outdata chr(34) "}"

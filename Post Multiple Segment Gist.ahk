@@ -23,6 +23,8 @@ Post_Multiple_Segment_Gist(){
 	StringTrimRight,json,json,1
 	json.="}}"
 	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	if proxy:=settings.ssn("//proxy").text
+		http.setProxy(2,proxy)
 	if id
 		http.Open("PATCH",url "/" id)
 	else

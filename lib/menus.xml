@@ -43,6 +43,7 @@
 			<menu name="Paste" clean="Paste"></menu>
 			<menu name="Personal &amp;Variable List" clean="Personal_Variable_List"></menu>
 			<menu name="Previous Found" hotkey="+F3" clean="Previous_Found"></menu>
+			<menu clean="Proxy_Settings" name="Proxy Settings"></menu>
 			<menu name="&amp;Quick Find" hotkey="!q" clean="Quick_Find"></menu>
 			<menu name="Red&amp;o" clean="Redo"></menu>
 			<menu name="Replace &amp;Selected" hotkey="F1" clean="Replace_Selected"></menu>

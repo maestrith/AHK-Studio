@@ -2,6 +2,9 @@
 ;download complete
 /*
 	TODO LIST:
+	Bkid(){
+		<Bkid> maestrith:  http.setProxy(2,Proxy ":" Port)  on lines 469 (updates), 501 (github), and 6890 (downloading initial files, I believe)
+	}
 	Find/Replace
 	-Current Segment, Current Project, All Files
 	
@@ -286,3 +289,4 @@ return
 #Include Words In Document.ahk
 #Include debug settings.ahk
 #Include Refresh Variable List.ahk
+#Include Proxy Settings.ahk

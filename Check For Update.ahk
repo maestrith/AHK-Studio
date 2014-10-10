@@ -7,6 +7,8 @@ Check_For_Update(){
 	time+=%sub%,hh
 	url:="http://files.maestrith.com/AHK-Studio/AHK%20Studio.text"
 	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1"),http.Open("GET",url)
+	if proxy:=settings.ssn("//proxy").text
+		http.setProxy(2,proxy)
 	FormatTime,time,%time%,ddd, dd MMM yyyy HH:mm:ss
 	http.setRequestHeader("If-Modified-Since",time " GMT"),http.Send(),setup(55)
 	info:=http.responsetext?http.responsetext:"Nothing new to download"
