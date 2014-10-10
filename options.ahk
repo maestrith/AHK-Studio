@@ -14,6 +14,7 @@ options(){
 	Warn_Overwrite_On_Export:
 	Disable_Backup:
 	Disable_Autosave:
+	Disable_Variable_List:
 	sc:=csc()
 	onoff:=settings.ssn("//options/@" A_ThisLabel).text?0:1
 	att:=[],att[A_ThisLabel]:=onoff

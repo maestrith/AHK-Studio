@@ -60,6 +60,7 @@
 			<menu name="Check For Edited Files On Focus" clean="Check_For_Edited_Files_On_Focus"></menu>
 			<menu clean="Disable_Autosave" name="Disable Autosave"></menu>
 			<menu clean="Disable_Backup" name="Disable Backup"></menu>
+			<menu clean="Disable_Variable_List" name="Disable Variable List"></menu>
 			<menu name="Enable Close On Save" clean="Enable_Close_On_Save"></menu>
 			<menu name="Hide Code Explorer" clean="Hide_Code_Explorer"></menu>
 			<menu name="Hide Project Explorer" clean="Hide_Project_Explorer"></menu>
@@ -159,5 +160,5 @@
 			<menu name="Testing" hotkey="!F1" clean="Testing"></menu></menu>
 		<menu name="Scratch &amp;Pad" clean="Scratch_Pad"></menu>
 	</main>
-	<date>20141005</date>
+	<date>20141010</date>
 </menus>

@@ -12,12 +12,14 @@ class code_explorer{
 				StringReplace,code,code,%rp%,%rep%,All
 			}
 		}
-		pos:=1,this.variables[parentfile,filename]:=[]
-		while,pos:=RegExMatch(code,"Osm`n)(\w*)(\s*)?:=",var,pos){
-			if var.len(1)
-				this.variables[parentfile,filename,var.1]:=1,pos:=var.Pos(1)+var.len(1)
-			else
-				pos+=1
+		if !v.options.Disable_Variable_List{
+			pos:=1,this.variables[parentfile,filename]:=[]
+			while,pos:=RegExMatch(code,"Osm`n)(\w*)(\s*)?:=",var,pos){
+				if var.len(1)
+					this.variables[parentfile,filename,var.1]:=1,pos:=var.Pos(1)+var.len(1)
+				else
+					pos+=1
+			}
 		}
 		for type,find in {hotkey:"Om`n)^\s*([#|!|^|\+|~|\$|&|<|>|*]*?\w+)::",label:this.label}{
 			pos:=1
