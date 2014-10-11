@@ -86,6 +86,13 @@ class github{
 		this.http.Open("POST",url)
 		json={"name":"%name%","description":"%description%","homepage":"http://www.maestrith.com","private":%private%,"has_issues":%issues%,"has_wiki":%wiki%,"has_downloads":%downloads%}
 		this.http.Send(json)
+		;PUT /repos/:owner/:repo/contents/:path
+		url:=this.url "/repos/" this.owner "/" this.repo "/contents/ReadMe.MD" this.token
+		this.http.Open("PUT",url)
+		ea:=settings.ea("//github")
+		name:=ea.name,email:=ea.email,owner:=ea.owner,content:=debug.encode("Created with AHK Studio")
+		json={"message":"Create Readme.md file","committer":{"name":"%name%","email":"%email%"},"content":"%content%"}
+		this.http.Send(json)
 		FileDelete,create.txt
 		FileAppend,% this.http.ResponseText,create.txt
 	}

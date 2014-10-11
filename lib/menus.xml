@@ -119,7 +119,7 @@
 				<menu clean="Forward" name="Forward" hotkey="!Right"></menu></menu>
 			<menu name="Next File" hotkey="+!Down" clean="Next_File"></menu>
 			<menu clean="Omni-Search" name="Omni-Search">
-				<menu clean="Add_Function_Call" name="Add Function Call" hotkey="+^="></menu>
+				<menu clean="Add_Function_Call" name="Add Function Call" hotkey="^="></menu>
 				<menu clean="Bookmark_Search" name="Bookmark Search" hotkey="+^3"></menu>
 				<menu name="Class Search" hotkey="+^[" clean="Class_Search"></menu>
 				<menu name="File Search" hotkey="+!O" clean="File_Search"></menu>
