@@ -7,7 +7,7 @@ publish(return=""){
 		if InStr(publish,ssn(ii,"@include").text)
 			StringReplace,publish,publish,% ssn(ii,"@include").text,% update({get:ssn(ii,"@file").text}),All
 	ea:=xml.ea(vversion.ssn("//*[@file='" ssn(current(1),"@file").text "']"))
-	newver:=ea.version
+	newver:="Version=" ea.version
 	if InStr(publish,Chr(59) "auto_version")
 		publish:=RegExReplace(publish,Chr(59) "auto_version",newver)
 	if InStr(publish,Chr(59) "github_version")
