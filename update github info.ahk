@@ -22,6 +22,8 @@ update_github_info(){
 	25GuiEscape:
 	25GuiClose:
 	hwnd({rem:25})
+	if WinExist(hwnd([10]))
+		WinActivate,% hwnd([10])
 	return
 	gettoken:
 	Run,https://github.com/settings/applications
