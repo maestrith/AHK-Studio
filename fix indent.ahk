@@ -33,7 +33,7 @@ fix_indent(sc=""){
 		}
 		if (v.skip)
 			continue
-		RegExMatch(b,"iUA)\b(" v.indentregex ")\b",found)
+		RegExMatch(b,"iUA)}?\b(" v.indentregex ")\b",found)
 		if (lastfound&&SubStr(lastb,0,1)!="{")
 			add++
 		if (add&&lastfound&&SubStr(b,0,1)="{")

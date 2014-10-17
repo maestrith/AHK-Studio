@@ -39,6 +39,7 @@
 			<menu name="Jump to Proj&amp;ect" clean="Jump_to_Project" hotkey="!S"></menu>
 			<menu name="&amp;Jump to Segment" hotkey="!j" clean="Jump_to_Segment"></menu>
 			<menu name="&amp;Menu Editor" func="flan" clean="Menu_Editor"></menu>
+			<menu clean="New_File_Template" name="New File Template"></menu>
 			<menu name="&amp;Next Found" hotkey="F3" clean="Next_Found"></menu>
 			<menu name="Paste" clean="Paste"></menu>
 			<menu name="Personal &amp;Variable List" clean="Personal_Variable_List"></menu>

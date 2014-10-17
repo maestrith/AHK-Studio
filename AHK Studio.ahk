@@ -290,3 +290,4 @@ return
 #Include debug settings.ahk
 #Include Refresh Variable List.ahk
 #Include Proxy Settings.ahk
+#Include New File Template.ahk

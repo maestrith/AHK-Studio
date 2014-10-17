@@ -16,7 +16,8 @@ new(filename=""){
 		if ErrorLevel
 			return
 		filename:=InStr(filename,".ahk")?filename:filename ".ahk"
-		FileAppend,`;New File,%filename%
+		template:=settings.ssn("//template").text?settings.ssn("//template").text:"`;New File"
+		FileAppend,%template%,%filename%
 	}
 	Gui,1:Default
 	Gui,1:TreeView,SysTreeView321
