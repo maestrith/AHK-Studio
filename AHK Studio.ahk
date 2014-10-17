@@ -132,6 +132,7 @@ return
 #Include cut.ahk
 #Include deadend.ahk
 #Include Debug Current Script.ahk
+#Include debug settings.ahk
 #Include debug.ahk
 #Include Default.ahk
 #Include defaultfont.ahk
@@ -197,6 +198,7 @@ return
 #Include move selected lines up.ahk
 #Include Msgbox Creator.ahk
 #Include multisel.ahk
+#Include New File Template.ahk
 #Include New Scintilla Window.ahk
 #Include new segment.ahk
 #Include new.ahk
@@ -217,11 +219,13 @@ return
 #Include Post Multiple Segment Gist.ahk
 #Include previous found.ahk
 #Include Previous Scripts.ahk
+#Include Proxy Settings.ahk
 #Include publish.ahk
 #Include qf.ahk
 #Include Quick Scintilla Code Lookup.ahk
 #Include redo.ahk
 #Include Refresh Code Explorer.ahk
+#Include Refresh Variable List.ahk
 #Include refresh.ahk
 #Include refreshthemes.ahk
 #Include Remove Current Selection.ahk
@@ -287,7 +291,3 @@ return
 #Include window.ahk
 #Include WM COPYDATA.ahk
 #Include Words In Document.ahk
-#Include debug settings.ahk
-#Include Refresh Variable List.ahk
-#Include Proxy Settings.ahk
-#Include New File Template.ahk
