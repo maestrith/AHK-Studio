@@ -161,5 +161,4 @@
 			<menu name="Testing" hotkey="!F1" clean="Testing"></menu></menu>
 		<menu name="Scratch &amp;Pad" clean="Scratch_Pad"></menu>
 	</main>
-	<date>20141010</date>
 </menus>
