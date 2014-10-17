@@ -51,4 +51,7 @@ filecheck(){
 	commands:=new xml("commands","lib\commands.xml")
 	if updatedate
 		commands.Add({path:"Version/Date",text:commandsdate}),commands.save(1)
+	SysGet,Border,33
+	SysGet,Caption,4
+	v.Border:=Border,v.Caption:=Caption
 }

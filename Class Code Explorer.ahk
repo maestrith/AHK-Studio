@@ -77,7 +77,7 @@ class code_explorer{
 				explore.function.Insert(min)
 				code_explorer.functions[ParentFile,min.text]:=min
 			}if !(test.MinIndex())
-			break
+				break
 			lastpos:=pos:=test.MinIndex()+StrLen(min.text)
 		}
 		ubp(csc(),filename)

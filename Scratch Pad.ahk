@@ -22,6 +22,8 @@ Scratch_Pad(){
 		return sc.2101,sc.2201
 	gosub spsave
 	gosub spkill
+	WinGetPos,x,y,w,h,% hwnd([14])
+	settings.Add({path:"Scratch_Pad",text:"x" x " y" y " w" w-(v.Border*2) " h" h-(v.Border*2+v.Caption)})
 	hwnd({rem:14})
 	csc({hwnd:s.main.1.sc})
 	return
@@ -60,7 +62,5 @@ Scratch_Pad(){
 	Loop,3
 		GuiControl,move,Button%A_Index%,% "y" A_GuiHeight-h
 	WinMove,% "ahk_id" v.scratch.sc,,0,0,A_GuiWidth,% A_GuiHeight-h
-	WinGetPos,x,y,,,% hwnd([14])
-	settings.Add({path:"Scratch_Pad",text:"x" x " y" y " w" A_GuiWidth " h" A_GuiHeight})
 	return
 }
