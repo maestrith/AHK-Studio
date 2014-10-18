@@ -1,6 +1,6 @@
 Check_For_Update(){
 	static version
-	version=;auto_version
+	;auto_version
 	sub:=A_NowUTC
 	sub-=A_Now,hh
 	FileGetTime,time,%A_ScriptFullPath%
@@ -20,7 +20,7 @@ Check_For_Update(){
 	ControlSend,55:Edit1,^{Home}
 	return
 	autoupdate:
-	version=;auto_version
+	;auto_version
 	save(),settings.save(1)
 	SplitPath,A_ScriptName,,,ext,name
 	studio:=URLDownloadToVar("http://files.maestrith.com/AHK-Studio/AHK Studio.ahk")
