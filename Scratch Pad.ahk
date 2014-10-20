@@ -8,7 +8,7 @@ Scratch_Pad(){
 	setup(14)
 	Gui,+Resize
 	Gui,Margin,0,0
-	v.scratch:=new s(14,{pos:"w500 h300"}),hotkeys([14],{Esc:"14guiclose","^v":"paste"})
+	v.scratch:=new s(14,{pos:"w500 h300"}),hotkeys([14],{"+Esc":"14guiclose","^v":"paste"})
 	Gui,Add,Button,gsprun,Run
 	Gui,Add,Button,x+10 gspdyna,Dyna Run
 	Gui,Add,Button,x+10 gspkill,Kill Process
