@@ -1,9 +1,11 @@
 about(){
 	about=
 (
-If you wish to use this software, great. If you wish to use this as a part of your project I require payment.
+If you wish to use this software, great.
 
-If you wish to donate to help me with my living expenses please email me at maestrith@gmail.com
+If you wish to use this as a part of your project I require payment.
+
+If you wish to donate to help me with my living expenses please email me at autohotkeystudio@gmail.com
 
 I want to thank all of the people who helped this project become a reality.
 
