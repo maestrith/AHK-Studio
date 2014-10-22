@@ -13,7 +13,7 @@ fix_indent(sc=""){
 	lock:=[],track:=[]
 	if !sc
 		sc:=csc()
-	filename:=files.ssn("//*[@sc='" sc.2357 "']/@filename")
+	filename:=files.ssn("//*[@sc='" sc.2357 "']/@filename").text
 	SplitPath,filename,,,ext
 	if (ext!="ahk")
 		return
