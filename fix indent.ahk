@@ -13,6 +13,10 @@ fix_indent(sc=""){
 	lock:=[],track:=[]
 	if !sc
 		sc:=csc()
+	filename:=files.ssn("//*[@sc='" sc.2357 "']/@filename")
+	SplitPath,filename,,,ext
+	if (ext!="ahk")
+		return
 	sc.2078
 	lines:=sc.2154,pos:=0
 	text:=sc.gettext(),indentwidth:=settings.ssn("//tab").text?settings.ssn("//tab").text:5
