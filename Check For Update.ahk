@@ -13,7 +13,8 @@ Check_For_Update(){
 	http.setRequestHeader("If-Modified-Since",time " GMT"),http.Send(),setup(55)
 	info:=http.responsetext?http.responsetext:"Nothing new to download"
 	Gui,Add,Edit,w500 h500 ReadOnly,%info%
-	Gui,Add,Button,gautoupdate,Update
+	Disable:=info="Nothing new to download"?"Disabled":""
+	Gui,Add,Button,gautoupdate %Disable%,Update
 	Gui,Add,Button,x+5 gextrainfo,Changlog History
 	Gui,Show,,AHK Studio Version %version%
 	sleep,200
