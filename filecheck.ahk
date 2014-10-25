@@ -1,5 +1,8 @@
 filecheck(){
 	commandsdate:=20140917,menusdate:=20141019,scilexerdate:=20140801123000
+	RegRead,proxy,HKEY_CURRENT_USER,Software\Microsoft\Windows\CurrentVersion\Internet Settings,ProxyServer
+	if proxy
+		settings.Add({path:"proxy",text:proxy})
 	if !settings.ssn("//autoadd")
 		for a,b in {60:62,123:125,34:34,39:39,91:93,40:41}
 			settings.add({path:"autoadd/key",att:{trigger:a,add:b},dup:1})
