@@ -104,7 +104,7 @@ class toolbar{
 		if (code=-2){ ;left click
 			button:=this.buttons[NumGet(A_EventInfo+12)]
 			if GetKeyState("Alt","P")&&this.id!=10002
-				addbutton(this)
+				add_button(this)
 			else if GetKeyState("Ctrl","P"){
 				if button
 					new icon_browser([this.buttons[NumGet(A_EventInfo+12)],NumGet(A_EventInfo+12),this.ahkid,this,"toolbar"])

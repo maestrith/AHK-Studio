@@ -91,7 +91,7 @@
 			<menu name="Post &amp;Multiple Segment Gist" clean="Post_Multiple_Segment_Gist"></menu>
 			<menu name="Update Github Info" clean="Update_Github_Info"></menu></menu>
 		<menu name="&amp;Special Menu" clean="Special_Menu">
-			<menu clean="Addbutton" name="Addbutton"></menu>
+			<menu clean="Add_button" name="Add Button"></menu>
 			<menu clean="Bookmarks" name="Bookmarks">
 				<menu clean="Add_Bookmark" name="Add Bookmark" hotkey="!B"></menu>
 				<menu clean="Delete_Bookmark" name="Delete Bookmark"></menu>
@@ -161,5 +161,5 @@
 			<menu name="Testing" hotkey="!F1" clean="Testing"></menu></menu>
 		<menu name="Scratch &amp;Pad" clean="Scratch_Pad"></menu>
 	</main>
-	<date>20141019</date>
+	<date>20141025</date>
 </menus>

@@ -1,4 +1,4 @@
-AddButton(this=""){
+Add_Button(this=""){
 	static bar
 	if !(this){
 		number:=InputBox(csc().sc,"Enter a toolbar number","Enter the toolbar you want to add a button to (1 or 2)","1")
