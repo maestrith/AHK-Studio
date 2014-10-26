@@ -25,7 +25,7 @@ Github_Repository(){
 		node.ParentNode.RemoveChild(node)
 		TV_Delete(TV_GetSelection())
 	}else
-	ControlSend,%focus%,{%A_ThisHotkey%},% hwnd([25])
+		ControlSend,%focus%,{%A_ThisHotkey%},% hwnd([25])
 	return
 	graddfile:
 	Gui,25:Default
@@ -95,7 +95,7 @@ Github_Repository(){
 		lastversion:=vn
 	}if (A_EventInfo=repo){
 		ControlGet,hwnd,hwnd,,SysTreeView321,% hwnd([25])
-		newrepo:=InputBox(hwnd,"Enter the new name for your repository","New Repository name",ssn(verfile.node,"@repo").text)
+		newrepo:=InputBox(hwnd,"Enter the new name for your repository","New Repository name",ssn(verfile.node,"@repo").text),newrepo:=RegExReplace(newrepo," ","-")
 		TV_Modify(TV_GetSelection(),"","Repository Name: " newrepo),verfile.node.SetAttribute("repo",newrepo)
 	}
 	Return
@@ -113,7 +113,7 @@ Github_Repository(){
 		json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%body%","draft":%draft%,"prerelease":%pre%}
 		http.open("PATCH",url),http.Send(json)
 	}else m("No record of this version being uploaded")
-	return
+		return
 	commit:
 	info:=newwin[]
 	draft:=info.draft?"true":"false",pre:=info.pre?"true":"false"

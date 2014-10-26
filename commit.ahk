@@ -93,5 +93,5 @@ commit(commitmsg,version){
 		return 1
 	}
 	Else
-		m("An Error Occured")
+		m("An Error Occured",commit)
 }
