@@ -101,6 +101,10 @@
 			<menu name="Clear Line Status" clean="Clear_Line_Status"></menu>
 			<menu name="Code &amp;Vault" clean="Code_Vault" hotkey="+^F1"></menu>
 			<menu name="Create Launcher" clean="Create_Launcher"></menu>
+			<menu clean="Debug" name="Debug">
+				<menu clean="Step_Into" name="Step Into"></menu>
+				<menu clean="Step_Out" name="Step Out"></menu>
+				<menu clean="Step_Over" name="Step Over"></menu></menu>
 			<menu name="Delete Matching Brace" clean="Delete_Matching_Brace" hotkey="+^Delete"></menu>
 			<menu name="&amp;Find Nearest Brace" clean="Find_Nearest_Brace" hotkey="^!N"></menu>
 			<menu clean="Folding" name="Folding">
@@ -147,6 +151,7 @@
 				<menu name="Remove Spaces From Selected" hotkey="^!U" clean="Remove_Spaces_From_Selected"></menu>
 				<menu name="RemoveSpacesFromAroundCommas" clean="RemoveSpacesFromAroundCommas" hotkey="^E"></menu></menu>
 			<menu name="Split Code" hotkey="!I" clean="Split_Code"></menu>
+			<menu clean="Step_Over" name="Step Over"></menu>
 			<menu name="Tab To Next Comma" clean="Tab_To_Next_Comma" hotkey="^Tab"></menu>
 			<menu name="Tab To Previous Comma" clean="Tab_To_Previous_Comma" hotkey="+^tab"></menu>
 			<menu clean="Test_Plugin" name="Test Plugin" hotkey="!T"></menu>
@@ -161,5 +166,5 @@
 			<menu name="Testing" hotkey="!F1" clean="Testing"></menu></menu>
 		<menu name="Scratch &amp;Pad" clean="Scratch_Pad"></menu>
 	</main>
-	<date>20141025</date>
+	<date>20141028</date>
 </menus>
