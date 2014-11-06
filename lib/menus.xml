@@ -160,11 +160,12 @@
 		<menu name="&amp;Help" clean="Help">
 			<menu name="&amp;About" clean="About"></menu>
 			<menu name="Command Help" hotkey="^H" clean="Command_Help"></menu>
+			<menu clean="Donate" name="Donate"></menu>
 			<menu name="&amp;Forum" clean="Forum"></menu>
 			<menu name="&amp;Help" clean="Help"></menu>
 			<menu name="&amp;Social" clean="Social"></menu>
 			<menu name="Testing" hotkey="!F1" clean="Testing"></menu></menu>
 		<menu name="Scratch &amp;Pad" clean="Scratch_Pad"></menu>
 	</main>
-	<date>20141028</date>
+	<date>20141106</date>
 </menus>

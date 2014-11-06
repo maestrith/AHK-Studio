@@ -1,8 +1,11 @@
 gui(){
+	#MaxHotkeysPerInterval,400
 	Gui,+Resize +hwndhwnd -DPIScale
 	OnMessage(5,"Resize"),hwnd(1,hwnd),ComObjError(0),v.startup:=1,OnMessage(6,"focus"),enter:=[]
 	for a,b in ["+","!","^","~"]
 		Enter[b "Enter"]:="checkqf"
+	for a,b in StrSplit("WheelLeft,WheelRight",",")
+		Enter[b]:="scrollwheel"
 	Enter["^c"]:="copy",hotkeys([1],enter)
 	Gui,Add,StatusBar,hwndsb,StatusBar Info
 	new s(1,{main:1}),v.win2:=win2,v.win3:=win3
