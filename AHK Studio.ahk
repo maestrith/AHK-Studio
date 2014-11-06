@@ -140,6 +140,7 @@ return
 #Include display.ahk
 #Include Dlg Color.ahk
 #Include Dlg Font.ahk
+#Include Donate.ahk
 #Include Duplicate Line.ahk
 #Include duplicates.ahk
 #Include dupsel.ahk
@@ -262,6 +263,7 @@ return
 #Include Sort Selected.ahk
 #Include split code.ahk
 #Include ssn.ahk
+#Include Step Over.ahk
 #Include step.ahk
 #Include stop.ahk
 #Include striperror.ahk
@@ -289,4 +291,3 @@ return
 #Include window.ahk
 #Include WM COPYDATA.ahk
 #Include Words In Document.ahk
-#Include Step Over.ahk
