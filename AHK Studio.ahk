@@ -247,6 +247,7 @@ return
 #Include scintilla code lookup.ahk
 #Include scintilla.ahk
 #Include Scratch Pad.ahk
+#Include ScrollWheel.ahk
 #Include Search Label.ahk
 #Include Select Next Duplicate.ahk
 #Include selectall.ahk
