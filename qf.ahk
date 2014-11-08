@@ -40,7 +40,7 @@ qf(){
 				if index=1
 					sc.2160(start+np,start+np+StrPut(found.1,"utf-8")-1),index++,sc.2232(sc.2166(sc.2008(start+np)))
 				Else
-					sc.2573(start+np+StrPut(found.1,"utf-8")-1,start+np)
+					sc.2573(start+np+StrPut(found.1,"utf-8")-1,start+np),sc.2232(sc.2166(sc.2008(start+np+StrPut(found.1,"utf-8")-1)))
 				if !found.len()
 					break
 				pos+=found.len()
@@ -55,7 +55,7 @@ qf(){
 		if A_Index=1
 			sc.2160(np,np+StrPut(found.1,"utf-8")-1),sc.2232(sc.2166(sc.2008(np)))
 		Else
-			sc.2573(np+StrPut(found.1,"utf-8")-1,np)
+			sc.2573(np+StrPut(found.1,"utf-8")-1,np),sc.2232(sc.2166(sc.2008(np+StrPut(found.1,"utf-8")-1)))
 		pos+=found.len()
 	}
 	if mainsel>=0
