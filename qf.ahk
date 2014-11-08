@@ -52,10 +52,13 @@ qf(){
 		np:=StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-1-(StrPut(SubStr(found.1,1,1),"utf-8")-1)
 		if (begin<np&&!mainsel)
 			mainsel:=sc.2570=1?0:sc.2570
-		if A_Index=1
+		if (A_Index=1){
 			sc.2160(np,np+StrPut(found.1,"utf-8")-1),sc.2232(sc.2166(sc.2008(np)))
-		Else
+			Sleep,1
+		}Else{
 			sc.2573(np+StrPut(found.1,"utf-8")-1,np),sc.2232(sc.2166(sc.2008(np+StrPut(found.1,"utf-8")-1)))
+			Sleep,1
+		}
 		pos+=found.len()
 	}
 	if mainsel>=0
