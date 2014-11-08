@@ -38,7 +38,7 @@ qf(){
 			while,pos:=RegExMatch(search,find1,found,pos){
 				np:=StrPut(SubStr(search,1,found.Pos(1)),"utf-8")-1-(StrPut(SubStr(found.1,1,1),"utf-8")-1)
 				if index=1
-					sc.2160(start+np,start+np+StrPut(found.1,"utf-8")-1),index++
+					sc.2160(start+np,start+np+StrPut(found.1,"utf-8")-1),index++,sc.2232(sc.2166(sc.2008(start+np)))
 				Else
 					sc.2573(start+np+StrPut(found.1,"utf-8")-1,start+np)
 				if !found.len()
@@ -53,7 +53,7 @@ qf(){
 		if (begin<np&&!mainsel)
 			mainsel:=sc.2570=1?0:sc.2570
 		if A_Index=1
-			sc.2160(np,np+StrPut(found.1,"utf-8")-1)
+			sc.2160(np,np+StrPut(found.1,"utf-8")-1),sc.2232(sc.2166(sc.2008(np)))
 		Else
 			sc.2573(np+StrPut(found.1,"utf-8")-1,np)
 		pos+=found.len()
