@@ -6,7 +6,8 @@ Export(){
 	filename:=InStr(filename,".ahk")?filename:filename ".ahk"
 	FileDelete,%filename%
 	FileAppend,% publish(1),%filename%,UTF-8
-	if !indir.text
+	if !indir
 		indir:=settings.Add({path:"export/file",att:{file:ssn(current(1),"@file").text},dup:1})
-	indir.text:=outdir
+	if outdir
+		indir.text:=outdir
 }

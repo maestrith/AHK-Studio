@@ -2,9 +2,6 @@
 ;download complete
 /*
 	TODO LIST:
-	Bkid(){
-		<Bkid> maestrith:  http.setProxy(2,Proxy ":" Port)  on lines 469 (updates), 501 (github), and 6890 (downloading initial files, I believe)
-	}
 	Find/Replace
 	-Current Segment, Current Project, All Files
 	
@@ -292,3 +289,4 @@ return
 #Include window.ahk
 #Include WM COPYDATA.ahk
 #Include Words In Document.ahk
+#Include Reset Zoom.ahk

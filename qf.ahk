@@ -37,10 +37,13 @@ qf(){
 			start:=b.min,search:=sc.textrange(b.min,b.max,1),pos:=1
 			while,pos:=RegExMatch(search,find1,found,pos){
 				np:=StrPut(SubStr(search,1,found.Pos(1)),"utf-8")-1-(StrPut(SubStr(found.1,1,1),"utf-8")-1)
-				if index=1
+				if (index=1){
 					sc.2160(start+np,start+np+StrPut(found.1,"utf-8")-1),index++,sc.2232(sc.2166(sc.2008(start+np)))
-				Else
+					Sleep,1
+				}else{
 					sc.2573(start+np+StrPut(found.1,"utf-8")-1,start+np),sc.2232(sc.2166(sc.2008(start+np+StrPut(found.1,"utf-8")-1)))
+					Sleep,1
+				}
 				if !found.len()
 					break
 				pos+=found.len()
