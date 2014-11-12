@@ -10,9 +10,7 @@ class s{
 			pos.=" Hide"
 		notify:=info.label?info.label:"notify"
 		Gui,%win%:Add,custom,classScintilla hwndsc w500 h400 %pos% +1387331584 g%notify%
-		this.sc:=sc,t:=[]
-		if !info.temp
-			s.ctrl[sc]:=this
+		this.sc:=sc,t:=[],s.ctrl[sc]:=this
 		for a,b in {fn:2184,ptr:2185}
 			this[a]:=DllCall("SendMessageA","UInt",sc,"int",b,int,0,int,0)
 		v.focus:=sc
