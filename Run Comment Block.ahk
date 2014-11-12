@@ -3,9 +3,8 @@ Run_Comment_Block(){
 	if (sc.2127(line)>0){
 		up:=down:=line
 		ss:=sc.2127(line)-tab
-		while,sc.2127(--line)!=ss{
+		while,sc.2127(--line)!=ss
 			up:=line
-		}
 		while,sc.2127(++line)!=ss
 			down:=line
 	}

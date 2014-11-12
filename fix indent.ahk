@@ -1,9 +1,9 @@
 fix_indent(sc=""){
-	Critical
+	skip:=1
 	move_selected:
 	auto_delete:
-	if !sc
-		sc:=csc()
+	if !sc.sc
+		sc:=csc
 	cpos:=sc.2008,begin:=cpos-sc.2128(sc.2166(cpos))
 	fullauto:
 	fix_paste:
@@ -11,17 +11,20 @@ fix_indent(sc=""){
 	Critical
 	next:=0,cpos:=0,indent:=0,add:=0
 	lock:=[],track:=[]
-	if !sc
+	if !WinExist("ahk_id" sc.sc)
 		sc:=csc()
 	filename:=files.ssn("//*[@sc='" sc.2357 "']/@filename").text
+	;ToolTip,% sc.sc "`n" v.scratch.sc,,,2
 	SplitPath,filename,,,ext
-	if (ext!="ahk")
+	if (ext!="ahk"&&v.scratch.sc!=sc.sc&&skip!=1)
 		return
+	skip:=""
+	finext:
 	sc.2078
 	lines:=sc.2154,pos:=0
 	text:=sc.gettext(),indentwidth:=settings.ssn("//tab").text?settings.ssn("//tab").text:5
 	if !text
-		return sc:=""
+		return
 	GuiControl,-Redraw,% sc.sc
 	for a,b in strsplit(text,"`n","`n"){
 		b:=Trim(b),start:=0
@@ -90,6 +93,5 @@ fix_indent(sc=""){
 	sc.2079
 	lastb:=""
 	GuiControl,+Redraw,% sc.sc
-	sc:=""
 	return
 }

@@ -1,5 +1,5 @@
 class s{
-	static ctrl:=[],main:=[]
+	static ctrl:=[],main:=[],temp:=[]
 	__New(window,info){
 		static int,count:=1
 		if !init
@@ -10,7 +10,9 @@ class s{
 			pos.=" Hide"
 		notify:=info.label?info.label:"notify"
 		Gui,%win%:Add,custom,classScintilla hwndsc w500 h400 %pos% +1387331584 g%notify%
-		this.sc:=sc,s.ctrl[sc]:=this,t:=[]
+		this.sc:=sc,t:=[]
+		if !info.temp
+			s.ctrl[sc]:=this
 		for a,b in {fn:2184,ptr:2185}
 			this[a]:=DllCall("SendMessageA","UInt",sc,"int",b,int,0,int,0)
 		v.focus:=sc
@@ -21,13 +23,19 @@ class s{
 		}
 		if info.main
 			s.main.Insert(this)
+		if info.temp
+			s.temp.Insert(this)
 		this.2052(32,0),this.2051(32,0xaaaaaa),this.2050,this.2052(33,0x222222)
 		this.2069(0xAAAAAA),this.2067(1,0),this.2601(0xaa88aa)
-		this.2563(1),this.2614(1),this.2565(1)
-		this.2660(1),this.2458(0)
+		this.2563(1),this.2614(1),this.2565(1),this.2660(1),this.2458(0)
 		this.2036(width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5),this.2124(1),this.2260(1),this.2122(5),this.2132(1)
 		color(this)
 		return this
+	}
+	clear(){
+		for a,b in s.temp
+			DllCall("DestroyWindow",uptr,b.sc)
+		s.temp:=[]
 	}
 	delete(x*){
 		if s.main.MaxIndex()=1
@@ -40,9 +48,6 @@ class s{
 		DllCall("DestroyWindow",uptr,this.sc)
 		csc("Scintilla1").2400
 		Resize()
-	}
-	__Delete(x*){
-		m("should not happen")
 	}
 	__Get(x*){
 		return DllCall(this.fn,"Ptr",this.ptr,"UInt",x.1,int,0,int,0,"Cdecl")

@@ -25,7 +25,8 @@ Scratch_Pad(){
 	WinGetPos,x,y,w,h,% hwnd([14])
 	settings.Add({path:"Scratch_Pad",text:"x" x " y" y " w" w-(v.Border*2) " h" h-(v.Border*2+v.Caption)})
 	hwnd({rem:14})
-	csc({hwnd:s.main.1.sc})
+	;csc({hwnd:s.main.1.sc})
+	csc(1)
 	return
 	sprun:
 	gosub spsave
