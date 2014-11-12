@@ -4,7 +4,7 @@ multisel(){
 	ControlGetFocus,con,% hwnd([1])
 	if !InStr(con,"scintilla"){
 		ControlFocus,,% "ahk_id" sc.sc
-		return 
+		return
 	}
 	if (sc.2102=0&&sc.2570>1){
 		main:=sc.2575

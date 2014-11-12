@@ -4,7 +4,9 @@
 	TODO LIST:
 	Find/Replace
 	-Current Segment, Current Project, All Files
-	
+	bkid(){
+		Scratch Pad is blinky on resize
+	}
 	tidy up script:
 	Toolbars
 	-Make it work on xml natively
@@ -290,3 +292,4 @@ return
 #Include WM COPYDATA.ahk
 #Include Words In Document.ahk
 #Include Reset Zoom.ahk
+#Include case settings.ahk

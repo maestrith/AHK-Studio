@@ -27,6 +27,7 @@
 			<menu name="&amp;Upload" clean="Upload"></menu></menu>
 		<menu name="&amp;Edit" clean="Edit">
 			<menu name="Auto Insert" clean="Auto_Add" hotkey=""></menu>
+			<menu clean="Custom_Case_Settings" name="Custom Case Settings"></menu>
 			<menu name="Compare" hotkey="" clean="Compare"></menu>
 			<menu name="Copy" clean="Copy"></menu>
 			<menu name="Cut" clean="Cut"></menu>
@@ -168,5 +169,5 @@
 			<menu name="Testing" hotkey="!F1" clean="Testing"></menu></menu>
 		<menu name="Scratch &amp;Pad" clean="Scratch_Pad"></menu>
 	</main>
-	<date>20141106</date>
+	<date>20141111</date>
 </menus>
