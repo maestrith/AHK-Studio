@@ -1,8 +1,7 @@
 testing(){
-	Refresh_Variable_List()
 	;add this list to the auto list that pops up for commands
 	/*
-		static stuff:={"~o":"Ãµ","~n":"Ã±"},winhwnd
+		static stuff:={"~o":"õ","~n":"ñ"},winhwnd
 		WinGet,winhwnd,id,A
 		Gui,27:Destroy
 		Gui,27:Default

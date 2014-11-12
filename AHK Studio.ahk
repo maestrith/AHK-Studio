@@ -293,3 +293,4 @@ return
 #Include Words In Document.ahk
 #Include Reset Zoom.ahk
 #Include case settings.ahk
+#Include Run Comment Block.ahk
