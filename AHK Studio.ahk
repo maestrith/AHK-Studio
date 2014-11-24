@@ -2,6 +2,8 @@
 ;download complete
 /*
 	TODO LIST:
+	fix break points
+	Add plugin hotkeys to add to the menu editor.
 	Find/Replace
 	-Current Segment, Current Project, All Files
 	bkid(){
