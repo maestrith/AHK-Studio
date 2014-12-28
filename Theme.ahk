@@ -8,7 +8,7 @@ Theme(info=""){
 	Gui,Add,TreeView,w200 h500 gthemetv AltSubmit
 	theme:=v.theme:=new s(3,{pos:"x+10 w500 h500"}),hotkeys([3],{Delete:"themedelete"})
 	Gui,Add,Button,Hidden x0 y0 gthemetv Default,go
-	Loop,45
+	Loop,80
 		theme.2409(A_Index,1)
 	Gui,Show,% Center(3),Theme Editor
 	theme.2246(0,1),theme.2400,theme.2563(0)

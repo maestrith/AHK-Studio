@@ -33,10 +33,11 @@ tv(tv=0,open=""){
 			while,dd:=dup.item[A_Index-1]
 				dd.SetAttribute("sc",doc)
 		}else
-		sc.2358(0,doc.text),marginwidth(sc),current(1).SetAttribute("last",fn)
+			sc.2358(0,doc.text),marginwidth(sc),current(1).SetAttribute("last",fn)
 		GuiControl,1:+Redraw,% sc.sc
 		setpos(ei),uppos(),history(fn),marginwidth(sc)
 		WinSetTitle,% hwnd([1]),,AHK Studio - %fn%
+		sc.4004("fold",[1])
 	}
 	return
 }

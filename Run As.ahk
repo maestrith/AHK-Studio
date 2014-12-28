@@ -19,3 +19,11 @@ run_as(ahk){
 	Else
 		m("Can not find " ahk)
 }
+run_as_V2(){
+	if !FileExist("v2\autohotkey.exe")
+		return m("Make a folder named v2","Put AutoHotkey.exe (version 2) in it.","Try again")
+	save()
+	file:=Chr(34) ssn(current(1),"@file").text Chr(34)
+	ahk="%A_ScriptDir%\v2\AutoHotkey.exe"
+	Run,%ahk% %file%
+}

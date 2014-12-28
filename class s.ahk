@@ -85,7 +85,8 @@ class s{
 			wp:="int"
 		if IsObject(wparam)
 			wp:="AStr",wparam:=wparam.1
-		info:=DllCall(this.fn,"Ptr",this.ptr,"UInt",code,"int",lparam,wp,wparam,"Cdecl")
+		lp:=(lparam+0)!=""?"Int":"AStr"
+		info:=DllCall(this.fn,"Ptr",this.ptr,"UInt",code,lp,lparam,wp,wparam,"Cdecl")
 		return info
 	}
 	show(){

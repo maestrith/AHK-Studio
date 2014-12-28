@@ -89,8 +89,7 @@ notify(csc=""){
 		style:=sc.2010(sc.2008-2)
 		settimer,context,150
 		c:=fn.ch
-		lll=44,32
-		if c in %lll%
+		if c in 44,32
 			replace()
 	}
 	if (fn.code=2010){

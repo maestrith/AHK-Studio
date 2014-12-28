@@ -99,4 +99,5 @@ gui(){
 	}
 	code_explorer.populate(),hk(1),Refresh_Variable_List()
 	Gui,1:TreeView,SysTreeView321
+	csc().4004("fold",[1])
 }

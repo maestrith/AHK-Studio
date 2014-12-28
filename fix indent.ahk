@@ -16,12 +16,15 @@ fix_indent(sc=""){
 	filename:=files.ssn("//*[@sc='" sc.2357 "']/@filename").text
 	;ToolTip,% sc.sc "`n" v.scratch.sc,,,2
 	SplitPath,filename,,,ext
-	if (ext!="ahk"&&v.scratch.sc!=sc.sc&&skip!=1)
-		return
+	/*
+		if (ext!="ahk"&&v.scratch.sc!=sc.sc&&skip!=1)
+			return
+	*/
 	skip:=""
 	finext:
 	sc.2078
 	lines:=sc.2154,pos:=0
+	GuiControl,+g,% sc.hwnd
 	text:=sc.gettext(),indentwidth:=settings.ssn("//tab").text?settings.ssn("//tab").text:5
 	if !text
 		return
@@ -53,7 +56,7 @@ fix_indent(sc=""){
 			indent--
 		if (SubStr(b,1,2)="*/")
 			indent--
-		if (lock.MinIndex()){
+		if ( lock.MinIndex()) {
 			if (track[a-2]&&track[a-1]="")
 				add--
 		}
@@ -61,7 +64,7 @@ fix_indent(sc=""){
 			if (indent*indentwidth!=sc.2127(a-1))
 				sc.2126(a-1,indent*indentwidth)
 			indent++
-		}else if (SubStr(b,0,1)="{"){
+		} else if (SubStr(b,0,1)="{"){
 			if ((indent+add)*indentwidth!=sc.2127(a-1))
 				sc.2126(a-1,(indent+add)*indentwidth)
 			indent++
@@ -92,6 +95,7 @@ fix_indent(sc=""){
 	}
 	sc.2079
 	lastb:=""
+	GuiControl,+gnotify,% sc.hwnd
 	GuiControl,+Redraw,% sc.sc
 	return
 }

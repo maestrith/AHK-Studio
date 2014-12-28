@@ -121,5 +121,7 @@ qf(){
 	ControlGetFocus,Focus,% hwnd([1])
 	if (Focus="Edit1")
 		goto qf
+	else if(A_ThisHotkey="+Enter")
+		replace()
 	return
 }
