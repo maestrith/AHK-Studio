@@ -137,7 +137,7 @@
 				<menu name="Menu Search" hotkey="!M" clean="Menu_Search"></menu>
 				<menu name="Method Search" hotkey="^[" clean="Method_Search"></menu>
 				<menu name="Omni Search" hotkey="^!O" clean="Omni_Search"></menu>
-				<menu name="Search Label" hotkey="+^;" clean="Search_Label"></menu></menu>
+				<menu name="Search Label" hotkey="+^M" clean="Search_Label"></menu></menu>
 			<menu name="Previous File" hotkey="+!Up" clean="Previous_File"></menu>
 			<menu name="Quick Scintilla Code Lookup" hotkey="+Escape" clean="Quick_Scintilla_Code_Lookup"></menu>
 			<menu name="Refresh Code Explorer" clean="Refresh_Code_Explorer"></menu>
