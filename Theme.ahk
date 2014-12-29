@@ -251,7 +251,7 @@ Theme(info=""){
 		editfont:
 		SetTimer,%A_ThisLabel%,Off
 		if !style:=settings.ssn("//fonts/font[@style='" v.style.style "']")
-			style:=settings.add({path:"fonts/font",att:{style:v.style.style}})
+			style:=settings.add({path:"fonts/font",att:{style:v.style.style},dup:1})
 		font:=settings.ea("//fonts/font[@style='" v.style.style "']")
 		compare:=default:=settings.ea("//fonts/font[@style='5']")
 		for a,b in font
@@ -269,7 +269,7 @@ Theme(info=""){
 		editback:
 		SetTimer,%A_ThisLabel%,Off
 		if !style:=settings.ssn("//fonts/font[@style='" v.style.style "']")
-			style:=settings.add({path:"fonts/font",att:{style:v.style.style}})
+			style:=settings.add({path:"fonts/font",att:{style:v.style.style},dup:1})
 		default:=settings.ea("//fonts/font[@style='5']")
 		font:=settings.ea("//fonts/font[@style='" v.style.style "']")
 		color:=font.Background?font.Background:default.Background
