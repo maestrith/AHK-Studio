@@ -21,8 +21,7 @@
 			<menu name="Run As Ansii" clean="Run_As_Ansii" hotkey="^!A"></menu>
 			<menu name="Run As U32" clean="Run_As_U32"></menu>
 			<menu name="Run As U64" clean="Run_As_U64"></menu>
-			<menu clean="Run_As_V2" name="Run As V2" hotkey=""></menu>
-			<menu clean="Run_Comment_Block" name="Run Comment Block" hotkey=""></menu>
+			<menu clean="Run_Comment_Block" name="Run Comment Block"></menu>
 			<menu name="Run Se&amp;lected Text" clean="Run_Selected_Text"></menu>
 			<menu name="&amp;Save" hotkey="^S" clean="Save"></menu>
 			<menu name="Set &amp;As Default Editor" clean="Set_As_Default_Editor"></menu>
@@ -63,6 +62,7 @@
 			<menu name="Autocomplete Enter Newline" clean="Autocomplete_Enter_Newline"></menu>
 			<menu name="Center Caret" clean="Center_Caret"></menu>
 			<menu name="Check For Edited Files On Focus" clean="Check_For_Edited_Files_On_Focus"></menu>
+			<menu clean="Disable_Auto_Indent_For_Non_Ahk_Files" name="Disable Auto Indent For Non Ahk Files"></menu>
 			<menu clean="Disable_Autosave" name="Disable Autosave"></menu>
 			<menu clean="Disable_Backup" name="Disable Backup"></menu>
 			<menu clean="Disable_Variable_List" name="Disable Variable List"></menu>
@@ -137,7 +137,7 @@
 				<menu name="Menu Search" hotkey="!M" clean="Menu_Search"></menu>
 				<menu name="Method Search" hotkey="^[" clean="Method_Search"></menu>
 				<menu name="Omni Search" hotkey="^!O" clean="Omni_Search"></menu>
-				<menu name="Search Label" hotkey="+^M" clean="Search_Label"></menu></menu>
+				<menu name="Search Label" hotkey="+^;" clean="Search_Label"></menu></menu>
 			<menu name="Previous File" hotkey="+!Up" clean="Previous_File"></menu>
 			<menu name="Quick Scintilla Code Lookup" hotkey="+Escape" clean="Quick_Scintilla_Code_Lookup"></menu>
 			<menu name="Refresh Code Explorer" clean="Refresh_Code_Explorer"></menu>
@@ -171,5 +171,4 @@
 			<menu name="Testing" hotkey="!F1" clean="Testing"></menu></menu>
 		<menu name="Scratch &amp;Pad" clean="Scratch_Pad"></menu>
 	</main>
-	<date>201411111</date>
 </menus>

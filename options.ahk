@@ -29,7 +29,7 @@ options(){
 		if !IsObject(List[a]){
 			d[list[a]](b)
 	}Else if IsObject(List[a])&&b
-	d[list[a].1](List[a].2,List[a].3)
+		d[list[a].1](List[a].2,List[a].3)
 	else if IsObject(List[a])&&onoff=0
 		d[list[a].1](0)
 	if (A_ThisLabel="Hide_Code_Explorer"||A_ThisLabel="Hide_Project_Explorer")
@@ -61,6 +61,7 @@ options(){
 	Check_For_Edited_Files_On_Focus:
 	Auto_Advance_Quote:
 	Auto_Set_Area_On_Quick_Find:
+	Disable_Auto_Indent_For_Non_Ahk_Files:
 	onoff:=settings.ssn("//options/@ " A_ThisLabel).text?0:1
 	att:=[],att[A_ThisLabel]:=onoff
 	v.options[A_ThisLabel]:=onoff
