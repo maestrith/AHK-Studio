@@ -122,7 +122,10 @@ notify(csc=""){
 			SetTimer,sendenter,100
 		Else{
 			v.word:=StrGet(fn.text,"utf-8")			
-			SetTimer,automenu,100			
+			if (v.word="#Include")
+				SetTimer,getinclude,-200
+			else
+				SetTimer,automenu,100			
 		}
 	}
 	if (fn.code=2001){

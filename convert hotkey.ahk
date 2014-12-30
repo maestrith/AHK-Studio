@@ -3,5 +3,5 @@ convert_hotkey(key){
 	for a,b in [{Shift:"+"},{Ctrl:"^"},{Alt:"!"}]
 		for c,d in b
 			key:=RegExReplace(key,"\" d,c "+")
-	return key	
+	return key
 }
