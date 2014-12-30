@@ -1,5 +1,5 @@
 filecheck(){
-	commandsdate:=20140917,menusdate:=20141228,scilexerdate:=20141229020351
+	commandsdate:=20140917,menusdate:=20141228,scilexerdate:=20141229193921
 	RegRead,proxy,HKEY_CURRENT_USER,Software\Microsoft\Windows\CurrentVersion\Internet Settings,ProxyServer
 	if proxy
 		settings.Add({path:"proxy",text:proxy})
