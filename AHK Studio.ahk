@@ -12,7 +12,6 @@
 	samardac(){
 		Is it possible to make different styles for function that you use in code and for function that you define?
 		Rename include files from within Studio
-		May be make Derective work this way? For example When you type #Include opens dialog to select file to include?
 	}
 	tidy up script:
 	Toolbars
