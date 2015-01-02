@@ -6,6 +6,9 @@
 	Add plugin hotkeys to add to the menu editor.
 	Find/Replace
 	-Current Segment, Current Project, All Files
+	maestrith(){
+		have it so that when you type in the name of a class then . it will bring up a list of the methods
+	}
 	bkid(){
 		Scratch Pad is blinky on resize
 	}

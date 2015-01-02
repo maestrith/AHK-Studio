@@ -17,6 +17,10 @@ notify(csc=""){
 		return
 	sc:=csc?csc:csc()
 	csc:=""
+	if(fn.code=2000){
+		t(A_Now)
+		;sc.flan()
+	}
 	if (fn.code=2002){
 		Gui,1:TreeView,% hwnd("fe")
 		list:=files.sn("//*[@file='" current(3).file "']")
