@@ -101,6 +101,7 @@ return
 #Include Back.ahk
 #Include brace.ahk
 #Include bracesetup.ahk
+#Include case settings.ahk
 #Include center.ahk
 #Include cgp.ahk
 #Include changehotkey.ahk
@@ -170,6 +171,7 @@ return
 #Include full backup.ahk
 #Include function search.ahk
 #Include get access.ahk
+#Include Get_Include.ahk
 #Include getpos.ahk
 #Include Github Repository.ahk
 #Include global.ahk
@@ -242,10 +244,12 @@ return
 #Include Remove Spaces From Selected.ahk
 #Include replace selected.ahk
 #Include replace.ahk
+#Include Reset Zoom.ahk
 #Include resize.ahk
 #Include restore current file.ahk
 #Include rgb.ahk
 #Include Run As.ahk
+#Include Run Comment Block.ahk
 #Include run program.ahk
 #Include run selected text.ahk
 #Include run.ahk
@@ -301,7 +305,3 @@ return
 #Include window.ahk
 #Include WM COPYDATA.ahk
 #Include Words In Document.ahk
-#Include Reset Zoom.ahk
-#Include case settings.ahk
-#Include Run Comment Block.ahk
-#Include Get_Include.ahk
