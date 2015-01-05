@@ -56,7 +56,6 @@ if (AID:=OtherInstance()){
 	ExitApp
 }
 SetWorkingDir,%A_ScriptDir%
-
 global v:=[],settings,files,menus,commands,positions,vversion,access_token,vault,preset,cexp,scintilla,bookmarks
 settings:=new xml("settings","lib\settings.xml"),files:=new xml("files"),menus:=new xml("menus","lib\menus.xml"),commands:=new xml("commands","lib\commands.xml"),cexp:=new xml("code_explorer"),bookmarks:=new xml("bookmarks","lib\bookmarks.xml")
 positions:=new xml("positions","lib\positions.xml"),vversion:=new xml("version","lib\version.xml"),access_token:=settings.ssn("//access_token").text
@@ -85,7 +84,8 @@ if (openfile){
 goto plugins
 return
 GuiDropFiles:
-tv(open(A_GuiEvent),1)
+open(A_GuiEvent),openfile:=StrSplit(A_GuiEvent,"`n").1,main:=files.ssn("//main[@file='" openfile "']")
+tv(ssn(main.firstchild,"@tv").text)
 return
 #Include %A_ScriptDir%
 #Include about.ahk
