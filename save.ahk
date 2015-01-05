@@ -30,7 +30,10 @@ save(option=""){
 			FileDelete,%filename%
 		}
 		StringReplace,text,text,`n,`r`n,All
-		FileAppend,%text%,%filename%,utf-8
+		encoding:=files.ssn("//file[@file='" filename "']/@encoding").text,encoding:=encoding?encoding:"UTF-8"
+		if(encoding!="UTF-16"&&RegExMatch(text,"[^\x00-\x7F]"))
+			encoding:="UTF-16"
+		FileAppend,%text%,%filename%,%encoding%
 		Gui,1:TreeView,% hwnd("fe")
 		multi:=files.sn("//file[@file='" filename "']")
 		while,mm:=multi.item[A_Index-1]

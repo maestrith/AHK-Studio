@@ -84,11 +84,11 @@ open(filelist="",show=""){
 		SplitPath,newfn,fn
 		child:=TV_Add(fn,root,"Sort")
 		top:=files.ssn("//main[@file='" filename "']")
-		new:=files.under({under:top,node:"file",att:{file:newfn,include:b,tv:child,filename:fn,skip:skip}})
+		ffff:=FileOpen(newfn,"RW"),encoding:=ffff.pos=3?"UTF-8":ffff.pos=2?"UTF-16":"CP0"
+		new:=files.under({under:top,node:"file",att:{file:newfn,include:b,tv:child,filename:fn,skip:skip,encoding:encoding}})
 		FileGetTime,time,%newfn%
 		new.SetAttribute("time",time)
 		v.filelist[newfn]:=1
-		ffff:=FileOpen(newfn,"RW","utf-8")
 		text:=ffff.read(ffff.length)
 		StringReplace,text,text,`r`n,`n,All
 		update({file:newfn,text:text,load:1})

@@ -6,7 +6,7 @@
 			<menu name="&amp;Close" clean="Close" hotkey=""></menu>
 			<menu name="Co&amp;mpile" clean="Compile" hotkey=""></menu>
 			<menu name="Create S&amp;egment From Selection" hotkey="+^N" clean="Create_Segment_From_Selection"></menu>
-			<menu name="Debug Current Script" clean="Debug_Current_Script" hotkey="^!R" last="1"></menu>
+			<menu name="Debug Current Script" clean="Debug_Current_Script" hotkey="^!R"></menu>
 			<menu name="E&amp;xit" clean="Exit" hotkey=""></menu>
 			<menu name="Export" clean="Export"></menu>
 			<menu name="&amp;Full Backup" clean="Full_Backup" hotkey=""></menu>
