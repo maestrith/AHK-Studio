@@ -10,7 +10,7 @@ open(filelist="",show=""){
 			TV_Modify(tv,"Select Vis Focus")
 			return
 		}
-		fff:=FileOpen(filename,"RW","utf-8")
+		fff:=FileOpen(filename,"RW")
 		file1:=file:=fff.read(fff.length)
 		gosub,addfile
 		Gui,1:TreeView,SysTreeView321
@@ -23,7 +23,7 @@ open(filelist="",show=""){
 		for a,b in StrSplit(filelist,"`n"){
 			if files.ssn("//main[@file='" b "']")
 				continue
-			fff:=FileOpen(b,"RW","utf-8")
+			fff:=FileOpen(b,"RW")
 			file1:=file:=fff.read(fff.length)
 			filename:=b
 			gosub,addfile
@@ -45,8 +45,8 @@ open(filelist="",show=""){
 	root:=TV_Add(fn)
 	StringReplace,file,file,`r`n,`n,All
 	StringReplace,file,file,`r,`n,All
-	file1:=file
-	new:=files.under({under:top,node:"file",att:{file:filename,tv:root,filename:fn}})
+	file1:=file,encoding:=ffff.pos=3?"UTF-8":ffff.pos=2?"UTF-16":"CP0"
+	new:=files.under({under:top,node:"file",att:{file:filename,tv:root,filename:fn,encoding:encoding}})
 	FileGetTime,time,%filename%
 	new.SetAttribute("time",time)
 	for a,b in strsplit(file1,"`n"){

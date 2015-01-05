@@ -87,6 +87,7 @@ GuiDropFiles:
 open(A_GuiEvent),openfile:=StrSplit(A_GuiEvent,"`n").1,main:=files.ssn("//main[@file='" openfile "']")
 tv(ssn(main.firstchild,"@tv").text)
 return
+;¯\_(ツ)_/¯
 #Include %A_ScriptDir%
 #Include about.ahk
 #Include add bookmark.ahk
