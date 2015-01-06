@@ -1,5 +1,4 @@
 testing(flan:=""){
-	m(auto_update())
 	/*
 		list:=files.sn("//*[@encoding='CP0']")
 		while,ll:=list.Item[A_Index-1]
