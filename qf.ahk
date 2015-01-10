@@ -11,7 +11,7 @@ qf(){
 		return sc.2606,sc.2169()
 	}
 	pre:="O",find1:=""
-	find1:=v.options.regex?find:"\Q" find "\E"
+	find1:=v.options.regex?find:"\Q" RegExReplace(find, "\\E", "\E\\E\Q") "\E"
 	pre.=v.options.greed?"":"U"
 	pre.=v.options.case_sensitive?"":"i"
 	pre.=v.options.multi_line?"m`n":""
