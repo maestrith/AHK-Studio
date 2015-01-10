@@ -15,7 +15,7 @@ qf(){
 	pre.=v.options.greed?"":"U"
 	pre.=v.options.case_sensitive?"":"i"
 	pre.=v.options.multi_line?"m`n":""
-	find1:=pre ")(" find1 ")"
+	find1:=pre ")" find1 ""
 	if (find=""||find="."||find=".*"||find="\"){
 		sc.2571
 		return
@@ -36,12 +36,12 @@ qf(){
 		for a,b in MinMax{
 			start:=b.min,search:=sc.textrange(b.min,b.max,1),pos:=1
 			while,pos:=RegExMatch(search,find1,found,pos){
-				np:=StrPut(SubStr(search,1,found.Pos(1)),"utf-8")-1-(StrPut(SubStr(found.1,1,1),"utf-8")-1)
+				np:=StrPut(SubStr(search,1,found.Pos(0)),"utf-8")-1-(StrPut(SubStr(found.0,1,1),"utf-8")-1)
 				if (index=1){
-					sc.2160(start+np,start+np+StrPut(found.1,"utf-8")-1),index++,sc.2232(sc.2166(sc.2008(start+np)))
+					sc.2160(start+np,start+np+StrPut(found.0,"utf-8")-1),index++,sc.2232(sc.2166(sc.2008(start+np)))
 					Sleep,1
 				}else{
-					sc.2573(start+np+StrPut(found.1,"utf-8")-1,start+np),sc.2232(sc.2166(sc.2008(start+np+StrPut(found.1,"utf-8")-1)))
+					sc.2573(start+np+StrPut(found.0,"utf-8")-1,start+np),sc.2232(sc.2166(sc.2008(start+np+StrPut(found.0,"utf-8")-1)))
 					Sleep,1
 				}
 				if !found.len()
@@ -52,14 +52,14 @@ qf(){
 	}
 	Else
 	while,pos:=RegExMatch(text,find1,found,pos){
-		np:=StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-1-(StrPut(SubStr(found.1,1,1),"utf-8")-1)
+		np:=StrPut(SubStr(text,1,found.Pos(0)),"utf-8")-1-(StrPut(SubStr(found.0,1,1),"utf-8")-1)
 		if (begin<np&&!mainsel)
 			mainsel:=sc.2570=1?0:sc.2570
 		if (A_Index=1){
-			sc.2160(np,np+StrPut(found.1,"utf-8")-1),sc.2232(sc.2166(sc.2008(np)))
+			sc.2160(np,np+StrPut(found.0,"utf-8")-1),sc.2232(sc.2166(sc.2008(np)))
 			Sleep,1
 		}Else{
-			sc.2573(np+StrPut(found.1,"utf-8")-1,np),sc.2232(sc.2166(sc.2008(np+StrPut(found.1,"utf-8")-1)))
+			sc.2573(np+StrPut(found.0,"utf-8")-1,np),sc.2232(sc.2166(sc.2008(np+StrPut(found.0,"utf-8")-1)))
 			Sleep,1
 		}
 		pos+=found.len()

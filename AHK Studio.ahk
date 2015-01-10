@@ -15,6 +15,7 @@
 	samardac(){
 		Is it possible to make different styles for function that you use in code and for function that you define?
 		Rename include files from within Studio
+		Can not find command to find and replace multiple items in all included documents, help me pleas.
 	}
 	tidy up script:
 	Toolbars
