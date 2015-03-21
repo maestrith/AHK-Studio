@@ -1,4 +1,0 @@
-deadend(){
-	deadend:
-	return
-}
