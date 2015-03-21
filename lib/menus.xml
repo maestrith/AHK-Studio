@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<menus>
+	<main>
+		<menu name="&amp;File" clean="File">
+			<menu clean="Auto_Update" name="Auto Update"></menu>
+			<menu name="Chec&amp;k For Update" clean="Check_For_Update" hotkey=""></menu>
+			<menu name="&amp;Close" clean="Close"></menu>
+			<menu name="Co&amp;mpile" clean="Compile" hotkey=""></menu>
+			<menu name="Create S&amp;egment From Selection" hotkey="+^N" clean="Create_Segment_From_Selection"></menu>
+			<menu name="Debug Current Script" clean="Debug_Current_Script" hotkey="!R"></menu>
+			<menu name="E&amp;xit" clean="Exit" hotkey=""></menu>
+			<menu name="Export" clean="Export"></menu>
+			<menu name="&amp;Full Backup" clean="Full_Backup" hotkey=""></menu>
+			<menu name="&amp;New" hotkey="^N" clean="New"></menu>
+			<menu name="New Se&amp;gment" clean="New_Segment" hotkey=""></menu>
+			<menu name="&amp;Open" clean="Open" hotkey="^O"></menu>
+			<menu name="Open Fol&amp;der" clean="Open_Folder" hotkey=""></menu>
+			<menu name="Pre&amp;vious Scripts" clean="Previous_Scripts"></menu>
+			<menu name="&amp;Publish" clean="Publish"></menu>
+			<menu name="Remove Segmen&amp;t" hotkey="" clean="Remove_Segment"></menu>
+			<menu name="&amp;Run" clean="Run" hotkey=""></menu>
+			<menu name="Run As Ansii" clean="Run_As_Ansii" hotkey="^!A"></menu>
+			<menu name="Run As U32" clean="Run_As_U32"></menu>
+			<menu name="Run As U64" clean="Run_As_U64"></menu>
+			<menu clean="Run_Comment_Block" name="Run Comment Block"></menu>
+			<menu name="Run Se&amp;lected Text" clean="Run_Selected_Text"></menu>
+			<menu name="&amp;Save" hotkey="^S" clean="Save"></menu>
+			<menu clean="Save_As" name="Save As"></menu>
+			<menu name="Set &amp;As Default Editor" clean="Set_As_Default_Editor"></menu>
+			<menu name="&amp;Upload" clean="Upload"></menu></menu>
+		<menu name="&amp;Edit" clean="Edit">
+			<menu name="Auto Insert" clean="Auto_Add" hotkey=""></menu>
+			<menu name="Compare" hotkey="" clean="Compare"></menu>
+			<menu name="Copy" clean="Copy"></menu>
+			<menu clean="Custom_Case_Settings" name="Custom Case Settings"></menu>
+			<menu name="Cut" clean="Cut"></menu>
+			<menu clean="Debug_Settings" name="Debug Settings"></menu>
+			<menu clean="Default_Project_Folder" name="Default Project Folder"></menu>
+			<menu name="&amp;Duplicate Line" hotkey="F2" clean="Duplicate_Line"></menu>
+			<menu name="Ed&amp;it Replacements" clean="Edit_Replacements"></menu>
+			<menu name="&amp;Find" clean="Find" hotkey="^F"></menu>
+			<menu clean="Find_Replace" name="Find Replace"></menu>
+			<menu name="Fi&amp;x Indent" hotkey="" clean="Fix_Indent"></menu>
+			<menu name="Ft&amp;p Servers" clean="Ftp_Servers"></menu>
+			<menu clean="Go_To_Line" name="Go To Line"></menu>
+			<menu name="Jump to Proj&amp;ect" clean="Jump_to_Project" hotkey="!S"></menu>
+			<menu name="&amp;Jump to Segment" hotkey="!j" clean="Jump_to_Segment"></menu>
+			<menu name="&amp;Menu Editor" func="flan" clean="Menu_Editor"></menu>
+			<menu clean="New_File_Template" name="New File Template"></menu>
+			<menu name="&amp;Next Found" hotkey="F3" clean="Next_Found"></menu>
+			<menu name="Paste" clean="Paste"></menu>
+			<menu name="Personal &amp;Variable List" clean="Personal_Variable_List"></menu>
+			<menu name="Previous Found" hotkey="+F3" clean="Previous_Found"></menu>
+			<menu clean="Proxy_Settings" name="Proxy Settings"></menu>
+			<menu name="&amp;Quick Find" hotkey="!q" clean="Quick_Find"></menu>
+			<menu name="Red&amp;o" clean="Redo"></menu>
+			<menu name="Replace &amp;Selected" hotkey="F1" clean="Replace_Selected"></menu>
+			<menu clean="Reset_Zoom" name="Reset Zoom"></menu>
+			<menu name="&amp;Restore Current File" clean="Restore_Current_File"></menu>
+			<menu name="&amp;Theme" clean="Theme"></menu>
+			<menu name="Togg&amp;le Comment Line" hotkey="^J" clean="Toggle_Comment_Line"></menu>
+			<menu name="&amp;Undo" clean="Undo"></menu>
+			<menu name="Widths" clean="Widths"></menu></menu>
+		<menu name="&amp;Options" clean="Options">
+			<menu name="Auto Advance" clean="Auto_Advance"></menu>
+			<menu clean="Auto_Close_Find" name="Auto Close Find"></menu>
+			<menu name="Auto Set Area On Quick Find" clean="Auto_Set_Area_On_Quick_Find"></menu>
+			<menu name="Autocomplete Enter Newline" clean="Autocomplete_Enter_Newline"></menu>
+			<menu name="Center Caret" clean="Center_Caret"></menu>
+			<menu name="Check For Edited Files On Focus" clean="Check_For_Edited_Files_On_Focus"></menu>
+			<menu clean="Disable_Auto_Indent_For_Non_Ahk_Files" name="Disable Auto Indent For Non Ahk Files"></menu>
+			<menu clean="Disable_Autosave" name="Disable Autosave"></menu>
+			<menu clean="Disable_Backup" name="Disable Backup"></menu>
+			<menu clean="Disable_Folders_In_Project_Explorer" name="Disable Folders In Project Explorer"></menu>
+			<menu name="Disable Include Dialog" clean="Disable_Include_Dialog"></menu>
+			<menu name="Disable Line Status" clean="Disable_Line_Status"></menu>
+			<menu clean="Disable_Variable_List" name="Disable Variable List"></menu>
+			<menu name="Enable Close On Save" clean="Enable_Close_On_Save"></menu>
+			<menu name="Force Utf8" clean="Force_Utf8"></menu>
+			<menu name="Hide Code Explorer" clean="Hide_Code_Explorer"></menu>
+			<menu clean="Hide_Indentation_Guides" name="Hide Indentation Guides"></menu>
+			<menu name="Hide Project Explorer" clean="Hide_Project_Explorer"></menu>
+			<menu name="Highlight Current Area" clean="Highlight_Current_Area"></menu>
+			<menu name="Show Caret Line" clean="Show_Caret_Line"></menu>
+			<menu name="Show EOL" clean="Show_EOL"></menu>
+			<menu name="Show WhiteSpace" clean="Show_WhiteSpace"></menu>
+			<menu name="Small &amp;Icons" clean="Small_Icons"></menu>
+			<menu name="Tab Width" clean="Tab_Width"></menu>
+			<menu name="Virtual Space" clean="Virtual_Space"></menu>
+			<menu name="Warn Overwrite On Export" clean="Warn_Overwrite_On_Export"></menu>
+			<menu name="&amp;Word Wrap" clean="Word_Wrap"></menu></menu>
+		<menu name="Q&amp;uick Find Settings" clean="Quick_Find_Settings">
+			<menu name="&amp;Case Sensitive" clean="Case_Sensitive"></menu>
+			<menu name="Cle&amp;ar Selection" clean="Clear_Selection" hotkey="^F2"></menu>
+			<menu name="Greed" clean="Greed" hotkey="!G"></menu>
+			<menu name="Multi Line" clean="Multi-Line"></menu>
+			<menu name="&amp;Regex" clean="Regex"></menu>
+			<menu name="&amp;Set Selection" clean="Set_Selection" hotkey="^F1"></menu></menu>
+		<menu name="&amp;Auto Indent" clean="Auto_Indent">
+			<menu name="F&amp;ix Next Line" clean="Fix_Next_Line"></menu>
+			<menu name="&amp;Full Auto" clean="Full_Auto"></menu></menu>
+		<menu name="&amp;Tools" clean="Tools">
+			<menu name="Github Repository" hotkey="^G" clean="Github_Repository"></menu>
+			<menu name="Ms&amp;gBox Creator" clean="MsgBox_Creator"></menu>
+			<menu name="Post &amp;All In One Gist" clean="Post_All_In_One_Gist"></menu>
+			<menu name="Post &amp;Multiple Segment Gist" clean="Post_Multiple_Segment_Gist"></menu>
+			<menu name="Update Github Info" clean="Update_Github_Info"></menu></menu>
+		<menu name="&amp;Special Menu" clean="Special_Menu">
+			<menu clean="Add_button" name="Add Button"></menu>
+			<menu name="Add Selected To Personal Variables" clean="Add_Selected_To_Personal_Variables"></menu>
+			<menu clean="Bookmarks" name="Bookmarks">
+				<menu clean="Add_Bookmark" name="Add Bookmark" hotkey="!B"></menu>
+				<menu clean="Delete_Bookmark" name="Delete Bookmark"></menu>
+				<menu clean="Jump_To_Next_Bookmark" name="Jump To Next Bookmark"></menu>
+				<menu clean="Jump_To_Previous_Bookmark" name="Jump To Previous Bookmark"></menu>
+				<menu clean="Manage_Bookmarks" name="Manage Bookmarks" hotkey="^M"></menu></menu>
+			<menu name="Clear Line Status" clean="Clear_Line_Status"></menu>
+			<menu name="Code &amp;Vault" clean="Code_Vault" hotkey="+^F1"></menu>
+			<menu name="Create Launcher" clean="Create_Launcher"></menu>
+			<menu clean="Debug" name="Debug">
+				<menu clean="Step_Into" name="Step Into"></menu>
+				<menu clean="Step_Out" name="Step Out"></menu>
+				<menu clean="Step_Over" name="Step Over"></menu></menu>
+			<menu name="Delete Matching Brace" clean="Delete_Matching_Brace" hotkey="+^Delete"></menu>
+			<menu name="&amp;Find Nearest Brace" clean="Find_Nearest_Brace" hotkey="^!N"></menu>
+			<menu clean="Folding" name="Folding">
+				<menu clean="Fold_All" name="Fold All"></menu>
+				<menu clean="Fold_Current_Level" name="Fold Current Level"></menu>
+				<menu clean="Fold_Level_X" name="Fold Level X"></menu>
+				<menu clean="Unfold_All" name="Unfold All"></menu>
+				<menu clean="Unfold_Current_Level" name="Unfold Current Level"></menu>
+				<menu clean="Unfold_Level_X" name="Unfold Level X"></menu></menu>
+			<menu name="Hide Menu" clean="Hide_Menu"></menu>
+			<menu name="Highlight to Matching Brace" clean="Highlight_to_Matching_Brace" hotkey="^!M"></menu>
+			<menu name="Insert Code Vault Text" hotkey="+^Escape" clean="Insert_Code_Vault_Text"></menu>
+			<menu clean="Jump_To" name="Jump To">
+				<menu clean="Jump_To_Class" name="Jump To Class"></menu>
+				<menu clean="Jump_To_First_Available" name="Jump To First Available" hotkey="!F1"></menu>
+				<menu clean="Jump_To_Function" name="Jump To Function"></menu>
+				<menu clean="Jump_To_Include" name="Jump To Include"></menu>
+				<menu clean="Jump_To_Label" name="Jump To Label"></menu>
+				<menu clean="Jump_To_Method" name="Jump To Method" hotkey=""></menu></menu>
+			<menu name="Move Selected Lines Down" hotkey="+^Down" clean="Move_Selected_Lines_Down"></menu>
+			<menu name="Move Selected Lines Up" hotkey="+^Up" clean="Move_Selected_Lines_Up"></menu>
+			<menu clean="Navigation" name="Navigation">
+				<menu clean="Back" name="Back" hotkey="!Left"></menu>
+				<menu clean="Forward" name="Forward" hotkey="!Right"></menu></menu>
+			<menu name="Next File" hotkey="+!Down" clean="Next_File"></menu>
+			<menu clean="Omni-Search" name="Omni-Search">
+				<menu clean="Add_Function_Call" name="Add Function Call" hotkey="^="></menu>
+				<menu clean="Bookmark_Search" name="Bookmark Search" hotkey="+^3"></menu>
+				<menu name="Class Search" hotkey="+^[" clean="Class_Search"></menu>
+				<menu name="File Search" hotkey="+!O" clean="File_Search"></menu>
+				<menu name="Function Search" hotkey="+^9" clean="Function_Search"></menu>
+				<menu name="Hotkey Search" hotkey="+^7" clean="Hotkey_Search"></menu>
+				<menu name="Menu Search" hotkey="!M" clean="Menu_Search"></menu>
+				<menu name="Method Search" hotkey="^[" clean="Method_Search"></menu>
+				<menu name="Omni Search" hotkey="^!O" clean="Omni_Search"></menu>
+				<menu name="Search Label" hotkey="+^;" clean="Search_Label"></menu></menu>
+			<menu name="Previous File" hotkey="+!Up" clean="Previous_File"></menu>
+			<menu name="Quick Scintilla Code Lookup" hotkey="+Escape" clean="Quick_Scintilla_Code_Lookup"></menu>
+			<menu name="Refresh Code Explorer" clean="Refresh_Code_Explorer"></menu>
+			<menu clean="Refresh_Variable_List" name="Refresh Variable List"></menu>
+			<menu name="Remove Current Selection" hotkey="^F3" clean="Remove_Current_Selection"></menu>
+			<menu name="&amp;Scintilla Code Lookup" hotkey="F6" clean="Scintilla_Code_Lookup"></menu>
+			<menu name="Select Next Duplicate" clean="Select_Next_Duplicate" hotkey="!F3"></menu>
+			<menu name="Show Menu" clean="Show_Menu"></menu>
+			<menu name="Sho&amp;w Scintilla Code In Line" hotkey="F4" clean="Show_Scintilla_Code_In_Line"></menu>
+			<menu name="S&amp;ort Selected" clean="Sort_Selected"></menu>
+			<menu clean="Spacing" name="Spacing">
+				<menu name="Add Space After Commas" clean="Add_Space_After_Commas"></menu>
+				<menu name="Add Space Before And After Commas" clean="Add_Space_Before_And_After_Commas"></menu>
+				<menu name="Add Space Before Commas" clean="Add_Space_Before_Commas"></menu>
+				<menu name="Remove Spaces From Selected" hotkey="^!U" clean="Remove_Spaces_From_Selected"></menu>
+				<menu name="RemoveSpacesFromAroundCommas" clean="RemoveSpacesFromAroundCommas" hotkey="^E"></menu></menu>
+			<menu name="Split Code" hotkey="!I" clean="Split_Code"></menu>
+			<menu clean="Step_Over" name="Step Over"></menu>
+			<menu name="Tab To Next Comma" clean="Tab_To_Next_Comma" hotkey="^Tab"></menu>
+			<menu name="Tab To Previous Comma" clean="Tab_To_Previous_Comma" hotkey="+^tab"></menu>
+			<menu clean="Test_Plugin" name="Test Plugin" hotkey="!T"></menu>
+			<menu name="Toggle &amp;Multiple Line Comment" hotkey="+F1" clean="Toggle_Multiple_Line_Comment"></menu>
+			<menu name="Words In Document" clean="Words_In_Document" hotkey="!W"></menu></menu>
+		<menu name="&amp;Help" clean="Help">
+			<menu name="&amp;About" clean="About" hotkey="^!9"></menu>
+			<menu name="Command Help" hotkey="^H" clean="Command_Help"></menu>
+			<menu clean="Donate" name="Donate"></menu>
+			<menu name="&amp;Forum" clean="Forum"></menu>
+			<menu name="&amp;Help" clean="Help"></menu>
+			<menu name="&amp;Social" clean="Social"></menu>
+			<menu name="Testing" hotkey="!F2" clean="Testing"></menu></menu>
+		<menu name="Scratch &amp;Pad" clean="Scratch_Pad"></menu>
+		<menu clean="Plugin" name="P&amp;lugin">
+			<menu clean="Make_One_Line" name="Make One Line" option="" plugin="plugins\All One Line.ahk" hotkey="!["></menu>
+			<menu clean="Auto_Menu_Adder" name="Auto Menu Adder" option="" plugin="plugins\Auto Menu Adder.ahk"></menu>
+			<menu clean="Capture_Gif" name="Capture Gif" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="GeekDude_Paste" name="GeekDude Paste" option="" plugin="plugins\Geekdude Paste.ahk"></menu>
+			<menu clean="Paste_Clipboard" name="Paste Clipboard" option="Clipboard" plugin="plugins\Geekdude Paste.ahk"></menu>
+			<menu clean="Mark_All_Files_For_Update" name="Mark All Files For Update" option="" plugin="plugins\Mark All Files For Update.ahk"></menu>
+			<menu clean="Upload_Menus" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu></menu>
+	</main>
+	<date>20150319</date>
+</menus>

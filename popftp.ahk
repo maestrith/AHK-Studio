@@ -1,0 +1,9 @@
+popftp(){	
+	servers:=settings.sn("//ftp/*"),LV_Delete()
+	while,ss:=servers.item[A_Index-1]{
+		ea:=settings.ea(ss)
+		LV_Add("",ea.address,ea.username,ea.password,ea.port)
+	}
+	Loop,4
+		LV_ModifyCol(A_Index,"AutoHDR")
+}
