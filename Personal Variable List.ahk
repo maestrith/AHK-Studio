@@ -1,10 +1,8 @@
 Personal_Variable_List(){
 	static
-	newwin:=new windowtracker(6)
-	newwin.Add(["ListView,w200 h400,Variables,wh","Edit,w200 vvariable,,yw","Button,gaddvar Default,Add,y","Button,x+10 gvdelete,Delete Selected,y"])
-	newwin.Show("Variables")
+	newwin:=new windowtracker(6),newwin.Add(["ListView,w200 h400,Variables,wh","Edit,w200 vvariable,,yw","Button,gaddvar Default,Add,y","Button,x+10 gvdelete,Delete Selected,y"])
+	newwin.Show("Variables",1),vars:=settings.sn("//Variables/*")
 	ControlFocus,Edit1,% hwnd([6])
-	vars:=settings.sn("//Variables/*")
 	while,vv:=vars.item(A_Index-1)
 		LV_Add("",vv.text)
 	ControlFocus,Edit1,% hwnd([6])

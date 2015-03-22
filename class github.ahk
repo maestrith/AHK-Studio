@@ -48,7 +48,7 @@ class github{
 		return this.http.ResponseText
 	}
 	tree(repo,parent,blobs){
-		url:=this.url "/repos/" this.owner "/" repo "/git/trees" this.token ;POST /repos/:owner/:repo/git/trees
+		url:=this.url "/repos/" this.owner "/" repo "/git/trees" this.token
 		json={"base_tree":"%parent%","tree":[
 		for a,blob in blobs{
 			add={"path":"%a%","mode":"100644","type":"blob","sha":"%blob%"},

@@ -40,7 +40,10 @@ class WindowTracker{
 			}
 			pos.=b var " "
 		}
-		pos:=position?position:pos
+		if position=1
+			pos:=Center(this.win)
+		else
+			pos:=position?position:pos
 		Gui,% this.win ":Show",%pos% %AutoSize%,%title%
 		if ssn(root,"@minmax").text
 			WinMaximize,% this.ahkid
