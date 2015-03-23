@@ -71,6 +71,7 @@ filecheck(),v.quick:=[]
 Menu,Tray,Icon,AHKStudio.ico
 keywords(),plugins(),gui(),ObjRegisterActive(pluginclass)
 if(openfile){
+	m("here")
 	v.openfile:=openfile
 	if !files.ssn("//*[@file='" openfile "']")
 		open(openfile,1)

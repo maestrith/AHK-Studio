@@ -12,6 +12,6 @@ ObjRegisterActive(Object,CLSID:="{DBD5A90A-A85C-11E4-B0C7-43449580656B}",Flags:=
 		throw Exception("Invalid CLSID",-1,CLSID)
 	hr:=DllCall("oleaut32\RegisterActiveObject","ptr",&Object,"ptr",&_clsid,"uint",Flags,"uint*",cookie,"uint")
 	if hr<0
-		throw Exception("An Error Occured.")
+		return
 	cookieJar[Object]:=cookie
 }
