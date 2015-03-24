@@ -21,7 +21,7 @@ context(return=""){
 		return found
 	if !(found){
 		StringUpper,search,command1
-		ea:=xml.ea(cexml.ssn("//main[@file='" ssn(current(1),"@file").text "']/file/info[@type='function' and @upper='" search "']"))
+		ea:=xml.ea(cexml.ssn("//main[@file='" current(2).file "']/descendant::file/info[@type='Function' and @upper='" search "']"))
 		if cmd:=ea.text{
 			info:=syn:=cmd "(" ea.args ")",found:=cmd
 			goto,conbottom
