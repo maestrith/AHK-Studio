@@ -20,6 +20,15 @@ context(return=""){
 	if return
 		return found
 	if !(found){
+		RegExMatch(cbb,"U)\s*(\w*)\." command1 "\($",found)
+		class:=ssn(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Object'][@upper='" upper(found1) "']"),"@class").text
+		args:=ssn(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Class' and @upper='" upper(class) "']/descendant::*[@type='Method' or @type='Property'][@upper='" upper(command1) "']"),"@args").text
+		if(args){
+			info:=found1 "." command1 "(" args ")"
+			goto,conbottom
+		}
+	}
+	if !(found){
 		StringUpper,search,command1
 		ea:=xml.ea(cexml.ssn("//main[@file='" current(2).file "']/descendant::file/info[@type='Function' and @upper='" search "']"))
 		if cmd:=ea.text{
