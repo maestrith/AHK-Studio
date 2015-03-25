@@ -41,6 +41,10 @@
 		}
 	}
 */
+if FileExist(A_ScriptDir "\AutoHotkey.exe"){
+	Run,%A_ScriptDir%\AutoHotkey.exe "%A_ScriptName%"
+	ExitApp
+}
 DetectHiddenWindows,On
 file=%1%
 ComObjError(0),openfile:=file
