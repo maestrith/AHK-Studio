@@ -42,7 +42,7 @@
 	}
 */
 if(FileExist(A_ScriptDir "\AutoHotkey.exe")&&A_IsUnicode!=1){
-	Run,%A_ScriptDir%\AutoHotkey.exe "%A_ScriptName%"
+	Run,"%A_ScriptDir%\AutoHotkey.exe" "%A_ScriptName%"
 	ExitApp
 }
 DetectHiddenWindows,On
