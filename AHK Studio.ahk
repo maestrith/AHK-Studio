@@ -41,7 +41,7 @@
 		}
 	}
 */
-if FileExist(A_ScriptDir "\AutoHotkey.exe"){
+if(FileExist(A_ScriptDir "\AutoHotkey.exe")&&A_IsUnicode=0){
 	Run,%A_ScriptDir%\AutoHotkey.exe "%A_ScriptName%"
 	ExitApp
 }
