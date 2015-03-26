@@ -44,9 +44,15 @@
 		}
 	}
 */
-if(FileExist(A_ScriptDir "\AutoHotkey.exe")&&A_IsUnicode!=1){
-	Run,"%A_ScriptDir%\AutoHotkey.exe" "%A_ScriptName%"
+if(A_IsUnicode!=1){
+	SplitPath,A_AhkPath,,dir
+	if !FileExist(correct:=dir "\AutoHotkeyU32.exe"){
+		m("Requires AutoHotkey 1.1 to run")
+		ExitApp
+	}
+	run,"%correct%" "%A_ScriptName%",%A_ScriptDir%
 	ExitApp
+	return
 }
 DetectHiddenWindows,On
 file=%1%
