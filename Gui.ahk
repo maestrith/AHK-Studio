@@ -80,7 +80,7 @@ Gui(){
 		}else
 			openfilelist.=oo.text "`n"
 	}
-	open(trim(openfilelist,"`n"),1)
+	open(trim(openfilelist,"`n"))
 	last:=settings.sn("//last/*")
 	if !last.length
 		new(1)
