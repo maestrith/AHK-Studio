@@ -83,11 +83,14 @@ class code_explorer{
 			}
 		}
 		pos:=0
-		while,pos:=RegExMatch(code,"OUi)\s*(\w*)\s*:=new\s*(\w*)\(",found,++pos){
+		while,pos:=RegExMatch(code,"OUi)\s*(\w*)\s*:=\s*new\s*(\w*)\(",found,++pos){
 			npos:=StrPut(SubStr(code,1,found.Pos(1)-2),"utf-8")
 			cexml.under(cce,"info",{type:"Object",file:filename,upper:upper(found.1),pos:npos,text:found.1,root:parentfile,class:found.2,order:"text,type,class,root"})
 			pos:=found.Pos(1)+found.len(1)
 		}
+		addclass:=sn(cce,"*[@type='Class']")
+		while,ac:=addclass.item[A_Index-1],ea:=xml.ea(ac)
+			cexml.under(cce,"info",{type:"Object",file:filename,upper:upper(ea.text),pos:ea.pos,text:ea.text,root:parentfile,class:ea.text,order:"text,type,class,root"})
 		pos:=0
 		while,pos:=RegExMatch(code,"OU);#\[(.*)\]",found,++pos){
 			npos:=StrPut(SubStr(code,1,pos),"utf-8")
