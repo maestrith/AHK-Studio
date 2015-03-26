@@ -65,7 +65,7 @@ class xml{
 	}
 	add2(path,att:="",text:="",dup:=0,list:=""){
 		p:="/",po:=StrSplit(path,"/")
-		if (next:=this.ssn("//" path))
+		if(next:=this.ssn("//" path)&&dup)
 			next:=next.parentnode.appendchild(this.xml.CreateElement(po[po.MaxIndex()]))
 		else if next:=this.ssn("//*")
 			for a,b in po

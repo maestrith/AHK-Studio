@@ -336,3 +336,4 @@ return
 #Include window.ahk
 #Include Words In Document.ahk
 #Include EditStyle.ahk
+#Include Edit Comment Insert.ahk

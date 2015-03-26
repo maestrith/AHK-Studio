@@ -75,6 +75,7 @@
 			<menu name="Disable Include Dialog" clean="Disable_Include_Dialog"></menu>
 			<menu name="Disable Line Status" clean="Disable_Line_Status"></menu>
 			<menu clean="Disable_Variable_List" name="Disable Variable List"></menu>
+			<menu name="Edit Comment Insert" clean="Edit_Comment_Insert"></menu>
 			<menu name="Enable Close On Save" clean="Enable_Close_On_Save"></menu>
 			<menu name="Force Utf8" clean="Force_Utf8"></menu>
 			<menu name="Hide Code Explorer" clean="Hide_Code_Explorer"></menu>
