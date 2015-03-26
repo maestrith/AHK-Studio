@@ -5,7 +5,7 @@ Theme(info=""){
 	setup(3,1),hotkeys([3],{Esc:"3GuiClose"}),v.themelist:=[]
 	Gui,3:Default
 	Gui,+hwndhwnd Owner1
-	Gui,Add,TreeView,w200 h500 gthemetv AltSubmit
+	Gui,Add,TreeView,w300 h500 gthemetv AltSubmit
 	theme:=v.theme:=new s(3,{pos:"x+10 w500 h500"}),hotkeys([3],{Delete:"themedelete"})
 	Gui,Add,Button,Hidden x0 y0 gthemetv Default,go
 	Loop,80
@@ -15,7 +15,7 @@ Theme(info=""){
 	v.themelist:=[]
 	color:=TV_Add("Color")
 	for a,b in ["Background","Default Background Color","Default Font Style","Caret","Caret Line Background","End Of Line Color","Reset To Default","Indent Guide","Multiple Selection Foreground","Multiple Selection Background"
-		,"Main Selection Foreground","Main Selection Background","Brace Match Color","Edited Marker","Saved Marker","Compare Color"]
+		,"Main Selection Foreground","Main Selection Background","Brace Match Color","Brace Match Indicator Reset","Brace Match Style","Edited Marker","Saved Marker","Compare Color"]
 	v.themelist[TV_Add(b,color,"Sort")]:=b
 	options:=TV_Add("Theme Options")
 	for a,b in ["Edit Theme Name","Edit Author","Download Themes","Export Theme","Import Theme","Save Theme","Display Style Number At Caret"]
@@ -43,15 +43,26 @@ Theme(info=""){
 	if (event="Display Style Number At Caret"){
 		return m("Style=" csc().2010(csc().2008))
 	}if (event="Brace Match Color"){
-		color:=settings.ssn("//fonts/font[@code='2082']/@color").text
-		color:=dlg_color(color,hwnd(3))
+		for a,b in ["//fonts/font[@style='34']","//fonts/font[@code='2082']"]
+			if color:=settings.ssn(b)
+				goto,themeafter
+		color:=settings.add2("fonts/font",{code:2082},"",1)
+		themeafter:
+		newcolor:=dlg_color(ssn(color,"@color").text,hwnd(3))
 		if ErrorLevel
 			return
-		if !clr:=settings.ssn("//fonts/font[@code='2082']")
-			settings.Add({path:"fonts/font",att:{code:2082,color:color},dup:1})
-		else
-			clr.SetAttribute("color",color)
+		color.SetAttribute("color",newcolor)
 		refreshthemes()
+		ControlFocus,Scintilla1,% hwnd([3])
+		Sleep,100
+		sc:=csc(),tt:=sc.gettext(),sc.2025(StrPut(SubStr(tt,1,InStr(tt,"(")),"utf-8")-1)
+	}if(event="Brace Match Indicator Reset"){
+		sc:=csc(),sc.2498(1,7),refreshthemes()
+		rem:=settings.ssn("//fonts/font[@style='34']"),rem.ParentNode.RemoveChild(rem)
+		tt:=sc.gettext(),sc.2025(StrPut(SubStr(tt,1,InStr(tt,"(")),"utf-8")-1),refreshthemes()
+	}if(event="brace match style"){
+		sc:=csc(),editstyle(34),sc.2498(0,8),refreshthemes()
+		tt:=sc.gettext(),sc.2025(StrPut(SubStr(tt,1,InStr(tt,"(")),"utf-8")-1)
 	}
 	if (event="Themes List"){
 		TV_GetText(theme,TV_GetSelection())
@@ -142,7 +153,7 @@ Theme(info=""){
 		top.appendchild(clone)
 		preset.save(1)
 		tlist:=preset.sn("//preset/*")
-		noadd:=0
+		noadd:=0,m("Theme Saved")
 	}if (event="Download Themes"){
 		parent:=TV_GetSelection()
 		if child:=TV_GetChild(parent){
@@ -223,7 +234,7 @@ Theme(info=""){
 		rem:=settings.ssn("//fonts")
 		rem.parentnode.removechild(rem)
 		defaultfont()
-		refreshthemes()		
+		refreshthemes()
 	}
 	event:=""
 	return

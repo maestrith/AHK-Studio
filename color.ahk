@@ -33,7 +33,9 @@ color(con){
 		con[b.1](b.2,b.3)
 	if !settings.ssn("//fonts/font[@code='2082']")
 		con.2082(7,0xff00ff)
-	con.2498(1,7),con.2212,con.2371
+	if !(settings.ssn("//fonts/font[@style='34']"))
+		con.2498(1,7)
+	con.2212(),con.2371
 	con.2080(2,8),con.2082(2,0xff00ff),con.2636(1)
 	if zoom:=settings.ssn("//gui/@zoom").text
 		con.2373(zoom)
@@ -44,3 +46,10 @@ color(con){
 	for a,b in v.color
 		con.4005(kwind[a],RegExReplace(b,"#"))
 }
+/*
+	flipflop:
+	sc:=csc()
+	flan:=flan?0:1
+	sc.2498(flan,7)
+	return
+*/

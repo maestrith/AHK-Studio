@@ -23,6 +23,9 @@
 		Split Code
 		Scratch Pad
 	}
+	fischgeek{
+		editable matching highlight
+	}
 	video{
 		Omni-Search (Files,Menu items,...etc)
 		Multiple Segments (discuss how segments work and show them)
@@ -53,14 +56,6 @@ if x:=ComObjActive("AHK-Studio"){
 	ExitApp
 }
 ComObjError(1)
-SetWorkingDir,%A_ScriptDir%
-global v:=[],settings,files,menus,commands,positions,vversion,access_token,vault,preset,cexp,scintilla,bookmarks,cexml
-settings:=new xml("settings","lib\settings.xml"),files:=new xml("files"),menus:=new xml("menus","lib\menus.xml"),commands:=new xml("commands","lib\commands.xml"),cexp:=new xml("code_explorer"),bookmarks:=new xml("bookmarks","lib\bookmarks.xml")
-positions:=new xml("positions","lib\positions.xml"),vversion:=new xml("version","lib\version.xml"),access_token:=settings.ssn("//access_token").text
-cexml:=new xml("code_explorer"),v.filescan:=[]
-if !settings.ssn("//Auto_Indent")
-	settings.Add2("Auto_Indent",{Full_Auto:1})
-vault:=new xml("vault","lib\vault.xml"),v.color:=[],preset:=new xml("preset","lib\preset.xml")
 if (A_PtrSize=8&&A_IsCompiled=""){
 	SplitPath,A_AhkPath,,dir
 	if !FileExist(correct:=dir "\AutoHotkeyU32.exe"){
@@ -71,6 +66,14 @@ if (A_PtrSize=8&&A_IsCompiled=""){
 	ExitApp
 	return
 }
+SetWorkingDir,%A_ScriptDir%
+global v:=[],settings,files,menus,commands,positions,vversion,access_token,vault,preset,cexp,scintilla,bookmarks,cexml
+settings:=new xml("settings","lib\settings.xml"),files:=new xml("files"),menus:=new xml("menus","lib\menus.xml"),commands:=new xml("commands","lib\commands.xml"),cexp:=new xml("code_explorer"),bookmarks:=new xml("bookmarks","lib\bookmarks.xml")
+positions:=new xml("positions","lib\positions.xml"),vversion:=new xml("version","lib\version.xml"),access_token:=settings.ssn("//access_token").text
+cexml:=new xml("code_explorer"),v.filescan:=[]
+if !settings.ssn("//Auto_Indent")
+	settings.Add2("Auto_Indent",{Full_Auto:1})
+vault:=new xml("vault","lib\vault.xml"),v.color:=[],preset:=new xml("preset","lib\preset.xml")
 filecheck(),v.quick:=[]
 Menu,Tray,Icon,AHKStudio.ico
 keywords(),plugins(),gui(),ObjRegisterActive(pluginclass)
@@ -326,3 +329,4 @@ return
 #Include Widths.ahk
 #Include window.ahk
 #Include Words In Document.ahk
+#Include EditStyle.ahk
