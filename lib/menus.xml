@@ -199,5 +199,5 @@
 			<menu clean="Mark_All_Files_For_Update" name="Mark All Files For Update" option="" plugin="plugins\Mark All Files For Update.ahk"></menu>
 			<menu clean="Upload_Menus" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu></menu>
 	</main>
-	<date>20150319</date>
+	<date>20150326</date>
 </menus>
