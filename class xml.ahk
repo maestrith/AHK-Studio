@@ -65,16 +65,18 @@ class xml{
 	}
 	add2(path,att:="",text:="",dup:=0,list:=""){
 		p:="/",dup1:=this.ssn("//" path)?1:0
-		if next:=this.ssn("//" path)?this.ssn("//" path):this.ssn("//*")
+		if !next:=this.ssn("//" path){
+			next:=this.ssn("//*")
 			Loop,Parse,path,/
 				last:=A_LoopField,p.="/" last,next:=this.ssn(p)?this.ssn(p):next.appendchild(this.xml.CreateElement(last))
-		if (dup&&dup1)
+		}
+		if(dup&&dup1)
 			next:=next.parentnode.appendchild(this.xml.CreateElement(last))
 		for a,b in att
 			next.SetAttribute(a,b)
 		for a,b in StrSplit(list,",")
 			next.SetAttribute(b,att[b])
-		if info.text!=""
+		if text!=""
 			next.text:=text
 		return next
 	}
