@@ -132,7 +132,8 @@ class code_explorer{
 					continue
 				if !top:=cet.ssn("//main[@file='" filename "'][@type='" ea.type "']")
 					if !(ea.type~="(Method|Property)")
-						top:=cet.Add2("main",{file:filename,type:ea.type,tv:code_explorer.Add(ea.type,main,"Vis Sort")},"",1)
+						top:=cet.Add({path:"main",att:{file:filename,type:ea.type,tv:code_explorer.Add(ea.type,main,"Vis Sort")},dup:1})
+				;top:=cet.Add2("main",{file:filename,type:ea.type,tv:code_explorer.Add(ea.type,main,"Vis Sort")},"",1)
 				text:=ea[StrSplit(ea.order,",").1]
 				if(ea.type~="(Method|Property)")
 					cet.under(last,"info",{text:text,pos:ea.pos,file:ea.file,type:ea.type,tv:code_explorer.Add(text,ssn(last,"@tv").text,"Sort")})
