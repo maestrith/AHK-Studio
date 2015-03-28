@@ -10,7 +10,6 @@ notify(csc=""){
 			WinSetTitle,% hwnd([1]),,AHK Studio - %filename%
 		return
 	}
-	;{15:"foldLevelPrev",16:"margin",17:"listType",18:"x",19:"y",21:"token",22:"annotLinesAdded",23:"updated"}
 	for a,b in {0:"Obj",2:"Code",3:"position",4:"ch",5:"mod",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",17:"listType",22:"updated"}
 		fn[b]:=NumGet(Info+(A_PtrSize*a))
 	if (fn.code=""||fn.code=2013||Info=256)
@@ -40,10 +39,12 @@ notify(csc=""){
 			if v.options.full_auto
 				SetTimer,fullauto,-1
 		}else if(fn.listType=3){
-			args:=ssn(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Method' or @type='Property'][@upper='" upper(text:=StrGet(fn.text,"utf-8")) "']"),"@args").text
+			text:=StrGet(fn.text,"utf-8")
 			start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1)
 			text.="()",sc.2645(start,end-start),sc.2003(sc.2008,text),sc.2025(sc.2008+StrLen(text)-1)
-		}
+		}else if(fn.listtype=4)
+			text:=StrGet(fn.text,"utf-8"),start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(start,end-start),sc.2003(sc.2008,text "."),sc.2025(sc.2008+StrLen(text ".")),Show_Class_Methods(text)
+		
 	}
 	;if (fn.code=2027)
 	;switch this out with 2027 and use GetKeyState("Control","P") and stuff
@@ -74,17 +75,8 @@ notify(csc=""){
 	if (fn.code=2004&&sc.sc=v.codevault.sc)
 		m("Please create or select a code snippet")
 	if (fn.code=2001){
-		if(fn.ch=46){
-			object:=sc.textrange(sc.2266(sc.2008-1,1),sc.2267(sc.2008-1,1))
-			ea:=xml.ea(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Object' and @upper='" upper(object) "']"))
-			if ea.class{
-				disp:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Class' and @upper='" upper(ea.class) "']")
-				show:=sn(disp,"*[@type='Method' or @type='Property']"),list:=""
-				while,ss:=show.item[A_Index-1],ea:=xml.ea(ss)
-					list.=ea.text " "
-				sc.2117(3,Trim(list))
-			}
-		}
+		if(fn.ch=46)
+			Show_Class_Methods(sc.textrange(sc.2266(sc.2008-1,1),sc.2267(sc.2008-1,1)))
 		if ((fn.ch=10||fn.ch=123||fn.ch=125)&&v.options.full_auto&&sc.2102=0){
 			if fn.ch=10
 				SetTimer,FullAuto,50

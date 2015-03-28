@@ -173,7 +173,9 @@ return
 #Include duplicates.ahk
 #Include dupsel.ahk
 #Include DynaRun.ahk
+#Include Edit Comment Insert.ahk
 #Include edit replacements.ahk
+#Include EditStyle.ahk
 #Include eol.ahk
 #Include exit.ahk
 #Include Export.ahk
@@ -300,8 +302,11 @@ return
 #Include set.ahk
 #Include setpos.ahk
 #Include setup.ahk
+#Include Show Class Methods.ahk
+#Include Show Classes.ahk
 #Include show scintilla code in line.ahk
 #Include show.ahk
+#Include Show_Functions.ahk
 #Include sn.ahk
 #Include social.ahk
 #Include SocketEvent.ahk
@@ -336,5 +341,3 @@ return
 #Include Widths.ahk
 #Include window.ahk
 #Include Words In Document.ahk
-#Include EditStyle.ahk
-#Include Edit Comment Insert.ahk
