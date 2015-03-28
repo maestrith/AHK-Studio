@@ -65,7 +65,7 @@ filecheck(){
 	SysGet,Border,33
 	SysGet,Caption,4
 	v.Border:=Border,v.Caption:=Caption
-	RegRead,value,REG_SZ,HKCU,Software\Classes\AHK-Studio
+	RegRead,value,HKCU,Software\Classes\AHK-Studio
 	if !value
 		registerids("{DBD5A90A-A85C-11E4-B0C7-43449580656B}","AHK-Studio")
 }
