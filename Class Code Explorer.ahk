@@ -3,7 +3,8 @@ class code_explorer{
 	scan(node){
 		explore:=[],bits:=[],method:=[],filename:=ssn(node,"@file").text,parentfile:=ssn(node,"ancestor::main/@file").text
 		if !main:=cexml.ssn("//main[@file='" parentfile "']")
-			main:=cexml.Add2("main",{file:parentfile},"",1)
+			main:=cexml.Add({path:"main",att:{file:parentfile},dup:1})
+		;main:=cexml.Add2("main",{file:parentfile},"",1)
 		SplitPath,filename,name,folder
 		if !(folder)
 			SplitPath,parentfile,,folder

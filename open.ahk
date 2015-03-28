@@ -29,7 +29,7 @@ open(filelist="",show=""){
 				continue
 			fff:=FileOpen(b,"RW"),file1:=file:=fff.read(fff.length),filename:=b
 			gosub,addfile
-			v.filescan.Insert(filename)
+			v.filescan.Insert(b)
 		}
 		if Show
 			SetTimer,scanfiles,-100
