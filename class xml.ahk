@@ -64,7 +64,7 @@ class xml{
 		return find
 	}
 	add2(path,att:="",text:="",dup:=0,list:=""){
-		p:="/",dup1:=this.ssn("//" path)?1:0,next:=this.ssn("//" path),last:=SubStr(path,InStr(last,"/",0,0)+1)
+		p:="/",dup1:=this.ssn("//" path)?1:0,next:=this.ssn("//" path),last:=SubStr(path,InStr(path,"/",0,0)+1)
 		if !next.xml{
 			next:=this.ssn("//*")
 			Loop,Parse,path,/
