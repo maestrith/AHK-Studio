@@ -23,9 +23,6 @@
 		Split Code
 		Scratch Pad
 	}
-	fischgeek{
-		editable matching highlight
-	}
 	video{
 		Omni-Search (Files,Menu items,...etc)
 		Multiple Segments (discuss how segments work and show them)
