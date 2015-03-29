@@ -341,3 +341,4 @@ return
 #Include Widths.ahk
 #Include window.ahk
 #Include Words In Document.ahk
+#Include Index Current File.ahk

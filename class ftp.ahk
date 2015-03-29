@@ -82,8 +82,10 @@ class ftp{
 		if error.1
 			m(error.1)
 		SplashTextOff
-		if (error.1)
+		if (error.1){
+			SplashTextOff
 			this.error:=1,m(this.GetLastError(error.1))
+		}
 		for a,b in [this.file,this.connect,this.internet]
 			DllCall("wininet\InternetCloseHandle","UInt",this.internet)
 		DllCall("FreeLibrary","UInt",this.library)

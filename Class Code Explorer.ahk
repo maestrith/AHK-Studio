@@ -3,8 +3,7 @@ class code_explorer{
 	scan(node){
 		explore:=[],bits:=[],method:=[],filename:=ssn(node,"@file").text,parentfile:=ssn(node,"ancestor::main/@file").text
 		if !main:=cexml.ssn("//main[@file='" parentfile "']")
-			main:=cexml.Add({path:"main",att:{file:parentfile},dup:1})
-		;main:=cexml.Add2("main",{file:parentfile},"",1)
+			main:=cexml.Add2("main",{file:parentfile},"",1)
 		SplitPath,filename,name,folder
 		if !(folder)
 			SplitPath,parentfile,,folder
@@ -133,8 +132,7 @@ class code_explorer{
 					continue
 				if !top:=cet.ssn("//main[@file='" filename "'][@type='" ea.type "']")
 					if !(ea.type~="(Method|Property)")
-						top:=cet.Add({path:"main",att:{file:filename,type:ea.type,tv:code_explorer.Add(ea.type,main,"Vis Sort")},dup:1})
-				;top:=cet.Add2("main",{file:filename,type:ea.type,tv:code_explorer.Add(ea.type,main,"Vis Sort")},"",1)
+						top:=cet.Add2("main",{file:filename,type:ea.type,tv:code_explorer.Add(ea.type,main,"Vis Sort")},"",1)
 				text:=ea[StrSplit(ea.order,",").1]
 				if(ea.type~="(Method|Property)")
 					cet.under(last,"info",{text:text,pos:ea.pos,file:ea.file,type:ea.type,tv:code_explorer.Add(text,ssn(last,"@tv").text,"Sort")})

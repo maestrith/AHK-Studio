@@ -133,6 +133,7 @@
 				<menu clean="Unfold_Level_X" name="Unfold Level X"></menu></menu>
 			<menu name="Hide Menu" clean="Hide_Menu"></menu>
 			<menu name="Highlight to Matching Brace" clean="Highlight_to_Matching_Brace" hotkey="^!M"></menu>
+			<menu name="Index Current File" clean="Index_Current_File" hotkey="F5"></menu>
 			<menu name="Insert Code Vault Text" hotkey="+^Escape" clean="Insert_Code_Vault_Text"></menu>
 			<menu clean="Jump_To" name="Jump To">
 				<menu clean="Jump_To_Class" name="Jump To Class"></menu>

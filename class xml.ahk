@@ -64,8 +64,8 @@ class xml{
 		return find
 	}
 	add2(path,att:="",text:="",dup:=0,list:=""){
-		p:="/",dup1:=this.ssn("//" path)?1:0
-		if !next:=this.ssn("//" path){
+		p:="/",dup1:=this.ssn("//" path)?1:0,next:=this.ssn("//" path),last:=SubStr(path,InStr(last,"/",0,0)+1)
+		if !next.xml{
 			next:=this.ssn("//*")
 			Loop,Parse,path,/
 				last:=A_LoopField,p.="/" last,next:=this.ssn(p)?this.ssn(p):next.appendchild(this.xml.CreateElement(last))
