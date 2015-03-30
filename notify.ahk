@@ -2,7 +2,7 @@ notify(csc=""){
 	notify:
 	static last,lastline
 	fn:=[],info:=A_EventInfo
-	if (info=512){
+	if(info=512){
 		ControlGetFocus,con,% hwnd([A_Gui])
 		ControlGet,hwnd,hwnd,,%con%,% hwnd([A_Gui])
 		sc:=csc({hwnd:hwnd}),filename:=files.ssn("//*[@sc='" sc.2357 "']/@file").text
@@ -12,43 +12,39 @@ notify(csc=""){
 	}
 	for a,b in {0:"Obj",2:"Code",3:"position",4:"ch",5:"mod",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",17:"listType",22:"updated"}
 		fn[b]:=NumGet(Info+(A_PtrSize*a))
-	if (fn.code=""||fn.code=2013||Info=256)
+	if(fn.code=""||fn.code=2013||Info=256)
 		return
 	sc:=csc?csc:csc(),csc:=""
-	if (fn.code=2002){
+	if(fn.code=2002){
 		Gui,1:TreeView,% hwnd("fe")
 		list:=files.sn("//*[@file='" current(3).file "']")
 		while,ll:=list.item[A_Index-1],ea:=xml.ea(ll)
 			TV_Modify(ea.tv,"",ea.filename)
 	}
-	if (fn.code=2014){
+	if(fn.code=2014){
 		if (fn.listtype=1){
 			if !IsObject(scintilla)
 				scintilla:=new xml("scintilla","lib\scintilla.xml")
 			command:=StrGet(fn.text,"utf-8")
 			info:=scintilla.ssn("//commands/item[@name='" command "']")
 			ea:=xml.ea(info),start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1)
-			syn:=ea.syntax?ea.code "()":ea.code,sc.2160(start,end),sc.2170(0,[syn])
+			syn:=ea.syntax "()"?ea.code:ea.code,sc.2160(start,end),sc.2170(0,[syn])
 			if ea.syntax
 				sc.2025(sc.2008-1),sc.2200(start,ea.code ea.syntax)
 		}Else if(fn.listType=2){
-			vv:=StrGet(fn.text,"utf-8")
-			start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1)
-			sc.2645(start,end-start)
-			sc.2003(sc.2008,vault.ssn("//*[@name='" vv "']").text)
+			vv:=StrGet(fn.text,"utf-8"),start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(start,end-start),sc.2003(sc.2008,vault.ssn("//*[@name='" vv "']").text)
 			if v.options.full_auto
 				SetTimer,fullauto,-1
 		}else if(fn.listType=3){
-			text:=StrGet(fn.text,"utf-8")
-			start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1)
-			text.="()",sc.2645(start,end-start),sc.2003(sc.2008,text),sc.2025(sc.2008+StrLen(text)-1)
+			text:=StrGet(fn.text,"utf-8") "()",start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1)
+			sc.2645(start,end-start),sc.2003(sc.2008,text),sc.2025(sc.2008+StrLen(text)-1)
 		}else if(fn.listtype=4)
 			text:=StrGet(fn.text,"utf-8"),start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(start,end-start),sc.2003(sc.2008,text "."),sc.2025(sc.2008+StrLen(text ".")),Show_Class_Methods(text)
 		
 	}
 	;if (fn.code=2027)
 	;switch this out with 2027 and use GetKeyState("Control","P") and stuff
-	if (fn.code=2019){
+	if(fn.code=2019){
 		v.style:={style:sc.2010(fn.position),mod:fn.mod}
 		if fn.mod=0
 			SetTimer,styleclick,1
@@ -57,7 +53,7 @@ notify(csc=""){
 		if fn.mod=4
 			SetTimer,editback,1
 	}
-	if (fn.code=2008){
+	if(fn.code=2008){
 		if ((fn.modtype&0x01)||(fn.modtype&0x02))
 			update({sc:sc.2357})
 		if (fn.modtype&0x02){
@@ -72,9 +68,9 @@ notify(csc=""){
 			locker.text:=sc.gettext()
 		}
 	}
-	if (fn.code=2004&&sc.sc=v.codevault.sc)
+	if(fn.code=2004&&sc.sc=v.codevault.sc)
 		m("Please create or select a code snippet")
-	if (fn.code=2001){
+	if(fn.code=2001){
 		if(fn.ch=46)
 			Show_Class_Methods(sc.textrange(sc.2266(sc.2008-1,1),sc.2267(sc.2008-1,1)))
 		if ((fn.ch=10||fn.ch=123||fn.ch=125)&&v.options.full_auto&&sc.2102=0){
@@ -96,7 +92,7 @@ notify(csc=""){
 		if c in 44,32
 			replace()
 	}
-	if (fn.code=2010){
+	if(fn.code=2010){
 		margin:=NumGet(info+64)
 		if margin=0
 			return theme({margin:margin,mod:fn.mod})
@@ -121,7 +117,7 @@ notify(csc=""){
 			getpos()
 		}
 	}
-	if (fn.code=2022){
+	if(fn.code=2022){
 		if v.options.Autocomplete_Enter_Newline
 			SetTimer,sendenter,100
 		Else{
@@ -134,9 +130,9 @@ notify(csc=""){
 				SetTimer,automenu,100
 		}
 	}
-	if (fn.code=2001)
+	if(fn.code=2001)
 		uppos(),width:=sc.2276(32,"aaa"),text1:="Last Entered Character: " Chr(fn.ch) " Code:" fn.ch,last:=width*StrLen(text1 1),SB_SetParts(v.lastwidth,last,40),SB_SetText(text1,2)
-	if (fn.code=2007)
+	if(fn.code=2007)
 		uppos()
 	if(fn.code=2021)
 		t(fn.position) ;this is for the multiple calltips 1=up 2=down
