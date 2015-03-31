@@ -76,7 +76,7 @@ class xml{
 			next.SetAttribute(a,b)
 		for a,b in StrSplit(list,",")
 			next.SetAttribute(b,att[b])
-		if text!=""
+		if(text!="")
 			next.text:=text
 		return next
 	}
@@ -91,12 +91,12 @@ class xml{
 			next.SetAttribute(a,b)
 		for a,b in StrSplit(info.list,",")
 			next.SetAttribute(b,info.att[b])
-		if info.text!=""
+		if(info.text!="")
 			next.text:=info.text
 		return next
 	}
 	find(info){
-		if info.att.1&&info.text
+		if(info.att.1&&info.text)
 			return m("You can only search by either the attribut or the text, not both")
 		search:=info.path?"//" info.path:"//*"
 		for a,b in info.att
