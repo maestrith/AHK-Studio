@@ -46,10 +46,3 @@ color(con){
 	for a,b in v.color
 		con.4005(kwind[a],RegExReplace(b,"#"))
 }
-/*
-	flipflop:
-	sc:=csc()
-	flan:=flan?0:1
-	sc.2498(flan,7)
-	return
-*/

@@ -22,10 +22,10 @@ Auto_Insert(){
 	if StrLen(enter)!=1||StrLen(add)!=1
 		return m("Both values must be a single character")
 	dup:=1
-	
 	if settings.ssn("//autoadd/key[@trigger='" Asc(enter) "']")
 		LV_Delete(LV_GetNext()),dup:=0
-	settings.add2("autoadd/key",{trigger:Asc(enter),add:Asc(add)},dup),LV_Add("",enter,add)
+	if !settings.ssn("//autoadd/key[@trigger='" Asc(Enter) "']")
+		settings.add2("autoadd/key",{trigger:Asc(enter),add:Asc(add)},"",1),LV_Add("",enter,add)
 	Loop,2
 		ControlSetText,Edit%A_Index%,,% hwnd([wname])
 	ControlFocus,Edit1,% hwnd([wname])
