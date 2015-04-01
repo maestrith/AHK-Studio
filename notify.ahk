@@ -25,14 +25,9 @@ notify(csc=""){
 		char:=Chr(sc.2007(fn.position))
 		if char is number
 		{
-			text:=sc.getseltext()
-			RegExMatch(text,"O)\D*(\d*)",found)
-			pos:=posinfo()
-			sc.2190(pos.start),sc.2192(pos.end)
-			pos:=sc.2197(StrLen(found.1),[found.1])
+			text:=sc.getseltext(),RegExMatch(text,"O)\D*(\d*)",found),pos:=posinfo(),sc.2190(pos.start),sc.2192(pos.end),pos:=sc.2197(StrLen(found.1),[found.1])
 			if(pos>0)
 				sc.2160(pos,pos+StrLen(found.1))
-			;m(found.1,found.0,text)
 		}
 	}
 	if(fn.code=2014){
