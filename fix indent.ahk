@@ -38,7 +38,7 @@ newindent(indentwidth:=""){
 		text:=b
 		if (InStr(text,Chr(59)))
 			text:=RegExReplace(text,"(\s" Chr(59) ".*)")
-		text:=Trim(text,"`t")
+		text:=Trim(text,"`t ")
 		if (SubStr(text,1,1)="("&&SubStr(text,0,1)!=")")
 			skip:=1
 		if (SubStr(text,1,1)=")"&&skip){
