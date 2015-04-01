@@ -52,7 +52,7 @@ context(return=""){
 		info:=SubStr(cb,1,cc+StrLen(ff)-1) " " info
 	}
 	conbottom:
-	RegExReplace(info,",","",count)
+	RegExReplace(info,",","",count),info:=RegExReplace(info,Chr(96) "n","`n")
 	if !count
 		return sc.2207(0),sc.2200(start,info),sc.2204(0,StrLen(info))
 	newstr:=RegExReplace(SubStr(cb,InStr(cb,found)+StrLen(found)),"U)\((.*)\)"),newstr:=Trim(newstr,"("),RegExReplace(newstr,",","",count)

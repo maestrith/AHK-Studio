@@ -1,7 +1,7 @@
 command_help(){
 	static stuff,hwnd
 	sc:=csc(),found1:=context(1)
-	SplitPath,A_AhkPath,,outdir
+	RegRead,outdir,HKEY_LOCAL_MACHINE,SOFTWARE\AutoHotkey,InstallDir
 	if !found1
 		RegExMatch(sc.getline(sc.2166(sc.2008)),"[\s+]?(\w+)",found)
 	if InStr(commands.ssn("//Commands/Commands").text,found1){

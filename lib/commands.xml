@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Commands>
 	<Version>
-		<Date>20150103</Date>
+		<Date>20150401</Date>
 	</Version>
 	<Commands>
 		<commands>if</commands>
@@ -12,15 +12,15 @@
 		<commands syntax="Value">#HotkeyInterval</commands>
 		<commands syntax="milliseconds">#HotkeyModifierTimeout</commands>
 		<commands syntax="NewOptions">#Hotstring</commands>
-		<commands syntax="[expression] \n[AutoHotkey_L] Makes subsequent hotkeys and hotstrings only function when the specified expression is true.">#if</commands>
-		<commands syntax="timeout \n[AutoHotkey_L] Sets the maximum time that may be spent evaluating a single #If expression.">#IfTimeout</commands>
-		<commands syntax="[, WinTitle, WinText] \nMakes subsequent hotkeys and hotstrings only function when the specified window is active.">#IfWinActive</commands>
-		<commands syntax="[, WinTitle, WinText] \nMakes subsequent hotkeys and hotstrings only function when the specified window exists.">#IfWinExist</commands>
-		<commands syntax="[, WinTitle, WinText] \nMakes subsequent hotkeys and hotstrings only function when the specified window is not active.">#IfWinNotActive</commands>
-		<commands syntax="[, WinTitle, WinText] \nMakes subsequent hotkeys and hotstrings only function when the specified window doesn't exist.">#IfWinNotExist</commands>
-		<commands syntax="FileName \nCauses the script to behave as though the specified file's contents are present at this exact position.">#Include</commands>
+		<commands syntax="[expression] `n[AutoHotkey_L] Makes subsequent hotkeys and hotstrings only function when the specified expression is true.">#if</commands>
+		<commands syntax="timeout `n[AutoHotkey_L] Sets the maximum time that may be spent evaluating a single #If expression.">#IfTimeout</commands>
+		<commands syntax="[, WinTitle, WinText] `nMakes subsequent hotkeys and hotstrings only function when the specified window is active.">#IfWinActive</commands>
+		<commands syntax="[, WinTitle, WinText] `nMakes subsequent hotkeys and hotstrings only function when the specified window exists.">#IfWinExist</commands>
+		<commands syntax="[, WinTitle, WinText] `nMakes subsequent hotkeys and hotstrings only function when the specified window is not active.">#IfWinNotActive</commands>
+		<commands syntax="[, WinTitle, WinText] `nMakes subsequent hotkeys and hotstrings only function when the specified window doesn't exist.">#IfWinNotExist</commands>
+		<commands syntax="FileName `nCauses the script to behave as though the specified file's contents are present at this exact position.">#Include</commands>
 		<commands syntax="[, Level (0-100)]">#InputLevel</commands>
-		<commands syntax="FileName \nCauses the script to behave as though the specified file's contents are present at this exact position.">#IncludeAgain</commands>
+		<commands syntax="FileName `nCauses the script to behave as though the specified file's contents are present at this exact position.">#IncludeAgain</commands>
 		<commands syntax="MaxEvents">#KeyHistory</commands>
 		<commands syntax="On|Off">#LTrim</commands>
 		<commands syntax="Value">#MaxHotkeysPerInterval</commands>
@@ -28,10 +28,10 @@
 		<commands syntax="Value">#MaxThreads</commands>
 		<commands syntax="On|Off">#MaxThreadsBuffer</commands>
 		<commands syntax="Value">#MaxThreadsPerHotkey</commands>
-		<commands syntax="keyname \n[AutoHotkey_L] Changes which key is used to mask Win or Alt keyup events.">#MenuMaskKey</commands>
+		<commands syntax="keyname `n[AutoHotkey_L] Changes which key is used to mask Win or Alt keyup events.">#MenuMaskKey</commands>
 		<commands syntax="[, force|ignore|off]">#SingleInstance</commands>
 		<commands syntax="[, On|Off]">#UseHook</commands>
-		<commands syntax="[, WarningType, WarningMode] \n[AutoHotkey_L] Enables or disables warnings for selected load-time or run-time conditions that may be indicative of developer errors.">#Warn</commands>
+		<commands syntax="[, WarningType, WarningMode] `n[AutoHotkey_L] Enables or disables warnings for selected load-time or run-time conditions that may be indicative of developer errors.">#Warn</commands>
 		<commands syntax=", On|Off">AutoTrim</commands>
 		<commands syntax=", On|Off|Send|Mouse|SendAndMouse|Default|MouseMove|MouseMoveOff">BlockInput</commands>
 		<commands syntax="[, OutputVar]">Catch</commands>
@@ -86,22 +86,27 @@
 		<commands syntax=", Attributes[+-^RASHNOT] [, FilePattern, OperateOnFolders?, Recurse?]">FileSetAttrib</commands>
 		<commands syntax="[, YYYYMMDDHH24MISS, FilePattern, WhichTime [M|C|A], OperateOnFolders?, Recurse?]">FileSetTime</commands>
 		<commands syntax="[Statement]">Finally</commands>
-		<commands syntax="key [,val] in obj \n[AutoHotkey_L]">for</commands>
+		<commands syntax="key [,val] in obj `n[AutoHotkey_L]">for</commands>
 		<commands syntax="(FormatStr [, Values...])">Format</commands>
 		<commands syntax=", OutputVar [, YYYYMMDDHH24MISS, Format]">FormatTime</commands>
 		<commands syntax="(key)">GetKeyName</commands>
 		<commands syntax="(key)">GetKeyVK</commands>
 		<commands syntax="(key)">GetKeySC</commands>
 		<commands syntax=", OutputVar, WhichKey [, Mode [P|T]]">GetKeyState</commands>
-		<commands syntax=", Label\nJumps to the specified label and continues execution until Return is encountered.">gosub</commands>
-		<commands syntax=", Label\nJumps to the specified label and continues execution.">goto</commands>
+		<commands syntax=", Label`nJumps to the specified label and continues execution until Return is encountered.">gosub</commands>
+		<commands syntax=", Label`nJumps to the specified label and continues execution.">goto</commands>
 		<commands syntax=", GroupName [, R]">GroupActivate</commands>
 		<commands syntax=", GroupName, WinTitle [, WinText, Label, ExcludeTitle, ExcludeText]">GroupAdd</commands>
 		<commands syntax=", GroupName [, A|R]">GroupClose</commands>
 		<commands syntax=", GroupName [, R]">GroupDeactivate</commands>
 		<commands>Gui</commands>
+		<commands syntax="([GuiHwnd, CtrlHwnd, EventInfo, IsRightClick, X, Y])">GuiContextMenu</commands>
+		<commands syntax="([GuiHwnd, FileArray, CtrlHwnd, X, Y])">GuiDropFiles</commands>
+		<commands syntax="([GuiHwnd])`nCalled when the GUI is closed. Return a non-zero value to prevent closing.">GuiClose</commands>
+		<commands syntax="([GuiHwnd])`nCalled when the GUI is closed via Escape key. Return a non-zero value to prevent closing.">GuiEscape</commands>
 		<commands syntax=", Sub-command, ControlID [, Param3]">GuiControl</commands>
 		<commands syntax=", OutputVar [, Sub-command, ControlID, Param4]">GuiControlGet</commands>
+		<commands syntax="([GuiHwnd, EventInfo, Width, Height])">GuiSize</commands>
 		<commands syntax=", KeyName [, Label, Options]">Hotkey</commands>
 		<commands syntax=", var, value">IfEqual</commands>
 		<commands syntax=", File|Dir|Pattern">IfExist</commands>
@@ -120,8 +125,8 @@
 		<commands syntax="[, WinTitle, WinText, ExcludeTitle, ExcludeText]">IfWinNotExist</commands>
 		<commands syntax=", OutputVarX, OutputVarY, X1, Y1, X2, Y2, ImageFile">ImageSearch</commands>
 		<commands syntax=", Filename, Section [, Key]">IniDelete</commands>
-		<commands syntax=", OutputVar, Filename [, Section, Key, Default]\n[The Section and Key parameters are only optional on AutoHotkey_L]">IniRead</commands>
-		<commands syntax=", Value, Filename, Section [, Key]\n[The Key parameter is only optional on AutoHotkey_L]">IniWrite</commands>
+		<commands syntax=", OutputVar, Filename [, Section, Key, Default]`n[The Section and Key parameters are only optional on AutoHotkey_L]">IniRead</commands>
+		<commands syntax=", Value, Filename, Section [, Key]`n[The Key parameter is only optional on AutoHotkey_L]">IniWrite</commands>
 		<commands syntax="[, OutputVar, Options, EndKeys, MatchList]">Input</commands>
 		<commands syntax=", OutputVar [, Title, Prompt, HIDE, Width, Height, X, Y, Font, Timeout, Default]">InputBox</commands>
 		<commands syntax=", KeyName [, Options]">KeyWait</commands>
@@ -131,8 +136,9 @@
 		<commands syntax=", WhichButton, X1, Y1, X2, Y2 [, Speed, R]">MouseClickDrag</commands>
 		<commands syntax="[, OutputVarX, OutputVarY, OutputVarWin, OutputVarControl, 1|2|3]">MouseGetPos</commands>
 		<commands syntax=", X, Y [, Speed, R]">MouseMove</commands>
-		<commands syntax="[, Options, Title, Text, Timeout]\nDisplays the specified text in a small window containing one or more buttons  [such as Yes and No].">MsgBox</commands>
+		<commands syntax="[, Options, Title, Text, Timeout]`nDisplays the specified text in a small window containing one or more buttons  [such as Yes and No].">MsgBox</commands>
 		<commands syntax="[, Label]">OnExit</commands>
+		<commands syntax="(Func [, AddRemove])`nFunc is the function name or function object to call on exit.`nThe function optionally receives the parameters ExitFunc(ExitReason, ExitCode)">OnExit</commands>
 		<commands syntax=", Text">OutputDebug</commands>
 		<commands syntax="[, On|Off|Toggle, OperateOnUnderlyingThread?]">Pause</commands>
 		<commands syntax=", OutputVar, X, Y [, Alt|Slow|RGB]">PixelGetColor</commands>
@@ -194,6 +200,7 @@
 		<commands syntax=", OutputVar, InputVar">StringLen</commands>
 		<commands syntax=", OutputVar, InputVar [, T]">StringLower</commands>
 		<commands syntax=", OutputVar, InputVar, StartChar [, Count, L]">StringMid</commands>
+		<commands syntax="(Haystack, SearchText [, ReplaceText, OutputVarCount, Limit:=-1])">StrReplace</commands>
 		<commands syntax=", OutputVar, InputVar, SearchText [, ReplaceText, All]">StringReplace</commands>
 		<commands syntax=", OutputVar, InputVar, Count">StringRight</commands>
 		<commands syntax=", OutputArray, InputVar [, Delimiters, OmitChars]">StringSplit</commands>
@@ -208,7 +215,7 @@
 		<commands syntax="[, Text, X, Y, WhichToolTip]">ToolTip</commands>
 		<commands syntax=", OutputVar, Cmd, Value1 [, Value2]">Transform</commands>
 		<commands syntax="[, Title, Text, Seconds, Options]">TrayTip</commands>
-		<commands syntax="Expression \n[AutoHotkey_L]">until</commands>
+		<commands syntax="Expression `n[AutoHotkey_L]">until</commands>
 		<commands syntax=", URL, Filename">URLDownloadToFile</commands>
 		<commands syntax="Expression">while</commands>
 		<commands syntax="[, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinActivate</commands>
@@ -251,7 +258,7 @@
 		<commands syntax="(ImageListID, Filename [, IconNumber, ResizeNonIcon?])">IL_Add</commands>
 		<commands syntax="([, InitialCount, GrowCount, LargeIcons?])">IL_Create</commands>
 		<commands syntax="(ImageListID)">IL_Destroy</commands>
-		<commands syntax="(Haystack, Needle [, CaseSensitive?, StartingPos, Occurrence])\n(The Occurrence parameter only exists in AutoHotkey_L)">InStr</commands>
+		<commands syntax="(Haystack, Needle [, CaseSensitive?, StartingPos, Occurrence])`n(The Occurrence parameter only exists in AutoHotkey_L)">InStr</commands>
 		<commands syntax="(Var)">IsByRef</commands>
 		<commands syntax="(FunctionName)">IsFunc</commands>
 		<commands syntax="(LabelName)">IsLabel</commands>
@@ -269,8 +276,8 @@
 		<commands syntax="([ColumnNumber, Options, ColumnTitle])">LV_ModifyCol</commands>
 		<commands syntax="(ImageListID [, 0|1|2])">LV_SetImageList</commands>
 		<commands syntax="(Dividend, Divisor)">Mod</commands>
-		<commands syntax="(VarOrAddress [, Offset = 0] [, Type = &quot;UPtr&quot;])\n(When Type is specified the Offset parameter is only optional in AutoHotkey_L)">NumGet</commands>
-		<commands syntax="(Number, VarOrAddress [, Offset = 0] [, Type = &quot;UPtr&quot;])\n(When Type is specified the Offset parameter is only optional in AutoHotkey_L)">NumPut</commands>
+		<commands syntax="(VarOrAddress [, Offset = 0] [, Type = &quot;UPtr&quot;])`n(When Type is specified the Offset parameter is only optional in AutoHotkey_L)">NumGet</commands>
+		<commands syntax="(Number, VarOrAddress [, Offset = 0] [, Type = &quot;UPtr&quot;])`n(When Type is specified the Offset parameter is only optional in AutoHotkey_L)">NumPut</commands>
 		<commands syntax="(MsgNumber [, &quot;FunctionName&quot;])">OnMessage</commands>
 		<commands syntax="(Haystack, NeedleRegEx [, UnquotedOutputVar = &quot;&quot;, StartingPos = 1])">RegExMatch</commands>
 		<commands syntax="(Haystack, NeedleRegEx [, Replacement = &quot;&quot;, OutputVarCount = &quot;&quot;, Limit = -1, StartingPos = 1])">RegExReplace</commands>
@@ -298,69 +305,69 @@
 		<commands syntax="(Var [, RequestedCapacity, FillByte])">VarSetCapacity</commands>
 		<commands syntax="(&quot;WinTitle&quot; [, &quot;WinText&quot;, &quot;ExcludeTitle&quot;, &quot;ExcludeText&quot;])">WinActive</commands>
 		<commands syntax="(&quot;WinTitle&quot; [, &quot;WinText&quot;, &quot;ExcludeTitle&quot;, &quot;ExcludeText&quot;])">WinExist</commands>
-		<commands syntax="(string [, omitchars = &quot; `t&quot;]) \n[AutoHotkey_L] Trims characters from the beginning and end of a string.">Trim</commands>
-		<commands syntax="(string [, omitchars = &quot; `t&quot;]) \n[AutoHotkey_L] Trims characters from the beginning of a string.">LTrim</commands>
-		<commands syntax="(string [, omitchars = &quot; `t&quot;]) \n[AutoHotkey_L] Trims characters from the end of a string.">RTrim</commands>
-		<commands syntax="[, CPnnn|UTF-8/16[-RAW] ] \n[AutoHotkey_L] Sets the default encoding for FileRead, FileReadLine, Loop Read, FileAppend, and FileOpen.">FileEncoding</commands>
-		<commands syntax="(file, mode[, encoding]) \n[AutoHotkey_L] Opens a file and returns a new file object.">FileOpen</commands>
-		<commands syntax="(address [, max][, encoding]) \n[AutoHotkey_L] Retrieves the null-terminated string at the specified address.">StrGet</commands>
-		<commands syntax="(string [, encoding]) \n[AutoHotkey_L] Retrieves the amount of characters (not bytes) that a string copy requires.">StrPut</commands>
-		<commands syntax="(string, address [, max][, encoding]) \n[AutoHotkey_L] Copies a string to the specified location.">StrPut</commands>
-		<commands syntax="([key, value, [key2, value2...]]) \n[AutoHotkey_L] Creates a scriptable object which is also an associative array.">Object</commands>
-		<commands syntax="(obj) \n[AutoHotkey_L] Retrieves an interface pointer from an object reference or vice versa.">Object</commands>
-		<commands syntax="([values...]) \n[AutoHotkey_L] Creates an array.">Array</commands>
-		<commands syntax="(param) \n[AutoHotkey_L] Tests if the parameter is an object.">IsObject</commands>
-		<commands syntax="(obj, index, values...) \n[AutoHotkey_L]">ObjInsert</commands>
-		<commands syntax="(value) \n[AutoHotkey_L]">ObjInsert</commands>
-		<commands syntax="(key, value) \n[AutoHotkey_L]">ObjInsert</commands>
-		<commands syntax="(index, values...) \n[AutoHotkey_L] ??">_Insert</commands>
-		<commands syntax="(value) \n[AutoHotkey_L]">_Insert</commands>
-		<commands syntax="(key, value) \n[AutoHotkey_L]">_Insert</commands>
-		<commands syntax="(obj, key) \n[AutoHotkey_L]">ObjRemove</commands>
-		<commands syntax="(obj, first, last) \n[AutoHotkey_L]">ObjRemove</commands>
-		<commands syntax="(key) \n[AutoHotkey_L]">_Remove</commands>
-		<commands syntax="(first, last) \n[AutoHotkey_L]">_Remove</commands>
-		<commands syntax="(obj) \n[AutoHotkey_L]">ObjMinIndex</commands>
-		<commands syntax="() \n[AutoHotkey_L]">_MinIndex</commands>
-		<commands syntax="(obj) \n[AutoHotkey_L]">ObjMaxIndex</commands>
-		<commands syntax="() \n[AutoHotkey_L]">_MaxIndex</commands>
-		<commands syntax="(obj, maxitems) \n[AutoHotkey_L]">ObjSetCapacity</commands>
-		<commands syntax="(obj, key, bytesize) \n[AutoHotkey_L]">ObjSetCapacity</commands>
-		<commands syntax="(maxitems) \n[AutoHotkey_L]">_SetCapacity</commands>
-		<commands syntax="(key, bytesize) \n[AutoHotkey_L]">_SetCapacity</commands>
-		<commands syntax="(obj[, key]) \n[AutoHotkey_L]">ObjGetCapacity</commands>
-		<commands syntax="([key]) \n[AutoHotkey_L]">_GetCapacity</commands>
-		<commands syntax="(obj, key) \n[AutoHotkey_L]">ObjGetAddress</commands>
-		<commands syntax="(key) \n[AutoHotkey_L]">_GetAddress</commands>
-		<commands syntax="(obj) \n[AutoHotkey_L]">ObjNewEnum</commands>
-		<commands syntax="() \n[AutoHotkey_L]">_NewEnum</commands>
-		<commands syntax="(obj) \n[AutoHotkey_L]">ObjAddRef</commands>
-		<commands syntax="() \n[AutoHotkey_L]">_AddRef</commands>
-		<commands syntax="(obj) \n[AutoHotkey_L]">ObjRelease</commands>
-		<commands syntax="() \n[AutoHotkey_L]">_Release</commands>
-		<commands syntax="(obj, key) \n[AutoHotkey_L]">ObjHasKey</commands>
-		<commands syntax="(key) \n[AutoHotkey_L]">_HasKey</commands>
-		<commands syntax="(obj) \n[AutoHotkey_L]">ObjClone</commands>
-		<commands syntax="() \n[AutoHotkey_L]">_Clone</commands>
-		<commands syntax="([params...]) \n[AutoHotkey_L]">__New</commands>
-		<commands syntax="([params...]) \n[AutoHotkey_L]">__Get</commands>
-		<commands syntax="([params...,] value) \n[AutoHotkey_L]">__Set</commands>
-		<commands syntax="([params...]) \n[AutoHotkey_L]">__Call</commands>
-		<commands syntax="() \n[AutoHotkey_L]">__Delete</commands>
-		<commands syntax="(ProgIdOrCLSID [, IID]) \n[AutoHotkey_L] Creates a COM object.">ComObjCreate</commands>
-		<commands syntax="(name) \n[AutoHotkey_L] Returns a reference to an object provided by a COM component.">ComObjGet</commands>
-		<commands syntax="(obj [, prefix])  \n[AutoHotkey_L] Listens to events from a ComObject (omit prefix to stop listening).">ComObjConnect</commands>
-		<commands syntax="([Enable])\nEnables or disables notification of COM errors. If Enable is omitted, the current setting is returned.">ComObjError</commands>
-		<commands syntax="(ProgIdOrCLSID) \n[AutoHotkey_L] Retrieves a running object that has been registered with OLE.">ComObjActive</commands>
-		<commands syntax="(pdisp) \n[AutoHotkey_L] Wraps a raw IDispatch pointer in a usable object.">ComObjEnwrap</commands>
-		<commands syntax="(obj) \n[AutoHotkey_L] Unwraps a raw IDispatch pointer in a usable object.">ComObjUnwrap</commands>
-		<commands syntax="(vt, val [, flags]) \n[AutoHotkey_L] Packs type and value information in a single parameter.">ComObjParameter</commands>
-		<commands syntax="(obj [, &quot;Name&quot;/&quot;IID&quot;]) \n[AutoHotkey_L] Retrieves type information for a COM object.">ComObjType</commands>
-		<commands syntax="(obj) \n[AutoHotkey_L] Retrieves the raw 64-bit signed integer stored in a ComObject wrapper.">ComObjValue</commands>
-		<commands syntax="() \n[AutoHotkey_L] Creates an object for use in place of an optional parameter's default value when calling a COM object.">ComObjMissing</commands>
-		<commands syntax="(VarType, Count1 [, Count2, ... Count8]) \n[AutoHotkey_L] Creates a SAFEARRAY for use with COM.">ComObjArray</commands>
-		<commands syntax="(ComObject [, SID], IID) \n[AutoHotkey_L] Queries a COM object for an interface or service.">ComObjQuery</commands>
-		<commands syntax="(ComObject [, NewFlags, Mask]) \n[AutoHotkey_L] Retrieves or changes flags which control a COM wrapper object's behaviour.">ComObjFlags</commands>
+		<commands syntax="(string [, omitchars = &quot; `t&quot;]) `n[AutoHotkey_L] Trims characters from the beginning and end of a string.">Trim</commands>
+		<commands syntax="(string [, omitchars = &quot; `t&quot;]) `n[AutoHotkey_L] Trims characters from the beginning of a string.">LTrim</commands>
+		<commands syntax="(string [, omitchars = &quot; `t&quot;]) `n[AutoHotkey_L] Trims characters from the end of a string.">RTrim</commands>
+		<commands syntax="[, CPnnn|UTF-8/16[-RAW] ] `n[AutoHotkey_L] Sets the default encoding for FileRead, FileReadLine, Loop Read, FileAppend, and FileOpen.">FileEncoding</commands>
+		<commands syntax="(file, mode[, encoding]) `n[AutoHotkey_L] Opens a file and returns a new file object.">FileOpen</commands>
+		<commands syntax="(address [, max][, encoding]) `n[AutoHotkey_L] Retrieves the null-terminated string at the specified address.">StrGet</commands>
+		<commands syntax="(string [, encoding]) `n[AutoHotkey_L] Retrieves the amount of characters (not bytes) that a string copy requires.">StrPut</commands>
+		<commands syntax="(string, address [, max][, encoding]) `n[AutoHotkey_L] Copies a string to the specified location.">StrPut</commands>
+		<commands syntax="([key, value, [key2, value2...]]) `n[AutoHotkey_L] Creates a scriptable object which is also an associative array.">Object</commands>
+		<commands syntax="(obj) `n[AutoHotkey_L] Retrieves an interface pointer from an object reference or vice versa.">Object</commands>
+		<commands syntax="([values...]) `n[AutoHotkey_L] Creates an array.">Array</commands>
+		<commands syntax="(param) `n[AutoHotkey_L] Tests if the parameter is an object.">IsObject</commands>
+		<commands syntax="(obj, index, values...) `n[AutoHotkey_L]">ObjInsert</commands>
+		<commands syntax="(value) `n[AutoHotkey_L]">ObjInsert</commands>
+		<commands syntax="(key, value) `n[AutoHotkey_L]">ObjInsert</commands>
+		<commands syntax="(index, values...) `n[AutoHotkey_L] ??">_Insert</commands>
+		<commands syntax="(value) `n[AutoHotkey_L]">_Insert</commands>
+		<commands syntax="(key, value) `n[AutoHotkey_L]">_Insert</commands>
+		<commands syntax="(obj, key) `n[AutoHotkey_L]">ObjRemove</commands>
+		<commands syntax="(obj, first, last) `n[AutoHotkey_L]">ObjRemove</commands>
+		<commands syntax="(key) `n[AutoHotkey_L]">_Remove</commands>
+		<commands syntax="(first, last) `n[AutoHotkey_L]">_Remove</commands>
+		<commands syntax="(obj) `n[AutoHotkey_L]">ObjMinIndex</commands>
+		<commands syntax="() `n[AutoHotkey_L]">_MinIndex</commands>
+		<commands syntax="(obj) `n[AutoHotkey_L]">ObjMaxIndex</commands>
+		<commands syntax="() `n[AutoHotkey_L]">_MaxIndex</commands>
+		<commands syntax="(obj, maxitems) `n[AutoHotkey_L]">ObjSetCapacity</commands>
+		<commands syntax="(obj, key, bytesize) `n[AutoHotkey_L]">ObjSetCapacity</commands>
+		<commands syntax="(maxitems) `n[AutoHotkey_L]">_SetCapacity</commands>
+		<commands syntax="(key, bytesize) `n[AutoHotkey_L]">_SetCapacity</commands>
+		<commands syntax="(obj[, key]) `n[AutoHotkey_L]">ObjGetCapacity</commands>
+		<commands syntax="([key]) `n[AutoHotkey_L]">_GetCapacity</commands>
+		<commands syntax="(obj, key) `n[AutoHotkey_L]">ObjGetAddress</commands>
+		<commands syntax="(key) `n[AutoHotkey_L]">_GetAddress</commands>
+		<commands syntax="(obj) `n[AutoHotkey_L]">ObjNewEnum</commands>
+		<commands syntax="() `n[AutoHotkey_L]">_NewEnum</commands>
+		<commands syntax="(obj) `n[AutoHotkey_L]">ObjAddRef</commands>
+		<commands syntax="() `n[AutoHotkey_L]">_AddRef</commands>
+		<commands syntax="(obj) `n[AutoHotkey_L]">ObjRelease</commands>
+		<commands syntax="() `n[AutoHotkey_L]">_Release</commands>
+		<commands syntax="(obj, key) `n[AutoHotkey_L]">ObjHasKey</commands>
+		<commands syntax="(key) `n[AutoHotkey_L]">_HasKey</commands>
+		<commands syntax="(obj) `n[AutoHotkey_L]">ObjClone</commands>
+		<commands syntax="() `n[AutoHotkey_L]">_Clone</commands>
+		<commands syntax="([params...]) `n[AutoHotkey_L]">__New</commands>
+		<commands syntax="([params...]) `n[AutoHotkey_L]">__Get</commands>
+		<commands syntax="([params...,] value) `n[AutoHotkey_L]">__Set</commands>
+		<commands syntax="([params...]) `n[AutoHotkey_L]">__Call</commands>
+		<commands syntax="() `n[AutoHotkey_L]">__Delete</commands>
+		<commands syntax="(ProgIdOrCLSID [, IID]) `n[AutoHotkey_L] Creates a COM object.">ComObjCreate</commands>
+		<commands syntax="(name) `n[AutoHotkey_L] Returns a reference to an object provided by a COM component.">ComObjGet</commands>
+		<commands syntax="(obj [, prefix])  `n[AutoHotkey_L] Listens to events from a ComObject (omit prefix to stop listening).">ComObjConnect</commands>
+		<commands syntax="([Enable])`nEnables or disables notification of COM errors. If Enable is omitted, the current setting is returned.">ComObjError</commands>
+		<commands syntax="(ProgIdOrCLSID) `n[AutoHotkey_L] Retrieves a running object that has been registered with OLE.">ComObjActive</commands>
+		<commands syntax="(pdisp) `n[AutoHotkey_L] Wraps a raw IDispatch pointer in a usable object.">ComObjEnwrap</commands>
+		<commands syntax="(obj) `n[AutoHotkey_L] Unwraps a raw IDispatch pointer in a usable object.">ComObjUnwrap</commands>
+		<commands syntax="(vt, val [, flags]) `n[AutoHotkey_L] Packs type and value information in a single parameter.">ComObjParameter</commands>
+		<commands syntax="(obj [, &quot;Name&quot;/&quot;IID&quot;]) `n[AutoHotkey_L] Retrieves type information for a COM object.">ComObjType</commands>
+		<commands syntax="(obj) `n[AutoHotkey_L] Retrieves the raw 64-bit signed integer stored in a ComObject wrapper.">ComObjValue</commands>
+		<commands syntax="() `n[AutoHotkey_L] Creates an object for use in place of an optional parameter's default value when calling a COM object.">ComObjMissing</commands>
+		<commands syntax="(VarType, Count1 [, Count2, ... Count8]) `n[AutoHotkey_L] Creates a SAFEARRAY for use with COM.">ComObjArray</commands>
+		<commands syntax="(ComObject [, SID], IID) `n[AutoHotkey_L] Queries a COM object for an interface or service.">ComObjQuery</commands>
+		<commands syntax="(ComObject [, NewFlags, Mask]) `n[AutoHotkey_L] Retrieves or changes flags which control a COM wrapper object's behaviour.">ComObjFlags</commands>
 	</Commands>
 	<Color>
 		<KeyNames>Alt AppsKey Backspace Break Browser_Back Browser_Favorites Browser_Forward Browser_Home Browser_Refresh Browser_Search Browser_Stop CapsLock Control CtrlBreak Delete Down End Enter Escape F1 F2 F3 F4 F5 F6 F7 F8 F9 F10 F11 F12 F13 F14 F15 F16 F17 F18 F19 F20 F21 F22 F23 F24 Help Home Insert LAlt Launch_App1 Launch_App2 Launch_Mail Launch_Media LButton LControl Left LShift LWin MButton Media_Next Media_Play_Pause Media_Prev Media_Stop NumLock Numpad Numpad0 Numpad1 Numpad2 Numpad3 Numpad4 Numpad5 Numpad6 Numpad7 Numpad8 Numpad9 NumpadAdd NumpadAdd NumpadClear NumpadDel NumpadDiv NumpadDiv NumpadDot NumpadDown NumpadEnd NumpadEnter NumpadEnter NumpadHome NumpadIns NumpadLeft NumpadMult NumpadMult NumpadPgDn NumpadPgUp NumpadRight NumpadSub NumpadSub NumpadUp Pause PgDn PgUp PrintScreen RAlt RButton RControl Right RShift RWin ScrollLock Shift Space Tab Up Volume_Down Volume_Mute Volume_Up WheelDown WheelLeft WheelRight WheelUp XButton1 XButton2</KeyNames>
@@ -368,7 +375,7 @@
 		<Indent>Catch else for Finally if IfEqual IfExist IfGreater IfGreaterOrEqual IfInString IfLess IfLessOrEqual IfMsgBox IfNotEqual IfNotExist IfNotInString IfWinActive IfWinExist IfWinNotActive IfWinNotExist Loop Try while</Indent>
 		<BuiltIn>A_AhkPath A_ScriptHwnd A_AhkVersion A_AppData A_AppDataCommon A_AutoTrim A_BatchLines A_CaretX A_CaretY A_ComputerName A_ControlDelay A_Cursor A_DD A_DDD A_DDDD A_DefaultMouseSpeed A_Desktop A_DesktopCommon A_DetectHiddenText A_DetectHiddenWindows A_EndChar A_EventInfo A_ExitReason A_FormatFloat A_FormatInteger A_Gui A_GuiControl A_GuiControlEvent A_GuiEvent A_GuiHeight A_GuiWidth A_GuiX A_GuiY A_Hour A_IconFile A_IconHidden A_IconNumber A_IconTip A_Index A_IPAddress1 A_IPAddress2 A_IPAddress3 A_IPAddress4 A_IsAdmin A_IsCompiled A_IsCritical A_IsPaused A_IsSuspended A_IsUnicode A_KeyDelay A_Language A_LastError A_LineFile A_LineNumber A_LoopField A_LoopFileAttrib A_LoopFileDir A_LoopFileExt A_LoopFileFullPath A_LoopFileLongPath A_LoopFileName A_LoopFileShortName A_LoopFileShortPath A_LoopFileSize A_LoopFileSizeKB A_LoopFileSizeMB A_LoopFileTimeAccessed A_LoopFileTimeCreated A_LoopFileTimeModified A_LoopReadLine A_LoopRegKey A_LoopRegName A_LoopRegSubkey A_LoopRegTimeModified A_LoopRegType A_MDAY A_Min A_MM A_MMM  A_MMMM A_Mon A_MouseDelay A_MSec A_MyDocuments A_Now A_NowUTC A_NumBatchLines A_OSType A_OSVersion A_PriorHotkey A_ProgramFiles A_Programs A_ProgramsCommon A_PtrSize A_ScreenHeight A_ScreenWidth A_ScriptDir A_ScriptFullPath A_ScriptName A_Sec A_Space A_StartMenu A_StartMenuCommon A_Startup A_StartupCommon A_StringCaseSense A_Tab A_Temp A_ThisFunc A_ThisHotkey A_ThisLabel A_ThisMenu A_ThisMenuItem A_ThisMenuItemPos A_TickCount A_TimeIdle A_TimeIdlePhysical A_TimeSincePriorHotkey A_TimeSinceThisHotkey A_TitleMatchMode A_TitleMatchModeSpeed A_UserName A_WDay A_WinDelay A_WinDir A_WorkingDir A_YDay A_YEAR A_YWeek A_YYYY true false</BuiltIn>
 		<Commands>AutoTrim BlockInput Click ClipWait Control ControlClick ControlFocus ControlGet ControlGetFocus ControlGetPos ControlGetText ControlMove ControlSend ControlSetText CoordMode DetectHiddenText DetectHiddenWindows Drive DriveGet DriveSpaceFree Edit EnvAdd EnvDiv EnvGet EnvMult EnvSet EnvSub EnvUpdate FileAppend FileCopy FileCopyDir FileCreateDir FileCreateShortcut FileDelete FileEncoding FileInstall FileGetAttrib FileGetShortcut FileGetSize FileGetTime FileGetVersion FileMove FileMoveDir FileOpen FileRead FileReadLine FileRecycle FileRecycleEmpty FileRemoveDir FileSelectFile FileSelectFolder FileSetAttrib FileSetTime FormatTime GetKeyState GroupActivate GroupAdd GroupClose GroupDeactivate Gui GuiControl GuiControlGet Hotkey ImageSearch IniDelete IniRead IniWrite Input InputBox KeyHistory KeyWait ListHotkeys ListLines ListVars #LTrim Menu MouseClick MouseClickDrag MouseGetPos MouseMove MsgBox OnClipboardChange OutputDebug Pause PixelGetColor PixelSearch PostMessage Process Progress Random RegDelete RegRead RegWrite Reload Run RunAs RunWait Sleep Send SendRaw SendInput SendPlay SendLevel SendMessage SendMode SetCapslockState SetControlDelay SetDefaultMouseSpeed SetEnv SetFormat SetKeyDelay SetMouseDelay SetNumlockState SetScrollLockState SetRegView SetStoreCapslockMode SetTitleMatchMode SetWinDelay SetWorkingDir Shutdown Sort SoundBeep SoundGet SoundGetWaveVolume SoundPlay SoundSet SoundSetWaveVolume SplashImage SplashTextOn SplashTextOff SplitPath StatusBarGetText StatusBarWait StringCaseSense StringGetPos StringLeft StringLen StringLower StringMid StringReplace StringRight StringSplit StringTrimLeft StringTrimRight StringUpper SysGet ToolTip Transform TrayTip Trim UrlDownloadToFile WinActivate WinActivateBottom WinClose WinGetActiveStats WinGetActiveTitle WinGetClass WinGet WinGetPos WinGetText WinGetTitle WinHide WinKill WinMaximize WinMenuSelectItem WinMinimize WinMinimizeAll WinMinimizeAll Undo WinMove WinRestore WinSet WinSetTitle WinShow WinWait WinWaitActive WinWaitClose WinWaitNotActive</Commands>
-		<Functions>Abs Asc ACos ASin ATan Ceil Chr ComObjActive ComObjArray ComObjConnect ComObjCreate ComObjEnwrap ComObjError ComObjFlags ComObjGet ComObjMissing ComObjParameter ComObjQuery ComObjType ComObjValue Cos DllCall Exp FileExist  Floor Format Func GetKeyName GetKeySC GetKeyVK InStr InStr InStr IsByRef IsFunc IsLabel IsObject Ln Log Mod NumGet NumPut OnMessage RegExMatch RegExReplace RegisterCallback Round Sin Sqrt StrGet StrLen StrPut StrSplit SubStr Tan VarSetCapacity WinExist</Functions>
+		<Functions>Abs Asc ACos ASin ATan Ceil Chr ComObjActive ComObjArray ComObjConnect ComObjCreate ComObjEnwrap ComObjError ComObjFlags ComObjGet ComObjMissing ComObjParameter ComObjQuery ComObjType ComObjValue Cos DllCall Exp FileExist  Floor Format Func GetKeyName GetKeySC GetKeyVK GuiClose GuiContextMenu GuiDropFiles GuiEscape GuiSize InStr InStr InStr IsByRef IsFunc IsLabel IsObject Ln Log Mod NumGet NumPut OnExit OnMessage RegExMatch RegExReplace RegisterCallback Round Sin Sqrt StrGet StrLen StrPut StrReplace StrSplit SubStr Tan VarSetCapacity WinExist</Functions>
 		<Keywords>Abort AboveNormal Add ahk_class ahk_group ahk_id ahk_pid All alnum alpha AltDown AltSubmit AltTab AltTabAndMenu AltTabMenu AltTabMenuDismiss AltUp AlwaysOnTop and AutoHDR AutoSize Background BackgroundTrans BelowNormal between BitAnd BitNot BitOr BitShiftLeft BitShiftRight BitXOr Blind bold Border Bottom Button Buttons ByRef Cancel Capacity Caption Center Check Check3 Checkbox Checked CheckedGray Choose ChooseString Clipboard ClipboardAll Close Color ComboBox ComSpec contains ControlList Count CtrlDown CtrlUp date DateTime Days DDL Default DeleteAll Delimiter Deref Destroy digit Disable Disabled DropDownList Eject Enable Enabled Error ErrorLevel Exist Expand ExStyle FileSystem First Flash Float FloatFast Focus Font FromCodePage global Grid Group GroupBox GuiClose GuiContextMenu GuiDropFiles GuiEscape GuiSize Hdr Hidden Hide High HKCC HKCR HKCU HKEY_CLASSES_ROOT HKEY_CURRENT_CONFIG HKEY_CURRENT_USER HKEY_LOCAL_MACHINE HKEY_USERS HKLM HKU Hours HScroll Icon IconSmall ID IDLast Ignore ImageList in Integer IntegerFast Interrupt italic Join Label LastFound LastFoundExist Limit Lines List ListBox ListView local LocalSameAsGlobal Lock Logoff Low lower Lowercase MainWindow Margin Maximize MaximizeBox MaxSize Minimize MinimizeBox MinMax MinSize Minutes MonthCal Mouse Move Multi NA No NoActivate NoDefault NoHide NoIcon NoMainWindow norm Normal NoSort NoSortHdr NoStandard not NoTab NoTimers number Off Ok On or OwnDialogs Owner Parse Password Pic Picture Pixel Pos Pow Priority ProcessName ProgramFiles Radio Range Raw Read ReadOnly Realtime Redraw REG_BINARY REG_DWORD REG_EXPAND_SZ REG_MULTI_SZ REG_SZ Region Relative Remove Rename Report Resize Restore Retry RGB RWinDown RWinUp Screen Seconds Section Select Serial SetLabel ShiftAltTab ShiftDown ShiftUp Show Single Slider SortDesc ss Standard static Status StatusBar StatusCD strike Style Submit SysMenu Tab2 TabStop Text Theme Tile time Tip ToCodePage ToggleCheck ToggleEnable ToolWindow Top Topmost TransColor Transparent Tray TreeView TryAgain Type UnCheck underline Unicode Unlock UpDown upper Uppercase UseEnv UseErrorLevel UseUnsetGlobal UseUnsetLocal Vis VisFirst Visible VScroll Wait WaitClose WantCtrlA WantF2 WantReturn WinMinimizeAllUndo Wrap xdigit xm xp xs Yes ym yp ys</Keywords>
 		<Flow>Break Continue Critical Exit ExitApp Gosub Goto OnExit Pause return SetBatchLines SetTimer Suspend Thread Throw Until</Flow>
 	</Color>
