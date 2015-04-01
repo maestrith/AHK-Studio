@@ -80,7 +80,10 @@ notify(csc=""){
 	if(fn.code=2004&&sc.sc=v.codevault.sc)
 		m("Please create or select a code snippet")
 	if(fn.code=2001){
-		if(fn.ch=46)
+		if(fn.ch=44){
+			insert:=v.options.Auto_Space_After_Comma?" ":""
+			sc.2003(sc.2008,insert),sc.2025(sc.2008+StrLen(insert))
+		}if(fn.ch=46)
 			Show_Class_Methods(sc.textrange(sc.2266(sc.2008-1,1),sc.2267(sc.2008-1,1)))
 		if ((fn.ch=10||fn.ch=123||fn.ch=125)&&v.options.full_auto&&sc.2102=0){
 			if fn.ch=10

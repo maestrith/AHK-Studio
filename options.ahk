@@ -55,6 +55,7 @@ options(){
 	Autocomplete_Enter_Newline:
 	Disable_Folders_In_Project_Explorer:
 	Disable_Include_Dialog:
+	Auto_Space_After_Comma:
 	onoff:=settings.ssn("//options/@ " A_ThisLabel).text?0:1
 	att:=[],att[A_ThisLabel]:=onoff
 	settings.add({path:"options",att:att})
