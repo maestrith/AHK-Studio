@@ -52,7 +52,6 @@ if(A_IsUnicode!=1){
 	return
 }
 DetectHiddenWindows,On
-flan:=%A_Index%
 file=%1%
 ComObjError(0),openfile:=file
 if x:=ComObjActive("AHK-Studio"){

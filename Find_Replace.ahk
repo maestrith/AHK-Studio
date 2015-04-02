@@ -42,25 +42,30 @@ Find_Replace(){
 	goto,frrestart
 	return
 	frreplace:
-	info:=newwin[]
-	csc().2170(0,[info.replace])
+	info:=newwin[],text:=sc.getseltext(),replace:=info.replace
+	for a,b in {"``n":"`n","``r":"`n","``t":"`t","\r":"`n","\t":"`t","\n":"`n"}
+		StringReplace,replace,replace,%a%,%b%,All
+	csc().2170(0,[RegExReplace(text,info.find,replace)])
 	goto,frfind
 	return
 	frall:
 	info:=newwin[],sc:=csc(),stop:=current(3).file,looped:=0,current:=current(),pos:=sc.2008,pre:="O",find:="",find:=info.regex?info.find:"\Q" RegExReplace(info.find, "\\E", "\E\\E\Q") "\E",pre.=info.greed?"":"U",pre.=info.cs?"":"i",pre.=info.ml?"":"m`n",find:=pre ")" find ""
 	if info.segment
 		goto,frseg
-	list:=sn(current(1),"descendant::file"),All:=update("get").1,replace:=info.replace
+	list:=sn(current(1),"descendant::file"),All:=update("get").1
+	info:=newwin[],replace:=info.replace
+	for a,b in {"``n":"`n","``r":"`n","``t":"`t","\r":"`n","\t":"`t","\n":"`n"}
+		StringReplace,replace,replace,%a%,%b%,All
 	while,ll:=list.Item[A_Index-1]{
 		text:=All[ssn(ll,"@file").text]
-		if(RegExMatch(text,find)){
+		if(RegExMatch(text,find,found)){
 			rep:=RegExReplace(text,find,replace),ea:=xml.ea(ll)
 			if(ea.sc){
 				tv(ea.tv)
 				Sleep,200
 				sc.2181(0,[rep])
 			}else
-			update({file:ea.file,text:rep})
+				update({file:ea.file,text:rep})
 		}
 	}
 	return
