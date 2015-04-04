@@ -1,11 +1,10 @@
 brace(){
 	brace:
 	sc:=csc(),cp:=sc.2008,line:=sc.2166(cp),min:=posinfo()
-	if sc.2102
-		if(Chr(sc.2007(sc.2008-1))=A_ThisHotkey),sc.2104
-			return
-	ControlGetFocus,Focus,A
 	hotkey:=SubStr(A_ThisHotkey,0)
+	if sc.2102
+		return sc.2104
+	ControlGetFocus,Focus,A
 	if !InStr(Focus,"Scintilla"){
 		Send,{%hotkey%}
 		return
