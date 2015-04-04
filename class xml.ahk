@@ -95,6 +95,17 @@ class xml{
 			next.text:=info.text
 		return next
 	}
+	ff(info*){
+		doc:=info.1.NodeName?info.1:this.xml
+		if(info.1.NodeName)
+			node:=info.2,find:=info.3
+		else
+			node:=info.1,find:=info.2
+		if InStr(find,"'")
+			return doc.SelectSingleNode(node "[.=concat('" RegExReplace(find,"'","'," Chr(34) "'" Chr(34) ",'") "')]/..")
+		else
+			return doc.SelectSingleNode(node "[.='" find "']/..")
+	}
 	find(info){
 		if(info.att.1&&info.text)
 			return m("You can only search by either the attribut or the text, not both")
