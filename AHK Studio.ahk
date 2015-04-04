@@ -92,10 +92,10 @@ tv(files.ssn("//*[@file='" v.openfile "']/@tv").text)
 return
 GuiDropFiles:
 v.wait:=1
-open(A_GuiEvent,1),openfile:=StrSplit(A_GuiEvent,"`n").1,main:=files.ssn("//main[@file='" openfile "']")
+tv:=open(A_GuiEvent,1),openfile:=StrSplit(A_GuiEvent,"`n").1,main:=files.ssn("//main[@file='" openfile "']")
 while,(v.wait)
 	Sleep,20
-tv(ssn(main.firstchild,"@tv").text)
+tv(tv)
 return
 #Include %A_ScriptDir%
 #Include about.ahk
