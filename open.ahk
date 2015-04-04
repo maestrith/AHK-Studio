@@ -39,14 +39,14 @@ open(filelist="",show=""){
 		if !v.filescan.1{
 			SetTimer,scanfiles,Off
 			WinSetTitle,% hwnd([1]),,% "AHK Studio - " current(3).file
-			code_explorer.Refresh_Code_Explorer(),v.wait:=0
+			code_explorer.Refresh_Code_Explorer()
 			return
 		}
 		filename:=v.filescan.1
 		filelist:=files.sn("//main[@file='" filename "']/descendant::file")
 		while,fn:=filelist.item[A_Index-1]
 			code_explorer.scan(fn)
-		v.filescan.Remove(1),v.wait:=0
+		v.filescan.Remove(1)
 		return
 	}
 	return root
