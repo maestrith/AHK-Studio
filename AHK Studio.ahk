@@ -11,12 +11,13 @@
 		Rename include files from within Studio
 	}
 	tidy up script:
-	Toolbars
-	-Make it work on xml natively
-	-Add the ability to add more toolbars.
-	hotkey for adding selected words to a word list for the program
-	-make windows show up inititally inside of the main window. centered.
-	Change the version script to add tags for <changed> and <fixed> and so on.
+	Toolbars{
+		-Make it work on xml natively
+		-Add the ability to add more toolbars.
+		hotkey for adding selected words to a word list for the program
+		-make windows show up inititally inside of the main window. centered.
+		Change the version script to add tags for <changed> and <fixed> and so on.
+	}
 	windows_to_replace{
 		Themes
 		Code Vault
