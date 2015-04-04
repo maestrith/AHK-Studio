@@ -6,7 +6,7 @@ Gui(){
 		Enter[b "Enter"]:="checkqf"
 	for a,b in StrSplit("WheelLeft,WheelRight",",")
 		Enter[b]:="scrollwheel"
-	Enter["^c"]:="copy",Enter["^x"]:="cut",hotkeys([1],enter)
+	Enter["~Backspace"]:="Backspace",Enter["^c"]:="copy",Enter["^x"]:="cut",hotkeys([1],enter)
 	for a,b in ["esc & space","esc & ,"]
 		Hotkey,%b%,eol,On
 	Gui,Add,StatusBar,hwndsb,StatusBar Info

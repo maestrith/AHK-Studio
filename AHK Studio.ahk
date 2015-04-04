@@ -335,3 +335,4 @@ return
 #Include window.ahk
 #Include Words In Document.ahk
 #Include Index Current File.ahk
+#Include Backspace.ahk
