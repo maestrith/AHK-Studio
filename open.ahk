@@ -33,7 +33,8 @@ open(filelist="",show=""){
 		}
 		if Show
 			SetTimer,scanfiles,-100
-		return
+		;m(StrSplit(filelist,"`n").1)
+		return files.ssn("//main[@file='" StrSplit(filelist,"`n").1 "']/file/@tv").text
 		scanfiles:
 		if !v.filescan.1{
 			SetTimer,scanfiles,Off

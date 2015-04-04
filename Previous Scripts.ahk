@@ -19,7 +19,7 @@ Previous_Scripts(filename=""){
 		hwnd({rem:21})
 		return
 		previousscript:
-		LV_GetText(open,LV_GetNext()),tv:=open(open,1),tv(tv)
+		LV_GetText(open,LV_GetNext()),tv(open(open,1))
 		return
 		cleanup:
 		dup:=[]

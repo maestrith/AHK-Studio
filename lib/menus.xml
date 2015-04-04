@@ -142,7 +142,7 @@
 				<menu clean="Jump_To_Function" name="Jump To Function"></menu>
 				<menu clean="Jump_To_Include" name="Jump To Include"></menu>
 				<menu clean="Jump_To_Label" name="Jump To Label"></menu>
-				<menu clean="Jump_To_Method" name="Jump To Method" hotkey=""></menu></menu>
+				<menu clean="Jump_To_Method" name="Jump To Method"></menu></menu>
 			<menu name="Move Selected Lines Down" hotkey="+^Down" clean="Move_Selected_Lines_Down"></menu>
 			<menu name="Move Selected Lines Up" hotkey="+^Up" clean="Move_Selected_Lines_Up"></menu>
 			<menu clean="Navigation" name="Navigation">
