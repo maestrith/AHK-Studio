@@ -2,15 +2,8 @@ Auto_Insert(){
 	static
 	wname:="Auto_Insert",newwin:=new windowtracker(wname)
 	newwin.Add(["ListView,w200 h200 AltSubmit gchange,Entered Key|Added Key,wh","Text,,Entered Key:,y","Edit,venter x+10 w50,,yw","Text,xm,Added Key:,y","Edit,vadd x+10 w50,,yw","Button,xm gaddkey Default,Add Keys,y","Button,x+10 gremkey,Remove Selected,y"])
-	newwin.Show("Auto Insert"),autoadd:=settings.sn("//autoadd/*")
-	while,aa:=autoadd.item(a_index-1){
-		insert:=[]
-		ea:=xml.ea(aa)
-		for c,d in {trigger:ea.trigger,add:ea.add}
-			for e,f in StrSplit(d,",")
-				Insert[c].=Chr(f)
-		LV_Add("",insert.trigger,insert.add)
-	}
+	newwin.Show("Auto Insert")
+	goto,popai
 	return
 	change:
 	if A_GuiEvent not in Normal,i
@@ -36,7 +29,8 @@ Auto_Insert(){
 	if settings.ssn("//autoadd/key[@trigger='" trigger "']")
 		LV_Delete(LV_GetNext()),dup:=0
 	if !settings.ssn("//autoadd/key[@trigger='" trigger "']")
-		settings.add2("autoadd/key",{trigger:trigger,add:replace},"",1),LV_Add("",enter,add)
+		settings.add2("autoadd/key",{trigger:trigger,add:replace},"",1)
+	Gosub,popai
 	Loop,2
 		ControlSetText,Edit%A_Index%,,% hwnd([wname])
 	ControlFocus,Edit1,% hwnd([wname])
@@ -44,10 +38,12 @@ Auto_Insert(){
 	return
 	remkey:
 	while,LV_GetNext(){
-		LV_GetText(trigger,LV_GetNext())
+		LV_GetText(trigger,LV_GetNext()),trig:=""
 		Hotkey,IfWinActive,% hwnd([1])
 		Hotkey,%trigger%,Off
-		rem:=settings.ssn("//autoadd/key[@trigger='" Asc(trigger) "']"),rem.ParentNode.RemoveChild(rem),LV_Delete(LV_GetNext())
+		for a,b in StrSplit(trigger)
+			trig.=Asc(b) ","
+		rem:=settings.ssn("//autoadd/key[@trigger='" Trim(trig,",") "']"),rem.ParentNode.RemoveChild(rem),LV_Delete(LV_GetNext())
 	}
 	Loop,2
 		ControlSetText,Edit%A_Index%,,% hwnd([wname])
@@ -55,5 +51,16 @@ Auto_Insert(){
 	Auto_InsertGuiClose:
 	Auto_InsertGuiEscape:
 	hwnd({rem:wname})
+	return
+	popai:
+	LV_Delete(),autoadd:=settings.sn("//autoadd/*")
+	while,aa:=autoadd.item(a_index-1){
+		insert:=[]
+		ea:=xml.ea(aa)
+		for c,d in {trigger:ea.trigger,add:ea.add}
+			for e,f in StrSplit(d,",")
+				Insert[c].=Chr(f)
+		LV_Add("",insert.trigger,insert.add)
+	}
 	return
 }
