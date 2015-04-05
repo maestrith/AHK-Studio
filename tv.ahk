@@ -5,6 +5,7 @@ tv(tv=0,open=""){
 	if !open
 		return
 	tv:
+	Sleep,100
 	if (A_GuiEvent="S"||open){
 		if !v.startup
 			getpos(),count:=0
@@ -36,6 +37,5 @@ tv(tv=0,open=""){
 		WinSetTitle,% hwnd([1]),,AHK Studio - %fn%
 		sc.4004("fold",[1])
 	}
-	Sleep,100
 	return
 }
