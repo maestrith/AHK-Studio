@@ -126,6 +126,9 @@ qf(){
 	full:
 	sc:=csc()
 	GuiControl,1:-Redraw,% sc.sc
+	SetTimer,gofull,-1
+	return
+	gofull:
 	fix_indent()
 	GuiControl,1:+Redraw,% sc.sc
 	return
