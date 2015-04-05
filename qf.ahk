@@ -118,10 +118,15 @@ qf(){
 		replace()
 	else
 		marginwidth()
-	if(v.options.full_auto)
+	if(v.options.full_auto){
+		GuiControl,1:-Redraw,% sc.sc
 		SetTimer,full,-10
+	}
 	return
 	full:
+	sc:=csc()
+	GuiControl,1:-Redraw,% sc.sc
 	fix_indent()
+	GuiControl,1:+Redraw,% sc.sc
 	return
 }

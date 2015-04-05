@@ -15,7 +15,6 @@ fix_indent(sc=""){
 	fullauto:
 	settimer,%A_ThisLabel%,Off
 	return
-	Critical
 	next:=0,cpos:=0,indent:=0,add:=0
 	lock:=[],track:=[]
 	if !WinExist("ahk_id" sc.sc)
@@ -29,13 +28,14 @@ fix_indent(sc=""){
 	skip:=""
 }
 newindent(indentwidth:=""){
+	Critical
+	sc:=csc(),codetext:=sc.getuni(),indentation:=sc.2121
 	GuiControl,1:-Redraw,% sc.sc
-	sc:=csc(),codetext:=sc.getuni()
+	GuiControl,1:+g,% sc.sc
 	firstvis:=sc.2152,line:=sc.2166(sc.2008),linestart:=sc.2128(line),posinline:=sc.2008-linestart
-	selpos:=posinfo(),startline:=sc.2166(selpos.start),endline:=sc.2166(selpos.end-1)
+	selpos:=posinfo()
 	add:=[],braces:=0,code:=StrSplit(codetext,"`n"),state:=[],aa:=ab:=0
 	for a,b in code{
-		state[a-1]:=sc.2533(a-1)
 		text:=b
 		if (InStr(text,Chr(59)))
 			text:=RegExReplace(text,"(\s" Chr(59) ".*)")
@@ -43,13 +43,11 @@ newindent(indentwidth:=""){
 		if (SubStr(text,1,1)="("&&SubStr(text,0,1)!=")")
 			skip:=1
 		if (SubStr(text,1,1)=")"&&skip){
-			skip:=0,new.=b "`n"
+			skip:=0
 			continue
 		}
-		if (skip){
-			new.=b "`n"
+		if (skip)
 			continue
-		}
 		if RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b",found)
 			aa:=1
 		else
@@ -64,12 +62,13 @@ newindent(indentwidth:=""){
 		if(text="{")
 			add:=[]
 		if !(indentwidth){
-			if add.MaxIndex()
-				Loop,% add.MaxIndex()
-					new.="`t"
-			Loop,%braces%
-				new.="`t"
-			new.=Trim(b)
+			if add.MaxIndex(){
+				if(sc.2127(a-1)!=(braces+add.MaxIndex())*indentation)
+					sc.2126(a-1,(braces+add.MaxIndex())*indentation)
+			}else{
+				if(sc.2127(a-1)!=braces*indentation)
+					sc.2126(a-1,braces*indentation)
+			}
 		}else{
 			max:=add.MaxIndex()?add.MaxIndex():0,indent:=(braces+max)*indentwidth
 			if(indent!=sc.2127(a-1))
@@ -83,9 +82,8 @@ newindent(indentwidth:=""){
 			braces++,lastind:=1
 		else
 			lastind:=0
-		if(a!=code.MaxIndex())
-			new.="`n"
 	}
+	GuiControl,1:+gnotify,% sc.sc
 	if(indentwidth)
 		return
 	if braces
@@ -93,19 +91,14 @@ newindent(indentwidth:=""){
 	else
 		t()
 	if(codetext=new){
-		GuiControl,+Redraw,% sc.sc
+		GuiControl,1:+Redraw,% sc.sc
 		return
 	}
-	GuiControl,-Redraw,% sc.sc
-	length:=VarSetCapacity(text,strput(new,"utf-8")),StrPut(new,&text,length,"utf-8"),sc.2181(0,&text),sc.2613(firstvis)
 	if(selpos.start=selpos.end){
 		newpos:=sc.2128(line)+posinline
 		newpos:=newpos>sc.2128(line)?newpos:sc.2128(line)
 		sc.2160(newpos,newpos)
-	}else{
+	}else
 		sc.2160(sc.2167(startline),sc.2136(endline))
-	}
-	for a,b in state
-		sc.2532(a,b)
-	GuiControl,+Redraw,% sc.sc
+	GuiControl,1:+Redraw,% sc.sc
 }

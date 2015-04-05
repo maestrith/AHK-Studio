@@ -1,4 +1,10 @@
 testing(){
+	sc:=csc()
+	GuiControl,1:-Redraw,% sc.sc
+	sleep,1000
+				sc.2126(4,20)
+	GuiControl,1:+Redraw,% sc.sc
+	
 }
 /*
 	;clean out positions

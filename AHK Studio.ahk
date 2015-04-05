@@ -40,6 +40,7 @@
 		Code_Vault{
 			Add an area for comments for snippets
 		}
+		
 	}
 */
 if(A_IsUnicode!=1){

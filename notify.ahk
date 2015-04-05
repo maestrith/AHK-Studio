@@ -85,8 +85,12 @@ notify(csc=""){
 			sc.2003(sc.2008,insert),sc.2025(sc.2008+StrLen(insert))
 		}if(fn.ch=46)
 			Show_Class_Methods(sc.textrange(sc.2266(sc.2008-1,1),sc.2267(sc.2008-1,1)))
-		if(fn.ch=10&&v.options.full_auto)
-			GuiControl,1:-Redraw,% sc.sc
+		if(fn.ch=10&&v.options.full_auto){
+			return
+			/*
+				GuiControl,1:-Redraw,% sc.sc
+			*/
+		}
 		if(fn.ch=10&&v.options.fix_next_line){
 			GuiControl,1:-Redraw,% sc.sc
 			SetTimer,fix_next,50
