@@ -49,7 +49,7 @@ newindent(indentwidth:=""){
 			new.=b "`n"
 			continue
 		}
-		if RegExMatch(text,"iA)}?\b(" v.indentregex ")\b",found)
+		if RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b",found)
 			aa:=1
 		else
 			aa:=0
@@ -100,7 +100,7 @@ newindent(indentwidth:=""){
 	if(selpos.start=selpos.end){
 		newpos:=sc.2128(line)+posinline
 		newpos:=newpos>sc.2128(line)?newpos:sc.2128(line)
-		sc.2025(newpos)
+		sc.2160(newpos,newpos)
 	}else{
 		sc.2160(sc.2167(startline),sc.2136(endline))
 	}
