@@ -33,7 +33,7 @@ newindent(indentwidth:=""){
 	GuiControl,1:-Redraw,% sc.sc
 	GuiControl,1:+g,% sc.sc
 	firstvis:=sc.2152,line:=sc.2166(sc.2008),linestart:=sc.2128(line),posinline:=sc.2008-linestart
-	selpos:=posinfo()
+	selpos:=posinfo(),sc.2078
 	add:=[],braces:=0,code:=StrSplit(codetext,"`n"),state:=[],aa:=ab:=0
 	for a,b in code{
 		text:=b
@@ -83,6 +83,7 @@ newindent(indentwidth:=""){
 		else
 			lastind:=0
 	}
+	sc.2079
 	GuiControl,1:+gnotify,% sc.sc
 	if(indentwidth)
 		return
