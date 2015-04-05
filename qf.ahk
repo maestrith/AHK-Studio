@@ -84,7 +84,7 @@ qf(){
 	if !IsObject(MinMax),pos:=posinfo()
 		minmax:=[]
 	Loop,% sc.2570
-		{
+	{
 		caret:=sc.2577(A_Index-1),anchor:=sc.2579(A_Index-1)
 		if (caret>anchor)
 			min:=anchor,max:=caret
@@ -112,14 +112,14 @@ qf(){
 	return
 	checkqf:
 	ControlGetFocus,Focus,% hwnd([1])
-	if (Focus="Edit1")
+	if(Focus="Edit1")
 		goto,qf
 	else if(A_ThisHotkey="+Enter")
 		replace()
 	else
 		marginwidth()
-	if (v.options.full_auto)
-		SetTimer,full,-20
+	if(v.options.full_auto)
+		SetTimer,full,-10
 	return
 	full:
 	fix_indent()

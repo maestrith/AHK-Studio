@@ -29,6 +29,7 @@ fix_indent(sc=""){
 	skip:=""
 }
 newindent(indentwidth:=""){
+	GuiControl,1:-Redraw,% sc.sc
 	sc:=csc(),codetext:=sc.getuni()
 	firstvis:=sc.2152,line:=sc.2166(sc.2008),linestart:=sc.2128(line),posinline:=sc.2008-linestart
 	selpos:=posinfo(),startline:=sc.2166(selpos.start),endline:=sc.2166(selpos.end-1)

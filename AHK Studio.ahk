@@ -108,6 +108,7 @@ return
 #Include Auto_Update.ahk
 #Include automenu.ahk
 #Include Back.ahk
+#Include Backspace.ahk
 #Include brace.ahk
 #Include bracesetup.ahk
 #Include case settings.ahk
@@ -206,6 +207,7 @@ return
 #Include Hotkey Search.ahk
 #Include hotkeys.ahk
 #Include hwnd.ahk
+#Include Index Current File.ahk
 #Include inputbox.ahk
 #Include Insert Code Vault.ahk
 #Include json.ahk
@@ -334,5 +336,3 @@ return
 #Include Widths.ahk
 #Include window.ahk
 #Include Words In Document.ahk
-#Include Index Current File.ahk
-#Include Backspace.ahk
