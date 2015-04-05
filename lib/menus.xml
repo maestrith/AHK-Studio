@@ -69,6 +69,7 @@
 			<menu name="Autocomplete Enter Newline" clean="Autocomplete_Enter_Newline"></menu>
 			<menu name="Center Caret" clean="Center_Caret"></menu>
 			<menu name="Check For Edited Files On Focus" clean="Check_For_Edited_Files_On_Focus"></menu>
+			<menu name="Disable Auto Delete" clean="Disable_Auto_Delete"></menu>
 			<menu clean="Disable_Auto_Indent_For_Non_Ahk_Files" name="Disable Auto Indent For Non Ahk Files"></menu>
 			<menu clean="Disable_Autosave" name="Disable Autosave"></menu>
 			<menu clean="Disable_Backup" name="Disable Backup"></menu>

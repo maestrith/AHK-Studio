@@ -6,12 +6,8 @@ upload(winname="Upload"){
 	while,ll:=list.item[A_Index-1]
 		lst.="|" ll.text
 	newwin:=new WindowTracker(10)
-	newwin.Add(["Text,,Use Ctrl+Up/Down to increment the version","Text,Section,Version:","Edit,x+5 ys-2 w130 vversion,,w,1","Button,guladd x+5 -TabStop,Add Version,x","Button,x+5 gverhelp -TabStop,Help,x","Text,xs,Versions:","TreeView,w360 h100 guplv AltSubmit -TabStop,,w","Button,xm gremver -TabStop,Remove Selected Version","Text,xs,Version Information:","Edit,xm w360 h200 -Wrap gupadd,,wh"
-	,"Text,xm Section,Upload directory:,y","Edit,vdir w100 x+10 ys-2,,yw,1","Text,section xm,Ftp Server:,y","DDL,x+10 ys-2 w200 vserver," lst ",yw","Checkbox,vcompile xm,Compile,y","Checkbox,vgistversion xm Disabled,Update Gist Version,y","Checkbox,vupver,Upload without progress bar (a bit more stable),y","Checkbox,vversstyle,Remove (Version=) from the " chr(59) "auto_version,y"
-	,"Checkbox,vupgithub,Update GitHub,y","Button,w200 gupload1 xm Default,Upload,y"])
-	file:=ssn(current(1),"@file").text
-	newwin.Show("Upload"),info:="",hotkeys([10],{"^up":"uup","^down":"udown",Delete:"uldel",Backspace:"uldel",F1:"compilever",F2:"clearver",F3:"wholelist"})
-	node:=vversion.ssn("//info[@file='" file "']")
+	newwin.Add(["Text,,Use Ctrl+Up/Down to increment the version","Text,Section,Version:","Edit,x+5 ys-2 w130 vversion,,w,1","Button,guladd x+5 -TabStop,Add Version,x","Button,x+5 gverhelp -TabStop,Help,x","Text,xs,Versions:","TreeView,w360 h100 guplv AltSubmit -TabStop,,w","Button,xm gremver -TabStop,Remove Selected Version","Text,xs,Version Information:","Edit,xm w360 h200 -Wrap gupadd,,wh","Text,xm Section,Upload directory:,y","Edit,vdir w100 x+10 ys-2,,yw,1","Text,section xm,Ftp Server:,y","DDL,x+10 ys-2 w200 vserver," lst ",yw","Checkbox,vcompile xm,Compile,y","Checkbox,vgistversion xm Disabled,Update Gist Version,y","Checkbox,vupver,Upload without progress bar (a bit more stable),y","Checkbox,vversstyle,Remove (Version=) from the " chr(59) "auto_version,y","Checkbox,vupgithub,Update GitHub,y","Button,w200 gupload1 xm Default,Upload,y"])
+	file:=ssn(current(1),"@file").text,newwin.Show("Upload"),info:="",hotkeys([10],{"^up":"uup","^down":"udown",Delete:"uldel",Backspace:"uldel",F1:"compilever",F2:"clearver",F3:"wholelist"}),node:=vversion.ssn("//info[@file='" file "']")
 	for a,b in vversion.ea(node)
 		GuiControl,10:,% ControlList[a],%b%
 	GuiControl,10:ChooseString,ComboBox1,% ssn(node,"@server").text
@@ -22,10 +18,8 @@ upload(winname="Upload"){
 	return
 	uldel:
 	ControlGetFocus,focus,% hwnd([10])
-	if (Focus!="SysTreeView321"){
-		ControlSend,%focus%,{%A_ThisHotkey%},% hwnd([10])
-		return
-	}
+	if (Focus!="SysTreeView321")
+		Send,{Backspace}
 	else
 		goto,remver
 	return
@@ -99,11 +93,10 @@ upload(winname="Upload"){
 	TV_GetText(ver,TV_GetSelection())
 	WinGetPos,x,y,w,h,% hwnd([10])
 	vertext:=vers.getver(ver)
-	if (vertext){
+	if (vertext)
 		vertext:=ver "`r`n" Trim(vertext,"`r`n") "`r`n"
-	}else if !vertext{
+	else if !vertext
 		m("Please select a version number to build a version list")
-	}
 	if !compilever
 		clipboard:=vertext,compilever:=1
 	else
