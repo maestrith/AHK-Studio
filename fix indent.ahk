@@ -91,8 +91,10 @@ newindent(indentwidth:=""){
 		ToolTip,Segment Open,0,0
 	else
 		t()
-	if(codetext=new)
+	if(codetext=new){
+		GuiControl,+Redraw,% sc.sc
 		return
+	}
 	GuiControl,-Redraw,% sc.sc
 	length:=VarSetCapacity(text,strput(new,"utf-8")),StrPut(new,&text,length,"utf-8"),sc.2181(0,&text),sc.2613(firstvis)
 	if(selpos.start=selpos.end){
