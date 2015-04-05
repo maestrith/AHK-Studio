@@ -19,7 +19,7 @@ Previous_Scripts(filename=""){
 		hwnd({rem:21})
 		return
 		previousscript:
-		LV_GetText(open,LV_GetNext()),tv(open(open,1))
+		LV_GetText(open,LV_GetNext()),tv:=open(open,1),tv(tv)
 		return
 		cleanup:
 		dup:=[]
@@ -64,7 +64,7 @@ Previous_Scripts(filename=""){
 	LV_Modify(1,"Select Vis Focus")
 	return
 	pssel:
-	LV_GetText(file,LV_GetNext()),tv(open(file,1)),hwnd({rem:21})
+	LV_GetText(file,LV_GetNext()),tv:=open(file,1),tv(tv),hwnd({rem:21})
 	return
 	psup:
 	psdown:

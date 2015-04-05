@@ -5,13 +5,14 @@ brace(){
 	if !InStr(Focus,"Scintilla"){
 		Send,{%hotkey%}
 		return
-	}hotkey:=SubStr(A_ThisHotkey,0),add:=ea.add
+	}
+	hotkey:=SubStr(A_ThisHotkey,0),add:=ea.add
 	if(sc.2102){
 		sc.2104(),cp:=sc.2008
 		if(Chr(sc.2007(sc.2008-1))=hotkey)
 			return
 	}
-	if(sc.2007(sc.2008)=Asc(ea.add)&&v.options.Auto_Advance)
+	if(sc.2007(sc.2008)=Asc(ea.add)&&v.options.Auto_Advance&&sc.2007(sc.2008)!=0)
 		return sc.2025(sc.2008+1)
 	if(ea.trigger!=ea.add)
 		return sc.2003(sc.2008,ea.add),sc.2025(sc.2008+1)

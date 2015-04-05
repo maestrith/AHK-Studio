@@ -98,7 +98,7 @@ newindent(indentwidth:=""){
 	if(selpos.start=selpos.end){
 		newpos:=sc.2128(line)+posinline
 		newpos:=newpos>sc.2128(line)?newpos:sc.2128(line)
-		sc.2160(newpos,newpos)
+		sc.2025(newpos)
 	}else{
 		sc.2160(sc.2167(startline),sc.2136(endline))
 	}

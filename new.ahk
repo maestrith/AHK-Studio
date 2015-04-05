@@ -21,8 +21,9 @@ new(filename:="",text:=""){
 		FileSelectFile,filename,S,% ProjectFolder(),Create A New Project,*.ahk
 		if ErrorLevel
 			return
-		filename:=filename~="\.ahk$"?filename:filename ".ahk"
-		FileAppend,%template%,%filename%
+		filename:=SubStr(filename,-3,1)="."?filename:filename ".ahk"
+		if InStr(filename,".ahk")
+			FileAppend,%template%,%filename%
 	}else if(text){
 		SplitPath,filename,,outdir
 		FileCreateDir,%outdir%
@@ -30,11 +31,6 @@ new(filename:="",text:=""){
 	}
 	Gui,1:Default
 	Gui,1:TreeView,SysTreeView321
-	root:=open(filename,1)
-	SetTimer,selectnewfile,100
-	return
-	selectnewfile:
-	SetTimer,selectnewfile,Off
-	tv(root)
-	return
+	tv:=open(filename,1)
+	tv(tv)
 }

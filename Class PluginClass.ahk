@@ -49,7 +49,7 @@ Class PluginClass{
 		WinActivate,% hwnd([1])
 	}
 	open(info){
-		tv(open(info))
+		tv:=open(info),tv(tv)
 	}
 	GuiControl(info*){
 		GuiControl,% info.1,% info.2,% info.3

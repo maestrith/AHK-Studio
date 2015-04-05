@@ -32,8 +32,7 @@ open(filelist="",show=""){
 			v.filescan.Insert(b)
 		}
 		if Show
-			SetTimer,scanfiles,-100
-		;m(StrSplit(filelist,"`n").1)
+			SetTimer,scanfiles,10
 		return files.ssn("//main[@file='" StrSplit(filelist,"`n").1 "']/file/@tv").text
 		scanfiles:
 		if !v.filescan.1{
