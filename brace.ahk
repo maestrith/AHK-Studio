@@ -1,16 +1,17 @@
 brace(){
 	brace:
 	ControlGetFocus,Focus,A
-	sc:=csc(),cp:=sc.2008,line:=sc.2166(cp),min:=posinfo(),et:=xml.ea(settings.ff("//autoadd/key/@trigger",A_ThisHotkey)),ea:=xml.ea(settings.ff("//autoadd/key/@add",A_ThisHotkey)),hotkey:=SubStr(A_ThisHotkey,0)
+	sc:=csc(),cp:=sc.2008,line:=sc.2166(cp),et:=xml.ea(settings.ff("//autoadd/key/@trigger",A_ThisHotkey)),ea:=xml.ea(settings.ff("//autoadd/key/@add",A_ThisHotkey)),hotkey:=SubStr(A_ThisHotkey,0)
 	if !InStr(Focus,"Scintilla"){
 		Send,{%hotkey%}
 		return
 	}hotkey:=SubStr(A_ThisHotkey,0),add:=ea.add
 	if(sc.2102){
-		sc.2104
-		if(sc.2007(sc.2008)=Asc(add))
+		sc.2104(),cp:=sc.2008
+		if(Chr(sc.2007(sc.2008-1))=hotkey)
 			return
-	}if(sc.2007(sc.2008)=Asc(ea.add)&&v.options.Auto_Advance)
+	}
+	if(sc.2007(sc.2008)=Asc(ea.add)&&v.options.Auto_Advance)
 		return sc.2025(sc.2008+1)
 	if(ea.trigger!=ea.add)
 		return sc.2003(sc.2008,ea.add),sc.2025(sc.2008+1)
@@ -31,8 +32,9 @@ brace(){
 		return sc.2079
 	}if(hotkey="{"&&sc.2128(line)=cp&&cp=sc.2136(line)&&v.options.full_auto)
 		sc.2003(cp,"{`n`n}`n"),fix_indent(),sc.2025(sc.2136(line+1))
-	else
+	else{
 		sc.2003(cp,hotkey et.add),sc.2025(cp+1)
+	}
 	width:=sc.2276(32,"a"),text1:="Last Entered Character: " hotkey " Code:" Asc(hotkey),SB_SetText(text1,2),SB_SetParts(v.lastwidth,width*StrLen(text1 1),40),last:=width*StrLen(text1 1),replace()
 	return
 }
