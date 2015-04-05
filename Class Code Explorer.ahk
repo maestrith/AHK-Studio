@@ -28,8 +28,7 @@ class code_explorer{
 					if !ssn(main,"descendant::*[@type='variable'][@text='" var.1 "']")
 						cexml.under(cce,"info",{type:"Variable",file:filename,pos:pos-1,text:var.1,root:parentfile,upper:upper(var.1),order:"text,type,file"})
 					pos:=var.Pos(1)+var.len(1)
-				}
-				else{
+				}else{
 					pos:=1
 					break
 				}
@@ -42,7 +41,7 @@ class code_explorer{
 		}
 		lastpos:=pos:=1,codeobj:=StrSplit(code,"`n"),pos:=1,objects:=[]
 		while,pos:=RegExMatch(code,code_explorer.class,found,pos)
-			top:=SubStr(code,1,InStr(code,found.1)),RegExReplace(top,"\n","",count),objects[pos]:={name:found.1,line:count},cexml.under(cce,"info",{type:"Class",file:filename,pos:pos=1?0:pos,text:SubStr(found.1,7),upper:upper(SubStr(found.1,7)),root:parentfile,order:"text,type,root"}),pos:=found.Pos(1)+StrLen(found.1)
+			npos:=StrPut(SubStr(code,1,found.Pos(1)-2),"utf-8"),top:=SubStr(code,1,InStr(code,found.1)),RegExReplace(top,"\n","",count),objects[pos]:={name:found.1,line:count},cexml.under(cce,"info",{type:"Class",file:filename,pos:npos,text:SubStr(found.1,7),upper:upper(SubStr(found.1,7)),root:parentfile,order:"text,type,root"}),pos:=found.Pos(1)+StrLen(found.1)
 		for a,b in objects{
 			braces:=0,start:=0,add:=StrPut(SubStr(code,1,InStr(code,b.name)),"utf-8")-2,b.start:=add
 			loop,% codeobj.MaxIndex()
@@ -174,7 +173,10 @@ class code_explorer{
 			list:=""
 			code_explorer.TreeView.Transform()
 			if found:=code_explorer.TreeView.ssn("//*[@tv='" A_EventInfo "']"){
-				ea:=xml.ea(found),parent:=ssn(found,"ancestor::main/@file").text,TV(files.ssn("//main[@file='" parent "']/descendant::file[@file='" ea.file "']/@tv").text)
+				ea:=xml.ea(found)
+				if(ea.pos="")
+					return
+				parent:=ssn(found,"ancestor::main/@file").text,TV(files.ssn("//main[@file='" parent "']/descendant::file[@file='" ea.file "']/@tv").text)
 				Sleep,200
 				if (ea.type="bookmark"){
 					sc:=csc(),sc.2024(sc.2166(ea.pos))

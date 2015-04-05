@@ -12,11 +12,11 @@
 	}
 	tidy up script:
 	Toolbars{
-	-Make it work on xml natively
-	-Add the ability to add more toolbars.
-	hotkey for adding selected words to a word list for the program
-	-make windows show up inititally inside of the main window. centered.
-	Change the version script to add tags for <changed> and <fixed> and so on.
+		-Make it work on xml natively
+		-Add the ability to add more toolbars.
+		hotkey for adding selected words to a word list for the program
+		-make windows show up inititally inside of the main window. centered.
+		Change the version script to add tags for <changed> and <fixed> and so on.
 	}
 	windows_to_replace{
 		Themes
@@ -40,7 +40,6 @@
 		Code_Vault{
 			Add an area for comments for snippets
 		}
-		
 	}
 */
 if(A_IsUnicode!=1){
@@ -109,7 +108,6 @@ return
 #Include Auto_Update.ahk
 #Include automenu.ahk
 #Include Back.ahk
-#Include Backspace.ahk
 #Include brace.ahk
 #Include bracesetup.ahk
 #Include case settings.ahk
@@ -208,7 +206,6 @@ return
 #Include Hotkey Search.ahk
 #Include hotkeys.ahk
 #Include hwnd.ahk
-#Include Index Current File.ahk
 #Include inputbox.ahk
 #Include Insert Code Vault.ahk
 #Include json.ahk
@@ -337,3 +334,5 @@ return
 #Include Widths.ahk
 #Include window.ahk
 #Include Words In Document.ahk
+#Include Index Current File.ahk
+#Include Backspace.ahk
