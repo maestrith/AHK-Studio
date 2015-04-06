@@ -5,7 +5,6 @@ tv(tv=0,open=""){
 	if !open
 		return
 	tv:
-	Sleep,100
 	if (A_GuiEvent="S"||open){
 		if !v.startup
 			getpos(),count:=0
@@ -36,6 +35,14 @@ tv(tv=0,open=""){
 		setpos(ei),uppos(),history(fn),marginwidth(sc)
 		WinSetTitle,% hwnd([1]),,AHK Studio - %fn%
 		sc.4004("fold",[1])
+		SetTimer,matchfile,-300
 	}
+	return
+	matchfile:
+	Gui,1:Default
+	Gui,1:TreeView,SysTreeView321
+	doc:=sc.2357(),tv:=files.ssn("//*[@tv='" TV_GetSelection() "']"),ea:=xml.ea(tv)
+	if(doc!=ea.sc)
+		tv(TV_GetSelection(),1)
 	return
 }
