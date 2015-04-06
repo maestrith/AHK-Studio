@@ -40,8 +40,10 @@ class code_explorer{
 				np:=StrPut(SubStr(code,1,fun.Pos(1)),"utf-8")-1-(StrPut(SubStr(fun.1,1,1),"utf-8")-1),cexml.under(cce,"info",{type:type,file:filename,pos:np,text:fun.1,root:parentfile,upper:upper(fun.1),order:"text,type,file"}),pos:=fun.pos(1)+1
 		}
 		lastpos:=pos:=1,codeobj:=StrSplit(code,"`n"),pos:=1,objects:=[]
-		while,pos:=RegExMatch(code,code_explorer.class,found,pos)
+		while,pos:=RegExMatch(code,code_explorer.class,found,pos){
 			npos:=StrPut(SubStr(code,1,found.Pos(1)-2),"utf-8"),top:=SubStr(code,1,InStr(code,found.1)),RegExReplace(top,"\n","",count),objects[pos]:={name:found.1,line:count},cexml.under(cce,"info",{type:"Class",file:filename,pos:npos,text:SubStr(found.1,7),upper:upper(SubStr(found.1,7)),root:parentfile,order:"text,type,root"}),pos:=found.Pos(1)+StrLen(found.1)
+			;t(npos)
+		}
 		for a,b in objects{
 			braces:=0,start:=0,add:=StrPut(SubStr(code,1,InStr(code,b.name)),"utf-8")-2,b.start:=add
 			loop,% codeobj.MaxIndex()

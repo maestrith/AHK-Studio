@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
 <menus>
 	<main>
-		<menu clean="My_New_Menu" name="My New Menu">
-			<menu clean="Auto_Update" name="Auto Update"></menu></menu>
 		<menu name="&amp;File" clean="File">
+			<menu clean="Auto_Update" name="Auto Update"></menu>
 			<menu name="Chec&amp;k For Update" clean="Check_For_Update" hotkey=""></menu>
 			<menu name="&amp;Close" clean="Close"></menu>
 			<menu name="Co&amp;mpile" clean="Compile" hotkey=""></menu>
@@ -12,8 +11,9 @@
 			<menu name="E&amp;xit" clean="Exit" hotkey=""></menu>
 			<menu name="Export" clean="Export"></menu>
 			<menu name="&amp;Full Backup" clean="Full_Backup" hotkey=""></menu>
-			<menu name="&amp;New" hotkey="^N" clean="New"></menu>
 			<menu name="New Se&amp;gment" clean="New_Segment" hotkey=""></menu>
+			<menu clean="New_Stuff" name="New Stuff">
+				<menu name="&amp;New" hotkey="^N" clean="New"></menu></menu>
 			<menu name="&amp;Open" clean="Open" hotkey="^O"></menu>
 			<menu name="Open Fol&amp;der" clean="Open_Folder" hotkey=""></menu>
 			<menu name="Pre&amp;vious Scripts" clean="Previous_Scripts"></menu>
