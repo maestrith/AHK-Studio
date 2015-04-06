@@ -27,41 +27,26 @@ qf(){
 	pos:=start?start:1
 	pos:=pos=0?1:pos
 	mainsel:=""
-	if InStr(text,find)
-		sc.2571
+	if !IsObject(minmax)
+		minmax:=[],minmax.1:={min:0,max:sc.2006},delete:=1
 	if IsObject(minmax){
-		index:=1
+		start:=StrPut(SubStr(text,1,b.min),"utf-8")-2,index:=1
 		for a,b in MinMax{
-			start:=b.min,search:=sc.textrange(b.min,b.max,1),pos:=1
-			while,pos:=RegExMatch(search,find1,found,pos){
-				np:=StrPut(SubStr(search,1,found.Pos(0)),"utf-8")-1-(StrPut(SubStr(found.0,1,1),"utf-8")-1)
-				if (index=1){
-					sc.2160(start+np,start+np+StrPut(found.0,"utf-8")-1),index++,sc.2232(sc.2166(sc.2008(start+np)))
-					Sleep,1
-				}else{
-					sc.2573(start+np+StrPut(found.0,"utf-8")-1,start+np),sc.2232(sc.2166(sc.2008(start+np+StrPut(found.0,"utf-8")-1)))
-					Sleep,1
-				}
-				if !found.len()
-					break
-				pos+=found.len()
+			search:=sc.textrange(b.min,b.max,1),pos:=1
+			while,RegExMatch(search,find1,found,pos){
+				if found.Count(){
+					Loop,% found.Count(){
+						if !found.len(A_Index)
+							Break,2
+						ns:=StrPut(SubStr(search,1,found.Pos(A_Index)),"utf-8")-1,sc[Index=1?2160:2573](start+ns,start+ns+StrPut(found[A_Index])-1),pos:=found.Pos(A_Index)+found.len(A_Index),index++
+					}
+				}else
+					ns:=StrPut(SubStr(search,1,found.Pos(0)),"utf-8")-1,sc[Index=1?2160:2573](start+ns,start+ns+StrPut(found[0])-1),pos:=found.Pos(0)+found.len(0),index++
 			}
 		}
 	}
-	Else
-		while,pos:=RegExMatch(text,find1,found,pos){
-		np:=StrPut(SubStr(text,1,found.Pos(0)),"utf-8")-1-(StrPut(SubStr(found.0,1,1),"utf-8")-1)
-		if (begin<np&&!mainsel)
-			mainsel:=sc.2570=1?0:sc.2570
-		if (A_Index=1){
-			sc.2160(np,np+StrPut(found.0,"utf-8")-1),sc.2232(sc.2166(sc.2008(np)))
-			Sleep,1
-		}Else{
-			sc.2573(np+StrPut(found.0,"utf-8")-1,np),sc.2232(sc.2166(sc.2008(np+StrPut(found.0,"utf-8")-1)))
-			Sleep,1
-		}
-		pos+=found.len()
-	}
+	if delete
+		minmax:="",delete:=0
 	if mainsel>=0
 		sc.2574(mainsel)
 	sc.2169(),lastfind:=find

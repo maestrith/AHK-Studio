@@ -30,7 +30,8 @@ brace(){
 			else
 				sc.2573(b.end+(A_Index*2)-1,b.start+(A_Index*2)-1)
 		}
-		return sc.2079
+		sc.2079
+		return
 	}if(hotkey="{"&&sc.2128(line)=cp&&cp=sc.2136(line)&&v.options.full_auto)
 		sc.2003(cp,"{`n`n}`n"),fix_indent(),sc.2025(sc.2136(line+1))
 	else{

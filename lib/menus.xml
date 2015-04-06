@@ -194,7 +194,7 @@
 			<menu name="&amp;Forum" clean="Forum"></menu>
 			<menu name="&amp;Help" clean="Help"></menu>
 			<menu name="&amp;Social" clean="Social"></menu>
-			<menu name="Testing" hotkey="!F2" clean="Testing"></menu></menu>
+			<menu name="Testing" hotkey="!F12" clean="Testing"></menu></menu>
 		<menu name="Scratch &amp;Pad" clean="Scratch_Pad"></menu>
 		<menu clean="Plugin" name="P&amp;lugin">
 			<menu clean="Make_One_Line" name="Make One Line" option="" plugin="plugins\All One Line.ahk" hotkey="!["></menu>

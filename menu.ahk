@@ -2,7 +2,7 @@ menu(menuname){
 	menu:=menus.sn("//" menuname "/descendant::*"),topmenu:=menus.sn("//" menuname "/*")
 	Menu,main,UseErrorLevel,On
 	while,mm:=topmenu.item[A_Index-1]{
-		if(mm.nodename="date")
+				if(mm.nodename="date")
 			Continue
 		children:=sn(mm,"*")
 		while,cc:=children.item[A_Index-1]{

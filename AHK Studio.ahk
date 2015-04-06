@@ -2,7 +2,6 @@
 ;download complete
 /*
 	TODO LIST:
-	Show someone how this works.
 	Make a plugin downloader
 	-Current Segment, Current Project, All Files
 	bkid{
