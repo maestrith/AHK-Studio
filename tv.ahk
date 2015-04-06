@@ -41,6 +41,7 @@ tv(tv=0,open=""){
 	matchfile:
 	Gui,1:Default
 	Gui,1:TreeView,SysTreeView321
+	sc:=csc()
 	doc:=sc.2357(),tv:=files.ssn("//*[@tv='" TV_GetSelection() "']"),ea:=xml.ea(tv)
 	if(doc!=ea.sc)
 		tv(TV_GetSelection(),1)

@@ -83,6 +83,7 @@ newindent(indentwidth:=""){
 		else
 			lastind:=0
 	}
+	t("done")
 	sc.2079
 	GuiControl,1:+gnotify,% sc.sc
 	if(indentwidth)
