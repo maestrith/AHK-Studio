@@ -203,7 +203,8 @@
 			<menu clean="GeekDude_Paste" name="GeekDude Paste" option="" plugin="plugins\Geekdude Paste.ahk"></menu>
 			<menu clean="Paste_Clipboard" name="Paste Clipboard" option="Clipboard" plugin="plugins\Geekdude Paste.ahk"></menu>
 			<menu clean="Mark_All_Files_For_Update" name="Mark All Files For Update" option="" plugin="plugins\Mark All Files For Update.ahk"></menu>
-			<menu clean="Upload_Menus" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu></menu>
+			<menu clean="Upload_Menus" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu>
+			<menu clean="Split_Line_By_Comma" name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk" hotkey="^!,"></menu></menu>
 	</main>
 	<date>20150404</date>
 </menus>

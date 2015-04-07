@@ -36,14 +36,21 @@ Class PluginClass{
 		m(info*)
 	}
 	call(info*){
-		if IsFunc(info.1){
-			func:=info.1
-			info.Remove(1)
-			return %func%(info*)
-		}else if (IsLabel(info.1)){
-			SetTimer,% info.1,-100
-		}
+		/*
+			if IsFunc(info.1){
+				func:=info.1
+				if !IsObject(v.classcall)
+					v.classcall:=[]
+				info.Remove(1)
+				v.classcall.Insert({function:func,args:info})
+				SetTimer,classcall,100
+				return
+			}else if (IsLabel(info.1)){
+				SetTimer,% info.1,-100
+			}
+		*/
 		
+		SetTimer,% info.1,-100
 	}
 	activate(){
 		WinActivate,% hwnd([1])
@@ -56,5 +63,21 @@ Class PluginClass{
 	}
 	ssn(node,path){
 		return node.SelectSingleNode(path)
+	}
+}
+classcall:
+if !v.classcall.1.function
+	SetTimer,classcall,off
+if v.classcall.1.function{
+	fun:=v.classcall.1.function
+	new functioncall(v.classcall.1.function,v.classcall.1.args)
+}
+m(v.classcall.1.function)
+v.classcall.Remove(1)
+return
+;return %func%(info*)
+class functioncall{
+	__New(func,args){
+		%func%(args)
 	}
 }

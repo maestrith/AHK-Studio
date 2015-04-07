@@ -2,7 +2,7 @@ qf(){
 	static quickfind:=[],find,lastfind,minmax
 	qf:
 	sc:=csc()
-	if (sc.2570=1)
+	if(sc.2570=1)
 		begin:=sc.2008
 	ControlGetText,find,Edit1,% hwnd([1])
 	if (find=lastfind&&sc.2570>1){
@@ -10,14 +10,9 @@ qf(){
 			return previous_found()
 		return sc.2606,sc.2169()
 	}
-	pre:="O",find1:=""
-	find1:=v.options.regex?find:"\Q" RegExReplace(find, "\\E", "\E\\E\Q") "\E"
-	pre.=v.options.greed?"":"U",pre.=v.options.case_sensitive?"":"i",pre.=v.options.multi_line?"m`n":""
-	find1:=pre ")" find1 ""
-	if (find=""||find="."||find=".*"||find="\"){
-		sc.2571
-		return
-	}
+	pre:="O",find1:="",find1:=v.options.regex?find:"\Q" RegExReplace(find, "\\E", "\E\\E\Q") "\E",pre.=v.options.greed?"":"U",pre.=v.options.case_sensitive?"":"i",pre.=v.options.multi_line?"m`n":"",find1:=pre ")" find1 ""
+	if (find=""||find="."||find=".*"||find="\")
+		return sc.2571
 	text:=sc.getuni()
 	if sc.2508(0,start:=quickfind[sc.2357]+1)!=""{
 		end:=sc.2509(0,start)
@@ -52,9 +47,7 @@ qf(){
 	sc.2169(),lastfind:=find
 	return
 	next:
-	sc:=csc()
-	sc.2606
-	sc.2169
+	sc:=csc(),sc.2606(),sc.2169()
 	return
 	clear_selection:
 	sc:=csc(),sc.2500(2),sc.2505(0,sc.2006)
