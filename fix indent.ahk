@@ -39,17 +39,25 @@ newindent(indentwidth:=""){
 		text:=b
 		if (InStr(text,Chr(59)))
 			text:=RegExReplace(text,"(\s" Chr(59) ".*)")
-		text:=Trim(text,"`t ")
-		if (SubStr(text,1,1)="("&&SubStr(text,0,1)!=")")
+		text:=Trim(text,"`t "),first:=SubStr(text,1,1)
+		if (first="("&&SubStr(text,0,1)!=")")
 			skip:=1
-		if (SubStr(text,1,1)=")"&&skip){
+		if (first=")"&&skip){
 			skip:=0
 			continue
 		}
 		if (skip)
 			continue
-		if(SubStr(text,1,1)=",")
-			continue
+		for c,d in ["&&","OR","AND",".",",","||"]{
+			if(SubStr(text,1,StrLen(d))=d){
+				ss:=1
+				break
+			}
+		}
+		if(ss){
+			ss:=0
+			Continue
+		}
 		if RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b",found)
 			aa:=1
 		else
