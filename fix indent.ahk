@@ -55,9 +55,13 @@ newindent(indentwidth:=""){
 			}
 		}
 		if(ss){
+			if specialind
+				sc.2126(a-1,specialind)
 			ss:=0
+			specialind:=sc.2127(a-1)
 			Continue
 		}
+		specialind:=0
 		if RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b",found)
 			aa:=1
 		else
