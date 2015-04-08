@@ -48,6 +48,8 @@ newindent(indentwidth:=""){
 		}
 		if (skip)
 			continue
+		if(SubStr(text,1,1)=",")
+			continue
 		if RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b",found)
 			aa:=1
 		else

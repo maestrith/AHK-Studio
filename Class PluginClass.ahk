@@ -37,6 +37,7 @@ Class PluginClass{
 	}
 	call(info*){
 		/*
+			;this causes major errors
 			if IsFunc(info.1){
 				func:=info.1
 				if !IsObject(v.classcall)
@@ -45,11 +46,8 @@ Class PluginClass{
 				v.classcall.Insert({function:func,args:info})
 				SetTimer,classcall,100
 				return
-			}else if (IsLabel(info.1)){
-				SetTimer,% info.1,-100
 			}
 		*/
-		
 		SetTimer,% info.1,-100
 	}
 	activate(){
