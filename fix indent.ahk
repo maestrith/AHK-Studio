@@ -55,9 +55,11 @@ newindent(indentwidth:=""){
 			}
 		}
 		if(ss){
+			ss:=0
+			if(v.options.Manual_Continuation_Line)
+				Continue
 			if specialind
 				sc.2126(a-1,specialind)
-			ss:=0
 			specialind:=sc.2127(a-1)
 			Continue
 		}
