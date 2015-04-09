@@ -37,7 +37,7 @@ notify(csc=""){
 			command:=StrGet(fn.text,"utf-8")
 			info:=scintilla.ssn("//commands/item[@name='" command "']")
 			ea:=xml.ea(info),start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1)
-			syn:=ea.syntax "()"?ea.code:ea.code,sc.2160(start,end),sc.2170(0,[syn])
+			syn:=ea.syntax?ea.code "()":ea.code,sc.2160(start,end),sc.2170(0,[syn])
 			if ea.syntax
 				sc.2025(sc.2008-1),sc.2200(start,ea.code ea.syntax)
 		}Else if(fn.listType=2){

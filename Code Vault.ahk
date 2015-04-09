@@ -2,8 +2,8 @@ Code_Vault(){
 	static ev,mainfile,newwin
 	v.lastsc:=csc(),mainfile:=ssn(current(1),"@file").text
 	newwin:=new windowtracker(19)
-	newwin.Add(["ListView,w100 h400 AltSubmit gdisplayvault Section,Code,h","Button,xm gaddcode,Add Code,y","Button,x+10 ginsertcode Default,Insert Into Segment,y","Button,x+10 gcreatenewsegment,Create New Segment,y","Button,x+10 gremovevaultentry,Remove Selected Entries,y"])
-	v.codevault:=new s(19,{pos:"xs+110 ys w600 h400"}),csc({hwnd:v.codevault.sc})
+	newwin.Add(["ListView,w200 h400 AltSubmit gdisplayvault Section,Code,h","Button,xm gaddcode,Add Code,y","Button,x+10 ginsertcode Default,Insert Into Segment,y","Button,x+10 gcreatenewsegment,Create New Segment,y","Button,x+10 gremovevaultentry,Remove Selected Entries,y"])
+	v.codevault:=new s(19,{pos:"xs+210 ys w600 h400"}),csc({hwnd:v.codevault.sc})
 	newwin.resize.Insert({control:v.codevault.sc,pos:"wh"})
 	sc:=csc(),sc.2171(1),bracesetup(19),hotkeys([19],{esc:"19GuiClose"})
 	newwin.Show("Code Vault")
@@ -18,7 +18,8 @@ Code_Vault(){
 	return
 	createnewsegment:
 	SplitPath,mainfile,,cdir
-	file:=InputBox(csc().sc,"New Segment","Enter a name for this new file","")
+	ControlGet,defName,List,Selected,SysListView321,% hwnd([19])
+	file:=InputBox(csc().sc,"New Segment","Enter a name for this new file",RegExReplace(defName,"_"," "))
 	if ErrorLevel
 		return
 	file:=!InStr(file,".ahk")?file ".ahk":file
