@@ -5,12 +5,13 @@ menu_editor(x:=0){
 	if !x{
 		Gui,1:menu
 		all:=menus.sn("//*")
-		while,aa:=all.item[A_Index-1]{
-			parent:=ssn(aa.ParentNode,"@name").text
-			hotkey:=ssn(aa,"@hotkey").text,hotkey:=hotkey?"`t" convert_hotkey(hotkey):""
-			current:=ssn(aa,"@name").text
+		while,aa:=all.item[A_Index-1],ea:=xml.ea(aa){
+			parent:=ssn(aa.ParentNode,"@name").text,hotkey:=ssn(aa,"@hotkey").text,hotkey:=hotkey?"`t" convert_hotkey(hotkey):"",current:=ssn(aa,"@name").text
 			Menu,%parent%,Delete,% current hotkey
 		}
+		while,aa:=all.item[A_Index-1],ea:=xml.ea(aa)
+			if(aa.haschildnodes())
+				Menu,main,Delete,% ea.name
 		newwin:=new windowtracker(2),icons:=[]
 		list:=menus.sn("//*[@icon!='']")
 		if (list.length){
@@ -22,20 +23,17 @@ menu_editor(x:=0){
 			}
 			mil:="ImageList" il
 		}
+		WinSet,Redraw,,% hwnd([1])
 		newwin.Add(["Text,,Control+UP/DOWN/LEFT/RIGHT will move items","Edit,gmesearch w500,,w","ListView,w500 r9 gmego AltSubmit ReadOnly,Menu Item Search|Hotkey,w","TreeView,w500 r10 hwndhwnd " mil ",,wh","Button,gaddmenu,Add A New Menu,y","Button,x+10 gchangeitem,Change Item,y","Button,x+10 gaddsep,Add Separator,y","Button,x+10 gedithotkey Default,Edit Hotkey,y","Button,xm gmenudefault,Re-Load Defaults,y","Button,x+10 gsortmenus,Sort Menus,y","Button,x+10 gsortsubmenus,Sort Sub-Menus,y","Button,xm gmeci,Change Icon,y","Button,x+10 gmeri,Remove Icon,y","Button,x+10 gmerai,Remove All Icons From Current Menu,y"])
-		hotkeys([2],{"Del":"deletenode","^up":"moveup","^down":"movedown","^left":"moveover","^right":"moveunder"})
+		hotkeys([2],{"*Del":"deletenode","^up":"moveup","^down":"movedown","^left":"moveover","^right":"moveunder"})
 		newwin.Show("Menu Editor")
 		ControlGet,TreeView,hwnd,,SysTreeView321,% hwnd([2])
 	}
 	Gui,2:Default
 	GuiControl,2:-Redraw,SysTreeView321
 	list:=menus.sn("//main/descendant::*"),root:=0,del:=[],next:=0,lll:="",TV_Delete(),tvlist:=[]
-	while,ll:=list.item[A_Index-1]{
-		hotkey:=ssn(ll,"@hotkey").text,hot:=convert_hotkey(hotkey),hot:=hot?" - Hotkey = " hot:"",hotkey:=hotkey?"`t" convert_hotkey(hotkey):""
-		parent:=ssn(ll.ParentNode,"@tv").text?ssn(ll.ParentNode,"@tv").text:0
-		icon:=icons[ssn(ll,"@filename").text,ssn(ll,"@icon").text]?"icon" icons[ssn(ll,"@filename").text,ssn(ll,"@icon").text]:"icon-1"
-		root:=TV_Add(RegExReplace(ssn(ll,"@clean").text,"_"," ") hot,parent,icon),lll.=RegExReplace(ssn(ll,"@clean").text,"_"," ") "|"
-		tvlist[root]:=ll,ll.SetAttribute("tv",root),deletelist.Insert(clean(ssn(ll,"@name").text))
+	while,ll:=list.item[A_Index-1],ea:=xml.ea(ll){
+		hotkey:=convert_hotkey(ea.hotkey),hot:=hotkey?" - Hotkey = " hotkey:"",parent:=ssn(ll.ParentNode,"@tv").text?ssn(ll.ParentNode,"@tv").text:0,icon:=icons[ssn(ll,"@filename").text,ssn(ll,"@icon").text]?"icon" icons[ssn(ll,"@filename").text,ssn(ll,"@icon").text]:"icon-1",name:=RegExReplace(ea.clean,"_"," "),hide:=ea.hide?" - Hidden":"",root:=TV_Add(name hot hide,parent,icon),lll.=RegExReplace(ssn(ll,"@clean").text,"_"," ") "|",tvlist[root]:=ll,ll.SetAttribute("tv",root)
 		if ssn(ll,"@last").text
 			count:=A_Index
 	}
@@ -149,8 +147,14 @@ menu_editor(x:=0){
 	deletenode:
 	Gui,2:Default
 	top:=menus.ssn("//*[@tv='" TV_GetSelection() "']")
-	top.ParentNode.RemoveChild(top)
-	TV_Delete(TV_GetSelection())
+	if(GetKeyState("Shift","P")){
+		MsgBox,308,ARE YOU SURE?!?!,This can not be undone!
+		IfMsgBox,No
+			return
+		top.ParentNode.RemoveChild(top),TV_Delete(TV_GetSelection())
+		return
+	}
+	ea:=xml.ea(top),_:=ea.hide?top.RemoveAttribute("hide"):top.SetAttribute("hide",1),ea:=xml.ea(top),hide:=ea.hide?" - Hidden":"",hotkey:=convert_hotkey(ea.hotkey),hot:=hotkey?" - Hotkey = " hotkey:"",TV_Modify(ea.tv,"",RegExReplace(ea.clean,"_"," ") hot hide)
 	return
 	moveunder:
 	Gui,2:Default
@@ -201,8 +205,8 @@ menu_editor(x:=0){
 		list:=menus.sn("//*[@clean='" b "']/*"),order:=[]
 		while,ll:=list.item[A_Index-1]
 			order[ssn(ll,"@clean").text]:=ll
-		for a,b in order
-			root.appendchild(b)
+			for a,b in order
+				root.appendchild(b)
 	}
 	menu_editor(1)
 	return
@@ -213,8 +217,8 @@ menu_editor(x:=0){
 			list:=sn(root,"*"),order:=[]
 			while,ll:=list.item[A_Index-1]
 				order[ssn(ll,"@clean").text]:=ll
-			for a,b in order
-				root.appendchild(b)
+				for a,b in order
+					root.appendchild(b)
 		}
 	}
 	menu_editor(1)

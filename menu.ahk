@@ -1,12 +1,16 @@
 menu(menuname){
 	menu:=menus.sn("//" menuname "/descendant::*"),topmenu:=menus.sn("//" menuname "/*")
 	Menu,main,UseErrorLevel,On
-	while,mm:=topmenu.item[A_Index-1]{
-				if(mm.nodename="date")
+	while,mm:=topmenu.item[A_Index-1],eamm:=xml.ea(mm){
+		if(mm.nodename="date")
 			Continue
 		children:=sn(mm,"*")
-		while,cc:=children.item[A_Index-1]{
+		if(eamm.hide)
+			continue
+		while,cc:=children.item[A_Index-1],cea:=xml.ea(cc){
 			if(cc.nodename="date")
+				Continue
+			if(cea.hide)
 				Continue
 			if(cc.haschildnodes()&&ssn(cc,"ancestor-or-self::menu[@clean='Plugin']").xml=""){
 				list:=[],sub:=sn(cc,"descendant-or-self::*")
@@ -17,10 +21,13 @@ menu(menuname){
 					item:=List[list.MaxIndex()-(A_Index-1)],lll:=sn(item,"*")
 					while,ll:=lll.item[A_Index-1]{
 						parent:=ssn(ll.ParentNode,"@name").text,current:=ssn(ll,"@name").text
-						if ll.haschildnodes()
+						if ll.haschildnodes(){
 							Menu,%parent%,Add,%current%,:%current%
+						}
 						else{
 							hotkey:=ssn(ll,"@hotkey").text,hotkey:=hotkey?"`t" convert_hotkey(hotkey):"",ea:=xml.ea(ll)
+							if(ea.hide)
+								Continue
 							if !(IsFunc(clean(current))||IsLabel(clean(current)))
 								if !FileExist("plugins\" ea.plugin)
 									Continue
@@ -34,6 +41,8 @@ menu(menuname){
 				}
 				Menu,% ssn(cc.ParentNode,"@name").text,Add,%parent%,:%parent%
 			}else{
+				if(cea.hide)
+					Continue
 				current:=ssn(cc,"@name").text,parent:=ssn(cc.ParentNode,"@name").text,hotkey:=ssn(cc,"@hotkey").text,hotkey:=hotkey?"`t" convert_hotkey(hotkey):"",ea:=xml.ea(cc)
 				if !(IsFunc(clean(current))||IsLabel(clean(current))){
 					if !ea.plugin
@@ -49,10 +58,16 @@ menu(menuname){
 	}
 	while,tt:=topmenu.item[A_Index-1]{
 		menu:=ssn(tt,"@name").text
-		if tt.haschildnodes()
+		if tt.haschildnodes(){
+			if ssn(tt,"@hide").text
+				Continue
 			Menu,%menuname%,Add,%menu%,:%menu%
-		else
+		}
+		else{
+			if ssn(tt,"@hide").text
+				Continue
 			Menu,%menuname%,Add,%menu%,MenuRoute
+		}
 	}
 	return menuname
 	MenuRoute:

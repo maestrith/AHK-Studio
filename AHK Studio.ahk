@@ -2,13 +2,14 @@
 ;download complete
 /*
 	TODO LIST:
+	!look into adding #warn to the debugger
 	Make a context creator so the user can add their own context stuff
 	-Merge it over the stuff that I have
 	Make a plugin downloader
 	-Current Segment, Current Project, All Files
 	toolbar{
-			;change this so that all you need to do is pass it an xml and it does everything.
-	;save updates the info and writes it to the settings.xml
+		;change this so that all you need to do is pass it an xml and it does everything.
+		;save updates the info and writes it to the settings.xml
 	}
 	bkid{
 		Scratch Pad is blinky on resize
