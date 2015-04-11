@@ -211,5 +211,5 @@
 			<menu clean="C#" name="C#" option="C#" plugin="plugins\Run As.ahk"></menu>
 			<menu clean="Compile_C#" name="Compile C#" option="CompileC#" plugin="plugins\Run As.ahk"></menu></menu>
 	</main>
-	<date>20150409</date>
+	<date>20150411</date>
 </menus>

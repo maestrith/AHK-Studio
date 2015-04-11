@@ -33,7 +33,7 @@ context(return=""){
 						rem:=[]
 				}
 			}
-			obj:=List[list.MaxIndex()],command:=SubStr(cc,obj.Pos(2),obj.Pos(3)-obj.pos(2)),pre:=SubStr(cc,obj.Pos(1),obj.Pos(2)-obj.Pos(1))
+			obj:=List[list.MaxIndex()],pre:=obj.1,command:=obj.2
 			for a,b in rem{
 				startpos:=b.obj.Pos(1),rep:="",find:=SubStr(cc,b.obj.Pos(1),b.pos-b.obj.Pos(1))
 				Loop,% b.pos-b.obj.Pos(1)
