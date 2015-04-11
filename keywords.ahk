@@ -6,12 +6,9 @@ keywords(){
 		stringlower,text,text
 		v.color[color.nodename]:=text
 	}
-	personal:=settings.ssn("//Variables").text
-	all.=personal
+	personal:=settings.ssn("//Variables").text,all.=personal
 	StringLower,per,personal
-	v.color.Personal:=Trim(per)
-	v.indentregex:=RegExReplace(v.color.indent," ","|")
-	command:=commands.ssn("//Commands/Commands").text
+	v.color.Personal:=Trim(per),v.indentregex:=RegExReplace(v.color.indent," ","|"),command:=commands.ssn("//Commands/Commands").text
 	Sleep,4
 	Loop,Parse,command,%A_Space%,%A_Space%
 		v.kw[A_LoopField]:=A_LoopField,all.=" " A_LoopField

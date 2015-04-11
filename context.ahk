@@ -19,42 +19,32 @@ context(return=""){
 		pos:=1
 		RegExReplace(cc,"\(","",opc),RegExReplace(cc,"\)","",clc)
 		if(opc!=clc){
-			list:=[],total:="",ct:=0,max:=[],count:=0
-			for a,b in StrSplit(cc){
-				count++
-				if(b="("){
-					ct++
-					list.Insert({text:total,paren:b})
-					total:=""
-					Continue
+			pos:=1,list:=[],rem:=[]
+			while,RegExMatch(cc,"OU).*(\w*)\.?(\w*)(\(|\))",found,pos){
+				pos:=found.Pos(2)+found.len(2)+StrLen(found.3)
+				if(found.len(2)=0&&found.len(3)=0)
+					Break
+				if(found.3="(")
+					list.Insert(found)
+				else if(found.3=")"){
+					rem.Insert({obj:List[list.MaxIndex()],pos:found.Pos(3)+1})
+					list.Remove(list.MaxIndex())
+					if !list.1
+						rem:=[]
 				}
-				if(b=")"){
-					ct--
-					list.Insert({text:total,paren:b})
-					total:=""
-					Continue
-				}
-				if(max[ct]=""&&b~="\w")
-					max[ct]:=count
-				lastct:=ct
-				if(list.1&&ct=0){
-					list:=[],max:=[],count:=0
-					Continue
-				}
-				total.=b
 			}
-			trimpos:=max[lastct-1]
-			if total
-				list.Insert({text:total})
-			stuff:="",rep:=[],lastpos:=[],max:=0,total:=""
-			for a,b in list{
-				if(b.paren=")")
-					rep.Insert({text:b.text,pos:list[a].pos})
-				total.=b.text b.paren
+			obj:=List[list.MaxIndex()],command:=SubStr(cc,obj.Pos(2),obj.Pos(3)-obj.pos(2)),pre:=SubStr(cc,obj.Pos(1),obj.Pos(2)-obj.Pos(1))
+			for a,b in rem{
+				startpos:=b.obj.Pos(1),rep:="",find:=SubStr(cc,b.obj.Pos(1),b.pos-b.obj.Pos(1))
+				Loop,% b.pos-b.obj.Pos(1)
+					rep.="_"
+				cc:=RegExReplace(cc,"\Q" find "\E",rep,"",1,startpos)
 			}
-			for a,b in rep
-				StringReplace,total,total,% text:=b.text,% RegExReplace(text,",","_")
-			total:=SubStr(total,trimpos),RegExMatch(total,"OU).*(\w*)\.?(\w*)\(",command),pre:=command.1,total:=SubStr(total,command.Pos(1)),command:=command.2,string:=total
+			start:=pre,string:=SubStr(cc,obj.Pos(1))
+		}else{
+			text:=commands.ssn("//Color/Functions").text
+			if RegExMatch(text,"i)\b" kw[word] "\b")
+				return
 		}
 	}else
 		command:=word
@@ -73,7 +63,7 @@ context(return=""){
 		}
 	}
 	if((ea:=scintilla.ea("//*[@code='" command "']")).syntax){
-		syntax:=pre "." command ea.syntax "`n" ea.name
+		syntax:=pre command ea.syntax "`n" ea.name
 		Goto,conbottom
 	}else if(command:=kw[command]){
 		if(main:=commands.ssn("//Context/" command)){

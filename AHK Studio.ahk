@@ -277,6 +277,7 @@ return
 #Include Remove Scintilla Window.ahk
 #Include Remove Segment.ahk
 #Include Remove Spaces From Selected.ahk
+#Include RemoveCandP.ahk
 #Include replace selected.ahk
 #Include replace.ahk
 #Include Reset Zoom.ahk
@@ -343,4 +344,3 @@ return
 #Include Widths.ahk
 #Include window.ahk
 #Include Words In Document.ahk
-#Include RemoveCandP.ahk
