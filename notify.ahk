@@ -49,7 +49,6 @@ notify(csc=""){
 			sc.2645(start,end-start),sc.2003(sc.2008,text),sc.2025(sc.2008+StrLen(text)-1)
 		}else if(fn.listtype=4)
 			text:=StrGet(fn.text,"utf-8"),start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(start,end-start),sc.2003(sc.2008,text "."),sc.2025(sc.2008+StrLen(text ".")),Show_Class_Methods(text)
-		
 	}
 	;if (fn.code=2027)
 	;switch this out with 2027 and use GetKeyState("Control","P") and stuff
@@ -80,17 +79,10 @@ notify(csc=""){
 	if(fn.code=2004&&sc.sc=v.codevault.sc)
 		m("Please create or select a code snippet")
 	if(fn.code=2001){
-		if(fn.ch=44){
-			insert:=v.options.Auto_Space_After_Comma?" ":""
-			sc.2003(sc.2008,insert),sc.2025(sc.2008+StrLen(insert))
-		}if(fn.ch=46)
+		if(fn.ch=46)
 			Show_Class_Methods(sc.textrange(sc.2266(sc.2008-1,1),sc.2267(sc.2008-1,1)))
-		if(fn.ch=10&&v.options.full_auto){
+		if(fn.ch=10&&v.options.full_auto)
 			return
-			/*
-				GuiControl,1:-Redraw,% sc.sc
-			*/
-		}
 		if(fn.ch=10&&v.options.fix_next_line){
 			GuiControl,1:-Redraw,% sc.sc
 			SetTimer,fix_next,50
@@ -106,6 +98,8 @@ notify(csc=""){
 		c:=fn.ch
 		if c in 44,32
 			replace()
+		if(fn.ch=44)
+			insert:=v.options.Auto_Space_After_Comma?" ":"",sc.2003(sc.2008,insert),sc.2025(sc.2008+StrLen(insert))
 	}
 	if(fn.code=2010){
 		margin:=NumGet(info+64)
@@ -142,7 +136,7 @@ notify(csc=""){
 			else if(v.word~="i)(goto|gosub)")
 				SetTimer,goto,-100
 			else
-				SetTimer,automenu,100
+				SetTimer,automenu,-100
 		}
 	}
 	if(fn.code=2001)

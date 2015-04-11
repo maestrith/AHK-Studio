@@ -1,7 +1,6 @@
 Theme(info=""){
 	if info
 		goto,returnedinfo
-	;class-ify
 	setup(3,1),hotkeys([3],{Esc:"3GuiClose"}),v.themelist:=[]
 	Gui,3:Default
 	Gui,+hwndhwnd Owner1

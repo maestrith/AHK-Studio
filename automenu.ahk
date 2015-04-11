@@ -1,6 +1,5 @@
 automenu(){
 	automenu:
-	SetTimer,automenu,Off
 	sc:=csc()
 	if sc.2007(sc.2008-1)=40
 		return
@@ -11,8 +10,8 @@ automenu(){
 				return
 			if l.ParentNode.nodename!=command
 				return
-			if (sc.2007(sc.2008-1)!=44){
-				insert:=v.options.Auto_Space_After_Comma?", ":","
+			insert:=v.options.Auto_Space_After_Comma?", ":","
+			if (sc.2007(sc.2008-StrLen(insert))!=44){
 				sc.2003(sc.2008,insert),sc.2025(sc.2008+StrLen(insert))
 			}
 			sc.2100(0,list.text,v.word:="")

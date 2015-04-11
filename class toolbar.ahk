@@ -1,7 +1,5 @@
 class toolbar{
 	static keep:=[],order:=[],list:=[],imagelist:="",toolbar1,toolbar2,toolbar3
-	;change this so that all you need to do is pass it an xml and it does everything.
-	;save updates the info and writes it to the settings.xml
 	__New(win,parent,id,mask=""){
 		static count:=0,toolbar1,toolbar2,toolbar3
 		count++

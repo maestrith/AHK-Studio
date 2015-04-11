@@ -37,7 +37,7 @@ Class PluginClass{
 	}
 	call(info*){
 		;this causes major errors
-		if (IsFunc(info.1)&&info.1!="Fix_Indent"){
+		if (IsFunc(info.1)&&info.1~="i)(Fix_Indent|newindent)"=0){
 			func:=info.1,info.Remove(1)
 			return %func%(info*)
 		}
@@ -56,21 +56,3 @@ Class PluginClass{
 		return node.SelectSingleNode(path)
 	}
 }
-/*
-	classcall:
-	if !v.classcall.1.function
-		SetTimer,classcall,off
-	if v.classcall.1.function{
-		fun:=v.classcall.1.function
-		new functioncall(v.classcall.1.function,v.classcall.1.args)
-	}
-	m(v.classcall.1.function)
-	v.classcall.Remove(1)
-	return
-	;return %func%(info*)
-	class functioncall{
-		__New(func,args){
-			%func%(args)
-		}
-	}
-*/

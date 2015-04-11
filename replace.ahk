@@ -20,6 +20,8 @@ replace(){
 		rep:=RegExReplace(rep,"``n","`n"),sc.2190(start),sc.2192(end),sc.2194(StrLen(rep),rep)
 	if(A_ThisHotkey="+Enter")
 		sc.2160(start+StrLen(rep),start+StrLen(rep))
+	if v.options.Auto_Space_After_Comma
+		sc.2003(sc.2008," "),sc.2025(sc.2008+1)
 	v.word:=rep?rep:word
-	SetTimer,automenu,80
+	SetTimer,automenu,-80
 }

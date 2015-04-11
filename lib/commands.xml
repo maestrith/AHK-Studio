@@ -397,7 +397,7 @@
 			<syntax syntax="[, Options, FontName]">Font</syntax>
 			<syntax syntax="[, WindowColor, ControlColor]">Color</syntax>
 			<syntax syntax="[, X, Y]">Margin</syntax>
-			<syntax syntax="[v Menuname]">Menu</syntax>
+			<syntax syntax="[, Menuname]">Menu</syntax>
 			<syntax syntax="[, Off]">Flash</syntax>
 		</Gui>
 		<SingleInstance>

@@ -1,6 +1,5 @@
 split_code(){
 	static list:=[]
-	;class-ify
 	code:=update({get:ssn(current(),"@file").text}),list:=[]
 	pos:=1
 	Loop

@@ -2,8 +2,14 @@
 ;download complete
 /*
 	TODO LIST:
+	Make a context creator so the user can add their own context stuff
+	-Merge it over the stuff that I have
 	Make a plugin downloader
 	-Current Segment, Current Project, All Files
+	toolbar{
+			;change this so that all you need to do is pass it an xml and it does everything.
+	;save updates the info and writes it to the settings.xml
+	}
 	bkid{
 		Scratch Pad is blinky on resize
 	}
@@ -74,6 +80,8 @@ if (A_PtrSize=8&&A_IsCompiled=""){
 SetWorkingDir,%A_ScriptDir%
 global v:=[],settings,files,menus,commands,positions,vversion,access_token,vault,preset,cexp,scintilla,bookmarks,cexml
 settings:=new xml("settings","lib\settings.xml"),files:=new xml("files"),menus:=new xml("menus","lib\menus.xml"),commands:=new xml("commands","lib\commands.xml"),cexp:=new xml("code_explorer"),bookmarks:=new xml("bookmarks","lib\bookmarks.xml"),positions:=new xml("positions","lib\positions.xml"),vversion:=new xml("version","lib\version.xml"),access_token:=settings.ssn("//access_token").text,cexml:=new xml("code_explorer"),v.filescan:=[]
+if(FileExist(A_ScriptDir "\lib\scintilla.xml"))
+	scintilla:=new xml("scintilla",A_ScriptDir "\lib\scintilla.xml")
 if !settings.ssn("//Auto_Indent")
 	settings.Add2("Auto_Indent",{Full_Auto:1})
 vault:=new xml("vault","lib\vault.xml"),v.color:=[],preset:=new xml("preset","lib\preset.xml")
@@ -335,3 +343,4 @@ return
 #Include Widths.ahk
 #Include window.ahk
 #Include Words In Document.ahk
+#Include RemoveCandP.ahk

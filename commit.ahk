@@ -82,10 +82,6 @@ commit(commitmsg,version){
 	}
 	tree:=git.Tree(repo,current_commit,upload)
 	commit:=git.commit(repo,tree,current_commit,commitmsg,ea.name,ea.email)
-	/*
-		clipboard:=commit
-		59ce5e25eb395465aeec39b6ac7586ab16fc9b98
-	*/
 	info:=git.ref(repo,commit)
 	if (info=200){
 		TrayTip,GitHub Update Complete,Updated files

@@ -1,6 +1,5 @@
 update_github_info(){
 	static
-	;class-ify or remove
 	info:=settings.ea("//github"),setup(25)
 	controls:={owner:"Owner (GitHub Username)",email:"Email",name:"Your Full Name"}
 	for a,b in {owner:100,email:200,name:100}{

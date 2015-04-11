@@ -23,6 +23,7 @@ class s{
 			s.temp.Insert(this)
 		this.2052(32,0),this.2051(32,0xaaaaaa),this.2050,this.2052(33,0x222222),this.2069(0xAAAAAA),this.2067(1,0),this.2601(0xaa88aa),this.2563(1),this.2614(1),this.2565(1),this.2660(1),this.2458(0)
 		this.2036(width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5),this.2124(1),this.2260(1),this.2122(5),this.2132(1),color(this)
+		this.2056(38,"Consolas")
 		return this
 	}
 	clear(){

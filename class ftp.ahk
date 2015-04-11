@@ -107,8 +107,7 @@ class ftp{
 		cap:=VarSetCapacity(dir,128),DllCall("wininet\FtpGetCurrentDirectory",UInt,this.connect,UInt,&dir,UInt,&cap,"cdecl")
 		return Trim(StrGet(&dir,128,"cp0"),"/")
 	}
-	;http://msdn.microsoft.com/en-us/library/ms679351
-	GetLastError(error){
+	GetLastError(error){ ;http://msdn.microsoft.com/en-us/library/ms679351
 		size:=VarSetCapacity(buffer,1024)
 		if (error = 12003){
 			VarSetCapacity(ErrorMsg,4),DllCall("wininet\InternetGetLastResponseInfo","UIntP",&ErrorMsg,"PTR",&buffer,"UIntP",&size)

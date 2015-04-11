@@ -114,7 +114,7 @@ Sock(info*){
 		if (info.2&0xffff=8)
 			debug.accept()
 		if (info.2&0xFFFF=32)
-			debug.disconnect() ;("disconnect")
+			debug.disconnect()
 	}
 }
 debug(text){

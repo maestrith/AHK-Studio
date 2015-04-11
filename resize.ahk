@@ -47,14 +47,11 @@ resize(info*){
 	add+=x
 	widths:=(width-add)/max
 	if (v.options.Split_Horizontal){
-		totalwidth:=width-(x) ;for the width of the controls for horizontal split
-		;hh is the total height available to split
-		;t(totalwidth,x,ow)
+		totalwidth:=width-(x) ;for the width of the controls for horizontal split,;hh is the total height available to split,;t(totalwidth,x,ow)
 		for a,b in s.main{
 			GuiControl,-Redraw,% b.sc
 			GuiControl,1:Move,% b.sc,% "x" x " y" h " w" widths " h" hh
 			GuiControl,+Redraw,% b.sc
-			;x+=widths
 		}
 		guicontrol,1:move,systreeview322,% "x" totalwidth " y" h "w" ow " h" hh
 	}Else{

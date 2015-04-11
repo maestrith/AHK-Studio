@@ -1,6 +1,5 @@
 Msgbox_Creator(){
 	static
-	;class-ify and change
 	msgbox:=setup(17)
 	Gui,-DPIScale
 	Gui,Add,Text,Section hwndheight,Title:
