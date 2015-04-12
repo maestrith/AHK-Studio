@@ -1,6 +1,11 @@
 Class PluginClass{
+	Close:=[]
 	__New(){
 		return this
+	}
+	AutoClose(script){
+		if !this.Close[script]
+			this.Close[script]:=1
 	}
 	update(filename,text){
 		update({file:filename,text:text})
@@ -36,7 +41,7 @@ Class PluginClass{
 		m(info*)
 	}
 	call(info*){
-		;this causes major errors
+		;this can cause major errors
 		if (IsFunc(info.1)&&info.1~="i)(Fix_Indent|newindent)"=0){
 			func:=info.1,info.Remove(1)
 			return %func%(info*)

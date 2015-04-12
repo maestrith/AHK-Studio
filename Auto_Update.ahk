@@ -1,4 +1,9 @@
 Auto_Update(){
+	if(FileExist("auto_update.ahk")){
+		MsgBox,308,Are you sure?,This will change the style of this program to a single file.
+		IfMsgBox,No
+			return
+	}
 	sub:=A_NowUTC
 	sub-=A_Now,hh
 	FileGetTime,time,%A_ScriptFullPath%

@@ -4,9 +4,9 @@ menu(menuname){
 	while,mm:=topmenu.item[A_Index-1],eamm:=xml.ea(mm){
 		if(mm.nodename="date")
 			Continue
-		children:=sn(mm,"*")
 		if(eamm.hide)
-			continue
+			Continue
+		children:=sn(mm,"*")
 		while,cc:=children.item[A_Index-1],cea:=xml.ea(cc){
 			if(cc.nodename="date")
 				Continue
@@ -21,9 +21,8 @@ menu(menuname){
 					item:=List[list.MaxIndex()-(A_Index-1)],lll:=sn(item,"*")
 					while,ll:=lll.item[A_Index-1]{
 						parent:=ssn(ll.ParentNode,"@name").text,current:=ssn(ll,"@name").text
-						if ll.haschildnodes(){
+						if ll.haschildnodes()
 							Menu,%parent%,Add,%current%,:%current%
-						}
 						else{
 							hotkey:=ssn(ll,"@hotkey").text,hotkey:=hotkey?"`t" convert_hotkey(hotkey):"",ea:=xml.ea(ll)
 							if(ea.hide)
