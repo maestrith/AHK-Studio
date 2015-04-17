@@ -153,7 +153,7 @@ class code_explorer{
 			GuiControl,+gcej,SysTreeView322
 		}
 		if(Focus="SysTreeView321"){
-			for a,b in StrSplit("Close,Open,Folder",",")
+			for a,b in StrSplit("Close,Open,Folder,,Copy File Path,Copy Folder Path",",")
 				Menu,rcm,Add,%b%,rcm
 			Menu,rcm,show
 			Menu,rcm,DeleteAll
@@ -161,6 +161,11 @@ class code_explorer{
 			rcm:
 			if(A_ThisMenuItem~="(Close|Open)")
 				%A_ThisMenuItem%()
+			else if(A_ThisMenuItem~="Copy (File|Folder) Path"){
+				pFile:=current(3).file
+				SplitPath, pFile,,pFolder
+				Clipboard:=InStr(A_ThisMenuItem,"Folder")?pFolder:pFile
+			}
 			else if(A_ThisMenuItem="Folder"){
 				FileSelectFolder,dir,,,Select a folder to open
 				if ErrorLevel
