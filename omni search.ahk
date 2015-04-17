@@ -7,7 +7,7 @@ omni_search(start=""){
 	WinGetPos,x,y,w,h,% hwnd([1])
 	width:=w-50,newwin.Add(["Edit,goss w" width " vsearch," start,"ListView,w" width " r15 -hdr -Multi gosgo,Menu Command|Additional|1|2|Rating|index"])
 	Gui,20:-Caption
-		hotkeys([20],{up:"omniup",down:"omnidown","^Backspace":"deleteback",Enter:"osgo"}),newwin.Show("Omni-Search",Center(20))
+	hotkeys([20],{up:"omniup",down:"omnidown","^Backspace":"deleteback",Enter:"osgo"}),newwin.Show("Omni-Search",Center(20))
 	ControlSend,Edit1,^{End},% hwnd([20])
 	bm:=bookmarks.sn("//mark")
 	if top:=cexml.ssn("//bookmarks")
@@ -25,15 +25,15 @@ omni_search(start=""){
 	GuiControl,20:-Redraw,SysListView321
 	search:=newwin[].search,Select:=[],LV_Delete(),pre:=SubStr(search,1,1)
 	pre:=omni_search_class.prefix[pre]?pre:"",search:=pre?SubStr(search,2):search,sort:=[],stext:=[]
-	if (search="?"){
+	if(search="?"){
 		LV_Delete()
 		for a,b in omni_search_class.prefix{
 			info:=a="+"?"Add Function Call":b
 			LV_Add("",a,info)
 		}
-		Loop,2
-			LV_Modify(A_Index,"AutoHDR")
 		GuiControl,20:+Redraw,SysListView321
+		Loop,4
+			LV_ModifyCol(A_Index,"AutoHDR")
 		return
 	}
 	for a,b in StrSplit(search)
