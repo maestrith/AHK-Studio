@@ -1,8 +1,8 @@
 defaultfont(){
 	temp:=new xml("temp")
 	info=
-	(
-<fonts>
+(
+	<fonts>
 	<author>joedf</author>
 	<name>PlasticCodeWrap</name>
 	<font background="0x1D160B" bold="0" color="0xF8F8F2" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>

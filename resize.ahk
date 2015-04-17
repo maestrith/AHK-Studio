@@ -1,5 +1,7 @@
 resize(info*){
 	static width,height,rheight,band,size:=[]
+	if(info.1=1)
+		return getpos()
 	if(info.1="other")
 		return size.clone()
 	if (A_Gui!=1){

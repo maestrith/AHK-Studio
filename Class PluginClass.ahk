@@ -10,6 +10,12 @@ Class PluginClass{
 	update(filename,text){
 		update({file:filename,text:text})
 	}
+	Show(){
+		sc:=csc()
+		WinActivate,% hwnd([1])
+		GuiControl,+Redraw,% sc.sc
+		setpos(sc.2357),sc.2400
+	}
 	Style(){
 		return ea:=settings.ea(settings.ssn("//fonts/font[@style='5']")),ea.color:=RGB(ea.color),ea.Background:=RGB(ea.Background)
 	}

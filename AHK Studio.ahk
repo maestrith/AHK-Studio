@@ -2,6 +2,8 @@
 ;download complete
 /*
 	TODO LIST:
+	Create a way that the user can add things to the commands list
+	-Do it so that it creates a local file that will not be effected by my main commands.xml
 	!look into adding #warn to the debugger
 	Make a context creator so the user can add their own context stuff
 	-Merge it over the stuff that I have
@@ -63,7 +65,10 @@ DetectHiddenWindows,On
 file=%1%
 ComObjError(0),openfile:=file
 if x:=ComObjActive("AHK-Studio"){
-	x.open(file),x.scanfiles(),x.activate()
+	if file
+		x.open(file),x.scanfiles()
+	;x.activate() ;,x.Show()
+	x.Show()
 	ExitApp
 }
 ComObjError(1)

@@ -46,24 +46,28 @@ class s{
 		return DllCall(this.fn,"Ptr",this.ptr,"UInt",x.1,int,0,int,0,"Cdecl")
 	}
 	__Call(code,lparam=0,wparam=0,extra=""){
-		if (code="getseltext"){
+		if(code="getword"){
+			sc:=csc(),cpos:=lparam?lparam:sc.2008
+			return sc.textrange(sc.2266(cpos,1),sc.2267(cpos,1))
+		}
+		if(code="getseltext"){
 			VarSetCapacity(text,this.2161),length:=this.2161(0,&text)
 			return StrGet(&text,length,"UTF-8")
 		}
-		if (code="textrange"){
+		if(code="textrange"){
 			cap:=VarSetCapacity(text,abs(lparam-wparam)),VarSetCapacity(textrange,12,0),NumPut(lparam,textrange,0),NumPut(wparam,textrange,4),NumPut(&text,textrange,8)
 			this.2162(0,&textrange)
 			return strget(&text,cap,"UTF-8")
 		}
-		if (code="getline"){
+		if(code="getline"){
 			length:=this.2350(lparam),cap:=VarSetCapacity(text,length,0),this.2153(lparam,&text)
 			return StrGet(&text,length,"UTF-8")
 		}
-		if (code="gettext"){
+		if(code="gettext"){
 			cap:=VarSetCapacity(text,vv:=this.2182),this.2182(vv,&text),t:=strget(&text,vv,"UTF-8")
 			return t
 		}
-		if (code="getuni"){
+		if(code="getuni"){
 			cap:=VarSetCapacity(text,vv:=this.2182),this.2182(vv,&text),t:=StrGet(&text,vv,"UTF-8")
 			return t
 		}

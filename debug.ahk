@@ -50,7 +50,8 @@ class debug{
 				sleep,200
 				sc:=csc()
 				start:=sc.2128(info.line),end:=sc.2136(info.line)
-				sc.2160(start,end)
+				if(start&&end)
+					sc.2160(start,end)
 			}
 		}
 		return

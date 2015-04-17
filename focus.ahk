@@ -21,19 +21,6 @@ Focus(a*){
 	}
 	if (a.1=2)
 		SetTimer,click,-1
-	/*
-		Gui,1:Default
-		Gui,1:TreeView,SysTreeView321
-		sc:=csc()
-		
-		
-		GuiControl,1:+Redraw,Scintilla1
-		GuiControl,1:-Redraw,Scintilla1
-		if a.1
-			setpos(TV_GetSelection())
-		else
-			getpos()
-	*/
 	return
 	click:
 	MouseClick,Left,,,,,U

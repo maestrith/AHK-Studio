@@ -5,7 +5,13 @@ tv(tv=0,open=""){
 	if !open
 		return
 	tv:
-	if (A_GuiEvent="S"||open){
+	if(A_GuiEvent="DoubleClick"){
+		item:=files.ssn("//*[@tv='" A_EventInfo "']")
+		if(item.nodename!="openfile")
+			return
+		open(ssn(item,"@file").text,1)
+	}
+	if(A_GuiEvent="S"||open){
 		if !v.startup
 			getpos(),count:=0
 		ei:=open?tv:a_eventinfo,sc:=csc(),file:=files.ssn("//*[@tv='" ei "']"),fn:=ssn(file,"@file").text

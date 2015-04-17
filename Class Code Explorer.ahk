@@ -1,3 +1,6 @@
+/*
+	they are foldable
+*/
 class code_explorer{
 	static explore:=[],TreeView:=[],sort:=[],function:="Om`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{",label:="Om`n)^\s*((\w|[^\x00-\x7F])+):[\s+;]",class:="Om`ni)^[\s*]?(class[\s*](\w|[^\x00-\x7F])+)",functions:=[],variables:=[],varlist:=[]
 	scan(node){
@@ -150,7 +153,7 @@ class code_explorer{
 			GuiControl,+gcej,SysTreeView322
 		}
 		if(Focus="SysTreeView321"){
-			for a,b in StrSplit("Close,Open",",")
+			for a,b in StrSplit("Close,Open,Folder",",")
 				Menu,rcm,Add,%b%,rcm
 			Menu,rcm,show
 			Menu,rcm,DeleteAll
@@ -158,6 +161,29 @@ class code_explorer{
 			rcm:
 			if(A_ThisMenuItem~="(Close|Open)")
 				%A_ThisMenuItem%()
+			else if(A_ThisMenuItem="Folder"){
+				FileSelectFolder,dir,,,Select a folder to open
+				if ErrorLevel
+					return
+				Gui,1:Default
+				Gui,1:TreeView,SysTreeView321
+				if !root:=files.ssn("//directory")
+					root:=files.add2("directory",{tv:TV_Add("Directory")})
+				if !(ssn(root,"dir[@dir='" dir "']")){
+					top:=files.under(root,"dir",{dir:dir,tv:TV_Add(dir,ssn(root,"@tv").text)}),ea:=xml.ea(top)
+					for a,b in ["*.ahk","*.txt","*.xml"]{
+						Loop,%dir%\%b%,1,1
+						{
+							SplitPath,A_LoopFileDir,dirname
+							if InStr(A_LoopFileFullPath,"'")
+								Continue
+							if !dirxml:=ssn(top,"descendant-or-self::*[@dir='" A_LoopFileDir "']")
+								dirxml:=files.under(top,"subdir",{dir:A_LoopFileDir,tv:TV_Add(dirname,ssn(top,"@tv").text,"vis")})
+							files.under(dirxml,"openfile",{tv:TV_Add(A_LoopFileName,xml.ea(dirxml).tv),file:A_LoopFileFullPath})
+						}
+					}
+				}
+			}
 			else
 				m("Coming Soon....maybe")
 			return

@@ -8,6 +8,7 @@ notify(csc=""){
 		sc:=csc({hwnd:hwnd}),filename:=files.ssn("//*[@sc='" sc.2357 "']/@file").text
 		if filename
 			WinSetTitle,% hwnd([1]),,AHK Studio - %filename%
+		GuiControl,+Redraw,% csc().sc
 		return
 	}
 	for a,b in {0:"Obj",2:"Code",3:"position",4:"ch",5:"mod",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",17:"listType",22:"updated"}
@@ -87,7 +88,7 @@ notify(csc=""){
 			GuiControl,1:-Redraw,% sc.sc
 			SetTimer,fix_next,50
 		}
-		cpos:=sc.2008,start:=sc.2266(cpos,1),end:=sc.2267(cpos,1),word:=sc.textrange(sc.2266(cpos,1),cpos)
+		cpos:=sc.2008,start:=sc.2266(cpos,1),end:=sc.2267(cpos,1),word:=sc.getword()
 		if (StrLen(word)>1&&sc.2102=0){
 			list:=Trim(v.keywords[SubStr(word,1,1)]) code_explorer.varlist[current(2).file]
 			if list&&instr(list,word)

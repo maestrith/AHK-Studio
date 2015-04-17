@@ -17,7 +17,7 @@ Jump_To_Include(){
 	Jump_To_Specific("include")
 }
 Jump_To_Specific(find:=""){
-	sc:=csc(),cpos:=sc.2008,word:=sc.textrange(sc.2266(cpos,1),sc.2267(cpos,1))
+	sc:=csc(),cpos:=sc.2008,word:=sc.getword()
 	StringUpper,word,word
 	search:=find?"[@type='" find "'][@upper='" word "']":"[@upper='" word "']"
 	if found:=cexml.ssn("//main[@file='" ssn(current(1),"@file").text "']/descendant::info" search){

@@ -6,7 +6,7 @@ Gui(){
 		Enter[b "Enter"]:="checkqf"
 	for a,b in StrSplit("WheelLeft,WheelRight",",")
 		Enter[b]:="scrollwheel"
-	Enter["~Backspace"]:="Backspace",Enter["^c"]:="copy",Enter["^x"]:="cut",hotkeys([1],enter)
+	Enter["~Backspace"]:="Backspace",Enter["^Backspace"]:="Backspace",Enter["^c"]:="copy",Enter["^x"]:="cut",hotkeys([1],enter)
 	for a,b in ["esc & space","esc & ,"]
 		Hotkey,%b%,eol,On
 	Gui,Add,StatusBar,hwndsb,StatusBar Info
@@ -30,7 +30,7 @@ Gui(){
 		if !settings.ssn("//rebar/band[@id='" id "']")
 			settings.add({path:"rebar/band",att:{id:id,vis:1},dup:1})
 	}
-	Gui,Add,Edit,w200 hwndedit
+	Gui,Add,Edit,hwndedit
 	ControlGetPos,,,,h,,ahk_id%edit%
 	info:={hwnd:edit,ideal:220,id:11000,height:h,width:200,max:h}
 	band.11000:={label:"Quick Find",hwnd:info.hwnd,height:info.height,ideal:info.ideal,id:11000,max:info.max,int:1,width:150}
@@ -102,5 +102,6 @@ Gui(){
 	hk(1),Refresh_Variable_List()
 	Gui,1:TreeView,SysTreeView321
 	csc().4004("fold",[1]),new omni_search_class()
+	GuiControl,+Redraw,% csc().sc
 	SetTimer,scanfiles,0
 }

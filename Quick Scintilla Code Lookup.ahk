@@ -1,6 +1,6 @@
 Quick_Scintilla_Code_Lookup(){
 	static list
-	sc:=csc(),start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),word:=sc.textrange(start,end)
+	sc:=csc(),word:=sc.getword()
 	StringUpper,word,word
 	if !(list)
 		list:=scintilla(1)
