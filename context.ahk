@@ -8,13 +8,16 @@ context(return=""){
 		return
 	cc:=content:=sc.textrange(start,pos+1),RegExMatch(content,"(#?\w+)",word),pos:=1
 	if(InStr(cc,Chr(34))){
-		while,RegExMatch(cc,"OU)((" Chr(34) ".*" Chr(34) ")|" Chr(34) ".*$)",found){
-			rep:=""
-			Loop,% found.len(1)
-				rep.="_"
-			StringReplace,cc,cc,% found.1,%rep%,All
+		for a,b in {Chr(34):Chr(34),"[":"]","{":"}"}{
+			while,RegExMatch(cc,"OU)((" a ".*" b ")|" a ".*$)",found){
+				rep:=""
+				Loop,% found.len(1)
+					rep.="_"
+				StringReplace,cc,cc,% found.1,%rep%,All
+			}
 		}
 	}
+	xml.add2("path",{1:1,2:2},"Text",1,"")
 	if(InStr(cc,"(")){
 		pos:=1
 		RegExReplace(cc,"\(","",opc),RegExReplace(cc,"\)","",clc)

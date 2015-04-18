@@ -1,6 +1,3 @@
-/*
-	they are foldable
-*/
 class code_explorer{
 	static explore:=[],TreeView:=[],sort:=[],function:="Om`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{",label:="Om`n)^\s*((\w|[^\x00-\x7F])+):[\s+;]",class:="Om`ni)^[\s*]?(class[\s*](\w|[^\x00-\x7F])+)",functions:=[],variables:=[],varlist:=[]
 	scan(node){
@@ -161,11 +158,6 @@ class code_explorer{
 			rcm:
 			if(A_ThisMenuItem~="(Close|Open)")
 				%A_ThisMenuItem%()
-			else if(A_ThisMenuItem~="Copy (File|Folder) Path"){
-				pFile:=current(3).file
-				SplitPath, pFile,,pFolder
-				Clipboard:=InStr(A_ThisMenuItem,"Folder")?pFolder:pFile
-			}
 			else if(A_ThisMenuItem="Folder"){
 				FileSelectFolder,dir,,,Select a folder to open
 				if ErrorLevel
@@ -188,8 +180,11 @@ class code_explorer{
 						}
 					}
 				}
-			}
-			else
+			}else if(A_ThisMenuItem~="Copy (File|Folder) Path"){
+				pFile:=current(3).file
+				SplitPath, pFile,,pFolder
+				Clipboard:=InStr(A_ThisMenuItem,"Folder")?pFolder:pFile
+			}else
 				m("Coming Soon....maybe")
 			return
 			rcmnew:

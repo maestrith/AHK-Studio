@@ -15,7 +15,7 @@ Theme(info=""){
 	color:=TV_Add("Color")
 	for a,b in ["Background","Default Background Color","Default Font Style","Caret","Caret Line Background","End Of Line Color","Reset To Default","Indent Guide","Multiple Selection Foreground","Multiple Selection Background"
 		,"Main Selection Foreground","Main Selection Background","Brace Match Color","Brace Match Indicator Reset","Brace Match Style","Edited Marker","Saved Marker","Compare Color"]
-	v.themelist[TV_Add(b,color,"Sort")]:=b
+		v.themelist[TV_Add(b,color,"Sort")]:=b
 	options:=TV_Add("Theme Options")
 	for a,b in ["Edit Theme Name","Edit Author","Download Themes","Export Theme","Import Theme","Save Theme","Display Style Number At Caret"]
 		v.themelist[TV_Add(b,options,"Sort")]:=b

@@ -23,7 +23,7 @@ Backspace(){
 		sc:=csc()
 		GuiControl,-Redraw,% sc.sc
 		Send,+^{Left}{Delete}
-		;
+		;I had to add ^bs back in.
 		GuiControl,+Redraw,% sc.sc
 	}
 	return
