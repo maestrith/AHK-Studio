@@ -29,7 +29,7 @@
 			<menu name="Set &amp;As Default Editor" clean="Set_As_Default_Editor"></menu>
 			<menu name="&amp;Upload" clean="Upload"></menu></menu>
 		<menu name="&amp;Edit" clean="Edit">
-			<menu name="Auto Insert" clean="Auto_Add" hotkey=""></menu>
+			<menu name="Auto Insert" clean="Auto_Insert" hotkey=""></menu>
 			<menu name="Compare" hotkey="" clean="Compare"></menu>
 			<menu name="Copy" clean="Copy"></menu>
 			<menu clean="Custom_Case_Settings" name="Custom Case Settings"></menu>
@@ -41,7 +41,7 @@
 			<menu name="&amp;Find" clean="Find" hotkey="^F"></menu>
 			<menu clean="Find_Replace" name="Find Replace"></menu>
 			<menu name="Fi&amp;x Indent" hotkey="" clean="Fix_Indent"></menu>
-			<menu name="Ft&amp;p Servers" clean="Ftp_Servers"></menu>
+			<menu name="FT&amp;P Servers" clean="Ftp_Servers"></menu>
 			<menu clean="Go_To_Line" name="Go To Line"></menu>
 			<menu name="Jump to Proj&amp;ect" clean="Jump_to_Project" hotkey="!S"></menu>
 			<menu name="&amp;Jump to Segment" hotkey="!j" clean="Jump_to_Segment"></menu>
