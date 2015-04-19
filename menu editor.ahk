@@ -12,6 +12,7 @@ menu_editor(x:=0){
 		while,aa:=all.item[A_Index-1],ea:=xml.ea(aa)
 			if(aa.haschildnodes())
 				Menu,main,Delete,% ea.name
+		Gui,2:Destroy
 		newwin:=new windowtracker(2),icons:=[]
 		list:=menus.sn("//*[@icon!='']")
 		if (list.length){
