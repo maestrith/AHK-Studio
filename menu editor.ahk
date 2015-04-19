@@ -195,7 +195,7 @@ menu_editor(x:=0){
 	Gui,2:Default
 	top:=menus.ssn("//*[@tv='" TV_GetSelection() "']")
 	main:=top.ParentNode
-	new:=menus.under(main,"separator",{name:"-------",last:1})
+	new:=menus.under(main,"separator",{name:"-------",clean:"-------",last:1})
 	main.insertbefore(new,top)
 	menu_editor(1)
 	return

@@ -2,9 +2,10 @@
 <menus>
 	<main>
 		<menu name="&amp;File" clean="File">
-			<menu clean="Auto_Update" name="Auto Update" hide="1"></menu>
+			<menu clean="Auto_Update" name="Auto Update"></menu>
 			<menu name="Chec&amp;k For Update" clean="Check_For_Update" hotkey=""></menu>
 			<menu name="&amp;Close" clean="Close"></menu>
+			<separator clean="-------" name="-------"></separator>
 			<menu name="Co&amp;mpile" clean="Compile" hotkey=""></menu>
 			<menu name="Create S&amp;egment From Selection" hotkey="+^N" clean="Create_Segment_From_Selection"></menu>
 			<menu name="Debug Current Script" clean="Debug_Current_Script" hotkey="!R"></menu>
@@ -154,12 +155,12 @@
 			<menu clean="Omni-Search" name="Omni-Search">
 				<menu clean="Add_Function_Call" name="Add Function Call" hotkey="^="></menu>
 				<menu clean="Bookmark_Search" name="Bookmark Search" hotkey="+^3"></menu>
-				<menu name="Class Search" hotkey="+^[" clean="Class_Search"></menu>
+				<menu name="Class Search" hotkey="^!c" clean="Class_Search"></menu>
 				<menu name="File Search" hotkey="+!O" clean="File_Search"></menu>
 				<menu name="Function Search" hotkey="+^9" clean="Function_Search"></menu>
 				<menu name="Hotkey Search" hotkey="+^7" clean="Hotkey_Search"></menu>
 				<menu name="Menu Search" hotkey="!M" clean="Menu_Search"></menu>
-				<menu name="Method Search" hotkey="^[" clean="Method_Search"></menu>
+				<menu name="Method Search" hotkey="^!m" clean="Method_Search"></menu>
 				<menu name="Omni Search" hotkey="^!O" clean="Omni_Search"></menu>
 				<menu name="Search Label" hotkey="+^;" clean="Search_Label"></menu></menu>
 			<menu name="Previous File" hotkey="+!Up" clean="Previous_File"></menu>

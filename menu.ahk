@@ -1,6 +1,11 @@
 menu(menuname){
 	menu:=menus.sn("//" menuname "/descendant::*"),topmenu:=menus.sn("//" menuname "/*")
 	Menu,main,UseErrorLevel,On
+	while,mm:=topmenu.item[A_Index-1],ea:=xml.ea(mm)
+		if mm.haschildnodes()
+			Menu,% ea.name,DeleteAll
+	;Menu,main,DeleteAll
+	Sleep,100
 	while,mm:=topmenu.item[A_Index-1],eamm:=xml.ea(mm){
 		if(mm.nodename="date")
 			Continue
@@ -12,6 +17,11 @@ menu(menuname){
 				Continue
 			if(cea.hide)
 				Continue
+			if(cc.nodename="separator"){
+				parent:=ssn(cc.ParentNode,"@name").text
+				Menu,%parent%,Add
+				Continue
+			}
 			if(cc.haschildnodes()&&ssn(cc,"ancestor-or-self::menu[@clean='Plugin']").xml=""){
 				list:=[],sub:=sn(cc,"descendant-or-self::*")
 				while,pp:=sub.item[A_Index-1]
@@ -55,17 +65,16 @@ menu(menuname){
 			}
 		}
 	}
-	while,tt:=topmenu.item[A_Index-1]{
-		menu:=ssn(tt,"@name").text
+	while,tt:=topmenu.item[A_Index-1],ea:=xml.ea(tt){
 		if tt.haschildnodes(){
-			if ssn(tt,"@hide").text
+			if(ea.hide)
 				Continue
-			Menu,%menuname%,Add,%menu%,:%menu%
+			Menu,%menuname%,Add,% ea.name,% ":" ea.name
 		}
 		else{
-			if ssn(tt,"@hide").text
+			if(ea.hide)
 				Continue
-			Menu,%menuname%,Add,%menu%,MenuRoute
+			Menu,%menuname%,Add,% ea.name,% ":" ea.name
 		}
 	}
 	return menuname
