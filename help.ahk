@@ -27,7 +27,7 @@ Auto Indent:
 	11GuiClose:
 	hwnd({rem:11}),csc({hwnd:s.main.1})
 	return
-	11buttononlinehelp:
+	Online_Help:
 	Run,http://github.com/maestrith/AHK-Studio/wiki
 	return
 }
