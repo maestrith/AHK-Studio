@@ -20,7 +20,7 @@ Auto Indent:
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w800 h500"}),csc({hwnd:sc})
 	SendMessage,0x400+91,1,,,% "ahk_id" sc.sc
-	Gui,Add,Button,,Online Help
+	Gui,Add,Button,gonline_help,Online Help
 	Gui,Show,,AHK Studio Help
 	sc.2181(0,help),sc.2025(0),hotkeys([11],{"Esc":"11GuiClose"})
 	return

@@ -119,6 +119,7 @@ class toolbar{
 			}
 			else if button.runfile
 				return runfile(button.runfile)
+			return 0
 		} 
 		if (code=-708) ;toolbar change
 			this.ideal()

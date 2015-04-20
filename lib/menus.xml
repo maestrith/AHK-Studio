@@ -7,6 +7,7 @@
 			<menu name="&amp;Close" clean="Close"></menu>
 			<menu name="Co&amp;mpile" clean="Compile" hotkey=""></menu>
 			<menu name="Create S&amp;egment From Selection" hotkey="+^N" clean="Create_Segment_From_Selection"></menu>
+			<separator clean="-------" name="-------"></separator>
 			<menu name="Debug Current Script" clean="Debug_Current_Script" hotkey="!R"></menu>
 			<menu name="E&amp;xit" clean="Exit" hotkey=""></menu>
 			<menu name="Export" clean="Export"></menu>
@@ -18,7 +19,7 @@
 			<menu name="Pre&amp;vious Scripts" clean="Previous_Scripts"></menu>
 			<menu name="&amp;Publish" clean="Publish"></menu>
 			<menu name="Remove Segmen&amp;t" hotkey="" clean="Remove_Segment"></menu>
-			<menu name="&amp;Run" clean="Run" hotkey="F12"></menu>
+			<menu name="&amp;Run" clean="Run" hotkey="!d"></menu>
 			<menu name="Run As Ansii" clean="Run_As_Ansii" hotkey="^!A"></menu>
 			<menu name="Run As U32" clean="Run_As_U32"></menu>
 			<menu name="Run As U64" clean="Run_As_U64"></menu>
@@ -140,11 +141,11 @@
 			<menu name="Insert Code Vault Text" hotkey="+^Escape" clean="Insert_Code_Vault_Text"></menu>
 			<menu clean="Jump_To" name="Jump To">
 				<menu clean="Jump_To_Class" name="Jump To Class"></menu>
-				<menu clean="Jump_To_First_Available" name="Jump To First Available" hotkey="^e"></menu>
+				<menu clean="Jump_To_First_Available" name="Jump To First Available" hotkey="!F1"></menu>
 				<menu clean="Jump_To_Function" name="Jump To Function"></menu>
 				<menu clean="Jump_To_Include" name="Jump To Include"></menu>
 				<menu clean="Jump_To_Label" name="Jump To Label"></menu>
-				<menu clean="Jump_To_Method" name="Jump To Method" hotkey=""></menu></menu>
+				<menu clean="Jump_To_Method" name="Jump To Method"></menu></menu>
 			<menu name="Move Selected Lines Down" hotkey="+^Down" clean="Move_Selected_Lines_Down"></menu>
 			<menu name="Move Selected Lines Up" hotkey="+^Up" clean="Move_Selected_Lines_Up"></menu>
 			<menu clean="Navigation" name="Navigation">
@@ -193,23 +194,23 @@
 			<menu clean="Donate" name="Donate"></menu>
 			<menu name="&amp;Forum" clean="Forum"></menu>
 			<menu name="&amp;Help" clean="Help"></menu>
-			<menu name="Online Help" clean="Online_Help"></menu>
+			<menu clean="Online_Help" name="Online Help"></menu>
 			<menu name="&amp;Social" clean="Social"></menu>
-			<menu name="Testing" hotkey="!F2" clean="Testing"></menu></menu>
+			<menu name="Testing" hotkey="!F12" clean="Testing"></menu></menu>
 		<menu name="Scratch &amp;Pad" clean="Scratch_Pad"></menu>
 		<menu clean="Plugin" name="P&amp;lugin">
-			<menu clean="Make_One_Line" name="Make One Line" option="" plugin="plugins\All One Line.ahk"></menu>
+			<menu clean="Make_One_Line" name="Make One Line" option="" plugin="plugins\All One Line.ahk" hotkey="!["></menu>
+			<menu clean="Split_Line_By_Comma" name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk" hotkey="^!,"></menu>
 			<menu clean="Auto_Menu_Adder" name="Auto Menu Adder" option="" plugin="plugins\Auto Menu Adder.ahk"></menu>
-			<menu clean="Align_Selected_Text" name="Align Selected Text" option="" plugin="plugins\Auto Think.ahk"></menu>
-			<menu clean="Capture_Gif" name="Capture Gif" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif" name="Capture Gif" option="" plugin="plugins\Capture Gif.ahk" hotkey="^!g"></menu>
 			<menu clean="GeekDude_Paste" name="GeekDude Paste" option="" plugin="plugins\Geekdude Paste.ahk"></menu>
 			<menu clean="Paste_Clipboard" name="Paste Clipboard" option="Clipboard" plugin="plugins\Geekdude Paste.ahk"></menu>
 			<menu clean="Mark_All_Files_For_Update" name="Mark All Files For Update" option="" plugin="plugins\Mark All Files For Update.ahk"></menu>
+			<menu clean="Upload_Menus" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu>
+			<menu clean="Align_Selected_Text" name="Align Selected Text" option="" plugin="plugins\Auto Think.ahk"></menu>
 			<menu clean="VB" name="VB" option="VB" plugin="plugins\Run As.ahk"></menu>
 			<menu clean="C#" name="C#" option="C#" plugin="plugins\Run As.ahk"></menu>
-			<menu clean="Compile_C#" name="Compile C#" option="CompileC#" plugin="plugins\Run As.ahk"></menu>
-			<menu clean="Split_Line_By_Comma" name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk"></menu>
-			<menu clean="Upload_Menus" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu></menu>
+			<menu clean="Compile_C#" name="Compile C#" option="CompileC#" plugin="plugins\Run As.ahk"></menu></menu>
 	</main>
-	<date>20150411</date>
+	<date>20150418</date>
 </menus>

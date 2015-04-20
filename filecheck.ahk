@@ -20,18 +20,7 @@ filecheck(){
 				if !ea.clean
 					Continue
 				if !menus.ssn("//*[@clean='" ea.clean "']"){
-					
-					
-					parent:=menus.ssn("//*[@clean='" ssn(mm.ParentNode,"@clean").text "']")
-					next:=0
-					new:=menus.under(parent,"menu",ea)
-order:=[]
-					list:=sn(parent,"*")
-					nn:=xml.ea(new)
-					
-					
-					
-					
+					parent:=menus.ssn("//*[@clean='" ssn(mm.ParentNode,"@clean").text "']"),next:=0,new:=menus.under(parent,"menu",ea),order:=[],list:=sn(parent,"*"),nn:=xml.ea(new)
 					while,ll:=list.Item[A_Index-1],ea:=xml.ea(ll)
 						order[ea.clean]:=ll
 						for a,b in order{
