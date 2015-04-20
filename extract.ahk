@@ -37,6 +37,7 @@ extract(list,top){
 		}
 		StringReplace,text,text,`r`n,`n,All
 		StringReplace,text,text,`r,`n,All
+		StringReplace,text,text,`n`n,`n,all
 		update({file:filename,text:text,load:1})
 		for a,b in StrSplit(text,"`n","`r"){
 			original:=b
