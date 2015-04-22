@@ -92,8 +92,8 @@ qf(){
 	ControlGetFocus,Focus,% hwnd([1])
 	if(Focus="Edit1")
 		goto,qf
-	else if(A_ThisHotkey="+Enter")
-		replace()
+	else if(A_ThisHotkey="+Enter"||A_ThisHotkey="enter")
+	replace()
 	else
 		marginwidth()
 	if(v.options.full_auto){

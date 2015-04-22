@@ -1,6 +1,7 @@
 #SingleInstance,Off
 ;download complete
 /*
+	I can demonstrate what I am doing
 	TODO LIST:
 	Create a way that the user can add things to the commands list
 	-Do it so that it creates a local file that will not be effected by my main commands.xml

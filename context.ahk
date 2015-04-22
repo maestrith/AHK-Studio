@@ -57,7 +57,7 @@ context(return=""){
 		if(class:=ssn(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Object'][@upper='" upper(pre) "']"),"@class").text){
 			args:=ssn(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Class' and @upper='" upper(class) "']/descendant::*[@type='Method' or @type='Property'][@upper='" upper(command) "']"),"@args").text
 			if(args){
-				syntax:=pre "." command "(" args ")"
+				syntax.=pre "." command "(" args ")"
 				goto,conbottom
 			}
 		}if(fun:=ssn(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Function'][@upper='" upper(command) "']"),"@args").text){
@@ -66,6 +66,7 @@ context(return=""){
 		}
 	}
 	if((ea:=scintilla.ea("//*[@code='" command "']")).syntax){
+		pre:=pre?pre ".":pre
 		syntax:=pre command ea.syntax "`n" ea.name
 		Goto,conbottom
 	}else if(command:=kw[command]){

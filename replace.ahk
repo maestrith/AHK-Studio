@@ -1,6 +1,6 @@
 replace(){
 	sc:=csc(),cp:=sc.2008,word:=sc.textrange(start:=sc.2266(cp-1,1),end:=sc.2267(cp-1,1)),rep:=settings.ssn("//replacements/*[@replace='" word "']").text
-	if(sc.2007(sc.2008)=125&&sc.2007(sc.2008-1)=123&&A_ThisHotkey="+Enter"&&v.options.Full_Auto)
+	if(sc.2007(sc.2008)=125&&sc.2007(sc.2008-1)=123&&(A_ThisHotkey="+Enter"||A_ThisHotkey="Enter")&&v.options.Full_Auto)
 		sc.2003(sc.2008,"`n`n"),fix_indent(),sc.2025(sc.2128(sc.2166(sc.2008)+1))
 	if !rep
 		return

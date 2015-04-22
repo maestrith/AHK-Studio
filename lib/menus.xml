@@ -31,12 +31,12 @@
 		<menu name="&amp;Edit" clean="Edit">
 			<menu name="Auto Insert" clean="Auto_Insert" hotkey=""></menu>
 			<menu name="Compare" hotkey="" clean="Compare"></menu>
-			<menu name="Copy" clean="Copy"></menu>
+			<menu name="Copy" clean="Copy" hotkey="^c"></menu>
 			<menu clean="Custom_Case_Settings" name="Custom Case Settings"></menu>
 			<menu name="Cut" clean="Cut"></menu>
 			<menu clean="Debug_Settings" name="Debug Settings"></menu>
 			<menu clean="Default_Project_Folder" name="Default Project Folder"></menu>
-			<menu name="&amp;Duplicate Line" hotkey="F2" clean="Duplicate_Line"></menu>
+			<menu name="&amp;Duplicate Line" hotkey="+^d" clean="Duplicate_Line"></menu>
 			<menu name="Ed&amp;it Replacements" clean="Edit_Replacements"></menu>
 			<menu name="&amp;Find" clean="Find" hotkey="^F"></menu>
 			<menu clean="Find_Replace" name="Find Replace"></menu>
@@ -48,7 +48,7 @@
 			<menu name="&amp;Menu Editor" func="flan" clean="Menu_Editor"></menu>
 			<menu clean="New_File_Template" name="New File Template"></menu>
 			<menu name="&amp;Next Found" hotkey="F3" clean="Next_Found"></menu>
-			<menu name="Paste" clean="Paste"></menu>
+			<menu name="Paste" clean="Paste" hotkey="^v"></menu>
 			<menu name="Personal &amp;Variable List" clean="Personal_Variable_List"></menu>
 			<menu name="Previous Found" hotkey="+F3" clean="Previous_Found"></menu>
 			<menu clean="Proxy_Settings" name="Proxy Settings"></menu>
@@ -138,7 +138,7 @@
 			<menu name="Hide Menu" clean="Hide_Menu"></menu>
 			<menu name="Highlight to Matching Brace" clean="Highlight_to_Matching_Brace" hotkey="^!M"></menu>
 			<menu name="Index Current File" clean="Index_Current_File" hotkey="F5"></menu>
-			<menu name="Insert Code Vault Text" hotkey="+^Escape" clean="Insert_Code_Vault_Text"></menu>
+			<menu name="Insert Code Vault Text" clean="Insert_Code_Vault_Text" hotkey="^!Escape"></menu>
 			<menu clean="Jump_To" name="Jump To">
 				<menu clean="Jump_To_Class" name="Jump To Class"></menu>
 				<menu clean="Jump_To_First_Available" name="Jump To First Available" hotkey="!F1"></menu>
@@ -169,7 +169,7 @@
 			<menu clean="Refresh_Variable_List" name="Refresh Variable List"></menu>
 			<menu name="Remove Current Selection" hotkey="^F3" clean="Remove_Current_Selection"></menu>
 			<menu name="&amp;Scintilla Code Lookup" hotkey="F6" clean="Scintilla_Code_Lookup"></menu>
-			<menu name="Select Next Duplicate" clean="Select_Next_Duplicate" hotkey="!F3"></menu>
+			<menu name="Select Next Duplicate" clean="Select_Next_Duplicate" hotkey="F3"></menu>
 			<menu name="Show Classes" clean="Show_Classes" hotkey="!i"></menu>
 			<menu name="Show Functions" clean="Show_Functions" hotkey="!o"></menu>
 			<menu name="Show Menu" clean="Show_Menu"></menu>
