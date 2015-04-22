@@ -1,7 +1,6 @@
 Quick_Scintilla_Code_Lookup(){
 	static list
-	sc:=csc(),word:=sc.getword()
-	StringUpper,word,word
+	sc:=csc(),word:=upper(sc.textrange(start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1)))
 	if !(list)
 		list:=scintilla(1)
 	ea:=scintilla.ea("//commands/item[@name='" word "']")
