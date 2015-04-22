@@ -2,10 +2,12 @@ test_plugin(){
 	save(),Exit(1,1)
 	return
 }
-plugins(){
+plugins(refresh:=0){
 	plugins:
 	if !FileExist("plugins")
 		FileCreateDir,Plugins
+		if(refresh)
+			rem:=menus.ssn("//menu[@clean='Plugin']"),rem.ParentNode.RemoveChild(rem)
 	pin:=menus.sn("//*[@clean='Plugin']/descendant::menu")
 	while,pp:=pin.item[A_Index-1],ea:=xml.ea(pp)
 		if !FileExist(ea.plugin)
@@ -28,6 +30,7 @@ plugins(){
 	SetTimer,refreshmenu,-300
 	return
 	refreshmenu:
+	Menu("main"),MenuWipe()
 	Gui,1:Menu,% Menu("main")
 	return
 }

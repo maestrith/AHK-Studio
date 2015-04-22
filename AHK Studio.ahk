@@ -67,12 +67,11 @@ ComObjError(0),openfile:=file
 if x:=ComObjActive("AHK-Studio"){
 	if file
 		x.open(file),x.scanfiles()
-	;x.activate() ;,x.Show()
 	x.Show()
 	ExitApp
 }
 ComObjError(1)
-if (A_PtrSize=8&&A_IsCompiled=""){
+if(A_PtrSize=8&&A_IsCompiled=""){
 	SplitPath,A_AhkPath,,dir
 	if !FileExist(correct:=dir "\AutoHotkeyU32.exe"){
 		m("Requires AutoHotkey 1.1 to run")
@@ -84,7 +83,7 @@ if (A_PtrSize=8&&A_IsCompiled=""){
 }
 SetWorkingDir,%A_ScriptDir%
 global v:=[],settings,files,menus,commands,positions,vversion,access_token,vault,preset,cexp,scintilla,bookmarks,cexml
-settings:=new xml("settings","lib\settings.xml"),files:=new xml("files"),menus:=new xml("menus","lib\menus.xml"),commands:=new xml("commands","lib\commands.xml"),cexp:=new xml("code_explorer"),bookmarks:=new xml("bookmarks","lib\bookmarks.xml"),positions:=new xml("positions","lib\positions.xml"),vversion:=new xml("version","lib\version.xml"),access_token:=settings.ssn("//access_token").text,cexml:=new xml("code_explorer"),v.filescan:=[]
+settings:=new xml("settings","lib\settings.xml"),files:=new xml("files"),menus:=new xml("menus","lib\menus.xml"),commands:=new xml("commands","lib\commands.xml"),cexp:=new xml("code_explorer"),bookmarks:=new xml("bookmarks","lib\bookmarks.xml"),positions:=new xml("positions","lib\positions.xml"),vversion:=new xml("version","lib\version.xml"),access_token:=settings.ssn("//github/@token").text,cexml:=new xml("code_explorer"),v.filescan:=[]
 if(FileExist(A_ScriptDir "\lib\scintilla.xml"))
 	scintilla:=new xml("scintilla",A_ScriptDir "\lib\scintilla.xml")
 if !settings.ssn("//Auto_Indent")
@@ -239,6 +238,7 @@ return
 #Include menu search.ahk
 #Include menu.ahk
 #Include Menu_Editor_Icon.ahk
+#Include MenuWipe.ahk
 #Include Method Search.ahk
 #Include move selected lines down.ahk
 #Include move selected lines up.ahk
@@ -272,6 +272,7 @@ return
 #Include Quick Scintilla Code Lookup.ahk
 #Include redo.ahk
 #Include Refresh Code Explorer.ahk
+#Include Refresh Plugins.ahk
 #Include Refresh Variable List.ahk
 #Include refresh.ahk
 #Include refreshthemes.ahk
@@ -349,4 +350,3 @@ return
 #Include Widths.ahk
 #Include window.ahk
 #Include Words In Document.ahk
-#Include MenuWipe.ahk

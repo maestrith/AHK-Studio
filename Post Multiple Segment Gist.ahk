@@ -1,9 +1,6 @@
 Post_Multiple_Segment_Gist(){
 	get_access()
-	ea:=xml.ea(vversion.ssn("//*[@file='" ssn(current(1),"@file").text "']")),newver:=ea.version "." ea.increment
-	fi:=sn(current(1),"file/@file"),file:=ssn(current(1),"@file").text
-	id:=positions.ssn("//main[@file='" file "']/@multiple_id").text
-	url:="https://api.github.com/gists"
+	ea:=xml.ea(vversion.ssn("//*[@file='" current(2).file "']")),newver:=(ea.versstyle?"":"Version=") ea.version,fi:=sn(current(1),"file/@file"),file:=ssn(current(1),"@file").text,id:=positions.ssn("//main[@file='" file "']/@multiple_id").text,url:="https://api.github.com/gists"
 	if id
 		id:=check_id(id)
 	SplitPath,file,filename
@@ -16,7 +13,7 @@ Post_Multiple_Segment_Gist(){
 		info:=udf[f]
 		if a_index=1
 			info.=compile_main_gist(f)
-		json.=json(info,filename)
+		json.=json(info,filename,newver)
 		if (fi.length!=A_Index)
 			json.=","
 	}

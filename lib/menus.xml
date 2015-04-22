@@ -7,7 +7,6 @@
 			<menu name="&amp;Close" clean="Close"></menu>
 			<menu name="Co&amp;mpile" clean="Compile" hotkey=""></menu>
 			<menu name="Create S&amp;egment From Selection" hotkey="+^N" clean="Create_Segment_From_Selection"></menu>
-			<separator clean="-------" name="-------"></separator>
 			<menu name="Debug Current Script" clean="Debug_Current_Script" hotkey="!R"></menu>
 			<menu name="E&amp;xit" clean="Exit" hotkey=""></menu>
 			<menu name="Export" clean="Export"></menu>
@@ -109,6 +108,7 @@
 			<menu name="Ms&amp;gBox Creator" clean="MsgBox_Creator"></menu>
 			<menu name="Post &amp;All In One Gist" clean="Post_All_In_One_Gist"></menu>
 			<menu name="Post &amp;Multiple Segment Gist" clean="Post_Multiple_Segment_Gist"></menu>
+			<menu name="Refresh Plugins" clean="Refresh_Plugins"></menu>
 			<menu name="Update Github Info" clean="Update_Github_Info"></menu></menu>
 		<menu name="&amp;Special Menu" clean="Special_Menu">
 			<menu clean="Add_button" name="Add Button"></menu>
@@ -199,18 +199,18 @@
 			<menu name="Testing" hotkey="!F12" clean="Testing"></menu></menu>
 		<menu name="Scratch &amp;Pad" clean="Scratch_Pad"></menu>
 		<menu clean="Plugin" name="P&amp;lugin">
-			<menu clean="Make_One_Line" name="Make One Line" option="" plugin="plugins\All One Line.ahk" hotkey="!["></menu>
-			<menu clean="Split_Line_By_Comma" name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk" hotkey="^!,"></menu>
+			<menu clean="Make_One_Line" name="Make One Line" option="" plugin="plugins\All One Line.ahk"></menu>
 			<menu clean="Auto_Menu_Adder" name="Auto Menu Adder" option="" plugin="plugins\Auto Menu Adder.ahk"></menu>
-			<menu clean="Capture_Gif" name="Capture Gif" option="" plugin="plugins\Capture Gif.ahk" hotkey="^!g"></menu>
+			<menu clean="Align_Selected_Text" name="Align Selected Text" option="" plugin="plugins\Auto Think.ahk"></menu>
+			<menu clean="Capture_Gif" name="Capture Gif" option="" plugin="plugins\Capture Gif.ahk"></menu>
 			<menu clean="GeekDude_Paste" name="GeekDude Paste" option="" plugin="plugins\Geekdude Paste.ahk"></menu>
 			<menu clean="Paste_Clipboard" name="Paste Clipboard" option="Clipboard" plugin="plugins\Geekdude Paste.ahk"></menu>
 			<menu clean="Mark_All_Files_For_Update" name="Mark All Files For Update" option="" plugin="plugins\Mark All Files For Update.ahk"></menu>
-			<menu clean="Upload_Menus" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu>
-			<menu clean="Align_Selected_Text" name="Align Selected Text" option="" plugin="plugins\Auto Think.ahk"></menu>
 			<menu clean="VB" name="VB" option="VB" plugin="plugins\Run As.ahk"></menu>
 			<menu clean="C#" name="C#" option="C#" plugin="plugins\Run As.ahk"></menu>
-			<menu clean="Compile_C#" name="Compile C#" option="CompileC#" plugin="plugins\Run As.ahk"></menu></menu>
+			<menu clean="Compile_C#" name="Compile C#" option="CompileC#" plugin="plugins\Run As.ahk"></menu>
+			<menu clean="Split_Line_By_Comma" name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk"></menu>
+			<menu clean="Upload_Menus" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu></menu>
 	</main>
-	<date>20150418</date>
+	<date>20150422</date>
 </menus>
