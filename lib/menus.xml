@@ -36,7 +36,7 @@
 			<menu name="Cut" clean="Cut"></menu>
 			<menu clean="Debug_Settings" name="Debug Settings"></menu>
 			<menu clean="Default_Project_Folder" name="Default Project Folder"></menu>
-			<menu name="&amp;Duplicate Line" hotkey="+^d" clean="Duplicate_Line"></menu>
+			<menu name="&amp;Duplicate Line" hotkey="F2" clean="Duplicate_Line"></menu>
 			<menu name="Ed&amp;it Replacements" clean="Edit_Replacements"></menu>
 			<menu name="&amp;Find" clean="Find" hotkey="^F"></menu>
 			<menu clean="Find_Replace" name="Find Replace"></menu>
@@ -138,7 +138,7 @@
 			<menu name="Hide Menu" clean="Hide_Menu"></menu>
 			<menu name="Highlight to Matching Brace" clean="Highlight_to_Matching_Brace" hotkey="^!M"></menu>
 			<menu name="Index Current File" clean="Index_Current_File" hotkey="F5"></menu>
-			<menu name="Insert Code Vault Text" clean="Insert_Code_Vault_Text" hotkey="^!Escape"></menu>
+			<menu name="Insert Code Vault Text" clean="Insert_Code_Vault_Text" hotkey="+^Escape"></menu>
 			<menu clean="Jump_To" name="Jump To">
 				<menu clean="Jump_To_Class" name="Jump To Class"></menu>
 				<menu clean="Jump_To_First_Available" name="Jump To First Available" hotkey="!F1"></menu>
