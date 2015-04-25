@@ -104,10 +104,10 @@ class code_explorer{
 		code_explorer.Refresh_Code_Explorer()
 		Gui,1:TreeView,SysTreeView321
 	}
-	Add(value,parent,options){
+	Add(value,parent=0,options=""){
 		Gui,1:Default
 		Gui,1:TreeView,SysTreeView322
-		return TV_Add(value,parent,options)
+		return this.Add(value,parent,options)
 	}
 	Refresh_Code_Explorer(){
 		if v.options.Hide_Code_Explorer
@@ -122,18 +122,20 @@ class code_explorer{
 		while,fn:=fz.Item[A_Index-1]{
 			things:=sn(fn,"descendant::*"),filename:=ssn(fn,"@file").text
 			SplitPath,filename,file
-			main:=TV_Add(file)
+			Gui,1:Default
+			Gui,1:TreeView,SysTreeView322
+			main:=tv_add(file)
 			while,tt:=things.Item[A_Index-1],ea:=xml.ea(tt){
 				if(ea.type="variable"||tt.nodename="file")
 					continue
 				if !top:=cet.ssn("//main[@file='" filename "'][@type='" ea.type "']")
 					if !(ea.type~="(Method|Property)")
-						top:=cet.Add2("main",{file:filename,type:ea.type,tv:code_explorer.Add(ea.type,main,"Vis Sort")},"",1)
+						top:=cet.Add2("main",{file:filename,type:ea.type,tv:TV_Add(ea.type,main,"Vis Sort")},"",1)
 				text:=ea[StrSplit(ea.order,",").1]
 				if(ea.type~="(Method|Property)")
-					cet.under(last,"info",{text:text,pos:ea.pos,file:ea.file,type:ea.type,tv:code_explorer.Add(text,ssn(last,"@tv").text,"Sort")})
+					cet.under(last,"info",{text:text,pos:ea.pos,file:ea.file,type:ea.type,tv:TV_Add(text,ssn(last,"@tv").text,"Sort")})
 				else
-					last:=cet.under(top,"info",{text:text,pos:ea.pos,file:ea.file,line:ea.line,type:ea.type,tv:code_explorer.Add(text,ssn(top,"@tv").text,"Sort")})
+					last:=cet.under(top,"info",{text:text,pos:ea.pos,file:ea.file,line:ea.line,type:ea.type,tv:TV_Add(text,ssn(top,"@tv").text,"Sort")})
 			}
 		}
 		GuiControl,1:+Redraw,SysTreeView322
@@ -162,9 +164,9 @@ class code_explorer{
 				Gui,1:Default
 				Gui,1:TreeView,SysTreeView321
 				if !root:=files.ssn("//directory")
-					root:=files.add2("directory",{tv:TV_Add("Directory")})
+					root:=files.add2("directory",{tv:tv_Add("Directory")})
 				if !(ssn(root,"dir[@dir='" dir "']")){
-					top:=files.under(root,"dir",{dir:dir,tv:TV_Add(dir,ssn(root,"@tv").text)}),ea:=xml.ea(top)
+					top:=files.under(root,"dir",{dir:dir,tv:tv_add(dir,ssn(root,"@tv").text)}),ea:=xml.ea(top)
 					for a,b in ["*.ahk","*.txt","*.xml"]{
 						Loop,%dir%\%b%,1,1
 						{
@@ -172,8 +174,8 @@ class code_explorer{
 							if InStr(A_LoopFileFullPath,"'")
 								Continue
 							if !dirxml:=ssn(top,"descendant-or-self::*[@dir='" A_LoopFileDir "']")
-								dirxml:=files.under(top,"subdir",{dir:A_LoopFileDir,tv:TV_Add(dirname,ssn(top,"@tv").text,"vis")})
-							files.under(dirxml,"openfile",{tv:TV_Add(A_LoopFileName,xml.ea(dirxml).tv),file:A_LoopFileFullPath})
+								dirxml:=files.under(top,"subdir",{dir:A_LoopFileDir,tv:tv_add(dirname,ssn(top,"@tv").text,"vis")})
+							files.under(dirxml,"openfile",{tv:tv_add(A_LoopFileName,xml.ea(dirxml).tv),file:A_LoopFileFullPath})
 						}
 					}
 				}
