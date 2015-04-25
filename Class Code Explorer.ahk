@@ -41,7 +41,7 @@ class code_explorer{
 		}
 		lastpos:=pos:=1,codeobj:=StrSplit(code,"`n"),pos:=1,objects:=[]
 		while,pos:=RegExMatch(code,code_explorer.class,found,pos)
-			npos:=StrPut(SubStr(code,1,found.Pos(1)-2),"utf-8"),top:=SubStr(code,1,InStr(code,found.1)),RegExReplace(top,"\n","",count),objects[pos]:={name:found.1,line:count},cexml.under(cce,"info",{type:"Class",file:filename,pos:npos,text:SubStr(found.1,7),upper:upper(SubStr(found.1,7)),root:parentfile,order:"text,type,root"}),pos:=found.Pos(1)+StrLen(found.1)
+			npos:=StrPut(SubStr(code,1,found.Pos(1)-1),"utf-8")-1,top:=SubStr(code,1,InStr(code,found.1)),RegExReplace(top,"\n","",count),objects[pos]:={name:found.1,line:count,xml:cexml.under(cce,"info",{type:"Class",file:filename,pos:npos,text:SubStr(found.1,7),upper:upper(SubStr(found.1,7)),root:parentfile,order:"text,type,root"})},pos:=found.Pos(1)+StrLen(found.1)
 		for a,b in objects{
 			braces:=0,start:=0,add:=StrPut(SubStr(code,1,InStr(code,b.name)),"utf-8")-2,b.start:=add
 			loop,% codeobj.MaxIndex()
@@ -55,6 +55,7 @@ class code_explorer{
 					break
 			}
 			b.end:=add
+			b.xml.SetAttribute("end",add)
 		}
 		pos:=1,methods:=[],list:=""
 		for a,b in objects
@@ -115,16 +116,16 @@ class code_explorer{
 		Gui,1:Default
 		Gui,1:TreeView,SysTreeView322
 		TV_Delete()
-		code_explorer.scan(current()),TV_Delete(),cet:=code_explorer.treeview:=new xml("TreeView"),bookmark:=[]
+		code_explorer.scan(current()),cet:=code_explorer.treeview:=new xml("TreeView"),bookmark:=[]
 		SplashTextOff
 		GuiControl,1:-Redraw,SysTreeView322
-		fz:=cexml.sn("//main"),TV_Delete()
+		fz:=cexml.sn("//main")
 		while,fn:=fz.Item[A_Index-1]{
 			things:=sn(fn,"descendant::*"),filename:=ssn(fn,"@file").text
 			SplitPath,filename,file
 			Gui,1:Default
 			Gui,1:TreeView,SysTreeView322
-			main:=tv_add(file)
+			main:=TV_Add(file)
 			while,tt:=things.Item[A_Index-1],ea:=xml.ea(tt){
 				if(ea.type="variable"||tt.nodename="file")
 					continue
