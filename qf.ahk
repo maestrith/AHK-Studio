@@ -35,8 +35,11 @@ qf(){
 							Break,2
 						ns:=StrPut(SubStr(search,1,found.Pos(A_Index)),"utf-8")-1,sc[Index=1?2160:2573](start+ns,start+ns+StrPut(found[A_Index])-1),pos:=found.Pos(A_Index)+found.len(A_Index),index++
 					}
-				}else
+				}else{
+					if(found.len=0)
+						Break
 					ns:=StrPut(SubStr(search,1,found.Pos(0)),"utf-8")-1,sc[Index=1?2160:2573](start+ns,start+ns+StrPut(found[0])-1),pos:=found.Pos(0)+found.len(0),index++
+				}
 			}
 		}
 	}
@@ -93,7 +96,7 @@ qf(){
 	if(Focus="Edit1")
 		goto,qf
 	else if(A_ThisHotkey="+Enter"||A_ThisHotkey="enter")
-	replace()
+		replace()
 	else
 		marginwidth()
 	if(v.options.full_auto){

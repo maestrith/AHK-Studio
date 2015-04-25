@@ -46,10 +46,7 @@ class code_explorer{
 			braces:=0,start:=0,add:=StrPut(SubStr(code,1,InStr(code,b.name)),"utf-8")-2,b.start:=add
 			loop,% codeobj.MaxIndex()
 			{
-				line:=codeobj[(A_Index-1)+b.line+1],ln:=(A_Index-1)+b.line+1,add+=StrPut(line,"utf-8")
-				if InStr(line," " Chr(59))
-					line:=RegExReplace(line,"(\s*" Chr(59) ".*)")
-				line:=Trim(line)
+				line:=codeobj[(A_Index-1)+b.line+1],add+=StrPut(line,"utf-8"),line:=Trim(RegExReplace(line,"(\s+" Chr(59) ".*)"))
 				if(SubStr(line,0,1)="{")
 					braces++,start:=1
 				if(SubStr(line,1,1)="}")

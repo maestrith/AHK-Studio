@@ -22,8 +22,11 @@ command_help(){
 			}
 		}
 		if !help:=GetWebBrowser(){
-			Run,hh.exe %url%
-			return
+			Run,% outdir "\AutoHotkey.chm"
+			WinWaitActive,AutoHotkey Help,,3
+			Sleep,300
+			if !help:=GetWebBrowser()
+				return m("Please open the help file.")
 		}
 		help.navigate(url)
 		WinActivate,AutoHotkey Help

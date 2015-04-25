@@ -199,7 +199,7 @@
 			<menu name="Testing" hotkey="!F12" clean="Testing"></menu></menu>
 		<menu name="Scratch &amp;Pad" clean="Scratch_Pad"></menu>
 		<menu clean="Plugin" name="P&amp;lugin">
-			<menu clean="Make_One_Line" name="Make One Line" option="" plugin="plugins\All One Line.ahk"></menu>
+			<menu clean="Make_One_Line" name="Make One Line" option="" plugin="plugins\All One Line.ahk" hotkey="!["></menu>
 			<menu clean="Auto_Menu_Adder" name="Auto Menu Adder" option="" plugin="plugins\Auto Menu Adder.ahk"></menu>
 			<menu clean="Align_Selected_Text" name="Align Selected Text" option="" plugin="plugins\Auto Think.ahk"></menu>
 			<menu clean="Capture_Gif" name="Capture Gif" option="" plugin="plugins\Capture Gif.ahk"></menu>
@@ -209,7 +209,7 @@
 			<menu clean="VB" name="VB" option="VB" plugin="plugins\Run As.ahk"></menu>
 			<menu clean="C#" name="C#" option="C#" plugin="plugins\Run As.ahk"></menu>
 			<menu clean="Compile_C#" name="Compile C#" option="CompileC#" plugin="plugins\Run As.ahk"></menu>
-			<menu clean="Split_Line_By_Comma" name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk"></menu>
+			<menu clean="Split_Line_By_Comma" name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk" hotkey="^!,"></menu>
 			<menu clean="Upload_Menus" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu></menu>
 	</main>
 	<date>20150422</date>

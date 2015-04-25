@@ -29,7 +29,7 @@ tv(tv=0,open=""){
 			if !(doc){
 				count++
 				if count=3
-					return m("error")
+					return
 				goto,tvtop
 			}
 			sc.2358(0,doc),tt:=update({get:fn}),length:=VarSetCapacity(text,strput(tt,"utf-8")),StrPut(tt,&text,length,"utf-8"),sc.2037(65001),sc.2181(0,&text),set(),sc.2175,dup:=files.sn("//file[@file='" fn "']")
