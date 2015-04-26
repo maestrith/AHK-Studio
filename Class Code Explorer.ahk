@@ -88,7 +88,7 @@ class code_explorer{
 		pos:=0
 		while,pos:=RegExMatch(code,"OU);#\[(.*)\]",found,++pos){
 			npos:=StrPut(SubStr(code,1,pos),"utf-8")
-			cexml.under(cce,"info",{type:"Bookmark",file:filename,upper:upper(ea.name),pos:npos,text:found.1,root:parentfile,order:"text,pos,root"})
+			cexml.under(cce,"info",{type:"Bookmark",file:filename,upper:upper(ea.name),pos:npos,text:found.1,root:parentfile,order:"text,type,root"})
 			pos:=found.Pos(1)+found.len(1)
 		}
 		addclass:=sn(cce,"*[@type='Class']")

@@ -11,9 +11,8 @@ automenu(){
 			if l.ParentNode.nodename!=command
 				return
 			insert:=v.options.Auto_Space_After_Comma?", ":","
-			if (sc.2007(sc.2008-StrLen(insert))!=44){
+			if (sc.2007(sc.2008-StrLen(insert))!=44)
 				sc.2003(sc.2008,insert),sc.2025(sc.2008+StrLen(insert))
-			}
 			sc.2100(0,list.text,v.word:="")
 		}
 	}

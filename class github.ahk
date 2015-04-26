@@ -72,15 +72,10 @@ class github{
 		url:=this.url "/rate_limit" this.token,this.http.Open("GET",url),this.http.Send()
 		m(this.http.ResponseText)
 	}
-	CreateRepo(name,description="Created with AHK Studio",homepage="",private="false",issues="false",wiki="true",downloads="true"){
+	CreateRepo(name,description="Created with AHK Studio",homepage="",private="false",issues="true",wiki="true",downloads="true"){
 		url:=this.url "/user/repos" this.token
-		this.http.Open("POST",url)
-		json={"name":"%name%","description":"%description%","homepage":"http://www.maestrith.com","private":%private%,"has_issues":%issues%,"has_wiki":%wiki%,"has_downloads":%downloads%}
-		this.http.Send(json)
-		url:=this.url "/repos/" this.owner "/" this.repo "/contents/ReadMe.MD" this.token
-		this.http.Open("PUT",url)
-		ea:=settings.ea("//github")
-		name:=ea.name,email:=ea.email,owner:=ea.owner,content:=debug.encode("Created with AHK Studio")
+		json={"name":"%name%","description":"%description%","homepage":"http://www.maestrith.com","private":%private%,"has_issues":%issues%,"has_wiki":%wiki%,"has_downloads":%downloads%,"auto_init":true}
+		this.Send("POST",url,json),ea:=settings.ea("//github"),name:=ea.name,email:=ea.email,owner:=ea.owner,content:=debug.encode("Created with AHK Studio")
 		json={"message":"Create Readme.md file","committer":{"name":"%name%","email":"%email%"},"content":"%content%"}
 		this.http.Send(json)
 		FileDelete,create.txt

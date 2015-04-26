@@ -1,7 +1,6 @@
 Auto_Insert(){
 	static
-	wname:="Auto_Insert",newwin:=new windowtracker(wname)
-	newwin.Add(["ListView,w200 h200 AltSubmit gchange,Entered Key|Added Key,wh","Text,,Entered Key:,y","Edit,venter x+10 w100,,yw","Text,xm,Added Key:,y","Edit,vadd x+10 w100 Limit1,,yw","Button,xm gaddkey Default,Add Keys,y","Button,x+10 gremkey,Remove Selected,y"]),newwin.Show("Auto Insert")
+	wname:="Auto_Insert",newwin:=new windowtracker(wname),newwin.Add(["ListView,w200 h200 AltSubmit gchange,Entered Key|Added Key,wh","Text,,Entered Key:,y","Edit,venter x+10 w100,,yw","Text,xm,Added Key:,y","Edit,vadd x+10 w100 Limit1,,yw","Button,xm gaddkey Default,Add Keys,y","Button,x+10 gremkey,Remove Selected,y"]),newwin.Show("Auto Insert")
 	goto,popai
 	return
 	change:
