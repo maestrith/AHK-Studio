@@ -1,11 +1,11 @@
 split_code(){
 	static list:=[]
-	code:=update({get:ssn(current(),"@file").text}),list:=[],pos:=1,code_explorer.scan(current(1)),info:=cexml.ssn("//main[@file='" current(2).file "']"),each:=sn(info,"descendant::info[@type='Class']|descendant::info[@type='Function']")
+	code:=update({get:current(3).file}),list:=[],pos:=1,code_explorer.scan(current(1)),each:=sn(info:=cexml.ssn("//main[@file='" current(2).file "']/file[@file='" current(3).file "']"),"descendant::info[@type='Class']|descendant::info[@type='Function']")
 	while,ee:=each.item[A_Index-1],ea:=xml.ea(ee){
 		if ea.end
 			List["Class " ea.text]:={pos:ea.pos,len:ea.end-ea.pos,code:SubStr(code,ea.pos,ea.end-ea.pos)}
 		else{
-			search:=SubStr(code,ea.pos),add:=start:=braces:=0
+			search:=SubStr(code,_:=ea.pos?ea.pos:1),add:=start:=braces:=0
 			for a,b in StrSplit(search,"`n"){
 				line:=b,add+=StrPut(line,"utf-8"),line:=Trim(RegExReplace(line,"(\s+" Chr(59) ".*)"))
 				if(SubStr(line,0,1)="{")
@@ -15,7 +15,7 @@ split_code(){
 				if(start&&braces=0)
 					break
 			}
-			List[ea.Text]:={pos:ea.pos,len:add,code:SubStr(code,ea.pos,add)}
+			List[ea.Text]:={pos:ea.pos,len:add,code:SubStr(code,_:=ea.pos?ea.pos:1,add)}
 		}
 	}
 	setup(66)
@@ -36,22 +36,23 @@ split_code(){
 	csc().2160(List[func].pos+List[Func].len-1,List[Func].pos)
 	return
 	split:
-	cfile:=ssn(current(),"@file").text,dd:=ssn(current(1),"@file").text
+	cfile:=current(3).file,dd:=current(2).file
 	SplitPath,dd,,outdir
-	editfile:=ssn(current(),"@file").text
+	editfile:=current(3).file
+	Gui,66:Default
 	while,LV_GetNext(){
 		contents:=update({get:editfile}),LV_GetText(func,LV_GetNext()),code:=List[func].code,func:=RegExReplace(func,"_"," "),newfile:=outdir "\" func
-		if FileExist(newfile ".ahk"){
+		if FileExist(newfile ".ahk")
 			while,FileExist(newfile ".ahk")
 				newfile:=outdir "\" func A_Index
-		}
 		newfile.=".ahk",new_segment(newfile,Trim(code,"`n")),contents:=update({get:editfile})
 		StringReplace,contents,contents,%code%,,All
 		update({file:editfile,text:contents})
 		Gui,66:Default
 		LV_Modify(LV_GetNext(),"-select")
 	}
-	files.ssn("//main[@file='" dd "']").removeattribute("sc"),files.ssn("//main[@file='" dd "']/file[@file='" cfile "']").removeattribute("sc")
+	Gui,1:Default
+	files.ssn("//main[@file='" dd "']/descendant::file[@file='" cfile "']").removeattribute("sc")
 	66GuiEscape:
 	66GuiClose:
 	hwnd({rem:66})
