@@ -29,12 +29,9 @@ fix_indent(sc=""){
 }
 newindent(indentwidth:=""){
 	Critical
-	sc:=csc(),codetext:=sc.getuni(),indentation:=sc.2121
 	GuiControl,1:-Redraw,% sc.sc
 	GuiControl,1:+g,% sc.sc
-	firstvis:=sc.2152,line:=sc.2166(sc.2008),linestart:=sc.2128(line),posinline:=sc.2008-linestart
-	selpos:=posinfo(),sc.2078
-	add:=[],braces:=0,code:=StrSplit(codetext,"`n"),state:=[],aa:=ab:=0
+	sc:=csc(),codetext:=sc.getuni(),indentation:=sc.2121,firstvis:=sc.2152,line:=sc.2166(sc.2008),linestart:=sc.2128(line),posinline:=sc.2008-linestart,selpos:=posinfo(),sc.2078,add:=[],braces:=0,code:=StrSplit(codetext,"`n"),state:=[],aa:=ab:=0
 	for a,b in code{
 		text:=b
 		if (InStr(text,Chr(59)))
@@ -73,30 +70,33 @@ newindent(indentwidth:=""){
 				ab:=1
 			braces--
 		}
-		if lastind
+		if(lastind)
 			add:=[]
 		if(text="{")
-			add:=[]
+			lock:=[],lock:=add.clone(),lock.Remove(1),add:=[]
 		if !(indentwidth){
-			if add.MaxIndex(){
-				if(sc.2127(a-1)!=(braces+add.MaxIndex())*indentation)
-					sc.2126(a-1,(braces+add.MaxIndex())*indentation)
-			}else{
-				if(sc.2127(a-1)!=braces*indentation)
-					sc.2126(a-1,braces*indentation)
-			}
+			plus:=add.1?add.MaxIndex()+braces:lock.1?lock.MaxIndex()+braces:braces
+			if(sc.2127(a-1)!=plus*indentation)
+				sc.2126(a-1,plus*indentation)
 		}else{
 			max:=add.MaxIndex()?add.MaxIndex():0,indent:=(braces+max)*indentwidth
 			if(indent!=sc.2127(a-1))
 				sc.2126(a-1,indent)
 		}
-		if(aa||ab)
+		if(SubStr(text,1,1)="}"&&lock.MinIndex())
+			lock:=[]
+		if(aa||ab){
 			add.Insert({line:a}),ab:=0
+			if lock.1
+				lock.Insert({line:a})
+		}
 		else
 			add:=[]
-		if(SubStr(text,0,1)="{"||SubStr(text,1,2)="/*")
+		if(SubStr(text,0,1)="{"||SubStr(text,1,2)="/*"){
 			braces++,lastind:=1
-		else
+			if(text!="{")
+				lock:=add.clone(),lock.Remove(1)
+		}else
 			lastind:=0
 	}
 	sc.2079
@@ -111,11 +111,9 @@ newindent(indentwidth:=""){
 		GuiControl,1:+Redraw,% sc.sc
 		return
 	}
-	if(selpos.start=selpos.end){
-		newpos:=sc.2128(line)+posinline
-		newpos:=newpos>sc.2128(line)?newpos:sc.2128(line)
-		sc.2160(newpos,newpos)
-	}else
+	if(selpos.start=selpos.end)
+		newpos:=sc.2128(line)+posinline,newpos:=newpos>sc.2128(line)?newpos:sc.2128(line),sc.2160(newpos,newpos)
+	else
 		sc.2160(sc.2167(startline),sc.2136(endline))
 	GuiControl,1:+Redraw,% sc.sc
 }
