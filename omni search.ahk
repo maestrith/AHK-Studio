@@ -118,7 +118,7 @@ omni_search(start=""){
 		sc:=csc(),sc.2024(sc.2166(item.pos)),hwnd({rem:20})
 	}else if(item.type="file")
 		hwnd({rem:20}),tv(files.ssn("//main[@file='" item.parent "']/descendant::file[@file='" item.file "']/@tv").text)
-	else if(item.type~="i)(label|object|method|function|hotkey|class|property|variable)"){
+	else if(item.type~="i)(label|instance|method|function|hotkey|class|property|variable)"){
 		hwnd({rem:20}),TV(files.ssn("//*[@file='" item.file "']/@tv").text)
 		Sleep,200
 		item.text:=item.type="class"?"class " item.text:item.text

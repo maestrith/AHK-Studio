@@ -1,8 +1,15 @@
 #SingleInstance,Off
 ;download complete
 /*
-	I can demonstrate what I am doing
 	TODO LIST:
+	Mark Current Point{
+		Temporary Mark in the current script to where the cursor is
+		have it jump back to it when hotkey is pressed.
+		Hotkeys{
+			Mark Spot
+			Goto Mark
+		}
+	}
 	Create a way that the user can add things to the commands list
 	-Do it so that it creates a local file that will not be effected by my main commands.xml
 	!look into adding #warn to the debugger
