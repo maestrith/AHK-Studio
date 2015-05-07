@@ -17,6 +17,11 @@ Scratch_Pad(){
 	WinWait,% hwnd([14])
 	bracesetup(14),hk(14),csc({hwnd:v.scratch.sc}),tt:=RegExReplace(file.Read(file.length),"\r\n","`n")
 	length:=VarSetCapacity(text,strput(tt,"utf-8")),StrPut(tt,&text,length,"utf-8"),sc:=csc(),sc.2037(65001),sc.2181(0,&text)
+	SetTimer,disable,-1
+	return
+	disable:
+	Gui,1:Default
+	Gui,1:+Disabled
 	return
 	postscratchpad:
 	ea:=xml.ea(menus.ssn("//*[@clean='Geekdude_Uploader']"))

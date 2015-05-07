@@ -210,7 +210,103 @@
 			<menu clean="C#" name="C#" option="C#" plugin="plugins\Run As.ahk"></menu>
 			<menu clean="Compile_C#" name="Compile C#" option="CompileC#" plugin="plugins\Run As.ahk"></menu>
 			<menu clean="Split_Line_By_Comma" name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk" hotkey="^!,"></menu>
-			<menu clean="Upload_Menus" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu></menu>
+			<menu clean="Upload_Menus" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu></menu>
 	</main>
 	<date>20150422</date>
 </menus>

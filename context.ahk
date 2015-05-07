@@ -54,20 +54,20 @@ context(return=""){
 	if(return)
 		return command:=command?command:word
 	if(command){
-		if(class:=ssn(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Object'][@upper='" upper(pre) "']"),"@class").text){
-			args:=ssn(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Class' and @upper='" upper(class) "']/descendant::*[@type='Method' or @type='Property'][@upper='" upper(command) "']"),"@args").text
-			if(args){
-				syntax.=pre "." command "(" args ")"
-				goto,conbottom
-			}
+		if(args:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Class' or @type='Instance'][@upper='" upper(pre) "']/descendant-or-self::*[@upper='" upper(command) "']/@args").text){
+			syntax.=pre "." command "(" args ")"
+			Goto,conbottom
 		}if(fun:=ssn(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Function'][@upper='" upper(command) "']"),"@args").text){
 			syntax:=command "("  fun  ")"
+			Goto,conbottom
+		}if(inst:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Instance'][@upper='" upper(pre) "']")){
+			args:=ssn(inst.ParentNode,"descendant-or-self::*[@type='Class' and @upper='" upper(ssn(inst,"@class").text) "']/*[@type='Method' or @type='Property'][@upper='" upper(command) "']/@args").text
+			syntax:=pre "." command "(" args ")"
 			Goto,conbottom
 		}
 	}
 	if((ea:=scintilla.ea("//*[@code='" command "']")).syntax){
-		pre:=pre?pre ".":pre
-		syntax:=pre command ea.syntax "`n" ea.name
+		pre:=pre?pre ".":pre,syntax:=pre command ea.syntax "`n" ea.name
 		Goto,conbottom
 	}else if(command:=kw[command]){
 		if(main:=commands.ssn("//Context/" command)){

@@ -72,7 +72,7 @@ class code_explorer{
 					info:=objects[name]
 					if(Pos>info.start&&Pos<info.end){
 						cls:=ssn(cce,"info[@text='" SubStr(info.name,7) "'][@type='Class']")
-						cexml.under(cls,"info",{type:a,file:filename,pos:StrPut(SubStr(code,1,found.pos(1)),"utf-8")-2,text:found.1,upper:upper(found.1),args:found.value(3),class:found.1,root:parentfile,order:"text,type,file,args"}),pos:=found.Pos(1)+StrLen(found.1)
+						cexml.under(cls,"info",{type:a,file:filename,pos:StrPut(SubStr(code,1,found.pos(1)),"utf-8")-2,text:found.1,upper:upper(found.1),args:found.value(3),class:SubStr(info.name,7),root:parentfile,order:"text,type,file,args"}),pos:=found.Pos(1)+StrLen(found.1)
 						Continue,2
 					}
 				}
