@@ -58,6 +58,7 @@ options(){
 	Auto_Space_After_Comma:
 	Disable_Auto_Delete:
 	Manual_Continuation_Line:
+	Disable_Auto_Insert_Complete:
 	onoff:=settings.ssn("//options/@ " A_ThisLabel).text?0:1
 	att:=[],att[A_ThisLabel]:=onoff
 	settings.add({path:"options",att:att})

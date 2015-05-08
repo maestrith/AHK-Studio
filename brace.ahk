@@ -7,7 +7,7 @@ brace(){
 		return
 	}
 	hotkey:=SubStr(A_ThisHotkey,0),add:=ea.add
-	if(sc.2102){
+	if(sc.2102&&v.options.Auto_Insert_Complete){
 		word:=sc.getword()
 		if(xml.ea(cexml.ssn("//*[@upper='" upper(word) "']")).type~="Method|Function")
 			sc.2101
@@ -16,7 +16,8 @@ brace(){
 			if(Chr(sc.2007(sc.2008-1))=hotkey)
 				return
 		}
-	}
+	}else
+		sc.2101()
 	if(sc.2007(sc.2008)=Asc(ea.add)&&v.options.Auto_Advance&&sc.2007(sc.2008)!=0)
 		return sc.2025(sc.2008+1)
 	if(ea.trigger!=ea.add)
