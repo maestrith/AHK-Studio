@@ -18,8 +18,4 @@ exit(x="",reload=0){
 	if (x=""||InStr(A_ThisLabel,"Gui"))
 		ExitApp
 	return
-	GuiEscape:
-	ControlGetFocus,Focus,% hwnd([1])
-	csc().2400
-	return
 }

@@ -4,6 +4,9 @@ context(return=""){
 	if sc.2102
 		return
 	cp:=sc.2008,kw:=v.kw,add:=0,pos:=cp-1,start:=sc.2128(line:=sc.2166(cp))
+	if(v.track.line)
+		if(v.track.line=line&&v.track.file=current(2).file)
+			return
 	if (start>=pos+1)
 		return
 	cc:=content:=sc.textrange(start,pos+1),RegExMatch(content,"(#?\w+)",word),pos:=1

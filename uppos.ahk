@@ -1,6 +1,9 @@
 uppos(){
 	sc:=csc()
 	line:=sc.2166(sc.2008)
+	if(v.track.line)
+		if(v.track.line!=line||v.track.file!=current(2).file)
+			v.track:=[]
 	if (lastline!=line)
 		hltline()
 	lastline:=line

@@ -1,6 +1,8 @@
 multisel(){
 	multisel:
 	sc:=csc()
+	if(sc.2202)
+		v.track:={line:sc.2166(sc.2008),file:current(2).file}
 	ControlGetFocus,con,% hwnd([1])
 	if !InStr(con,"scintilla"){
 		ControlFocus,,% "ahk_id" sc.sc
