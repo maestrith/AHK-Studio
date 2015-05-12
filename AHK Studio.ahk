@@ -2,6 +2,9 @@
 ;download complete
 /*
 	TODO LIST:
+	Disable auto insert complete{
+		fix it
+	}
 	Mark Current Point{
 		Temporary Mark in the current script to where the cursor is
 		have it jump back to it when hotkey is pressed.

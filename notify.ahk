@@ -8,6 +8,8 @@ notify(csc=""){
 		sc:=csc({hwnd:hwnd}),filename:=files.ssn("//*[@sc='" sc.2357 "']/@file").text
 		if filename
 			WinSetTitle,% hwnd([1]),,AHK Studio - %filename%
+		if(v.options.full_auto)
+			newindent(1)
 		GuiControl,+Redraw,% csc().sc
 		return
 	}

@@ -29,21 +29,33 @@ fix_indent(sc=""){
 }
 newindent(indentwidth:=""){
 	Critical
+	sc:=csc()
+	codetext:=sc.getuni()
+	indentation:=sc.2121
+	firstvis:=sc.2152
+	line:=sc.2166(sc.2008)
+	linestart:=sc.2128(line)
+	posinline:=sc.2008-linestart
+	selpos:=posinfo()
+	sc.2078
+	lock:=[]
+	aa:=ab:=braces:=0
+	code:=StrSplit(codetext,"`n")
 	GuiControl,1:-Redraw,% sc.sc
 	GuiControl,1:+g,% sc.sc
-	sc:=csc(),codetext:=sc.getuni(),indentation:=sc.2121,firstvis:=sc.2152,line:=sc.2166(sc.2008),linestart:=sc.2128(line),posinline:=sc.2008-linestart,selpos:=posinfo(),sc.2078,add:=[],braces:=0,code:=StrSplit(codetext,"`n"),state:=[],aa:=ab:=0
 	for a,b in code{
 		text:=b
 		if (InStr(text,Chr(59)))
 			text:=RegExReplace(text,"(\s" Chr(59) ".*)")
-		text:=Trim(text,"`t "),first:=SubStr(text,1,1)
-		if (first="("&&SubStr(text,0,1)!=")")
+		text:=Trim(text,"`t "),first:=SubStr(text,1,1),last:=SubStr(text,0,1),lasttwo:=SubStr(text,1,2)
+		indentcheck:=RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b")
+		if(first="("&&last!=")")
 			skip:=1
-		if (first=")"&&skip){
+		if(first=")"&&skip){
 			skip:=0
 			continue
 		}
-		if (skip)
+		if(skip)
 			continue
 		for c,d in ["&&","OR","AND",".",",","||"]{
 			if(SubStr(text,1,StrLen(d))=d){
@@ -61,52 +73,38 @@ newindent(indentwidth:=""){
 			Continue
 		}
 		specialind:=0
-		if RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b",found)
-			aa:=1
+		if(first="}"||lasttwo="*/")
+			backbrace:=lock.pop(),braces-=1
+		if(backbrace)
+			plus:=backbrace-1,backbrace:=0
 		else
-			aa:=0
-		if(SubStr(text,1,1)="}"||SubStr(text,1,2)="*/"){
-			if(aa)
-				ab:=1
-			braces--
+			plus:=lock[lock.MaxIndex()],plus:=plus?plus:0
+		if(text="{"&&aa)
+			aa--
+		if(sc.2127(a-1)!=(plus+aa)*indentation)
+			sc.2126(a-1,(plus+aa)*indentation)
+		if(indentcheck&&last="{"&&aa&&text!="{"){
+			skipcheck:=1
 		}
-		if(lastind)
-			add:=[]
-		if(text="{")
-			lock:=[],lock:=add.clone(),lock.Remove(1),add:=[]
-		if !(indentwidth){
-			plus:=add.1?add.MaxIndex()+braces:lock.1?lock.MaxIndex()+braces:braces
-			if(sc.2127(a-1)!=plus*indentation)
-				sc.2126(a-1,plus*indentation)
-		}else{
-			max:=add.MaxIndex()?add.MaxIndex():0,indent:=(braces+max)*indentwidth
-			if(indent!=sc.2127(a-1))
-				sc.2126(a-1,indent)
-		}
-		if(SubStr(text,1,1)="}"&&lock.MinIndex())
-			lock:=[]
-		if(aa||ab){
-			add.Insert({line:a}),ab:=0
-			if lock.1
-				lock.Insert({line:a})
-		}
-		else
-			add:=[]
-		if(SubStr(text,0,1)="{"||SubStr(text,1,2)="/*"){
-			braces++,lastind:=1
-			if(text!="{")
-				lock:=add.clone(),lock.Remove(1)
+		if(last="{"||lasttwo="/*")
+			braces+=1,lock.Insert(braces+aa)
+		if(indentcheck&&skipcheck!=1){
+			if(last!="{")
+				aa++
 		}else
-			lastind:=0
+			aa:=0
+		skipcheck:=0
 	}
 	sc.2079
 	GuiControl,1:+gnotify,% sc.sc
 	if(indentwidth)
 		return
-	if braces
-		ToolTip,Segment Open,0,0
-	else
-		t()
+	WinGetTitle,title,% hwnd([1])
+	if(braces&&InStr(title,"Segment Open!   -   ")=0){
+		WinSetTitle,% hwnd([1]),,% "Segment Open!   -   AHK Studio - " current(3).file
+	}else if(braces=0&&InStr(title,"Segment Open!   -   ")){
+		WinSetTitle,% hwnd([1]),,% "AHK Studio - " current(3).file
+	}
 	if(codetext=new){
 		GuiControl,1:+Redraw,% sc.sc
 		return

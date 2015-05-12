@@ -7,7 +7,7 @@ brace(){
 		return
 	}
 	hotkey:=SubStr(A_ThisHotkey,0),add:=ea.add
-	if(sc.2102&&v.options.Auto_Insert_Complete){
+	if(sc.2102&&v.options.Disable_Auto_Insert_Complete=0){
 		word:=sc.getword()
 		if(xml.ea(cexml.ssn("//*[@upper='" upper(word) "']")).type~="Method|Function")
 			sc.2101
