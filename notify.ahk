@@ -149,8 +149,10 @@ notify(csc=""){
 		uppos(),width:=sc.2276(32,"aaa"),text1:="Last Entered Character: " Chr(fn.ch) " Code:" fn.ch,last:=width*StrLen(text1 1),SB_SetParts(v.lastwidth,last,40),SB_SetText(text1,2)
 	if(fn.code=2007)
 		uppos()
-	if(fn.code=2021)
+	/*
+if(fn.code=2021)
 		t(fn.position) ;this is for the multiple calltips 1=up 2=down
+*/
 	return
 	Full_Auto:
 	Fix_Next_Line:

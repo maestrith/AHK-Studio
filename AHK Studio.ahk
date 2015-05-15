@@ -361,3 +361,4 @@ return
 #Include Widths.ahk
 #Include window.ahk
 #Include Words In Document.ahk
+#Include delete.ahk

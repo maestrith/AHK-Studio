@@ -6,7 +6,7 @@ Gui(){
 		Enter[b "Enter"]:="checkqf"
 	for a,b in StrSplit("WheelLeft,WheelRight",",")
 		Enter[b]:="scrollwheel"
-	Enter["~Backspace"]:="Backspace",Enter["^Backspace"]:="Backspace",Enter["^c"]:="copy",Enter["^x"]:="cut",hotkeys([1],enter)
+	Enter["~Delete"]:="Delete",Enter["~Backspace"]:="Backspace",Enter["^Backspace"]:="Backspace",Enter["^c"]:="copy",Enter["^x"]:="cut",hotkeys([1],enter)
 	/*
 		for a,b in ["` & space","` & ,"]
 			Hotkey,%b%,eol,On
@@ -22,16 +22,16 @@ Gui(){
 	for id,info in bar
 		for a,b in info{
 			if !top:=settings.ssn("//toolbar/bar[@id='" id "']")
-			top:=settings.add({path:"toolbar/bar",att:{id:id},dup:1})
-				if !button:=ssn(top,"button[@id='" b.5 "']")
-			button:=settings.under(top,"button"),vis:=1
-					for a,c in {icon:b.1,file:b.2,func:b.3,text:b.4,id:b.5,state:b.6}
-			button.SetAttribute(a,c)
-						if vis
-			button.SetAttribute("vis",1),vis:=0
-							if !settings.ssn("//rebar/band[@id='" id "']")
-			settings.add({path:"rebar/band",att:{id:id,vis:1},dup:1})
-							}
+				top:=settings.add({path:"toolbar/bar",att:{id:id},dup:1})
+			if !button:=ssn(top,"button[@id='" b.5 "']")
+				button:=settings.under(top,"button"),vis:=1
+			for a,c in {icon:b.1,file:b.2,func:b.3,text:b.4,id:b.5,state:b.6}
+				button.SetAttribute(a,c)
+			if vis
+				button.SetAttribute("vis",1),vis:=0
+			if !settings.ssn("//rebar/band[@id='" id "']")
+				settings.add({path:"rebar/band",att:{id:id,vis:1},dup:1})
+		}
 	Gui,Add,Edit,hwndedit
 	ControlGetPos,,,,h,,ahk_id%edit%
 	info:={hwnd:edit,ideal:220,id:11000,height:h,width:200,max:h}

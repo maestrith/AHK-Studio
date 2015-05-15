@@ -147,7 +147,7 @@ class code_explorer{
 			GuiControl,+gcej,SysTreeView322
 		}
 		if(Focus="SysTreeView321"){
-			for a,b in StrSplit("Close,Open,Folder,,Copy File Path,Copy Folder Path",",")
+			for a,b in StrSplit("Close,Open,Remove Segment,Folder,,Copy File Path,Copy Folder Path",",")
 				Menu,rcm,Add,%b%,rcm
 			Menu,rcm,show
 			Menu,rcm,DeleteAll
@@ -181,7 +181,9 @@ class code_explorer{
 				pFile:=current(3).file
 				SplitPath, pFile,,pFolder
 				Clipboard:=InStr(A_ThisMenuItem,"Folder")?pFolder:pFile
-			}else
+			}else if(A_ThisMenuItem="Remove Segment")
+				Remove_Segment()
+			else
 				m("Coming Soon....maybe")
 			return
 			rcmnew:

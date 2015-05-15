@@ -16,6 +16,7 @@ Remove_Segment(){
 	mainfile:=update({get:filename})
 	StringReplace,mainfile,mainfile,%include%,,All
 	current.ParentNode.RemoveAttribute("sc"),update({file:filename,text:mainfile}),update({edited:filename})
+	Gui,1:Default
 	Gui,1:TreeView,SysTreeView321
 	TV_Delete(xml.ea(current).tv),parent:=current().ParentNode,current.ParentNode.RemoveChild(current)
 	Sleep,100
