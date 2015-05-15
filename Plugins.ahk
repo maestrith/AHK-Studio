@@ -8,7 +8,7 @@ plugins(refresh:=0){
 		FileCreateDir,Plugins
 	plHks:=[]
 	if(refresh){
-		while pl:=menus.sn("//menu[@clean='Plugin']/menu[@hotkey!='']").item[A_Index-1], ea:=xml.ea(pl)
+		while pl:=menus.sn("//menu[@clean='Plugin']/menu[@hotkey!='']").item[A_Index-1],ea:=xml.ea(pl)
 			plHks[ea.name]:=ea.hotkey
 		rem:=menus.ssn("//menu[@clean='Plugin']"),rem.ParentNode.RemoveChild(rem)
 	}
