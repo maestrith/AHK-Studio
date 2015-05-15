@@ -6,8 +6,12 @@ plugins(refresh:=0){
 	plugins:
 	if !FileExist("plugins")
 		FileCreateDir,Plugins
-		if(refresh)
-			rem:=menus.ssn("//menu[@clean='Plugin']"),rem.ParentNode.RemoveChild(rem)
+	plHks:=[]
+	if(refresh){
+		while pl:=menus.sn("//menu[@clean='Plugin']/menu[@hotkey!='']").item[A_Index-1], ea:=xml.ea(pl)
+			plHks[ea.name]:=ea.hotkey
+		rem:=menus.ssn("//menu[@clean='Plugin']"),rem.ParentNode.RemoveChild(rem)
+	}
 	pin:=menus.sn("//*[@clean='Plugin']/descendant::menu")
 	while,pp:=pin.item[A_Index-1],ea:=xml.ea(pp)
 		if !FileExist(ea.plugin)
@@ -23,7 +27,7 @@ plugins(refresh:=0){
 		while,pos:=RegExMatch(plg,"Oi)\;menu\s*(.*)",found,pos){
 			item:=StrSplit(found.1,",")
 			if !ssn(plugin,"menu[@name='" item.1 "']")
-				menus.under(plugin,"menu",{name:item.1,clean:clean(item.1),plugin:A_LoopFileFullPath,option:item.2})
+				menus.under(plugin,"menu",{name:item.1,clean:clean(item.1),plugin:A_LoopFileFullPath,option:item.2,hotkey:plHks[item.1]})
 			pos:=found.Pos(1)+1
 		}
 	}
