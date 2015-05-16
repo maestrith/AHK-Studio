@@ -1,6 +1,7 @@
 #SingleInstance,Off
 ;download complete
 /*
+	m(A_AhkVersion)
 	TODO LIST:
 	Disable auto insert complete{
 		fix it
