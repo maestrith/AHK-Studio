@@ -26,10 +26,10 @@ class xml{
 		found:=this.xml.SelectNodes(node "[contains(.,'" RegExReplace(find,"&","')][contains(.,'") "')]")
 		while,ff:=found.item(a_index-1)
 			if (ff.text=find){
-			if return
-				return ff.SelectSingleNode("../" return)
-			return ff.SelectSingleNode("..")
-		}
+				if return
+					return ff.SelectSingleNode("../" return)
+				return ff.SelectSingleNode("..")
+			}
 	}
 	lang(info){
 		info:=info=""?"XPath":"XSLPattern"

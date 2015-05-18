@@ -19,7 +19,7 @@ open(filelist="",show=""){
 		filelist:=files.sn("//main[@file='" filename "']/descendant::file"),TV(files.ea("//main[@file='" filename "']/file").tv)
 		while,filename:=filelist.item[A_Index-1]
 			code_explorer.scan(filename)
-		code_explorer.Refresh_Code_Explorer()
+		code_explorer.Refresh_Code_Explorer(),PERefresh()
 	}else{
 		WinSetTitle,% hwnd([1]),,AHK Studio - Scanning files....
 		for a,b in StrSplit(filelist,"`n"){
@@ -33,7 +33,7 @@ open(filelist="",show=""){
 		}
 		if Show
 			SetTimer,scanfiles,10
-		return files.ssn("//main[@file='" StrSplit(filelist,"`n").1 "']/file/@tv").text
+		return files.ssn("//main[@file='" StrSplit(filelist,"`n").1 "']/file/@tv").text,PERefresh()
 		scanfiles:
 		if !v.filescan.1{
 			SetTimer,scanfiles,Off

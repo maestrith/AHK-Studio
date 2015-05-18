@@ -56,6 +56,10 @@ context(return=""){
 		command:=word
 	if(return)
 		return command:=command?command:word
+	/*
+		If((tip:=commands.sn("//MultiTip/" upper(command) "/*")).length)
+			return sc.2200(sc.2008,Chr(1) "1 of " tip.length Chr(2) " " tip.item[0].text)
+	*/
 	if(command){
 		if(args:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Class' or @type='Instance'][@upper='" upper(pre) "']/descendant-or-self::*[@upper='" upper(command) "']/@args").text){
 			syntax.=pre "." command "(" args ")"

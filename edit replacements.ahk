@@ -1,7 +1,7 @@
 Edit_Replacements(){
 	static
 	newwin:=new windowtracker(7),sn:=settings.sn("//replacements/*")
-	newwin.Add(["ListView,w300 h400 ger AltSubmit,Value|Replacement,wh","Text,,Value:,y","Edit,x+10 w200 vvalue,,wy","Text,xm,Replacement:,y","Edit,x+10 w150 vreplacement gedrep,,wy","Button,xm geradd Default,Add,y","Button,x+10 gerremove,Remove Selected,y"])
+	newwin.Add(["ListView,w500 h400 ger AltSubmit,Value|Replacement,wh","Text,,Value:,y","Edit,w500 vvalue,,wy","Text,xm,Replacement:,y","Edit,w500 r6 vreplacement gedrep,,wy","Button,xm geradd Default,Add,y","Button,x+10 gerremove,Remove Selected,y"])
 	while,val:=sn.item(A_Index-1)
 		LV_Add("",ssn(val,"@replace").text,val.text)
 	newwin.Show("Edit Replacements",1),LV_Modify(1,"Select Focus Vis AutoHDR"),LV_Modify(2,"AutoHDR")
@@ -28,7 +28,7 @@ Edit_Replacements(){
 	er:
 	LV_GetText(rep,LV_GetNext()),LV_GetText(rep1,LV_GetNext(),2)
 	for a,b in {Edit1:rep,Edit2:rep1}
-		ControlSetText,%a%,%b%,% hwnd([7])
+		ControlSetText,%a%,% RegExReplace(b,"(\r|\r\n|\n)","`r`n"),% hwnd([7])
 	return
 	erremove:
 	Gui,7:Default

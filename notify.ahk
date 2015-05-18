@@ -150,9 +150,9 @@ notify(csc=""){
 	if(fn.code=2007)
 		uppos()
 	/*
-if(fn.code=2021)
-		t(fn.position) ;this is for the multiple calltips 1=up 2=down
-*/
+		if(fn.code=2021)
+			t(fn.position) ;this is for the multiple calltips 1=up 2=down
+	*/
 	return
 	Full_Auto:
 	Fix_Next_Line:

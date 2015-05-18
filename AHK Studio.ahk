@@ -1,11 +1,9 @@
 #SingleInstance,Off
+SetBatchLines,-1
+#NoEnv
 ;download complete
 /*
-	m(A_AhkVersion)
 	TODO LIST:
-	Disable auto insert complete{
-		fix it
-	}
 	Mark Current Point{
 		Temporary Mark in the current script to where the cursor is
 		have it jump back to it when hotkey is pressed.
@@ -20,11 +18,6 @@
 	Make a context creator so the user can add their own context stuff
 	-Merge it over the stuff that I have
 	Make a plugin downloader
-	-Current Segment, Current Project, All Files
-	toolbar{
-		;change this so that all you need to do is pass it an xml and it does everything.
-		;save updates the info and writes it to the settings.xml
-	}
 	bkid{
 		Scratch Pad is blinky on resize
 	}
@@ -43,7 +36,6 @@
 		Themes
 		Code Vault
 		Split Code
-		Scratch Pad
 	}
 	video{
 		Omni-Search (Files,Menu items,...etc)
@@ -363,3 +355,4 @@ return
 #Include window.ahk
 #Include Words In Document.ahk
 #Include delete.ahk
+#Include PERefresh.ahk

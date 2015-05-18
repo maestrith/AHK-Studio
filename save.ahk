@@ -14,11 +14,11 @@ save(option=""){
 		text:=info.1[filename],main:=ssn(current(1),"@file").text
 		if settings.ssn("//options/@Enable_Close_On_Save").text
 			for process in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process"){
-			prog:=Trim(StrSplit(process.CommandLine,Chr(34)).4,Chr(34))
-			if (InStr(process.commandline,"autohotkey")&&prog!=A_ScriptFullPath&&prog)
-				if (prog=main)
-					Process,Close,% process.processid
-		}
+				prog:=Trim(StrSplit(process.CommandLine,Chr(34)).4,Chr(34))
+				if (InStr(process.commandline,"autohotkey")&&prog!=A_ScriptFullPath&&prog)
+					if (prog=main)
+						Process,Close,% process.processid
+			}
 		SplitPath,filename,file,dir
 		if !(v.options.disable_backup){
 			if !FileExist(dir "\backup")
@@ -62,5 +62,5 @@ save(option=""){
 	if ea.start&&ea.end
 		sc.2613(ea.scroll),sc.2160(ea.start,ea.end)
 	savegui(),positions.save(1),vversion.save(1),lastfiles()
-	update("clearupdated")
+	update("clearupdated"),PERefresh()
 }

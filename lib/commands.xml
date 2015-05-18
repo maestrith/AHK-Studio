@@ -397,7 +397,7 @@
 			<syntax syntax="[, Options, FontName]">Font</syntax>
 			<syntax syntax="[, WindowColor, ControlColor]">Color</syntax>
 			<syntax syntax="[, X, Y]">Margin</syntax>
-			<syntax syntax="[, Menuname]">Menu</syntax>
+			<syntax syntax="[v Menuname]">Menu</syntax>
 			<syntax syntax="[, Off]">Flash</syntax>
 		</Gui>
 		<SingleInstance>
@@ -467,4 +467,11 @@
 			<list list="Off On Permit Toggle">Suspend</list>
 		</Suspend>
 	</Context>
+	<MultiTip>
+		<IF>
+			<IF tip="1">This is tip 1</IF>
+			<IF tip="2">This is tip 2</IF>
+			<IF tip="3">This is tip 3</IF>
+		</IF>
+	</MultiTip>
 </Commands>

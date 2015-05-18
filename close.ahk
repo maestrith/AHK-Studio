@@ -19,5 +19,5 @@ close(){
 	main.ParentNode.RemoveChild(main)
 	if files.sn("//*").length=1
 		new(1)
-	code_explorer.Refresh_Code_Explorer()
+	code_explorer.Refresh_Code_Explorer(),PERefresh()
 }

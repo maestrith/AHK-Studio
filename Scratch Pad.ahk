@@ -17,7 +17,7 @@ Scratch_Pad(){
 	WinWait,% hwnd([14])
 	bracesetup(14),hk(14),csc({hwnd:v.scratch.sc}),tt:=RegExReplace(file.Read(file.length),"\r\n","`n")
 	length:=VarSetCapacity(text,strput(tt,"utf-8")),StrPut(tt,&text,length,"utf-8"),sc:=csc(),sc.2037(65001),sc.2181(0,&text)
-	SetTimer,disable,-1
+	SetTimer,disable,-10
 	return
 	disable:
 	Gui,1:Default
