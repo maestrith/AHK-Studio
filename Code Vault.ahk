@@ -48,7 +48,7 @@ Code_Vault(){
 	if LV_GetNext()
 		sc.2171(0)
 	LV_GetText(code,LV_GetNext())
-	sc.2181(0,vault.ssn("//code[@name='" code "']").text)
+	tt:=vault.ssn("//code[@name='" code "']").text,length:=VarSetCapacity(text,strput(tt,"utf-8")),StrPut(tt,&text,length,"utf-8"),sc.2037(65001),sc.2181(0,&text),set(),sc.2175,dup:=files.sn("//file[@file='" fn "']"),sc.2181(0,&text)
 	ControlFocus,SysTreeView321,% hwnd([19])
 	return
 	removevaultentry:

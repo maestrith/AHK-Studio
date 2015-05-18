@@ -82,8 +82,7 @@ options(){
 	Disable_Auto_Indent_For_Non_Ahk_Files:
 	Auto_Close_Find:
 	onoff:=settings.ssn("//options/@ " A_ThisLabel).text?0:1
-	att:=[],att[A_ThisLabel]:=onoff
-	v.options[A_ThisLabel]:=onoff
+	att:=[],att[A_ThisLabel]:=onoff,v.options[A_ThisLabel]:=onoff
 	settings.add({path:"options",att:att})
 	togglemenu(A_ThisLabel)
 	return

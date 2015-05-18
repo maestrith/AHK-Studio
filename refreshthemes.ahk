@@ -15,7 +15,7 @@ refreshthemes(){
 			if (win=1&&A_LoopField="Edit1")
 				Gui,1:font,% "Normal s10",% ea.font
 			GuiControl,% "+background" RGB(ea.Background) " c" rgb(ea.color),%A_LoopField%
-			GuiControl,% "font",%A_LoopField%
-		}
+				GuiControl,% "font",%A_LoopField%
+			}
 	}
 }

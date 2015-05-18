@@ -1,5 +1,6 @@
 togglemenu(Label){
 	if !Label
 		return
-	Menu,%A_ThisMenu%,ToggleCheck,%A_ThisMenuItem%
+	top:=menus.ssn("//*[@clean='" label "']"),ea:=xml.ea(top)
+	Menu,% ssn(top.ParentNode,"@name").text,ToggleCheck,% ea.name
 }

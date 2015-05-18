@@ -3,6 +3,10 @@ Class PluginClass{
 	__New(){
 		return this
 	}
+	SetTimer(timer,period:=-1){
+		period:=period>0?-period:period
+		SetTimer,%timer%,%period%
+	}
 	AutoClose(script){
 		if !this.Close[script]
 			this.Close[script]:=1

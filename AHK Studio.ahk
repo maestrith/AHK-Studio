@@ -173,6 +173,7 @@ return
 #Include defaultfont.ahk
 #Include Delete Bookmark.ahk
 #Include delete matching brace.ahk
+#Include delete.ahk
 #Include detach.ahk
 #Include display.ahk
 #Include Dlg Color.ahk
@@ -261,6 +262,7 @@ return
 #Include open.ahk
 #Include options.ahk
 #Include paste.ahk
+#Include PERefresh.ahk
 #Include Personal Variable List.ahk
 #Include Plugins.ahk
 #Include popftp.ahk
@@ -354,5 +356,3 @@ return
 #Include Widths.ahk
 #Include window.ahk
 #Include Words In Document.ahk
-#Include delete.ahk
-#Include PERefresh.ahk
