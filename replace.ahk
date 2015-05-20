@@ -17,7 +17,7 @@ replace(){
 		StringReplace,rep,rep,%b%,%value%,All
 	}
 	if(rep)
-		rep:=RegExReplace(rep,"``n","`n"),sc.2190(start),sc.2192(end),sc.2194(StrLen(rep),rep)
+		sc.2190(start),sc.2192(end),sc.2194(StrLen(rep),rep)
 	if(A_ThisHotkey="+Enter")
 		sc.2160(start+StrLen(rep),start+StrLen(rep))
 	if v.options.Auto_Space_After_Comma
