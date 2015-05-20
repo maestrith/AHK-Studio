@@ -14,6 +14,7 @@ find(){
 	GuiControl 5: -Redraw, Edit1
 	ControlSend, Edit1, ^+{Left}{Backspace}, % hwnd([5])
 	GuiControl 5: +Redraw, Edit1
+	return
 	findcheck:
 	ControlGetText,Button,Button6,% hwnd([5])
 	if (Button!="search")
