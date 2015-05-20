@@ -34,6 +34,8 @@ save(option=""){
 			encoding:="UTF-16"
 		if(v.options.Force_UTF8)
 			encoding:="UTF-8"
+		if (!FileExist(dir))
+			FileCreateDir,%dir%
 		FileAppend,%text%,%filename%,%encoding%
 		Gui,1:TreeView,% hwnd("fe")
 		multi:=files.sn("//file[@file='" filename "']")
