@@ -15,7 +15,7 @@ new_segment(new:="",text:="",adjusted:=""){
 		return tv(ssn(node,"@tv").Text)
 	SplitPath,new,file,newdir,,function
 	Gui,1:Default
-	Relative:=relativepath(cur,new),func:=clean(func),current:=ssn(current(1),"@file").text
+	Relative:=RegExReplace(relativepath(cur,new),"i)^lib\\([^\\]+)\.ahk$","<$1>"),func:=clean(func),current:=ssn(current(1),"@file").text
 	SplitPath,current,,currentdir
 	obj:=NewFile(cur,new),select:=files.under(obj.obj,"file",{file:new,filename:file,include:Chr(35) "Include " Relative,tv:TV_Add(file,obj.tv,"Sort")}),update({file:new,text:text})
 	if(adjusted)
