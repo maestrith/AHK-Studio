@@ -38,6 +38,7 @@ split_code(){
 	split:
 	cfile:=current(3).file,dd:=current(2).file
 	SplitPath,dd,,outdir
+	outdir.="\lib"	;Can check for "Split Files to lib Folder" option here
 	editfile:=current(3).file
 	Gui,66:Default
 	while,LV_GetNext(){
