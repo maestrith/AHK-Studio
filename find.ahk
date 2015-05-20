@@ -8,7 +8,12 @@ find(){
 	newwin.Show("Search")
 	ControlSetText,Edit1,%last%,% hwnd([5])
 	ControlSend,Edit1,^a,% hwnd([5])
+	hotkeys([5],{"^Backspace":"findback"})
 	return
+	findback:
+	GuiControl 5: -Redraw, Edit1
+	ControlSend, Edit1, ^+{Left}{Backspace}, % hwnd([5])
+	GuiControl 5: +Redraw, Edit1
 	findcheck:
 	ControlGetText,Button,Button6,% hwnd([5])
 	if (Button!="search")
