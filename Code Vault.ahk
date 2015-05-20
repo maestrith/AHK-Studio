@@ -18,6 +18,7 @@ Code_Vault(){
 	return
 	createnewsegment:
 	SplitPath,mainfile,,cdir
+	cdir.="\lib"	;Can check for "Split Code to Lib Dir" option here
 	ControlGet,defName,List,Selected,SysListView321,% hwnd([19])
 	file:=InputBox(csc().sc,"New Segment","Enter a name for this new file",RegExReplace(defName,"_"," "))
 	if ErrorLevel
