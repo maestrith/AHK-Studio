@@ -4,20 +4,28 @@ replace(){
 		sc.2003(sc.2008,"`n`n"),fix_indent(),sc.2025(sc.2128(sc.2166(sc.2008)+1))
 	if !rep
 		return
-	pos:=1,list:=[],foundList:=[]
-	while,pos:=RegExMatch(rep,"U)\$.+\b",found,pos){
+	pos:=1,list:=[],foundList:=[],origRepLen:=StrLen(rep)
+	while,pos:=RegExMatch(rep,"U)\$\||\$.+\b",found,pos){
 		if(!ObjHasKey(foundList,found))
-			foundList.Insert(found,1),List.Insert(found)
+			foundList[found]:=pos,List.Insert(found)
 		pos++
 	}
 	for a,b in List{
-		value:=InputBox(csc().sc,"Value for " b,"Insert value: "  b "`n" rep)
-		if ErrorLevel
-			return
+		value:=""
+		if (b!="$|"){
+			value:=InputBox(csc().sc,"Value for " b,"Insert value for: "  b "`n`n" rep)
+			if ErrorLevel
+				return
+		}
 		StringReplace,rep,rep,%b%,%value%,All
 	}
-	if(rep)
-		rep:=RegExReplace(rep,"``n","`n"),sc.2190(start),sc.2192(end),sc.2194(StrLen(rep),rep)
+	if(rep){
+		sc.2190(start),sc.2192(end),sc.2194(StrLen(rep),rep)
+		if (ObjHasKey(foundList, "$|")){
+			lenDif:=Abs(origRepLen-2-StrLen(rep))?Abs(origRepLen-StrLen(rep))+2:0
+			sc.2025(cp+foundList["$|"]-StrLen(word)+lenDif-2)
+		}
+	}
 	if(A_ThisHotkey="+Enter")
 		sc.2160(start+StrLen(rep),start+StrLen(rep))
 	if v.options.Auto_Space_After_Comma
