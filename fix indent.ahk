@@ -57,11 +57,6 @@ newindent(indentwidth:=""){
 			specialind:=sc.2127(a-1)
 			Continue
 		}specialind:=0
-		
-		
-		
-		
-		
 		if(first="}"||lasttwo="*/"){
 			while,((found:=SubStr(text,A_Index,1))~="(}|\s)")
 				if(found="}")
@@ -81,7 +76,7 @@ newindent(indentwidth:=""){
 		if(indentcheck&&last="{"&&aa&&text!="{")
 			skipcheck:=1
 		if(last="{"||lasttwo="/*")
-			braces+=1,lock.Insert(braces+aa)
+			braces+=1,lock.Insert(plus+aa+1)
 		if(indentcheck&&skipcheck!=1){
 			if(last!="{")
 				aa++
@@ -94,17 +89,10 @@ newindent(indentwidth:=""){
 	if(indentwidth)
 		return
 	WinGetTitle,title,% hwnd([1])
-	if(braces&&InStr(title,"Segment Open!   -   ")=0){
+	if(braces&&InStr(title,"Segment Open!   -   ")=0)
 		WinSetTitle,% hwnd([1]),,% "Segment Open!   -   AHK Studio - " current(3).file
-	}else if(braces=0&&InStr(title,"Segment Open!   -   ")){
+	else if(braces=0&&InStr(title,"Segment Open!   -   "))
 		WinSetTitle,% hwnd([1]),,% "AHK Studio - " current(3).file
-	}
-	/*
-		if(codetext=new){
-			GuiControl,1:+Redraw,% sc.sc
-			return
-		}
-	*/
 	if(selpos.start=selpos.end)
 		newpos:=sc.2128(line)+posinline,newpos:=newpos>sc.2128(line)?newpos:sc.2128(line),sc.2160(newpos,newpos)
 	else
