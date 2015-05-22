@@ -41,11 +41,17 @@ split_code(){
 	editfile:=current(3).file
 	Gui,66:Default
 	while,LV_GetNext(){
-		contents:=update({get:editfile}),LV_GetText(func,LV_GetNext()),code:=List[func].code,func:=RegExReplace(func,"_"," "),newfile:=outdir "\" func
+		contents:=update({get:editfile})
+		LV_GetText(func,LV_GetNext())
+		code:=List[func].code
+		func:=RegExReplace(func,"_"," ")
+		newfile:=outdir "\" func
 		if FileExist(newfile ".ahk")
 			while,FileExist(newfile ".ahk")
 				newfile:=outdir "\" func A_Index
-		newfile.=".ahk",new_segment(newfile,Trim(code,"`n")),contents:=update({get:editfile})
+		newfile.=".ahk"
+		new_segment(newfile,Trim(code,"`n"))
+		contents:=update({get:editfile})
 		StringReplace,contents,contents,%code%,,All
 		update({file:editfile,text:contents})
 		Gui,66:Default

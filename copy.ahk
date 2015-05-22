@@ -1,11 +1,10 @@
 copy(){
 	copy:
 	sc:=csc()
-	if (!sc.getseltext())	;Can add a check for "Cut/Copy Line When Selection Emtpy" here
+	if(!sc.getseltext())
 		sc.2455
 	else
-		Send,^c
-	Clipboard:=RegExReplace(Clipboard,"\n","`r`n")
+		Clipboard:=RegExReplace(csc().getseltext(),"\n","`r`n")
 	if(hwnd(30)){
 		WinActivate,% hwnd([30])
 		Sleep,50

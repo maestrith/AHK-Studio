@@ -4,7 +4,9 @@ Edit_Replacements(){
 	newwin.Add(["ListView,w500 h400 ger AltSubmit,Value|Replacement,wh","Text,,Value:,y","Edit,w500 vvalue,,wy","Text,xm,Replacement:,y","Edit,w500 r6 vreplacement gedrep,,wy","Button,xm geradd Default,Add,y","Button,x+10 gerremove,Remove Selected,y"])
 	while,val:=sn.item(A_Index-1)
 		LV_Add("",ssn(val,"@replace").text,val.text)
-	newwin.Show("Edit Replacements",1),LV_Modify(1,"Select Focus Vis AutoHDR"),LV_Modify(2,"AutoHDR")
+	newwin.Show("Edit Replacements",1),LV_Modify(1,"Select Focus Vis AutoHDR")
+	Loop,2
+		LV_ModifyCol(A_Index,"AutoHDR")
 	return
 	edrep:
 	info:=[]

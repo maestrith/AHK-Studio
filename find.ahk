@@ -5,15 +5,14 @@ find(){
 	for a,b in ea
 		value[a]:=b?"Checked":""
 	newwin.Add(["Edit,gfindcheck w500 vfind r1,,w","TreeView,w500 h300 AltSubmit gstate,,wh","Checkbox,vregex " value.regex ",Regex Search,y","Checkbox,vgr x+10 " value.gr ",Greed,y","Checkbox,xm vcs " value.cs ",Case Sensitive,y","Checkbox,vsort gfsort " value.sort ",Sort by Segment,y","Checkbox,vallfiles " value.allfiles ",Search in All Files,y","Button,gsearch Default,   Search   ,y","Button,gcomment,Toggle Comment,y"])
-	newwin.Show("Search")
+	newwin.Show("Search"),hotkeys([5],{"^Backspace":"findback"})
 	ControlSetText,Edit1,%last%,% hwnd([5])
 	ControlSend,Edit1,^a,% hwnd([5])
-	hotkeys([5],{"^Backspace":"findback"})
 	return
 	findback:
-	GuiControl 5: -Redraw, Edit1
-	ControlSend, Edit1, ^+{Left}{Backspace}, % hwnd([5])
-	GuiControl 5: +Redraw, Edit1
+	GuiControl,5:-Redraw,Edit1
+	ControlSend,Edit1,^+{Left}{Backspace},% hwnd([5])
+	GuiControl,5:+Redraw,Edit1
 	return
 	findcheck:
 	ControlGetText,Button,Button6,% hwnd([5])

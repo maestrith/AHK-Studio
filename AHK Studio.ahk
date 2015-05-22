@@ -12,6 +12,9 @@ SetBatchLines,-1
 			Goto Mark
 		}
 	}
+	Replacements InputBox{
+		get the width/height of the text and adjust it.
+	}
 	Create a way that the user can add things to the commands list
 	-Do it so that it creates a local file that will not be effected by my main commands.xml
 	!look into adding #warn to the debugger

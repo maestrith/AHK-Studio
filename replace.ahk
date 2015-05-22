@@ -5,7 +5,7 @@ replace(){
 	if !rep
 		return
 	pos:=1,list:=[],foundList:=[],origRepLen:=StrLen(rep)
-	while,pos:=RegExMatch(rep,"U)\$\||\$.+\b",found,pos){
+	while,pos:=RegExMatch(rep,"U)\$.+\b",found,pos){
 		if(!ObjHasKey(foundList,found))
 			foundList[found]:=pos,List.Insert(found)
 		pos++
@@ -19,14 +19,9 @@ replace(){
 		}
 		StringReplace,rep,rep,%b%,%value%,All
 	}
-	if(rep){
-		sc.2190(start),sc.2192(end),sc.2194(StrLen(rep),rep)
-		if (ObjHasKey(foundList, "$|")){
-			lenDif:=Abs(origRepLen-2-StrLen(rep))?Abs(origRepLen-StrLen(rep))+2:0
-			sc.2025(cp+foundList["$|"]-StrLen(word)+lenDif-2)
-		}
-	}
-	if(A_ThisHotkey="+Enter")
+	if(rep)
+		pos:=InStr(rep,"$|"),rep:=RegExReplace(rep,"\$\|"),sc.2190(start),sc.2192(end),sc.2194(StrLen(rep),rep),_:=pos?sc.2025(start+pos-1):""
+	else if(A_ThisHotkey="+Enter")
 		sc.2160(start+StrLen(rep),start+StrLen(rep))
 	if v.options.Auto_Space_After_Comma
 		sc.2003(sc.2008," "),sc.2025(sc.2008+1)

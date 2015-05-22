@@ -3,10 +3,12 @@ fix_indent(sc=""){
 	skip:=1
 	move_selected:
 	return
-	auto_delete:
-	if !sc.sc
-		sc:=csc
-	cpos:=sc.2008,begin:=cpos-sc.2128(sc.2166(cpos))
+	/*
+		auto_delete:
+		if !sc.sc
+			sc:=csc
+		cpos:=sc.2008,begin:=cpos-sc.2128(sc.2166(cpos))
+	*/
 	fix_paste:
 	settimer,%A_ThisLabel%,Off
 	if(v.options.full_auto)
@@ -32,10 +34,9 @@ newindent(indentwidth:=""){
 	sc:=csc(),codetext:=sc.getuni(),indentation:=sc.2121,firstvis:=sc.2152,line:=sc.2166(sc.2008),linestart:=sc.2128(line),posinline:=sc.2008-linestart,selpos:=posinfo(),sc.2078,lock:=[],aa:=ab:=braces:=0,code:=StrSplit(codetext,"`n")
 	GuiControl,1:-Redraw,% sc.sc
 	GuiControl,1:+g,% sc.sc
-	for a,b in code{
-		text:=b
+	for a,text in code{
 		if (InStr(text,Chr(59)))
-			text:=RegExReplace(text,"(\s" Chr(59) ".*)")
+			text:=RegExReplace(text,"\s" Chr(59) ".*")
 		text:=Trim(text,"`t "),first:=SubStr(text,1,1),last:=SubStr(text,0,1),lasttwo:=SubStr(text,1,2)
 		indentcheck:=RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b")
 		if(first="("&&last!=")")
@@ -46,7 +47,7 @@ newindent(indentwidth:=""){
 		}
 		if(skip)
 			continue
-		ss:=(text~="i)^\s*(&&|OR|AND|\.|\,|\|\|)")
+		ss:=(text~="i)^\s*(&&|OR|AND|\.|\,|\|\||:|\?)")
 		if(ss){
 			ss:=0
 			if(v.options.Manual_Continuation_Line)
@@ -56,12 +57,18 @@ newindent(indentwidth:=""){
 			specialind:=sc.2127(a-1)
 			Continue
 		}specialind:=0
-		if(first="}"||lasttwo="*/")
-			backbrace:=lock.pop(),braces-=1,aa:=aa?0:aa
+		if(first="}"||lasttwo="*/"){
+			while,((found:=SubStr(text,A_Index,1))~="(}|\s)")
+				if(found="}")
+					backbrace:=lock.pop(),braces--
+			if(lasttwo="*/")
+				backbrace:=lock.pop(),braces--
+			aa:=0
+		}
 		if(backbrace)
 			plus:=backbrace-1,backbrace:=0
 		else
-			plus:=lock[lock.MaxIndex()],plus:=plus?plus:0
+			plus:=lock[lock.MaxIndex()],plus:=plus!=""?plus:0
 		if(text="{"&&aa)
 			aa--
 		if(sc.2127(a-1)!=(plus+aa)*indentation)
@@ -87,10 +94,12 @@ newindent(indentwidth:=""){
 	}else if(braces=0&&InStr(title,"Segment Open!   -   ")){
 		WinSetTitle,% hwnd([1]),,% "AHK Studio - " current(3).file
 	}
-	if(codetext=new){
-		GuiControl,1:+Redraw,% sc.sc
-		return
-	}
+	/*
+		if(codetext=new){
+			GuiControl,1:+Redraw,% sc.sc
+			return
+		}
+	*/
 	if(selpos.start=selpos.end)
 		newpos:=sc.2128(line)+posinline,newpos:=newpos>sc.2128(line)?newpos:sc.2128(line),sc.2160(newpos,newpos)
 	else

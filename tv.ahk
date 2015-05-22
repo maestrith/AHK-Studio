@@ -12,6 +12,7 @@ tv(tv=0,open=""){
 		open(ssn(item,"@file").text,1)
 	}
 	if(A_GuiEvent="S"||open){
+		SetTimer,matchfile,Off
 		if !v.startup
 			getpos(),count:=0
 		ei:=open?tv:a_eventinfo,sc:=csc(),file:=files.ssn("//*[@tv='" ei "']"),fn:=ssn(file,"@file").text
@@ -41,6 +42,7 @@ tv(tv=0,open=""){
 		setpos(ei),uppos(),history(fn),marginwidth(sc)
 		WinSetTitle,% hwnd([1]),,AHK Studio - %fn%
 		sc.4004("fold",[1])
+		Sleep,150
 		SetTimer,matchfile,-300
 	}
 	return

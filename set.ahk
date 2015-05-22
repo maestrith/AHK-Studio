@@ -1,3 +1,3 @@
 set(){
-	sc:=csc(),color(sc)
+	color(csc())
 }
