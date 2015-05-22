@@ -4,7 +4,8 @@ copy(){
 	if(!sc.getseltext())
 		sc.2455
 	else
-		Clipboard:=RegExReplace(csc().getseltext(),"\n","`r`n")
+		Send,^c
+	Clipboard:=RegExReplace(Clipboard,"\n","`r`n")
 	if(hwnd(30)){
 		WinActivate,% hwnd([30])
 		Sleep,50
