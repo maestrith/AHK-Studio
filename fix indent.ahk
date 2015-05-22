@@ -32,6 +32,7 @@ fix_indent(sc=""){
 newindent(indentwidth:=""){
 	Critical
 	sc:=csc(),codetext:=sc.getuni(),indentation:=sc.2121,firstvis:=sc.2152,line:=sc.2166(sc.2008),linestart:=sc.2128(line),posinline:=sc.2008-linestart,selpos:=posinfo(),sc.2078,lock:=[],aa:=ab:=braces:=0,code:=StrSplit(codetext,"`n")
+	spind:=[]
 	GuiControl,1:-Redraw,% sc.sc
 	GuiControl,1:+g,% sc.sc
 	for a,text in code{
@@ -49,21 +50,18 @@ newindent(indentwidth:=""){
 			continue
 		ss:=(text~="i)^\s*(&&|OR|AND|\.|\,|\|\||:|\?)")
 		if(ss){
-			ss:=0
 			if(v.options.Manual_Continuation_Line)
 				Continue
-			if specialind
-				sc.2126(a-1,specialind)
-			specialind:=sc.2127(a-1)
-			Continue
-		}specialind:=0
+			if(last="{")
+				spind.Insert(sc.2127(a-1))
+		}
 		if(first="}"||lasttwo="*/"){
 			while,((found:=SubStr(text,A_Index,1))~="(}|\s)")
 				if(found="}")
 					backbrace:=lock.pop(),braces--
 			if(lasttwo="*/")
 				backbrace:=lock.pop(),braces--
-			aa:=0
+			aa:=0,spid:=spind.pop(),pop:=1
 		}
 		if(backbrace)
 			plus:=backbrace-1,backbrace:=0
@@ -71,7 +69,9 @@ newindent(indentwidth:=""){
 			plus:=lock[lock.MaxIndex()],plus:=plus!=""?plus:0
 		if(text="{"&&aa)
 			aa--
-		if(sc.2127(a-1)!=(plus+aa)*indentation)
+		if(spind.MinIndex()||(pop&&spid>=0)){
+			sc.2126(a-1,popp?spid:spind[spind.MaxIndex()]+(ss?0:indentation))
+		}else if(sc.2127(a-1)!=(plus+aa)*indentation)
 			sc.2126(a-1,(plus+aa)*indentation)
 		if(indentcheck&&last="{"&&aa&&text!="{")
 			skipcheck:=1
@@ -82,7 +82,7 @@ newindent(indentwidth:=""){
 				aa++
 		}else
 			aa:=0
-		skipcheck:=0
+		skipcheck:=0,ss:=0,spid:=0,pop:=0
 	}
 	sc.2079
 	GuiControl,1:+gnotify,% sc.sc
