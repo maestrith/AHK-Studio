@@ -4,6 +4,7 @@ cut(){
 	if(!sc.getseltext())
 		sc.2337
 	else
-		Clipboard:=RegExReplace(Clipboard,"\n","`r`n")
+		Send,^x
+	Clipboard:=RegExReplace(Clipboard,"\n","`r`n")
 	return
 }
