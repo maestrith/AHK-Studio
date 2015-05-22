@@ -2,9 +2,9 @@ copy(){
 	copy:
 	sc:=csc()
 	if(!sc.getseltext())
-		sc.2455
+		sc.2455()
 	else
-		Send,^c
+		Clipboard:=sc.getseltext()
 	Clipboard:=RegExReplace(Clipboard,"\n","`r`n")
 	if(hwnd(30)){
 		WinActivate,% hwnd([30])

@@ -57,6 +57,11 @@ newindent(indentwidth:=""){
 			specialind:=sc.2127(a-1)
 			Continue
 		}specialind:=0
+		
+		
+		
+		
+		
 		if(first="}"||lasttwo="*/"){
 			while,((found:=SubStr(text,A_Index,1))~="(}|\s)")
 				if(found="}")
