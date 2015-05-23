@@ -41,7 +41,9 @@ newindent(indentwidth:=""){
 	for a,text in code{
 		if (InStr(text,Chr(59)))
 			text:=RegExReplace(text,"\s" Chr(59) ".*")
-		text:=Trim(text,"`t "),first:=SubStr(text,1,1),last:=SubStr(text,0,1),firsttwo:=SubStr(text,1,2),ss:=(text~="i)^\s*(&&|OR|AND|\.|\,|\|\||:|\?)"),indentcheck:=RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b")
+		text:=Trim(text,"`t "),first:=SubStr(text,1,1),last:=SubStr(text,0,1),firsttwo:=SubStr(text,1,2)
+		ss:=(text~="i)^\s*(&&|OR|AND|\.|\,|\|\||:|\?)")
+		indentcheck:=RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b")
 		if(first="("&&last!=")")
 			skip:=1
 		if(first=")"&&skip){
@@ -53,8 +55,6 @@ newindent(indentwidth:=""){
 		if(ss&&aa<=0){
 			if(v.options.Manual_Continuation_Line)
 				Continue
-			if(last="{")
-				conind.Insert(sc.2127(a-1))
 		}
 		if(firsttwo="*/")
 			block:=[],blocks:=0
@@ -63,8 +63,9 @@ newindent(indentwidth:=""){
 				if(found=" ")
 					Continue
 				if(block.1+1){
-					if (block.MaxIndex()>1)
+					if (block.MaxIndex()>1){
 						lastind:=block.pop(),otherbraces--
+					}
 				}
 				else if(iflock.1+1)
 					lastind:=iflock.pop()
@@ -82,7 +83,7 @@ newindent(indentwidth:=""){
 			if(sc.2127(a-1)!=iii*indentation)
 				sc.2126(a-1,iii*indentation)
 		}else{
-			sc.2126(a-1,lastind?lastind-1:0)
+			sc.2126(a-1,(lastind?lastind-1:0)*indentation)
 		}
 		if(last="{"){
 			if(block.1+1)
@@ -101,7 +102,7 @@ newindent(indentwidth:=""){
 				if block.1+1
 					iftemp:=block[block.MaxIndex()]
 				else
-					iftemp:=lock[lock.MaxIndex()]
+					iftemp:=lock[lock.MaxIndex()]?lock[lock.MaxIndex()]:0
 				if(last!="{")
 					iflock.Insert(iftemp)
 			}
