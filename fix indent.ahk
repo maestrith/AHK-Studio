@@ -25,17 +25,7 @@ fix_indent(sc=""){
 }
 newindent(indentwidth:=""){
 	Critical
-	sc:=csc()
-	codetext:=sc.getuni()
-	indentation:=sc.2121
-	line:=sc.2166(sc.2008)
-	posinline:=sc.2008-sc.2128(line)
-	selpos:=posinfo()
-	sc.2078
-	lock:=[]
-	aa:=ab:=braces:=0
-	code:=StrSplit(codetext,"`n")
-	conind:=[],block:=[]
+	sc:=csc(),codetext:=sc.getuni(),indentation:=sc.2121,line:=sc.2166(sc.2008),posinline:=sc.2008-sc.2128(line),selpos:=posinfo(),sc.2078,lock:=[],iflock:={},aa:=ab:=braces:=0,code:=StrSplit(codetext,"`n"),conind:=[],block:=[]
 	GuiControl,1:-Redraw,% sc.sc
 	GuiControl,1:+g,% sc.sc
 	for a,text in code{
