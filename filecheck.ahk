@@ -24,13 +24,13 @@ filecheck(){
 					while,ll:=list.Item[A_Index-1],ea:=xml.ea(ll)
 						order[ea.clean]:=ll
 						for a,b in order{
-							if(next){
+						if(next){
 							parent.insertbefore(new,b)
 							break
 						}
-							if(a=nn.clean)
-								next:=1
-						}
+						if(a=nn.clean)
+							next:=1
+					}
 				}
 			}
 		}

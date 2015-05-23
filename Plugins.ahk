@@ -31,7 +31,8 @@ plugins(refresh:=0){
 			pos:=found.Pos(1)+1
 		}
 	}
-	SetTimer,refreshmenu,-300
+	if refresh
+		SetTimer,refreshmenu,-300
 	return
 	refreshmenu:
 	Menu("main"),MenuWipe()

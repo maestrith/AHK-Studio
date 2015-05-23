@@ -5,7 +5,6 @@ menu(menuname){
 		if mm.haschildnodes()
 			Menu,% ea.name,DeleteAll
 	Menu,main,DeleteAll
-	Sleep,100
 	while,mm:=topmenu.item[A_Index-1],eamm:=xml.ea(mm){
 		if(mm.nodename="date")
 			Continue
