@@ -50,7 +50,7 @@ newindent(indentwidth:=""){
 			block:=[],blocks:=0
 		if(first="}"){
 			while,((found:=SubStr(text,A_Index,1))~="(}|\s)"){
-				if(found=" ")
+				if(found~="\s")
 					Continue
 				if(block.1+1){
 					if (block.MaxIndex()>1){

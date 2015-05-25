@@ -81,6 +81,7 @@
 			<menu name="Edit Comment Insert" clean="Edit_Comment_Insert"></menu>
 			<menu name="Enable Close On Save" clean="Enable_Close_On_Save"></menu>
 			<menu name="Force Utf8" clean="Force_Utf8"></menu>
+			<menu name="Full Backup All Files" clean="Full_Backup_All_Files"></menu>
 			<menu name="Hide Code Explorer" clean="Hide_Code_Explorer"></menu>
 			<menu clean="Hide_Indentation_Guides" name="Hide Indentation Guides"></menu>
 			<menu name="Hide Project Explorer" clean="Hide_Project_Explorer"></menu>
@@ -805,6 +806,360 @@
 " option="" plugin="plugins\Capture Gif.ahk"></menu>
 			<menu clean="Capture_Gif
 " name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
+" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Capture_Gif
+" hotkey="" name="Capture Gif
 " option="" plugin="plugins\Capture Gif.ahk"></menu>
 			<menu clean="Capture_Gif
 " hotkey="" name="Capture Gif

@@ -81,6 +81,7 @@ options(){
 	Auto_Set_Area_On_Quick_Find:
 	Disable_Auto_Indent_For_Non_Ahk_Files:
 	Auto_Close_Find:
+	Full_Backup_All_Files:
 	onoff:=settings.ssn("//options/@ " A_ThisLabel).text?0:1
 	att:=[],att[A_ThisLabel]:=onoff,v.options[A_ThisLabel]:=onoff
 	settings.add({path:"options",att:att})

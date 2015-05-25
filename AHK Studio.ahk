@@ -4,9 +4,6 @@ SetBatchLines,-1
 ;download complete
 /*
 	TODO LIST:
-	geekdude{
-		After indent it is not marking modified
-	}
 	run1e{
 		Full backup, all directories but backup should be backed up.
 	}
