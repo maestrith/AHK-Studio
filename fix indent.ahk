@@ -106,7 +106,7 @@ newindent(indentwidth:=""){
 			blocks:=1,otherbraces:=braces,block.Insert(otherbraces+blocks)
 		lastind:=0
 	}
-	sc.2079
+	update({sc:sc.2357}),sc.2079
 	GuiControl,1:+gnotify,% sc.sc
 	if(indentwidth)
 		return
