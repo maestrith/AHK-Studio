@@ -58,7 +58,8 @@ newindent(indentwidth:=""){
 		if(ss&&v.options.Manual_Continuation_Line){
 		}else if(text=""&&comment=1){
 		}else
-			sc.2126(a-1,tind)
+			if(sc.2127(a-1)!=tind)
+				sc.2126(a-1,tind)
 		if(firsttwo="/*"){
 			if(block.1.ind+1="")
 				block.Insert({ind:(lock.1.ind+1?lock[lock.MaxIndex()].ind+indentation:indentation),aa:aa,braces:lock.1.ind+1?Lock[lock.MaxIndex()].braces+1:1})
