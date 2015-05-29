@@ -30,7 +30,7 @@ newindent(indentwidth:=""){
 	GuiControl,1:+g,% sc.sc
 	for a,text in code{
 		if(InStr(text,Chr(59)))
-			text:=RegExReplace(text,"\s" Chr(59) ".*")
+			text:=RegExReplace(text,"\s" Chr(59) ".*"),comment:=1
 		text:=Trim(text,"`t "),first:=SubStr(text,1,1),last:=SubStr(text,0,1),firsttwo:=SubStr(text,1,2),ss:=(text~="i)^\s*(&&|OR|AND|\.|\,|\|\||:|\?)"),indentcheck:=RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b")
 		if(first="("&&last!=")")
 			skip:=1
@@ -55,7 +55,7 @@ newindent(indentwidth:=""){
 		if(first="{"&&aa)
 			aa--
 		tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind
-		if !(ss&&v.options.Manual_Continuation_Line)
+		if (!(ss&&v.options.Manual_Continuation_Line)&&(text=""&&comment=0))
 			sc.2126(a-1,tind)
 		if(firsttwo="/*"){
 			if(block.1.ind+1="")
@@ -78,7 +78,7 @@ newindent(indentwidth:=""){
 			if !(ss||indentcheck)
 				aa:=0
 		}
-		aaobj[cur]:=aa,special:=0
+		aaobj[cur]:=aa,special:=0,comment:=0
 	}
 	update({sc:sc.2357}),sc.2079
 	GuiControl,1:+gnotify,% sc.sc
