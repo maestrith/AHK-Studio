@@ -54,7 +54,9 @@ newindent(indentwidth:=""){
 		}
 		if(first="{"&&aa)
 			aa--
-		tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind,sc.2126(a-1,tind)
+		tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind
+		if !(ss&&v.options.Manual_Continuation_Line)
+			sc.2126(a-1,tind)
 		if(firsttwo="/*"){
 			if(block.1.ind+1="")
 				block.Insert({ind:(lock.1.ind+1?lock[lock.MaxIndex()].ind+indentation:indentation),aa:aa,braces:lock.1.ind+1?Lock[lock.MaxIndex()].braces+1:1})
