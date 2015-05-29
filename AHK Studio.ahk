@@ -5,18 +5,18 @@ SetBatchLines,-1
 /*
 	TODO LIST:
 	run1e{
-		Full backup, all directories but backup should be backed up.
+	Full backup, all directories but backup should be backed up.
 	}
 	Mark Current Point{
-		Temporary Mark in the current script to where the cursor is
-		have it jump back to it when hotkey is pressed.
-		Hotkeys{
-			Mark Spot
-			Goto Mark
-		}
+	Temporary Mark in the current script to where the cursor is
+	have it jump back to it when hotkey is pressed.
+	Hotkeys{
+	Mark Spot
+	Goto Mark
+	}
 	}
 	Replacements InputBox{
-		get the width/height of the text and adjust it.
+	get the width/height of the text and adjust it.
 	}
 	Create a way that the user can add things to the commands list
 	-Do it so that it creates a local file that will not be effected by my main commands.xml
@@ -25,40 +25,40 @@ SetBatchLines,-1
 	-Merge it over the stuff that I have
 	Make a plugin downloader
 	bkid{
-		Scratch Pad is blinky on resize
+	Scratch Pad is blinky on resize
 	}
 	samardac{
-		Rename include files from within Studio
+	Rename include files from within Studio
 	}
 	tidy up script:
 	Toolbars{
-		-Make it work on xml natively
-		-Add the ability to add more toolbars.
-		hotkey for adding selected words to a word list for the program
-		-make windows show up inititally inside of the main window. centered.
-		Change the version script to add tags for <changed> and <fixed> and so on.
+	-Make it work on xml natively
+	-Add the ability to add more toolbars.
+	hotkey for adding selected words to a word list for the program
+	-make windows show up inititally inside of the main window. centered.
+	Change the version script to add tags for <changed> and <fixed> and so on.
 	}
 	windows_to_replace{
-		Themes
-		Code Vault
-		Split Code
+	Themes
+	Code Vault
+	Split Code
 	}
 	video{
-		Omni-Search (Files,Menu items,...etc)
-		Multiple Segments (discuss how segments work and show them)
-		Quick Find
+	Omni-Search (Files,Menu items,...etc)
+	Multiple Segments (discuss how segments work and show them)
+	Quick Find
 	}
 	hoppfrosch{
-		changing #includes manually causes issues with the file explorer
-		-Create a "Refresh Project Explorer" option.
+	changing #includes manually causes issues with the file explorer
+	-Create a "Refresh Project Explorer" option.
 	}
 	Don_Corleon{
-		Multiple Scintilla windows over/under rather than side by side.
+	Multiple Scintilla windows over/under rather than side by side.
 	}
 	Suggested_by_bgm{
-		Code_Vault{
-			Add an area for comments for snippets
-		}
+	Code_Vault{
+	Add an area for comments for snippets
+	}
 	}
 */
 if(A_IsUnicode!=1){

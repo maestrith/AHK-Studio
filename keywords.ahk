@@ -18,5 +18,6 @@ keywords(){
 		all:=RegExReplace(all,"i)\b" b "\b",b)
 	Loop,Parse,all,%a_space%
 		v.keywords[SubStr(A_LoopField,1,1)].=A_LoopField " "
+	;clipboard:=v.indentregex
 	return
 }

@@ -25,15 +25,13 @@ fix_indent(sc=""){
 }
 newindent(indentwidth:=""){
 	Critical
-	sc:=csc(),codetext:=sc.getuni(),indentation:=sc.2121,line:=sc.2166(sc.2008),posinline:=sc.2008-sc.2128(line),selpos:=posinfo(),sc.2078,lock:=[],iflock:={},aa:=ab:=braces:=0,code:=StrSplit(codetext,"`n"),conind:=[],block:=[]
+	sc:=csc(),codetext:=sc.getuni(),indentation:=sc.2121,line:=sc.2166(sc.2008),posinline:=sc.2008-sc.2128(line),selpos:=posinfo(),sc.2078,lock:=[],block:=[],aa:=ab:=braces:=0,code:=StrSplit(codetext,"`n"),aaobj:=[]
 	GuiControl,1:-Redraw,% sc.sc
 	GuiControl,1:+g,% sc.sc
 	for a,text in code{
-		if (InStr(text,Chr(59)))
+		if(InStr(text,Chr(59)))
 			text:=RegExReplace(text,"\s" Chr(59) ".*")
-		text:=Trim(text,"`t "),first:=SubStr(text,1,1),last:=SubStr(text,0,1),firsttwo:=SubStr(text,1,2)
-		ss:=(text~="i)^\s*(&&|OR|AND|\.|\,|\|\||:|\?)")
-		indentcheck:=RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b")
+		text:=Trim(text,"`t "),first:=SubStr(text,1,1),last:=SubStr(text,0,1),firsttwo:=SubStr(text,1,2),ss:=(text~="i)^\s*(&&|OR|AND|\.|\,|\|\||:|\?)"),indentcheck:=RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b")
 		if(first="("&&last!=")")
 			skip:=1
 		if(first=")"&&skip){
@@ -42,69 +40,43 @@ newindent(indentwidth:=""){
 		}
 		if(skip)
 			continue
-		if(ss&&aa<=0){
-			if(v.options.Manual_Continuation_Line)
-				Continue
-		}
 		if(firsttwo="*/")
-			block:=[],blocks:=0
+			block:=[],aa:=0
+		block.MinIndex()?(current:=block,cur:=1):(current:=lock,cur=0),braces:=current[current.MaxIndex()].braces+1?current[current.MaxIndex()].braces:0,aa:=aaobj[cur]+0?aaobj[cur]:0
 		if(first="}"){
 			while,((found:=SubStr(text,A_Index,1))~="(}|\s)"){
 				if(found~="\s")
 					Continue
-				if(block.1+1){
-					if (block.MaxIndex()>1){
-						lastind:=block.pop(),otherbraces--
-					}
-				}
-				else if(iflock.1+1)
-					lastind:=iflock.pop()
-				else
-					lastind:=lock.pop(),braces--
+				if(cur&&current.MaxIndex()<=1)
+					Break
+				special:=current.pop().ind,braces--
 			}
 		}
-		if(iflock.1+1)
-			sc.2126(a-1,(iflock[iflock.MaxIndex()]-(first="{"?1:0))*indentation)
-		else if(block.1){
-			if(sc.2127(a-1)!=(block[block.MaxIndex()])*indentation)
-				sc.2126(a-1,(block[block.MaxIndex()])*indentation)
-		}else if(lock.1){
-			iii:=lastind>0?lastind-1:(lock[lock.MaxIndex()])
-			if(sc.2127(a-1)!=iii*indentation)
-				sc.2126(a-1,iii*indentation)
-		}else{
-			sc.2126(a-1,(lastind?lastind-1:0)*indentation)
+		if(first="{"&&aa)
+			aa--
+		tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind,sc.2126(a-1,tind)
+		if(firsttwo="/*"){
+			if(block.1.ind+1="")
+				block.Insert({ind:(lock.1.ind+1?lock[lock.MaxIndex()].ind+indentation:indentation),aa:aa,braces:lock.1.ind+1?Lock[lock.MaxIndex()].braces+1:1})
+			current:=block,aa:=0
 		}
 		if(last="{"){
-			if(block.1+1)
-				otherbraces++,block.Insert(otherbraces+blocks)
-			else if(iflock[iflock.MaxIndex()]+1){
-				lock.Insert(iflock[iflock.MaxIndex()]+(first="{"?0:1)),braces++
-				if(a=84)
-					t(lock[lock.MaxIndex()],iflock[iflock.MaxIndex()])
-				iflock:=[]
-			}
+			braces++,aa:=ss&&last="{"?aa-1:aa
+			if(!current.MinIndex())
+				current.Insert({ind:(aa+braces)*indentation,aa:aa,braces:braces})
 			else
-				lock.Insert(++braces)
+				current.Insert({ind:(aa+current[current.MaxIndex()].aa+braces)*indentation,aa:aa+current[current.MaxIndex()].aa,braces:braces})
+			aa:=0
 		}
-		if(indentcheck){
-			if(iflock.1+1=""){
-				if block.1+1
-					iftemp:=block[block.MaxIndex()]
-				else
-					iftemp:=lock[lock.MaxIndex()]?lock[lock.MaxIndex()]:0
-				if(last!="{")
-					iflock.Insert(iftemp)
-			}
-			if(iflock.1+1&&last!="{")
-				iflock.Insert(++iftemp)
-		}else if(ss=0){
-			iflock:=[]
-		}else if(ss=1&&last="{")
-			lock[lock.MaxIndex()]:=Lock[lock.MaxIndex()]-1
-		if(firsttwo="/*")
-			blocks:=1,otherbraces:=braces,block.Insert(otherbraces+blocks)
-		lastind:=0
+		if(aa||ss||indentcheck){
+			if(indentcheck&&last!="{")
+				aa++
+		}
+		if(aa>0){
+			if !(ss||indentcheck)
+				aa:=0
+		}
+		aaobj[cur]:=aa,special:=0
 	}
 	update({sc:sc.2357}),sc.2079
 	GuiControl,1:+gnotify,% sc.sc

@@ -13,5 +13,5 @@ publish(return=""){
 	if return
 		return publish
 	Clipboard:=publish
-	MsgBox,,AHK Studio,Project compiled and coppied to your clipboard,.6
+	MsgBox,,AHK Studio,Project compiled and copied to your clipboard,.6
 }

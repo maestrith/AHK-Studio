@@ -1,4 +1,4 @@
-class code_explorer{
+Class Code_Explorer{
 	static explore:=[],TreeView:=[],sort:=[],function:="Om`n)^\s*((\w|[^\x00-\x7F])+)\((.*)?\)[\s+;.*\s+]?[\s*]?{",label:="Om`n)^\s*((\w|[^\x00-\x7F])+):[\s+;]",class:="Om`ni)^[\s*]?(class[\s*](\w|[^\x00-\x7F])+)",functions:=[],variables:=[],varlist:=[]
 	scan(node){
 		explore:=[],bits:=[],method:=[],filename:=ssn(node,"@file").text,parentfile:=ssn(node,"ancestor::main/@file").text
@@ -49,8 +49,13 @@ class code_explorer{
 				line:=codeobj[(A_Index-1)+b.line+1],add+=StrPut(line,"utf-8"),line:=Trim(RegExReplace(line,"(\s+" Chr(59) ".*)"))
 				if(SubStr(line,0,1)="{")
 					braces++,start:=1
-				if(SubStr(line,1,1)="}")
-					braces--
+				if(SubStr(line,1,1)="}"){
+					while,((found:=SubStr(line,A_Index,1))~="(}|\s)"){
+						if(found~="\s")
+							Continue
+						braces--
+					}
+				}
 				if(start&&braces=0)
 					break
 			}
@@ -68,15 +73,20 @@ class code_explorer{
 					pos:=found.Pos(1)+StrLen(found.1)
 					Continue
 				}
+				;npos:=StrPut(SubStr(code,1,pos),"utf-8")
 				for index,name in StrSplit(list,","){
 					info:=objects[name]
 					if(Pos>info.start&&Pos<info.end){
 						cls:=ssn(cce,"info[@text='" SubStr(info.name,7) "'][@type='Class']")
-						cexml.under(cls,"info",{type:a,file:filename,pos:StrPut(SubStr(code,1,found.pos(1)),"utf-8")-2,text:found.1,upper:upper(found.1),args:found.value(3),class:SubStr(info.name,7),root:parentfile,order:"text,type,file,args"}),pos:=found.Pos(1)+StrLen(found.1)
+						;cexml.under(cls,"info",{type:a,file:filename,pos:StrPut(SubStr(code,1,found.pos(1)),"utf-8")-2,text:found.1,upper:upper(found.1),args:found.value(3),class:SubStr(info.name,7),root:parentfile,order:"text,type,file,args"}),pos:=found.Pos(1)+StrLen(found.1)
+						cexml.under(cls,"info",{type:a,file:filename,pos:StrPut(SubStr(code,1,found.pos(1)-2),"utf-8"),text:found.1,upper:upper(found.1),args:found.value(3),class:SubStr(info.name,7),root:parentfile,order:"text,type,file,args"}),pos:=found.Pos(1)+StrLen(found.1)
 						Continue,2
 					}
 				}
-				cexml.under(cce,"info",{type:"Function",file:filename,pos:StrPut(SubStr(code,1,found.pos(1)),"utf-8")-2,text:found.1,upper:upper(found.1),args:found.value(3),class:found.1,root:parentfile,order:"text,type,file,args"}),pos:=found.Pos(1)+StrLen(found.1)
+				;cexml.under(cce,"info",{type:"Function",file:filename,pos:StrPut(SubStr(code,1,found.pos(1)),"utf-8")-2,text:found.1,upper:upper(found.1),args:found.value(3),class:found.1,root:parentfile,order:"text,type,file,args"}),pos:=found.Pos(1)+StrLen(found.1)
+				cexml.under(cce,"info",{type:"Function",file:filename,opos:found.Pos(1),pos:StrPut(SubStr(code,1,found.pos(1)-2),"utf-8"),text:found.1,upper:upper(found.1),args:found.value(3),class:found.1,root:parentfile,order:"text,type,file,args"}),pos:=found.Pos(1)+StrLen(found.1)
+				;if(InStr(filename,"general testing"))
+				
 			}
 		}
 		pos:=0

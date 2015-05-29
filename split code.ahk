@@ -6,17 +6,22 @@ split_code(){
 		if ea.end
 			List["Class " ea.text]:={pos:ea.pos,len:ea.end-ea.pos,code:SubStr(code,ea.pos,ea.end-ea.pos)}
 		else{
-			search:=SubStr(code,_:=ea.pos?ea.pos:1),add:=start:=braces:=0
+			search:=SubStr(code,_:=ea.opos?ea.opos:1),add:=start:=braces:=0
 			for a,b in StrSplit(search,"`n"){
 				line:=b,add+=StrPut(line,"utf-8"),line:=Trim(RegExReplace(line,"(\s+" Chr(59) ".*)"))
 				if(SubStr(line,0,1)="{")
 					braces++,start:=1
-				if(SubStr(line,1,1)="}")
-					braces--
+				if(SubStr(line,1,1)="}"){
+					while,((found:=SubStr(line,A_Index,1))~="(}|\s)"){
+						if(found~="\s")
+							Continue
+						braces--
+					}
+				}
 				if(start&&braces=0)
 					break
 			}
-			List[ea.Text]:={pos:ea.pos,len:add,code:SubStr(code,_:=ea.pos?ea.pos:1,add)}
+			List[ea.Text]:={pos:ea.opos,len:add,code:SubStr(code,_:=ea.opos?ea.opos:1,add)}
 		}
 	}
 	setup(66)
