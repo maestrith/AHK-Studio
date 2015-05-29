@@ -55,7 +55,9 @@ newindent(indentwidth:=""){
 		if(first="{"&&aa)
 			aa--
 		tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind
-		if (!(ss&&v.options.Manual_Continuation_Line)&&(text=""&&comment=0))
+		if(ss&&v.options.Manual_Continuation_Line){
+		}else if(text=""&&comment=1){
+		}else
 			sc.2126(a-1,tind)
 		if(firsttwo="/*"){
 			if(block.1.ind+1="")
@@ -78,7 +80,7 @@ newindent(indentwidth:=""){
 			if !(ss||indentcheck)
 				aa:=0
 		}
-		aaobj[cur]:=aa,special:=0,comment:=0
+		aaobj[cur]:=aa,special:=0,comment:=0,lastcontinue:=ss?1:0
 	}
 	update({sc:sc.2357}),sc.2079
 	GuiControl,1:+gnotify,% sc.sc
@@ -93,5 +95,12 @@ newindent(indentwidth:=""){
 		newpos:=sc.2128(line)+posinline,newpos:=newpos>sc.2128(line)?newpos:sc.2128(line),sc.2160(newpos,newpos)
 	else
 		sc.2160(sc.2167(startline),sc.2136(endline))
+	line:=sc.2166(sc.2008)
+	GuiControl,1:-Redraw,% sc.sc
+	if(sc.2008=sc.2128(line)&&v.options.Manual_Continuation_Line){
+		ss:=(sc.getline(line-1)~="i)^\s*(&&|OR|AND|\.|\,|\|\||:|\?)")
+		if ss
+			sc.2126(line,sc.2127(line-1)),sc.2025(sc.2128(line))
+	}
 	GuiControl,1:+Redraw,% sc.sc
 }
