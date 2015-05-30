@@ -77,7 +77,7 @@ newindent(indentwidth:=""){
 			if(indentcheck&&last!="{")
 				aa++
 		}
-		if(aa>0){
+		if(aa>0&&text!=""){
 			if !(ss||indentcheck)
 				aa:=0
 		}
