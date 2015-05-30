@@ -4,17 +4,19 @@ color(con){
 	nodes:=settings.sn("//fonts/*")
 	while,n:=nodes.item(A_Index-1){
 		ea:=settings.ea(n)
-		if (ea.code=2082){
+		if(ea.code=2082){
 			con.2082(7,ea.color)
 			Continue
 		}
-		if (ea.style=33)
+		if(ea.style=33)
 			for a,b in [2290,2291]
 				con[b](1,ea.Background)
 		ea.style:=ea.style=5?32:ea.style
 		for a,b in ea{
 			if list[a]&&ea.style!=""
 				con[list[a]](ea.style,b)
+			if(ea.code&&ea.value)
+				con[ea.code](ea.value)
 			else if ea.code&&ea.bool!=1
 				con[ea.code](ea.color,0)
 			else if ea.code&&ea.bool

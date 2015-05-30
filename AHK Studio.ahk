@@ -4,9 +4,6 @@ SetBatchLines,-1
 ;download complete
 /*
 	TODO LIST:
-	run1e{
-		Full backup, all directories but backup should be backed up.
-	}
 	Mark Current Point{
 		Temporary Mark in the current script to where the cursor is
 		have it jump back to it when hotkey is pressed.

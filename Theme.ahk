@@ -20,6 +20,7 @@ Theme(info=""){
 	for a,b in ["Edit Theme Name","Edit Author","Download Themes","Export Theme","Import Theme","Save Theme","Display Style Number At Caret"]
 		v.themelist[TV_Add(b,options,"Sort")]:=b
 	v.themelist[TV_Add("Color Input Method")]:="Color Input Method"
+	v.themelist[TV_Add("Caret Width")]:="Caret Width"
 	tlist:=preset.sn("//fonts/name")
 	tl:=TV_Add("Themes")
 	v.themetv:=tl
@@ -62,8 +63,7 @@ Theme(info=""){
 	}if(event="brace match style"){
 		sc:=csc(),editstyle(34),sc.2498(0,8),refreshthemes()
 		tt:=sc.gettext(),sc.2025(StrPut(SubStr(tt,1,InStr(tt,"(")),"utf-8")-1)
-	}
-	if (event="Themes List"){
+	}if(event="Themes List"){
 		TV_GetText(theme,TV_GetSelection())
 		overwrite:=preset.ssn("//name[text()='" theme "']..")
 		clone:=overwrite.clonenode(1)
@@ -71,6 +71,15 @@ Theme(info=""){
 		settings.ssn("*").appendchild(clone)
 		csc().2181(0,themetext())
 		refreshthemes()
+	}if(event="Caret Width"){
+		sc:=csc(),number:=InputBox(sc.sc,"Input Caret Width","Enter a number from 1 to 3",1)
+		if number not between 1 and 3
+			return m("Must be a number between 1 and 3")
+		if !node:=settings.ssn("//fonts/font[@code='2188']")
+			node:=settings.add2("fonts/font",{code:2188},"",1)
+		node.SetAttribute("value",number)
+		for a,b in s.ctrl
+			b.2188(number)
 	}if (event="Compare Color"){
 		style:=48
 		color:=settings.ssn("//fonts/font[@style='" style "']")
