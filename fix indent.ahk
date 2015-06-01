@@ -42,7 +42,7 @@ newindent(indentwidth:=""){
 			continue
 		if(firsttwo="*/")
 			block:=[],aa:=0
-		block.MinIndex()?(current:=block,cur:=1):(current:=lock,cur=0),braces:=current[current.MaxIndex()].braces+1?current[current.MaxIndex()].braces:0,aa:=aaobj[cur]+0?aaobj[cur]:0
+		block.MinIndex()?(current:=block,cur:=1):(current:=lock,cur:=0),braces:=current[current.MaxIndex()].braces+1?current[current.MaxIndex()].braces:0,aa:=aaobj[cur]+0?aaobj[cur]:0
 		if(first="}"){
 			while,((found:=SubStr(text,A_Index,1))~="(}|\s)"){
 				if(found~="\s")
@@ -55,11 +55,8 @@ newindent(indentwidth:=""){
 		if(first="{"&&aa)
 			aa--
 		tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind
-		if(ss&&v.options.Manual_Continuation_Line){
-		}else if(text=""&&comment=1){
-		}else
-			if(sc.2127(a-1)!=tind)
-				sc.2126(a-1,tind)
+		if(!(ss&&v.options.Manual_Continuation_Line||text=""&&comment=1)&&sc.2127(a-1)!=tind)
+			sc.2126(a-1,tind)
 		if(firsttwo="/*"){
 			if(block.1.ind+1="")
 				block.Insert({ind:(lock.1.ind+1?lock[lock.MaxIndex()].ind+indentation:indentation),aa:aa,braces:lock.1.ind+1?Lock[lock.MaxIndex()].braces+1:1})
@@ -77,7 +74,7 @@ newindent(indentwidth:=""){
 			if(indentcheck&&last!="{")
 				aa++
 		}
-		if(aa>0&&text!=""){
+		if(aa>0){
 			if !(ss||indentcheck)
 				aa:=0
 		}
