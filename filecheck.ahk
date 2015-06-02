@@ -25,9 +25,9 @@ filecheck(){
 						order[ea.clean]:=ll
 						for a,b in order{
 							if(next){
-							parent.insertbefore(new,b)
-							break
-						}
+								parent.insertbefore(new,b)
+								break
+							}
 							if(a=nn.clean)
 								next:=1
 						}

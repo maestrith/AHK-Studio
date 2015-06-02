@@ -23,7 +23,7 @@ fix_indent(sc=""){
 		return
 	skip:=""
 }
-newindent(indentwidth:=""){
+NewIndent(indentwidth:=""){
 	Critical
 	sc:=csc(),codetext:=sc.getuni(),indentation:=sc.2121,line:=sc.2166(sc.2008),posinline:=sc.2008-sc.2128(line),selpos:=posinfo(),sc.2078,lock:=[],block:=[],aa:=ab:=braces:=0,code:=StrSplit(codetext,"`n"),aaobj:=[]
 	GuiControl,1:-Redraw,% sc.sc
@@ -58,8 +58,8 @@ newindent(indentwidth:=""){
 		if(!(ss&&v.options.Manual_Continuation_Line||text=""&&comment=1)&&sc.2127(a-1)!=tind)
 			sc.2126(a-1,tind)
 		if(firsttwo="/*"){
-			if(block.1.ind+1="")
-				block.Insert({ind:(lock.1.ind+1?lock[lock.MaxIndex()].ind+indentation:indentation),aa:aa,braces:lock.1.ind+1?Lock[lock.MaxIndex()].braces+1:1})
+			if(block.1.ind="")
+				block.Insert({ind:(lock.1.ind!=""?lock[lock.MaxIndex()].ind+indentation:indentation),aa:aa,braces:lock.1.ind+1?Lock[lock.MaxIndex()].braces+1:1})
 			current:=block,aa:=0
 		}
 		if(last="{"){
@@ -70,15 +70,11 @@ newindent(indentwidth:=""){
 				current.Insert({ind:(aa+current[current.MaxIndex()].aa+braces)*indentation,aa:aa+current[current.MaxIndex()].aa,braces:braces})
 			aa:=0
 		}
-		if(aa||ss||indentcheck){
-			if(indentcheck&&last!="{")
-				aa++
-		}
-		if(aa>0){
-			if !(ss||indentcheck)
-				aa:=0
-		}
-		aaobj[cur]:=aa,special:=0,comment:=0,lastcontinue:=ss?1:0
+		if((aa||ss||indentcheck)&&(indentcheck&&last!="{"))
+			aa++
+		if(aa>0&&(ss||indentcheck)=0)
+			aa:=0
+		aaobj[cur]:=aa,special:=0,comment:=0
 	}
 	update({sc:sc.2357}),sc.2079
 	GuiControl,1:+gnotify,% sc.sc
