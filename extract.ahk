@@ -8,13 +8,15 @@ extract(list,top){
 		SplitPath,filename,fn,dir
 		backupdir:=dir
 		ffff:=FileOpen(filename,"RW"),encoding:=ffff.pos=3?"UTF-8":ffff.pos=2?"UTF-16":"CP0",text:=ffff.read(ffff.length)
-		if !next:=ssn(top,"descendant::file[@file='" obj.parent "']")
-			next:=files.under(top,"file",{file:filename,tv:FEAdd(fn,0,"Sort"),filename:fn,skip:skip,encoding:encoding})
+		if !next:=ssn(top,"descendant::file[@file='" obj.parent "']"){
+			FileGetTime,time,%filename%
+			next:=files.under(top,"file",{file:filename,tv:FEAdd(fn,0,"Sort"),filename:fn,skip:skip,encoding:encoding,time:time})
+		}
 		else{
 			cfile:=obj.file,pfile:=obj.parent
 			SplitPath,cfile,,cdir
 			SplitPath,pfile,,pdir
-			if (cdir!=pdir&&disable!=1){
+			if(cdir!=pdir&&disable!=1){
 				build:=""
 				for a,b in {"%A_AppData%":A_AppData,"%A_AppDataCommon%":A_AppDataCommon}
 					if(InStr(cfile,b))
@@ -27,12 +29,13 @@ extract(list,top){
 					if !folder:=ssn(top,"descendant::folder[@folder='" folderlist "']")
 						next:=files.under(next,"folder",{folder:folderlist,tv:FEAdd(f,ssn(next,"@tv").text,"First Sort")})
 				}
-				next:=folder.xml?folder:next
-				tv:=disable?ssn(top.FirstChild,"@tv").text:ssn(next,"@tv").text
-				files.under(next,"file",{file:filename,tv:FEAdd(cfname,tv,"First Sort"),filename:fn,skip:skip,encoding:encoding,include:obj.include})
+				next:=folder.xml?folder:next,tv:=disable?ssn(top.FirstChild,"@tv").text:ssn(next,"@tv").text
+				FileGetTime,time,%cfile%
+				files.under(next,"file",{file:filename,tv:FEAdd(cfname,tv,"First Sort"),filename:fn,skip:skip,encoding:encoding,include:obj.include,time:time})
 			}else{
 				tv:=disable?ssn(top.FirstChild,"@tv").text:ssn(next,"@tv").text
-				files.under(next,"file",{file:filename,tv:FEAdd(fn,tv,"Sort"),filename:fn,skip:skip,encoding:encoding,include:obj.include})
+				FileGetTime,time,%cfile%
+				files.under(next,"file",{file:filename,tv:FEAdd(fn,tv,"Sort"),filename:fn,skip:skip,encoding:encoding,include:obj.include,time:time})
 			}
 		}
 		StringReplace,text,text,`r`n,`n,All

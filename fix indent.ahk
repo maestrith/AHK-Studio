@@ -34,12 +34,11 @@ NewIndent(indentwidth:=""){
 		text:=Trim(text,"`t "),first:=SubStr(text,1,1),last:=SubStr(text,0,1),firsttwo:=SubStr(text,1,2),ss:=(text~="i)^\s*(&&|OR|AND|\.|\,|\|\||:|\?)"),indentcheck:=RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b")
 		if(first="("&&last!=")")
 			skip:=1
-		if(first=")"&&skip){
-			skip:=0
-			continue
+		if(Skip){
+			if(First=")")
+				Skip:=0
+			Continue
 		}
-		if(skip)
-			continue
 		if(firsttwo="*/")
 			block:=[],aa:=0
 		block.MinIndex()?(current:=block,cur:=1):(current:=lock,cur:=0),braces:=current[current.MaxIndex()].braces+1?current[current.MaxIndex()].braces:0,aa:=aaobj[cur]+0?aaobj[cur]:0
@@ -55,24 +54,18 @@ NewIndent(indentwidth:=""){
 		if(first="{"&&aa)
 			aa--
 		tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind
-		if(!(ss&&v.options.Manual_Continuation_Line||text=""&&comment=1)&&sc.2127(a-1)!=tind)
+		if(!(ss&&v.options.Manual_Continuation_Line)&&sc.2127(a-1)!=tind)
 			sc.2126(a-1,tind)
 		if(firsttwo="/*"){
 			if(block.1.ind="")
 				block.Insert({ind:(lock.1.ind!=""?lock[lock.MaxIndex()].ind+indentation:indentation),aa:aa,braces:lock.1.ind+1?Lock[lock.MaxIndex()].braces+1:1})
 			current:=block,aa:=0
 		}
-		if(last="{"){
-			braces++,aa:=ss&&last="{"?aa-1:aa
-			if(!current.MinIndex())
-				current.Insert({ind:(aa+braces)*indentation,aa:aa,braces:braces})
-			else
-				current.Insert({ind:(aa+current[current.MaxIndex()].aa+braces)*indentation,aa:aa+current[current.MaxIndex()].aa,braces:braces})
-			aa:=0
-		}
+		if(last="{")
+			braces++,aa:=ss&&last="{"?aa-1:aa,!current.MinIndex()?current.Insert({ind:(aa+braces)*indentation,aa:aa,braces:braces}):current.Insert({ind:(aa+current[current.MaxIndex()].aa+braces)*indentation,aa:aa+current[current.MaxIndex()].aa,braces:braces}),aa:=0
 		if((aa||ss||indentcheck)&&(indentcheck&&last!="{"))
 			aa++
-		if(aa>0&&(ss||indentcheck)=0)
+		if(aa>0&&!(ss||indentcheck))
 			aa:=0
 		aaobj[cur]:=aa,special:=0,comment:=0
 	}

@@ -81,7 +81,7 @@ Class Code_Explorer{
 						Continue,2
 					}
 				}
-				cexml.under(cce,"info",{type:"Function",file:filename,opos:found.Pos(1),pos:StrPut(SubStr(code,1,found.pos(1)-2),"utf-8"),text:found.1,upper:upper(found.1),args:found.value(3),class:found.1,root:parentfile,order:"text,type,file,args"}),pos:=found.Pos(1)+StrLen(found.1)
+				ppos:=found.pos(1)-2>0?found.pos(1)-2:0,cexml.under(cce,"info",{type:"Function",file:filename,opos:found.Pos(1),pos:StrPut(SubStr(code,1,ppos),"utf-8"),text:found.1,upper:upper(found.1),args:found.value(3),class:found.1,root:parentfile,order:"text,type,file,args"}),pos:=found.Pos(1)+StrLen(found.1)
 			}
 		}
 		pos:=0

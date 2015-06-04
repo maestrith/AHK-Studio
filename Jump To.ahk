@@ -23,6 +23,7 @@ Jump_To_Specific(find:=""){
 	if found:=cexml.ssn("//main[@file='" ssn(current(1),"@file").text "']/descendant::info" search){
 		ea:=xml.ea(found),TV(files.ssn("//main[@file='" ea.root "']/descendant::file[@file='" ea.file "']/@tv").text)
 		Sleep,200
+		ea.pos:=ea.pos=1?0:1
 		csc().2160(ea.pos,ea.pos+StrPut(ea.text,"Utf-8")-1+_:=ea.type="class"?+6:+0),v.sc.2169,v.sc.2400
 	}else if(InStr(text:=sc.textrange(sc.2128(line:=sc.2166(sc.2008)),sc.2136(line)),Chr(35) "include"))
 		main:=files.ssn("//main[@file='" ssn(current(1),"@file").text "']"),tv(ssn(main,"descendant::file[@include='" text "']/@tv").text)
@@ -31,6 +32,7 @@ Jump_To_Specific(find:=""){
 		if found:=cexml.ssn("//main[@file='" ssn(current(1),"@file").text "']/descendant::info" search){
 			ea:=xml.ea(found),TV(files.ssn("//main[@file='" ea.root "']/descendant::file[@file='" ea.file "']/@tv").text)
 			Sleep,200
+			ea.pos:=ea.pos=1?0:1
 			csc().2160(ea.pos,ea.pos+StrPut(ea.text,"Utf-8")-1+_:=ea.type="class"?+6:+0),v.sc.2169,v.sc.2400
 		}
 	}

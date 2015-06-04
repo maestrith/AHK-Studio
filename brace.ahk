@@ -42,6 +42,6 @@ brace(){
 		sc.2003(cp,"{`n`n}"),fix_indent(),sc.2025(sc.2136(line+1))
 	else
 		sc.2003(cp,hotkey et.add),sc.2025(cp+1)
-	width:=sc.2276(32,"a"),text1:="Last Entered Character: " hotkey " Code:" Asc(hotkey),SB_SetText(text1,2),SB_SetParts(v.lastwidth,width*StrLen(text1 1),40),last:=width*StrLen(text1 1),replace()
+	width:=sc.2276(32,"a"),text1:="Last Entered Character: " hotkey " Code:" Asc(hotkey),SB_SetText(text1,2),SB_SetParts(v.lastwidth,v.lastwidth1:=(width*StrLen(text1 1)),40),replace()
 	return
 }

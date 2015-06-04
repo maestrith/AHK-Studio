@@ -6,15 +6,12 @@ menu(menuname){
 			Menu,% ea.name,DeleteAll
 	Menu,main,DeleteAll
 	while,mm:=topmenu.item[A_Index-1],eamm:=xml.ea(mm){
-		if(mm.nodename="date")
-			Continue
-		if(eamm.hide)
+		if(mm.nodename="date"||eamm.hide)
 			Continue
 		children:=sn(mm,"*")
 		while,cc:=children.item[A_Index-1],cea:=xml.ea(cc){
-			if(cc.nodename="date")
-				Continue
-			if(cea.hide)
+			icon:=""
+			if(cc.nodename="date"||cea.hide)
 				Continue
 			if(cc.nodename="separator"){
 				parent:=ssn(cc.ParentNode,"@name").text
@@ -28,8 +25,8 @@ menu(menuname){
 						list.Insert(pp)
 				Loop,% list.MaxIndex(){
 					item:=List[list.MaxIndex()-(A_Index-1)],lll:=sn(item,"*")
-					while,ll:=lll.item[A_Index-1]{
-						parent:=ssn(ll.ParentNode,"@name").text,current:=ssn(ll,"@name").text
+					while,ll:=lll.item[A_Index-1],llea:=xml.ea(ll){
+						parent:=ssn(ll.ParentNode,"@name").text,current:=llea.name
 						if ll.haschildnodes()
 							Menu,%parent%,Add,%current%,:%current%
 						else{
@@ -40,6 +37,8 @@ menu(menuname){
 								if !FileExist("plugins\" ea.plugin)
 									Continue
 							Menu,%parent%,Add,% current hotkey,MenuRoute
+							if(llea.filename)
+								Menu,%parent%,Icon,% current hotkey,% llea.filename,% llea.icon
 							if value:=settings.ssn("//*/@" clean(current)).text{
 								Menu,%parent%,Check,% current hotkey
 								v.options[clean(current)]:=value
@@ -48,6 +47,8 @@ menu(menuname){
 					}
 				}
 				Menu,% ssn(cc.ParentNode,"@name").text,Add,%parent%,:%parent%
+				if(cea.filename)
+					Menu,% ssn(cc.ParentNode,"@name").text,Icon,%parent%,% cea.filename,% cea.icon
 			}else{
 				if(cea.hide)
 					Continue
@@ -57,6 +58,8 @@ menu(menuname){
 						Continue
 				}
 				Menu,%parent%,Add,% current hotkey,MenuRoute
+				if(cea.filename)
+					Menu,%parent%,Icon,% current hotkey,% cea.filename,% cea.icon
 				if value:=settings.ssn("//*/@" clean(current)).text{
 					Menu,%parent%,Check,% current hotkey
 					v.options[clean(current)]:=value
@@ -69,11 +72,19 @@ menu(menuname){
 			if(ea.hide)
 				Continue
 			Menu,%menuname%,Add,% ea.name,% ":" ea.name
+			if(ea.filename){
+				Menu,%menuname%,icon,% ea.filename,% ea.icon
+				m(ea.filename,ea.Icon)
+			}
 		}
 		else{
 			if(ea.hide)
 				Continue
 			Menu,%menuname%,Add,% ea.name,% ":" ea.name
+			if(ea.filename){
+				Menu,%menuname%,icon,% ea.filename,% ea.icon
+				m(ea.filename,ea.Icon)
+			}
 		}
 	}
 	return menuname
