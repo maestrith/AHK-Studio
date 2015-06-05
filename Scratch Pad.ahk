@@ -87,7 +87,7 @@ Scratch_Pad(){
 	sc:=csc()
 	ControlGetPos,,,,h,Button1,% hwnd([14])
 	Loop,%buttoncount%
-		GuiControl,move,Button%A_Index%,% "y" A_GuiHeight-h
-	WinMove,% "ahk_id" v.scratch.sc,,0,0,A_GuiWidth,% A_GuiHeight-h
+		GuiControl,Move,Button%A_Index%,% "y" A_GuiHeight-h
+	GuiControl,Move,% v.scratch.sc,% "x0 y0 w" A_GuiWidth " h" A_GuiHeight-h
 	return
 }

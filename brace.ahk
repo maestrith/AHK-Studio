@@ -6,6 +6,10 @@ brace(){
 		Send,{%hotkey%}
 		return
 	}
+	if(A_ThisHotkey=Chr(34)){
+		if(sc.2010(sc.2008)=13)
+			return sc.2003(sc.2008,Chr(34)),sc.2025(sc.2008+1)
+	}
 	hotkey:=SubStr(A_ThisHotkey,0),add:=ea.add
 	if(sc.2102&&v.options.Disable_Auto_Insert_Complete=0){
 		word:=sc.getword()

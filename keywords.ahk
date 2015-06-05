@@ -1,6 +1,8 @@
 keywords(){
-	v.keywords:=[],v.kw:=[],v.custom:=[],v.kk:=[],var:=[]
-	colors:=commands.sn("//Color/*")
+	commands:=new xml("commands","lib\commands.xml"),list:=settings.sn("//commands/*"),top:=commands.ssn("//Commands/Commands")
+	while,ll:=list.item[A_Index-1]
+		top.AppendChild(ll.clonenode(1))
+	v.keywords:=[],v.kw:=[],v.custom:=[],v.kk:=[],var:=[],colors:=commands.sn("//Color/*")
 	while,color:=colors.item[A_Index-1]{
 		text:=color.text,all.=text " "
 		stringlower,text,text
@@ -18,6 +20,5 @@ keywords(){
 		all:=RegExReplace(all,"i)\b" b "\b",b)
 	Loop,Parse,all,%a_space%
 		v.keywords[SubStr(A_LoopField,1,1)].=A_LoopField " "
-	;clipboard:=v.indentregex
 	return
 }

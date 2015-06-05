@@ -467,11 +467,4 @@
 			<list list="Off On Permit Toggle">Suspend</list>
 		</Suspend>
 	</Context>
-	<MultiTip>
-		<IF>
-			<IF tip="1">This is tip 1</IF>
-			<IF tip="2">This is tip 2</IF>
-			<IF tip="3">This is tip 3</IF>
-		</IF>
-	</MultiTip>
 </Commands>
