@@ -357,3 +357,5 @@ return
 #Include window.ahk
 #Include Words In Document.ahk
 #Include Custom Commands.ahk
+
+#Include GRUpdate.ahk

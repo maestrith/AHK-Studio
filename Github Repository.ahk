@@ -107,25 +107,6 @@ Github_Repository(){
 	}
 	goto,grpop
 	return
-	GRUpdate:
-	info:=git.send("get",git.url "/repos/" git.owner "/" git.repo "/releases" git.token),pos:=1
-	while,RegExMatch(info,"Oi)\x22id\x22",found,Pos){
-		out:=[]
-		for a,b in {id:"\d*",prerelease:"\w*",draft:"\w*"}{
-			RegExMatch(info,"Oi)\x22" a "\x22:(" b ")",found,pos)
-			out[a]:=found.1
-			RegExMatch(info,"OUi)\x22tag_name\x22:\x22(.*)\x22",found,pos)
-			out["tag_name"]:=found.1
-			pos++
-		}
-		pos:=RegExMatch(info,"Oi)\x22upload_url\x22",found,pos)
-		if(out.tag_name)
-			if node:=ssn(verfile.node,"descendant::*[@number='" out.tag_name "']")
-				for a,b in {draft:out.draft,pre:out.prerelease,id:out.id}
-					node.SetAttribute(a,b)
-	}
-	SetTimer,relstatus,-10
-	return
 	Gui,25:Default
 	Gui,TreeView,SysTreeView322
 	TV_GetText(parent,TV_GetParent(TV_GetSelection()))
@@ -188,44 +169,33 @@ Github_Repository(){
 	TV_GetText(version,TV_GetSelection())
 	Gui,25:ListView,SysListView321
 	LV_GetText(status,v.releasestatus,2)
-	;return m(info.cm,version,status)
 	draft:=status="draft"?"true":"false",pre:=status~="i)Unknown|Pre-Release"?"true":"false"
 	cm:=info.cm
-	;node:=
-	;return m(node.xml)
-	;draft:=info.draft?"true":"false",pre:=info.pre?"true":"false"
-	;ControlGetText,version,Edit1,% hwnd([25])
-	;ControlGetText,cm,Edit2,% hwnd([25])
 	if !(version&&cm)
 		return m("Please set a version and create some information for that version.")
-	
-	ok:=commit(cm,version)
-	
-	
-	ea:=settings.ea("//github")
-	top:=vversion.ssn("//*[@file='" current(2).file "']")
-	node:=ssn(top,"versions/version[@number='" version "']")
-	repo:=ssn(top,"@repo").text
-	
-	
+	ok:=commit(cm,version),ea:=settings.ea("//github"),top:=vversion.ssn("//*[@file='" current(2).file "']"),node:=ssn(top,"versions/version[@number='" version "']"),repo:=ssn(top,"@repo").text
 	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
 	if proxy:=settings.ssn("//proxy").text
 		http.setProxy(2,proxy)
 	if(release:=ssn(node,"@id").text){
 		url:=github.url "/repos/" ea.owner "/" repo "/releases/" release "?access_token=" ea.token,body:=github.utf8(cm)
-		json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%body%","draft":%draft%,"pre":%pre%}
-		http.open("PATCH",url),clipboard:=http.Send(json)
-		m(clipboard)
+		json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%body%","draft":%draft%,"prerelease":%pre%}
+		http.open("PATCH",url),http.Send(json)
 	}else{
 		url:=github.url "/repos/" ea.owner "/" repo "/releases?access_token=" ea.token
 		notes:=github.utf8(cm)
-		json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%notes%","draft":%draft%,"pre":%pre%}
+		json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%notes%","draft":%draft%,"prerelease":%pre%}
 		http.Open("POST",url),http.send(json)
 		info:=github.find("url",http.ResponseText)
-		clipboard:=info
 		id:=RegExReplace(info,"(.*)\/")
+		out:=[]
+		for a,b in ["draft","prerelease"]{
+			RegExMatch(info,"Oi)\x22" b "\x22:(\w*)",found,pos)
+			out[a]:=found.1
+		}
+		for a,b in {draft:out.draft,pre:out.prerelease}
+			node.SetAttribute(a,b)
 		node.SetAttribute("id",id)
-		m(info)
 	}
 	vversion.save(1)
 	return
