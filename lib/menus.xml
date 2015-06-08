@@ -47,6 +47,7 @@
 			<menu name="&amp;Jump to Segment" hotkey="!j" clean="Jump_to_Segment"></menu>
 			<menu name="&amp;Menu Editor" func="flan" clean="Menu_Editor"></menu>
 			<menu clean="New_File_Template" name="New File Template"></menu>
+			<menu name="New Scintilla Window" clean="New_Scintilla_Window"></menu>
 			<menu name="&amp;Next Found" hotkey="F3" clean="Next_Found"></menu>
 			<menu name="Paste" clean="Paste" hotkey="^v"></menu>
 			<menu name="Personal &amp;Variable List" clean="Personal_Variable_List"></menu>
@@ -54,6 +55,7 @@
 			<menu clean="Proxy_Settings" name="Proxy Settings"></menu>
 			<menu name="&amp;Quick Find" hotkey="!q" clean="Quick_Find"></menu>
 			<menu name="Red&amp;o" clean="Redo"></menu>
+			<menu name="Remove Scintilla Window" clean="Remove_Scintilla_Window"></menu>
 			<menu name="Replace &amp;Selected" hotkey="F1" clean="Replace_Selected"></menu>
 			<menu clean="Reset_Zoom" name="Reset Zoom"></menu>
 			<menu name="&amp;Restore Current File" clean="Restore_Current_File"></menu>
@@ -214,5 +216,5 @@
 			<menu clean="Split_Line_By_Comma" hotkey="^!," name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk"></menu>
 			<menu clean="Upload_Menus" hotkey="" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu></menu>
 	</main>
-	<date>20150525</date>
+	<date>20150608</date>
 </menus>

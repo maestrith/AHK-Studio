@@ -152,7 +152,7 @@ Class Code_Explorer{
 			GuiControl,+gcej,SysTreeView322
 		}
 		if(Focus="SysTreeView321"){
-			for a,b in StrSplit("Close,Open,Remove Segment,Folder,,Copy File Path,Copy Folder Path",",")
+			for a,b in StrSplit("Close,Open,Remove Segment,,Copy File Path,Copy Folder Path",",")
 				Menu,rcm,Add,%b%,rcm
 			Menu,rcm,show
 			Menu,rcm,DeleteAll
@@ -160,29 +160,7 @@ Class Code_Explorer{
 			rcm:
 			if(A_ThisMenuItem~="(Close|Open)")
 				%A_ThisMenuItem%()
-			else if(A_ThisMenuItem="Folder"){
-				FileSelectFolder,dir,,,Select a folder to open
-				if ErrorLevel
-					return
-				Gui,1:Default
-				Gui,1:TreeView,SysTreeView321
-				if !root:=files.ssn("//directory")
-					root:=files.add2("directory",{tv:tv_Add("Directory")})
-				if !(ssn(root,"dir[@dir='" dir "']")){
-					top:=files.under(root,"dir",{dir:dir,tv:tv_add(dir,ssn(root,"@tv").text)}),ea:=xml.ea(top)
-					for a,b in ["*.ahk","*.txt","*.xml"]{
-						Loop,%dir%\%b%,1,1
-						{
-							SplitPath,A_LoopFileDir,dirname
-							if InStr(A_LoopFileFullPath,"'")
-								Continue
-							if !dirxml:=ssn(top,"descendant-or-self::*[@dir='" A_LoopFileDir "']")
-								dirxml:=files.under(top,"subdir",{dir:A_LoopFileDir,tv:tv_add(dirname,ssn(top,"@tv").text,"vis")})
-							files.under(dirxml,"openfile",{tv:tv_add(A_LoopFileName,xml.ea(dirxml).tv),file:A_LoopFileFullPath})
-						}
-					}
-				}
-			}else if(A_ThisMenuItem~="Copy (File|Folder) Path"){
+			else if(A_ThisMenuItem~="Copy (File|Folder) Path"){
 				pFile:=current(3).file
 				SplitPath, pFile,,pFolder
 				Clipboard:=InStr(A_ThisMenuItem,"Folder")?pFolder:pFile

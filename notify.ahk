@@ -12,6 +12,8 @@ notify(csc=""){
 			newindent(1)
 		GuiControl,+Redraw,% csc().sc
 		return
+	}if(info=256){
+		getpos()
 	}
 	for a,b in {0:"Obj",2:"Code",3:"position",4:"ch",5:"mod",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",17:"listType",22:"updated"}
 		fn[b]:=NumGet(Info+(A_PtrSize*a))
