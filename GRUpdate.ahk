@@ -1,7 +1,11 @@
 GRUpdate(url){
-	verfile:=versionkeep.last,git:=new github()
-	url:=url?url:git.url "/repos/" git.owner "/" git.repo "/releases" git.token
-	info:=git.send("get",url),pos:=1
+	verfile:=versionkeep.last,git:=new github(),pos:=1
+	if(url.url){
+		info:=git.send("get",url.url),pos:=1
+	}if(url.info)
+		info:=url.info
+	else
+		info:=git.send("get",git.url "/repos/" git.owner "/" git.repo "/releases" git.token)
 	while,RegExMatch(info,"Oi)\x22id\x22",found,Pos){
 		out:=[]
 		for a,b in {id:"\d*",prerelease:"\w*",draft:"\w*"}{

@@ -1,6 +1,7 @@
 testing(){
+	
 	/*
-	top:=commands.add2("MultiTip")
+		top:=commands.add2("MultiTip")
 		next:=commands.under(top,"If")
 		Loop,3
 			commands.under(next,"If",{tip:A_Index},"This is tip " A_Index)

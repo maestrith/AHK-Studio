@@ -17,6 +17,7 @@ Github_Repository(){
 		LV_ModifyCol(A_Index,"AutoHDR")
 	ControlFocus,Edit1,% hwnd([25])
 	Send,^{End}
+	TV_GetText(version,TV_GetSelection())
 	SetTimer,relstatus,-10
 	return
 	grpop:
@@ -103,7 +104,42 @@ Github_Repository(){
 			return
 		node.text:=new
 	}else if(value="Release Status"){
-		m("Make a popup window with 3 choices, Draft, Pre-Release, Full Release")
+		Gui,25:Default
+		Gui,25:ListView,SysListView321
+		LV_GetText(current,v.releasestatus,2)
+		setup(32)
+		for a,b in ["Full Release","Pre-Release","Draft"]
+			Gui,Add,Radio,% _:=b=current?"Checked":"",%b%
+		Gui,Add,Button,gchangerelease Default,Submit
+		Gui,Show
+		return
+		32GuiEscape:
+		32GuiClose:
+		hwnd({rem:32})
+		WinActivate,% hwnd([25])
+		return
+		changerelease:
+		Loop,3
+		{
+			ControlGet,sel,checked,,Button%A_Index%,% hwnd([32])
+			ControlGetText,value,Button%A_Index%,% hwnd([32])
+			if(sel)
+				break
+		}
+		hwnd({rem:32})
+		WinActivate,% hwnd([25])
+		Gui,25:Default
+		TV_GetText(version,TV_GetSelection()),info:=newwin[],cm:=info.cm,ea:=settings.ea("//github"),top:=vversion.ssn("//*[@file='" current(2).file "']"),node:=ssn(top,"versions/version[@number='" version "']"),repo:=ssn(top,"@repo").text,draft:=value="draft"?"true":"false",pre:=value="pre-release"?"true":"false"
+		http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+		if proxy:=settings.ssn("//proxy").text
+			http.setProxy(2,proxy)
+		if(release:=ssn(node,"@id").text){
+			url:=github.url "/repos/" ea.owner "/" repo "/releases/" release "?access_token=" ea.token,body:=github.utf8(cm)
+			json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%body%","draft":%draft%,"prerelease":%pre%}
+			http.open("PATCH",url),http.Send(json),GRUpdate({info:http.ResponseText})
+		}else
+			return m("No record of this version being uploaded")
+		return
 	}
 	goto,grpop
 	return
@@ -128,41 +164,9 @@ Github_Repository(){
 		TV_Modify(TV_GetSelection(),"","Repository Name: " newrepo),verfile.node.SetAttribute("repo",newrepo)
 	}
 	return
-	/*
-		Todo:
-		-Make a commit button
-		if no commit made
-			auto do commit
-		else
-			set it to full release
-		-Have a tag somewhere that denotes the release type (full,pre)
-		
-		Give the buttons & like &Commit
-		;releases:
-		;GET /repos/:owner/:repo/releases
-		;m(git.send("get",git.url "/repos/maestrith/AHK-Studio/releases" git.token))
-		;GET /repos/:owner/:repo/releases/:id
-		;m(git.send("get",git.url "/repos/maestrith/AHK-Studio/releases/1383395" git.token))
-		;GET /repos/:owner/:repo/releases/tags/:tag
-		info:=git.send("get",git.url "/repos/maestrith/AHK-Studio/releases/tags/1.1.2" git.token)
-		RegExMatch(info,"i)\x22id\x22:(\d*)",id)
-		m(id1,id,info)
-	*/
 	grc:
 	ssn(verfile.node,"versions/version[@number='" lastversion "']").text:=newwin[].versioninfo
 	return
-	changerelease:
-	info:=newwin[],cm:=info.cm,version:=info.version,ea:=settings.ea("//github"),top:=vversion.ssn("//*[@file='" current(2).file "']"),node:=ssn(top,"versions/version[@number='" version "']"),repo:=ssn(top,"@repo").text
-	draft:=info.draft?"true":"false",pre:=info.pre?"true":"false"
-	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
-	if proxy:=settings.ssn("//proxy").text
-		http.setProxy(2,proxy)
-	if (release:=ssn(node,"@id").text){
-		url:=github.url "/repos/" ea.owner "/" repo "/releases/" release "?access_token=" ea.token,body:=github.utf8(cm)
-		json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%body%","draft":%draft%,"pre":%pre%}
-		http.open("PATCH",url),http.Send(json)
-	}else m("No record of this version being uploaded")
-		return
 	commit:
 	info:=newwin[]
 	Gui,25:Default
@@ -173,9 +177,7 @@ Github_Repository(){
 	cm:=info.cm
 	if !(version&&cm)
 		return m("Please set a version and create some information for that version.")
-	ok:=commit(cm,version),ea:=settings.ea("//github"),top:=vversion.ssn("//*[@file='" current(2).file "']"),node:=ssn(top,"versions/version[@number='" version "']"),repo:=ssn(top,"@repo").text
-	
-	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	ok:=commit(cm,version),ea:=settings.ea("//github"),top:=vversion.ssn("//*[@file='" current(2).file "']"),node:=ssn(top,"versions/version[@number='" version "']"),repo:=ssn(top,"@repo").text,http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
 	if proxy:=settings.ssn("//proxy").text
 		http.setProxy(2,proxy)
 	if(release:=ssn(node,"@id").text){
@@ -183,14 +185,11 @@ Github_Repository(){
 		json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%body%","draft":%draft%,"prerelease":%pre%}
 		http.open("PATCH",url),http.Send(json)
 	}else{
-		url:=github.url "/repos/" ea.owner "/" repo "/releases?access_token=" ea.token
-		notes:=github.utf8(cm)
+		url:=github.url "/repos/" ea.owner "/" repo "/releases?access_token=" ea.token,notes:=github.utf8(cm)
 		json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%notes%","draft":%draft%,"prerelease":%pre%}
-		http.Open("POST",url),http.send(json)
-		info:=github.find("url",http.ResponseText)
-		id:=RegExReplace(info,"(.*)\/")
-		node.SetAttribute("id",id)
+		http.Open("POST",url),http.send(json),info:=github.find("url",http.ResponseText),id:=RegExReplace(info,"(.*)\/"),node.SetAttribute("id",id)
 	}
+	GRUpdate({url:git.url "/repos/" git.owner "/" git.repo "/releases/" ssn(verfile.node,"descendant::*[@number='" version "']/@id").text git.token})
 	vversion.save(1)
 	return
 }
