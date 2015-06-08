@@ -188,13 +188,6 @@ Github_Repository(){
 		http.Open("POST",url),http.send(json)
 		info:=github.find("url",http.ResponseText)
 		id:=RegExReplace(info,"(.*)\/")
-		out:=[]
-		for a,b in ["draft","prerelease"]{
-			RegExMatch(info,"Oi)\x22" b "\x22:(\w*)",found,pos)
-			out[a]:=found.1
-		}
-		for a,b in {draft:out.draft,pre:out.prerelease}
-			node.SetAttribute(a,b)
 		node.SetAttribute("id",id)
 	}
 	vversion.save(1)
