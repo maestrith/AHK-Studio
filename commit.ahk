@@ -17,8 +17,7 @@ commit(commitmsg,version){
 		StringReplace,file,nn,%dir%\
 		current[file]:=1
 	}
-	replace:="github\" repo "\"
-	main:=files.ssn("//main[@file='" current(2).file "']"),verfiles:=vversion.ssn("//info[@file='" current(2).file "']")
+	replace:="github\" repo "\",main:=files.ssn("//main[@file='" current(2).file "']"),verfiles:=vversion.ssn("//info[@file='" current(2).file "']")
 	Loop,github\%repo%\*.*,0,1
 	{
 		if !A_LoopFileExt
@@ -37,8 +36,7 @@ commit(commitmsg,version){
 		git.Delete(repo,delete)
 	current_commit:=git.getref(repo)
 	if !(current_commit){
-		git.CreateRepo(repo)
-		git.CreateFile(repo,"README.md",";Readme.md","First Commit",ea.name,ea.email)
+		git.CreateRepo(repo),git.CreateFile(repo,"README.md",";Readme.md","First Commit",ea.name,ea.email)
 		Sleep,500
 		current_commit:=git.getref(repo)
 	}
@@ -80,9 +78,7 @@ commit(commitmsg,version){
 		SplashTextOn,200,100,Updating,%a%
 		upload[a]:=blob
 	}
-	tree:=git.Tree(repo,current_commit,upload)
-	commit:=git.commit(repo,tree,current_commit,commitmsg,ea.name,ea.email)
-	info:=git.ref(repo,commit)
+	tree:=git.Tree(repo,current_commit,upload),commit:=git.commit(repo,tree,current_commit,commitmsg,ea.name,ea.email),info:=git.ref(repo,commit)
 	if (info=200){
 		TrayTip,GitHub Update Complete,Updated files
 		for a,b in safe{

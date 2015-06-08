@@ -21,17 +21,17 @@ Gui(){
 	bar.10002:=[[18,"shell32.dll","Connect","Connect",10000,4],[22,"shell32.dll","Debug_Current_Script","Debug Current Script",10001,4],[21,"shell32.dll","ListVars","List Variables",10002,4],[137,"shell32.dll","Run_Program","Run Program",10003,4],[27,"shell32.dll","stop","Stop",10004,4]]
 	for id,info in bar
 		for a,b in info{
-		if !top:=settings.ssn("//toolbar/bar[@id='" id "']")
-			top:=settings.add({path:"toolbar/bar",att:{id:id},dup:1})
-		if !button:=ssn(top,"button[@id='" b.5 "']")
-			button:=settings.under(top,"button"),vis:=1
-		for a,c in {icon:b.1,file:b.2,func:b.3,text:b.4,id:b.5,state:b.6}
-			button.SetAttribute(a,c)
-		if vis
-			button.SetAttribute("vis",1),vis:=0
-		if !settings.ssn("//rebar/band[@id='" id "']")
-			settings.add({path:"rebar/band",att:{id:id,vis:1},dup:1})
-	}
+			if !top:=settings.ssn("//toolbar/bar[@id='" id "']")
+				top:=settings.add({path:"toolbar/bar",att:{id:id},dup:1})
+			if !button:=ssn(top,"button[@id='" b.5 "']")
+				button:=settings.under(top,"button"),vis:=1
+			for a,c in {icon:b.1,file:b.2,func:b.3,text:b.4,id:b.5,state:b.6}
+				button.SetAttribute(a,c)
+			if vis
+				button.SetAttribute("vis",1),vis:=0
+			if !settings.ssn("//rebar/band[@id='" id "']")
+				settings.add({path:"rebar/band",att:{id:id,vis:1},dup:1})
+		}
 	Gui,Add,Edit,hwndedit
 	ControlGetPos,,,,h,,ahk_id%edit%
 	info:={hwnd:edit,ideal:220,id:11000,height:h,width:200,max:h}
@@ -66,9 +66,10 @@ Gui(){
 	TV_Add("Open files to have items populated here"),TV_Add("Right click to refresh")
 	hwnd("fe",tv),hwnd("ce",tv2),refreshthemes(),debug.off(),list:=menus.sn("//main/d`endant::*"),open:=settings.sn("//open/*")
 	Gui,1:TreeView,% hwnd("fe")
-	Menu("main")
-	MenuWipe()
+	;tick:=A_TickCount
+	Menu("main"),MenuWipe()
 	Gui,1:Menu,% Menu("main")
+	;m(A_TickCount-tick)
 	Gui,1:Show,%pos% %max%,AHK Studio
 	while,oo:=open.item[A_Index-1]{
 		if !FileExist(oo.text){

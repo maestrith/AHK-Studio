@@ -1,5 +1,5 @@
 filecheck(){
-	commandsdate:=20150401,menusdate:=20150525,scilexerdate:=20150326190547
+	commandsdate:=20150401,menusdate:=20150525,scilexerdate:=20150606000000
 	RegRead,proxy,HKEY_CURRENT_USER,Software\Microsoft\Windows\CurrentVersion\Internet Settings,ProxyServer
 	if proxy
 		settings.Add({path:"proxy",text:proxy})
@@ -50,7 +50,7 @@ filecheck(){
 		FileDelete,lib\commands.xml
 		updatedate:=1
 	}
-	if !FileExist("lib\commands.xml")
+	if !FileExist(A_ScriptDir "\lib\commands.xml")
 		FileAppend,% URLDownloadToVar("http://files.maestrith.com/AHK-Studio/commands.xml"),lib\commands.xml
 	if !FileExist("scilexer.dll")
 		URLDownloadToFile,http://files.maestrith.com/AHK-Studio/SciLexer.dll,SciLexer.dll

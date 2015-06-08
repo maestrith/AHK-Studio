@@ -24,10 +24,11 @@ plugins(refresh:=0){
 			plugin:=menus.Add({path:"menu",att:{clean:"Plugin",name:"P&lugin"},dup:1})
 		FileRead,plg,%A_LoopFileFullPath%
 		pos:=1
-		while,pos:=RegExMatch(plg,"Oi)\;menu\s*(.*)",found,pos){
+		while,pos:=RegExMatch(plg,"Oim)\;menu\s*(.*)\R",found,pos){
 			item:=StrSplit(found.1,",")
-			if !ssn(plugin,"menu[@name='" item.1 "']")
-				menus.under(plugin,"menu",{name:item.1,clean:clean(item.1),plugin:A_LoopFileFullPath,option:item.2,hotkey:plHks[item.1]})
+			item.1:=Trim(item.1,"`r|`r`n|`n")
+			if !ssn(plugin,"descendant::menu[@name='" Trim(item.1) "']")
+				menus.under(plugin,"menu",{name:Trim(item.1),clean:clean(item.1),plugin:A_LoopFileFullPath,option:item.2,hotkey:plHks[item.1]})
 			pos:=found.Pos(1)+1
 		}
 	}

@@ -87,7 +87,7 @@ if(A_PtrSize=8&&A_IsCompiled=""){
 }
 SetWorkingDir,%A_ScriptDir%
 global v:=[],settings,files,menus,commands,positions,vversion,access_token,vault,preset,cexp,scintilla,bookmarks,cexml
-settings:=new xml("settings","lib\settings.xml"),files:=new xml("files"),menus:=new xml("menus","lib\menus.xml"),cexp:=new xml("code_explorer"),bookmarks:=new xml("bookmarks","lib\bookmarks.xml"),positions:=new xml("positions","lib\positions.xml"),vversion:=new xml("version","lib\version.xml"),access_token:=settings.ssn("//github/@token").text,cexml:=new xml("code_explorer"),v.filescan:=[]
+settings:=new xml("settings","lib\settings.xml"),commands:=new xml("commands","lib\commands.xml"),files:=new xml("files"),menus:=new xml("menus","lib\menus.xml"),cexp:=new xml("code_explorer"),bookmarks:=new xml("bookmarks","lib\bookmarks.xml"),positions:=new xml("positions","lib\positions.xml"),vversion:=new xml("version","lib\version.xml"),access_token:=settings.ssn("//github/@token").text,cexml:=new xml("code_explorer"),v.filescan:=[]
 if(FileExist(A_ScriptDir "\lib\scintilla.xml"))
 	scintilla:=new xml("scintilla",A_ScriptDir "\lib\scintilla.xml")
 if !settings.ssn("//Auto_Indent")

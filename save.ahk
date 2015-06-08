@@ -1,5 +1,5 @@
 save(option=""){
-	sc:=csc(),update({sc:sc.2357}),getpos(),info:=update("get"),now:=A_Now,currentdoc:=sc.2357
+	sc:=csc(),update({sc:sc.2357}),getpos(),info:=update("get"),now:=A_Now,currentdoc:=sc.2357,currentpos:={start:sc.2008,end:sc.2009,scroll:sc.2152}
 	GuiControl,-Redraw,% sc.sc
 	if (option=1){
 		for a,b in info.2{
@@ -59,8 +59,7 @@ save(option=""){
 		sc.2231(A_LoopField)
 	Loop,Parse,breakpoint,`,
 		sc.2043(A_LoopField,0)
-	if ea.start&&ea.end
-		sc.2613(ea.scroll),sc.2160(ea.start,ea.end)
+	sc.2613(currentpos.scroll),sc.2160(currentpos.start,currentpos.end)
 	savegui(),positions.save(1),vversion.save(1),lastfiles()
 	update("clearupdated"),PERefresh()
 }

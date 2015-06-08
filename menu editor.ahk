@@ -2,27 +2,27 @@ menu_editor(x:=0){
 	static hwnd,newwin,main:="main",TreeView,icons,il,tvlist
 	if (x="tvlist")
 		return {tvlist:tvlist,il:il,icons:icons}
+	list:=menus.sn("//*[@icon!='']")
 	if !x{
 		Gui,1:menu
 		MenuWipe()
 		Gui,2:Destroy
-		newwin:=new windowtracker(2),icons:=[]
-		list:=menus.sn("//*[@icon!='']")
-		if (list.length){
-			il:=IL_Create(list.length)
-			while,ii:=list.item[A_Index-1]{
-				ea:=menus.ea(ii)
-				if !icons[ea.filename,ea.icon]
-					icons[ea.filename,ea.icon]:=IL_Add(il,ea.filename,ea.icon)
-			}
-			mil:="ImageList" il
-		}
+		newwin:=new windowtracker(2)
 		WinSet,Redraw,,% hwnd([1])
-		newwin.Add(["Text,,Control+UP/DOWN/LEFT/RIGHT will move items","Edit,gmesearch w500,,w","ListView,w500 r9 gmego AltSubmit ReadOnly,Menu Item Search|Hotkey,w","TreeView,w500 r10 hwndhwnd " mil ",,wh","Button,gaddmenu,Add A New Menu,y","Button,x+10 gchangeitem,Change Item,y","Button,x+10 gaddsep,Add Separator,y","Button,x+10 gedithotkey Default,Edit Hotkey,y","Button,xm gmenudefault,Re-Load Defaults,y","Button,x+10 gsortmenus,Sort Menus,y","Button,x+10 gsortsubmenus,Sort Sub-Menus,y","Button,xm gmeci,Change Icon,y","Button,x+10 gmeri,Remove Icon,y","Button,x+10 gmerai,Remove All Icons From Current Menu,y"])
+		newwin.Add(["Text,,Control+UP/DOWN/LEFT/RIGHT will move items","Edit,gmesearch w500,,w","ListView,w500 r9 gmego AltSubmit ReadOnly,Menu Item Search|Hotkey,w","TreeView,w500 r10 hwndhwnd,,wh","Button,gaddmenu,Add A New Menu,y","Button,x+10 gchangeitem,Change Item,y","Button,x+10 gaddsep,Add Separator,y","Button,x+10 gedithotkey Default,Edit Hotkey,y","Button,xm gmenudefault,Re-Load Defaults,y","Button,x+10 gsortmenus,Sort Menus,y","Button,x+10 gsortsubmenus,Sort Sub-Menus,y","Button,xm gmeci,Change &Icon,y","Button,x+10 gmeri,Remove Icon,y","Button,x+10 gmerai,Remove All Icons From Current Menu,y"])
 		hotkeys([2],{"*Del":"deletenode","^up":"moveup","^down":"movedown","^left":"moveover","^right":"moveunder"})
 		newwin.Show("Menu Editor")
 		ControlGet,TreeView,hwnd,,SysTreeView321,% hwnd([2])
 	}
+	if(list.length&&(x=2||x=0||x=1)){
+		icons:=[],il:=""
+		il:=IL_Create(list.length)
+		while,ii:=list.item[A_Index-1],ea:=menus.ea(ii)
+			if !icons[ea.filename,ea.icon]
+				icons[ea.filename,ea.icon]:=IL_Add(il,ea.filename,ea.icon)
+		TV_SetImageList(il) ;,nil:="ImageList" il
+	}
+	list:=menus.sn("//*[@icon!='']")
 	Gui,2:Default
 	GuiControl,2:-Redraw,SysTreeView321
 	list:=menus.sn("//main/descendant::*"),root:=0,del:=[],next:=0,lll:="",TV_Delete(),tvlist:=[]

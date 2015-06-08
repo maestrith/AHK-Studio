@@ -105,7 +105,7 @@ Theme(info=""){
 		clone:=font.clonenode(1)
 		temp.xml.loadxml(clone.xml)
 		temp.save(1)
-		m("Theme saved to " A_ScriptDir "\Themes\" name ".xml")
+		m(A_ScriptDir "\Themes\" name ".xml")
 	}if (event="import theme"){
 		FileSelectFile,theme,,,,*.xml
 		if ErrorLevel
@@ -161,7 +161,8 @@ Theme(info=""){
 		top.appendchild(clone)
 		preset.save(1)
 		tlist:=preset.sn("//preset/*")
-		noadd:=0,m("Theme Saved")
+		noadd:=0
+		TrayTip,AHK Studio,Theme Saved,2
 	}if (event="Download Themes"){
 		parent:=TV_GetSelection()
 		if child:=TV_GetChild(parent){

@@ -10,11 +10,10 @@ Check_For_Update(){
 		http.setProxy(2,proxy)
 	FormatTime,time,%time%,ddd, dd MMM yyyy HH:mm:ss
 	http.setRequestHeader("If-Modified-Since",time " GMT"),http.Send(),setup(55),info:=http.responsetext?http.responsetext:"Nothing new to download"
-	return m(info,found.1)
 	Gui,Add,Edit,w500 h500 ReadOnly,%info%
 	Disable:=info="Nothing new to download"?"Disabled":""
 	Gui,Add,Button,gautoupdate,Update
-	Gui,Add,Button,x+5 gextrainfo,Changlog History
+	Gui,Add,Button,x+5 gextrainfo,Changelog History
 	Gui,Show,,AHK Studio Version %version%
 	Sleep,200
 	ControlSend,55:Edit1,^{Home}

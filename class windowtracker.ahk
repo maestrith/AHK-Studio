@@ -2,9 +2,7 @@ class WindowTracker{
 	static winlist:=[],set:=[],defaulttext:="i)(versioninfo)"
 	__New(win){
 		OnMessage(0x232,"Resize"),hwnd:=setup(win)
-		this.win:=win,this.hwnd:=hwnd,this.ahkid:="ahk_id" hwnd,this.type:=[]
-		this.tracker:=[],this.resize:=[],WindowTracker.winlist[win]:=this,this.varlist:=[]
-		WindowTracker.set:=new xml("window","lib\Window.xml")
+		this.win:=win,this.hwnd:=hwnd,this.ahkid:="ahk_id" hwnd,this.type:=[],this.tracker:=[],this.resize:=[],WindowTracker.winlist[win]:=this,this.varlist:=[],WindowTracker.set:=new xml("window","lib\Window.xml")
 		for a,b in {border:32,caption:4}{
 			SysGet,%a%,%b%
 			this[a]:=%a%
@@ -28,9 +26,9 @@ class WindowTracker{
 	}
 	Show(title:="",position=""){
 		Gui,% this.win ":Show",Hide
+		Gui,% this.win ":+MinSize"
 		for a,b in this.resize
 			this.track(b.control,b.pos)
-		Gui,% this.win ":+MinSize"
 		root:=this.root()
 		for a,b in ["x","y","w","h"]{
 			var:=ssn(root,"@" b).text
@@ -59,16 +57,14 @@ class WindowTracker{
 	}
 	Add(control){
 		for a,b in Control{
-			b:=StrSplit(b,",")
-			RegExMatch(b.2,"U)\bv(.*)\b",variable)
+			b:=StrSplit(b,","),RegExMatch(b.2,"U)\bv(.*)\b",variable)
 			if (variable1)
 				hwnd:=this.vars(b,variable1)
 			Else
 				Gui,% this.win ":Add",% b.1,% b.2 " hwndhwnd",% b.3
 			if (b.1~="i)(ComboBox|DDL|DropDownList)"&&info!="Error")
 				GuiControl,% this.win ":ChooseString",%hwnd%,%info%
-			this[variable1]:=hwnd
-			this.type[variable1]:=control.1
+			this[variable1]:=hwnd,this.type[variable1]:=control.1
 			if b.4{
 				Gui,% this.win ":+Resize"
 				this.resize.Insert({control:hwnd,pos:b.4})

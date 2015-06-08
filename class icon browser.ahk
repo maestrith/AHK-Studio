@@ -33,12 +33,16 @@ class icon_browser{
 		Select:
 		if A_GuiEvent!=Normal
 			return
+		settimer,ibnext1,-20
+		return
+		ibnext1:
+		Gui,85:Default
 		this:=icon_browser.keep[1]
 		LV_GetText(number,LV_GetNext())
-		if (this.return){
-			func:=this.func,number:=num="image"?0:number,%func%({file:this.file,number:number})
+		if(this.return){
 			if (num="image"||this.close)
 				hwnd({rem:85})
+			func:=this.func,number:=num="image"?0:number,%func%({file:this.file,number:number})
 			return
 		}
 		number:=num="image"?0:number
