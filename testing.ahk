@@ -1,5 +1,4 @@
 testing(){
-	
 	/*
 		top:=commands.add2("MultiTip")
 		next:=commands.under(top,"If")
@@ -13,11 +12,11 @@ testing(){
 		sc.2126(4,20)
 		GuiControl,1:+Redraw,% sc.sc
 	*/
+	/*
+		;clean out positions
+		file:=positions.sn("//*/@file")
+		while,ff:=file.Item[A_Index-1]
+			if !FileExist(ff.text)
+				ff.ParentNode.RemoveChild(ff)
+	*/
 }
-/*
-	;clean out positions
-	file:=positions.sn("//*/@file")
-	while,ff:=file.Item[A_Index-1]
-		if !FileExist(ff.text)
-			ff.ParentNode.RemoveChild(ff)
-*/
