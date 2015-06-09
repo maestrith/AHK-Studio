@@ -163,6 +163,7 @@ return
 #Include Create Segment From Selection.ahk
 #Include csc.ahk
 #Include current.ahk
+#Include Custom Commands.ahk
 #Include cut.ahk
 #Include deadend.ahk
 #Include Debug Current Script.ahk
@@ -213,6 +214,7 @@ return
 #Include Go To Line.ahk
 #Include google search selected.ahk
 #Include Goto.ahk
+#Include GRUpdate.ahk
 #Include gui.ahk
 #Include help.ahk
 #Include helpfile.ahk
@@ -356,6 +358,3 @@ return
 #Include Widths.ahk
 #Include window.ahk
 #Include Words In Document.ahk
-#Include Custom Commands.ahk
-
-#Include GRUpdate.ahk
