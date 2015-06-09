@@ -4,6 +4,9 @@ SetBatchLines,-1
 ;download complete
 /*
 	TODO LIST:
+	number1nub{
+		Opening files from outside Studio causes issues if other windows are open (eg Scratch Pad)
+	}
 	Mark Current Point{
 		Temporary Mark in the current script to where the cursor is
 		have it jump back to it when hotkey is pressed.

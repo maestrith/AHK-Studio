@@ -71,6 +71,9 @@ Find_Replace(){
 	return
 	frseg:
 	getpos(),info:=newwin[],sc:=csc(),pre:="O",find:="",find:=info.regex?info.find:"\Q" RegExReplace(info.find, "\\E", "\E\\E\Q") "\E",pre.=info.greed?"":"U",pre.=info.cs?"":"i",pre.=info.ml?"":"m`n",find:=pre ")" find ""
-	replace:=info.replace,sc.2181(0,RegExReplace(sc.gettext(),find,info.replace)),setpos(ssn(current(),"@tv").text)
+	replace:=info.replace
+	for a,b in {"``n":"`n","``r":"`n","``t":"`t","\r":"`n","\t":"`t","\n":"`n"}
+		StringReplace,replace,replace,%a%,%b%,All
+	sc.2181(0,[RegExReplace(sc.gettext(),find,replace)]),setpos(ssn(current(),"@tv").text)
 	return
 }

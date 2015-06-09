@@ -207,6 +207,7 @@
 			<menu clean="Auto_Menu_Adder" hotkey="" name="Auto Menu Adder" option="" plugin="plugins\Auto Menu Adder.ahk"></menu>
 			<menu clean="Align_Selected_Text" hotkey="" name="Align Selected Text" option="" plugin="plugins\Auto Think.ahk"></menu>
 			<menu clean="Capture_Gif" hotkey="" name="Capture Gif" option="" plugin="plugins\Capture Gif.ahk"></menu>
+			<menu clean="Toggle_Fullscreen" hotkey="" name="Toggle Fullscreen" option="" plugin="plugins\FullScreen.ahk"></menu>
 			<menu clean="GeekDude_Paste" hotkey="" name="GeekDude Paste" option="" plugin="plugins\Geekdude Paste.ahk"></menu>
 			<menu clean="Paste_Clipboard" hotkey="" name="Paste Clipboard" option="Clipboard" plugin="plugins\Geekdude Paste.ahk"></menu>
 			<menu clean="Mark_All_Files_For_Update" hotkey="" name="Mark All Files For Update" option="" plugin="plugins\Mark All Files For Update.ahk"></menu>
