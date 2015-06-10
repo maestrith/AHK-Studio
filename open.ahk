@@ -1,5 +1,11 @@
 open(filelist="",show=""){
 	static root,top
+	for a,b in [19,14,3,11]{
+		if(hwnd(b)){
+			WinGetTitle,title,% hwnd([b])
+			return m("Please close the " title " window before proceeding")
+		}
+	}
 	if !filelist{
 		openfile:=current(2).file
 		SplitPath,openfile,,dir
