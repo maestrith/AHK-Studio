@@ -66,11 +66,13 @@ split_code(){
 		if FileExist(newfile ".ahk")
 			while,FileExist(newfile ".ahk")
 				newfile:=outdir "\" func A_Index,newindex:=A_Index
-		newfile.=".ahk",topfile:=update({get:current(2).file}),update({file:current(2).file,text:topfile "`n" Chr(35) "Include " Trim(RelativePath(current(2).file,newfile),"\")})
+		newfile.=".ahk"
+		topfile:=update({get:current(2).file})
+		update({file:current(2).file,text:topfile "`n" Chr(35) "Include " Trim(RegExReplace(RelativePath(current(2).file,newfile),"i)^lib\\([^\\]+)\.ahk$","<$1>"),"\")})
 		FileAppend,% Trim(code,"`n"),%newfile%,UTF-8
 		Gui,1:Default
 		Gui,1:TreeView,SysTreeView321
-		newtv:=TV_Add(Trim(RelativePath(current(2).file,newfile),"\"),ssn(under,"@tv").text,"Sort"),CurrentNode:=files.under(under,"file",{encoding:"UTF-8",file:newfile,filename:func newindex ".ahk",include:Chr(35) "Include " Trim(RelativePath(current(2).file,newfile),"\"),skip:"",tv:newtv}),update({file:newfile,text:Trim(code,"`n")}),contents:=update({get:editfile})
+		newtv:=TV_Add(Trim(RegExReplace(RelativePath(current(2).file,newfile),"i)^lib\\([^\\]+)\.ahk$","<$1>"),"\"),ssn(under,"@tv").text,"Sort"),CurrentNode:=files.under(under,"file",{encoding:"UTF-8",file:newfile,filename:func newindex ".ahk",include:Chr(35) "Include " Trim(RegExReplace(RelativePath(current(2).file,newfile),"i)^lib\\([^\\]+)\.ahk$","<$1>"),"\"),skip:"",tv:newtv}),update({file:newfile,text:Trim(code,"`n")}),contents:=update({get:editfile})
 		StringReplace,contents,contents,%code%,,All
 		update({file:editfile,text:contents}),Code_Explorer.Scan(CurrentNode)
 		Gui,66:Default

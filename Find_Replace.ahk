@@ -3,11 +3,18 @@ Find_Replace(){
 	infopos:=positions.ssn("//*[@file='" current(3).file "']"),last:=ssn(infopos,"@findreplace").text,ea:=settings.ea("//findreplace"),newwin:=new windowtracker(30),value:=[]
 	for a,b in ea
 		value[a]:=b?"Checked":""
-	newwin.Add(["Text,,Find","Edit,w200 vfind","Text,,Replace","Edit,w200 vreplace","Checkbox,vregex " value.regex ",Regex","Checkbox,vcs " value.cs ",Case Sensitive","Checkbox,vgreed " value.greed ",Greed","Checkbox,vml " value.ml ",Multi-Line","Button,gfrfind Default,Find","Button,x+5 gfrreplace,Replace","Button,x+5 gfrall,Replace All","Checkbox,xm vsegment " value.segment ",Current Segment Only"]),newwin.Show("Find & Replace")
+	newwin.Add(["Text,,Find","Edit,w200 vfind","Text,,Replace","Edit,w200 vreplace","Checkbox,vregex " value.regex ",Regex","Checkbox,vcs " value.cs ",Case Sensitive","Checkbox,vgreed " value.greed ",Greed","Checkbox,vml " value.ml ",Multi-Line","Button,gfrfind Default,&Find","Button,x+5 gfrreplace,&Replace","Button,x+5 gfrall,Replace &All","Checkbox,xm vsegment " value.segment ",Current Segment Only"]),newwin.Show("Find & Replace")
 	sc:=csc(),order:=[],order[sc.2585(0)]:=1,order[sc.2587(0)]:=1,last:=(order.MinIndex()!=order.MaxIndex())?sc.textrange(order.MinIndex(),order.MaxIndex()):last
+	hotkeys([30],{"!e":"frregex"})
 	ControlSetText,Edit1,%last%,% hwnd([30])
 	ControlSend,Edit1,^a,% hwnd([30])
 	Gui,1:-Disabled
+	return
+	frregex:
+	Send,{!e,up}
+	ControlGet,check,Checked,,Button1,% hwnd([30])
+	check:=!check
+	GuiControl,30:,Button1,%check%
 	return
 	30GuiClose:
 	30GuiEscape:
