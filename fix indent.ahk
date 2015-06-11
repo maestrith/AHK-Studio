@@ -31,7 +31,17 @@ NewIndent(indentwidth:=""){
 	for a,text in code{
 		if(InStr(text,Chr(59)))
 			text:=RegExReplace(text,"\s" Chr(59) ".*"),comment:=1
-		text:=Trim(text,"`t "),first:=SubStr(text,1,1),last:=SubStr(text,0,1),firsttwo:=SubStr(text,1,2),ss:=(text~="i)^\s*(&&|OR|AND|\.|\,|\|\||:|\?)"),indentcheck:=RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b")
+		text:=Trim(text,"`t "),first:=SubStr(text,1,1),last:=SubStr(text,0,1),firsttwo:=SubStr(text,1,2),ss:=(text~="i)^\s*(&&|OR|AND|\.|\,|\|\||:|\?)"),indentcheck:=RegExMatch(text,"iA)}?\s*\b(" v.indentregex ")\b",string)
+		if(InStr(string,"try")){
+			if(RegExReplace(text,"i)(\{|try|\s)"))
+				indentcheck:=0
+		}
+		
+		
+		
+		
+		
+		
 		if(first="("&&last!=")")
 			skip:=1
 		if(Skip){
