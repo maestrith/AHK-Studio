@@ -12,19 +12,18 @@ commit(commitmsg,version){
 		return m("Please setup a repo name in the GUI by clicking Repository Name:")
 	delete:=[],main:=ssn(current(1),"@file").text
 	SplitPath,main,,dir
-	node:=vversion.sn("//info[@file='" current(2).file "']/files/file")
+	node:=vversion.sn("//info[@file='" current(2).file "']/files/file"),current:=[]
 	while,nn:=node.item[A_Index-1].text{
 		StringReplace,file,nn,%dir%\
 		current[file]:=1
 	}
-	replace:="github\" repo "\",main:=files.ssn("//main[@file='" current(2).file "']"),verfiles:=vversion.ssn("//info[@file='" current(2).file "']")
+	replace:="github\" repo "\",main:=files.ssn("//main[@file='" current(2).file "']"),verfiles:=vversion.ssn("//info[@file='" current(2).file "']"),vf:=sn(verfiles,"files/*")
 	Loop,github\%repo%\*.*,0,1
 	{
 		if !A_LoopFileExt
 			Continue
 		StringReplace,file,A_LoopFileFullPath,%replace%
 		if !(ssn(main,"descendant::file[@filename='" file "']")){
-			vf:=sn(verfiles,"files/*")
 			while,vv:=vf.Item[A_Index-1]
 				if InStr(vv.text,file)
 					Continue,2
@@ -36,7 +35,7 @@ commit(commitmsg,version){
 		git.Delete(repo,delete)
 	current_commit:=git.getref(repo)
 	if !(current_commit){
-		git.CreateRepo(repo),git.CreateFile(repo,"README.md",";Readme.md","First Commit",ea.name,ea.email)
+		git.CreateRepo(repo)
 		Sleep,500
 		current_commit:=git.getref(repo)
 	}
@@ -78,7 +77,9 @@ commit(commitmsg,version){
 		SplashTextOn,200,100,Updating,%a%
 		upload[a]:=blob
 	}
-	tree:=git.Tree(repo,current_commit,upload),commit:=git.commit(repo,tree,current_commit,commitmsg,ea.name,ea.email),info:=git.ref(repo,commit)
+	tree:=git.Tree(repo,current_commit,upload)
+	commit:=git.commit(repo,tree,current_commit,commitmsg,ea.name,ea.email)
+	info:=git.ref(repo,commit)
 	if (info=200){
 		TrayTip,GitHub Update Complete,Updated files
 		for a,b in safe{

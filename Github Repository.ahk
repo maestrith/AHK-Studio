@@ -2,7 +2,7 @@ Github_Repository(){
 	static
 	addfile:=[],git:=new github()
 	newwin:=new windowtracker(25),verfile:=new versionkeep(newwin)
-	newwin.add(["ListView,w140 h200 geditgr AltSubmit NoSortHdr,Github Setting|Value,wy","ListView,x+5 w215 h200,Additional Files|Directory,xy","Button,xm gGRUpdate,&Update Release Info,y","Button,x+5 gcommit,&Commit,y","Button,x+5 ggraddfile Default,&Add Text Files,y"])
+	newwin.add(["ListView,w140 h200 geditgr AltSubmit NoSortHdr,Github Setting|Value,wy","ListView,x+5 w215 h200,Additional Files|Directory,xy","Button,xm gGRUpdate,&Update Release Info,y","Button,x+5 gcommit,&Commit,y","Button,xm ggrdelrep,Delete Repository,y","Button,x+5 ggraddfile Default,&Add Text Files,y"])
 	newwin.show("Github")
 	if !settings.ssn("//github")
 		settings.Add({path:"github",att:{owner:"",email:"",name:"",token:""}})
@@ -99,10 +99,11 @@ Github_Repository(){
 			return
 		node.text:=new
 	}else if(value="Repository Name"){
-		node:=ssn(verfile.node,"@repo"),new:=InputBox(hwnd,"Repository Name","New Value For The Repository Name",node.text)
+		new:=InputBox(hwnd,"Repository Name","New Value For The Repository Name",xml.ea(verfile.node).repo)
 		if(ErrorLevel)
 			return
-		node.text:=new
+		versionkeep.last.node:=vversion.ssn("//info[@file='" ssn(current(1),"@file").text "']")
+		versionkeep.last.node.SetAttribute("repo",RegExReplace(new," ","-"))
 	}else if(value="Release Status"){
 		Gui,25:Default
 		Gui,25:ListView,SysListView321
@@ -162,6 +163,22 @@ Github_Repository(){
 		ControlGet,hwnd,hwnd,,SysTreeView321,% hwnd([25])
 		newrepo:=InputBox(hwnd,"Enter the new name for your repository","New Repository name",ssn(verfile.node,"@repo").text),newrepo:=RegExReplace(newrepo," ","-")
 		TV_Modify(TV_GetSelection(),"","Repository Name: " newrepo),verfile.node.SetAttribute("repo",newrepo)
+	}
+	return
+	grdelrep:
+	MsgBox,276,Delete This Repository,THIS CAN NOT BE UNDONE! ARE YOU SURE
+	IfMsgBox,Yes
+	{
+		ea:=xml.ea(verfile.node)
+		if(ea.repo="AHK-Studio")
+			return m("NO! you can not.")
+		info:=git.send("DELETE",git.url "/repos/" git.owner "/" ea.repo git.token)
+		if(InStr(git.http.status,204)){
+			rem:=vversion.ssn("//info[@file='" ssn(current(1),"@file").text "']"),rem.ParentNode.RemoveChild(rem)
+			FileRemoveDir,% A_ScriptDir "\github\" ea.repo,1
+		}else
+			m("Something went wrong","Please make sure that you have a repository named " ea.repo " on the Gethub servers")
+		goto,grpop
 	}
 	return
 	grc:

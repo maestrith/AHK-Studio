@@ -49,7 +49,10 @@ class github{
 	}
 	tree(repo,parent,blobs){
 		url:=this.url "/repos/" this.owner "/" repo "/git/trees" this.token
-		json={"base_tree":"%parent%","tree":[
+		if(parent)
+			json={"base_tree":"%parent%","tree":[
+		else
+			json={"tree":[
 		for a,blob in blobs{
 			add={"path":"%a%","mode":"100644","type":"blob","sha":"%blob%"},
 			json.=add
@@ -72,12 +75,10 @@ class github{
 		url:=this.url "/rate_limit" this.token,this.http.Open("GET",url),this.http.Send()
 		m(this.http.ResponseText)
 	}
-	CreateRepo(name,description="Created with AHK Studio",homepage="",private="false",issues="true",wiki="true",downloads="true"){
+	CreateRepo(name,description="Created with AHK Studio",homepage="http://www.maestrith.com",private="false",issues="true",wiki="true",downloads="true"){
 		url:=this.url "/user/repos" this.token
-		json={"name":"%name%","description":"%description%","homepage":"http://www.maestrith.com","private":%private%,"has_issues":%issues%,"has_wiki":%wiki%,"has_downloads":%downloads%,"auto_init":true}
-		this.Send("POST",url,json),ea:=settings.ea("//github"),name:=ea.name,email:=ea.email,owner:=ea.owner,content:=debug.encode("Created with AHK Studio")
-		json={"message":"Create Readme.md file","committer":{"name":"%name%","email":"%email%"},"content":"%content%"}
-		this.http.Send(json)
+		json={"name":"%name%","description":"%description%","homepage":"%homepage%","private":%private%,"has_issues":%issues%,"has_wiki":%wiki%,"has_downloads":%downloads%,"auto_init":true}
+		this.Send("POST",url,json)
 		FileDelete,create.txt
 		FileAppend,% this.http.ResponseText,create.txt
 	}
