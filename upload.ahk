@@ -22,6 +22,8 @@ upload(winname="Upload"){
 	return
 	upload1:
 	info:=newwin[]
+	node:=vversion.ssn("//info[@file='" file "']")
+	node.SetAttribute("versstyle",info.versstyle)
 	if(info.server="Choose a server..."||info.server="")
 		return m("Please choose a server")
 	if(info.compile)

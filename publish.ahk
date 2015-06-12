@@ -6,7 +6,8 @@ publish(return=""){
 	rem:=sn(current(1),"descendant::remove")
 	while,rr:=rem.Item[A_Index-1]
 		publish:=RegExReplace(publish,"m)^\Q" ssn(rr,"@inc").text "\E$")
-	ea:=xml.ea(vversion.ssn("//*[@file='" current(2).file "']/descendant::*[@number!='']")),newver:=(ea.versstyle?"":"Version=") ea.number
+	ea1:=xml.ea(vversion.ssn("//*[@file='" current(2).file "']"))
+	ea:=xml.ea(vversion.ssn("//*[@file='" current(2).file "']/descendant::*[@number!='']")),newver:=(ea1.versstyle?"":"Version=") ea.number
 	if InStr(publish,Chr(59) "auto_version")
 		publish:=RegExReplace(publish,Chr(59) "auto_version",newver)
 	StringReplace,publish,publish,`n,`r`n,All
