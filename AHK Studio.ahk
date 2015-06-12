@@ -3,9 +3,6 @@ SetBatchLines,-1
 #NoEnv
 ;download complete
 /*
-	change{
-		fileappend for Studio update to the FileOpen() that xml uses
-	}
 	TODO LIST:
 	Mark Current Point{
 		Temporary Mark in the current script to where the cursor is
