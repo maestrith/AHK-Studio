@@ -42,7 +42,7 @@ class ftp{
 		BufferSize:=4096
 		if compile
 			list[namenoext ".exe"]:=FileOpen(dir "\" namenoext ".exe","r")
-		upver:=vversion.ssn("//*[@file='" ssn(current(1),"@file").text "']/@upver").text,upver:="",info:=sn(node,"versions/version")
+		info:=sn(node,"versions/version")
 		while,in:=info.item[A_Index-1]
 			upver.=in.text "`r`n"
 		for a,b in list{
