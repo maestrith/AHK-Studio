@@ -64,7 +64,7 @@ class ftp{
 					size:=b.rawread(buffer,BufferSize),totalsize+=size
 					Progress,% (totalsize*100)/length
 					DllCall("wininet\InternetWriteFile","PTR",this.File,"PTR",&Buffer,"UInt",size,"UIntP",out,"cdecl")
-					Sleep,10
+					Sleep,30
 				}
 				close:=DllCall("wininet\InternetCloseHandle","UInt",this.file)
 				Sleep,100
