@@ -55,7 +55,6 @@ class ftp{
 			}
 			else
 			{
-				;ff:=DllCall("wininet\FtpDeleteFile",UPtr,this.connect,UPtr,&a,"cdecl")
 				this.file:=DllCall("wininet\FtpOpenFile",UPtr,this.connect,UPtr,&a,UInt,0x40000000,UInt,0x2,UPtr,0,"cdecl")
 				Progress,0,uploading,%a%,Uploading,Tahoma
 				if !this.file
