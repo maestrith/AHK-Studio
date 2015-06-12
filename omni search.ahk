@@ -122,7 +122,6 @@ omni_search(start=""){
 		hwnd({rem:20}),TV(files.ssn("//*[@file='" item.file "']/@tv").text)
 		Sleep,200
 		item.text:=item.type="class"?"class " item.text:item.text
-		item.pos:=item.pos=1?0:item.pos
 		csc().2160(item.pos,item.pos+StrPut(item.text,"Utf-8")-1),v.sc.2169,getpos(),v.sc.2400
 	}
 	return

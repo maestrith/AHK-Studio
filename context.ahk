@@ -20,7 +20,6 @@ context(return=""){
 			}
 		}
 	}
-	xml.add2("path",{1:1,2:2},"Text",1,"")
 	if(InStr(cc,"(")){
 		pos:=1
 		RegExReplace(cc,"\(","",opc),RegExReplace(cc,"\)","",clc)
@@ -61,7 +60,11 @@ context(return=""){
 			return sc.2200(sc.2008,Chr(1) "1 of " tip.length Chr(2) " " tip.item[0].text)
 	*/
 	if(command){
-		if(args:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Class' or @type='Instance'][@upper='" upper(pre) "']/descendant-or-self::*[@upper='" upper(command) "']/@args").text){
+		if(inst:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Instance' and @upper='" upper(pre) "']")){
+			args:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Class' and @upper='" upper(xml.ea(inst).class) "']/descendant-or-self::*[@upper='" upper(command) "']/@args").text
+			syntax.=pre "." command "(" args ")"
+			Goto,conbottom
+		}else if(args:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Class' and @upper='" upper(pre) "']/descendant-or-self::*[@upper='" upper(command) "']/@args").text){
 			syntax.=pre "." command "(" args ")"
 			Goto,conbottom
 		}if(fun:=ssn(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Function'][@upper='" upper(command) "']"),"@args").text){

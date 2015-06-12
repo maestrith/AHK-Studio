@@ -1,3 +1,3 @@
-	Add_Function_Call(){
+Add_Function_Call(){
 	omni_search("+")
 }

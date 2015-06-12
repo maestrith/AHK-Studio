@@ -29,7 +29,8 @@ Check_For_Update(){
 	if !InStr(studio,";download complete")
 		return m("There was an error. Please contact maestrith@gmail.com if this error continues")
 	FileMove,%A_ScriptName%,%name%%version%.ahk,1
-	FileAppend,%studio%,%A_ScriptName%
+	File:=FileOpen(A_ScriptDir "\" A_ScriptName,"rw")
+	File.seek(0),File.write(studio),File.length(File.position)
 	Run,%A_ScriptName%
 	ExitApp
 	return

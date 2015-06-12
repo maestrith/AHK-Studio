@@ -7,10 +7,6 @@ Gui(){
 	for a,b in StrSplit("WheelLeft,WheelRight",",")
 		Enter[b]:="scrollwheel"
 	Enter["~Delete"]:="Delete",Enter["~Backspace"]:="Backspace",Enter["^Backspace"]:="Backspace",Enter["^c"]:="copy",Enter["^x"]:="cut",hotkeys([1],enter)
-	/*
-		for a,b in ["` & space","` & ,"]
-			Hotkey,%b%,eol,On
-	*/
 	Gui,Add,StatusBar,hwndsb,StatusBar Info
 	new s(1,{main:1}),v.win2:=win2,v.win3:=win3
 	ControlGetPos,,,,h,,ahk_id%sb%
@@ -66,10 +62,8 @@ Gui(){
 	TV_Add("Open files to have items populated here"),TV_Add("Right click to refresh")
 	hwnd("fe",tv),hwnd("ce",tv2),refreshthemes(),debug.off(),list:=menus.sn("//main/d`endant::*"),open:=settings.sn("//open/*")
 	Gui,1:TreeView,% hwnd("fe")
-	;tick:=A_TickCount
 	Menu("main"),MenuWipe()
 	Gui,1:Menu,% Menu("main")
-	;m(A_TickCount-tick)
 	Gui,1:Show,%pos% %max%,AHK Studio
 	while,oo:=open.item[A_Index-1]{
 		if !FileExist(oo.text){
@@ -79,8 +73,7 @@ Gui(){
 		}else
 			openfilelist.=oo.text "`n"
 	}
-	open(trim(openfilelist,"`n"))
-	last:=settings.sn("//last/*")
+	open(trim(openfilelist,"`n")),last:=settings.sn("//last/*")
 	if !last.length
 		new(1)
 	Resize()

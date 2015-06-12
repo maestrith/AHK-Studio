@@ -37,21 +37,21 @@ Class Code_Explorer{
 		for type,find in {Hotkey:"Om`n)^\s*([#|!|^|\+|~|\$|&|<|>|*]*?\w+)::",Label:this.label}{
 			pos:=1
 			while,pos:=RegExMatch(code,find,fun,pos)
-				np:=StrPut(SubStr(code,1,fun.Pos(1)),"utf-8")-1-(StrPut(SubStr(fun.1,1,1),"utf-8")-1),cexml.under(cce,"info",{type:type,file:filename,pos:np,text:fun.1,root:parentfile,upper:upper(fun.1),order:"text,type,file"}),pos:=fun.pos(1)+1
+				ppos:=fun.Pos(1)-1,pos1:=ppos?StrPut(SubStr(code,1,ppos),"utf-8")-1:0,cexml.under(cce,"info",{type:type,file:filename,pos:pos1,text:fun.1,root:parentfile,upper:upper(fun.1),order:"text,type,file"}),pos:=fun.pos(1)+1
 		}
-		lastpos:=pos:=1,codeobj:=StrSplit(code,"`n"),pos:=1,objects:=[]
-		while,pos:=RegExMatch(code,code_explorer.class,found,pos)
-			npos:=StrPut(SubStr(code,1,found.Pos(1)-1),"utf-8")-1,top:=SubStr(code,1,InStr(code,found.1)),RegExReplace(top,"\n","",count),objects[pos]:={name:found.1,line:count,xml:cexml.under(cce,"info",{type:"Class",file:filename,pos:npos,text:SubStr(found.1,7),upper:upper(SubStr(found.1,7)),root:parentfile,order:"text,type,root"})},pos:=found.Pos(1)+StrLen(found.1)
-		for a,b in objects{
-			braces:=0,start:=0,add:=StrPut(SubStr(code,1,InStr(code,b.name)),"utf-8")-2,b.start:=add
-			loop,% codeobj.MaxIndex()
-			{
-				line:=codeobj[(A_Index-1)+b.line+1],add+=StrPut(line,"utf-8"),line:=Trim(RegExReplace(line,"(\s+" Chr(59) ".*)"))
+		lastpos:=pos:=1,pos:=1,objects:=[]
+		while,pos:=RegExMatch(code,code_explorer.class,found,pos){
+			ppos:=found.Pos(1)-1,pos1:=ppos?StrPut(SubStr(code,1,ppos),"utf-8")-1:0
+			start:=found.Pos(1)
+			ncode:=SubStr(code,found.pos(1)),add:=start:=braces:=0,nnc:=StrSplit(ncode,"`n")
+			for a,line in nnc{
+				add+=StrPut(line,"utf-8")
+				line:=Trim(RegExReplace(line,"(\s+" Chr(59) ".*)"))
 				if(SubStr(line,0,1)="{")
 					braces++,start:=1
 				if(SubStr(line,1,1)="}"){
-					while,((found:=SubStr(line,A_Index,1))~="(}|\s)"){
-						if(found~="\s")
+					while,((found1:=SubStr(line,A_Index,1))~="(}|\s)"){
+						if(found1~="\s")
 							Continue
 						braces--
 					}
@@ -59,13 +59,10 @@ Class Code_Explorer{
 				if(start&&braces=0)
 					break
 			}
-			b.end:=add
-			b.xml.SetAttribute("end",add)
+			cexml.under(cce,"info",{type:"Class",file:filename,start:start,pos:pos1,end:pos1+add-1,text:SubStr(found.1,7),upper:upper(SubStr(found.1,7)),root:parentfile,order:"text,type,root"})
+			pos:=found.Pos(1)+StrLen(found.1)
 		}
-		pos:=1,methods:=[],list:=""
-		for a,b in objects
-			list:=a "," list
-		list:=Trim(list,","),others:=[]
+		classlist:=sn(cce,"*[@type='Class']")
 		for a,b in {Method:code_explorer.function,Property:"Om`n)^\s*((\w|[^\x00-\x7F])+)\[(.*)?\][\s+;.*\s+]?[\s*]?{"}{
 			pos:=1
 			while,pos:=RegExMatch(code,b,found,pos){
@@ -73,15 +70,16 @@ Class Code_Explorer{
 					pos:=found.Pos(1)+StrLen(found.1)
 					Continue
 				}
-				for index,name in StrSplit(list,","){
-					info:=objects[name]
-					if(Pos>info.start&&Pos<info.end){
-						cls:=ssn(cce,"info[@text='" SubStr(info.name,7) "'][@type='Class']")
-						cexml.under(cls,"info",{type:a,file:filename,pos:StrPut(SubStr(code,1,found.pos(1)-2),"utf-8"),text:found.1,upper:upper(found.1),args:found.value(3),class:SubStr(info.name,7),root:parentfile,order:"text,type,file,args"}),pos:=found.Pos(1)+StrLen(found.1)
+				while,cl:=classlist.item[A_Index-1],ea:=xml.ea(cl){
+					if(pos>ea.start&&pos<ea.end){
+						cexml.under(cl,"info",{type:a,file:filename,pos:StrPut(SubStr(code,1,found.pos(1)-2),"utf-8"),text:found.1,upper:upper(found.1),args:found.value(3),class:ea.text,root:parentfile,order:"text,type,file,args"})
+						pos:=found.Pos(1)+StrLen(found.1)
 						Continue,2
 					}
 				}
-				ppos:=found.pos(1)-2>0?found.pos(1)-2:0,cexml.under(cce,"info",{type:"Function",file:filename,opos:found.Pos(1),pos:StrPut(SubStr(code,1,ppos),"utf-8"),text:found.1,upper:upper(found.1),args:found.value(3),class:found.1,root:parentfile,order:"text,type,file,args"}),pos:=found.Pos(1)+StrLen(found.1)
+				ppos:=found.Pos(1)-1,pos1:=ppos?StrPut(SubStr(code,1,ppos),"utf-8")-1:0
+				cexml.under(cce,"info",{type:"Function",file:filename,opos:found.Pos(1),pos:pos1,text:found.1,upper:upper(found.1),args:found.value(3),class:found.1,root:parentfile,order:"text,type,file,args"})
+				pos:=found.Pos(1)+StrLen(found.1)
 			}
 		}
 		pos:=0
