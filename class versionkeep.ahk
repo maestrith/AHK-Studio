@@ -29,6 +29,9 @@ class versionkeep{
 		this.populate(),this.node:=node,versionkeep.last:=this
 		return this
 	}
+	node(){
+		return vversion.ssn("//info[@file='" ssn(current(1),"@file").text "']")
+	}
 	default(){
 		Gui,% this.win ":Default"
 		Gui,% this.win ":TreeView",SysTreeView321
@@ -48,7 +51,7 @@ class versionkeep{
 			last.remver()
 		return
 		upadd:
-		node:=versionkeep.last.node,versionkeep.last.Default()
+		node:=versionkeep.node(),versionkeep.last.Default()
 		Gui,%A_Gui%:Default
 		TV_GetText(cv,TV_GetSelection())
 		ControlGetText,text,Edit1,% hwnd([A_Gui])
