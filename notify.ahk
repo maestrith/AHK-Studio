@@ -71,8 +71,7 @@ notify(csc=""){
 			update({sc:sc.2357})
 		if (fn.modtype&0x02){
 			update({sc:sc.2357})
-		}
-		if(fn.linesadded)
+		}if(fn.linesadded)
 			marginwidth(sc)
 		if (sc.sc=v.codevault.sc){
 			LV_GetText(code,LV_GetNext())
@@ -84,6 +83,7 @@ notify(csc=""){
 	if(fn.code=2004&&sc.sc=v.codevault.sc)
 		m("Please create or select a code snippet")
 	if(fn.code=2001){
+		if(fn.ch=46)
 		if(fn.ch=46)
 			Show_Class_Methods(sc.textrange(sc.2266(sc.2008-1,1),sc.2267(sc.2008-1,1)))
 		if(fn.ch=10&&v.options.full_auto){

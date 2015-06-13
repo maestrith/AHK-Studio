@@ -1,6 +1,6 @@
 Show_Class_Methods(object){
 	static list
-	ea:=xml.ea(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Object' and @upper='" upper(object) "']"))
+	ea:=xml.ea(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Instance' and @upper='" upper(object) "']"))
 	if ea.class{
 		disp:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Class' and @upper='" upper(ea.class) "']")
 		show:=sn(disp,"*[@type='Method' or @type='Property']"),list:=""
