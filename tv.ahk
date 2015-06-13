@@ -1,4 +1,4 @@
-tv(tv=0,open=""){
+tv(tv:=0,open:="",history:=""){
 	Gui,1:Default
 	Gui,1:TreeView,SysTreeView321
 	TV_Modify(tv,"Select Vis Focus")
@@ -39,7 +39,9 @@ tv(tv=0,open=""){
 		}else
 			sc.2358(0,doc.text),marginwidth(sc),current(1).SetAttribute("last",fn)
 		GuiControl,1:+Redraw,% sc.sc
-		setpos(ei),uppos(),history(fn),marginwidth(sc)
+		setpos(ei),uppos(),marginwidth(sc)
+		if(history!=1)
+			history(fn)
 		WinSetTitle,% hwnd([1]),,AHK Studio - %fn%
 		sc.4004("fold",[1])
 		Sleep,150

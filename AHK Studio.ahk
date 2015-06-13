@@ -3,9 +3,6 @@ SetBatchLines,-1
 #NoEnv
 ;download complete
 /*
-	Chunjee{
-		When there are error messages you can not update the file until you close them.
-	}
 	github{
 		try {"base_tree": "9fb037999f264ba9a7fc6274d15fa3ae2ab98312",
 		"tree": [
@@ -27,9 +24,6 @@ SetBatchLines,-1
 			Mark Spot
 			Goto Mark
 		}
-	}
-	Replacements InputBox{
-		get the width/height of the text and adjust it.
 	}
 	Create a way that the user can add things to the commands list
 	-Do it so that it creates a local file that will not be effected by my main commands.xml
