@@ -3,8 +3,21 @@ SetBatchLines,-1
 #NoEnv
 ;download complete
 /*
-	number1nub{
-		object.[dropdown for methods]
+	Chunjee{
+		When there are error messages you can not update the file until you close them.
+	}
+	github{
+		try {"base_tree": "9fb037999f264ba9a7fc6274d15fa3ae2ab98312",
+		"tree": [
+		{
+			"path": "file.rb",
+			"mode": "100644",
+			"type": "blob",
+			"content": %filecontents% rather than uploading blobs and adding the sha
+		}
+		]}
+		
+		Also make the github window drag/drop for non-text files
 	}
 	TODO LIST:
 	Mark Current Point{

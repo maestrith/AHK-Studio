@@ -15,7 +15,7 @@ save(option=""){
 		if settings.ssn("//options/@Enable_Close_On_Save").text
 			for process in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process"){
 				prog:=Trim(StrSplit(process.CommandLine,Chr(34)).4,Chr(34))
-				if (InStr(process.commandline,"autohotkey")&&prog!=A_ScriptFullPath&&prog)
+				if(InStr(process.commandline,"autohotkey")&&prog!=A_ScriptFullPath&&prog)
 					if (prog=main)
 						Process,Close,% process.processid
 			}
@@ -26,6 +26,27 @@ save(option=""){
 			if !FileExist(dir "\backup\" now)
 				FileCreateDir,% dir "\backup\" now
 			FileMove,%filename%,% dir "\backup\" now "\" file,1
+			fileloop:=0
+			if(ErrorLevel){
+				fileloop:
+				for process in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process"){
+					prog:=Trim(StrSplit(process.CommandLine,Chr(34)).4,Chr(34))
+					if(InStr(process.commandline,"autohotkey")&&prog!=A_ScriptFullPath&&prog)
+						if (prog=main){
+							Process,Close,% process.processid
+							break
+						}
+				}
+				FileMove,%filename%,% dir "\backup\" now "\" file,1
+				if(ErrorLevel){
+					Sleep,200
+					fileloop++
+					if(fileloop<=4)
+						goto,fileloop
+					else
+						m("There was an issue saving " filename,"Please close any error messages and try again")
+				}
+			}
 		}else
 			FileDelete,%filename%
 		StringReplace,text,text,`n,`r`n,All

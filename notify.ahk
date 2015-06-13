@@ -3,6 +3,19 @@ notify(csc=""){
 	static last,lastline
 	fn:=[],info:=A_EventInfo
 	if(info=512){
+		/*
+			if(v.runpid.1){
+				for a,b in v.runpid
+				{
+					WinGetClass,out,ahk_pid%b%
+					if(InStr(out,"#32")){
+						Process,close,%b%
+						t(ErrorLevel)
+					}
+					t(out)
+				}
+			}
+		*/
 		ControlGetFocus,con,% hwnd([A_Gui])
 		ControlGet,hwnd,hwnd,,%con%,% hwnd([A_Gui])
 		sc:=csc({hwnd:hwnd}),filename:=files.ssn("//*[@sc='" sc.2357 "']/@file").text
@@ -84,8 +97,8 @@ notify(csc=""){
 		m("Please create or select a code snippet")
 	if(fn.code=2001){
 		if(fn.ch=46)
-		if(fn.ch=46)
-			Show_Class_Methods(sc.textrange(sc.2266(sc.2008-1,1),sc.2267(sc.2008-1,1)))
+			if(fn.ch=46)
+				Show_Class_Methods(sc.textrange(sc.2266(sc.2008-1,1),sc.2267(sc.2008-1,1)))
 		if(fn.ch=10&&v.options.full_auto){
 			if(sc.2007(sc.2008)=125&&sc.2007(sc.2008-2)=123)
 				sc.2003(sc.2008,"`n")
