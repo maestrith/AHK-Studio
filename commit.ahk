@@ -74,7 +74,6 @@ commit(commitmsg,version){
 	upload:=[]
 	for a,text in uplist{
 		blob:=git.blob(repo,RegExReplace(text,Chr(59) "github_version",version))
-		m(blob)
 		SplashTextOn,200,100,Updating,%a%
 		upload[a]:=blob
 	}
