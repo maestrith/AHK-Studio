@@ -104,6 +104,8 @@ Github_Repository(){
 			return
 		versionkeep.last.node:=vversion.ssn("//info[@file='" ssn(current(1),"@file").text "']")
 		versionkeep.last.node.SetAttribute("repo",RegExReplace(new," ","-"))
+		url:=git.url "/repos/" git.owner "/" new "/commits" git.token
+		m(clipboard:=git.send("get",git.url "/repos/" git.owner "/" new "/git/trees/" git.sha(git.send("GET",url)) "?recursive=1" git.tok))
 	}else if(value="Release Status"){
 		Gui,25:Default
 		Gui,25:ListView,SysListView321

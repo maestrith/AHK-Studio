@@ -10,9 +10,9 @@ extract(list,top){
 		ffff:=FileOpen(filename,"RW"),encoding:=ffff.pos=3?"UTF-8":ffff.pos=2?"UTF-16":"CP0",text:=ffff.read(ffff.length)
 		if !next:=ssn(top,"descendant::file[@file='" obj.parent "']"){
 			FileGetTime,time,%filename%
-			next:=files.under(top,"file",{file:filename,tv:FEAdd(fn,0,"Sort"),filename:fn,skip:skip,encoding:encoding,time:time})
-		}
-		else{
+			SplitPath,filename,fnme
+			next:=files.under(top,"file",{file:filename,tv:FEAdd(fn,0,"Sort"),filename:fn,skip:skip,encoding:encoding,time:time,github:fnme})
+		}else{
 			cfile:=obj.file,pfile:=obj.parent
 			SplitPath,cfile,,cdir
 			SplitPath,pfile,,pdir
@@ -30,12 +30,14 @@ extract(list,top){
 						next:=files.under(next,"folder",{folder:folderlist,tv:FEAdd(f,ssn(next,"@tv").text,"First Sort")})
 				}
 				next:=folder.xml?folder:next,tv:=disable?ssn(top.FirstChild,"@tv").text:ssn(next,"@tv").text
+				StringReplace,git,filename,%pdir%\,,all
 				FileGetTime,time,%cfile%
-				files.under(next,"file",{file:filename,tv:FEAdd(cfname,tv,"First Sort"),filename:fn,skip:skip,encoding:encoding,include:obj.include,time:time})
+				files.under(next,"file",{file:filename,tv:FEAdd(cfname,tv,"First Sort"),filename:fn,skip:skip,encoding:encoding,include:obj.include,time:time,github:git})
 			}else{
 				tv:=disable?ssn(top.FirstChild,"@tv").text:ssn(next,"@tv").text
+				StringReplace,git,filename,%pdir%\,,all
 				FileGetTime,time,%cfile%
-				files.under(next,"file",{file:filename,tv:FEAdd(fn,tv,"Sort"),filename:fn,skip:skip,encoding:encoding,include:obj.include,time:time})
+				files.under(next,"file",{file:filename,tv:FEAdd(fn,tv,"Sort"),filename:fn,skip:skip,encoding:encoding,include:obj.include,time:time,github:git})
 			}
 		}
 		StringReplace,text,text,`r`n,`n,All

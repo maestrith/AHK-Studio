@@ -18,19 +18,19 @@ commit(commitmsg,version){
 		current[file]:=1
 	}
 	replace:="github\" repo "\",main:=files.ssn("//main[@file='" current(2).file "']"),verfiles:=vversion.ssn("//info[@file='" current(2).file "']"),vf:=sn(verfiles,"files/*")
+	git:=new github()
 	Loop,github\%repo%\*.*,0,1
 	{
 		if !A_LoopFileExt
 			Continue
 		StringReplace,file,A_LoopFileFullPath,%replace%
-		if !(ssn(main,"descendant::file[@filename='" file "']")){
+		if (ssn(main,"descendant::file[@github='" file "']").xml=""){
 			while,vv:=vf.Item[A_Index-1]
 				if InStr(vv.text,file)
 					Continue,2
 			Delete[file]:=1,del:=1
 		}
 	}
-	git:=new github()
 	if del
 		git.Delete(repo,delete)
 	current_commit:=git.getref(repo)
@@ -74,13 +74,14 @@ commit(commitmsg,version){
 	upload:=[]
 	for a,text in uplist{
 		blob:=git.blob(repo,RegExReplace(text,Chr(59) "github_version",version))
+		m(blob)
 		SplashTextOn,200,100,Updating,%a%
 		upload[a]:=blob
 	}
 	tree:=git.Tree(repo,current_commit,upload)
 	commit:=git.commit(repo,tree,current_commit,commitmsg,ea.name,ea.email)
 	info:=git.ref(repo,commit)
-	if (info=200){
+	if(info=200){
 		TrayTip,GitHub Update Complete,Updated files
 		for a,b in safe{
 			SplitPath,a,,dir
