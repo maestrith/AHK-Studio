@@ -1,8 +1,10 @@
-Github_Repository(){
+Github_Repository(x:=0){
 	static
+	if x
+		goto commit
 	addfile:=[],git:=new github()
 	newwin:=new windowtracker(25),verfile:=new versionkeep(newwin)
-	newwin.add(["ListView,w140 h200 geditgr AltSubmit NoSortHdr,Github Setting|Value,wy","ListView,x+5 w215 h200,Additional Files|Directory,xy","Button,xm gGRUpdate,&Update Release Info,y","Button,x+5 gcommit,&Commit,y","Button,xm ggrdelrep,Delete Repository,y","Button,x+5 ggraddfile Default,&Add Text Files,y"])
+	newwin.add(["Text,,Drag additional files here to add to the Repository,y","ListView,w140 h200 geditgr AltSubmit NoSortHdr,Github Setting|Value,wy","ListView,x+5 w215 h200,Additional Files|Directory,xy","Button,xm gGRUpdate,&Update Release Info,y","Button,x+5 gcommit,&Commit,y","Button,xm ggrdelrep,Delete Repository,y","Button,x+5 ggraddfile Default,&Add Text Files,y"])
 	newwin.show("Github")
 	if !settings.ssn("//github")
 		settings.Add({path:"github",att:{owner:"",email:"",name:"",token:""}})
@@ -190,10 +192,15 @@ Github_Repository(){
 	info:=newwin[]
 	Gui,25:Default
 	TV_GetText(version,TV_GetSelection())
+	if(!version){
+		node:=vversion.ssn("//info[@file='" ssn(current(1),"@file").text "']")
+		version:=ssn(node,"descendant::*/@number").text
+		cm:=ssn(node,"descendant::*[@number]").text
+	}
 	Gui,25:ListView,SysListView321
 	LV_GetText(status,v.releasestatus,2)
 	draft:=status="draft"?"true":"false",pre:=status~="i)Unknown|Pre-Release"?"true":"false"
-	cm:=info.cm
+	cm:=cm?cm:info.cm
 	if !(version&&cm)
 		return m("Please set a version and create some information for that version.")
 	ok:=commit(cm,version),ea:=settings.ea("//github"),top:=vversion.ssn("//*[@file='" current(2).file "']"),node:=ssn(top,"versions/version[@number='" version "']"),repo:=ssn(top,"@repo").text,http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
@@ -210,5 +217,50 @@ Github_Repository(){
 	}
 	GRUpdate({url:git.url "/repos/" git.owner "/" git.repo "/releases/" ssn(verfile.node,"descendant::*[@number='" version "']/@id").text git.token})
 	vversion.save(1)
+	cm:=version:=""
+	return
+	25GuiDropFiles:
+	git:=new github()
+	if(!git.repo)
+		return m("Please give a name to the Repository")
+	Gui,25:Default
+	for a,b in StrSplit(A_GuiEvent,"`n"){
+		FileRead,bin,% "*c " b
+		FileGetSize,size,%b%
+		DllCall("Crypt32.dll\CryptBinaryToStringW",Ptr,&bin,UInt,size,UInt,1,UInt,0,UIntP,Bytes)
+		VarSetCapacity(out,Bytes*2)
+		DllCall("Crypt32.dll\CryptBinaryToStringW",Ptr,&bin,UInt,size,UInt,1,Str,out,UIntP,Bytes)
+		StringReplace,out,out,`r`n,,All
+		SplitPath,b,filename
+		InputBox,message,Commit Message,Enter a quick message
+		InputBox,filename,New Directory/Filename,Directory/Filename,,,,,,,,%filename%
+		if FileExist("github\" git.repo "\" filename)
+			info:=git.gettree(1),sha:=info.ssn("//*[@path='" filename "']/@sha").text
+		else{
+			/*
+				this needs to account for /lib/filename.ext
+				flip the / to \ for local files
+				SplitPath
+				if !FileExist("github\" git.repo "\" filename)
+					FileCreateDir,% "github\" git.repo "\" filename
+				FileCopy,%b%,% "github\" git.repo "\" filename,1
+			*/
+		}
+		http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+		url:=git.url "/repos/" git.owner "/" git.repo "/contents/" filename git.token
+		name:=git.name,email:=git.email
+		json={"message":"%message%","committer":{"name":"%name%","email":"%email%"}
+		addsha=,"sha":"%sha%"
+		json.=sha?addsha:"",sha:=""
+		json.="," Chr(34) "content" Chr(34) ":" Chr(34) out chr(34) "}"
+		http.open("PUT",url)
+		http.Send(json)
+		;there needs to be a filecopy for 200 so that it keeps a backup for the earlier bit.
+		if(http.status=200)
+			TrayTip,AHK Studio,%b% Uploaded Successfully,2
+		else
+			TrayTip,AHK Studio,Error uploading %b%,2,3
+		m(http.ResponseText)
+	}
 	return
 }

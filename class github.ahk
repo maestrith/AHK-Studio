@@ -7,6 +7,8 @@ class github{
 		this.http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
 		if proxy:=settings.ssn("//proxy").text
 			http.setProxy(2,proxy)
+		for a,b in settings.ea("//github")
+			this[a]:=b
 		this.token:="?access_token=" ea.token,this.owner:=ea.owner,this.tok:="&access_token=" ea.token,this.repo:=vversion.ssn("//info[@file='" current(2).file "']/@repo").text
 		return this
 	}
@@ -33,6 +35,24 @@ class github{
 	sha(text){
 		RegExMatch(this.http.ResponseText,"U)" Chr(34) "sha" Chr(34) ":(.*),",found)
 		return Trim(found1,Chr(34))
+	}
+	gettree(value:=""){
+		info:=this.send("GET",this.url "/repos/" this.owner "/" this.repo "/git/trees/" this.getref(this.repo) this.token)
+		if(value){
+			temp:=new xml("tree")
+			top:=temp.ssn("//tree")
+			info:=SubStr(info,InStr(info,Chr(34) "tree" Chr(34))),pos:=1
+			while,RegExMatch(info,"OU){(.*)}",found,pos){
+				new:=temp.under(top,"node")
+				for a,b in StrSplit(found.1,","){
+					in:=StrSplit(b,":",Chr(34))
+					new.SetAttribute(in.1,in.2)
+				}
+				pos:=found.pos(1)+found.len(1)
+			}
+			temp.Transform(2)
+		}
+		return temp
 	}
 	getref(repo){
 		url:=this.url "/repos/" this.owner "/" repo "/git/refs/heads/master" this.token,this.cmtsha:=this.sha(this.Send("GET",url)),url:=this.url "/repos/" this.owner "/" repo "/commits/" this.cmtsha this.token,RegExMatch(this.Send("GET",url),"U)tree.:\{.sha.:.(.*)" Chr(34),found)

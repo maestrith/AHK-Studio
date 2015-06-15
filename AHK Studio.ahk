@@ -4,6 +4,13 @@ SetBatchLines,-1
 ;download complete
 /*
 	github{
+		{
+			Keep a local copy of the tree in either json or xml
+			-when upldating do the sha to get the current commit
+			-test it against the current
+			--if not download the updated one
+			-get your sha files for updates.
+		}
 		try {"base_tree": "9fb037999f264ba9a7fc6274d15fa3ae2ab98312",
 		"tree": [
 		{

@@ -1,16 +1,9 @@
 testing(){
+	x:=ComObjActive("ahk-studio")
+	x.call("github_repository",1)
 	/*
-		top:=commands.add2("MultiTip")
-		next:=commands.under(top,"If")
-		Loop,3
-			commands.under(next,"If",{tip:A_Index},"This is tip " A_Index)
-		commands.Transform(1)
-		m(commands.ssn("//MultiTip").xml),commands.save(1)
-		sc:=csc()
-		GuiControl,1:-Redraw,% sc.sc
-		sleep,1000
-		sc.2126(4,20)
-		GuiControl,1:+Redraw,% sc.sc
+		git:=new github()
+		m(clipboard:=git.gettree())
 	*/
 	/*
 		;clean out positions
