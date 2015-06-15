@@ -215,9 +215,10 @@ Github_Repository(x:=0){
 		json={"tag_name":"%version%","target_commitish":"master","name":"%version%","body":"%notes%","draft":%draft%,"prerelease":%pre%}
 		http.Open("POST",url),http.send(json),info:=github.find("url",http.ResponseText),id:=RegExReplace(info,"(.*)\/"),node.SetAttribute("id",id)
 	}
-	GRUpdate({url:git.url "/repos/" git.owner "/" git.repo "/releases/" ssn(verfile.node,"descendant::*[@number='" version "']/@id").text git.token})
+	if x=0
+		GRUpdate({url:git.url "/repos/" git.owner "/" git.repo "/releases/" ssn(verfile.node,"descendant::*[@number='" version "']/@id").text git.token})
 	vversion.save(1)
-	cm:=version:=""
+	cm:=version:=x:=""
 	return
 	25GuiDropFiles:
 	git:=new github()
