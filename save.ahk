@@ -7,7 +7,7 @@ save(option=""){
 			IfMsgBox,No
 				info.2.Remove(a)
 			IfMsgBox,Cancel
-				return
+				return "cancel"
 		}
 	}
 	for filename in info.2{
