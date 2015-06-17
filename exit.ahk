@@ -6,7 +6,10 @@ exit(x="",reload=0){
 		if file
 			settings.add({path:"last/file",text:file,dup:1})
 	}
-	toolbar.save(),rebar.save(),save(v.options.disable_autosave?1:0),menus.save(1),getpos()
+	toolbar.save(),rebar.save()
+	if (save(v.options.disable_autosave?1:0)="cancel")
+		return
+	menus.save(1),getpos()
 	settings.add({path:"gui",att:{zoom:csc().2374}}),settings.save(1),bookmarks.save(1)
 	for a in pluginclass.close
 		If WinExist("ahk_id" a)
