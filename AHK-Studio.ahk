@@ -2064,7 +2064,7 @@ FileCheck(file){
 				}menus.add("date",,b.date),menus.save(1),options:=temp.sn("//*[@clean='Options']/*")
 				while,oo:=options.item[A_Index-1],ea:=xml.ea(oo)
 					menus.ssn("//*[@clean='" ea.clean "']").SetAttribute("option",1)
-		}}else if(time<=b.date&&(type=1||type=3)){
+		}}else if(time<=b.date&&type=1){
 			SplashTextOn,200,100,% "Downloading " b.loc,Please Wait....
 			UrlDownloadToFile,% b.url,% b.loc
 			FileSetTime,% b.date,% b.loc,M
