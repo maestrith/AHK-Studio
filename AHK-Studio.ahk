@@ -80,7 +80,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
-	Gui,Show,,AHK Studio Help Version: Version=1.002.0
+	Gui,Show,,AHK Studio Help Version: Version=1.002.1
 	sc.2181(0,about),sc.2025(0),sc.2268(1)
 	return
 	11GuiClose:
@@ -621,11 +621,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		version:="Version=1.002.0"
+		version:="Version=1.002.1"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		return "Version=1.002.0"
+		return "Version=1.002.1"
 	}EnableSC(x:=0){
 		sc:=csc()
 		if(x){
@@ -2005,7 +2005,8 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"http://files.maestrith.com/AHK-Studio/commands.xml",type:3},menus:{date:20151031121205,loc:"lib\menus.xml",url:"http://files.maestrith.com/AHK-Studio/menus.xml",type:2},scilexer:{date:20150606000000,loc:"SciLexer.dll",url:"http://files.maestrith.com/AHK-Studio/SciLexer.dll",type:3},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"http://files.maestrith.com/AHK-Studio/AHKStudio.ico",type:3},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"https://raw.githubusercontent.com/maestrith/AHK-Studio-Plugins/master/Lib/Studio.ahk",type:3}}
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:3},menus:{date:20151031121205,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20150606000000,loc:"SciLexer.dll",url:"SciLexer.dll",type:3},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:3},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:3}}
+	url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
@@ -2037,7 +2038,7 @@ FileCheck(file){
 		if(b.type=2){
 			if(menus.ssn("//date").text!=b.date){
 				SplashTextOn,300,100,Downloading Menus XML,Please Wait...
-				temp:=new xml("temp"),temp.xml.loadxml(URLDownloadToVar(b.url))
+				temp:=new xml("temp"),temp.xml.loadxml(URLDownloadToVar(url b.url))
 				if(menus.sn("//*").length=1)
 					menus.xml.loadxml(temp[])
 				else{
@@ -2066,11 +2067,11 @@ FileCheck(file){
 					menus.ssn("//*[@clean='" ea.clean "']").SetAttribute("option",1)
 		}}else if(time<=b.date&&type=1){
 			SplashTextOn,200,100,% "Downloading " b.loc,Please Wait....
-			UrlDownloadToFile,% b.url,% b.loc
+			UrlDownloadToFile,% url b.url,% b.loc
 			FileSetTime,% b.date,% b.loc,M
 		}else if(!time){
 			SplashTextOn,200,100,% "Downloading " b.loc,Please Wait....
-			UrlDownloadToFile,% b.url,% b.loc
+			UrlDownloadToFile,% url b.url,% b.loc
 			FileSetTime,% b.date,% b.loc,M
 	}}
 	if(!FileExist("plugins\settings.ahk")){
