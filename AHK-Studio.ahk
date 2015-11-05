@@ -80,7 +80,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
-	Gui,Show,,AHK Studio Help Version: Version=1.002.1
+	Gui,Show,,AHK Studio Help Version: Version=1.002.2
 	sc.2181(0,about),sc.2025(0),sc.2268(1)
 	return
 	11GuiClose:
@@ -621,11 +621,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		version:="Version=1.002.1"
+		version:="Version=1.002.2"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		return "Version=1.002.1"
+		return "Version=1.002.2"
 	}EnableSC(x:=0){
 		sc:=csc()
 		if(x){
@@ -3313,8 +3313,7 @@ Notify(csc:=""){
 			Loop,% sc.2570
 				caret:=sc.2577(A_Index-1),anchor:=sc.2579(A_Index-1),(A_Index=1)?obj.push({2008:caret,2009:anchor,2152:sc.2152,main:caret=sc.2577(sc.2575)}):obj.push({2008:caret,2009:anchor,main:caret:=sc.2577(A_Index-1)})
 		return
-	}
-	if(code=2028){
+	}if(code=2028){
 		Sleep,20
 		sc:=focus.sc?focus:csc(1),maincaret:=1
 		for a,b in lastpos[current(3).sc]
@@ -3325,12 +3324,7 @@ Notify(csc:=""){
 		if(v.options.Check_For_Edited_Files_On_Focus=1)
 			check_for_edited()
 		return
-	}
-	/*
-		if(code=2013)
-			SetStatus(A_Now,3)
-	*/
-	if(!s.ctrl[NumGet(info+0)])
+	}if(!s.ctrl[NumGet(info+0)])
 		return csc(1)
 	if code not in 2001,2002,2004,2006,2007,2008,2010,2014,2018,2019,2021,2022,2027
 		return 0
@@ -4173,7 +4167,7 @@ QF(){
 	if(Focus="Edit1")
 		goto,qf
 	else if(A_ThisHotkey="+Enter"||A_ThisHotkey="enter")
-		replace()
+		replace(),MarginWidth()
 	else
 		marginwidth()
 	if(v.options.full_auto)
