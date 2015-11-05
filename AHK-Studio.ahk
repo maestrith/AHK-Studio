@@ -1937,8 +1937,7 @@ Extract(fileobj,top,rootfile){
 					Continue
 				}else if(FileExist(incfile)&&ext){
 					if(!ssn(top,"descendant::file[@file='" incfile "']"))
-						spfile:=incfile
-					nextfile.Push(incfile)
+						spfile:=incfile,nextfile.Push(incfile)
 				}else if(InStr(found.1,"<")||InStr(found.1,"%")){
 					if(look:=RegExReplace(found.1,"(<|>)"))
 						look.=".ahk"
@@ -1949,18 +1948,16 @@ Extract(fileobj,top,rootfile){
 					for a,b in {"ahkdir":ahkdir,"%A_ScriptDir%":maindir,"%A_MyDocuments%":A_MyDocuments "\AutoHotkey\Lib","lib":maindir "\lib","%A_AppData%":A_AppData,"%A_AppDataCommon%":A_AppDataCommon}{
 						if(InStr(look,a))
 							look:=RegExReplace(look,"i)" a "\\")
-						if(FileExist(b "\" look)){
+						if(FileExist(b "\" look)&&!ssn(top,"descendant::file[@file='" b "\" look "']")){
 							nextfile.Push(b "\" look)
 							if(!ssn(top,"descendant::file[@file='" b "\" look "']"))
 								spfile:=b "\" look
 							break
 						}
-						
 					}
 				}else if(FileExist(incfile:=ResDir.GetAbsolutePathName(dir "\" found.1))){
 					if(!ssn(top,"descendant::file[@file='" incfile "']"))
-						spfile:=incfile
-					nextfile.Push(incfile)
+						spfile:=incfile,nextfile.Push(incfile)
 				}
 				if(spfile){
 					SplitPath,spfile,fnme,folder
@@ -2693,7 +2690,7 @@ Class GuiKeep{
 		for a,b in {border:border,caption:DllCall("GetSystemMetrics",int,4)}
 			this[a]:=b
 		if(settings.ssn("//options/@Add_Margins_To_Windows").text!=1)
-			Gui,Margin,0,0
+			Gui,% this.win ":Margin",0,0
 		if(info.1)
 			this.add(info*)
 	}
