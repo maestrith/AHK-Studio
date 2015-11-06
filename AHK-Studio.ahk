@@ -32,7 +32,7 @@ selectfile:
 tv(files.ssn("//*[@file='" v.openfile "']/@tv").text)
 return
 #Include %A_ScriptDir%
-about(){
+About(){
 	about=
 (
 If you wish to use this software, great.
@@ -1872,7 +1872,7 @@ Exit(x:="",reload:=0){
 	rem:=settings.ssn("//last"),rem.ParentNode.RemoveChild(rem),notesxml.save(1),savegui(),vault.save(1)
 	for a,b in s.main{
 		file:=files.ssn("//*[@sc='" b.2357 "']/@file").text
-		if(file)
+		if(file!="Virtual Scratch Pad.ahk")
 			settings.add("last/file",,file,,1)
 	}
 	toolbar.save(),positions.save(1),rebar.save(),menus.save(1),getpos(),settings.add({path:"gui",att:{zoom:csc().2374}}),settings.save(1),bookmarks.save(1)
@@ -2002,7 +2002,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:3},menus:{date:20151031121205,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20150606000000,loc:"SciLexer.dll",url:"SciLexer.dll",type:3},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:3},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:3}}
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:3},menus:{date:20151106173300,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20150606000000,loc:"SciLexer.dll",url:"SciLexer.dll",type:3},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:3},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:3}}
 	url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
@@ -3415,8 +3415,10 @@ Notify(csc:=""){
 		}}}
 		if((fn.modtype&0x01)||(fn.modtype&0x02))
 			update({sc:sc.2357})
-		if(fn.modtype&0x02)
-			update({sc:sc.2357})
+		/*
+			if(fn.modtype&0x02)
+				update({sc:sc.2357})
+		*/
 		if(fn.linesadded)
 			MarginWidth(sc)
 		return
@@ -3438,7 +3440,7 @@ Notify(csc:=""){
 		else if(fn.listtype=4)
 			text:=StrGet(fn.text,"utf-8"),start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(start,end-start),sc.2003(sc.2008,text "."),sc.2025(sc.2008+StrLen(text ".")),Show_Class_Methods(text)
 		else if(fn.listtype=5){
-			text:=StrGet(fn.text,"utf-8"),start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(start,end-start),sc.2003(sc.2008,text "()"),sc.2025(sc.2008+StrLen(text "."))
+			text:=StrGet(fn.text,"utf-8"),start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),add:=sc.2007(end)=40?"":"()",sc.2645(start,end-start),sc.2003(sc.2008,text add),sc.2025(sc.2008+StrLen(text "."))
 			SetTimer,context,-10
 		}
 	}
@@ -3817,6 +3819,7 @@ Options(x:=0){
 	Full_Backup_All_Files:
 	Add_Margins_To_Windows:
 	Disable_Auto_Complete_In_Quotes:
+	Virtual_Scratch_Pad:
 	onoff:=settings.ssn("//options/@ " A_ThisLabel).text?0:1
 	att:=[],att[A_ThisLabel]:=onoff,v.options[A_ThisLabel]:=onoff
 	settings.add("options",att)
@@ -4471,6 +4474,10 @@ Run_Program(){
 	v.ddd.send("run")
 }
 Run(){
+	if(v.options.Virtual_Scratch_Pad&&InStr(current(2).file,"Scratch Pad.ahk")){
+		DynaRun(csc().getuni())
+		return
+	}
 	if(!current(1).xml)
 		return
 	sc:=csc(),getpos(),save(),file:=ssn(current(1),"@file").text
@@ -4548,6 +4555,8 @@ save(option=""){
 		}
 	}savedfiles:=[]
 	for filename in info.2{
+		if(v.options.Virtual_Scratch_Pad&&filename="Virtual Scratch Pad.ahk")
+			Continue
 		text:=info.1[filename],main:=ssn(current(1),"@file").text,savedfiles.push(1)
 		if(settings.ssn("//options/@Enable_Close_On_Save").text)
 			for process in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process"){
@@ -4604,6 +4613,17 @@ SaveGUI(win:=1){
 }
 Scratch_Pad(){
 	static
+	if(v.options.Virtual_Scratch_Pad){
+		Gui,1:Default
+		Gui,1:TreeView,SysTreeView321
+		if(!tv)
+			top:=files.ssn("//*"),main:=files.under(top,"main",{file:"Virtual Scratch Pad.ahk"}),files.under(main,"file",{tv:tv:=TV_Add("Virtual Scratch Pad"),file:"Virtual Scratch Pad.ahk",virtual:1}),tv(tv)
+		else if(TV_GetSelection()!=tv)
+			tv(tv)
+		else
+			History({back:1})
+		return
+	}
 	newpath:=A_ScriptDir "\projects\Scratch Pad\Scratch Pad.ahk"
 	file:=current(3).file
 	if(file=newpath){
@@ -4613,9 +4633,9 @@ Scratch_Pad(){
 			tv(files.ssn("//main/file/@tv").text)
 	}else{
 		main:=current(2).file,current:=current(3).file
-		if(!FileExist(newpath))
+		if(!FileExist(newpath)){
 			ts:=settings.ssn("//template").text,file:=FileOpen("c:\windows\shellnew\template.ahk",0),td:=file.Read(file.length),file.close(),template:=ts?ts:td,index:=0,new(newpath,template)
-		else if(!files.ssn("//main/file[@file='" newpath "']/@tv").text)
+		}else if(!files.ssn("//main/file[@file='" newpath "']/@tv").text)
 			open(newpath),tv(files.ssn("//main/file[@file='" newpath "']/@tv").text)
 		else
 			tv(files.ssn("//main/file[@file='" newpath "']/@tv").text)
@@ -4856,7 +4876,8 @@ Test_Plugin(){
 }
 Testing(x:=0){
 	;m("Testing","ico:?")
-	m(menus[],"ico:?")
+	m(files.ssn("//*[@tv='" TV_GetSelection() "']").xml)
+	;m(menus[],"ico:?")
 }
 Toggle_Comment_Line(){
 	sc:=csc(),sc.2078
@@ -4995,8 +5016,10 @@ tv(tv:=0,open:="",history:=0){
 	Gui,1:TreeView,SysTreeView321
 	sc:=csc()
 	doc:=sc.2357(),tv:=files.ssn("//*[@tv='" TV_GetSelection() "']"),ea:=xml.ea(tv)
-	if(doc!=ea.sc)
+	if(doc!=ea.sc){
+		m(doc,ea.sc,tv.xml)
 		tv(TV_GetSelection(),1)
+	}
 	return
 }
 TVIcons(x:=""){
@@ -5046,6 +5069,8 @@ Update(info){
 		return update[info.get]
 	if(info.sc){
 		sc:=csc(),fn:=files.ssn("//*[@sc='" info.sc "']"),ea:=xml.ea(fn),item:=ea.file?ea.file:ea.note
+		if(ea.virtual)
+			return t(":)")
 		if(!item)
 			return
 		if(update[item]=sc.getuni())
@@ -5117,8 +5142,7 @@ URLDownloadToVar(url){
 	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
 	if(proxy:=settings.ssn("//proxy").text)
 		http.setProxy(2,proxy)
-	http.Open("GET",url,1),http.Send()
-	http.WaitForResponse
+	http.Open("GET",url,1),http.Send(),http.WaitForResponse
 	return http.ResponseText
 }
 var(){
