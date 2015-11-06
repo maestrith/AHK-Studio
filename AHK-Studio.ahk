@@ -3500,7 +3500,9 @@ Omni_Search(start=""){
 	omnisearch:
 	Gui,20:Default
 	GuiControl,20:-Redraw,SysListView321
-	search:=newwin[].search,Select:=[],LV_Delete(),sort:=[],stext:=[]
+	osearch:=search:=newwin[].search,Select:=[],LV_Delete(),sort:=[],stext:=[]
+	for a,b in StrSplit("@^({[&+#%<")
+		osearch:=RegExReplace(osearch,"\Q" b "\E")
 	if(InStr(search,"?")){
 		LV_Delete()
 		for a,b in omni_search_class.prefix{
@@ -3515,13 +3517,13 @@ Omni_Search(start=""){
 		find:="//*[",pos:=1,replist:=[]
 		while,RegExMatch(search,"O)(\W)",found,pos),pos:=found.Pos(1)+found.len(1){
 			if(pre:=omni_search_class.prefix[found.1]){
+				replist.push(found.1)
 				if(found.1="+"){
-					find:="//main[@file='" current(2).file "']/descendant::*[@type='Class' or @type='Function']"
+					find:="//main[@file='" current(2).file "']/descendant::*[@type='Class' or @type='Function'"
 					break
 				}else if(pre)
 					add:="@type='" pre "'"
 				find.=A_Index>1?" or " add:add
-				replist.push(found.1)
 			}
 		}
 		for a,b in replist
@@ -3529,44 +3531,39 @@ Omni_Search(start=""){
 		find.="]"
 	}else
 		find:="//*"
-	for a,b in StrSplit(search)
+	for a,b in searchobj:=StrSplit(search)
 		stext[b]:=stext[b]=""?1:stext[b]+1
 	list:=cexml.sn(find),break:=0,currentparent:=current(2).file
-	while,ll:=list.Item[A_Index-1]{
+	while,ll:=list.Item[A_Index-1],b:=xml.ea(ll){
 		if(break){
 			break:=0
 			break
 		}
-		b:=xml.ea(ll),order:=ll.nodename="file"?"name,type,folder":b.type="menu"?"text,type,additional1":"text,type,file,args",info:=StrSplit(order,","),rating:=0,text:=b[info.1],b.root:=ssn(ll,"ancestor::main[@file]/@file").text,b.parent:=ssn(ll,"ancestor-or-self::file[@file]/@file").text,b.file:=b.parent
-		for c,d in stext{
-			RegExReplace(text,"i)" c,"",count)
-			if(d>count||count=0)
+		order:=ll.nodename="file"?"name,type,folder":b.type="menu"?"text,type,additional1":"text,type,file,args",info:=StrSplit(order,","),text:=b[info.1],rating:=0,b.parent:=ssn(ll,"ancestor-or-self::main/@file").text
+		if(!b.file)
+			b.file:=ssn(ll,"ancestor-or-self::file/@file").text
+		if(search="")
+			if(b.file=ssn(ll,"ancestor::main/@file").text)
+				rating+=50
+		for c,d in searchobj{
+			RegExReplace(text,"i)" d,"",count)
+			if(stext[d]>count)
 				Continue 2
-			rating+=count
-			if(count=d)
-				rating+=10
+			pos:=InStr(text,d),rating+=2/pos+A_Index
+			if(text~="i)\b" d)
+				rating+=100
 		}
-		if(div:=RegExMatch(text,"i)" sea:=RegExReplace(search,"(.)","\b$1.*"),found)){
-			rating+=100/div
-			for c,d in StrSplit(sea,"\b")
-				rating+=20/RegExMatch(text,"i)\b" d)
-		}
-		if(ssn(ll,"ancestor::main[@file='" b.file "']")&&search="")
+		if(pos:=InStr(text,osearch))
+			rating+=400/pos
+		if(currentparent=b.parent)
 			rating+=100
-		for c,d in StrSplit(search," ")
-			if(RegExMatch(text,"i)\b" d))
-				rating+=20
-		if(SubStr(text,1,StrLen(search))=search)
-			rating+=50
-		if(SubStr(text,-3)=".ahk")
-			rating+=40
-		if(currentparent=ssn(ll,"ancestor::main/@file").text)
-			rating+=30
+		if(pos:=InStr(text,search))
+			rating+=100/pos
 		two:=info.2="type"&&v.options.Show_Type_Prefix?omni_search_class.iprefix[b[info.2]] "  " b[info.2]:b[info.2]
 		item:=LV_Add("",b[info.1],two,b[info.3],b[info.4],rating,LV_GetCount()+1)
 		Select[item]:=b
 	}
-	Loop,6
+	Loop,4
 		LV_ModifyCol(A_Index,"Auto")
 	for a,b in [5,6]
 		LV_ModifyCol(b,0)
@@ -3602,9 +3599,8 @@ Omni_Search(start=""){
 			comma:=a_index>1?",":"",value:=InputBox(sc.sc,"Add Function Call","Insert a value for : " b " :`n" item.text "(" item.args ")`n" build ")",""),value:=value?value:Chr(34) Chr(34),build.=comma value
 		build.=")"
 		sc.2003(sc.2008,build)
-	}
-	else if(item.type="file"){
-		hwnd({rem:20}),tv(files.ssn("//main[@file='" item.root "']/descendant::file[@file='" item.parent "']/@tv").text)
+	}else if(item.type="file"){
+		hwnd({rem:20}),tv(files.ssn("//main[@file='" item.parent "']/descendant::file[@file='" item.file "']/@tv").text)
 	}else if(item.type~="i)(label|instance|method|function|hotkey|class|property|variable|bookmark)"){
 		hwnd({rem:20}),TV(files.ssn("//*[@file='" item.file "']/@tv").text)
 		Sleep,200
