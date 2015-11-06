@@ -5070,7 +5070,7 @@ Update(info){
 	if(info.sc){
 		sc:=csc(),fn:=files.ssn("//*[@sc='" info.sc "']"),ea:=xml.ea(fn),item:=ea.file?ea.file:ea.note
 		if(ea.virtual)
-			return t(":)")
+			return
 		if(!item)
 			return
 		if(update[item]=sc.getuni())
