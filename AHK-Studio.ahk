@@ -3099,8 +3099,11 @@ Menu(menuname:="main"){
 				Menu,%parent%,Add
 				Continue
 			}
-			if((!IsFunc(ea.clean)&&!IsLabel(ea.clean))&&!FileExist(ea.plugin))
+			if((!IsFunc(ea.clean)&&!IsLabel(ea.clean))&&!FileExist(ea.plugin)){
+				aa.SetAttribute("no",1)
 				Continue
+			}if(ea.no)
+				aa.RemoveAttribute("no")
 			exist[parent]:=1
 		}v.available[ea.clean]:=1
 		(aa.haschildnodes())?(track.push({name:ea.name,parent:parent,clean:ea.clean}),route:="deadend"):(route:="MenuRoute")
@@ -3314,8 +3317,10 @@ Notify(csc:=""){
 		Sleep,20
 		sc:=focus.sc?focus:csc(1),maincaret:=1
 		for a,b in lastpos[current(3).sc]
-			maincaret:=b.main?A_Index:maincaret,(A_Index=1)?(sc.2160(b.2008,b.2009),sc.2613(b.2152)):sc.2573(b.2008,b.2009)
+			maincaret:=b.main?A_Index:maincaret,(A_Index=1)?(sc.2160(b.2008,b.2009)):sc.2573(b.2008,b.2009)
 		sc.2574(maincaret-1)
+		if(fl:=lastpos[current(3).sc].1.2152)
+			sc.2613(fl)
 		SetTimer,Enable,-10
 		SetTimer,LButton,-200
 		if(v.options.Check_For_Edited_Files_On_Focus=1)
