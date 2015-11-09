@@ -231,7 +231,7 @@
 			<menu clean="Online_Help" name="Online Help" no="1"></menu>
 			<menu name="&amp;Social" clean="Social" no="1"></menu>
 			<menu clean="Testing" name="Testing" hotkey="^K"></menu></menu>
-		<menu clean="Plugin" name="P&amp;lugin" tv="11769864">
+		<menu clean="Plugin" name="P&amp;lugin">
 			<menu clean="Additional_Publish" hotkey="" name="Additional Publish" option="" plugin="plugins\Additional Publish.ahk"></menu>
 			<menu clean="Align_Selected_Text" hotkey="" name="Align Selected Text" option="" plugin="plugins\Align Selected Text.ahk"></menu>
 			<menu clean="Auto_Menu_Adder" hotkey="" name="Auto Menu Adder" option="" plugin="plugins\Auto Menu Adder.ahk"></menu>
@@ -240,6 +240,7 @@
 			<menu clean="Capture_Gif" hotkey="" name="Capture Gif" option="" plugin="plugins\Capture Gif.ahk"></menu>
 			<menu clean="Compile_Using_Unicode_32" hotkey="" name="Compile Using Unicode 32" option="" plugin="plugins\Compile Using Unicode 32.ahk"></menu>
 			<menu clean="Compile_In_Unicode_32" hotkey="" name="Compile In Unicode 32" option="" plugin="plugins\Compile.ahk"></menu>
+			<menu clean="Complex_Sort" hotkey="" name="Complex Sort" option="" plugin="plugins\Complex Sort.ahk"></menu>
 			<menu clean="Fix_if" hotkey="^!i" name="Fix &amp;if" option="" plugin="plugins\Fix If.ahk"></menu>
 			<menu clean="Increment_Selected" hotkey="" name="Increment Selected" option="" plugin="plugins\Increment Selected.ahk"></menu>
 			<menu clean="Lookup_Old_Code" hotkey="" name="Lookup Old Code" option="" plugin="plugins\Lookup.ahk"></menu>

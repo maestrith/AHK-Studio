@@ -249,30 +249,29 @@ Class Code_Explorer{
 		while,cc:=clist.item[A_Index-1],ea:=xml.ea(cc){
 			tt:=SubStr(text,ea.pos+1),total:="",braces:=0,start:=0
 			for a,b in StrSplit(tt,"`n"){
-				line:=Trim(RegExReplace(b,"(\s+" Chr(59) ".*)")),total.=b "`n"
-				if(SubStr(line,0,1)="{")
-					braces++,start:=1
+				line:=Trim(RegExReplace(b,"(\s+" Chr(59) ".*)"))
 				if(SubStr(line,1,1)="}"){
 					while,((found1:=SubStr(line,A_Index,1))~="(}|\s)"){
 						if(found1~="\s")
 							Continue
 						braces--
 					}
-				}if(start&&braces=0)
+				}
+				if(start&&braces=0)
 					break
-			}
-			total:=Trim(total,"`n"),cc.SetAttribute("end",np:=ea.pos+StrPut(total,"utf-8")-1)
+				total.=b "`n"
+				if(SubStr(line,0,1)="{")
+					braces++,start:=1
+			}lasteapos:=ea.pos,total:=Trim(total,"`n"),cc.SetAttribute("end",np:=ea.pos+StrPut(total,"utf-8")-1)
 			for a,b in {Property:Code_Explorer.property,Method:Code_Explorer.function}{
 				pos:=1
 				while,RegExMatch(total,b,found,pos),pos:=found.Pos(1)+found.len(1)
 					if(no.ssn("//bad[@min<'" ea.pos+found.pos(1) "' and @max>'" ea.pos+found.pos(1) "']")=""&&found.1!="if")
 						add:=a="property"?"[":"(",cexml.under(cc,"info",{type:a,pos:ea.pos+StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-2,text:found.1,upper:upper(found.1),args:found.value(3),class:ea.text})
-			}
-			no.Add("bad/bad",{min:ea.pos,max:np,type:"Class"},,1)
-		}
-		pos:=1
+			}no.Add("bad/bad",{min:ea.pos,max:np,type:"Class"},,1)
+		}pos:=1
 		while,RegExMatch(text,Code_Explorer.Function,found,pos),pos:=found.pos(1)+found.len(1){
-			if(no.ssn("//bad[@min<'" found.pos(1) "' and @max>'" found.pos(1) "']")=""&&found.1!="if"){
+			if(no.ssn("//bad[@min<'" found.pos(1) "' and @max>'" found.pos(1)+1 "']")=""&&found.1!="if"){
 				cexml.under(next,"info",{args:found.3,type:"Function",text:found.1,upper:upper(found.1),pos:StrPut(SubStr(text,1,found.pos(1)))-3})
 				/*
 					if(RegExMatch(tq:=SubStr(text,found.Pos(0)+found.len(0)),"OU)^\s*(\;.*)\n",fq)){
@@ -281,8 +280,7 @@ Class Code_Explorer{
 					}
 				*/
 			}
-		}
-		for type,find in {Hotkey:"Om`n)^\s*([#|!|^|\+|~|\$|&|<|>|*]*\w+([ |\t]*\&[ |\t]*[#|!|^|\+|~|\$|&|<|>|*]*\w+)?)::",Label:this.label}{
+		}for type,find in {Hotkey:"Om`n)^\s*([#|!|^|\+|~|\$|&|<|>|*]*\w+([ |\t]*\&[ |\t]*[#|!|^|\+|~|\$|&|<|>|*]*\w+)?)::",Label:this.label}{
 			pos:=1
 			while,RegExMatch(text,find,fun,pos),pos:=fun.pos(1)+fun.len(1)
 				if(!no.ssn("//bad[@min<'" fun.pos(1) "' and @max>'" fun.pos(1) "' and @type!='Class']"))
@@ -299,22 +297,18 @@ Class Code_Explorer{
 		}pos:=1
 		while,pos:=RegExMatch(text,"OU);#\[(.*)\]",found,pos),pos:=found.Pos(1)+found.len(1)
 			cexml.under(next,"info",{type:"Bookmark",upper:upper(found.1),pos:StrPut(SubStr(text,1,found.Pos(0)),"utf-8"),text:found.1})
-	}
-	remove(filename){
+	}remove(filename){
 		this.explore.remove(ssn(filename,"@file").text),list:=sn(filename,"@file")
 		while,ll:=list.item[A_Index-1]
 			this.explore.Remove(ll.text)
-	}
-	populate(){
+	}populate(){
 		code_explorer.Refresh_Code_Explorer()
 		Gui,1:TreeView,SysTreeView321
-	}
-	Add(value,parent=0,options=""){
+	}Add(value,parent=0,options=""){
 		Gui,1:Default
 		Gui,1:TreeView,SysTreeView322
 		return this.Add(value,parent,options)
-	}
-	Refresh_Code_Explorer(){
+	}Refresh_Code_Explorer(){
 		if(v.options.Hide_Code_Explorer)
 			return
 		Gui,1:Default
@@ -347,8 +341,7 @@ Class Code_Explorer{
 		GuiControl,1:+Redraw,SysTreeView322
 		Gui,1:TreeView,SysTreeView321
 		return
-	}
-	cej(){
+	}cej(){
 		static last
 		cej:
 		if((A_GuiEvent="S"||A_EventInfo=last)&&A_GuiEvent!="RightClick"){
@@ -371,8 +364,7 @@ Class Code_Explorer{
 			return
 		}
 		return
-	}
-}
+}}
 Class FTP{
 	__New(name){
 		ea:=settings.ea("//ftp/server[@name='" name "']"),this.error:=0
@@ -3239,7 +3231,7 @@ New_Segment(new:="",text:="",adjusted:=""){
 	Relative:=RegExReplace(relativepath(cur,new),"i)^lib\\([^\\]+)\.ahk$","<$1>"),func:=clean(func)
 	SplitPath,newdir,last
 	sc.2003(sc.2006,["`n#Include " Relative])
-	FileAppend,% m("Create Function Named " function "?","btn:yn")="yes"?function "(){`r`n`r`n}":"",%new%,UTF-8
+	FileAppend,% m("Create Function Named " clean(function) "?","btn:yn")="yes"?clean(function) "(){`r`n`r`n}":"",%new%,UTF-8
 	Refresh_Current_Project(new)
 	Sleep,300
 	sc.2025(StrLen(function)+1),NewIndent()
@@ -3507,7 +3499,7 @@ Omni_Search(start=""){
 	omnisearch:
 	Gui,20:Default
 	GuiControl,20:-Redraw,SysListView321
-	osearch:=search:=newwin[].search,Select:=[],LV_Delete(),sort:=[],stext:=[]
+	osearch:=search:=newwin[].search,Select:=[],LV_Delete(),sort:=[],stext:=[],fsearch:=search="^"?1:0
 	for a,b in StrSplit("@^({[&+#%<")
 		osearch:=RegExReplace(osearch,"\Q" b "\E")
 	if(InStr(search,"?")){
@@ -3548,24 +3540,29 @@ Omni_Search(start=""){
 		}
 		order:=ll.nodename="file"?"name,type,folder":b.type="menu"?"text,type,additional1":"text,type,file,args",info:=StrSplit(order,","),text:=b[info.1],rating:=0,b.parent:=ssn(ll,"ancestor-or-self::main/@file").text
 		if(!b.file)
-			b.file:=ssn(ll,"ancestor-or-self::file/@file").text
-		if(search="")
+			if(!b.file:=ssn(ll,"ancestor-or-self::file/@file").text)
+				b.file:=ssn(ll,"ancestor-or-self::main/@file").text
+		if(fsearch){
 			if(b.file=ssn(ll,"ancestor::main/@file").text)
 				rating+=50
-		for c,d in searchobj{
-			RegExReplace(text,"i)" d,"",count)
-			if(stext[d]>count)
-				Continue 2
-			pos:=InStr(text,d),rating+=2/pos+A_Index
-			if(text~="i)\b" d)
+			if(currentparent=b.file)
 				rating+=100
+		}else{
+			if(search){
+				for c,d in stext{
+					RegExReplace(text,"i)" c,"",count)
+					if(Count<d)
+						Continue,2
+				}spos:=1
+				for c,d in searchobj
+					if(pos:=RegExMatch(text,"iO)(\b" d ")",found,spos),spos:=found.Pos(1)+found.len(1))
+						rating+=100/pos
+				if(pos:=InStr(text,osearch))
+					rating+=400/pos
+				if(currentparent=ssn(ll,"ancestor::main/@file").text)
+					rating+=100
+			}
 		}
-		if(pos:=InStr(text,osearch))
-			rating+=400/pos
-		if(currentparent=b.parent)
-			rating+=100
-		if(pos:=InStr(text,search))
-			rating+=100/pos
 		two:=info.2="type"&&v.options.Show_Type_Prefix?omni_search_class.iprefix[b[info.2]] "  " b[info.2]:b[info.2]
 		item:=LV_Add("",b[info.1],two,b[info.3],b[info.4],rating,LV_GetCount()+1)
 		Select[item]:=b
@@ -5022,7 +5019,6 @@ tv(tv:=0,open:="",history:=0){
 	sc:=csc()
 	doc:=sc.2357(),tv:=files.ssn("//*[@tv='" TV_GetSelection() "']"),ea:=xml.ea(tv)
 	if(doc!=ea.sc){
-		m(doc,ea.sc,tv.xml)
 		tv(TV_GetSelection(),1)
 	}
 	return
