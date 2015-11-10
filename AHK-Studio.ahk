@@ -80,7 +80,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
-	Gui,Show,,AHK Studio Help Version: Version=1.002.2
+	Gui,Show,,AHK Studio Help Version: Version=1.002.3
 	sc.2181(0,about),sc.2025(0),sc.2268(1)
 	return
 	11GuiClose:
@@ -613,11 +613,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		version:="Version=1.002.2"
+		version:="Version=1.002.3"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		return "Version=1.002.2"
+		return "Version=1.002.3"
 	}EnableSC(x:=0){
 		sc:=csc()
 		if(x){
@@ -813,7 +813,7 @@ class s{
 			s.main.push(this)
 		if(info.temp)
 			s.temp.push(this)
-		this.2246(2,1),this.2052(32,0),this.2051(32,0xaaaaaa),this.2050,this.2052(33,0x222222),this.2069(0xAAAAAA),this.2601(0xaa88aa),this.2563(1),this.2614(1),this.2565(1),this.2660(1),this.2036(width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5),this.2124(1),this.2260(1),this.2122(5),this.2277(0),this.2056(38,"Consolas"),this.2516(1),color(this),this.2359(3)
+		this.2246(2,1),this.2052(32,0),this.2051(32,0xaaaaaa),this.2050,this.2052(33,0x222222),this.2069(0xAAAAAA),this.2601(0xaa88aa),this.2563(1),this.2614(1),this.2565(1),this.2660(1),this.2036(width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5),this.2124(1),this.2260(1),this.2122(5),this.2277(0),this.2056(38,"Consolas"),this.2516(1),color(this),this.2359(0x1|0x2|0x10)
 		return this
 	}
 	clear(){
@@ -1396,15 +1396,24 @@ Context(return=""){
 	if(cp<=start)
 		return
 	string:=sc.textrange(start,cp),pos:=1,fixcp:=cp,sub:=cp-start
-	while,(fixcp>start){
-		if(sc.2010(fixcp)="3")
-			string:=RegExReplace(string,".","_",,1,sub-A_Index+2)
-		fixcp--
-	}co:=InStr(string,"(",,0),cc:=InStr(string,")",,0),open:=cc>co?cc+start:co+start
+	/*
+		while,(fixcp>start){
+			if(sc.2010(fixcp)="3")
+				string:=RegExReplace(string,".","_",,1,sub-A_Index+2)
+			fixcp--
+		}co:=InStr(string,"(",,0),cc:=InStr(string,")",,0) ;,open:=cc>co?cc+start:co+start
+	*/
+	open:=sc.2008,commas:=0
 	Loop{
-		sc.2190(open),sc.2192(start),close:=sc.2197(1,")"),sc.2190(open),sc.2192(start),open:=sc.2197(1,"(")
+		sc.2190(open),sc.2192(start),close:=sc.2197(1,")"),sc.2190(open),sc.2192(start),comma:=sc.2197(1,","),sc.2190(open),sc.2192(start),open:=sc.2197(1,"(")
+		if(comma>close&&comma>open){
+			if(sc.2010(comma)~="\b97|4\b")
+				commas++
+			open:=comma
+			Continue
+		}
 		if(close>open&&open>start){
-			bm:=sc.2353(close),wb:=sc.2266(bm,1),string:=SubStr(string,1,wb-start) SubStr(string,close+2-start),open:=bm
+			bm:=sc.2353(close),wb:=sc.2266(bm,1),string:=SubStr(string,1,wb-start) SubStr(string,close+2-start),open:=sc.2266(bm,1)
 			Continue
 		}
 		if(open<0)
@@ -1415,18 +1424,19 @@ Context(return=""){
 				pre:=sc.textrange(wordstartpos:=sc.2266(wb-1,1),sc.2267(wb-1,1))
 			if(inst:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Instance' and @upper='" upper(pre) "']")){
 				if(args:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Class' and @upper='" upper(xml.ea(inst).class) "']/descendant-or-self::*[@upper='" upper(word) "']/@args").text)
-					synmatch.push(pre "." word "(" args ")"),startpos:=startpos=0?wordstartpos:startpos
+					synmatch.push(pre "." word "(" args ")"),startpos:=startpos=0?wordstartpos:startpos,commas++
 			}if(fun:=cexml.ssn("//lib/descendant::info[@upper='" upper(word) "']")){
-				synmatch.push(word "(" xml.ea(fun).args ")"),startpos:=startpos=0?wordstartpos:startpos
+				synmatch.push(word "(" xml.ea(fun).args ")"),startpos:=startpos=0?wordstartpos:startpos,commas++
 			}if(fun:=ssn(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Function'][@upper='" upper(word) "']"),"@args").text){
-				synmatch.push(word "("  fun  ")"),startpos:=startpos=0?wordstartpos:startpos
+				synmatch.push(word "("  fun  ")"),startpos:=startpos=0?wordstartpos:startpos,commas++
 			}if((ea:=scintilla.ea("//scintilla/commands/item[@code='" word "']")).syntax)
-				synmatch.push(pre "." word ea.syntax "`n" ea.name),startpos:=startpos=0?wordstartpos:startpos
+				synmatch.push(pre "." word ea.syntax "`n" ea.name),startpos:=startpos=0?wordstartpos:startpos,commas++
 			if(syn:=commands.ssn("//Commands/Commands/commands[text()='" v.kw[word] "']/@syntax").text)
-				synmatch.push(word syn),startpos:=startpos=0?wordstartpos:startpos
+				synmatch.push(word syn),startpos:=startpos=0?wordstartpos:startpos,commas+=SubStr(syn,1,1)="("?1:0
 			if(startpos)
 				break
-	}}if(word=""||word="if"){
+		}
+	}if(word=""||word="if"){
 		RegExMatch(string,"O)^\s*\W*(\w+)",word),word:=v.kw[word.1]?v.kw[word.1]:word.1,startpos:=start,loopword:=word,loopstring:=string,build:=word
 		if((list:=v.context[word])&&word!="if"){
 			for a,b in StrSplit(string,","){
@@ -1459,20 +1469,22 @@ Context(return=""){
 		return word
 	if(!syntax)
 		return
-	synbak:=RegExReplace(syntax,"(\n.*)"),RegExReplace(RegExReplace(synbak,"\(",",",,1),",","",count),syntax:=RegExReplace(syntax,Chr(96) "n","`n"),RegExReplace(RegExReplace(string,"\(",",","",1),",",,current)
+	synbak:=RegExReplace(syntax,"(\n.*)")
+	RegExReplace(synbak:=RegExReplace(synbak,  "\(",",",,1),",","",count)
+	syntax:=RegExReplace(syntax ,Chr(96) "n","`n")
 	if(count=0||word="if")
 		sc.2207(0xAAAAAA),sc.2200(startpos,syntax)
 	else{
 		ff:=RegExReplace(synbak,"\(",","),sc.2207(0xff0000),sc.2200(startpos,syntax)
-		if(current+1<=count)
-			sc.2204(InStr(ff,",",0,1,current),InStr(ff,",",0,1,current+1)-1)
-		if(current>count){
+		if(commas+1<=count)
+			sc.2204(InStr(ff,",",0,1,commas),InStr(ff,",",0,1,commas+1)-1)
+		if(commas>count){
 			if(InStr(SubStr(synbak,InStr(ff,",",0,1,count)+1),"*"))
-				current:=1
+				commas:=1
 			else
 				sc.2204(0,StrLen(ff)),sc.2207(0x0000ff)
-		}if(current=count)
-			end:=RegExMatch(syntax,"(\n|\]|\))"),end:=end?end-1:strlen(ff),sc.2204(InStr(ff,",",0,1,current),end)
+		}if(commas=count)
+			end:=RegExMatch(syntax,"(\n|\]|\))"),end:=end?end-1:strlen(ff),sc.2204(InStr(ff,",",0,1,commas),end)
 	}
 	return
 }
@@ -1994,7 +2006,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:3},menus:{date:20151106173300,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20150606000000,loc:"SciLexer.dll",url:"SciLexer.dll",type:3},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:3},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:3}}
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151106173300,loc:"lib\menus.xml",url:"lib/menus.xml",type:1},scilexer:{date:20151110121500,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
@@ -2054,7 +2066,7 @@ FileCheck(file){
 				}menus.add("date",,b.date),menus.save(1),options:=temp.sn("//*[@clean='Options']/*")
 				while,oo:=options.item[A_Index-1],ea:=xml.ea(oo)
 					menus.ssn("//*[@clean='" ea.clean "']").SetAttribute("option",1)
-		}}else if(time<=b.date&&type=1){
+		}}else if((time<b.date)&&b.type=1){
 			SplashTextOn,200,100,% "Downloading " b.loc,Please Wait....
 			UrlDownloadToFile,% url b.url,% b.loc
 			FileSetTime,% b.date,% b.loc,M
@@ -3290,10 +3302,10 @@ Notes(NoActivate:=0){
 	lastfile:=last
 }
 Notify(csc:=""){
+	notify:
 	static last,lastline,lastpos:=[],focus:=[],dwellfold:="",spam
 	if(csc=0)
 		return lastpos:=[]
-	notify:
 	fn:=[],info:=A_EventInfo,code:=NumGet(info+(A_PtrSize*2))
 	if(NumGet(info+0)=v.debug.sc&&v.debug.sc)
 		return
@@ -3320,11 +3332,17 @@ Notify(csc:=""){
 		return
 	}if(!s.ctrl[NumGet(info+0)])
 		return csc(1)
-	if code not in 2001,2002,2004,2006,2007,2008,2010,2014,2018,2019,2021,2022,2027
+	if code not in 2001,2005,2002,2004,2006,2007,2008,2010,2014,2018,2019,2021,2022,2027
 		return 0
 	;0:"Obj",2:"Code",4:"ch",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",17:"listType",22:"updated"
 	for a,b in {0:"Obj",2:"Code",3:"position",4:"ch",5:"mod",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",17:"listType",22:"updated"}
 		fn[b]:=NumGet(Info+(A_PtrSize*a))
+	/*
+		if(fn.ch=32){
+		;this is also where you would check for new words
+			t(word)
+		}
+	*/
 	if(fn.code=2010){
 		margin:=NumGet(Info+(A_PtrSize*16)),line:=sc.2166(fn.position)
 		if(margin=3)
@@ -3342,11 +3360,12 @@ Notify(csc:=""){
 				*/
 			}
 		}
+		;testing()::""
 	}if(fn.code=2022){
 		if v.options.Autocomplete_Enter_Newline
 			SetTimer,sendenter,100
 		Else{
-			v.word:=StrGet(fn.text,"utf-8")
+			v.word:=StrGet(fn.text,"utf-8") ;this is also where you would check for new words
 			if(v.word="#Include"&&v.options.Disable_Include_Dialog!=1)
 				SetTimer,getinclude,-200
 			else if(v.word~="i)(goto|gosub)")
@@ -3384,7 +3403,7 @@ Notify(csc:=""){
 		if(fn.ch=10&&v.options.full_auto!=1){
 			SetTimer,fix_next,-50
 			return
-		}cpos:=sc.2008,start:=sc.2266(cpos,1),end:=sc.2267(cpos,1),word:=sc.getword()
+		}cpos:=sc.2008,start:=sc.2266(cpos,1),end:=sc.2267(cpos,1),word:=sc.textrange(start,sc.2008)
 		if((StrLen(word)>1&&sc.2102=0&&v.options.Disable_Auto_Complete!=1)){
 			if((!sc.2202&&v.options.Disable_Auto_Complete_While_Tips_Are_Visible=1)||(sc.2010(cpos)~="\b(13|1|11|3)\b"=1&&v.options.Disable_Auto_Complete_In_Quotes=1)){
 			}else{
@@ -4480,13 +4499,13 @@ Run(){
 		DynaRun(csc().getuni())
 		return
 	}
+	sc:=csc(),getpos(),save(),file:=ssn(current(1),"@file").text
+	SplitPath,file,,dir,ext
 	if(!current(1).xml)
 		return
-	sc:=csc(),getpos(),save(),file:=ssn(current(1),"@file").text
 	if(file=A_ScriptFullPath)
 		exit(1)
 	main:=ssn(current(1),"@file").text
-	SplitPath,file,,dir
 	run:=FileExist(dir "\AutoHotkey.exe")?Chr(34) dir "\AutoHotkey.exe" Chr(34) " " Chr(34) file Chr(34):Chr(34) file Chr(34)
 	admin:=v.options.run_as_admin?"*RunAs ":""
 	Run,%admin%%run%,%dir%,,pid
@@ -4990,6 +5009,10 @@ tv(tv:=0,open:="",history:=0){
 					return
 				goto,tvtop
 			}
+			/*
+				;this is also where you would check for new words
+				;main scan
+			*/
 			sc.2358(0,doc),tt:=update({get:fn}),sc.2037(65001),txt:=Encode(tt),set(),sc.2181(0,&txt),sc.2175(),dup:=files.sn("//file[@file='" fn "']")
 			while,dd:=dup.item[A_Index-1]
 				dd.SetAttribute("sc",doc)
@@ -5018,9 +5041,8 @@ tv(tv:=0,open:="",history:=0){
 	Gui,1:TreeView,SysTreeView321
 	sc:=csc()
 	doc:=sc.2357(),tv:=files.ssn("//*[@tv='" TV_GetSelection() "']"),ea:=xml.ea(tv)
-	if(doc!=ea.sc){
+	if(doc!=ea.sc)
 		tv(TV_GetSelection(),1)
-	}
 	return
 }
 TVIcons(x:=""){
