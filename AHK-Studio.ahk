@@ -4105,10 +4105,8 @@ QF(){
 				Break,2
 			}
 			if(found.Count()){
-				/*
-					if(!found.len(A_Index))
-						Break
-				*/
+				if(!found.len(A_Index))
+					Break
 				Loop,% found.Count()
 					ns:=StrPut(SubStr(search,1,found.Pos(A_Index)),"utf-8")-1,select.items.push({start:start+ns,end:start+ns+StrPut(found[A_Index])-1}),pos:=found.Pos(A_Index)+found.len(A_Index)
 			}else{
@@ -4116,6 +4114,9 @@ QF(){
 					Break
 				ns:=StrPut(SubStr(search,1,found.Pos(0)),"utf-8")-1,select.items.InsertAt(1,{start:start+ns,end:start+ns+StrPut(found[0])-1}),pos:=found.Pos(0)+found.len(0)
 			}
+			if(lastpos=pos)
+				Break
+			lastpos:=pos
 		}
 	}
 	lastfind:=find
