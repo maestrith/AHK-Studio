@@ -88,12 +88,6 @@ OR PERFORMANCE OF THIS SOFTWARE.
 	hwnd({rem:11})
 	return
 }
-Activate(a,b,c,d){
-	if(a&&A_Gui=1){
-		Gui,1:Default
-		Gui,1:TreeView,SysTreeView321
-		setpos(TV_GetSelection()),csc(1)
-}}
 AutoMenu(){
 	AutoMenu:
 	sc:=csc()
@@ -128,243 +122,6 @@ BookEnd(add,hotkey){
 	}
 	sc.2079
 }
-Brace(){
-	ControlGetFocus,Focus,A
-	sc:=csc(),cp:=sc.2008,line:=sc.2166(cp),et:=xml.ea(settings.find("//autoadd/key/@trigger",A_ThisHotkey)),ea:=xml.ea(settings.find("//autoadd/key/@add",A_ThisHotkey)),hotkey:=SubStr(A_ThisHotkey,0)
-	if(!InStr(Focus,"Scintilla")){
-		Send,{%hotkey%}
-		return
-	}
-	if(A_ThisHotkey=Chr(34))
-		if(sc.2010(sc.2008)=13)
-			return sc.2003(sc.2008,Chr(34)),sc.2025(sc.2008+1)
-	hotkey:=SubStr(A_ThisHotkey,0),add:=ea.add
-	/*
-		if(!add)
-			return
-	*/
-	if(sc.2102&&v.options.Disable_Auto_Insert_Complete!=1){
-		word:=sc.getword()
-		if(xml.ea(cexml.ssn("//*[@upper='" upper(word) "']")).type~="Method|Function")
-			sc.2101
-		else{
-			sc.2104(),cp:=sc.2008
-			if(Chr(sc.2007(sc.2008-1))=hotkey)
-				return
-		}
-	}else
-		sc.2101()
-	if(sc.2007(sc.2008)=Asc(ea.add)&&v.options.Auto_Advance&&sc.2007(sc.2008)!=0)
-		return sc.2025(sc.2008+1)
-	if(ea.trigger!=ea.add)
-		return sc.2003(sc.2008,ea.add),sc.2025(sc.2008+1)
-	if(sc.2008!=sc.2009)
-		return bookend(et.add,hotkey)
-	if(hotkey="{"&&sc.2128(line)=cp&&cp=sc.2136(line)&&v.options.full_auto)
-		sc.2003(cp,"{`n`n}"),fix_indent(),sc.2025(sc.2136(line+1))
-	else if(hotkey="{"&&sc.2128(line)=cp&&cp!=sc.2136(line)&&v.options.full_auto)
-		sc.2078(),backup:=Clipboard,sc.2419(cp,sc.2136(line)),sc.2645(cp,sc.2136(line)-cp),sc.2003(cp,"{`n" clipboard "`n}"),fix_indent(),Clipboard:=backup,sc.2079()
-	else
-		sc.2003(cp,hotkey et.add),sc.2025(cp+1)
-	SetStatus("Last Entered Character: " hotkey " Code:" Asc(hotkey),2),replace()
-	return
-	match:
-	sc:=csc()
-	ControlGetFocus,Focus,A
-	if(sc.2008!=sc.2009&&InStr(focus,"Scintilla"))
-		bookend(v.match[A_ThisHotkey],A_ThisHotkey)
-	else
-		Send,{%A_ThisHotkey%}
-	SetStatus("Last Entered Character: " A_ThisHotkey " Code:" Asc(A_ThisHotkey),2)
-	return
-}
-BraceSetup(Win=1){
-	static oldkeys:=[]
-	Hotkey,IfWinActive,% hwnd([win])
-	for a in oldkeys
-		Hotkey,%a%,brace,Off
-	v.brace:=[],autoadd:=settings.sn("//autoadd/*")
-	if(!RegExReplace(test:=settings.ssn("//autoadd/*/@trigger").text,"\d"))
-		while,aa:=autoadd.item[A_Index-1],ea:=xml.ea(aa)
-			aa.SetAttribute("trigger",Chr(ea.trigger)),aa.SetAttribute("add",Chr(ea.add))
-	v.braceadvance:=[],oldkeys:=[]
-	while,aa:=autoadd.item(a_index-1),ea:=xml.ea(aa){
-		if(ea.trigger){
-			v.brace[ea.trigger]:=ea.add,v.braceadvance[ea.add]:=Asc(ea.add),oldkeys[ea.trigger]:=1
-			if(ea.trigger!=ea.add)
-				oldkeys[ea.Add]:=1
-		}
-	}
-	for a in oldkeys
-		Hotkey,%a%,brace,On
-}
-Center(win){
-	Gui,%win%:Show,Hide
-	WinGetPos,x,y,w,h,% hwnd([1])
-	WinGetPos,xx,yy,ww,hh,% hwnd([win])
-	centerx:=(Abs(w-ww)/2),centery:=Abs(h-hh)/2
-	return "x" x+centerx " y" y+centery
-}
-CenterSel(){
-	sc:=csc(),sc.2169,a:=sc.2166(sc.2585(sc.2575)),total:=sc.2370/2-1
-	;sc.2168(-100)
-	if(v.options.center_caret!=1)
-		sc.2403(0x04|0x08),sc.2169(),sc.2403(0,0)
-}
-Check_For_Edited(){
-	all:=files.sn("//file"),sc:=csc()
-	while,aa:=all.item[A_Index-1],ea:=xml.ea(aa){
-		FileGetTime,time,% ea.file
-		if(time!=ea.time){
-			list.=ea.filename ","
-			aa.SetAttribute("time",time)
-			FileRead,text,% ea.file
-			text:=RegExReplace(text,"\r\n|\r","`n")
-			if(ea.sc=sc.2357)
-				sc.2181(0,[text])
-			else if(ea.sc&&ea.sc!=sc.2357)
-				sc.2377(ea.sc),aa.RemoveAttribute("sc")
-			update({file:ea.file,text:text})
-		}
-	}
-	if(list)
-		SetStatus("Files Updated:" Trim(list,","),3)
-	return 1
-}
-Class Code_Explorer{
-	static explore:=[],TreeView:=[],sort:=[],function:="OUm`n)^[\s|}]*((\w|[^\x00-\x7F])+)\((.*)\)(\s+;.*)?\n?[\s]*\{",label:="UOm`n)^\s*((\w|[^\x00-\x7F])+):[\s|\R][\s+;]?",class:="Om`ni)^[\s*]?(class\s+(\w|[^\x00-\x7F])+)",Property:="Om`n)^\s*((\w|[^\x00-\x7F])+)\[(.*)?\][\s+;.*\s+]?[\s*]?{",functions:=[],variables:=[],varlist:=[]
-	scan(node){
-		static no:=new xml("no")
-		ea:=xml.ea(node),text:="`n" update({get:ea.file}),pos:=1,parent:=ssn(node,"@file").text,next:=cexml.ssn("//file[@file='" parent "']"),fnme:=ea.file
-		while,uu:=ssn(next,"*")
-			uu.ParentNode.RemoveChild(uu)
-		pos:=1,rem:=no.ssn("//bad"),rem.ParentNode.RemoveChild(rem),notop:=no.add("bad")
-		while,RegExMatch(text,"OUm`r)\n\s*(\x2F\x2A.*\x2A\x2F)",found,pos),pos:=found.pos(1)+found.len(1)
-			no.under(notop,"bad",{min:found.pos(1)-3,max:found.pos(1)+found.len(1)-3,type:"comment"},,1)
-		pos:=1
-		while,RegExMatch(text,Code_Explorer.class,found,pos),pos:=found.Pos(1)+found.len(1)
-			if(!no.ssn("//bad[@min<'" found.pos(1) "' and @max>'" found.pos(1) "']"))
-				cexml.under(next,"info",{type:"Class",opos:found.Pos(1)-1,pos:ppp:=StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-3,text:RegExReplace(found.1,"i)^(class|\s)"),upper:upper(RegExReplace(found.1,"i)(class\s+)"))})
-		clist:=sn(next,"descendant::info[@type='Class']")
-		while,cc:=clist.item[A_Index-1],ea:=xml.ea(cc){
-			tt:=SubStr(text,ea.pos+1),total:="",braces:=0,start:=0
-			for a,b in StrSplit(tt,"`n"){
-				line:=Trim(RegExReplace(b,"(\s+" Chr(59) ".*)"))
-				if(SubStr(line,1,1)="}"){
-					while,((found1:=SubStr(line,A_Index,1))~="(}|\s)"){
-						if(found1~="\s")
-							Continue
-						braces--
-					}
-				}
-				if(start&&braces=0)
-					break
-				total.=b "`n"
-				if(SubStr(line,0,1)="{")
-					braces++,start:=1
-			}lasteapos:=ea.pos,total:=Trim(total,"`n"),cc.SetAttribute("end",np:=ea.pos+StrPut(total,"utf-8")-1)
-			for a,b in {Property:Code_Explorer.property,Method:Code_Explorer.function}{
-				pos:=1
-				while,RegExMatch(total,b,found,pos),pos:=found.Pos(1)+found.len(1)
-					if(no.ssn("//bad[@min<'" ea.pos+found.pos(1) "' and @max>'" ea.pos+found.pos(1) "']")=""&&found.1!="if")
-						add:=a="property"?"[":"(",cexml.under(cc,"info",{type:a,pos:ea.pos+StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-2,text:found.1,upper:upper(found.1),args:found.value(3),class:ea.text})
-			}no.Add("bad/bad",{min:ea.pos,max:np,type:"Class"},,1)
-		}pos:=1
-		while,RegExMatch(text,Code_Explorer.Function,found,pos),pos:=found.pos(1)+found.len(1){
-			if(no.ssn("//bad[@min<'" found.pos(1) "' and @max>'" found.pos(1)+1 "']")=""&&found.1!="if"){
-				cexml.under(next,"info",{args:found.3,type:"Function",text:found.1,upper:upper(found.1),pos:StrPut(SubStr(text,1,found.pos(1)))-3})
-				/*
-					if(RegExMatch(tq:=SubStr(text,found.Pos(0)+found.len(0)),"OU)^\s*(\;.*)\n",fq)){
-						RegExMatch(SubStr(tq,fq.Pos(0)+fq.len(0)),"UO)^\s*(;.*)\n",fq2)
-						v.listo.=fq.0 "`n-`n" fq2.0 "`n-----`n"
-					}
-				*/
-			}
-		}for type,find in {Hotkey:"Om`n)^\s*([#|!|^|\+|~|\$|&|<|>|*]*\w+([ |\t]*\&[ |\t]*[#|!|^|\+|~|\$|&|<|>|*]*\w+)?)::",Label:this.label}{
-			pos:=1
-			while,RegExMatch(text,find,fun,pos),pos:=fun.pos(1)+fun.len(1)
-				if(!no.ssn("//bad[@min<'" fun.pos(1) "' and @max>'" fun.pos(1) "' and @type!='Class']"))
-					cexml.under(next,"info",{type:type,pos:StrPut(SubStr(text,1,fun.Pos(1)),"utf-8")-3,text:fun.1,upper:upper(fun.1)})
-		}pos:=1
-		while,RegExMatch(text,"OUi).*(\w+)\s*:=\s*new\s*(\w+)\(",found,pos),pos:=found.Pos(2)+found.len(2){
-			if(!no.ssn("//bad[@min<'" found.pos(1) "' and @max>'" found.pos(1) "' and @type!='Class']"))
-				cexml.under(next,"info",{type:"Instance",upper:upper(found.1),pos:StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-3,text:found.1,class:found.2})
-		}if(!v.options.Disable_Variable_List){
-			pos:=1,main:=ssn(node,"ancestor::main")
-			while,pos:=RegExMatch(text,"Osm`n)(\w+)\s*:=",var,pos),pos:=var.Pos(1)+var.len(1)
-				if(!ssn(main,"descendant::*[@type='Variable'][@text='" var.1 "'] or descendant::*[@type='Instance'][@text='" var.1 "']"))
-					cexml.under(next,"info",{type:"Variable",upper:upper(var.1),pos:StrPut(SubStr(text,1,var.Pos(1)),"utf-8")-3,text:var.1})
-		}pos:=1
-		while,pos:=RegExMatch(text,"OU);#\[(.*)\]",found,pos),pos:=found.Pos(1)+found.len(1)
-			cexml.under(next,"info",{type:"Bookmark",upper:upper(found.1),pos:StrPut(SubStr(text,1,found.Pos(0)),"utf-8"),text:found.1})
-	}remove(filename){
-		this.explore.remove(ssn(filename,"@file").text),list:=sn(filename,"@file")
-		while,ll:=list.item[A_Index-1]
-			this.explore.Remove(ll.text)
-	}populate(){
-		code_explorer.Refresh_Code_Explorer()
-		Gui,1:TreeView,SysTreeView321
-	}Add(value,parent=0,options=""){
-		Gui,1:Default
-		Gui,1:TreeView,SysTreeView322
-		return this.Add(value,parent,options)
-	}Refresh_Code_Explorer(){
-		if(v.options.Hide_Code_Explorer)
-			return
-		Gui,1:Default
-		Gui,1:TreeView,SysTreeView322
-		GuiControl,1:-Redraw,SysTreeView322
-		TV_Delete()
-		code_explorer.scan(current()),cet:=code_explorer.treeview:=new xml("TreeView"),bookmark:=[]
-		SplashTextOff
-		GuiControl,1:-Redraw,SysTreeView322
-		fz:=cexml.sn("//files/main")
-		while,fn:=fz.Item[A_Index-1]{
-			things:=sn(fn,"descendant::info"),filename:=ssn(fn,"@file").text
-			SplitPath,filename,file
-			Gui,1:Default
-			Gui,1:TreeView,SysTreeView322
-			main:=TV_Add(file,0,"Sort")
-			while,tt:=things.Item[A_Index-1],ea:=xml.ea(tt){
-				if(ea.type="variable")
-					continue
-				fin:=ssn(tt,"ancestor::file/@file").text
-				if(!top:=cet.ssn("//main[@file='" filename "'][@type='" ea.type "']"))
-					if(!(ea.type~="(Method|Property)"))
-						top:=cet.Add("main",{file:filename,type:ea.type,tv:TV_Add(ea.type,main,"Vis Sort")},"",1)
-				if(ea.type~="(Method|Property)")
-					cet.under(last,"info",{text:ea.text,pos:ea.pos,file:fin,tv:TV_Add(ea.text,ssn(last,"@tv").text,"Sort")})
-				else
-					last:=cet.under(top,"info",{text:ea.text,pos:ea.pos,file:fin,type:ea.type,tv:TV_Add(ea.text,ssn(top,"@tv").text,"Sort")})
-			}
-		}
-		GuiControl,1:+Redraw,SysTreeView322
-		Gui,1:TreeView,SysTreeView321
-		return
-	}cej(){
-		static last
-		cej:
-		if((A_GuiEvent="S"||A_EventInfo=last)&&A_GuiEvent!="RightClick"){
-			list:="",last:=A_EventInfo
-			if(found:=code_explorer.TreeView.ssn("//*[@tv='" A_EventInfo "']")){
-				ea:=xml.ea(found)
-				if(ea.pos="")
-					return
-				parent:=ssn(found,"ancestor::main/@file").text,
-				TV(files.ssn("//main[@file='" parent "']/descendant::file[@file='" ea.file "']/@tv").text)
-				Sleep,200
-				if(ea.type="bookmark"){
-					sc:=csc(),line:=sc.2166(ea.pos),sc.2160(sc.2128(line),sc.2136(line)),CenterSel()
-					ControlFocus,,% "ahk_id" csc().sc
-				}
-				else
-					csc().2160(ea.pos,ea.pos+StrPut(ea.text,"Utf-8")-1+_:=ea.type="class"?+6:+0) ;,v.sc.2169,v.sc.2400
-				ControlFocus,SysTreeView322,% hwnd([1])
-			}
-			return
-		}
-		return
-}}
 Class FTP{
 	__New(name){
 		ea:=settings.ea("//ftp/server[@name='" name "']"),this.error:=0
@@ -1215,6 +972,245 @@ Clear_Line_Status(){
 		Loop,% b.2154
 			b.2532(A_Index-1,33)
 }
+Brace(){
+	ControlGetFocus,Focus,A
+	sc:=csc(),cp:=sc.2008,line:=sc.2166(cp),et:=xml.ea(settings.find("//autoadd/key/@trigger",A_ThisHotkey)),ea:=xml.ea(settings.find("//autoadd/key/@add",A_ThisHotkey)),hotkey:=SubStr(A_ThisHotkey,0)
+	if(!InStr(Focus,"Scintilla")){
+		Send,{%hotkey%}
+		return
+	}
+	if(A_ThisHotkey=Chr(34))
+		if(sc.2010(sc.2008)=13)
+			return sc.2003(sc.2008,Chr(34)),sc.2025(sc.2008+1)
+	hotkey:=SubStr(A_ThisHotkey,0),add:=ea.add
+	/*
+		if(!add)
+			return
+	*/
+	if(sc.2102&&v.options.Disable_Auto_Insert_Complete!=1){
+		word:=sc.getword()
+		if(xml.ea(cexml.ssn("//*[@upper='" upper(word) "']")).type~="Method|Function")
+			sc.2101
+		else{
+			sc.2104(),cp:=sc.2008
+			if(Chr(sc.2007(sc.2008-1))=hotkey)
+				return
+		}
+	}else
+		sc.2101()
+	if(sc.2007(sc.2008)=Asc(ea.add)&&v.options.Auto_Advance&&sc.2007(sc.2008)!=0)
+		return sc.2025(sc.2008+1)
+	if(ea.trigger!=ea.add)
+		return sc.2003(sc.2008,ea.add),sc.2025(sc.2008+1)
+	if(sc.2008!=sc.2009)
+		return bookend(et.add,hotkey)
+	if(hotkey="{"&&sc.2128(line)=cp&&cp=sc.2136(line)&&v.options.full_auto)
+		sc.2003(cp,"{`n`n}"),fix_indent(),sc.2025(sc.2136(line+1))
+	else if(hotkey="{"&&sc.2128(line)=cp&&cp!=sc.2136(line)&&v.options.full_auto)
+		sc.2078(),backup:=Clipboard,sc.2419(cp,sc.2136(line)),sc.2645(cp,sc.2136(line)-cp),sc.2003(cp,"{`n" clipboard "`n}"),fix_indent(),Clipboard:=backup,sc.2079()
+	else
+		sc.2003(cp,hotkey et.add),sc.2025(cp+1)
+	SetStatus("Last Entered Character: " hotkey " Code:" Asc(hotkey),2),replace()
+	return
+	match:
+	sc:=csc()
+	ControlGetFocus,Focus,A
+	if(sc.2008!=sc.2009&&InStr(focus,"Scintilla"))
+		bookend(v.match[A_ThisHotkey],A_ThisHotkey)
+	else
+		Send,{%A_ThisHotkey%}
+	SetStatus("Last Entered Character: " A_ThisHotkey " Code:" Asc(A_ThisHotkey),2)
+	return
+}
+BraceSetup(Win=1){
+	static oldkeys:=[]
+	Hotkey,IfWinActive,% hwnd([win])
+	for a in oldkeys
+		Hotkey,%a%,brace,Off
+	v.brace:=[],autoadd:=settings.sn("//autoadd/*")
+	if(!RegExReplace(test:=settings.ssn("//autoadd/*/@trigger").text,"\d"))
+		while,aa:=autoadd.item[A_Index-1],ea:=xml.ea(aa)
+			aa.SetAttribute("trigger",Chr(ea.trigger)),aa.SetAttribute("add",Chr(ea.add))
+	v.braceadvance:=[],oldkeys:=[]
+	while,aa:=autoadd.item(a_index-1),ea:=xml.ea(aa){
+		if(ea.trigger){
+			v.brace[ea.trigger]:=ea.add,v.braceadvance[ea.add]:=Asc(ea.add),oldkeys[ea.trigger]:=1
+			if(ea.trigger!=ea.add)
+				oldkeys[ea.Add]:=1
+		}
+	}
+	for a in oldkeys
+		Hotkey,%a%,brace,On
+}
+Center(win){
+	Gui,%win%:Show,Hide
+	WinGetPos,x,y,w,h,% hwnd([1])
+	WinGetPos,xx,yy,ww,hh,% hwnd([win])
+	centerx:=(Abs(w-ww)/2),centery:=Abs(h-hh)/2
+	return "x" x+centerx " y" y+centery
+}
+CenterSel(){
+	sc:=csc(),sc.2169,a:=sc.2166(sc.2585(sc.2575)),total:=sc.2370/2-1
+	if(v.options.center_caret!=1){
+		sc.2403(0x04|0x08)
+		Sleep,1
+		sc.2169(),sc.2403(0,0)
+	}
+}
+Check_For_Edited(){
+	all:=files.sn("//file"),sc:=csc()
+	while,aa:=all.item[A_Index-1],ea:=xml.ea(aa){
+		FileGetTime,time,% ea.file
+		if(time!=ea.time){
+			list.=ea.filename ","
+			aa.SetAttribute("time",time)
+			FileRead,text,% ea.file
+			text:=RegExReplace(text,"\r\n|\r","`n")
+			if(ea.sc=sc.2357)
+				sc.2181(0,[text])
+			else if(ea.sc&&ea.sc!=sc.2357)
+				sc.2377(ea.sc),aa.RemoveAttribute("sc")
+			update({file:ea.file,text:text})
+		}
+	}
+	if(list)
+		SetStatus("Files Updated:" Trim(list,","),3)
+	return 1
+}
+Class Code_Explorer{
+	static explore:=[],TreeView:=[],sort:=[],function:="OUm`n)^[\s|}]*((\w|[^\x00-\x7F])+)\((.*)\)(\s+;.*)?\n?[\s]*\{",label:="UOm`n)^\s*((\w|[^\x00-\x7F])+):[\s|\R][\s+;]?",class:="Om`ni)^[\s*]?(class\s+(\w|[^\x00-\x7F])+)",Property:="Om`n)^\s*((\w|[^\x00-\x7F])+)\[(.*)?\][\s+;.*\s+]?[\s*]?{",functions:=[],variables:=[],varlist:=[]
+	scan(node){
+		static no:=new xml("no")
+		ea:=xml.ea(node),text:="`n" update({get:ea.file}),pos:=1,parent:=ssn(node,"@file").text,next:=cexml.ssn("//file[@file='" parent "']"),fnme:=ea.file
+		while,uu:=ssn(next,"*")
+			uu.ParentNode.RemoveChild(uu)
+		pos:=1,rem:=no.ssn("//bad"),rem.ParentNode.RemoveChild(rem),notop:=no.add("bad")
+		while,RegExMatch(text,"OUm`r)\n\s*(\x2F\x2A.*\x2A\x2F)",found,pos),pos:=found.pos(1)+found.len(1)
+			no.under(notop,"bad",{min:found.pos(1)-3,max:found.pos(1)+found.len(1)-3,type:"comment"},,1)
+		pos:=1
+		while,RegExMatch(text,Code_Explorer.class,found,pos),pos:=found.Pos(1)+found.len(1)
+			if(!no.ssn("//bad[@min<'" found.pos(1) "' and @max>'" found.pos(1) "']"))
+				cexml.under(next,"info",{type:"Class",opos:found.Pos(1)-1,pos:ppp:=StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-3,text:RegExReplace(found.1,"i)^(class|\s)"),upper:upper(RegExReplace(found.1,"i)(class\s+)"))})
+		clist:=sn(next,"descendant::info[@type='Class']")
+		while,cc:=clist.item[A_Index-1],ea:=xml.ea(cc){
+			tt:=SubStr(text,ea.pos+1),total:="",braces:=0,start:=0
+			for a,b in StrSplit(tt,"`n"){
+				line:=Trim(RegExReplace(b,"(\s+" Chr(59) ".*)"))
+				if(SubStr(line,1,1)="}"){
+					while,((found1:=SubStr(line,A_Index,1))~="(}|\s)"){
+						if(found1~="\s")
+							Continue
+						braces--
+					}
+				}
+				if(start&&braces=0)
+					break
+				total.=b "`n"
+				if(SubStr(line,0,1)="{")
+					braces++,start:=1
+			}lasteapos:=ea.pos,total:=Trim(total,"`n"),cc.SetAttribute("end",np:=ea.pos+StrPut(total,"utf-8")-1)
+			for a,b in {Property:Code_Explorer.property,Method:Code_Explorer.function}{
+				pos:=1
+				while,RegExMatch(total,b,found,pos),pos:=found.Pos(1)+found.len(1)
+					if(no.ssn("//bad[@min<'" ea.pos+found.pos(1) "' and @max>'" ea.pos+found.pos(1) "']")=""&&found.1!="if")
+						add:=a="property"?"[":"(",cexml.under(cc,"info",{type:a,pos:ea.pos+StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-2,text:found.1,upper:upper(found.1),args:found.value(3),class:ea.text})
+			}no.Add("bad/bad",{min:ea.pos,max:np,type:"Class"},,1)
+		}pos:=1
+		while,RegExMatch(text,Code_Explorer.Function,found,pos),pos:=found.pos(1)+found.len(1){
+			if(no.ssn("//bad[@min<'" found.pos(1) "' and @max>'" found.pos(1)+1 "']")=""&&found.1!="if"){
+				cexml.under(next,"info",{args:found.3,type:"Function",text:found.1,upper:upper(found.1),pos:StrPut(SubStr(text,1,found.pos(1)))-3})
+				/*
+					if(RegExMatch(tq:=SubStr(text,found.Pos(0)+found.len(0)),"OU)^\s*(\;.*)\n",fq)){
+						RegExMatch(SubStr(tq,fq.Pos(0)+fq.len(0)),"UO)^\s*(;.*)\n",fq2)
+						v.listo.=fq.0 "`n-`n" fq2.0 "`n-----`n"
+					}
+				*/
+			}
+		}for type,find in {Hotkey:"Om`n)^\s*([#|!|^|\+|~|\$|&|<|>|*]*\w+([ |\t]*\&[ |\t]*[#|!|^|\+|~|\$|&|<|>|*]*\w+)?)::",Label:this.label}{
+			pos:=1
+			while,RegExMatch(text,find,fun,pos),pos:=fun.pos(1)+fun.len(1)
+				if(!no.ssn("//bad[@min<'" fun.pos(1) "' and @max>'" fun.pos(1) "' and @type!='Class']"))
+					cexml.under(next,"info",{type:type,pos:StrPut(SubStr(text,1,fun.Pos(1)),"utf-8")-3,text:fun.1,upper:upper(fun.1)})
+		}pos:=1
+		while,RegExMatch(text,"OUi).*(\w+)\s*:=\s*new\s*(\w+)\(",found,pos),pos:=found.Pos(2)+found.len(2){
+			if(!no.ssn("//bad[@min<'" found.pos(1) "' and @max>'" found.pos(1) "' and @type!='Class']"))
+				cexml.under(next,"info",{type:"Instance",upper:upper(found.1),pos:StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-3,text:found.1,class:found.2})
+		}if(!v.options.Disable_Variable_List){
+			pos:=1,main:=ssn(node,"ancestor::main")
+			while,pos:=RegExMatch(text,"Osm`n)(\w+)\s*:=",var,pos),pos:=var.Pos(1)+var.len(1)
+				if(!ssn(main,"descendant::*[@type='Variable'][@text='" var.1 "'] or descendant::*[@type='Instance'][@text='" var.1 "']"))
+					cexml.under(next,"info",{type:"Variable",upper:upper(var.1),pos:StrPut(SubStr(text,1,var.Pos(1)),"utf-8")-3,text:var.1})
+		}pos:=1
+		while,pos:=RegExMatch(text,"OU);#\[(.*)\]",found,pos),pos:=found.Pos(1)+found.len(1)
+			cexml.under(next,"info",{type:"Bookmark",upper:upper(found.1),pos:StrPut(SubStr(text,1,found.Pos(0)),"utf-8"),text:found.1})
+	}remove(filename){
+		this.explore.remove(ssn(filename,"@file").text),list:=sn(filename,"@file")
+		while,ll:=list.item[A_Index-1]
+			this.explore.Remove(ll.text)
+	}populate(){
+		code_explorer.Refresh_Code_Explorer()
+		Gui,1:TreeView,SysTreeView321
+	}Add(value,parent=0,options=""){
+		Gui,1:Default
+		Gui,1:TreeView,SysTreeView322
+		return this.Add(value,parent,options)
+	}Refresh_Code_Explorer(){
+		if(v.options.Hide_Code_Explorer)
+			return
+		Gui,1:Default
+		Gui,1:TreeView,SysTreeView322
+		GuiControl,1:-Redraw,SysTreeView322
+		TV_Delete()
+		code_explorer.scan(current()),cet:=code_explorer.treeview:=new xml("TreeView"),bookmark:=[]
+		SplashTextOff
+		GuiControl,1:-Redraw,SysTreeView322
+		fz:=cexml.sn("//files/main")
+		while,fn:=fz.Item[A_Index-1]{
+			things:=sn(fn,"descendant::info"),filename:=ssn(fn,"@file").text
+			SplitPath,filename,file
+			Gui,1:Default
+			Gui,1:TreeView,SysTreeView322
+			main:=TV_Add(file,0,"Sort")
+			while,tt:=things.Item[A_Index-1],ea:=xml.ea(tt){
+				if(ea.type="variable")
+					continue
+				fin:=ssn(tt,"ancestor::file/@file").text
+				if(!top:=cet.ssn("//main[@file='" filename "'][@type='" ea.type "']"))
+					if(!(ea.type~="(Method|Property)"))
+						top:=cet.Add("main",{file:filename,type:ea.type,tv:TV_Add(ea.type,main,"Vis Sort")},"",1)
+				if(ea.type~="(Method|Property)")
+					cet.under(last,"info",{text:ea.text,pos:ea.pos,file:fin,tv:TV_Add(ea.text,ssn(last,"@tv").text,"Sort")})
+				else
+					last:=cet.under(top,"info",{text:ea.text,pos:ea.pos,file:fin,type:ea.type,tv:TV_Add(ea.text,ssn(top,"@tv").text,"Sort")})
+			}
+		}
+		GuiControl,1:+Redraw,SysTreeView322
+		Gui,1:TreeView,SysTreeView321
+		return
+	}cej(){
+		static last
+		cej:
+		if((A_GuiEvent="S"||A_EventInfo=last)&&A_GuiEvent!="RightClick"){
+			list:="",last:=A_EventInfo
+			if(found:=code_explorer.TreeView.ssn("//*[@tv='" A_EventInfo "']")){
+				ea:=xml.ea(found)
+				if(ea.pos="")
+					return
+				parent:=ssn(found,"ancestor::main/@file").text,
+				TV(files.ssn("//main[@file='" parent "']/descendant::file[@file='" ea.file "']/@tv").text)
+				Sleep,200
+				if(ea.type="bookmark"){
+					sc:=csc(),line:=sc.2166(ea.pos),sc.2160(sc.2128(line),sc.2136(line)),CenterSel()
+					ControlFocus,,% "ahk_id" csc().sc
+				}
+				else
+					csc().2160(ea.pos,ea.pos+StrPut(ea.text,"Utf-8")-1+_:=ea.type="class"?+6:+0) ;,v.sc.2169,v.sc.2400
+				ControlFocus,SysTreeView322,% hwnd([1])
+			}
+			return
+		}
+		return
+}}
 Close(x:=1,all:="",Redraw:=1){
 	if(x=1)
 		save()
@@ -1299,22 +1295,6 @@ Color(con:=""){
 		Loop,7
 			con.2041(24+A_Index,ea.color!=""?ea.color:"0"),con.2042(24+A_Index,ea.background!=""?ea.Background:"0xaaaaaa")
 	}marginwidth()
-}
-Tab_Width(){
-	static
-	setup(23),width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5
-	Gui,Add,Text,,Enter a number for the tab width
-	Gui,Add,Edit,w100 vtabwidth gtabwidth,%width%
-	Gui,Show,,Tab Width
-	return
-	23GuiEscape:
-	23GuiClose:
-	hwnd({rem:23})
-	return
-	tabwidth:
-	Gui,Submit,Nohide
-	tabwidth:=tabwidth?tabwidth:5,csc().2036(tabwidth),settings.Add("tab").text:=tabwidth
-	return
 }
 Command_Help(){
 	static stuff,hwnd
@@ -1844,24 +1824,6 @@ Encode(tt){
 	length:=VarSetCapacity(text,strput(tt,"utf-8")),StrPut(tt,&text,length,"utf-8")
 	return text
 }
-Escape(){
-	sc:=csc()
-	ControlGetFocus,Focus,% hwnd([1])
-	if(!InStr(Focus,"scintilla")){
-		selections:=[],main:=sc.2575,sel:=sc.2570()
-		Loop,% sc.2570()
-			selections.push([sc.2577(A_Index-1),sc.2579(A_Index-1)])
-		sc.2400(),sc.2571()
-		Sleep,0
-		for a,b in selections{
-			if(A_Index=1)
-				sc.2160(b.2,b.1)
-			else
-				sc.2573(b.1,b.2)
-		}
-		sc.2574(main),CenterSel()
-	}
-}
 ExecScript(Script, Wait:=false){
 	shell:=ComObjCreate("WScript.Shell"),exec:=shell.Exec("AutoHotkey.exe /ErrorStdOut *"),exec.StdIn.Write(script),exec.StdIn.Close()
 	if(Wait)
@@ -2287,17 +2249,23 @@ Find(){
 	}else if(Button="jump"){
 		ea:=foundinfo[TV_GetSelection()]
 		Gui,1:+Disabled
-		if(ea.file!=current(3).file){
-			tv(files.ssn("//*[@file='" ea.file "']/@tv").text)
-			Sleep,100
-			WinActivate,% hwnd([5])
-		}
-		sc:=csc(),sc.2397(0),sc.2376,sc.2160(ea.start,ea.end),sc.2169,notify(0),CenterSel(),Notify("setpos")
-		if(v.options.auto_close_find){
-			hwnd({rem:5})
-			Gui,1:-Disabled
-		}else
-			WinActivate,% hwnd([5])
+		SetPos(ea)
+		/*
+			if(ea.file!=current(3).file){
+				tv(files.ssn("//*[@file='" ea.file "']/@tv").text)
+				Sleep,100
+				WinActivate,% hwnd([5])
+			}
+		*/
+		
+		/*
+			sc:=csc(),sc.2397(0),sc.2376,sc.2160(ea.start,ea.end),sc.2169,notify(0),CenterSel(),Notify("setpos")
+			if(v.options.auto_close_find){
+				hwnd({rem:5})
+				Gui,1:-Disabled
+			}else
+				WinActivate,% hwnd([5])
+		*/
 	}else{
 		sel:=TV_GetSelection(),TV_Modify(sel,ec:=TV_Get(sel,"E")?"-Expand":"Expand")
 		SetTimer,findlabel,-200
@@ -2564,7 +2532,8 @@ Gui(){
 	static controls:=["Static1","Edit1","Button1","Button2","Button3","Button4"]
 	Gui,+hwndhwnd +Resize +OwnDialogs
 	hwnd(1,hwnd),rb:=new rebar(1,hwnd),v.rb:=rb,pos:=settings.ssn("//gui/position[@window='1']")
-	OnMessage(6,"Activate"),v.opening:=1
+	;OnMessage(6,"Activate")
+	v.opening:=1
 	Gui,Margin,0,0
 	Gui,Add,TreeView,xm hwndce c0xff00ff w150
 	Gui,Add,TreeView,hwndpe c0xff00ff w150 gcej
@@ -2792,7 +2761,7 @@ History(file=""){
 			SetTimer,historyset,-20
 			return
 			historyset:
-			setpos(ltv:=last.pop())
+			SetPos(ltv:=last.pop())
 			return
 		}
 	}else
@@ -3311,24 +3280,33 @@ Notify(csc:=""){
 		return
 	if(info=256||info=512||info=768)
 		return
-	if(code=2029||(code=2007&&WinActive(hwnd([1]))=0)||csc="setpos"){
-		getpos(),focus:=sc:=csc(),obj:=lastpos[current(3).sc]:=[]
-		if(!WinActive(hwnd([1])))
-			Loop,% sc.2570
-				caret:=sc.2577(A_Index-1),anchor:=sc.2579(A_Index-1),(A_Index=1)?obj.push({2008:caret,2009:anchor,2152:sc.2152,main:caret=sc.2577(sc.2575)}):obj.push({2008:caret,2009:anchor,main:caret:=sc.2577(A_Index-1)})
-		return
-	}if(code=2028){
-		Sleep,20
-		sc:=focus.sc?focus:csc(1),maincaret:=1
-		for a,b in lastpos[current(3).sc]
-			maincaret:=b.main?A_Index:maincaret,(A_Index=1)?(sc.2160(b.2008,b.2009)):sc.2573(b.2008,b.2009)
-		sc.2574(maincaret-1)
-		if(fl:=lastpos[current(3).sc].1.2152)
-			sc.2613(fl)
-		SetTimer,Enable,-10
-		SetTimer,LButton,-200
+	sc:=csc()
+	/*
+		if(code=2029||(code=2007&&WinActive(hwnd([1]))=0)||csc="setpos"){
+			getpos(),focus:=sc:=csc(),obj:=lastpos[current(3).sc]:=[]
+			last:=sc.sc
+			if(!WinActive(hwnd([1])))
+				Loop,% sc.2570
+					caret:=sc.2577(A_Index-1),anchor:=sc.2579(A_Index-1),(A_Index=1)?obj.push({2008:caret,2009:anchor,2152:sc.2152,main:caret=sc.2577(sc.2575)}):obj.push({2008:caret,2009:anchor,main:caret:=sc.2577(A_Index-1)})
+			return
+		}
+	*/
+	if(code=2028){
 		if(v.options.Check_For_Edited_Files_On_Focus=1)
 			check_for_edited()
+		/* 
+			Sleep,20
+			sc:=focus.sc?focus:csc(1),maincaret:=1
+			return
+			focus:
+			for a,b in lastpos[current(3).sc]
+				maincaret:=b.main?A_Index:maincaret,(A_Index=1)?(sc.2160(b.2008,b.2009)):sc.2573(b.2008,b.2009)
+			sc.2574(maincaret-1)
+			if(fl:=lastpos[current(3).sc].1.2152)
+				sc.2613(fl)
+			SetTimer,Enable,-10
+			SetTimer,LButton,-20
+		*/
 		return
 	}if(!s.ctrl[NumGet(info+0)])
 		return csc(1)
@@ -3467,7 +3445,11 @@ Notify(csc:=""){
 	if(v.options.full_auto)
 		SetTimer,fullauto,10
 	return
-	enable:
+	Disable:
+	for a,b in s.ctrl
+		GuiControl,1:-Redraw,% b.sc
+	return
+	Enable:
 	for a,b in s.ctrl
 		GuiControl,1:+Redraw,% b.sc
 	return
@@ -4788,8 +4770,22 @@ SetMatch(){
 		if(!settings.find("//autoadd/key/@trigger",a))
 			key:=[],key[a]:="match",hotkeys([1],key)
 }
-SetPos(tv:=""){
+SetPos(oea:=""){
 	static
+	if(IsObject(oea)){
+		posinfo:=positions.ssn("//main[@file='" files.ssn("//*[@file='" oea.file "']/ancestor::main/@file").text "']/file[@file='" oea.file "']")
+		nea:=files.ea("//*[@sc='" sc.2357 "']"),cea:=files.ea("//*[@file='" oea.file "']")
+		SetTimer,Disable,-1
+		Sleep,2
+		if(oea.file!=nea.file)
+			tv(cea.tv,2,1)
+		for a,b in oea
+			posinfo.SetAttribute(a,b)
+		sc.2160(oea.start,oea.end)
+		SetTimer,CenterSel,-50
+		SetTimer,Enable,-250
+		return
+	}
 	delay:=(WinActive("A")=hwnd(1))?1:300
 	if(delay=1)
 		goto,spnext
@@ -4809,7 +4805,8 @@ SetPos(tv:=""){
 			SetTimer,setscrollpos,-1
 		return
 		setscrollpos:
-		sc.2613(ea.scroll),sc.2400()
+		if(ea.scroll)
+			sc.2613(ea.scroll),sc.2400()
 		return
 	}
 	return
@@ -4888,6 +4885,22 @@ stop(x:=0){
 	v.ddd.debug.disconnect()
 	v.ddd.debug.off()
 	csc("Scintilla1")
+}
+Tab_Width(){
+	static
+	setup(23),width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5
+	Gui,Add,Text,,Enter a number for the tab width
+	Gui,Add,Edit,w100 vtabwidth gtabwidth,%width%
+	Gui,Show,,Tab Width
+	return
+	23GuiEscape:
+	23GuiClose:
+	hwnd({rem:23})
+	return
+	tabwidth:
+	Gui,Submit,Nohide
+	tabwidth:=tabwidth?tabwidth:5,csc().2036(tabwidth),settings.Add("tab").text:=tabwidth
+	return
 }
 Test_Plugin(){
 	Save(),Exit(1,1)
@@ -4980,9 +4993,10 @@ Toggle_Multiple_Line_Comment(){
 	GuiControl,1:+Redraw,% csc().sc
 }
 tv(tv:=0,open:="",history:=0){
-	static fn,noredraw
+	static fn,noredraw,tvbak
 	Gui,1:Default
 	Gui,1:TreeView,SysTreeView321
+	tvbak:=tv
 	TV_Modify(tv,"Select Vis Focus")
 	if(open=""&&history=0)
 		return
@@ -4991,7 +5005,7 @@ tv(tv:=0,open:="",history:=0){
 		SetTimer,matchfile,Off
 		if(!v.startup)
 			getpos(),count:=0
-		ei:=open?tv:a_eventinfo,sc:=csc(),file:=files.ssn("//*[@tv='" ei "']"),fn:=ssn(file,"@file").text
+		ei:=open?tvbak:a_eventinfo,sc:=csc(),file:=files.ssn("//*[@tv='" ei "']"),fn:=ssn(file,"@file").text
 		sc.Enable()
 		if(file.nodename!="file")
 			return
@@ -5023,6 +5037,8 @@ tv(tv:=0,open:="",history:=0){
 		setpos(ei),uppos(),marginwidth(sc)
 		if(history!=1)
 			History(fn)
+		if(open=2)
+			
 		history:=0
 		WinSetTitle,% hwnd([1]),,AHK Studio - %fn%
 		sc.4004("fold",[1])
@@ -5222,6 +5238,24 @@ Words_In_Document(){
 	if(word)
 		StringReplace,list,list,%word%%A_Space%,,All
 	sc.2100(StrLen(word),Trim(list))
+}
+Escape(){
+	sc:=csc()
+	ControlGetFocus,Focus,% hwnd([1])
+	if(!InStr(Focus,"scintilla")){
+		selections:=[],main:=sc.2575,sel:=sc.2570()
+		Loop,% sc.2570()
+			selections.push([sc.2577(A_Index-1),sc.2579(A_Index-1)])
+		sc.2400(),sc.2571()
+		Sleep,0
+		for a,b in selections{
+			if(A_Index=1)
+				sc.2160(b.2,b.1)
+			else
+				sc.2573(b.1,b.2)
+		}
+		sc.2574(main),CenterSel()
+	}
 }
 ;plugin
 Quick_Scintilla_Code_Lookup(){
