@@ -1377,17 +1377,13 @@ Context(return=""){
 		return
 	if(cp<=start)
 		return
-	string:=sc.textrange(start,cp),pos:=1,fixcp:=cp,sub:=cp-start
-	/*
-		while,(fixcp>start){
-			if(sc.2010(fixcp)="3")
-				string:=RegExReplace(string,".","_",,1,sub-A_Index+2)
-			fixcp--
-		}co:=InStr(string,"(",,0),cc:=InStr(string,")",,0) ;,open:=cc>co?cc+start:co+start
-	*/
-	open:=sc.2008,commas:=0
+	found:=[]
+	string:=sc.textrange(start,cp),pos:=1,sub:=cp-start,open:=sc.2008,commas:=0
 	Loop{
 		sc.2190(open),sc.2192(start),close:=sc.2197(1,")"),sc.2190(open),sc.2192(start),comma:=sc.2197(1,","),sc.2190(open),sc.2192(start),open:=sc.2197(1,"(")
+		for a,b in {open:open,close:close,comma:comma}
+			if(sc.2010(b)=3)
+				%a%:=0
 		if(comma>close&&comma>open){
 			if(sc.2010(comma)~="\b97|4\b")
 				commas++
@@ -1398,7 +1394,7 @@ Context(return=""){
 			bm:=sc.2353(close),wb:=sc.2266(bm,1),string:=SubStr(string,1,wb-start) SubStr(string,close+2-start),open:=sc.2266(bm,1)
 			Continue
 		}
-		if(open<0)
+		if(open<start)
 			break
 		word:=sc.textrange(wb:=sc.2266(open,1),sc.2267(open,1)),wordstartpos:=wb
 		if(word){
@@ -5356,3 +5352,49 @@ Scintilla(return:=""){
 		return list
 }
 ;/plugin
+Check_For_Update(){
+	static newwin,version
+	sub:=A_NowUTC
+	sub-=A_Now,hh
+	FileGetTime,time,%A_ScriptFullPath%
+	time+=sub,hh
+	ea:=settings.ea("//github"),token:=ea.token?"?access_token=" ea.token:"",url:="https://api.github.com/repos/maestrith/AHK-Studio/commits/master" token,http:=ComObjCreate("WinHttp.WinHttpRequest.5.1"),http.Open("GET",url)
+	if(proxy:=settings.ssn("//proxy").text)
+		http.setProxy(2,proxy)
+	http.send()
+	version=Version=1.002.3
+	RegExMatch(http.ResponseText,"iUO)\x22date\x22:\x22(.*)\x22",found),date:=RegExReplace(found.1,"\D")
+	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update","Button,x+5 gcurrentinfo,Current Changelog","Button,x+5 gextrainfo,Changelog History")
+	newwin.show("AHK Studio Version: " version)
+	if(time<date){
+		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
+		ControlSetText,Edit1,%update%,% newwin.ahkid
+	}if(!found.1)
+		ControlSetText,Edit1,% http.ResponseText,% newwin.ahkid
+	return
+	autoupdate:
+	save(),settings.save(1)
+	studio:=URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk")
+	if(!InStr(studio,";download complete"))
+		return m("There was an error. Please contact maestrith@gmail.com if this error continues")
+	FileMove,%A_ScriptFullPath%,%A_ScriptDir%\%A_ScriptName% - %version%,1
+	ComObjError(0),File:=FileOpen(A_ScriptFullPath,"rw"),File.seek(0),File.write(studio),File.length(File.position)
+	Reload
+	ExitApp
+	return
+	currentinfo:
+	file:=FileOpen("changelog.txt","rw")
+	if(!file.length)
+		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position)
+	file.seek(0)
+	ControlSetText,Edit1,% file.Read(file.length)
+	file.Close()
+	return
+	extrainfo:
+	Run,https://github.com/maestrith/AHK-Studio/wiki/Version-Update-History
+	return
+	cfuguiclose:
+	cfuguiescape:
+	newwin.Destroy()
+	return
+}

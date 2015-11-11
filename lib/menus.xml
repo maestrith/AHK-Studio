@@ -231,7 +231,7 @@
 			<menu clean="Online_Help" name="Online Help" no="1"></menu>
 			<menu name="&amp;Social" clean="Social" no="1"></menu>
 			<menu clean="Testing" name="Testing" hotkey="^K"></menu></menu>
-		<menu clean="Plugin" name="P&amp;lugin" tv="11342896">
+		<menu clean="Plugin" name="P&amp;lugin">
 			<menu clean="Additional_Publish" hotkey="" name="Additional Publish" option="" plugin="plugins\Additional Publish.ahk"></menu>
 			<menu clean="Align_Selected_Text" hotkey="" name="Align Selected Text" option="" plugin="plugins\Align Selected Text.ahk"></menu>
 			<menu clean="Auto_Menu_Adder" hotkey="" name="Auto Menu Adder" option="" plugin="plugins\Auto Menu Adder.ahk"></menu>

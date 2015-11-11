@@ -1,0 +1,37 @@
+1.002.3
+NOTICE!
+-This will download a new copy of SciLexer.dll
+
+Fixed: Reported by huckleberry
+-Escaped commas `, were causing the context sensitive help to advance
+Changed:
+-Commas inside { }, [ ], and () have a different color code.  This can be changed in the Themes plugin.
+Fixed: Reported by zotune
+-Jumping of selection and positions on focus
+-Find is a lot more stable and accurate.
+1.002.2
+Changed:
+-Added the margin width adjuster to +Enter
+-Fuzzy Search: Inside Omni-Search
+-Display Function: If there is already () after the current word it will not add ()
+Fixed: Reported by Run1e
+-If you have an #Include for the file in that file it caused Studio to crash
+Added: Suggested by Run1e
+-Options/Virtual Scratch Pad: Does not create a file on your drive
+1.002.1
+Changed:
+-All files not point to Github
+1.002.0
+Soup branch is now the mainReplaced the master with the single file releaseUploading xml files and Scilexer.dll
+0.000.15
+Fixed:-Save As: nasty little bug that was deleting things if you saved as to the same directoryChanged: Suggested by Arahnoid-Omni-Search: If you add a ? then choose one of the prefixes and hit enter
+0.000.29
+Testing things out
+0.000.28
+Fixed:-An error in publish that was causing code to be incomplete
+0.000.27
+Fixed: Reported by Arahnoid-Menus on first run were not populating correctly
+0.000.25
+Re-Added:-Run As Ansii/U32/U64Removed:-Menu EditorAdded:-Edit/Settings: Replaces Menu Editor and Options DialogChanged:-Menu Editor: It is now Settings
+0.000.22
+Changed:-Delete Project: Made it a bit safer...I had a bad thing happen-Commands.xml: Getting ready to make things editable-Context Sensitive fixes
