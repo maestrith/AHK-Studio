@@ -3296,6 +3296,9 @@ Notify(csc:=""){
 	if(code=2028){
 		if(v.options.Check_For_Edited_Files_On_Focus=1)
 			check_for_edited()
+		MouseGetPos,,,win
+		if(win=hwnd(1))
+			SetTimer,LButton,-20
 		/* 
 			Sleep,20
 			sc:=focus.sc?focus:csc(1),maincaret:=1
@@ -3307,7 +3310,6 @@ Notify(csc:=""){
 			if(fl:=lastpos[current(3).sc].1.2152)
 				sc.2613(fl)
 			SetTimer,Enable,-10
-			SetTimer,LButton,-20
 		*/
 		return
 	}if(!s.ctrl[NumGet(info+0)])
