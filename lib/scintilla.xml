@@ -2,8 +2,8 @@
 <scintilla>
 	<commands>
 		<item name="START" code="2103"></item>
-		<item name="OPTIONAL_START" code=""></item>
-		<item name="LEXER_START" code=""></item>
+		<item name="OPTIONAL_START" code="2000"></item>
+		<item name="LEXER_START" code="4000"></item>
 		<item name="ADDTEXT" code="2001" syntax="(int length,string text)"></item>
 		<item name="ADDSTYLEDTEXT" code="2002" syntax="(int length,cells c)"></item>
 		<item name="INSERTTEXT" code="2003" syntax="(position pos,string text)"></item>
@@ -766,7 +766,7 @@
 		<item code="29" name="MARKNUM_FOLDERSUB"></item>
 		<item code="30" name="MARKNUM_FOLDER"></item>
 		<item code="31" name="MARKNUM_FOLDEROPEN"></item>
-		<item code="0" name="MASK_FOLDERS"></item>
+		<item code="0xFE000000" name="MASK_FOLDERS"></item>
 		<item code="4" name="MAX_MARGIN"></item>
 		<item code="0" name="MARGIN_SYMBOL"></item>
 		<item code="1" name="MARGIN_NUMBER"></item>
@@ -804,8 +804,8 @@
 		<item code="400" name="WEIGHT_NORMAL"></item>
 		<item code="600" name="WEIGHT_SEMIBOLD"></item>
 		<item code="700" name="WEIGHT_BOLD"></item>
-		<item code="0" name="INDICVALUEBIT"></item>
-		<item code="0" name="INDICVALUEMASK"></item>
+		<item code="0x1000000" name="INDICVALUEBIT"></item>
+		<item code="0xFFFFFF" name="INDICVALUEMASK"></item>
 		<item code="1" name="INDICFLAG_VALUEFORE"></item>
 		<item code="0" name="IV_NONE"></item>
 		<item code="1" name="IV_REAL"></item>
@@ -816,34 +816,34 @@
 		<item code="2" name="PRINT_BLACKONWHITE"></item>
 		<item code="3" name="PRINT_COLOURONWHITE"></item>
 		<item code="4" name="PRINT_COLOURONWHITEDEFAULTBG"></item>
-		<item code="0" name="FOLDLEVELBASE"></item>
-		<item code="0" name="FOLDLEVELWHITEFLAG"></item>
-		<item code="0" name="FOLDLEVELHEADERFLAG"></item>
-		<item code="0" name="FOLDLEVELNUMBERMASK"></item>
+		<item code="0x400" name="FOLDLEVELBASE"></item>
+		<item code="0x1000" name="FOLDLEVELWHITEFLAG"></item>
+		<item code="0x2000" name="FOLDLEVELHEADERFLAG"></item>
+		<item code="0x0FFF" name="FOLDLEVELNUMBERMASK"></item>
 		<item code="0" name="FOLDACTION_CONTRACT"></item>
 		<item code="1" name="FOLDACTION_EXPAND"></item>
 		<item code="2" name="FOLDACTION_TOGGLE"></item>
-		<item code="0" name="AUTOMATICFOLD_SHOW"></item>
-		<item code="0" name="AUTOMATICFOLD_CLICK"></item>
-		<item code="0" name="AUTOMATICFOLD_CHANGE"></item>
-		<item code="0" name="FOLDFLAG_LINEBEFORE_EXPANDED"></item>
-		<item code="0" name="FOLDFLAG_LINEBEFORE_CONTRACTED"></item>
-		<item code="0" name="FOLDFLAG_LINEAFTER_EXPANDED"></item>
-		<item code="0" name="FOLDFLAG_LINEAFTER_CONTRACTED"></item>
-		<item code="0" name="FOLDFLAG_LEVELNUMBERS"></item>
-		<item code="0" name="FOLDFLAG_LINESTATE"></item>
+		<item code="0x0001" name="AUTOMATICFOLD_SHOW"></item>
+		<item code="0x0002" name="AUTOMATICFOLD_CLICK"></item>
+		<item code="0x0004" name="AUTOMATICFOLD_CHANGE"></item>
+		<item code="0x0002" name="FOLDFLAG_LINEBEFORE_EXPANDED"></item>
+		<item code="0x0004" name="FOLDFLAG_LINEBEFORE_CONTRACTED"></item>
+		<item code="0x0008" name="FOLDFLAG_LINEAFTER_EXPANDED"></item>
+		<item code="0x0010" name="FOLDFLAG_LINEAFTER_CONTRACTED"></item>
+		<item code="0x0040" name="FOLDFLAG_LEVELNUMBERS"></item>
+		<item code="0x0080" name="FOLDFLAG_LINESTATE"></item>
 		<item code="10000000" name="TIME_FOREVER"></item>
 		<item code="0" name="WRAP_NONE"></item>
 		<item code="1" name="WRAP_WORD"></item>
 		<item code="2" name="WRAP_CHAR"></item>
 		<item code="3" name="WRAP_WHITESPACE"></item>
-		<item code="0" name="WRAPVISUALFLAG_NONE"></item>
-		<item code="0" name="WRAPVISUALFLAG_END"></item>
-		<item code="0" name="WRAPVISUALFLAG_START"></item>
-		<item code="0" name="WRAPVISUALFLAG_MARGIN"></item>
-		<item code="0" name="WRAPVISUALFLAGLOC_DEFAULT"></item>
-		<item code="0" name="WRAPVISUALFLAGLOC_END_BY_TEXT"></item>
-		<item code="0" name="WRAPVISUALFLAGLOC_START_BY_TEXT"></item>
+		<item code="0x0000" name="WRAPVISUALFLAG_NONE"></item>
+		<item code="0x0001" name="WRAPVISUALFLAG_END"></item>
+		<item code="0x0002" name="WRAPVISUALFLAG_START"></item>
+		<item code="0x0004" name="WRAPVISUALFLAG_MARGIN"></item>
+		<item code="0x0000" name="WRAPVISUALFLAGLOC_DEFAULT"></item>
+		<item code="0x0001" name="WRAPVISUALFLAGLOC_END_BY_TEXT"></item>
+		<item code="0x0002" name="WRAPVISUALFLAGLOC_START_BY_TEXT"></item>
 		<item code="0" name="WRAPINDENT_FIXED"></item>
 		<item code="1" name="WRAPINDENT_SAME"></item>
 		<item code="2" name="WRAPINDENT_INDENT"></item>
@@ -854,7 +854,7 @@
 		<item code="0" name="PHASES_ONE"></item>
 		<item code="1" name="PHASES_TWO"></item>
 		<item code="2" name="PHASES_MULTIPLE"></item>
-		<item code="0" name="EFF_QUALITY_MASK"></item>
+		<item code="0xF" name="EFF_QUALITY_MASK"></item>
 		<item code="0" name="EFF_QUALITY_DEFAULT"></item>
 		<item code="1" name="EFF_QUALITY_NON_ANTIALIASED"></item>
 		<item code="2" name="EFF_QUALITY_ANTIALIASED"></item>
@@ -866,6 +866,7 @@
 		<item code="2" name="STATUS_BADALLOC"></item>
 		<item code="1000" name="STATUS_WARN_START"></item>
 		<item code="1001" name="STATUS_WARN_REGEX"></item>
+		<item code="-1" name="CURSORNORMAL"></item>
 		<item code="2" name="CURSORARROW"></item>
 		<item code="4" name="CURSORWAIT"></item>
 		<item code="7" name="CURSORREVERSEARROW"></item>
@@ -897,33 +898,33 @@
 		<item code="0" name="TYPE_BOOLEAN"></item>
 		<item code="1" name="TYPE_INTEGER"></item>
 		<item code="2" name="TYPE_STRING"></item>
-		<item code="0" name="MOD_INSERTTEXT"></item>
-		<item code="0" name="MOD_DELETETEXT"></item>
-		<item code="0" name="MOD_CHANGESTYLE"></item>
-		<item code="0" name="MOD_CHANGEFOLD"></item>
-		<item code="0" name="PERFORMED_USER"></item>
-		<item code="0" name="PERFORMED_UNDO"></item>
-		<item code="0" name="PERFORMED_REDO"></item>
-		<item code="0" name="MULTISTEPUNDOREDO"></item>
-		<item code="0" name="LASTSTEPINUNDOREDO"></item>
-		<item code="0" name="MOD_CHANGEMARKER"></item>
-		<item code="0" name="MOD_BEFOREINSERT"></item>
-		<item code="0" name="MOD_BEFOREDELETE"></item>
-		<item code="0" name="MULTILINEUNDOREDO"></item>
-		<item code="0" name="STARTACTION"></item>
-		<item code="0" name="MOD_CHANGEINDICATOR"></item>
-		<item code="0" name="MOD_CHANGELINESTATE"></item>
-		<item code="0" name="MOD_CHANGEMARGIN"></item>
-		<item code="0" name="MOD_CHANGEANNOTATION"></item>
-		<item code="0" name="MOD_CONTAINER"></item>
-		<item code="0" name="MOD_LEXERSTATE"></item>
-		<item code="0" name="MOD_INSERTCHECK"></item>
-		<item code="0" name="MOD_CHANGETABSTOPS"></item>
-		<item code="0" name="MODEVENTMASKALL"></item>
-		<item code="0" name="UPDATE_CONTENT"></item>
-		<item code="0" name="UPDATE_SELECTION"></item>
-		<item code="0" name="UPDATE_V_SCROLL"></item>
-		<item code="0" name="UPDATE_H_SCROLL"></item>
+		<item code="0x1" name="MOD_INSERTTEXT"></item>
+		<item code="0x2" name="MOD_DELETETEXT"></item>
+		<item code="0x4" name="MOD_CHANGESTYLE"></item>
+		<item code="0x8" name="MOD_CHANGEFOLD"></item>
+		<item code="0x10" name="PERFORMED_USER"></item>
+		<item code="0x20" name="PERFORMED_UNDO"></item>
+		<item code="0x40" name="PERFORMED_REDO"></item>
+		<item code="0x80" name="MULTISTEPUNDOREDO"></item>
+		<item code="0x100" name="LASTSTEPINUNDOREDO"></item>
+		<item code="0x200" name="MOD_CHANGEMARKER"></item>
+		<item code="0x400" name="MOD_BEFOREINSERT"></item>
+		<item code="0x800" name="MOD_BEFOREDELETE"></item>
+		<item code="0x1000" name="MULTILINEUNDOREDO"></item>
+		<item code="0x2000" name="STARTACTION"></item>
+		<item code="0x4000" name="MOD_CHANGEINDICATOR"></item>
+		<item code="0x8000" name="MOD_CHANGELINESTATE"></item>
+		<item code="0x10000" name="MOD_CHANGEMARGIN"></item>
+		<item code="0x20000" name="MOD_CHANGEANNOTATION"></item>
+		<item code="0x40000" name="MOD_CONTAINER"></item>
+		<item code="0x80000" name="MOD_LEXERSTATE"></item>
+		<item code="0x100000" name="MOD_INSERTCHECK"></item>
+		<item code="0x200000" name="MOD_CHANGETABSTOPS"></item>
+		<item code="0x3FFFFF" name="MODEVENTMASKALL"></item>
+		<item code="0x1" name="UPDATE_CONTENT"></item>
+		<item code="0x2" name="UPDATE_SELECTION"></item>
+		<item code="0x4" name="UPDATE_V_SCROLL"></item>
+		<item code="0x8" name="UPDATE_H_SCROLL"></item>
 		<item code="1" name="AC_FILLUP"></item>
 		<item code="2" name="AC_DOUBLECLICK"></item>
 		<item code="3" name="AC_TAB"></item>
