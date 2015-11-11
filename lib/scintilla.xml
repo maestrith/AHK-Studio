@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <scintilla>
 	<commands>
+		<item name="START" code="2103"></item>
+		<item name="OPTIONAL_START" code=""></item>
+		<item name="LEXER_START" code=""></item>
 		<item name="ADDTEXT" code="2001" syntax="(int length,string text)"></item>
 		<item name="ADDSTYLEDTEXT" code="2002" syntax="(int length,cells c)"></item>
 		<item name="INSERTTEXT" code="2003" syntax="(position pos,string text)"></item>
@@ -34,6 +37,7 @@
 		<item name="CONVERTEOLS" code="2029" syntax="(int eolMode)"></item>
 		<item name="GETEOLMODE" code="2030"></item>
 		<item name="SETEOLMODE" code="2031" syntax="(int eolMode)"></item>
+		<item name="STARTSTYLING" code="2032" syntax="(position pos,int mask)"></item>
 		<item name="SETSTYLING" code="2033" syntax="(int length,int style)"></item>
 		<item name="GETBUFFEREDDRAW" code="2034"></item>
 		<item name="SETBUFFEREDDRAW" code="2035" syntax="(bool buffered)"></item>
@@ -146,11 +150,14 @@
 		<item name="AUTOCSHOW" code="2100" syntax="(int lenEntered,string itemList)"></item>
 		<item name="AUTOCCANCEL" code="2101"></item>
 		<item name="AUTOCACTIVE" code="2102"></item>
+		<item name="AUTOCPOSSTART" code="2103"></item>
 		<item name="AUTOCCOMPLETE" code="2104"></item>
 		<item name="AUTOCSTOPS" code="2105" syntax="(0,string characterSet)"></item>
 		<item name="AUTOCSETSEPARATOR" code="2106" syntax="(int separatorCharacter)"></item>
 		<item name="AUTOCGETSEPARATOR" code="2107"></item>
 		<item name="AUTOCSELECT" code="2108" syntax="(0,string text)"></item>
+		<item name="AUTOCSETCANCELATSTART" code="2110" syntax="(bool cancel)"></item>
+		<item name="AUTOCGETCANCELATSTART" code="2111"></item>
 		<item name="AUTOCSETFILLUPS" code="2112" syntax="(0,string characterSet)"></item>
 		<item name="AUTOCSETCHOOSESINGLE" code="2113" syntax="(bool chooseSingle)"></item>
 		<item name="AUTOCGETCHOOSESINGLE" code="2114"></item>
@@ -189,6 +196,8 @@
 		<item name="GETCARETFORE" code="2138"></item>
 		<item name="GETREADONLY" code="2140"></item>
 		<item name="SETCURRENTPOS" code="2141" syntax="(position pos)"></item>
+		<item name="SETSELECTIONSTART" code="2142" syntax="(position pos)"></item>
+		<item name="GETSELECTIONSTART" code="2143"></item>
 		<item name="SETSELECTIONEND" code="2144" syntax="(position pos)"></item>
 		<item name="GETSELECTIONEND" code="2145"></item>
 		<item name="SETEMPTYSELECTION" code="2556" syntax="(position pos)"></item>
@@ -237,6 +246,8 @@
 		<item name="GETOVERTYPE" code="2187"></item>
 		<item name="SETCARETWIDTH" code="2188" syntax="(int pixelWidth)"></item>
 		<item name="GETCARETWIDTH" code="2189"></item>
+		<item name="SETTARGETSTART" code="2190" syntax="(position pos)"></item>
+		<item name="GETTARGETSTART" code="2191"></item>
 		<item name="SETTARGETEND" code="2192" syntax="(position pos)"></item>
 		<item name="GETTARGETEND" code="2193"></item>
 		<item name="SETTARGETRANGE" code="2686" syntax="(position start,position end)"></item>
@@ -251,6 +262,8 @@
 		<item name="CALLTIPSHOW" code="2200" syntax="(position pos,string definition)"></item>
 		<item name="CALLTIPCANCEL" code="2201"></item>
 		<item name="CALLTIPACTIVE" code="2202"></item>
+		<item name="CALLTIPPOSSTART" code="2203"></item>
+		<item name="CALLTIPSETPOSSTART" code="2214" syntax="(int posStart)"></item>
 		<item name="CALLTIPSETHLT" code="2204" syntax="(int start,int end)"></item>
 		<item name="CALLTIPSETBACK" code="2205" syntax="(colour back)"></item>
 		<item name="CALLTIPSETFORE" code="2206" syntax="(colour fore)"></item>
@@ -286,6 +299,7 @@
 		<item name="GETBACKSPACEUNINDENTS" code="2263"></item>
 		<item name="SETMOUSEDWELLTIME" code="2264" syntax="(int periodMilliseconds)"></item>
 		<item name="GETMOUSEDWELLTIME" code="2265"></item>
+		<item name="WORDSTARTPOSITION" code="2266" syntax="(position pos,bool onlyWordCharacters)"></item>
 		<item name="WORDENDPOSITION" code="2267" syntax="(position pos,bool onlyWordCharacters)"></item>
 		<item name="ISRANGEWORD" code="2691" syntax="(position start,position end)"></item>
 		<item name="SETWRAPMODE" code="2268" syntax="(int mode)"></item>
@@ -294,6 +308,8 @@
 		<item name="GETWRAPVISUALFLAGS" code="2461"></item>
 		<item name="SETWRAPVISUALFLAGSLOCATION" code="2462" syntax="(int wrapVisualFlagsLocation)"></item>
 		<item name="GETWRAPVISUALFLAGSLOCATION" code="2463"></item>
+		<item name="SETWRAPSTARTINDENT" code="2464" syntax="(int indent)"></item>
+		<item name="GETWRAPSTARTINDENT" code="2465"></item>
 		<item name="SETWRAPINDENTMODE" code="2472" syntax="(int mode)"></item>
 		<item name="GETWRAPINDENTMODE" code="2473"></item>
 		<item name="SETLAYOUTCACHE" code="2272" syntax="(int mode)"></item>
@@ -339,6 +355,8 @@
 		<item name="HOMEEXTEND" code="2313"></item>
 		<item name="LINEEND" code="2314"></item>
 		<item name="LINEENDEXTEND" code="2315"></item>
+		<item name="DOCUMENTSTART" code="2316"></item>
+		<item name="DOCUMENTSTARTEXTEND" code="2317"></item>
 		<item name="DOCUMENTEND" code="2318"></item>
 		<item name="DOCUMENTENDEXTEND" code="2319"></item>
 		<item name="PAGEUP" code="2320"></item>
@@ -453,6 +471,7 @@
 		<item name="COPYTEXT" code="2420" syntax="(int length,string text)"></item>
 		<item name="SETSELECTIONMODE" code="2422" syntax="(int mode)"></item>
 		<item name="GETSELECTIONMODE" code="2423"></item>
+		<item name="GETLINESELSTARTPOSITION" code="2424" syntax="(int line)"></item>
 		<item name="GETLINESELENDPOSITION" code="2425" syntax="(int line)"></item>
 		<item name="LINEDOWNRECTEXTEND" code="2426"></item>
 		<item name="LINEUPRECTEXTEND" code="2427"></item>
@@ -507,6 +526,7 @@
 		<item name="INDICATORCLEARRANGE" code="2505" syntax="(int position,int clearLength)"></item>
 		<item name="INDICATORALLONFOR" code="2506" syntax="(int position)"></item>
 		<item name="INDICATORVALUEAT" code="2507" syntax="(int indicator,int position)"></item>
+		<item name="INDICATORSTART" code="2508" syntax="(int indicator,int position)"></item>
 		<item name="INDICATOREND" code="2509" syntax="(int indicator,int position)"></item>
 		<item name="SETPOSITIONCACHE" code="2514" syntax="(int size)"></item>
 		<item name="GETPOSITIONCACHE" code="2515"></item>
@@ -577,6 +597,8 @@
 		<item name="GETSELECTIONNCARETVIRTUALSPACE" code="2581" syntax="(int selection)"></item>
 		<item name="SETSELECTIONNANCHORVIRTUALSPACE" code="2582" syntax="(int selection,int space)"></item>
 		<item name="GETSELECTIONNANCHORVIRTUALSPACE" code="2583" syntax="(int selection)"></item>
+		<item name="SETSELECTIONNSTART" code="2584" syntax="(int selection,position pos)"></item>
+		<item name="GETSELECTIONNSTART" code="2585" syntax="(int selection)"></item>
 		<item name="SETSELECTIONNEND" code="2586" syntax="(int selection,position pos)"></item>
 		<item name="GETSELECTIONNEND" code="2587" syntax="(int selection)"></item>
 		<item name="SETRECTANGULARSELECTIONCARET" code="2588" syntax="(position pos)"></item>
@@ -613,6 +635,7 @@
 		<item name="RGBAIMAGESETSCALE" code="2651" syntax="(int scalePercent)"></item>
 		<item name="MARKERDEFINERGBAIMAGE" code="2626" syntax="(int markerNumber,string pixels)"></item>
 		<item name="REGISTERRGBAIMAGE" code="2627" syntax="(int type,string pixels)"></item>
+		<item name="SCROLLTOSTART" code="2628"></item>
 		<item name="SCROLLTOEND" code="2629"></item>
 		<item name="SETTECHNOLOGY" code="2630" syntax="(int technology)"></item>
 		<item name="GETTECHNOLOGY" code="2631"></item>
@@ -630,6 +653,7 @@
 		<item name="SETREPRESENTATION" code="2665" syntax="(string encodedCharacter,string representation)"></item>
 		<item name="GETREPRESENTATION" code="2666" syntax="(string encodedCharacter,stringresult representation)"></item>
 		<item name="CLEARREPRESENTATION" code="2667" syntax="(string encodedCharacter)"></item>
+		<item name="STARTRECORD" code="3001"></item>
 		<item name="STOPRECORD" code="3002"></item>
 		<item name="SETLEXER" code="4001" syntax="(int lexer)"></item>
 		<item name="GETLEXER" code="4002"></item>
@@ -650,6 +674,7 @@
 		<item name="DESCRIBEKEYWORDSETS" code="4017" syntax="(0,stringresult descriptions)"></item>
 		<item name="GETLINEENDTYPESSUPPORTED" code="4018"></item>
 		<item name="ALLOCATESUBSTYLES" code="4020" syntax="(int styleBase,int numberStyles)"></item>
+		<item name="GETSUBSTYLESSTART" code="4021" syntax="(int styleBase)"></item>
 		<item name="GETSUBSTYLESLENGTH" code="4022" syntax="(int styleBase)"></item>
 		<item name="GETSTYLEFROMSUBSTYLE" code="4027" syntax="(int subStyle)"></item>
 		<item name="GETPRIMARYSTYLEFROMSTYLE" code="4028" syntax="(int style)"></item>
@@ -741,7 +766,7 @@
 		<item code="29" name="MARKNUM_FOLDERSUB"></item>
 		<item code="30" name="MARKNUM_FOLDER"></item>
 		<item code="31" name="MARKNUM_FOLDEROPEN"></item>
-		<item code="0xFE000000" name="MASK_FOLDERS"></item>
+		<item code="0" name="MASK_FOLDERS"></item>
 		<item code="4" name="MAX_MARGIN"></item>
 		<item code="0" name="MARGIN_SYMBOL"></item>
 		<item code="1" name="MARGIN_NUMBER"></item>
@@ -779,8 +804,8 @@
 		<item code="400" name="WEIGHT_NORMAL"></item>
 		<item code="600" name="WEIGHT_SEMIBOLD"></item>
 		<item code="700" name="WEIGHT_BOLD"></item>
-		<item code="0x1000000" name="INDICVALUEBIT"></item>
-		<item code="0xFFFFFF" name="INDICVALUEMASK"></item>
+		<item code="0" name="INDICVALUEBIT"></item>
+		<item code="0" name="INDICVALUEMASK"></item>
 		<item code="1" name="INDICFLAG_VALUEFORE"></item>
 		<item code="0" name="IV_NONE"></item>
 		<item code="1" name="IV_REAL"></item>
@@ -791,34 +816,34 @@
 		<item code="2" name="PRINT_BLACKONWHITE"></item>
 		<item code="3" name="PRINT_COLOURONWHITE"></item>
 		<item code="4" name="PRINT_COLOURONWHITEDEFAULTBG"></item>
-		<item code="0x400" name="FOLDLEVELBASE"></item>
-		<item code="0x1000" name="FOLDLEVELWHITEFLAG"></item>
-		<item code="0x2000" name="FOLDLEVELHEADERFLAG"></item>
-		<item code="0x0FFF" name="FOLDLEVELNUMBERMASK"></item>
+		<item code="0" name="FOLDLEVELBASE"></item>
+		<item code="0" name="FOLDLEVELWHITEFLAG"></item>
+		<item code="0" name="FOLDLEVELHEADERFLAG"></item>
+		<item code="0" name="FOLDLEVELNUMBERMASK"></item>
 		<item code="0" name="FOLDACTION_CONTRACT"></item>
 		<item code="1" name="FOLDACTION_EXPAND"></item>
 		<item code="2" name="FOLDACTION_TOGGLE"></item>
-		<item code="0x0001" name="AUTOMATICFOLD_SHOW"></item>
-		<item code="0x0002" name="AUTOMATICFOLD_CLICK"></item>
-		<item code="0x0004" name="AUTOMATICFOLD_CHANGE"></item>
-		<item code="0x0002" name="FOLDFLAG_LINEBEFORE_EXPANDED"></item>
-		<item code="0x0004" name="FOLDFLAG_LINEBEFORE_CONTRACTED"></item>
-		<item code="0x0008" name="FOLDFLAG_LINEAFTER_EXPANDED"></item>
-		<item code="0x0010" name="FOLDFLAG_LINEAFTER_CONTRACTED"></item>
-		<item code="0x0040" name="FOLDFLAG_LEVELNUMBERS"></item>
-		<item code="0x0080" name="FOLDFLAG_LINESTATE"></item>
+		<item code="0" name="AUTOMATICFOLD_SHOW"></item>
+		<item code="0" name="AUTOMATICFOLD_CLICK"></item>
+		<item code="0" name="AUTOMATICFOLD_CHANGE"></item>
+		<item code="0" name="FOLDFLAG_LINEBEFORE_EXPANDED"></item>
+		<item code="0" name="FOLDFLAG_LINEBEFORE_CONTRACTED"></item>
+		<item code="0" name="FOLDFLAG_LINEAFTER_EXPANDED"></item>
+		<item code="0" name="FOLDFLAG_LINEAFTER_CONTRACTED"></item>
+		<item code="0" name="FOLDFLAG_LEVELNUMBERS"></item>
+		<item code="0" name="FOLDFLAG_LINESTATE"></item>
 		<item code="10000000" name="TIME_FOREVER"></item>
 		<item code="0" name="WRAP_NONE"></item>
 		<item code="1" name="WRAP_WORD"></item>
 		<item code="2" name="WRAP_CHAR"></item>
 		<item code="3" name="WRAP_WHITESPACE"></item>
-		<item code="0x0000" name="WRAPVISUALFLAG_NONE"></item>
-		<item code="0x0001" name="WRAPVISUALFLAG_END"></item>
-		<item code="0x0002" name="WRAPVISUALFLAG_START"></item>
-		<item code="0x0004" name="WRAPVISUALFLAG_MARGIN"></item>
-		<item code="0x0000" name="WRAPVISUALFLAGLOC_DEFAULT"></item>
-		<item code="0x0001" name="WRAPVISUALFLAGLOC_END_BY_TEXT"></item>
-		<item code="0x0002" name="WRAPVISUALFLAGLOC_START_BY_TEXT"></item>
+		<item code="0" name="WRAPVISUALFLAG_NONE"></item>
+		<item code="0" name="WRAPVISUALFLAG_END"></item>
+		<item code="0" name="WRAPVISUALFLAG_START"></item>
+		<item code="0" name="WRAPVISUALFLAG_MARGIN"></item>
+		<item code="0" name="WRAPVISUALFLAGLOC_DEFAULT"></item>
+		<item code="0" name="WRAPVISUALFLAGLOC_END_BY_TEXT"></item>
+		<item code="0" name="WRAPVISUALFLAGLOC_START_BY_TEXT"></item>
 		<item code="0" name="WRAPINDENT_FIXED"></item>
 		<item code="1" name="WRAPINDENT_SAME"></item>
 		<item code="2" name="WRAPINDENT_INDENT"></item>
@@ -829,7 +854,7 @@
 		<item code="0" name="PHASES_ONE"></item>
 		<item code="1" name="PHASES_TWO"></item>
 		<item code="2" name="PHASES_MULTIPLE"></item>
-		<item code="0xF" name="EFF_QUALITY_MASK"></item>
+		<item code="0" name="EFF_QUALITY_MASK"></item>
 		<item code="0" name="EFF_QUALITY_DEFAULT"></item>
 		<item code="1" name="EFF_QUALITY_NON_ANTIALIASED"></item>
 		<item code="2" name="EFF_QUALITY_ANTIALIASED"></item>
@@ -841,7 +866,6 @@
 		<item code="2" name="STATUS_BADALLOC"></item>
 		<item code="1000" name="STATUS_WARN_START"></item>
 		<item code="1001" name="STATUS_WARN_REGEX"></item>
-		<item code="-1" name="CURSORNORMAL"></item>
 		<item code="2" name="CURSORARROW"></item>
 		<item code="4" name="CURSORWAIT"></item>
 		<item code="7" name="CURSORREVERSEARROW"></item>
@@ -873,33 +897,33 @@
 		<item code="0" name="TYPE_BOOLEAN"></item>
 		<item code="1" name="TYPE_INTEGER"></item>
 		<item code="2" name="TYPE_STRING"></item>
-		<item code="0x1" name="MOD_INSERTTEXT"></item>
-		<item code="0x2" name="MOD_DELETETEXT"></item>
-		<item code="0x4" name="MOD_CHANGESTYLE"></item>
-		<item code="0x8" name="MOD_CHANGEFOLD"></item>
-		<item code="0x10" name="PERFORMED_USER"></item>
-		<item code="0x20" name="PERFORMED_UNDO"></item>
-		<item code="0x40" name="PERFORMED_REDO"></item>
-		<item code="0x80" name="MULTISTEPUNDOREDO"></item>
-		<item code="0x100" name="LASTSTEPINUNDOREDO"></item>
-		<item code="0x200" name="MOD_CHANGEMARKER"></item>
-		<item code="0x400" name="MOD_BEFOREINSERT"></item>
-		<item code="0x800" name="MOD_BEFOREDELETE"></item>
-		<item code="0x1000" name="MULTILINEUNDOREDO"></item>
-		<item code="0x2000" name="STARTACTION"></item>
-		<item code="0x4000" name="MOD_CHANGEINDICATOR"></item>
-		<item code="0x8000" name="MOD_CHANGELINESTATE"></item>
-		<item code="0x10000" name="MOD_CHANGEMARGIN"></item>
-		<item code="0x20000" name="MOD_CHANGEANNOTATION"></item>
-		<item code="0x40000" name="MOD_CONTAINER"></item>
-		<item code="0x80000" name="MOD_LEXERSTATE"></item>
-		<item code="0x100000" name="MOD_INSERTCHECK"></item>
-		<item code="0x200000" name="MOD_CHANGETABSTOPS"></item>
-		<item code="0x3FFFFF" name="MODEVENTMASKALL"></item>
-		<item code="0x1" name="UPDATE_CONTENT"></item>
-		<item code="0x2" name="UPDATE_SELECTION"></item>
-		<item code="0x4" name="UPDATE_V_SCROLL"></item>
-		<item code="0x8" name="UPDATE_H_SCROLL"></item>
+		<item code="0" name="MOD_INSERTTEXT"></item>
+		<item code="0" name="MOD_DELETETEXT"></item>
+		<item code="0" name="MOD_CHANGESTYLE"></item>
+		<item code="0" name="MOD_CHANGEFOLD"></item>
+		<item code="0" name="PERFORMED_USER"></item>
+		<item code="0" name="PERFORMED_UNDO"></item>
+		<item code="0" name="PERFORMED_REDO"></item>
+		<item code="0" name="MULTISTEPUNDOREDO"></item>
+		<item code="0" name="LASTSTEPINUNDOREDO"></item>
+		<item code="0" name="MOD_CHANGEMARKER"></item>
+		<item code="0" name="MOD_BEFOREINSERT"></item>
+		<item code="0" name="MOD_BEFOREDELETE"></item>
+		<item code="0" name="MULTILINEUNDOREDO"></item>
+		<item code="0" name="STARTACTION"></item>
+		<item code="0" name="MOD_CHANGEINDICATOR"></item>
+		<item code="0" name="MOD_CHANGELINESTATE"></item>
+		<item code="0" name="MOD_CHANGEMARGIN"></item>
+		<item code="0" name="MOD_CHANGEANNOTATION"></item>
+		<item code="0" name="MOD_CONTAINER"></item>
+		<item code="0" name="MOD_LEXERSTATE"></item>
+		<item code="0" name="MOD_INSERTCHECK"></item>
+		<item code="0" name="MOD_CHANGETABSTOPS"></item>
+		<item code="0" name="MODEVENTMASKALL"></item>
+		<item code="0" name="UPDATE_CONTENT"></item>
+		<item code="0" name="UPDATE_SELECTION"></item>
+		<item code="0" name="UPDATE_V_SCROLL"></item>
+		<item code="0" name="UPDATE_H_SCROLL"></item>
 		<item code="1" name="AC_FILLUP"></item>
 		<item code="2" name="AC_DOUBLECLICK"></item>
 		<item code="3" name="AC_TAB"></item>
