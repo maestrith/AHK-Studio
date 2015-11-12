@@ -152,9 +152,9 @@
 			<menu name="Code &amp;Vault" clean="Code_Vault" hotkey="+^F1" plugin="plugins\Code Vault.ahk" index="5"></menu>
 			<menu name="Create Launcher" clean="Create_Launcher" plugin="plugins\Create Launcher.ahk" index="6"></menu>
 			<menu clean="Debug" name="Debug" tv="11343832" index="7">
-				<menu clean="Step_Into" name="Step Into" no="1"></menu>
-				<menu clean="Step_Out" name="Step Out" no="1"></menu>
-				<menu clean="Step_Over" name="Step Over" no="1"></menu></menu>
+				<menu clean="Step_Into" name="Step Into"></menu>
+				<menu clean="Step_Out" name="Step Out"></menu>
+				<menu clean="Step_Over" name="Step Over"></menu></menu>
 			<menu name="Delete Matching Brace" clean="Delete_Matching_Brace" hotkey="+^DELETE" index="8"></menu>
 			<menu name="Display Functions" clean="Display_Functions" hotkey="!i" index="9"></menu>
 			<menu name="&amp;Find Nearest Brace" clean="Find_Nearest_Brace" hotkey="^!N" no="1"></menu>

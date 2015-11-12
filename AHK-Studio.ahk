@@ -80,7 +80,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
-	Gui,Show,,AHK Studio Help Version: Version=1.002.3
+	Gui,Show,,AHK Studio Help Version: Version=1.002.4
 	sc.2181(0,about),sc.2025(0),sc.2268(1)
 	return
 	11GuiClose:
@@ -310,8 +310,8 @@ Class Icon_Browser{
 	}
 }
 class omni_search_class{
-	static prefix:={"@":"Menu","^":"File",":":"Label","(":"Function","{":"Class","[":"Method","&":"Hotkey","+":"Function","#":"Bookmark",".":"Property","%":"Variable","<":"Instance"}
-	static iprefix:={Menu:"@",File:"^",Label:":",Function:"(",Class:"{",Method:"[",Hotkey:"&",Bookmark:"#",Property:".",Variable:"%",Instance:"<"}
+	static prefix:={"@":"Menu","^":"File",":":"Label","(":"Function","{":"Class","[":"Method","&":"Hotkey","+":"Function","#":"Bookmark",".":"Property","%":"Variable","<":"Instance","*":"Breakpoint"}
+	static iprefix:={Menu:"@",File:"^",Label:":",Function:"(",Class:"{",Method:"[",Hotkey:"&",Bookmark:"#",Property:".",Variable:"%",Instance:"<",Breakpoint:"*"}
 	__New(){
 		this.menus()
 		return this
@@ -370,11 +370,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		version:="Version=1.002.3"
+		version:="Version=1.002.4"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		return "Version=1.002.3"
+		return "Version=1.002.4"
 	}EnableSC(x:=0){
 		sc:=csc()
 		if(x){
@@ -1008,9 +1008,17 @@ Class Code_Explorer{
 			while,pos:=RegExMatch(text,"Osm`n)(\w+)\s*:=",var,pos),pos:=var.Pos(1)+var.len(1)
 				if(!ssn(main,"descendant::*[@type='Variable'][@text='" var.1 "'] or descendant::*[@type='Instance'][@text='" var.1 "']"))
 					cexml.under(next,"info",{type:"Variable",upper:upper(var.1),pos:StrPut(SubStr(text,1,var.Pos(1)),"utf-8")-3,text:var.1})
-		}pos:=1
-		while,pos:=RegExMatch(text,"OU);#\[(.*)\]",found,pos),pos:=found.Pos(1)+found.len(1)
-			cexml.under(next,"info",{type:"Bookmark",upper:upper(found.1),pos:StrPut(SubStr(text,1,found.Pos(0)),"utf-8"),text:found.1})
+		}
+		for a,b in {Bookmark:"\s+;#\[(.*)\]",Breakpoint:"\s+;\*\[(.*)\]"}{
+			pos:=1
+			while,pos:=RegExMatch(text,"OU)" b,found,pos),pos:=found.Pos(1)+found.len(1){
+				nnn:=cexml.under(next,"info",{type:a,upper:upper(found.1),pos:StrPut(enter:=SubStr(text,1,found.Pos(0)),"utf-8"),text:found.1})
+				if(a="Breakpoint"){
+					RegExReplace(enter,"\R",,Count)
+					nnn.SetAttribute("line",Count),nnn.SetAttribute("filename",fnme)
+				}
+			}
+		}
 	}remove(filename){
 		this.explore.remove(ssn(filename,"@file").text),list:=sn(filename,"@file")
 		while,ll:=list.item[A_Index-1]
@@ -1269,7 +1277,7 @@ Color(con:=""){
 				con.2050(),con.2052(30,0x0000ff),con.2052(31,0x00ff00),con.2052(48,0xff00ff)
 		}
 	}
-	for a,b in [[2040,25,13],[2040,26,15],[2040,27,11],[2040,28,10],[2040,29,9],[2040,30,12],[2040,31,14],[2242,0,20],[2242,1,13],[2134,1],[2260,1],[2246,1,1],[2246,2,1],[2115,1],[2029,2],[2031,2],[2244,3,0xFE000000],[2080,7,6],[2240,3,0],[2242,3,15],[2244,3,0xFE000000],[2246,1,1],[2246,3,1],[2244,2,3],[2040,0,0],[2040,1,2],[2041,0,0],[2042,0,0xff],[2115,1],[2056,38,"Tahoma"],[2077,0,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ#_1234567890"],[2041,1,0],[4006,0,"ahk"],[2042,1,0xff0000],[2040,2,22],[2042,2,0x444444],[2040,3,22],[2042,3,0x666666],[2040,4,31],[2042,4,0xff0000],[2037,65001],[2132,v.options.Hide_Indentation_Guides=1?0:1]]
+	for a,b in [[2040,25,13],[2040,26,15],[2040,27,11],[2040,28,10],[2040,29,9],[2040,30,12],[2040,31,14],[2242,0,20],[2242,1,13],[2134,1],[2260,1],[2246,1,1],[2246,2,1],[2115,1],[2029,2],[2031,2],[2244,3,0xFE000000],[2080,7,6],[2240,3,0],[2242,3,15],[2244,3,0xFE000000],[2246,1,1],[2246,3,1],[2244,2,3],[2040,0,0],[2041,0,0],[2042,0,0xff],[2115,1],[2056,38,"Tahoma"],[2077,0,"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ#_1234567890"],[2041,1,0],[4006,0,"ahk"],[2042,1,0xff0000],[2040,2,22],[2042,2,0x444444],[2040,3,22],[2042,3,0x666666],[2040,4,31],[2042,4,0xff0000],[2037,65001],[2132,v.options.Hide_Indentation_Guides=1?0:1],[2040,1,0],[2042,1,0x0000ff]]
 		con[b.1](b.2,b.3)
 	if(!v.options.Disable_Word_Wrap_Indicators)
 		con.2460(4)
@@ -2245,25 +2253,17 @@ Find(){
 		SetTimer,findlabel,-200
 		GuiControl,5:+gstate,SysTreeView321
 	}else if(Button="jump"){
-		ea:=foundinfo[TV_GetSelection()]
 		Gui,1:+Disabled
-		SetPos(ea)
-		/*
-			if(ea.file!=current(3).file){
-				tv(files.ssn("//*[@file='" ea.file "']/@tv").text)
-				Sleep,100
-				WinActivate,% hwnd([5])
-			}
-		*/
-		
-		/*
-			sc:=csc(),sc.2397(0),sc.2376,sc.2160(ea.start,ea.end),sc.2169,notify(0),CenterSel(),Notify("setpos")
-			if(v.options.auto_close_find){
-				hwnd({rem:5})
-				Gui,1:-Disabled
-			}else
-				WinActivate,% hwnd([5])
-		*/
+		ea:=foundinfo[TV_GetSelection()],SetPos(ea),xpos:=sc.2164(0,ea.start),ypos:=sc.2165(0,ea.start)
+		Sleep,300
+		WinGetPos,xx,yy,ww,hh,% newwin.ahkid
+		WinGetPos,px,py,,,% "ahk_id" sc.sc
+		WinGet,trans,Transparent,% newwin.ahkid
+		cxpos:=px+xpos,cypos:=py+ypos
+		if(cxpos>xx&&cxpos<xx+ww&&cypos>yy&&cypos<yy+hh)
+			WinSet,Transparent,50,% newwin.ahkid
+		else if(trans=50)
+			WinSet,Transparent,255,% newwin.ahk
 	}else{
 		sel:=TV_GetSelection(),TV_Modify(sel,ec:=TV_Get(sel,"E")?"-Expand":"Expand")
 		SetTimer,findlabel,-200
@@ -2483,7 +2483,7 @@ GetInclude(){
 	Refresh_Project_Explorer(newfile)
 	return
 }
-getpos(){
+GetPos(){
 	if(!current(1).xml)
 		return
 	sc:=csc(),current:=current(2).file,code_explorer.scan(current()),cf:=current(3).file
@@ -2499,7 +2499,7 @@ getpos(){
 	if(list)
 		fix.SetAttribute("fold",Trim(list,","))
 	pos:=positions.ssn("//main[@file='" current(2).file "']/file[@file='" current(3).file "']"),line:=0,bp:=""
-	while,sc.2047(line,1)>=0,line:=sc.2047(line,1)
+	while,sc.2047(line,2)>=0,line:=sc.2047(line,2)
 		bp.=line ",",line++
 	if(bp:=Trim(bp,","))
 		pos.SetAttribute("breakpoint",bp)
@@ -3333,6 +3333,14 @@ Notify(csc:=""){
 				else
 					text:=sc.gettext(),text:=SubStr(text,1,sc.2128(line)),slash:=RegExMatch(text,"(\s*;#\[.*\])")?"/":"",end:=sc.2136(line),start:=sc.2128(line),_:=start=end?(add:=3+StrLen(slash),space:=""):(add:=4+StrLen(slash),space:=" "),sc.2003(end,space Chr(59) "#[" slash (name:=SubStr(current(3).filename,1,-4)) "]"),sc.2160(end+add,end+add+StrPut(name,utf-8)-1)
 			}else if(GetKeyState("Shift","P")){
+				m("breakpoint set/remove 0;*[description]")
+				/*
+					if(sc.2047(line,1)=line)
+						sc.2044(line,-1) ;,m("here",line)
+					else
+						sc.2043(line,1) ;,m(sc.2047(line,1)=line,sc.2047(line,1),line)
+				*/
+				;m(sc.2047(line-2,2),sc.2046(line))
 				/*
 					add the stop point for debugging
 				*/
@@ -3534,6 +3542,7 @@ Omni_Search(start=""){
 	for a,b in searchobj:=StrSplit(search)
 		stext[b]:=stext[b]=""?1:stext[b]+1
 	list:=cexml.sn(find),break:=0,currentparent:=current(2).file
+	;return m(find,list.length)
 	while,ll:=list.Item[A_Index-1],b:=xml.ea(ll){
 		if(break){
 			break:=0
@@ -3606,11 +3615,11 @@ Omni_Search(start=""){
 		sc.2003(sc.2008,build)
 	}else if(item.type="file"){
 		hwnd({rem:20}),tv(files.ssn("//main[@file='" item.parent "']/descendant::file[@file='" item.file "']/@tv").text)
-	}else if(item.type~="i)(label|instance|method|function|hotkey|class|property|variable|bookmark)"){
+	}else if(item.type~="i)(breakpoint|label|instance|method|function|hotkey|class|property|variable|bookmark)"){
 		hwnd({rem:20}),TV(files.ssn("//*[@file='" item.file "']/@tv").text)
 		Sleep,200
 		item.text:=item.type="class"?"class " item.text:item.text
-		(item.type="bookmark")?(sc:=csc(),line:=sc.2166(item.pos),sc.2160(sc.2128(line),sc.2136(line)),hwnd({rem:20}),CenterSel()):(csc().2160(item.pos,item.pos+StrPut(item.text,"Utf-8")-1),v.sc.2169,getpos(),v.sc.2400)
+		(item.type~="i)bookmark|breakpoint")?(sc:=csc(),line:=sc.2166(item.pos),sc.2160(sc.2128(line),sc.2136(line)),hwnd({rem:20}),CenterSel()):(csc().2160(item.pos,item.pos+StrPut(item.text,"Utf-8")-1),v.sc.2169,getpos(),v.sc.2400)
 	}
 	return
 	omnikey:
@@ -4594,8 +4603,11 @@ save(option=""){
 		file:=fileopen(filename,"rw",encoding),file.seek(0),file.write(text),file.length(file.position)
 		Gui,1:TreeView,% hwnd("fe")
 		multi:=files.sn("//file[@file='" filename "']")
-		while,mm:=multi.item[A_Index-1]
-			ea:=files.ea(mm),TV_Modify(ea.tv,"",ea.filename)
+		while,mm:=multi.item[A_Index-1]{
+			ea:=files.ea(mm)
+			SplitPath,% ea.filename,,,,nne
+			TV_Modify(ea.tv,"",v.options.Hide_File_Extensions?nne:ea.filename) ;#[FIXED: Maintain 'Hide File Extensions' option when updating project explorer]
+		}
 		FileGetTime,time,%filename%
 		ff:=files.sn("//*[@file='" filename "']")
 		while,fff:=ff.item[A_Index-1]
@@ -4776,16 +4788,18 @@ SetMatch(){
 SetPos(oea:=""){
 	static
 	if(IsObject(oea)){
-		posinfo:=positions.ssn("//main[@file='" files.ssn("//*[@file='" oea.file "']/ancestor::main/@file").text "']/file[@file='" oea.file "']")
+		sc:=csc(),current:=files.ssn("//*[@file='" oea.file "']/ancestor::main/@file").text
+		if(!top:=positions.ssn("//main[@file='" current "']"))
+			top:=positions.add("main",{file:current},,1)
+		if(!fix:=ssn(top,"descendant::file[@file='" oea.file "']"))
+			fix:=settings.under(top,"file",{file:oea.file})
 		nea:=files.ea("//*[@sc='" sc.2357 "']"),cea:=files.ea("//*[@file='" oea.file "']")
 		SetTimer,Disable,-1
 		Sleep,2
 		if(oea.file!=nea.file)
 			tv(cea.tv,2,1)
-		if(oea.line)
-			sc.2160(sc.2128(oea.line),sc.2136(oea.line))
-		else
-			sc.2160(oea.start,oea.end)
+		(oea.line!="")?(end:=sc.2136(oea.line),start:=sc.2128(oea.line)):(end:=oea.end,start:=oea.start)
+		fix.SetAttribute("start",oea.start),fix.SetAttribute("end",oea.end),sc.2160(start,end)
 		SetTimer,CenterSel,-50
 		SetTimer,Enable,-250
 		return
@@ -4800,9 +4814,11 @@ SetPos(oea:=""){
 	sc:=csc(),sc.2397(0),node:=files.ssn("//*[@sc='" sc.2357 "']"),file:=ssn(node,"@file").text,parent:=ssn(node,"ancestor::main/@file").text,posinfo:=positions.ssn("//main[@file='" parent "']/file[@file='" file "']"),doc:=ssn(node,"@sc").text,ea:=xml.ea(posinfo),fold:=ea.fold,breakpoint:=ea.breakpoint
 	if(ea.file){
 		Loop,Parse,fold,`,
-			sc.2231(A_LoopField)
-		Loop,Parse,breakpoint,`,
-			sc.2043(A_LoopField,0)
+			sc.2231(A_LoopField) ;*[My Breakpoint]
+		/*
+			Loop,Parse,breakpoint,`, ;*[Another (options to come later?)]
+				sc.2043(A_LoopField,1)
+		*/
 		if(ea.start&&ea.end)
 			sc.2160(ea.start,ea.end)
 		if(ea.scroll!="")
@@ -4914,8 +4930,10 @@ Test_Plugin(){
 }
 Testing(x:=0){
 	;m("Testing","ico:?")
-	m(files.ssn("//*[@tv='" TV_GetSelection() "']").xml)
+	;m(files.ssn("//*[@tv='" TV_GetSelection() "']").xml)
 	;m(menus[],"ico:?")
+	;v.ddd.send("breakpoint_list")
+	v.ddd.send("stack_get")
 }
 Toggle_Comment_Line(){
 	sc:=csc(),sc.2078
@@ -5118,8 +5136,10 @@ Update(info){
 			return
 		if(update[item]=sc.getuni())
 			return
-		if(updated[item]="")
-			TV_Modify(ea.tv,"","*" ea.filename)
+		if(updated[item]=""){	;#[FIXED: Maintain 'Hide File Extensions' option when updating project explorer]
+			SplitPath,% ea.filename,,,,nne
+			TV_Modify(ea.tv,"","*" (v.options.Hide_File_Extensions?nne:ea.filename))
+		}
 		if(v.options.disable_line_status!=1){
 			pos:=posinfo(),line:=sc.2166(pos.start),end:=sc.2166(pos.end)
 			if(line!=end){
@@ -5363,7 +5383,7 @@ Check_For_Update(){
 	if(proxy:=settings.ssn("//proxy").text)
 		http.setProxy(2,proxy)
 	http.send()
-	version=Version=1.002.3
+	version=Version=1.002.4
 	RegExMatch(http.ResponseText,"iUO)\x22date\x22:\x22(.*)\x22",found),date:=RegExReplace(found.1,"\D")
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y")
 	newwin.show("AHK Studio Version: " version)
@@ -5398,4 +5418,13 @@ Check_For_Update(){
 	cfuguiescape:
 	newwin.Destroy()
 	return
+}
+Step_Into(){
+	v.ddd.send("step_into")
+}
+Step_Over(){
+	v.ddd.send("step_over")
+}
+Step_Out(){
+	v.ddd.send("step_out")
 }

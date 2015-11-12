@@ -3,14 +3,14 @@ Studio(ico:=0){
 	global x
 	if(ico)
 		Menu,Tray,Icon
-	return x:=comobjactive("AHK-Studio"),x.autoclose(A_ScriptHwnd)
+	return x:=ComObjActive("AHK-Studio"),x.autoclose(A_ScriptHwnd)
 }
 class GUIKeep{
 	static table:=[],showlist:=[]
 	__New(win,parent:=""){
 		#NoTrayIcon
 		x:=ComObjActive("AHK-Studio"),path:=x.path(),info:=x.style(),settings:=x.get("settings")
-		owner:=winexist("ahk_id" parent)?parent:x.hwnd(1)
+		owner:=WinExist("ahk_id" parent)?parent:x.hwnd(1)
 		DetectHiddenWindows,On
 		if(FileExist(path "\AHKStudio.ico"))
 			Menu,Tray,Icon,%path%\AHKStudio.ico
