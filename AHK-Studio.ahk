@@ -1974,7 +1974,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151106173300,loc:"lib\menus.xml",url:"lib/menus.xml",type:1},scilexer:{date:20151111164146,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151106173300,loc:"lib\menus.xml",url:"lib/menus.xml",type:1},scilexer:{date:20151112182156,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
@@ -3326,27 +3326,12 @@ Notify(csc:=""){
 		if(margin=3)
 			sc.2231(line)
 		if(margin=1){
-			if(!GetKeyState("Shift","P")){
-				text:=Trim(sc.getline(line))
-				if(RegExMatch(text,"\s+;#\[.*\]"))
-					start:=sc.2128(line),pos:=RegExMatch(text,"UO)(\s*;#\[.*\])",found),sc.2190(start+pos-1),sc.2192(start+pos-1+found.len(1)),sc.2194(0,""),code_explorer.scan(current())
-				else
-					text:=sc.gettext(),text:=SubStr(text,1,sc.2128(line)),slash:=RegExMatch(text,"(\s*;#\[.*\])")?"/":"",end:=sc.2136(line),start:=sc.2128(line),_:=start=end?(add:=3+StrLen(slash),space:=""):(add:=4+StrLen(slash),space:=" "),sc.2003(end,space Chr(59) "#[" slash (name:=SubStr(current(3).filename,1,-4)) "]"),sc.2160(end+add,end+add+StrPut(name,utf-8)-1)
-			}else if(GetKeyState("Shift","P")){
-				m("breakpoint set/remove 0;*[description]")
-				/*
-					if(sc.2047(line,1)=line)
-						sc.2044(line,-1) ;,m("here",line)
-					else
-						sc.2043(line,1) ;,m(sc.2047(line,1)=line,sc.2047(line,1),line)
-				*/
-				;m(sc.2047(line-2,2),sc.2046(line))
-				/*
-					add the stop point for debugging
-				*/
-			}
+			text:=Trim(sc.getline(line)),search:=GetKeyState("Shift","P")?["*","UO)(\s*;\*\[.*\])"]:["#","UO)(\s*;#\[.*\])"]
+			if(RegExMatch(text,search.2))
+				start:=sc.2128(line),pos:=RegExMatch(text,search.2,found),sc.2190(start+pos-1),sc.2192(start+pos-1+found.len(1)),sc.2194(0,""),code_explorer.scan(current())
+			else
+				text:=sc.gettext(),text:=SubStr(text,1,sc.2128(line)),slash:=RegExMatch(text,search.2)?"/":"",end:=sc.2136(line),start:=sc.2128(line),_:=start=end?(add:=3+StrLen(slash),space:=""):(add:=4+StrLen(slash),space:=" "),sc.2003(end,space Chr(59) search.1 "[" slash (name:=SubStr(current(3).filename,1,-4)) "]"),sc.2160(end+add,end+add+StrPut(name,utf-8)-1)
 		}
-		;testing()::""
 	}if(fn.code=2022){
 		if v.options.Autocomplete_Enter_Newline
 			SetTimer,sendenter,100
