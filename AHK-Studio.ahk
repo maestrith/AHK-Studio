@@ -4782,9 +4782,14 @@ SetPos(oea:=""){
 		Sleep,2
 		if(oea.file!=nea.file)
 			tv(cea.tv,2,1)
-		for a,b in oea
-			posinfo.SetAttribute(a,b)
-		sc.2160(oea.start,oea.end)
+		/*
+			for a,b in oea
+				posinfo.SetAttribute(a,b)
+		*/
+		if(oea.line)
+			sc.2160(sc.2128(oea.line),sc.2136(oea.line))
+		else
+			sc.2160(oea.start,oea.end)
 		SetTimer,CenterSel,-50
 		SetTimer,Enable,-250
 		return
