@@ -3,6 +3,7 @@ Added:
 -Edit/Find: If the found text is behind the window it will change the transparency of the window so you can see the text behind it.
 Fixed: Reported by Run1e
 -Words within () before a , were not properly highlighting
+-Omni-Search: Spaces cause issues.
 1.002.3
 NOTICE!
 -This will download a new copy of SciLexer.dll

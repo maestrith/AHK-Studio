@@ -3522,8 +3522,10 @@ Omni_Search(start=""){
 			LV_ModifyCol(A_Index,"AutoHDR")
 		return
 	}if(RegExMatch(search,"\W")){
-		find:="//*[",pos:=1,replist:=[]
+		pos:=1,replist:=[],find1:="",index:=1
 		while,RegExMatch(search,"O)(\W)",found,pos),pos:=found.Pos(1)+found.len(1){
+			if(found.1=" ")
+				Continue
 			if(pre:=omni_search_class.prefix[found.1]){
 				replist.push(found.1)
 				if(found.1="+"){
@@ -3531,18 +3533,17 @@ Omni_Search(start=""){
 					break
 				}else if(pre)
 					add:="@type='" pre "'"
-				find.=A_Index>1?" or " add:add
-			}
+				find1.=index>1?" or " add:add
+			}index++
 		}
 		for a,b in replist
 			search:=RegExReplace(search,"\Q" b "\E")
-		find.="]"
+		find:=find1?"//*[" find1 "]":"//*"
 	}else
 		find:="//*"
 	for a,b in searchobj:=StrSplit(search)
 		stext[b]:=stext[b]=""?1:stext[b]+1
 	list:=cexml.sn(find),break:=0,currentparent:=current(2).file
-	;return m(find,list.length)
 	while,ll:=list.Item[A_Index-1],b:=xml.ea(ll){
 		if(break){
 			break:=0
