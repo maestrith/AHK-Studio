@@ -80,7 +80,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
-	Gui,Show,,AHK Studio Help Version: Version=1.002.4
+	Gui,Show,,AHK Studio Help Version: Version=1.002.5
 	sc.2181(0,about),sc.2025(0),sc.2268(1)
 	return
 	11GuiClose:
@@ -259,8 +259,7 @@ Class Icon_Browser{
 		loaddefault:
 		this:=icon_browser.keep,this.file:="shell32.dll",this.start:=0,this.populate(),settings.add("icons",{"last":this.file})
 		return
-	}
-	select(num:=""){
+	}select(num:=""){
 		select:
 		if(A_GuiEvent!="I")
 			return
@@ -281,8 +280,7 @@ Class Icon_Browser{
 		if(this.focus)
 			WinActivate,% this.focus
 		return
-	}
-	load(filename:=""){
+	}load(filename:=""){
 		loadfile:
 		this:=icon_browser.keep
 		if(!filename){
@@ -295,12 +293,10 @@ Class Icon_Browser{
 			return this.select("image")
 		this.populate(),settings.add("icons",{"last":filename}),filename:=""
 		return
-	}
-	exit(){
+	}exit(){
 		for win in icon_browser.window
 			Gui,%win%:Destroy
-	}
-	populate(){
+	}populate(){
 		GuiControl,85:-Redraw,SysListView321
 		il:=IL_Create(50,10,1),LV_SetImageList(il)
 		while,icon:=IL_Add(il,this.file,A_Index)
@@ -370,11 +366,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		version:="Version=1.002.4"
+		version:="Version=1.002.5"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		return "Version=1.002.4"
+		return "Version=1.002.5"
 	}EnableSC(x:=0){
 		sc:=csc()
 		if(x){
@@ -960,23 +956,26 @@ Class Code_Explorer{
 			if(!no.ssn("//bad[@min<'" found.pos(1) "' and @max>'" found.pos(1) "']"))
 				cexml.under(next,"info",{type:"Class",opos:found.Pos(1)-1,pos:ppp:=StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-3,text:RegExReplace(found.1,"i)^(class|\s)"),upper:upper(RegExReplace(found.1,"i)(class\s+)"))})
 		clist:=sn(next,"descendant::info[@type='Class']")
-		while,cc:=clist.item[A_Index-1],ea:=xml.ea(cc){
-			tt:=SubStr(text,ea.pos+1),total:="",braces:=0,start:=0
-			for a,b in StrSplit(tt,"`n"){
-				line:=Trim(RegExReplace(b,"(\s+" Chr(59) ".*)"))
+		while,cc:=clist.item[A_Index-1],ea:=xml.ea(cc),tt:=SubStr(text,ea.opos),total:="",braces:=start:=lbraces:=0{
+			for a,b in StrSplit(tt,"`n","`r`n"){
+				line:=Trim(RegExReplace(b,"(\s+" Chr(59) ".*)\R?"))
 				if(SubStr(line,1,1)="}"){
 					while,((found1:=SubStr(line,A_Index,1))~="(}|\s)"){
 						if(found1~="\s")
 							Continue
 						braces--
-					}
-				}
-				if(start&&braces=0)
+				}}if(start&&braces<=0){
+					for c,d in StrSplit(line)
+						if(RegExMatch(d,"[}|\s]")&&lbraces>0)
+							total.=d,lbraces--
 					break
-				total.=b "`n"
+				}total.=b "`n"
 				if(SubStr(line,0,1)="{")
 					braces++,start:=1
-			}lasteapos:=ea.pos,total:=Trim(total,"`n"),cc.SetAttribute("end",np:=ea.pos+StrPut(total,"utf-8")-1)
+				lbraces:=braces
+			}
+			
+			lasteapos:=ea.pos,total:=Trim(total,"`n"),cc.SetAttribute("end",np:=ea.pos+StrPut(total,"utf-8")-1)
 			for a,b in {Property:Code_Explorer.property,Method:Code_Explorer.function}{
 				pos:=1
 				while,RegExMatch(total,b,found,pos),pos:=found.Pos(1)+found.len(1)
@@ -2067,7 +2066,8 @@ Find_Replace(){
 	infopos:=positions.ssn("//*[@file='" current(3).file "']"),last:=ssn(infopos,"@findreplace").text,ea:=settings.ea("//findreplace"),newwin:=new GUIKeep(30),value:=[]
 	for a,b in ea
 		value[a]:=b?"Checked":""
-	newwin.Add("Text,,Find","Edit,w200 vfind","Text,,Replace","Edit,w200 vreplace","Checkbox,vregex " value.regex ",Regex","Checkbox,vcs " value.cs ",Case Sensitive","Checkbox,vgreed " value.greed ",Greed","Checkbox,vml " value.ml ",Multi-Line","Checkbox,xm vsegment " value.segment ",Current Segment Only","Checkbox,xm vcurrentsel hwndcs gcurrentsel " value.currentsel ",In Current Selection","Button,gfrfind Default,&Find","Button,x+5 gfrreplace,&Replace","Button,x+5 gfrall,Replace &All"),newwin.Show("Find & Replace"),sc:=csc(),order:=[],order[sc.2585(0)]:=1,order[sc.2587(0)]:=1,last:=(order.MinIndex()!=order.MaxIndex())?sc.textrange(order.MinIndex(),order.MaxIndex()):last,hotkeys([30],{"!e":"frregex"})
+	newwin.Add("Text,,Find","Edit,w200 vfind","Text,,Replace","Edit,w200 vreplace","Checkbox,vregex " value.regex ",Regex","Checkbox,vcs " value.cs ",Case Sensitive","Checkbox,vgreed " value.greed ",Greed","Checkbox,vml " value.ml ",Multi-Line","Checkbox,xm vsegment " value.segment ",Current Segment Only","Checkbox,xm vcurrentsel hwndcs gcurrentsel " value.currentsel ",In Current Selection","Button,gfrfind Default,&Find","Button,x+5 gfrreplace,&Replace","Button,x+5 gfrall,Replace &All")
+	newwin.Show("Find & Replace"),sc:=csc(),order:=[],order[sc.2585(0)]:=1,order[sc.2587(0)]:=1,last:=(order.MinIndex()!=order.MaxIndex())?sc.textrange(order.MinIndex(),order.MaxIndex()):last,hotkeys([30],{"!e":"frregex"})
 	if(ea.regex&&order.MinIndex()!=order.MaxIndex())
 		for a,b in StrSplit("\.*?+[{|()^$")
 			if(!InStr(last,"\" b))
@@ -2152,11 +2152,8 @@ Find_Replace(){
 	}current:=current(1).firstchild,looped:=1
 	goto,frrestart
 	return
-	frreplace:
-	info:=newwin[],text:=sc.getseltext(),replace:=info.replace
-	for a,b in {"``n":"`n","``r":"`n","``t":"`t","\r":"`n","\t":"`t","\n":"`n"}
-		StringReplace,replace,replace,%a%,%b%,All
-	csc().2170(0,[RegExReplace(text,"\Q" info.find "\E",replace)])
+	FRReplace:
+	sc:=csc(),info:=newwin[],sc.2170(0,[RegExReplace(sc.getseltext(),"\Q" info.find "\E",NewLines(info.replace))])
 	goto,frfind
 	return
 	frall:
@@ -2165,9 +2162,7 @@ Find_Replace(){
 		return pos:=1,end:=sc.2509(2,start),text:=SubStr(sc.getuni(),start+1,end-start),text:=RegExReplace(text,find,info.replace),sc.2190(start),sc.2192(end),sc.2194(StrPut(text,"utf-8")-1,[text]),sc.2500(2),sc.2505(0,sc.2006),sc.2504(start,len:=StrPut(text,"utf-8")-1),end:=start+len
 	if(info.segment)
 		goto,frseg
-	list:=sn(current(1),"descendant::file"),All:=update("get").1,info:=newwin[],replace:=info.replace
-	for a,b in {"``n":"`n","``r":"`n","``t":"`t","\r":"`n","\t":"`t","\n":"`n"}
-		StringReplace,replace,replace,%a%,%b%,All
+	list:=sn(current(1),"descendant::file"),All:=update("get").1,info:=newwin[],replace:=NewLines(info.replace)
 	while,ll:=list.Item[A_Index-1]{
 		text:=All[ssn(ll,"@file").text]
 		if(RegExMatch(text,find,found)){
@@ -2181,10 +2176,8 @@ Find_Replace(){
 	}}
 	return
 	frseg:
-	getpos(),info:=newwin[],sc:=csc(),pre:="O",find:="",find:=info.regex?info.find:"\Q" RegExReplace(info.find, "\\E", "\E\\E\Q") "\E",pre.=info.greed?"":"U",pre.=info.cs?"":"i",pre.=info.ml?"":"m`n",find:=pre ")" find ""
-	replace:=info.replace
-	for a,b in {"``n":"`n","``r":"`n","``t":"`t","\r":"`n","\t":"`t","\n":"`n"}
-		StringReplace,replace,replace,%a%,%b%,All
+	GetPos(),info:=newwin[],sc:=csc(),pre:="O",find:="",find:=info.regex?info.find:"\Q" RegExReplace(info.find, "\\E", "\E\\E\Q") "\E",pre.=info.greed?"":"U",pre.=info.cs?"":"i",pre.=info.ml?"":"m`n",find:=pre ")" find ""
+	replace:=NewLines(info.replace)
 	sc.2181(0,[RegExReplace(sc.gettext(),find,replace)]),setpos(ssn(current(),"@tv").text)
 	return
 }
@@ -2525,12 +2518,15 @@ Goto(){
 	sc.2100(0,Trim(labels))
 	return
 }
+activate(){
+	csc().2400
+}
 Gui(){
 	static
 	static controls:=["Static1","Edit1","Button1","Button2","Button3","Button4"]
 	Gui,+hwndhwnd +Resize +OwnDialogs
 	hwnd(1,hwnd),rb:=new rebar(1,hwnd),v.rb:=rb,pos:=settings.ssn("//gui/position[@window='1']")
-	;OnMessage(6,"Activate")
+	OnMessage(6,"Activate")
 	v.opening:=1
 	Gui,Margin,0,0
 	Gui,Add,TreeView,xm hwndce c0xff00ff w150
@@ -3031,9 +3027,11 @@ LButton(){
 		MouseClick,Left,,,,,U
 }
 ListVars(){
+	List_Variables:
 	if(v.dbgsock=""&&x=0)
 		return m("Currently no file being debugged"),debug.off()
 	v.ddd.send("context_get -c 1")
+	return
 }
 LV_Select(win,add){
 	Gui,%win%:Default
@@ -4192,7 +4190,7 @@ Refresh_Current_Project(file:=""){
 	GuiControl,1:+Redraw,SysTreeView321
 }
 Refresh_Plugins(){
-	plugins(1)
+	Plugins(1)
 }
 Refresh_Project_Explorer(openfile:=""){
 	static parent,file
@@ -5369,7 +5367,7 @@ Check_For_Update(){
 	if(proxy:=settings.ssn("//proxy").text)
 		http.setProxy(2,proxy)
 	http.send()
-	version=Version=1.002.4
+	version=Version=1.002.5
 	RegExMatch(http.ResponseText,"iUO)\x22date\x22:\x22(.*)\x22",found),date:=RegExReplace(found.1,"\D")
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y")
 	newwin.show("AHK Studio Version: " version)
@@ -5413,4 +5411,9 @@ Step_Over(){
 }
 Step_Out(){
 	v.ddd.send("step_out")
+}
+NewLines(text){
+	for a,b in {"``n":"`n","``r":"`n","``t":"`t","\r":"`n","\t":"`t","\n":"`n"}
+		StringReplace,text,text,%a%,%b%,All
+	return text
 }

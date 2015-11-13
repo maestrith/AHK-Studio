@@ -1,3 +1,6 @@
+1.002.5
+Fixed: Reported by number1nub
+-Find Replace: Replace was not replacing a single found item
 1.002.4
 Added:
 -Edit/Find: If the found text is behind the window it will change the transparency of the window so you can see the text behind it.
