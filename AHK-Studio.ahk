@@ -13,7 +13,7 @@ CoordMode,ToolTip,Screen
 if(!FileExist("lib"))
 	FileCreateDir,Lib
 global v:=[],settings:=new xml("settings","lib\Settings.xml"),files:=new xml("files"),menus,commands:=new xml("commands","lib\commands.xml"),positions:=new xml("positions","lib\positions.xml"),vversion,access_token,vault:=new xml("vault","lib\Vault.xml"),preset,scintilla,bookmarks,cexml:=new xml("code_explorer"),notesxml,language:=new xml("language","lib\en-us.xml"),vversion:=new xml("version","lib\version.xml"),Custom_Commands:=new XML("custom","lib\Custom Commands.xml")
-scintilla:=new xml("scintilla","lib\scintilla.xml"),v.pluginversion:=1,menus:=new xml("menus","lib\menus.xml"),FileCheck(file)
+scintilla:=new xml("scintilla","lib\scintilla.xml"),v.pluginversion:=1,FileCheck(file),menus:=new xml("menus","lib\menus.xml")
 if(FileExist("AHKStudio.ico"))
 	Menu,Tray,Icon,AHKStudio.ico
 new omni_search_class(),v.filelist:=[],v.options:=[],var(),keywords(),Gui(),v.match:={"{":"}","[":"]","<":">","(":")",Chr(34):Chr(34),"'":"'","%":"%"},v.filescan:=[]
