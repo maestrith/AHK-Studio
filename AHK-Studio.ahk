@@ -1075,14 +1075,7 @@ Class Code_Explorer{
 				if(ea.pos="")
 					return
 				parent:=ssn(found,"ancestor::main/@file").text,
-				TV(files.ssn("//main[@file='" parent "']/descendant::file[@file='" ea.file "']/@tv").text)
-				Sleep,200
-				if(ea.type="bookmark"){
-					sc:=csc(),line:=sc.2166(ea.pos),sc.2160(sc.2128(line),sc.2136(line)),CenterSel()
-					ControlFocus,,% "ahk_id" csc().sc
-				}
-				else
-					csc().2160(ea.pos,ea.pos+StrPut(ea.text,"Utf-8")-1+_:=ea.type="class"?+6:+0) ;,v.sc.2169,v.sc.2400
+				SetPos({file:ea.file,start:ea.pos,end:ea.pos+StrLen(ea.text)})
 				ControlFocus,SysTreeView322,% hwnd([1])
 			}
 			return

@@ -3,6 +3,7 @@ Fixed: Reported by number1nub
 -Find Replace: Replace was not replacing a single found item
 Fixed: Reported by KaoSDlanor
 -Code Explorer: Clicking again on an item that is already selected was not re-selecting it in the code
+-Code Explorer: Quickly clicking on items was causing the first item to show but not the second
 1.002.4
 Added:
 -Edit/Find: If the found text is behind the window it will change the transparency of the window so you can see the text behind it.
