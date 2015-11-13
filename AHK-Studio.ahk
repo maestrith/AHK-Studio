@@ -2266,9 +2266,12 @@ Find(){
 	return
 	state:
 	if(A_GuiEvent="DoubleClick"){
-		ea:=foundinfo[TV_GetSelection()],sc:=csc(),tv(files.ssn("//*[@file='" ea.file "']/@tv").text)
+		info:=newwin[]
+		ea:=foundinfo[TV_GetSelection()]
 		Sleep,200
-		return sc.2160(ea.start,ea.end),sc.2169,CenterSel(),notify(0)
+		SetPos({start:ea.start,end:ea.end,file:ea.file})
+		if(info.acdc)
+			goto,5GuiClose
 	}if(A_GuiEvent=="f")
 		return
 	sel:=TV_GetSelection()
@@ -2300,7 +2303,7 @@ Find(){
 	5GuiEscape:
 	5GuiClose:
 	Gui,5:Submit,NoHide
-	ea:=newwin[],settings.add("search/find",{regex:ea.regex,cs:ea.cs,sort:ea.sort,gr:ea.gr,allfiles:ea.allfiles}),foundinfo:="",positions.ssn("//*[@file='" file "']/@search").text:=ea.find,hwnd({rem:5})
+	ea:=newwin[],settings.add("search/find",{acdc:ea.acdc,regex:ea.regex,cs:ea.cs,sort:ea.sort,gr:ea.gr,allfiles:ea.allfiles}),foundinfo:="",positions.ssn("//*[@file='" file "']/@search").text:=ea.find,hwnd({rem:5})
 	return
 	comment:
 	sc:=csc()
@@ -4884,6 +4887,7 @@ ShowLabels(x:=0){
 	sc.2100(0,Trim(list))
 }
 stop(x:=0){
+	Stop_Debugger:
 	if(v.dbgsock=""&&x=0)
 		return m("Currently no file being debugged"),debug.off()
 	v.ddd.send("stop")
@@ -4891,6 +4895,7 @@ stop(x:=0){
 	v.ddd.debug.disconnect()
 	v.ddd.debug.off()
 	csc("Scintilla1")
+	return
 }
 Tab_Width(){
 	static
@@ -4919,7 +4924,7 @@ Testing(x:=0){
 	;m(files.ssn("//*[@tv='" TV_GetSelection() "']").xml)
 	;m(menus[],"ico:?")
 	;v.ddd.send("breakpoint_list")
-	v.ddd.send("stack_get")
+	m(v.color.personal)
 }
 Toggle_Comment_Line(){
 	sc:=csc(),sc.2078
