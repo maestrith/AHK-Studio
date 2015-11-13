@@ -1658,6 +1658,8 @@ Display_Functions(){
 		if(aa.text~="i)^" word)
 			list.=aa.text " "
 	Sort,list,list,D%A_Space%
+	if(list="")
+		return
 	sc.2117(5,Trim(list))
 	if(!InStr(Trim(List)," "))
 		sc.2104
