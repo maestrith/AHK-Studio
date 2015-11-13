@@ -1067,7 +1067,8 @@ Class Code_Explorer{
 	}cej(){
 		static last
 		cej:
-		if((A_GuiEvent="S"||A_EventInfo=last)&&A_GuiEvent!="RightClick"){
+		t(A_GuiEvent)
+		if((A_GuiEvent="S"||A_GuiEvent="Normal"||A_EventInfo=last)&&A_GuiEvent!="RightClick"){
 			list:="",last:=A_EventInfo
 			if(found:=code_explorer.TreeView.ssn("//*[@tv='" A_EventInfo "']")){
 				ea:=xml.ea(found)
@@ -1975,7 +1976,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151106173300,loc:"lib\menus.xml",url:"lib/menus.xml",type:1},scilexer:{date:20151112182156,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151113064154,loc:"lib\menus.xml",url:"lib/menus.xml",type:1},scilexer:{date:20151112182156,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
@@ -4892,8 +4893,7 @@ stop(x:=0){
 		return m("Currently no file being debugged"),debug.off()
 	v.ddd.send("stop")
 	sleep,200
-	v.ddd.debug.disconnect()
-	v.ddd.debug.off()
+	v.ddd.debug.disconnect(),v.ddd.debug.off()
 	csc("Scintilla1")
 	return
 }
