@@ -436,6 +436,8 @@ Class PluginClass{
 		csc().2181(0,&text)
 	}ReplaceSelected(text){
 		csc().2170(0,&text:=encode(text))
+	}calltip(text){
+		sc:=csc(),sc.2200(sc.2128(sc.2166(sc.2008)),text)
 }}
 class rebar{
 	static hw:=[],keep:=[]
