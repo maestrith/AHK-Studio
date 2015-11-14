@@ -2875,7 +2875,7 @@ Hotkeys(win,item,track:=0){
 	ea:=menus.ea("//*[@hotkey='" A_ThisHotkey "']")
 	if(ea.plugin){
 		if(!FileExist(ea.plugin))
-			MissingPlugin(ea.plugin)
+			MissingPlugin(ea.plugin,ea.clean)
 		else
 			Run,% Chr(34) ea.plugin Chr(34) " " Chr(34) ea.option Chr(34)
 	}else if(IsLabel(ea.clean)||IsFunc(ea.clean))
@@ -3126,7 +3126,7 @@ Menu(menuname:="main"){
 	item:=clean(A_ThisMenuItem),ea:=menus.ea("//*[@clean='" item "']"),plugin:=ea.plugin,option:=ea.option
 	if(plugin){
 		if(!FileExist(plugin))
-			MissingPlugin(plugin)
+			MissingPlugin(plugin,item)
 		else
 			Run,"%plugin%" %option%
 		; , , ,
@@ -3621,9 +3621,8 @@ Omni_Search(start=""){
 			v.runfunc:=text
 			SetTimer,runfunc,-100
 		}else{
-			
 			if(!FileExist(type))
-				MissingPlugin(type)
+				MissingPlugin(type,item.sort)
 			else{
 				option:=menus.ssn("//*[@clean='" RegExReplace(item.sort," ","_") "']/@option").text
 				Run,%type% "%option%"
@@ -5461,12 +5460,12 @@ NewLines(text){
 		StringReplace,text,text,%a%,%b%,All
 	return text
 }
-MissingPlugin(file){
+MissingPlugin(file,menuname){
 	SplitPath,file,filename,dir
 	if(dir="plugins"&&!FileExist(file)){
 		if(m("This requires a plugin that has not been downloaded yet, Download it now?","btn:yn")="yes"){
 			UrlDownloadToFile,https://raw.githubusercontent.com/maestrith/AHK-Studio-Plugins/master/%filename%,%file%
-			option:=menus.ssn("//*[@plugin='" type "']/@option").text
+			option:=menus.ssn("//*[@clean='" RegExReplace(menuname," ","_") "']/@option").text
 			Refresh_Plugins()
 			Run,%file% "%option%"
 		}else
