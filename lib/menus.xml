@@ -36,7 +36,6 @@
 			<menu name="Set &amp;As Default Editor" clean="Set_As_Default_Editor" index="31"></menu>
 			<menu name="&amp;Upload" clean="Upload" index="32" option="" plugin="plugins\Upload.ahk"></menu></menu>
 		<menu name="&amp;Edit" clean="Edit" tv="2815816">
-			<menu name="Add Toolbar" clean="Add_Toolbar" no="1"></menu>
 			<menu name="Compare" clean="Compare" no="1"></menu>
 			<menu name="Copy" clean="Copy" hotkey="^C" index="2"></menu>
 			<menu clean="Custom_Case_Settings" name="Custom Case Settings" no="1"></menu>
@@ -54,7 +53,6 @@
 			<menu name="&amp;Jump to Segment" hotkey="!j" clean="Jump_to_Segment" index="11"></menu>
 			<menu name="Manage Toolbars" clean="Manage_Toolbars" index="12" option="" plugin="plugins\Manage Toolbars.ahk"></menu>
 			<menu name="Margin Left" clean="Margin_Left" index="13"></menu>
-			<menu name="&amp;Menu Editor" func="flan" clean="Menu_Editor" no="1"></menu>
 			<menu clean="New_File_Template" name="New File Template" index="14"></menu>
 			<menu name="New Scintilla Window" clean="New_Scintilla_Window" index="15"></menu>
 			<menu name="&amp;Next Found" hotkey="F3" clean="Next_Found" index="16"></menu>
@@ -124,12 +122,10 @@
 			<menu name="&amp;Case Sensitive" clean="Case_Sensitive" index="1"></menu>
 			<menu name="Cle&amp;ar Selection" clean="Clear_Selection" hotkey="^F2" index="2"></menu>
 			<menu name="Greed" clean="Greed" hotkey="!G" index="3"></menu>
-			<menu name="Multi Line" clean="Multi-Line" no="1"></menu>
 			<menu name="Multi Line" clean="Multi_Line" index="5"></menu>
 			<menu name="&amp;Regex" clean="Regex" hotkey="^!r" index="6"></menu>
 			<menu name="&amp;Set Selection" clean="Set_Selection" hotkey="^F1" index="7"></menu></menu>
 		<menu name="&amp;Auto Indent" clean="Auto_Indent" tv="2814664">
-			<menu name="F&amp;ix Next Line" clean="Fix_Next_Line" no="1"></menu>
 			<menu name="&amp;Full Auto" clean="Full_Auto" index="2"></menu></menu>
 		<menu name="&amp;Tools" clean="Tools" tv="2814808">
 			<menu name="Download Plugins" clean="Download_Plugins" index="1"></menu>
@@ -140,7 +136,6 @@
 			<menu name="Refresh Plugins" clean="Refresh_Plugins" index="6"></menu>
 			<menu name="Update Github Info" clean="Update_Github_Info" no="1"></menu></menu>
 		<menu name="&amp;Special Menu" clean="Special_Menu" tv="2815240">
-			<menu clean="Add_button" name="Add Button" no="1"></menu>
 			<menu name="Add Selected To Personal Variables" clean="Add_Selected_To_Personal_Variables" no="1"></menu>
 			<menu clean="Bookmarks" name="Bookmarks" tv="2814016" index="1">
 				<menu clean="Add_Bookmark" name="Add Bookmark" hotkey="!B" no="1"></menu>
