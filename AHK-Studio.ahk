@@ -1473,6 +1473,29 @@ ContextMenu(){
 	GuiContextMenu:
 	ControlGetFocus,Focus,% hwnd([1])
 	MouseGetPos,,,,ctl ;#[ADDED: Context menu shown when quick find is right clicked allowing moving between top & bottom]
+	MouseGetPos,,,,control,2
+	if(control=v.debug.sc){
+		Menu,rcm,Add,Close,SciDebug
+		Menu,rcm,Show
+		Menu,rcm,Delete
+		return
+		SciDebug:
+		if(A_ThisMenuItem="Close")
+			stop()
+		return
+	}
+	if(InStr(ctl,"Scintilla")){
+		for a,b in ["Bookmark Search","Class Search","Close","Copy","Cut","Delete","Function Search","Hotkey Search","Instance Search","Menu Search","Method Search","Open Folder","Paste","Property Search","Redo","Search Label","Select All","Undo"]
+			Menu,rcm,Add,%b%,SciRCM
+		Menu,rcm,Show
+		Menu,rcm,DeleteAll
+		return
+		SciRCM:
+		item:=clean(A_ThisMenuItem)
+		if(IsFunc(item))
+			%item%()
+		return
+	}
 	if(ctl="Static1"||ctl="Edit1"){
 		Menu,qfm,Add,% "Move to " (v.options.top_find?"Bottom":"Top"),Top_Find
 		Menu,qfm,Show
@@ -2850,9 +2873,12 @@ Hotkeys(win,item,track:=0){
 	if(IsFunc(func))
 		return %func%()
 	ea:=menus.ea("//*[@hotkey='" A_ThisHotkey "']")
-	if(ea.plugin)
-		Run,% Chr(34) ea.plugin Chr(34) " " Chr(34) ea.option Chr(34)
-	else if(IsLabel(ea.clean)||IsFunc(ea.clean))
+	if(ea.plugin){
+		if(!FileExist(ea.plugin))
+			MissingPlugin(ea.plugin)
+		else
+			Run,% Chr(34) ea.plugin Chr(34) " " Chr(34) ea.option Chr(34)
+	}else if(IsLabel(ea.clean)||IsFunc(ea.clean))
 		SetTimer,% ea.clean,-10
 	return
 }
@@ -3069,8 +3095,8 @@ Menu(menuname:="main"){
 				Menu,%parent%,Add
 				Continue
 			}
-			if((!IsFunc(ea.clean)&&!IsLabel(ea.clean))&&!FileExist(ea.plugin)){
-				aa.SetAttribute("no",1)
+			if((!IsFunc(ea.clean)&&!IsLabel(ea.clean))&&!ea.plugin){
+				aa.SetAttribute("no",1),fixlist.=ea.clean "`n"
 				Continue
 			}if(ea.no)
 				aa.RemoveAttribute("no")
@@ -3087,6 +3113,7 @@ Menu(menuname:="main"){
 		}if(ea.icon!=""&&ea.filename)
 			Menu,%Parent%,Icon,% ea.name hotkey,% ea.filename,% ea.icon
 	}
+	;m(Clipboard:=fixlist)
 	for a,b in track{
 		if(!Exist[b.name])
 			Menu,% b.parent,Delete,% b.name
@@ -3098,7 +3125,11 @@ Menu(menuname:="main"){
 	MenuRoute:
 	item:=clean(A_ThisMenuItem),ea:=menus.ea("//*[@clean='" item "']"),plugin:=ea.plugin,option:=ea.option
 	if(plugin){
-		Run,"%plugin%" %option%
+		if(!FileExist(plugin))
+			MissingPlugin(plugin)
+		else
+			Run,"%plugin%" %option%
+		; , , ,
 		return
 	}
 	if(IsFunc(item))
@@ -3589,8 +3620,14 @@ Omni_Search(start=""){
 		else if(type="func"){
 			v.runfunc:=text
 			SetTimer,runfunc,-100
-		}else
-			Run,%type%
+		}else{
+			if(!FileExist(type))
+				MissingPlugin(type)
+			else{
+				option:=menus.ssn("//*[@plugin='" type "']/@option").text
+				Run,%type% "%option%"
+			}
+		}
 		hwnd({rem:20})
 	}else if(pre="+"){
 		hwnd({rem:20}),args:=item.args,sc:=csc(),args:=RegExReplace(args,"U)=?" chr(34) "(.*)" chr(34)),build:=item.text "("
@@ -3904,7 +3941,7 @@ Plugins(refresh:=0){
 			if(!ii:=menus.ssn("//*[@clean='" clean(Trim(item.1)) "']"))
 				menus.under(plugin,"menu",{name:Trim(item.1),clean:clean(item.1),plugin:A_LoopFileFullPath,option:item.2,hotkey:plHks[item.1]})
 			else
-				ii.SetAttribute("plugin",A_LoopFileFullPath)
+				ii.SetAttribute("plugin",A_LoopFileFullPath),ii.SetAttribute("option",item.2)
 			pos:=found.Pos(1)+1
 		}
 	}
@@ -5418,4 +5455,27 @@ NewLines(text){
 	for a,b in {"``n":"`n","``r":"`n","``t":"`t","\r":"`n","\t":"`t","\n":"`n"}
 		StringReplace,text,text,%a%,%b%,All
 	return text
+}
+MissingPlugin(file){
+	SplitPath,file,filename,dir
+	if(dir="plugins"&&!FileExist(file)){
+		if(m("This requires a plugin that has not been downloaded yet, Download it now?","btn:yn")="yes"){
+			UrlDownloadToFile,https://raw.githubusercontent.com/maestrith/AHK-Studio-Plugins/master/%filename%,%file%
+			option:=menus.ssn("//*[@plugin='" type "']/@option").text
+			Run,%file% "%option%"
+		}else
+			return m("Unable to run this option.")
+	}
+}
+Undo(){
+	Send,^z
+}
+Redo(){
+	Send,^y
+}
+Cut(){
+	Send,^x
+}
+Select_All(){
+	Send,^a
 }
