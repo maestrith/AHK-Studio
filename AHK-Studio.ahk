@@ -316,7 +316,7 @@ class omni_search_class{
 		rem:=cexml.ssn("//menu"),rem.ParentNode.RemoveChild(rem),this.menulist:=[],list:=menus.sn("//menu"),top:=cexml.Add("menu")
 		while,mm:=list.item[A_Index-1],ea:=xml.ea(mm){
 			clean:=ea.clean,hotkey:=convert_hotkey(ea.hotkey)
-			StringReplace,clean,clean,_,%A_Space%,all
+			StringReplace,clean,clean,_,%A_Space%,All
 			launch:=IsFunc(ea.clean)?"func":IsLabel(ea.clean)?"label":""
 			if(launch=""&&ea.plugin="")
 				Continue
@@ -1485,7 +1485,7 @@ ContextMenu(){
 		return
 	}
 	if(InStr(ctl,"Scintilla")){
-		for a,b in ["Bookmark Search","Class Search","Close","Copy","Cut","Delete","Function Search","Hotkey Search","Instance Search","Menu Search","Method Search","Open Folder","Paste","Property Search","Redo","Search Label","Select All","Undo"]
+		for a,b in ["Undo","Redo","Copy","Cut","Paste","Select All","Close","Delete","","Open Folder","Bookmark Search","Class Search","Function Search","Hotkey Search","Instance Search","Menu Search","Method Search","Property Search","Search Label"]
 			Menu,rcm,Add,%b%,SciRCM
 		Menu,rcm,Show
 		Menu,rcm,DeleteAll
@@ -3621,10 +3621,11 @@ Omni_Search(start=""){
 			v.runfunc:=text
 			SetTimer,runfunc,-100
 		}else{
+			
 			if(!FileExist(type))
 				MissingPlugin(type)
 			else{
-				option:=menus.ssn("//*[@plugin='" type "']/@option").text
+				option:=menus.ssn("//*[@clean='" RegExReplace(item.sort," ","_") "']/@option").text
 				Run,%type% "%option%"
 			}
 		}
@@ -3918,6 +3919,10 @@ Plugins(refresh:=0){
 		while,pl:=menus.sn("//menu[@clean='Plugin']/menu[@hotkey!='']").item[A_Index-1],ea:=xml.ea(pl)
 			plHks[ea.name]:=ea.hotkey
 		rem:=menus.ssn("//menu[@clean='Plugin']"),rem.ParentNode.RemoveChild(rem)
+		rem:=menus.sn("//*[@plugin]")
+		while,rr:=rem.item[A_Index-1]{
+			rr.RemoveAttribute("plugin")
+		}
 	}all:=menus.sn("//*[@clean]")
 	while,aa:=all.item[A_Index-1],ea:=menus.ea(aa)
 		if((dup:=menus.sn("//*[@clean='" ea.clean "']")).length>1)
@@ -5462,6 +5467,7 @@ MissingPlugin(file){
 		if(m("This requires a plugin that has not been downloaded yet, Download it now?","btn:yn")="yes"){
 			UrlDownloadToFile,https://raw.githubusercontent.com/maestrith/AHK-Studio-Plugins/master/%filename%,%file%
 			option:=menus.ssn("//*[@plugin='" type "']/@option").text
+			Refresh_Plugins()
 			Run,%file% "%option%"
 		}else
 			return m("Unable to run this option.")
