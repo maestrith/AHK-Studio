@@ -88,6 +88,15 @@ OR PERFORMANCE OF THIS SOFTWARE.
 	hwnd({rem:11})
 	return
 }
+AddBookmark(line,search){
+	sc:=csc(),end:=sc.2136(line),start:=sc.2128(line),name:=(settings.ssn("//bookmark").text),name?name:SubStr(StrSplit(current(2).file,"\").pop(),1,-4)
+	for a,b in {"$file":SubStr(StrSplit(current(3).file,"\").pop(),1,-4),"$project":SubStr(StrSplit(current(2).file,"\").pop(),1,-4)}
+		name:=RegExReplace(name,"i)\Q" a "\E",b)
+	if(RegExMatch(name,"UO)\[(.*)\]",time)){
+		FormatTime,currenttime,%A_Now%,% time.1
+		name:=RegExReplace(name,"\Q[" time.1 "]\E",currenttime)
+	}sc.2003(end," " Chr(59) search.1 "[" name "]"),sc.2160(end+4,end+4+StrPut(name,utf-8)-1)
+}
 AutoMenu(){
 	AutoMenu:
 	sc:=csc()
@@ -2061,7 +2070,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151114191733,loc:"lib\menus.xml",url:"lib/menus.xml",type:1},scilexer:{date:20151112182156,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151115170308,loc:"lib\menus.xml",url:"lib/menus.xml",type:1},scilexer:{date:20151112182156,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
@@ -3443,11 +3452,11 @@ Notify(csc:=""){
 		if(margin=3)
 			sc.2231(line)
 		if(margin=1){
-			text:=Trim(sc.getline(line)),search:=GetKeyState("Shift","P")?["*","UO)(\s*;\*\[.*\])"]:["#","UO)(\s*;#\[.*\])"]
+			shift:=GetKeyState("Shift","P"),ShiftBP:=v.options.Shift_Breakpoint,text:=Trim(sc.getline(line)),search:=(shift&&ShiftBP||!shift&&!ShiftBP)?["*","UO)(\s*;\*\[.*\])"]:["#","UO)(\s*;#\[.*\])"]
 			if(RegExMatch(text,search.2))
 				start:=sc.2128(line),pos:=RegExMatch(text,search.2,found),sc.2190(start+pos-1),sc.2192(start+pos-1+found.len(1)),sc.2194(0,""),code_explorer.scan(current())
 			else
-				text:=sc.gettext(),text:=SubStr(text,1,sc.2128(line)),slash:=RegExMatch(text,search.2)?"/":"",end:=sc.2136(line),start:=sc.2128(line),_:=start=end?(add:=3+StrLen(slash),space:=""):(add:=4+StrLen(slash),space:=" "),sc.2003(end,space Chr(59) search.1 "[" slash (name:=SubStr(current(3).filename,1,-4)) "]"),sc.2160(end+add,end+add+StrPut(name,utf-8)-1)
+				AddBookmark(line,search)
 		}
 	}if(fn.code=2022){
 		if v.options.Autocomplete_Enter_Newline
@@ -3942,6 +3951,7 @@ Options(x:=0){
 	Disable_Auto_Complete_In_Quotes:
 	Virtual_Scratch_Pad:
 	Includes_In_Place:
+	Shift_Breakpoint:
 	onoff:=settings.ssn("//options/@ " A_ThisLabel).text?0:1
 	att:=[],att[A_ThisLabel]:=onoff,v.options[A_ThisLabel]:=onoff
 	settings.add("options",att)
@@ -4124,7 +4134,7 @@ Previous_Scripts(filename=""){
 	return
 }
 ProjectFolder(){
-	return settings.ssn("//directory").text?settings.ssn("//directory").text:A_ScriptDir "\Project"
+	return settings.ssn("//directory").text?settings.ssn("//directory").text:A_ScriptDir "\Projects"
 }
 Publish(return=""){
 	sc:=csc(),text:=update("get").1,save(),mainfile:=ssn(current(1),"@file").text,publish:=update({get:mainfile}),includes:=sn(current(1),"descendant::*/@include/..")

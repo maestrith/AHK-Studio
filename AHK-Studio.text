@@ -11,6 +11,16 @@ o Theme Editor
 
 o Find Replace
 - Replace command doesn't work; nothing is changed unless the Replace All command is used
+
+RE-ADDED: Words_In_Document
+RE-ADDED: Highlight_to_Matching_Brace
+RE-ADDED: Select_Current_Word
+RE-ADDED: Select_Next_Duplicate
+RE-ADDED: Remove_Current_Selection
+RE-ADDED: Previous_Found
+RE-ADDED: split_code
+CHANGED: Fixed ProjectFolder() to default to "Projects" instead of "Project" to match the new "Untitled" script location
+CHANGED: Bookmark insert -- Changed back to require shift to be held to insert bookmark on margin click. Also added in Options/Shift BreakPoint
 1.002.5
 Fixed: Reported by number1nub
 -Find Replace: Replace was not replacing a single found item
