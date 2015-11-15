@@ -1,3 +1,16 @@
+1.002.6
+Fixed: Reported by number1nub
+o Split Code
+- Leaves the final closing brace of classes behind in the main script when splitting
+- Options/Includes In Place: No longer places the include commands at the bottom of the main script-- not sure if this was on purpose, but it sometimes causes workingdir issues, and is far less convenient in general having to find and move the include lines in a big file
+- Files split into a Lib folder no longer use the "#Include <FileName>" notation
+
+o Theme Editor
+- Export Theme isn't pointing to the Themes folder in Studio's root folder
+- Personal Variables are no longer shown on the GUI to be customized
+
+o Find Replace
+- Replace command doesn't work; nothing is changed unless the Replace All command is used
 1.002.5
 Fixed: Reported by number1nub
 -Find Replace: Replace was not replacing a single found item

@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <menus>
 	<main>
-		<menu name="&amp;File" clean="File" tv="2815312">
-			<menu clean="Run_Comment_Block" name="Run Comment Block" hotkey="!V" no="1"></menu>
+		<menu name="&amp;File" clean="File" tv="2817680">
 			<menu name="Chec&amp;k For Update" clean="Check_For_Update" hotkey="" index="1" option="" plugin="plugins\Check For Update.ahk"></menu>
 			<menu clean="Close" name="&amp;Close" index="2"></menu>
 			<menu name="Close All" clean="Close_All" index="3" hotkey=""></menu>
@@ -30,16 +29,17 @@
 			<menu name="Run As Ansii" clean="Run_As_Ansii" hotkey="^!A" index="25"></menu>
 			<menu name="Run As U32" clean="Run_As_U32" index="26"></menu>
 			<menu name="Run As U64" clean="Run_As_U64" index="27"></menu>
+			<menu clean="Run_Comment_Block" name="Run Comment Block" hotkey="!V" no="1"></menu>
 			<menu name="Run Se&amp;lected Text" clean="Run_Selected_Text" index="28" option="" plugin="plugins\Run Selected Text.ahk"></menu>
 			<menu name="&amp;Save" hotkey="^S" clean="Save" index="29"></menu>
 			<menu clean="Save_As" name="Save &amp;As" index="30"></menu>
 			<menu name="Set &amp;As Default Editor" clean="Set_As_Default_Editor" index="31"></menu>
 			<menu name="&amp;Upload" clean="Upload" index="32" option="" plugin="plugins\Upload.ahk"></menu></menu>
-		<menu name="&amp;Edit" clean="Edit" tv="2815816">
+		<menu name="&amp;Edit" clean="Edit" tv="2818616">
 			<menu name="Compare" clean="Compare" no="1"></menu>
-			<menu name="Copy" clean="Copy" hotkey="^C" index="2"></menu>
+			<menu name="Copy" clean="Copy" hotkey="^C" index="1"></menu>
 			<menu clean="Custom_Case_Settings" name="Custom Case Settings" no="1"></menu>
-			<menu name="Cut" clean="Cut"></menu>
+			<menu name="Cut" clean="Cut" index="2"></menu>
 			<menu clean="Debug_Settings" name="Debug Settings" index="3"></menu>
 			<menu clean="Default_Project_Folder" name="Default Project Folder" no="1"></menu>
 			<menu name="&amp;Duplicate Line" hotkey="F2" clean="Duplicate_Line" index="4"></menu>
@@ -61,19 +61,19 @@
 			<menu name="Previous Found" hotkey="+F3" clean="Previous_Found" index="19"></menu>
 			<menu clean="Proxy_Settings" name="Proxy Settings" no="1"></menu>
 			<menu name="&amp;Quick Find" hotkey="!Q" clean="Quick_Find" index="20"></menu>
-			<menu name="Red&amp;o" clean="Redo"></menu>
-			<menu name="Remove Scintilla Window" clean="Remove_Scintilla_Window" index="21"></menu>
-			<menu name="Replace &amp;Selected" hotkey="F1" clean="Replace_Selected" index="22"></menu>
-			<menu clean="Reset_Zoom" name="Reset Zoom" index="23"></menu>
-			<menu name="&amp;Restore Current File" clean="Restore_Current_File" index="24" option="" plugin="plugins\Restore Current File.ahk"></menu>
-			<menu clean="Settings" name="Settings" index="25" option="" plugin="plugins\Settings.ahk"></menu>
-			<menu name="Tab Width" clean="Tab_Width" index="26"></menu>
-			<menu name="&amp;Theme" clean="Theme" index="27" option="" plugin="plugins\Theme.ahk"></menu>
-			<menu name="Togg&amp;le Comment Line" hotkey="^J" clean="Toggle_Comment_Line" index="28"></menu>
-			<menu name="&amp;Undo" clean="Undo"></menu>
-			<menu name="Auto Insert" clean="Auto_Insert" index="29" hide="1" option="" plugin="plugins\Auto Insert.ahk"></menu>
-			<menu name="Widths" clean="Widths" hide="1" index="30"></menu></menu>
-		<menu name="&amp;Options" clean="Options" tv="2815600" option="" plugin="plugins\Options.ahk">
+			<menu name="Red&amp;o" clean="Redo" index="21"></menu>
+			<menu name="Remove Scintilla Window" clean="Remove_Scintilla_Window" index="22"></menu>
+			<menu name="Replace &amp;Selected" hotkey="F1" clean="Replace_Selected" index="23"></menu>
+			<menu clean="Reset_Zoom" name="Reset Zoom" index="24"></menu>
+			<menu name="&amp;Restore Current File" clean="Restore_Current_File" index="25" option="" plugin="plugins\Restore Current File.ahk"></menu>
+			<menu clean="Settings" name="Settings" index="26" option="" plugin="plugins\Settings.ahk"></menu>
+			<menu name="Tab Width" clean="Tab_Width" index="27"></menu>
+			<menu name="&amp;Theme" clean="Theme" index="28" option="" plugin="plugins\Theme.ahk"></menu>
+			<menu name="Togg&amp;le Comment Line" hotkey="^J" clean="Toggle_Comment_Line" index="29"></menu>
+			<menu name="&amp;Undo" clean="Undo" index="30"></menu>
+			<menu name="Auto Insert" clean="Auto_Insert" index="31" hide="1" option="" plugin="plugins\Auto Insert.ahk"></menu>
+			<menu name="Widths" clean="Widths" hide="1" index="32"></menu></menu>
+		<menu name="&amp;Options" clean="Options" tv="2819120" option="" plugin="plugins\Options.ahk">
 			<menu name="Add Margins To Windows" clean="Add_Margins_To_Windows" option="1" index="1"></menu>
 			<menu name="Auto Advance" clean="Auto_Advance" option="1" index="2"></menu>
 			<menu clean="Auto_Close_Find" name="Auto Close Find" option="1" index="3"></menu>
@@ -106,28 +106,29 @@
 			<menu clean="Hide_Indentation_Guides" name="Hide Indentation Guides" option="1" index="29"></menu>
 			<menu name="Hide Project Explorer" clean="Hide_Project_Explorer" option="1" index="30"></menu>
 			<menu name="Highlight Current Area" clean="Highlight_Current_Area" option="1" index="31"></menu>
-			<menu name="Manual Continuation Line" clean="Manual_Continuation_Line" option="1" index="32"></menu>
-			<menu name="Remove Directory Slash" clean="Remove_Directory_Slash" option="1" index="33"></menu>
-			<menu clean="Run_As_Admin" name="Run As Admin" option="1" index="34"></menu>
-			<menu name="Show Caret Line" clean="Show_Caret_Line" option="1" index="35"></menu>
-			<menu name="Show EOL" clean="Show_EOL" option="1" index="36"></menu>
-			<menu name="Show WhiteSpace" clean="Show_WhiteSpace" option="1" index="37"></menu>
-			<menu name="Small &amp;Icons" clean="Small_Icons" option="1" index="38"></menu>
-			<menu clean="Top_Find" name="Top Find" option="1" index="39"></menu>
-			<menu name="Virtual Scratch Pad" clean="Virtual_Scratch_Pad" hotkey="" option="1" index="40"></menu>
-			<menu name="Virtual Space" clean="Virtual_Space" option="1" index="41"></menu>
-			<menu name="Warn Overwrite On Export" clean="Warn_Overwrite_On_Export" option="1" index="42"></menu>
-			<menu name="&amp;Word Wrap" clean="Word_Wrap" option="1" index="43"></menu></menu>
-		<menu name="Q&amp;uick Find Settings" clean="Quick_Find_Settings" tv="2815960">
+			<menu name="Includes In Place" clean="Includes_In_Place" index="32"></menu>
+			<menu name="Manual Continuation Line" clean="Manual_Continuation_Line" option="1" index="33"></menu>
+			<menu name="Remove Directory Slash" clean="Remove_Directory_Slash" option="1" index="34"></menu>
+			<menu clean="Run_As_Admin" name="Run As Admin" option="1" index="35"></menu>
+			<menu name="Show Caret Line" clean="Show_Caret_Line" option="1" index="36"></menu>
+			<menu name="Show EOL" clean="Show_EOL" option="1" index="37"></menu>
+			<menu name="Show WhiteSpace" clean="Show_WhiteSpace" option="1" index="38"></menu>
+			<menu name="Small &amp;Icons" clean="Small_Icons" option="1" index="39"></menu>
+			<menu clean="Top_Find" name="Top Find" option="1" index="40"></menu>
+			<menu name="Virtual Scratch Pad" clean="Virtual_Scratch_Pad" hotkey="" option="1" index="41"></menu>
+			<menu name="Virtual Space" clean="Virtual_Space" option="1" index="42"></menu>
+			<menu name="Warn Overwrite On Export" clean="Warn_Overwrite_On_Export" option="1" index="43"></menu>
+			<menu name="&amp;Word Wrap" clean="Word_Wrap" option="1" index="44"></menu></menu>
+		<menu name="Q&amp;uick Find Settings" clean="Quick_Find_Settings" tv="2818976">
 			<menu name="&amp;Case Sensitive" clean="Case_Sensitive" index="1"></menu>
 			<menu name="Cle&amp;ar Selection" clean="Clear_Selection" hotkey="^F2" index="2"></menu>
 			<menu name="Greed" clean="Greed" hotkey="!G" index="3"></menu>
 			<menu name="Multi Line" clean="Multi_Line" index="5"></menu>
 			<menu name="&amp;Regex" clean="Regex" hotkey="^!r" index="6"></menu>
 			<menu name="&amp;Set Selection" clean="Set_Selection" hotkey="^F1" index="7"></menu></menu>
-		<menu name="&amp;Auto Indent" clean="Auto_Indent" tv="2814664">
+		<menu name="&amp;Auto Indent" clean="Auto_Indent" tv="2818688">
 			<menu name="&amp;Full Auto" clean="Full_Auto" index="2"></menu></menu>
-		<menu name="&amp;Tools" clean="Tools" tv="2814808">
+		<menu name="&amp;Tools" clean="Tools" tv="2819192">
 			<menu name="Download Plugins" clean="Download_Plugins" index="1"></menu>
 			<menu name="Github Repository" hotkey="^G" clean="Github_Repository" index="2" option="" plugin="plugins\Github Repository.ahk"></menu>
 			<menu name="Ms&amp;gBox Creator" clean="MsgBox_Creator" index="3" option="" plugin="plugins\MsgBox Creator.ahk"></menu>
@@ -135,9 +136,9 @@
 			<menu name="Post &amp;Multiple Segment Gist" clean="Post_Multiple_Segment_Gist" no="1"></menu>
 			<menu name="Refresh Plugins" clean="Refresh_Plugins" index="6"></menu>
 			<menu name="Update Github Info" clean="Update_Github_Info" no="1"></menu></menu>
-		<menu name="&amp;Special Menu" clean="Special_Menu" tv="2815240">
+		<menu name="&amp;Special Menu" clean="Special_Menu" tv="2821352">
 			<menu name="Add Selected To Personal Variables" clean="Add_Selected_To_Personal_Variables" no="1"></menu>
-			<menu clean="Bookmarks" name="Bookmarks" tv="2814016" index="1">
+			<menu clean="Bookmarks" name="Bookmarks" tv="2820488" index="1">
 				<menu clean="Add_Bookmark" name="Add Bookmark" hotkey="!B" no="1"></menu>
 				<menu clean="Delete_Bookmark" name="Delete Bookmark" no="1"></menu>
 				<menu clean="Jump_To_Next_Bookmark" name="Jump To Next Bookmark" hotkey="^!RIGHT" no="1"></menu>
@@ -146,7 +147,7 @@
 			<menu name="Clear Line Status" clean="Clear_Line_Status" index="2"></menu>
 			<menu name="Code &amp;Vault" clean="Code_Vault" hotkey="+^F1" index="3" option="" plugin="plugins\Code Vault.ahk"></menu>
 			<menu name="Create Launcher" clean="Create_Launcher" index="4" option="" plugin="plugins\Create Launcher.ahk"></menu>
-			<menu clean="Debug" name="Debug" tv="2814376" index="5">
+			<menu clean="Debug" name="Debug" tv="2820992" index="5">
 				<menu name="List Variables" clean="List_Variables" index="1"></menu>
 				<menu clean="Step_Into" name="Step Into" index="2"></menu>
 				<menu clean="Step_Out" name="Step Out" index="3"></menu>
@@ -155,7 +156,7 @@
 			<menu name="Delete Matching Brace" clean="Delete_Matching_Brace" hotkey="+^DELETE" index="6"></menu>
 			<menu name="Display Functions" clean="Display_Functions" hotkey="!i" index="7"></menu>
 			<menu name="&amp;Find Nearest Brace" clean="Find_Nearest_Brace" hotkey="^!N" no="1"></menu>
-			<menu clean="Folding" name="Folding" tv="2815744" index="8">
+			<menu clean="Folding" name="Folding" tv="2821424" index="8">
 				<menu clean="Fold_All" name="Fold All" no="1"></menu>
 				<menu clean="Fold_Current_Level" name="Fold Current Level" no="1"></menu>
 				<menu clean="Fold_Level_X" name="Fold Level X" no="1"></menu>
@@ -165,7 +166,7 @@
 			<menu name="Highlight to Matching Brace" clean="Highlight_to_Matching_Brace" hotkey="^!M" index="9"></menu>
 			<menu name="Index Current File" clean="Index_Current_File" hotkey="F5" index="10"></menu>
 			<menu name="Insert Code Vault Text" clean="Insert_Code_Vault_Text" hotkey="+^ESCAPE" index="11"></menu>
-			<menu clean="Jump_To" name="Jump To" tv="2814880" index="12">
+			<menu clean="Jump_To" name="Jump To" tv="2820128" index="12">
 				<menu clean="Jump_To_Class" name="Jump To Class" index="1"></menu>
 				<menu clean="Jump_To_First_Available" name="Jump To First Available" hotkey="!F1" index="2"></menu>
 				<menu clean="Jump_To_Function" name="Jump To Function" index="3"></menu>
@@ -174,13 +175,13 @@
 				<menu clean="Jump_To_Method" name="Jump To Method" index="6"></menu></menu>
 			<menu name="Move Selected Lines Down" hotkey="+^DOWN" clean="Move_Selected_Lines_Down" index="13"></menu>
 			<menu name="Move Selected Lines Up" hotkey="+^UP" clean="Move_Selected_Lines_Up" index="14"></menu>
-			<menu clean="Navigation" name="Navigation" tv="2814952" index="15">
+			<menu clean="Navigation" name="Navigation" tv="2820344" index="15">
 				<menu clean="Back" name="Back" hotkey="!LEFT" index="1"></menu>
 				<menu clean="Forward" name="Forward" hotkey="!RIGHT" index="2"></menu></menu>
 			<menu name="New Caret Above" clean="New_Caret_Above" hotkey="+^!Up" index="16"></menu>
 			<menu name="New Caret Below" clean="New_Caret_Below" hotkey="+^!Down" index="17"></menu>
 			<menu name="Next File" hotkey="+!DOWN" clean="Next_File" index="18"></menu>
-			<menu clean="Omni-Search" name="Omni-Search" tv="2815888" index="19">
+			<menu clean="Omni-Search" name="Omni-Search" tv="2820704" index="19">
 				<menu clean="Add_Function_Call" name="Add Function Call" hotkey="^=" index="1"></menu>
 				<menu clean="Bookmark_Search" name="Bookmark Search" hotkey="+^3" index="2"></menu>
 				<menu name="Class Search" hotkey="^!C" clean="Class_Search" index="3"></menu>
@@ -208,7 +209,7 @@
 			<menu name="Show Functions" clean="Show_Functions" hotkey="!O" no="1"></menu>
 			<menu name="Sho&amp;w Scintilla Code In Line" hotkey="F4" clean="Show_Scintilla_Code_In_Line" index="28"></menu>
 			<menu name="S&amp;ort Selected" clean="Sort_Selected" index="29" option="" plugin="plugins\Sort Selected.ahk"></menu>
-			<menu clean="Spacing" name="Spacing" tv="2816032" index="30">
+			<menu clean="Spacing" name="Spacing" tv="2821496" index="30">
 				<menu name="Add Space After Commas" clean="Add_Space_After_Commas" option="ac" plugin="plugins\Add Spaces.ahk"></menu>
 				<menu name="Add Space Before And After Commas" clean="Add_Space_Before_And_After_Commas" option="baa" plugin="plugins\Add Spaces.ahk"></menu>
 				<menu name="Add Space Before Commas" clean="Add_Space_Before_Commas" option="bc" plugin="plugins\Add Spaces.ahk"></menu>
@@ -220,7 +221,7 @@
 			<menu clean="Test_Plugin" name="Test Plugin" hotkey="!T" index="32"></menu>
 			<menu name="Toggle &amp;Multiple Line Comment" hotkey="+F1" clean="Toggle_Multiple_Line_Comment" index="33"></menu>
 			<menu name="Words In Document" clean="Words_In_Document" hotkey="!W" index="34"></menu></menu>
-		<menu name="&amp;Help" clean="Help" tv="2816104">
+		<menu name="&amp;Help" clean="Help" tv="2821208">
 			<menu name="&amp;About" clean="About"></menu>
 			<menu name="Command Help" hotkey="^H" clean="Command_Help"></menu>
 			<menu clean="Donate" name="Donate"></menu>
@@ -228,7 +229,7 @@
 			<menu clean="Online_Help" name="Online Help" no="1"></menu>
 			<menu name="&amp;Social" clean="Social" no="1"></menu>
 			<menu clean="Testing" name="Testing" hotkey="^K"></menu></menu>
-		<menu clean="Plugin" name="P&amp;lugin">
+		<menu clean="Plugin" name="P&amp;lugin" tv="2820200">
 			<menu clean="Additional_Publish" hotkey="" name="Additional Publish" option="" plugin="plugins\Additional Publish.ahk"></menu>
 			<menu clean="Align_Selected_Text" hotkey="" name="Align Selected Text" option="" plugin="plugins\Align Selected Text.ahk"></menu>
 			<menu clean="Auto_Menu_Adder" hotkey="" name="Auto Menu Adder" option="" plugin="plugins\Auto Menu Adder.ahk"></menu>
@@ -236,8 +237,8 @@
 			<menu clean="Camel" hotkey="" name="Camel" option="" plugin="plugins\Camel.ahk"></menu>
 			<menu clean="Capture_Gif" hotkey="" name="Capture Gif" option="" plugin="plugins\Capture Gif.ahk"></menu>
 			<menu clean="Compile_And_Run" hotkey="!p" name="Compile And Run" option="" plugin="plugins\Compile And Run.ahk"></menu>
-			<menu clean="Compile_Using_Unicode_32" hotkey="" name="Compile Using Unicode 32" option="" plugin="plugins\Compile Using Unicode 32.ahk"></menu>
 			<menu clean="Compile_In_Unicode_32" hotkey="" name="Compile In Unicode 32" option="" plugin="plugins\Compile.ahk"></menu>
+			<menu clean="Compile_Using_Unicode_32" hotkey="" name="Compile Using Unicode 32" option="" plugin="plugins\Compile Using Unicode 32.ahk"></menu>
 			<menu clean="Complex_Sort" hotkey="" name="Complex Sort" option="" plugin="plugins\Complex Sort.ahk"></menu>
 			<menu clean="Fix_if" hotkey="^!i" name="Fix &amp;if" option="" plugin="plugins\Fix If.ahk"></menu>
 			<menu clean="Increment_Selected" hotkey="" name="Increment Selected" option="" plugin="plugins\Increment Selected.ahk"></menu>
@@ -246,8 +247,8 @@
 			<menu clean="Mark_All_Files_For_Update" hotkey="" name="Mark All Files For Update" option="" plugin="plugins\Mark All Files For Update.ahk"></menu>
 			<menu clean="New_Plugin" hotkey="" name="New Plugin" option="" plugin="plugins\New Plugin.ahk"></menu>
 			<menu clean="Options_Dialog" hotkey="" name="Options Dialog" option="" plugin="plugins\Options Dialog.ahk"></menu>
-			<menu clean="Paste_To_p.ahkscript.org" hotkey="" name="Paste To p.ahkscript.org" option="" plugin="plugins\Paste Script.ahk"></menu>
 			<menu clean="Paste_Clipboard" hotkey="" name="Paste Clipboard" option="Clipboard" plugin="plugins\Paste Script.ahk"></menu>
+			<menu clean="Paste_To_p.ahkscript.org" hotkey="" name="Paste To p.ahkscript.org" option="" plugin="plugins\Paste Script.ahk"></menu>
 			<menu clean="Remove_Blank_Lines" hotkey="" name="Remove Blank Lines" option="" plugin="plugins\Remove Blank Lines.ahk"></menu>
 			<menu clean="Run_Current_Segment" hotkey="" name="Run Current Segment" option="segment" plugin="plugins\Run Selected Text.ahk"></menu>
 			<menu clean="Run_Testing" hotkey="!;" name="Run Testing" option="" plugin="plugins\Run Testing.ahk"></menu>
