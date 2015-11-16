@@ -2730,7 +2730,7 @@ Gui(){
 	}
 	WinSet,Redraw,,% hwnd([1])
 	OnExit,Exit
-	v.opening:=0
+	v.opening:=0,TrayMenu()
 	GuiControl,1:+gtv,SysTreeView321
 	if(select:=settings.ssn("//open/file[@select='1']"))
 		tv(files.ssn("//file[@file='" select.text "']/@tv").text,1)
@@ -5490,7 +5490,7 @@ Scintilla(return:=""){
 		return list
 }
 ;/plugin
-traymenu(){
+TrayMenu(){
 	Menu,Tray,NoStandard
 	Menu,Tray,Add,Show AHK Studio,show
 	Menu,Tray,Default,Show AHK Studio
