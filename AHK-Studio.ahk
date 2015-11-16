@@ -2618,9 +2618,6 @@ Goto(){
 	sc.2100(0,Trim(labels))
 	return
 }
-activate(){
-	csc().2400
-}
 Gui(){
 	static
 	static controls:=["Static1","Edit1","Button1","Button2","Button3","Button4"]
@@ -2642,7 +2639,7 @@ Gui(){
 	Hotkey,IfWinActive,% hwnd([1])
 	Hotkey,!q,Quick_Find,On
 	enter:=[]
-	for a,b in ["+","!","^","~"]
+	for a,b in ["+","~"]
 		Enter[b "Enter"]:="checkqf",Enter[b "NumpadEnter"]:="checkqf"
 	Enter["~Escape"]:="Escape",Enter["^a"]:="SelectAll",Enter["^v"]:="menupaste"
 	for a,b in StrSplit("WheelLeft,WheelRight",",")
@@ -3328,9 +3325,16 @@ New_Segment(new:="",text:="",adjusted:=""){
 		return tv(ssn(node,"@tv").Text)
 	SplitPath,new,file,newdir,,function
 	Gui,1:Default
-	Relative:=RegExReplace(relativepath(cur,new),"i)^lib\\([^\\]+)\.ahk$","<$1>"),func:=clean(func)
+	Relative:=RegExReplace(relativepath(cur,new),"i)^lib\\([^\\]+)\.ahk$","<$1>")
+	if(v.options.Includes_In_Place=1)
+		sc.2003(sc.2008,"#Include " relative)
+	else
+		maintext:=Update({get:current(2).file}),update({file:current(2).file,text:maintext "`n#Include " Relative})
+	/*
+		Relative:=RegExReplace(relativepath(cur,new),"i)^lib\\([^\\]+)\.ahk$","<$1>")
+	*/
+	func:=clean(func)
 	SplitPath,newdir,last
-	sc.2003(sc.2006,["`n#Include " Relative])
 	FileAppend,% m("Create Function Named " clean(function) "?","btn:yn")="yes"?clean(function) "(){`r`n`r`n}":"",%new%,UTF-8
 	Refresh_Current_Project(new)
 	Sleep,300
@@ -3935,7 +3939,7 @@ Options(x:=0){
 	}
 	v.options[A_ThisLabel]:=onoff
 	if(A_ThisLabel="top_find")
-		Resize("Rebar")
+		Resize("Rebar"),RefreshThemes()
 	if(A_ThisLabel~="i)Disable_Folders_In_Project_Explorer|Full_Tree")
 		Refresh_Project_Explorer()
 	return
@@ -4377,7 +4381,7 @@ Refresh(){
 	}
 }
 RefreshThemes(){
-	refresh()
+	Refresh()
 	if(node:=settings.ssn("//fonts/custom[@gui='1' and @control='msctls_statusbar321']"))
 		SetStatus(node)
 	else
@@ -4386,24 +4390,23 @@ RefreshThemes(){
 	for win,b in hwnd("get"){
 		if(win>99)
 			return
+		cea:=settings.ea("//fonts/find"),tf:=v.options.top_find,bcolor:=(cea.tb!=""&&tf)?cea.tb:(cea.bb&&tf!=1)?cea.bb:ea.Background,fcolor:=(cea.tf!=""&&tf)?cea.tf:(cea.tf&&tf!=1)?cea.bf:ea.Color
 		WinGet,controllist,ControlList,% "ahk_id" b
 		Gui,%win%:Default
-		Gui,Color,% RGB(ea.Background),% RGB(ea.Background)
+		Gui,Color,% RGB(bcolor),% RGB(bcolor)
 		loop,Parse,ControlList,`n
 		{
-			if(A_LoopField~="i)Static1|Button")
-				Continue
-			if(win=1&&A_LoopField="Edit1")
-				Gui,1:font,% "Normal s10 c" RGB(ea.Color),% ea.font
+			if((A_LoopField~="i)Static1|Button|Edit1")&&win=1)
+				GuiControl,% "1:+background" RGB(bcolor) " c" rgb(fcolor),%A_LoopField%
 			else{
 				if(node:=settings.ssn("//fonts/custom[@gui='" win "' and @control='" A_LoopField "']"))
 					text:=CompileFont(node),ea:=xml.ea(node)
 				else
 					text:=CompileFont(node:=settings.ssn("//fonts/font[@style='5']")),ea:=xml.ea(node)
 				Gui,%win%:font,%text%,% ea.font
+				GuiControl,% "+background" RGB(ea.Background!=""?ea.Background:default.Background) " c" rgb(ea.color),%A_LoopField%
+				GuiControl,% "font",%A_LoopField%
 			}
-			GuiControl,% "+background" RGB(ea.Background!=""?ea.Background:default.Background) " c" rgb(ea.color),%A_LoopField%
-			GuiControl,% "font",%A_LoopField%
 		}
 	}
 	if(settings.ssn("//fonts/font[@style='34']"))
@@ -5487,3 +5490,15 @@ Scintilla(return:=""){
 		return list
 }
 ;/plugin
+traymenu(){
+	Menu,Tray,NoStandard
+	Menu,Tray,Add,Show AHK Studio,show
+	Menu,Tray,Default,Show AHK Studio
+	Menu,Tray,Standard
+}
+Activate(){
+	csc().2400
+}
+Show(){
+	GuiControl,+Show,% this.sc
+}
