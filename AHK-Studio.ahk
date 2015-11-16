@@ -13,7 +13,7 @@ CoordMode,ToolTip,Screen
 if(!FileExist("lib"))
 	FileCreateDir,Lib
 global v:=[],settings:=new xml("settings","lib\Settings.xml"),files:=new xml("files"),menus,commands:=new xml("commands","lib\commands.xml"),positions:=new xml("positions","lib\positions.xml"),vversion,access_token,vault:=new xml("vault","lib\Vault.xml"),preset,scintilla,bookmarks,cexml:=new xml("code_explorer"),notesxml,language:=new xml("language","lib\en-us.xml"),vversion:=new xml("version","lib\version.xml"),Custom_Commands:=new XML("custom","lib\Custom Commands.xml")
-scintilla:=new xml("scintilla","lib\scintilla.xml"),v.pluginversion:=1,FileCheck(file),menus:=new xml("menus","lib\menus.xml")
+scintilla:=new xml("scintilla","lib\scintilla.xml"),v.pluginversion:=1,menus:=new xml("menus","lib\menus.xml"),FileCheck(file)
 if(FileExist("AHKStudio.ico"))
 	Menu,Tray,Icon,AHKStudio.ico
 new omni_search_class(),v.filelist:=[],v.options:=[],var(),keywords(),Gui(),v.match:={"{":"}","[":"]","<":">","(":")",Chr(34):Chr(34),"'":"'","%":"%"},v.filescan:=[]
@@ -80,7 +80,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
-	Gui,Show,,AHK Studio Help Version: Version=1.002.6
+	Gui,Show,,AHK Studio Help Version: Version=1.002.7
 	sc.2181(0,about),sc.2025(0),sc.2268(1)
 	return
 	11GuiClose:
@@ -246,7 +246,7 @@ Check_For_Update(){
 	if(proxy:=settings.ssn("//proxy").text)
 		http.setProxy(2,proxy)
 	http.send()
-	version=Version=1.002.6
+	version=Version=1.002.7
 	RegExMatch(http.ResponseText,"iUO)\x22date\x22:\x22(.*)\x22",found),date:=RegExReplace(found.1,"\D")
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y")
 	newwin.show("AHK Studio Version: " version)
@@ -665,11 +665,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		version:="Version=1.002.6"
+		version:="Version=1.002.7"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		return "Version=1.002.6"
+		return "Version=1.002.7"
 	}EnableSC(x:=0){
 		sc:=csc()
 		if(x){
@@ -1527,7 +1527,7 @@ Context(return=""){
 ContextMenu(){
 	GuiContextMenu:
 	ControlGetFocus,Focus,% hwnd([1])
-	MouseGetPos,,,,ctl ;#[ADDED: Context menu shown when quick find is right clicked allowing moving between top & bottom]
+	MouseGetPos,,,,ctl
 	MouseGetPos,,,,control,2
 	if(control=v.debug.sc){
 		Menu,rcm,Add,Close,SciDebug
@@ -2103,7 +2103,7 @@ FileCheck(file){
 		if(b.type=2){
 			if(menus.ssn("//date").text!=b.date){
 				SplashTextOn,300,100,Downloading Menus XML,Please Wait...
-				temp:=new xml("temp"),temp.xml.loadxml(URLDownloadToVar(url b.url))
+				temp:=new xml("temp"),temp.xml.loadxml(URLDownloadToVar(url b.url)),menus:=new xml("menus","lib\menus.xml")
 				if(menus.sn("//*").length=1)
 					menus.xml.loadxml(temp[])
 				else{
@@ -5268,7 +5268,7 @@ Update(info){
 			return
 		if(update[item]=sc.getuni())
 			return
-		if(updated[item]=""){	;#[FIXED: Maintain 'Hide File Extensions' option when updating project explorer]
+		if(updated[item]=""){
 			SplitPath,% ea.filename,,,,nne
 			TV_Modify(ea.tv,"","*" (v.options.Hide_File_Extensions?nne:ea.filename))
 		}

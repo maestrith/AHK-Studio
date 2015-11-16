@@ -140,12 +140,12 @@
 		<menu name="&amp;Special Menu" clean="Special_Menu" tv="3413184">
 			<menu name="Add Selected To Personal Variables" clean="Add_Selected_To_Personal_Variables" no="1"></menu>
 			<menu clean="Bookmarks" name="Bookmarks" tv="3413256" index="1">
-				<menu clean="Add_Bookmark" name="Add Bookmark" hotkey="!B" plugin="plugins\Bookmarks.ahk" option="ab"></menu>
-				<menu clean="Delete_Bookmark" name="Delete Bookmark" plugin="plugins\Bookmarks.ahk" option="db"></menu>
-				<menu name="Edit Custom Bookmark" clean="Edit_Custom_Bookmark" plugin="plugins\Bookmarks.ahk" option="ecb"></menu>
-				<menu clean="Jump_To_Next_Bookmark" name="Jump To Next Bookmark" hotkey="^!RIGHT" plugin="plugins\Bookmarks.ahk" option="jtnb"></menu>
-				<menu clean="Jump_To_Previous_Bookmark" name="Jump To Previous Bookmark" hotkey="^!LEFT" plugin="plugins\Bookmarks.ahk" option="jtpb"></menu>
-				<menu clean="Manage_Bookmarks" name="Manage Bookmarks" hotkey="^M" plugin="plugins\Bookmarks.ahk" option="mb"></menu></menu>
+				<menu clean="Add_Bookmark" name="Add Bookmark" hotkey="!B" option="ab" plugin="plugins\BookMarks.ahk"></menu>
+				<menu clean="Delete_Bookmark" name="Delete Bookmark" option="db" plugin="plugins\BookMarks.ahk"></menu>
+				<menu name="Edit Custom Bookmark" clean="Edit_Custom_Bookmark" option="ecb" plugin="plugins\BookMarks.ahk"></menu>
+				<menu clean="Jump_To_Next_Bookmark" name="Jump To Next Bookmark" hotkey="^!RIGHT" option="jtnb" plugin="plugins\BookMarks.ahk"></menu>
+				<menu clean="Jump_To_Previous_Bookmark" name="Jump To Previous Bookmark" hotkey="^!LEFT" option="jtpb" plugin="plugins\BookMarks.ahk"></menu>
+				<menu clean="Manage_Bookmarks" name="Manage Bookmarks" hotkey="^M" option="mb" plugin="plugins\BookMarks.ahk"></menu></menu>
 			<menu name="Clear Line Status" clean="Clear_Line_Status" index="2"></menu>
 			<menu name="Code &amp;Vault" clean="Code_Vault" hotkey="+^F1" index="3" option="" plugin="plugins\Code Vault.ahk"></menu>
 			<menu name="Create Launcher" clean="Create_Launcher" index="4" option="" plugin="plugins\Create Launcher.ahk"></menu>
@@ -231,7 +231,7 @@
 			<menu clean="Online_Help" name="Online Help" no="1"></menu>
 			<menu name="&amp;Social" clean="Social" no="1"></menu>
 			<menu clean="Testing" name="Testing" hotkey="^K"></menu></menu>
-		<menu clean="Plugin" name="P&amp;lugin" tv="3413400">
+		<menu clean="Plugin" name="P&amp;lugin">
 			<menu clean="Additional_Publish" hotkey="" name="Additional Publish" option="" plugin="plugins\Additional Publish.ahk"></menu>
 			<menu clean="Align_Selected_Text" hotkey="" name="Align Selected Text" option="" plugin="plugins\Align Selected Text.ahk"></menu>
 			<menu clean="Auto_Menu_Adder" hotkey="" name="Auto Menu Adder" option="" plugin="plugins\Auto Menu Adder.ahk"></menu>
@@ -239,8 +239,8 @@
 			<menu clean="Camel" hotkey="" name="Camel" option="" plugin="plugins\Camel.ahk"></menu>
 			<menu clean="Capture_Gif" hotkey="" name="Capture Gif" option="" plugin="plugins\Capture Gif.ahk"></menu>
 			<menu clean="Compile_And_Run" hotkey="!p" name="Compile And Run" option="" plugin="plugins\Compile And Run.ahk"></menu>
-			<menu clean="Compile_In_Unicode_32" hotkey="" name="Compile In Unicode 32" option="" plugin="plugins\Compile.ahk"></menu>
 			<menu clean="Compile_Using_Unicode_32" hotkey="" name="Compile Using Unicode 32" option="" plugin="plugins\Compile Using Unicode 32.ahk"></menu>
+			<menu clean="Compile_In_Unicode_32" hotkey="" name="Compile In Unicode 32" option="" plugin="plugins\Compile.ahk"></menu>
 			<menu clean="Complex_Sort" hotkey="" name="Complex Sort" option="" plugin="plugins\Complex Sort.ahk"></menu>
 			<menu clean="Fix_if" hotkey="^!i" name="Fix &amp;if" option="" plugin="plugins\Fix If.ahk"></menu>
 			<menu clean="Increment_Selected" hotkey="" name="Increment Selected" option="" plugin="plugins\Increment Selected.ahk"></menu>
@@ -249,8 +249,8 @@
 			<menu clean="Mark_All_Files_For_Update" hotkey="" name="Mark All Files For Update" option="" plugin="plugins\Mark All Files For Update.ahk"></menu>
 			<menu clean="New_Plugin" hotkey="" name="New Plugin" option="" plugin="plugins\New Plugin.ahk"></menu>
 			<menu clean="Options_Dialog" hotkey="" name="Options Dialog" option="" plugin="plugins\Options Dialog.ahk"></menu>
-			<menu clean="Paste_Clipboard" hotkey="" name="Paste Clipboard" option="Clipboard" plugin="plugins\Paste Script.ahk"></menu>
 			<menu clean="Paste_To_p.ahkscript.org" hotkey="" name="Paste To p.ahkscript.org" option="" plugin="plugins\Paste Script.ahk"></menu>
+			<menu clean="Paste_Clipboard" hotkey="" name="Paste Clipboard" option="Clipboard" plugin="plugins\Paste Script.ahk"></menu>
 			<menu clean="Remove_Blank_Lines" hotkey="" name="Remove Blank Lines" option="" plugin="plugins\Remove Blank Lines.ahk"></menu>
 			<menu clean="Run_Current_Segment" hotkey="" name="Run Current Segment" option="segment" plugin="plugins\Run Selected Text.ahk"></menu>
 			<menu clean="Run_Testing" hotkey="!;" name="Run Testing" option="" plugin="plugins\Run Testing.ahk"></menu>
