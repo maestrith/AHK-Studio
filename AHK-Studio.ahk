@@ -1460,7 +1460,7 @@ Context(return=""){
 				pre:=sc.textrange(wordstartpos:=sc.2266(wb-1,1),sc.2267(wb-1,1))
 			if(inst:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Instance' and @upper='" upper(pre) "']")){
 				if(args:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Class' and @upper='" upper(xml.ea(inst).class) "']/descendant-or-self::*[@upper='" upper(word) "']/@args").text)
-					synmatch.push(pre "." word "(" args ")"),startpos:=startpos=0?wordstartpos:startpos,commas++
+					synmatch.push(pre "." word "(" args ")"),startpos:=startpos=0?wordstartpos:startpos
 			}if(fun:=cexml.ssn("//lib/descendant::info[@upper='" upper(word) "']")){
 				synmatch.push(word "(" xml.ea(fun).args ")"),startpos:=startpos=0?wordstartpos:startpos,commas++
 			}if(fun:=ssn(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Function'][@upper='" upper(word) "']"),"@args").text){
@@ -3419,7 +3419,11 @@ Notify(csc:=""){
 			t(word)
 		}
 	*/
-	if(fn.code=2010){
+	if(fn.code=2002){
+		ea:=files.ea("//*[@sc='" sc.2357 "']"),file:=ea.file,updated:=update("get").2,updated.Delete(ea.file)
+		SplitPath,file,,,,nne
+		TV_Modify(ea.tv,"",v.options.Hide_File_Extensions?nne:ea.filename)
+	}if(fn.code=2010){
 		margin:=NumGet(Info+(A_PtrSize*16)),line:=sc.2166(fn.position)
 		if(margin=3)
 			sc.2231(line)
@@ -4361,7 +4365,7 @@ RefreshThemes(){
 			return
 		WinGet,controllist,ControlList,% "ahk_id" b
 		Gui,%win%:Default
-		Gui,Color,% RGB(bcolor),% RGB(bcolor)
+		Gui,Color,% RGB(bcolor),% RGB(cea.qfb!=""?cea.qfb:bcolor)
 		for a,b in StrSplit(ControlList,"`n"){
 			if((b~="i)Static1|Button|Edit1")&&win=1)
 				GuiControl,% "1:+background" RGB(bcolor) " c" RGB(fcolor),%b%
@@ -4705,7 +4709,7 @@ save(option=""){
 		while,mm:=multi.item[A_Index-1]{
 			ea:=files.ea(mm)
 			SplitPath,% ea.filename,,,,nne
-			TV_Modify(ea.tv,"",v.options.Hide_File_Extensions?nne:ea.filename) ;#[FIXED: Maintain 'Hide File Extensions' option when updating project explorer]
+			TV_Modify(ea.tv,"",v.options.Hide_File_Extensions?nne:ea.filename)
 		}
 		FileGetTime,time,%filename%
 		ff:=files.sn("//*[@file='" filename "']")
@@ -5229,8 +5233,7 @@ Update(info){
 		if(!info.load)
 			updated[info.file]:=1
 		return
-	}
-	if(info.get)
+	}if(info.get)
 		return update[info.get]
 	if(info.sc){
 		sc:=csc(),fn:=files.ssn("//*[@sc='" info.sc "']"),ea:=xml.ea(fn),item:=ea.file?ea.file:ea.note
@@ -5243,8 +5246,7 @@ Update(info){
 		if(updated[item]=""){
 			SplitPath,% ea.filename,,,,nne
 			TV_Modify(ea.tv,"","*" (v.options.Hide_File_Extensions?nne:ea.filename))
-		}
-		if(v.options.disable_line_status!=1){
+		}if(v.options.disable_line_status!=1){
 			pos:=posinfo(),line:=sc.2166(pos.start),end:=sc.2166(pos.end)
 			if(line!=end){
 				Loop,% end-line
@@ -5503,4 +5505,10 @@ New_Segment(new:="",text:="",adjusted:=""){
 	Refresh_Current_Project(new)
 	Sleep,300
 	sc.2025(StrLen(function)+1),NewIndent()
+}
+Default_Project_Folder(){
+	FileSelectFolder,directory,,3,% "Current Default Folder: " settings.ssn("//directory").text
+	if(ErrorLevel)
+		return
+	settings.add("directory","",directory)
 }
