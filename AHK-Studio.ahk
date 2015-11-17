@@ -4359,7 +4359,7 @@ RefreshThemes(){
 		SetStatus(node)
 	else
 		SetStatus(settings.ssn("//fonts/font[@style='5']"))
-	default:=ea:=settings.ea("//fonts/font[@style='5']"),cea:=settings.ea("//fonts/find"),tf:=v.options.top_find,bcolor:=(cea.tb!=""&&tf)?cea.tb:(cea.bb&&tf!=1)?cea.bb:ea.Background,fcolor:=(cea.tf!=""&&tf)?cea.tf:(cea.tf&&tf!=1)?cea.bf:ea.Color
+	default:=ea:=settings.ea("//fonts/font[@style='5']"),cea:=settings.ea("//fonts/find"),tf:=v.options.top_find,bcolor:=((cea.tb||cea.tf)&&tf)?cea.tb:((cea.bb||cea.bf)&&!tf)?cea.bb:ea.Background,fcolor:=((cea.tb||cea.tf)&&tf)?cea.tf:((cea.bb||cea.bf)&&!tf)?cea.bf:ea.Color ;#[FIXED: Wasn't applying QF colors correctly when black selected (value=0)]
 	for win,b in hwnd("get"){
 		if(win>99)
 			return
