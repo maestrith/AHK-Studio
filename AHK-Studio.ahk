@@ -1538,8 +1538,7 @@ ContextMenu(){
 		if(A_ThisMenuItem="Close")
 			stop()
 		return
-	}
-	if(InStr(ctl,"Scintilla")){
+	}else if(InStr(ctl,"Scintilla")){
 		for a,b in ["Undo","Redo","Copy","Cut","Paste","Select All","Close","Delete","","Open Folder","Bookmark Search","Class Search","Function Search","Hotkey Search","Instance Search","Menu Search","Method Search","Property Search","Search Label"]
 			Menu,rcm,Add,%b%,SciRCM
 		Menu,rcm,Show
@@ -1550,18 +1549,15 @@ ContextMenu(){
 		if(IsFunc(item))
 			%item%()
 		return
-	}
-	if(ctl="Static1"||ctl="Edit1"){
+	}else if(ctl="Static1"||ctl="Edit1"){
 		Menu,qfm,Add,% "Move to " (v.options.top_find?"Bottom":"Top"),Top_Find
 		Menu,qfm,Show
 		Menu,qfm,Delete
-	}
-	if(Focus="SysTreeView322"){
+	}else if(Focus="SysTreeView322"){
 		GuiControl,+g,SysTreeView322
 		code_explorer.Refresh_Code_Explorer()
 		GuiControl,+gcej,SysTreeView322
-	}
-	if(Focus="SysTreeView321"){
+	}else if(Focus="SysTreeView321"){
 		static info
 		TV_GetText(text,A_EventInfo),info:=A_EventInfo
 		main:=files.ssn("//*[@tv='" A_EventInfo "']/ancestor::main")

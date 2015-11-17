@@ -7,6 +7,8 @@ Added: Requested by number1nub
 -Quick Find: Edit background color
 Fixed: Programmed by number1nub
 -Black on white wasn't working
+Changed: Suggested by number1nub
+-Context Menu: Changed ifs to else ifs
 1.002.6
 Fixed: Reported by number1nub
 o Split Code

@@ -159,7 +159,7 @@
 			<menu name="Display Functions" clean="Display_Functions" hotkey="!i" index="7"></menu>
 			<menu name="&amp;Find Nearest Brace" clean="Find_Nearest_Brace" hotkey="^!N" no="1"></menu>
 			<menu clean="Folding" name="Folding" tv="10748304" index="8">
-				<menu clean="Fold_All" name="Fold All" option="all" plugin="plugins\Fold.ahk"></menu>
+				<menu clean="Fold_All" name="Fold All" option="fa" plugin="plugins\Fold.ahk"></menu>
 				<menu clean="Fold_Current_Level" name="Fold Current Level" option="fc" plugin="plugins\Fold.ahk"></menu>
 				<menu clean="Fold_Level_X" name="Fold Level X" option="fx" plugin="plugins\Fold.ahk"></menu>
 				<menu clean="Unfold_All" name="Unfold All" option="ua" plugin="plugins\Fold.ahk"></menu>
@@ -231,7 +231,7 @@
 			<menu clean="Online_Help" name="Online Help" no="1"></menu>
 			<menu name="&amp;Social" clean="Social" no="1"></menu>
 			<menu clean="Testing" name="Testing" hotkey="^K"></menu></menu>
-		<menu clean="Plugin" name="P&amp;lugin" tv="10747800">
+		<menu clean="Plugin" name="P&amp;lugin">
 			<menu clean="Additional_Publish" hotkey="" name="Additional Publish" option="" plugin="plugins\Additional Publish.ahk"></menu>
 			<menu clean="Align_Selected_Text" hotkey="" name="Align Selected Text" option="" plugin="plugins\Align Selected Text.ahk"></menu>
 			<menu clean="Auto_Menu_Adder" hotkey="" name="Auto Menu Adder" option="" plugin="plugins\Auto Menu Adder.ahk"></menu>
@@ -243,6 +243,7 @@
 			<menu clean="Compile_In_Unicode_32" hotkey="" name="Compile In Unicode 32" option="" plugin="plugins\Compile.ahk"></menu>
 			<menu clean="Complex_Sort" hotkey="" name="Complex Sort" option="" plugin="plugins\Complex Sort.ahk"></menu>
 			<menu clean="Fix_if" hotkey="^!i" name="Fix &amp;if" option="" plugin="plugins\Fix If.ahk"></menu>
+			<menu clean="Toggle_Fold" hotkey="" name="Toggle Fold" option="tf" plugin="plugins\Fold.ahk"></menu>
 			<menu clean="Increment_Selected" hotkey="" name="Increment Selected" option="" plugin="plugins\Increment Selected.ahk"></menu>
 			<menu clean="Lookup_Old_Code" hotkey="" name="Lookup Old Code" option="" plugin="plugins\Lookup.ahk"></menu>
 			<menu clean="Make_One_Line" hotkey="![" name="Make One Line" option="" plugin="plugins\Make One Line.ahk"></menu>
