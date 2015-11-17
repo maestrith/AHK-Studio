@@ -3308,38 +3308,6 @@ New_Scintilla_Window(file=""){
 		sc.2358(0,doc),SetPos(doc)
 	sc.2400(),sc.show(),Resize("rebar")
 }
-New_Segment(new:="",text:="",adjusted:=""){
-	cur:=adjusted?adjusted:current(2).file,sc:=csc(),parent:=mainfile:=current(2).file
-	SplitPath,cur,,dir
-	maindir:=dir
-	if(!new){
-		FileSelectFile,new,s,%dir%,Create a new Segment,*.ahk
-		if(ErrorLevel)
-			return
-		new:=new~="\.ahk$"?new:new ".ahk"
-		if(FileExist(new))
-			return m("File Already Exists.","Please create a new file")
-		SplitPath,new,filename,dir,,func
-	}
-	if(node:=ssn(current(1),"descendant::file[@file='" new "']"))
-		return tv(ssn(node,"@tv").Text)
-	SplitPath,new,file,newdir,,function
-	Gui,1:Default
-	Relative:=RegExReplace(relativepath(cur,new),"i)^lib\\([^\\]+)\.ahk$","<$1>")
-	if(v.options.Includes_In_Place=1)
-		sc.2003(sc.2008,"#Include " relative)
-	else
-		maintext:=Update({get:current(2).file}),update({file:current(2).file,text:maintext "`n#Include " Relative})
-	/*
-		Relative:=RegExReplace(relativepath(cur,new),"i)^lib\\([^\\]+)\.ahk$","<$1>")
-	*/
-	func:=clean(func)
-	SplitPath,newdir,last
-	FileAppend,% m("Create Function Named " clean(function) "?","btn:yn")="yes"?clean(function) "(){`r`n`r`n}":"",%new%,UTF-8
-	Refresh_Current_Project(new)
-	Sleep,300
-	sc.2025(StrLen(function)+1),NewIndent()
-}
 New(filename:="",text:=""){
 	ts:=settings.ssn("//template").text,file:=FileOpen("c:\windows\shellnew\template.ahk",0),td:=file.Read(file.length),file.close(),template:=ts?ts:td,index:=0
 	if(filename=1||text=""){
@@ -5066,7 +5034,7 @@ Testing(x:=0){
 	;m(files.ssn("//*[@tv='" TV_GetSelection() "']").xml)
 	;m(menus[],"ico:?")
 	;v.ddd.send("breakpoint_list")
-	m(v.color.personal)
+	;m(v.color.personal)
 }
 Toggle_Comment_Line(){
 	sc:=csc(),sc.2078
@@ -5502,4 +5470,37 @@ Activate(){
 }
 Show(){
 	GuiControl,+Show,% this.sc
+}
+New_Segment(new:="",text:="",adjusted:=""){
+	cur:=adjusted?adjusted:current(2).file,sc:=csc(),parent:=mainfile:=current(2).file
+	SplitPath,cur,,dir
+	maindir:=dir
+	if(!new){
+		FileSelectFile,new,s,%dir%,Create a new Segment,*.ahk
+		if(ErrorLevel)
+			return
+		new:=new~="\.ahk$"?new:new ".ahk"
+		if(FileExist(new))
+			return m("File Already Exists.","Please create a new file")
+		SplitPath,new,filename,dir,,func
+	}
+	if(node:=ssn(current(1),"descendant::file[@file='" new "']"))
+		return tv(ssn(node,"@tv").Text)
+	SplitPath,new,file,newdir,,function
+	Gui,1:Default
+	Relative:=RegExReplace(relativepath(cur,new),"i)^lib\\([^\\]+)\.ahk$","<$1>")
+	if(v.options.Includes_In_Place=1)
+		sc.2003(sc.2008,"#Include " relative)
+	else{
+		if(files.ssn("//*[@sc='" sc.2357 "']/@file").text=current(2).file)
+			sc.2003(sc.2006,"`n#Include " Relative)
+		else
+			maintext:=Update({get:current(2).file}),update({file:current(2).file,text:maintext "`n#Include " Relative})
+	}
+	func:=clean(func)
+	SplitPath,newdir,last
+	FileAppend,% m("Create Function Named " clean(function) "?","btn:yn")="yes"?clean(function) "(){`r`n`r`n}":"",%new%,UTF-8
+	Refresh_Current_Project(new)
+	Sleep,300
+	sc.2025(StrLen(function)+1),NewIndent()
 }
