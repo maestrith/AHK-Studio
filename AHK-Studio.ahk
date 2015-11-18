@@ -12,6 +12,7 @@ ComObjError(0)
 CoordMode,ToolTip,Screen
 if(!FileExist("lib"))
 	FileCreateDir,Lib
+FileCreateDir,Lib
 global v:=[],settings:=new xml("settings","lib\Settings.xml"),files:=new xml("files"),menus,commands:=new xml("commands","lib\commands.xml"),positions:=new xml("positions","lib\positions.xml"),vversion,access_token,vault:=new xml("vault","lib\Vault.xml"),preset,scintilla,bookmarks,cexml:=new xml("code_explorer"),notesxml,language:=new xml("language","lib\en-us.xml"),vversion:=new xml("version","lib\version.xml"),Custom_Commands:=new XML("custom","lib\Custom Commands.xml")
 scintilla:=new xml("scintilla","lib\scintilla.xml"),v.pluginversion:=1,menus:=new xml("menus","lib\menus.xml"),FileCheck(file)
 if(FileExist("AHKStudio.ico"))
@@ -2066,8 +2067,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151115170308,loc:"lib\menus.xml",url:"lib/menus.xml",type:1},scilexer:{date:20151112182156,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
-	url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151115170308,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151112182156,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
@@ -2711,11 +2711,7 @@ Gui(){
 		}else
 			openfilelist.=oo.text "`n"
 	}
-	hk(1),hotkeys([1],enter)
-	if(openfilelist){
-		Open(trim(openfilelist,"`n"))
-	}else
-		New(1)
+	hk(1),hotkeys([1],enter),(openfilelist)?Open(trim(openfilelist,"`n")):New(1)
 	if(last.length>1){
 		while,file:=last.item[A_Index-1]{
 			if(A_Index=1)
@@ -2736,7 +2732,7 @@ Gui(){
 		tv(files.ssn("//file[@tv!='']/@tv").text,1)
 	while,ss:=settings.ssn("//open/file[@select='1']")
 		ss.RemoveAttribute("select")
-	csc(1)
+	csc(1),Refresh()
 	return
 	GuiClose:
 	SetTimer,Exit,-1
@@ -4350,7 +4346,6 @@ Refresh(){
 }
 RefreshThemes(){
 	static bcolor,fcolor
-	Refresh()
 	if(node:=settings.ssn("//fonts/custom[@gui='1' and @control='msctls_statusbar321']"))
 		SetStatus(node)
 	else
@@ -4382,6 +4377,7 @@ RefreshThemes(){
 	if(number:=settings.ssn("//fonts/font[@code='2188']/@value").text)
 		for a,b in s.ctrl
 			b.2188(number)
+	Refresh()
 	return
 }
 RegisterID(CLSID,APPID){

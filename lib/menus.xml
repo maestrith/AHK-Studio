@@ -106,11 +106,11 @@
 			<menu clean="Hide_Indentation_Guides" name="Hide Indentation Guides" option="1" index="29"></menu>
 			<menu name="Hide Project Explorer" clean="Hide_Project_Explorer" option="1" index="30"></menu>
 			<menu name="Highlight Current Area" clean="Highlight_Current_Area" option="1" index="31"></menu>
-			<menu name="Includes In Place" clean="Includes_In_Place" index="32"></menu>
+			<menu name="Includes In Place" clean="Includes_In_Place" index="32" option="1"></menu>
 			<menu name="Manual Continuation Line" clean="Manual_Continuation_Line" option="1" index="33"></menu>
 			<menu name="Remove Directory Slash" clean="Remove_Directory_Slash" option="1" index="34"></menu>
 			<menu clean="Run_As_Admin" name="Run As Admin" option="1" index="35"></menu>
-			<menu name="Shift Breakpoint" clean="Shift_Breakpoint" index="36"></menu>
+			<menu name="Shift Breakpoint" clean="Shift_Breakpoint" index="36" option="1"></menu>
 			<menu name="Show Caret Line" clean="Show_Caret_Line" option="1" index="37"></menu>
 			<menu name="Show EOL" clean="Show_EOL" option="1" index="38"></menu>
 			<menu name="Show WhiteSpace" clean="Show_WhiteSpace" option="1" index="39"></menu>
@@ -262,5 +262,5 @@
 			<menu clean="Upload_Menus" hotkey="" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu>
 			<menu clean="XML_Date" hotkey="" name="XML Date" option="" plugin="plugins\xml date.ahk"></menu></menu>
 	</main>
-	<date>20151106173300</date>
+	<date>20151115170308</date>
 </menus>
