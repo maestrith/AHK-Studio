@@ -1729,8 +1729,8 @@ Delete_Project(x:=0){
 	SplitPath,project,,dir
 	FileRecycle,%dir%
 }
-Display_Functions(){
-	code_explorer.scan(current()),all:=cexml.sn("//main[@file='" current(2).file "']/descendant::info[@type='Function']/@text")
+Display(type){
+	code_explorer.scan(current()),all:=cexml.sn("//main[@file='" current(2).file "']/descendant::info[@type='" type "']/@text")
 	sc:=csc(),word:=sc.getword(),sc.2634(1)
 	while,aa:=all.item[A_Index-1]
 		if(aa.text~="i)^" word)
@@ -1741,6 +1741,12 @@ Display_Functions(){
 	sc.2117(5,Trim(list))
 	if(!InStr(Trim(List)," "))
 		sc.2104
+}
+Display_Functions(){
+	Display("Function")
+}
+Display_Classes(){
+	Display("Class")
 }
 Donate(){
 	donate:
@@ -2067,7 +2073,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151115170308,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151112182156,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151118153303,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151112182156,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
@@ -2151,9 +2157,7 @@ FileCheck(file){
 		for a,b in {"{":"}","[":"]","<":">","'":"'","(":")",Chr(34):Chr(34)}
 			settings.under(top,"key",{trigger:a,add:b})
 		settings.add("Auto_Indent",{Full_Auto:1}),settings.add("options",{Auto_Advance:1})
-	}
-	return
-}
+}}
 Find_Replace(){
 	static
 	infopos:=positions.ssn("//*[@file='" current(3).file "']"),last:=ssn(infopos,"@findreplace").text,ea:=settings.ea("//findreplace"),newwin:=new GUIKeep(30),value:=[]
