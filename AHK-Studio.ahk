@@ -2363,7 +2363,7 @@ Find(){
 		SetPos({start:ea.start,end:ea.end,file:ea.file})
 		if(info.acdc)
 			goto,5GuiClose
-	}if(A_GuiEvent=="f")
+	}if(A_GuiEvent!="Normal")
 		return
 	sel:=TV_GetSelection()
 	Gui,5:TreeView,SysTreeView321
@@ -4355,7 +4355,7 @@ RefreshThemes(){
 		SetStatus(node)
 	else
 		SetStatus(settings.ssn("//fonts/font[@style='5']"))
-	default:=ea:=settings.ea("//fonts/font[@style='5']"),cea:=settings.ea("//fonts/find"),tf:=v.options.top_find,bcolor:=((cea.tb||cea.tf)&&tf)?cea.tb:((cea.bb||cea.bf)&&!tf)?cea.bb:ea.Background,fcolor:=((cea.tb||cea.tf)&&tf)?cea.tf:((cea.bb||cea.bf)&&!tf)?cea.bf:ea.Color
+	ea:=settings.ea("//fonts/font[@style='5']"),default:=ea.clone(),cea:=settings.ea("//fonts/find"),tf:=v.options.top_find,bcolor:=(cea.tb!=""&&tf)?cea.tb:(cea.bb!=""&&!tf)?cea.bb:ea.Background,fcolor:=(cea.tf!=""&&tf)?cea.tf:(cea.bf!=""&&!tf)?cea.bf:ea.Color
 	for win,b in hwnd("get"){
 		if(win>99)
 			return
