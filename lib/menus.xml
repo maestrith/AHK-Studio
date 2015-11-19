@@ -83,7 +83,7 @@
 			<menu name="Build Comment" clean="Build_Comment" option="1" index="7"></menu>
 			<menu name="Center Caret" clean="Center_Caret" option="1" index="8"></menu>
 			<menu name="Check For Edited Files On Focus" clean="Check_For_Edited_Files_On_Focus" option="1" index="9"></menu>
-			<menu name="Check For Update On Startup" clean="Check_For_Update_On_Startup" index="10" no="1"></menu>
+			<menu name="Check For Update On Startup" clean="Check_For_Update_On_Startup" index="10" option="1"></menu>
 			<menu name="Disable Auto Complete" clean="Disable_Auto_Complete" option="1" index="11"></menu>
 			<menu name="Disable Auto Complete In Quotes" clean="Disable_Auto_Complete_In_Quotes" option="1" index="12"></menu>
 			<menu name="Disable Auto Complete While Tips Are Visible" clean="Disable_Auto_Complete_While_Tips_Are_Visible" option="1" index="13"></menu>
@@ -264,5 +264,5 @@
 			<menu clean="Upload_Menus" hotkey="" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu>
 			<menu clean="XML_Date" hotkey="" name="XML Date" option="" plugin="plugins\xml date.ahk"></menu></menu>
 	</main>
-	<date>20151118153303</date>
+	<date>20151119173032</date>
 </menus>

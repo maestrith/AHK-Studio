@@ -81,7 +81,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
-	Gui,Show,,AHK Studio Help Version: Version=1.002.7
+	Gui,Show,,AHK Studio Help Version: Version=1.002.8
 	sc.2181(0,about),sc.2025(0),sc.2268(1)
 	return
 	11GuiClose:
@@ -240,8 +240,12 @@ Check_For_Edited(){
 Check_For_Update(startup:=""){
 	static newwin,version
 	auto:=settings.ea("//autoupdate")
-	if(startup=1&&auto.reset>A_Now&&v.options.Check_For_Update_On_Startup!=1)
-		return
+	if(startup=1){
+		if(v.options.Check_For_Update_On_Startup!=1)
+			return
+		if(auto.reset>A_Now)
+			return
+	}
 	sub:=A_NowUTC
 	sub-=A_Now,hh
 	FileGetTime,time,%A_ScriptFullPath%
@@ -263,7 +267,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	version=Version=1.002.7
+	version=Version=1.002.8
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y")
 	newwin.show("AHK Studio Version: " version)
 	if(time<date){
@@ -681,11 +685,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		version:="Version=1.002.7"
+		version:="Version=1.002.8"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		return "Version=1.002.7"
+		return "Version=1.002.8"
 	}EnableSC(x:=0){
 		sc:=csc()
 		if(x){

@@ -1,3 +1,6 @@
+1.002.8
+Added:
+-Options/Check For Update On Startup
 1.002.7
 Fixed: Reported by zotune and number1nub
 -Menus were getting resetting on updates :(
