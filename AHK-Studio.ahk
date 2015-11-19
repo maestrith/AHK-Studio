@@ -221,7 +221,7 @@ Check_For_Edited(){
 	all:=files.sn("//file"),sc:=csc()
 	while,aa:=all.item[A_Index-1],ea:=xml.ea(aa){
 		FileGetTime,time,% ea.file
-		if(time!=ea.time){
+		if(time!=ea.time&&ea.note!=1){
 			list.=ea.filename ","
 			aa.SetAttribute("time",time)
 			FileRead,text,% ea.file
@@ -263,7 +263,7 @@ Check_For_Update(){
 	if(!InStr(studio,";download complete"))
 		return m("There was an error. Please contact maestrith@gmail.com if this error continues")
 	FileMove,%A_ScriptFullPath%,%A_ScriptDir%\%A_ScriptName% - %version%,1
-	ComObjError(0),File:=FileOpen(A_ScriptFullPath,"rw"),File.seek(0),File.write(studio),File.length(File.position)
+	File:=FileOpen(A_ScriptFullPath,"rw"),File.seek(0),File.write(studio),File.length(File.position)
 	Reload
 	ExitApp
 	return
@@ -2095,7 +2095,7 @@ FileCheck(file){
 		Run,"%correct%" "%A_ScriptName%",%A_ScriptDir%
 		ExitApp
 		return
-	}ComObjError(0)
+	}
 	for a,b in dates{
 		FileGetTime,time,% b.loc,M
 		loc:=b.loc
@@ -3385,7 +3385,7 @@ Notify(csc:=""){
 	*/
 	if(code=2028){
 		if(v.options.Check_For_Edited_Files_On_Focus=1)
-			check_for_edited()
+			Check_For_Edited()
 		MouseGetPos,,,win
 		if(win=hwnd(1))
 			SetTimer,LButton,-20
@@ -4444,7 +4444,8 @@ Rename_Current_Segment(current:=""){
 	if(!ext)
 		rename.=".ahk"
 	mainfile:=ssn(current,"ancestor::main/@file").text,relative:=RelativePath(mainfile,rename)
-	FileMove,% ea.file,%relative%,1
+	SplitPath,mainfile,,dir
+	FileMove,% ea.file,%dir%\%relative%,1	;#[FIXED: Renamed files were being placed in the Studio working directory]
 	text:=update({get:mainfile}),text:=RegExReplace(text,"\Q" ea.include "\E","#Include " relative),update({file:mainfile,text:text}),current(1).firstchild.removeattribute("sc")
 	SplashTextOn,,100,Indexing Files,Please Wait....
 	Refresh_Project_Explorer(rename)

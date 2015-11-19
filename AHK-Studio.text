@@ -9,6 +9,7 @@ Fixed: Programmed by number1nub
 -Black on white wasn't working
 Changed: Suggested by number1nub
 -Context Menu: Changed ifs to else ifs
+-Rename Current Segment: was broken
 1.002.6
 Fixed: Reported by number1nub
 o Split Code

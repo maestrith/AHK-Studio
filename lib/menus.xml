@@ -29,7 +29,7 @@
 			<menu name="Run As Ansii" clean="Run_As_Ansii" hotkey="^!A" index="25"></menu>
 			<menu name="Run As U32" clean="Run_As_U32" index="26"></menu>
 			<menu name="Run As U64" clean="Run_As_U64" index="27"></menu>
-			<menu clean="Run_Comment_Block" name="Run Comment Block" hotkey="!V" no="1"></menu>
+			<menu clean="Run_Comment_Block" name="Run Comment Block" hotkey="!V" option="" plugin="plugins\Run Comment Block.ahk"></menu>
 			<menu name="Run Se&amp;lected Text" clean="Run_Selected_Text" index="28" option="" plugin="plugins\Run Selected Text.ahk"></menu>
 			<menu name="&amp;Save" hotkey="^S" clean="Save" index="29"></menu>
 			<menu clean="Save_As" name="Save &amp;As" index="30"></menu>
@@ -209,7 +209,7 @@
 			<menu name="Select Current Word" clean="Select_Current_Word" index="26"></menu>
 			<menu name="Select Next Duplicate" clean="Select_Next_Duplicate" hotkey="+^F3" index="27"></menu>
 			<menu name="Show Classes" clean="Show_Classes" hotkey="!I" no="1"></menu>
-			<menu name="Show Functions" clean="Show_Functions" hotkey="!O" option="sf" plugin="plugins\Show.ahk"></menu>
+			<menu name="Show Functions" clean="Show_Functions" hotkey="!O" option="sf" no="1"></menu>
 			<menu name="Sho&amp;w Scintilla Code In Line" hotkey="F4" clean="Show_Scintilla_Code_In_Line" index="28"></menu>
 			<menu name="S&amp;ort Selected" clean="Sort_Selected" index="29" option="" plugin="plugins\Sort Selected.ahk"></menu>
 			<menu clean="Spacing" name="Spacing" tv="3397032" index="30">
@@ -232,7 +232,7 @@
 			<menu clean="Online_Help" name="Online Help" no="1"></menu>
 			<menu name="&amp;Social" clean="Social" no="1"></menu>
 			<menu clean="Testing" name="Testing" hotkey="^K"></menu></menu>
-		<menu clean="Plugin" name="P&amp;lugin" tv="3396816">
+		<menu clean="Plugin" name="P&amp;lugin">
 			<menu clean="Additional_Publish" hotkey="" name="Additional Publish" option="" plugin="plugins\Additional Publish.ahk"></menu>
 			<menu clean="Align_Selected_Text" hotkey="" name="Align Selected Text" option="" plugin="plugins\Align Selected Text.ahk"></menu>
 			<menu clean="Auto_Menu_Adder" hotkey="" name="Auto Menu Adder" option="" plugin="plugins\Auto Menu Adder.ahk"></menu>
@@ -240,30 +240,28 @@
 			<menu clean="Camel" hotkey="" name="Camel" option="" plugin="plugins\Camel.ahk"></menu>
 			<menu clean="Capture_Gif" hotkey="" name="Capture Gif" option="" plugin="plugins\Capture Gif.ahk"></menu>
 			<menu clean="Compile_And_Run" hotkey="!p" name="Compile And Run" option="" plugin="plugins\Compile And Run.ahk"></menu>
-			<menu clean="Compile_In_Unicode_32" hotkey="" name="Compile In Unicode 32" option="" plugin="plugins\Compile.ahk"></menu>
 			<menu clean="Compile_Using_Unicode_32" hotkey="" name="Compile Using Unicode 32" option="" plugin="plugins\Compile Using Unicode 32.ahk"></menu>
+			<menu clean="Compile_In_Unicode_32" hotkey="" name="Compile In Unicode 32" option="" plugin="plugins\Compile.ahk"></menu>
 			<menu clean="Complex_Sort" hotkey="" name="Complex Sort" option="" plugin="plugins\Complex Sort.ahk"></menu>
 			<menu clean="Fix_if" hotkey="^!i" name="Fix &amp;if" option="" plugin="plugins\Fix If.ahk"></menu>
+			<menu clean="Toggle_Fold" hotkey="" name="Toggle Fold" option="tf" plugin="plugins\Fold.ahk"></menu>
 			<menu clean="Increment_Selected" hotkey="" name="Increment Selected" option="" plugin="plugins\Increment Selected.ahk"></menu>
 			<menu clean="Lookup_Old_Code" hotkey="" name="Lookup Old Code" option="" plugin="plugins\Lookup.ahk"></menu>
 			<menu clean="Make_One_Line" hotkey="![" name="Make One Line" option="" plugin="plugins\Make One Line.ahk"></menu>
 			<menu clean="Mark_All_Files_For_Update" hotkey="" name="Mark All Files For Update" option="" plugin="plugins\Mark All Files For Update.ahk"></menu>
 			<menu clean="New_Plugin" hotkey="" name="New Plugin" option="" plugin="plugins\New Plugin.ahk"></menu>
 			<menu clean="Options_Dialog" hotkey="" name="Options Dialog" option="" plugin="plugins\Options Dialog.ahk"></menu>
-			<menu clean="Paste_Clipboard" hotkey="" name="Paste Clipboard" option="Clipboard" plugin="plugins\Paste Script.ahk"></menu>
 			<menu clean="Paste_To_p.ahkscript.org" hotkey="" name="Paste To p.ahkscript.org" option="" plugin="plugins\Paste Script.ahk"></menu>
+			<menu clean="Paste_Clipboard" hotkey="" name="Paste Clipboard" option="Clipboard" plugin="plugins\Paste Script.ahk"></menu>
 			<menu clean="Remove_Blank_Lines" hotkey="" name="Remove Blank Lines" option="" plugin="plugins\Remove Blank Lines.ahk"></menu>
 			<menu clean="Run_Current_Segment" hotkey="" name="Run Current Segment" option="segment" plugin="plugins\Run Selected Text.ahk"></menu>
 			<menu clean="Run_Testing" hotkey="!;" name="Run Testing" option="" plugin="plugins\Run Testing.ahk"></menu>
-			<menu clean="Show_Class" hotkey="" name="Show Class" option="sc" plugin="plugins\Show.ahk"></menu>
-			<menu clean="Show_Label" hotkey="" name="Show Label" option="sl" plugin="plugins\Show.ahk"></menu>
 			<menu clean="Split_Line_By_Comma" hotkey="!," name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk"></menu>
-			<menu clean="Toggle_Fold" hotkey="" name="Toggle Fold" option="tf" plugin="plugins\Fold.ahk"></menu>
 			<menu clean="Toggle_Fullscreen" hotkey="" name="Toggle Fullscreen" option="" plugin="plugins\Toggle Fullscreen.ahk"></menu>
 			<menu clean="Update_Repository" hotkey="" name="Update Repository" option="" plugin="plugins\Update Repository.ahk"></menu>
 			<menu clean="Upload_Files_To_Repository" hotkey="" name="Upload Files To Repository" option="" plugin="plugins\Upload Files To Repository.ahk"></menu>
 			<menu clean="Upload_Menus" hotkey="" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu>
 			<menu clean="XML_Date" hotkey="" name="XML Date" option="" plugin="plugins\xml date.ahk"></menu></menu>
 	</main>
-	<date>20151115170308</date>
+	<date>20151118153303</date>
 </menus>
