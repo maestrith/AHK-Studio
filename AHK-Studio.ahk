@@ -237,8 +237,11 @@ Check_For_Edited(){
 		SetStatus("Files Updated:" Trim(list,","),3)
 	return 1
 }
-Check_For_Update(){
+Check_For_Update(startup:=""){
 	static newwin,version
+	auto:=settings.ea("//autoupdate")
+	if(startup=1&&auto.reset>A_Now&&v.options.Check_For_Update_On_Startup!=1)
+		return
 	sub:=A_NowUTC
 	sub-=A_Now,hh
 	FileGetTime,time,%A_ScriptFullPath%
@@ -247,8 +250,20 @@ Check_For_Update(){
 	if(proxy:=settings.ssn("//proxy").text)
 		http.setProxy(2,proxy)
 	http.send()
-	version=Version=1.002.7
 	RegExMatch(http.ResponseText,"iUO)\x22date\x22:\x22(.*)\x22",found),date:=RegExReplace(found.1,"\D")
+	if(startup="1"){
+		reset:=http.getresponseheader("X-RateLimit-Reset")
+		if(reset){
+			seventy:=19700101000000
+			for a,b in {s:reset,h:-sub}
+				EnvAdd,seventy,%b%,%a%
+			settings.add("autoupdate",{reset:seventy})
+			if(time>date)
+				return
+		}else
+			return
+	}
+	version=Version=1.002.7
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y")
 	newwin.show("AHK Studio Version: " version)
 	if(time<date){
@@ -2073,7 +2088,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151118153303,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151112182156,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151119173032,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151112182156,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
@@ -2736,7 +2751,7 @@ Gui(){
 		tv(files.ssn("//file[@tv!='']/@tv").text,1)
 	while,ss:=settings.ssn("//open/file[@select='1']")
 		ss.RemoveAttribute("select")
-	csc(1),Refresh()
+	csc(1),Refresh(),Check_For_Update(1)
 	return
 	GuiClose:
 	SetTimer,Exit,-1
@@ -3924,6 +3939,7 @@ Options(x:=0){
 	Virtual_Scratch_Pad:
 	Includes_In_Place:
 	Shift_Breakpoint:
+	Check_For_Update_On_Startup:
 	onoff:=settings.ssn("//options/@ " A_ThisLabel).text?0:1
 	att:=[],att[A_ThisLabel]:=onoff,v.options[A_ThisLabel]:=onoff
 	settings.add("options",att)
@@ -5036,6 +5052,7 @@ Testing(x:=0){
 	;m(menus[],"ico:?")
 	;v.ddd.send("breakpoint_list")
 	;m(v.color.personal)
+	Check_For_Update(1)
 }
 Toggle_Comment_Line(){
 	sc:=csc(),sc.2078
