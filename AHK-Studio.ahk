@@ -81,12 +81,16 @@ OR PERFORMANCE OF THIS SOFTWARE.
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
+	Gui,Add,Button,x+M gsite,Website
 	Gui,Show,,AHK Studio Help Version: %version%
 	sc.2181(0,about),sc.2025(0),sc.2268(1)
 	return
 	11GuiClose:
 	11GuiEscape:
 	hwnd({rem:11})
+	return
+	site:
+	Run,https://github.com/maestrith/AHK-Studio
 	return
 }
 Activate(){
@@ -1416,6 +1420,12 @@ Compile(main=""){
 	main:=ssn(current(1),"@file").Text,v.compiling:=1
 	SplitPath,main,,dir,,name
 	SplitPath,A_AhkPath,file,dirr
+	if(fileExist(dirr "\Compile_AHK.exe")) {
+		Loop,%dirr%\Compile_AHK.exe,1,1
+			file:=A_LoopFileFullPath
+		Run,% file Chr(34) current(2).file Chr(34)
+		return
+	}
 	Loop,%dirr%\Ahk2Exe.exe,1,1
 		file:=A_LoopFileFullPath
 	if(!FileExist("temp"))

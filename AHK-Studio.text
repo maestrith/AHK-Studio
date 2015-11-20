@@ -3,6 +3,8 @@ Added:
 -Options/Check For Update On Startup
 Fixed: Reported by noticz
 -Some Includes with %A_ScriptDir% were not parsing correctly
+Added: Requested by noticz
+-Using Compile_AHK.exe if it is available
 1.002.7
 Fixed: Reported by zotune and number1nub
 -Menus were getting resetting on updates :(
