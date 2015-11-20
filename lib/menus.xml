@@ -265,5 +265,5 @@
 			<menu clean="Upload_Menus" hotkey="" name="Upload Menus" option="" plugin="plugins\Upload Menus.ahk"></menu>
 			<menu clean="XML_Date" hotkey="" name="XML Date" option="" plugin="plugins\xml date.ahk"></menu></menu>
 	</main>
-	<date>20151119173032</date>
+	<date>20151120120830</date>
 </menus>

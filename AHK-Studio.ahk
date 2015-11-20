@@ -278,8 +278,7 @@ Check_For_Update(startup:=""){
 		ControlSetText,Edit1,% http.ResponseText,% newwin.ahkid
 	return
 	autoupdate:
-	save(),settings.save(1)
-	studio:=URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk")
+	save(),settings.save(1),studio:=URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk")
 	if(!InStr(studio,";download complete"))
 		return m("There was an error. Please contact maestrith@gmail.com if this error continues")
 	FileMove,%A_ScriptFullPath%,%A_ScriptDir%\%A_ScriptName% - %version%,1
@@ -2770,6 +2769,7 @@ Gui(){
 	while,ss:=settings.ssn("//open/file[@select='1']")
 		ss.RemoveAttribute("select")
 	csc(1),Refresh(),Check_For_Update(1)
+	WinSet,Redraw,,% hwnd([1])
 	return
 	GuiClose:
 	SetTimer,Exit,-1
