@@ -2042,19 +2042,22 @@ Extract(fileobj,top,rootfile){
 					if(!ssn(top,"descendant::file[@file='" incfile "']"))
 						spfile:=incfile,nextfile.Push(incfile)
 				}else if(InStr(found.1,"<")||InStr(found.1,"%")){
-					if(look:=RegExReplace(found.1,"(<|>)"))
-						look.=".ahk"
+					if(InStr(found.1,"<")){
+						if(look:=RegExReplace(found.1,"(<|>)"))
+							look.=".ahk"
+					}else
+						look:=found.1
 					if(!FileExist(look))
 						if(SubStr(look,-3)!=".ahk")
 							if(FileExist(look ".ahk"))
 								look.=".ahk"
-					for a,b in {"ahkdir":ahkdir,"%A_ScriptDir%":maindir,"%A_MyDocuments%":A_MyDocuments "\AutoHotkey\Lib","lib":maindir "\lib","%A_AppData%":A_AppData,"%A_AppDataCommon%":A_AppDataCommon}{
-						if(InStr(look,a))
-							look:=RegExReplace(look,"i)" a "\\")
-						if(FileExist(b "\" look)&&!ssn(top,"descendant::file[@file='" b "\" look "']")){
-							nextfile.Push(b "\" look)
-							if(!ssn(top,"descendant::file[@file='" b "\" look "']"))
-								spfile:=b "\" look
+					for c,d in {"ahkdir":ahkdir,"%A_ScriptDir%":maindir,"%A_MyDocuments%":A_MyDocuments "\AutoHotkey\Lib","lib":maindir "\lib","%A_AppData%":A_AppData,"%A_AppDataCommon%":A_AppDataCommon}{
+						if(InStr(look,c))
+							look:=RegExReplace(look,"i)" c "\\")
+						if(FileExist(d "\" look)&&!ssn(top,"descendant::file[@file='" d "\" look "']")){
+							nextfile.Push(d "\" look)
+							if(!ssn(top,"descendant::file[@file='" d "\" look "']"))
+								spfile:=d "\" look
 							break
 						}
 					}
@@ -5535,4 +5538,5 @@ Scintilla(return:=""){
 	if(return)
 		return list
 }
+msgbox ok
 ;/plugin
