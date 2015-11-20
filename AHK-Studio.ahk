@@ -5538,5 +5538,4 @@ Scintilla(return:=""){
 	if(return)
 		return list
 }
-msgbox ok
 ;/plugin
