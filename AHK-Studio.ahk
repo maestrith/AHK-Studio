@@ -77,17 +77,20 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"})
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.8"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
-	Gui,Show,,AHK Studio Help Version: Version=1.002.8
+	Gui,Show,,AHK Studio Help Version: %version%
 	sc.2181(0,about),sc.2025(0),sc.2268(1)
 	return
 	11GuiClose:
 	11GuiEscape:
 	hwnd({rem:11})
 	return
+}
+Activate(){
+	csc().2400
 }
 AddBookmark(line,search){
 	sc:=csc(),end:=sc.2136(line),start:=sc.2128(line),name:=(settings.ssn("//bookmark").text),name:=name?name:SubStr(StrSplit(current(2).file,"\").pop(),1,-4)
@@ -256,8 +259,7 @@ Check_For_Update(startup:=""){
 	http.send()
 	RegExMatch(http.ResponseText,"iUO)\x22date\x22:\x22(.*)\x22",found),date:=RegExReplace(found.1,"\D")
 	if(startup="1"){
-		reset:=http.getresponseheader("X-RateLimit-Reset")
-		if(reset){
+		if(reset:=http.getresponseheader("X-RateLimit-Reset")){
 			seventy:=19700101000000
 			for a,b in {s:reset,h:-sub}
 				EnvAdd,seventy,%b%,%a%
@@ -267,9 +269,8 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	version=Version=1.002.8
-	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y")
-	newwin.show("AHK Studio Version: " version)
+	Version:="1.002.8"
+	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
 		ControlSetText,Edit1,%update%,% newwin.ahkid
@@ -685,11 +686,12 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		version:="Version=1.002.8"
+		Version:="1.002.8"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		return "Version=1.002.8"
+		Version:="1.002.8"
+		return version
 	}EnableSC(x:=0){
 		sc:=csc()
 		if(x){
@@ -1680,6 +1682,12 @@ Current(parent=""){
 		return xml.ea(node)
 	return node
 }
+Custom_Version(){
+	change:=settings.ssn("//auto_version").text?settings.ssn("//auto_version").text:"Version:=" Chr(34) "$v" Chr(34)
+	cc:=InputBox(csc().sc,"Custom auto_version","Enter your custom" Chr(59) "auto_version in the form of Version:=$v",change)
+	if(cc)
+		settings.add("auto_version").text:=cc
+}
 Cut(){
 	Send,^x
 }
@@ -1698,6 +1706,12 @@ Debug_Settings(){
 		top.SetAttribute(b,info[b])
 	newwin.Destroy()
 	return
+}
+Default_Project_Folder(){
+	FileSelectFolder,directory,,3,% "Current Default Folder: " settings.ssn("//directory").text
+	if(ErrorLevel)
+		return
+	settings.add("directory","",directory)
 }
 Default(type:="TreeView",control:="SysTreeView321"){
 	Gui,1:Default
@@ -3323,6 +3337,39 @@ New_Scintilla_Window(file=""){
 		sc.2358(0,doc),SetPos(doc)
 	sc.2400(),sc.show(),Resize("rebar")
 }
+New_Segment(new:="",text:="",adjusted:=""){
+	cur:=adjusted?adjusted:current(2).file,sc:=csc(),parent:=mainfile:=current(2).file
+	SplitPath,cur,,dir
+	maindir:=dir
+	if(!new){
+		FileSelectFile,new,s,%dir%,Create a new Segment,*.ahk
+		if(ErrorLevel)
+			return
+		new:=new~="\.ahk$"?new:new ".ahk"
+		if(FileExist(new))
+			return m("File Already Exists.","Please create a new file")
+		SplitPath,new,filename,dir,,func
+	}
+	if(node:=ssn(current(1),"descendant::file[@file='" new "']"))
+		return tv(ssn(node,"@tv").Text)
+	SplitPath,new,file,newdir,,function
+	Gui,1:Default
+	Relative:=RegExReplace(relativepath(cur,new),"i)^lib\\([^\\]+)\.ahk$","<$1>")
+	if(v.options.Includes_In_Place=1)
+		sc.2003(sc.2008,"#Include " relative)
+	else{
+		if(files.ssn("//*[@sc='" sc.2357 "']/@file").text=current(2).file)
+			sc.2003(sc.2006,"`n#Include " Relative)
+		else
+			maintext:=Update({get:current(2).file}),update({file:current(2).file,text:maintext "`n#Include " Relative})
+	}
+	func:=clean(func)
+	SplitPath,newdir,last
+	FileAppend,% m("Create Function Named " clean(function) "?","btn:yn")="yes"?clean(function) "(){`r`n`r`n}":"",%new%,UTF-8
+	Refresh_Current_Project(new)
+	Sleep,300
+	sc.2025(StrLen(function)+1),NewIndent()
+}
 New(filename:="",text:=""){
 	ts:=settings.ssn("//template").text,file:=FileOpen("c:\windows\shellnew\template.ahk",0),td:=file.Read(file.length),file.close(),template:=ts?ts:td,index:=0
 	if(filename=1||text=""){
@@ -4130,15 +4177,16 @@ ProjectFolder(){
 }
 Publish(return=""){
 	sc:=csc(),text:=update("get").1,save(),mainfile:=ssn(current(1),"@file").text,publish:=update({get:mainfile}),includes:=sn(current(1),"descendant::*/@include/..")
+	number:=vversion.ssn("//info[@file='" current(2).file "']/descendant::version/@number").text
 	while,ii:=includes.item[A_Index-1]
 		if(InStr(publish,ssn(ii,"@include").text))
 			StringReplace,publish,publish,% ssn(ii,"@include").text,% update({get:ssn(ii,"@file").text}),All
 	rem:=sn(current(1),"descendant::remove")
 	while,rr:=rem.Item[A_Index-1]
 		publish:=RegExReplace(publish,"m)^\Q" ssn(rr,"@inc").text "\E$")
-	ea1:=xml.ea(vversion.ssn("//*[@file='" current(2).file "']")),ea:=xml.ea(vversion.ssn("//*[@file='" current(2).file "']/descendant::*[@number!='']")),newver:=(ea1.versstyle?"":"Version=") ea.number
+	change:=settings.ssn("//auto_version").text?settings.ssn("//auto_version").text:"Version:=" Chr(34) "$v" Chr(34)
 	if(InStr(publish,Chr(59) "auto_version"))
-		publish:=RegExReplace(publish,Chr(59) "auto_version",newver)
+		publish:=RegExReplace(publish,Chr(59) "auto_version",RegExReplace(change,"\Q$v\E",number))
 	publish:=RegExReplace(publish,"U)^\s*(;{.*\R|;}.*\R)","`n")
 	StringReplace,publish,publish,`n,`r`n,All
 	if(!publish)
@@ -4157,7 +4205,7 @@ PublishIndent(Code,Indent:="`t",Newline:="`r`n"){
 		if(Skip){
 			if(First==")")
 				Skip:=False
-			Out.=Newline.RTrim(Line)
+			Out.="`r`n" line
 			continue
 		}
 		if(FirstTwo=="*/")
@@ -4998,6 +5046,9 @@ Show_Scintilla_Code_In_Line(){
 	if(list)
 		m(Trim(list,"`n"))
 }
+Show(){
+	GuiControl,+Show,% this.sc
+}
 ShowLabels(x:=0){
 	code_explorer.scan(current()),all:=cexml.sn("//main[@file='" current(2).file "']/descendant::info[@type='Function' or @type='Label']/@text")
 	sc:=csc(),sc.2634(1),dup:=[]
@@ -5056,7 +5107,7 @@ Testing(x:=0){
 	;m(menus[],"ico:?")
 	;v.ddd.send("breakpoint_list")
 	;m(v.color.personal)
-	Check_For_Update(1)
+	Custom_Version()
 }
 Toggle_Comment_Line(){
 	sc:=csc(),sc.2078
@@ -5136,6 +5187,12 @@ Toggle_Multiple_Line_Comment(){
 		}
 	}
 	GuiControl,1:+Redraw,% csc().sc
+}
+TrayMenu(){
+	Menu,Tray,NoStandard
+	Menu,Tray,Add,Show AHK Studio,show
+	Menu,Tray,Default,Show AHK Studio
+	Menu,Tray,Standard
 }
 tv(tv:=0,open:="",history:=0){
 	static fn,noredraw,tvbak
@@ -5479,54 +5536,3 @@ Scintilla(return:=""){
 		return list
 }
 ;/plugin
-TrayMenu(){
-	Menu,Tray,NoStandard
-	Menu,Tray,Add,Show AHK Studio,show
-	Menu,Tray,Default,Show AHK Studio
-	Menu,Tray,Standard
-}
-Activate(){
-	csc().2400
-}
-Show(){
-	GuiControl,+Show,% this.sc
-}
-New_Segment(new:="",text:="",adjusted:=""){
-	cur:=adjusted?adjusted:current(2).file,sc:=csc(),parent:=mainfile:=current(2).file
-	SplitPath,cur,,dir
-	maindir:=dir
-	if(!new){
-		FileSelectFile,new,s,%dir%,Create a new Segment,*.ahk
-		if(ErrorLevel)
-			return
-		new:=new~="\.ahk$"?new:new ".ahk"
-		if(FileExist(new))
-			return m("File Already Exists.","Please create a new file")
-		SplitPath,new,filename,dir,,func
-	}
-	if(node:=ssn(current(1),"descendant::file[@file='" new "']"))
-		return tv(ssn(node,"@tv").Text)
-	SplitPath,new,file,newdir,,function
-	Gui,1:Default
-	Relative:=RegExReplace(relativepath(cur,new),"i)^lib\\([^\\]+)\.ahk$","<$1>")
-	if(v.options.Includes_In_Place=1)
-		sc.2003(sc.2008,"#Include " relative)
-	else{
-		if(files.ssn("//*[@sc='" sc.2357 "']/@file").text=current(2).file)
-			sc.2003(sc.2006,"`n#Include " Relative)
-		else
-			maintext:=Update({get:current(2).file}),update({file:current(2).file,text:maintext "`n#Include " Relative})
-	}
-	func:=clean(func)
-	SplitPath,newdir,last
-	FileAppend,% m("Create Function Named " clean(function) "?","btn:yn")="yes"?clean(function) "(){`r`n`r`n}":"",%new%,UTF-8
-	Refresh_Current_Project(new)
-	Sleep,300
-	sc.2025(StrLen(function)+1),NewIndent()
-}
-Default_Project_Folder(){
-	FileSelectFolder,directory,,3,% "Current Default Folder: " settings.ssn("//directory").text
-	if(ErrorLevel)
-		return
-	settings.add("directory","",directory)
-}
