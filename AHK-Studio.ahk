@@ -4981,17 +4981,15 @@ SetPos(oea:=""){
 	if(delay=1)
 		goto,spnext
 	SetTimer,spnext,-%delay%
-	GuiControl,1:+Redraw,% sc.sc
 	return
 	spnext:
 	sc:=csc(),sc.2397(0),node:=files.ssn("//*[@sc='" sc.2357 "']"),file:=ssn(node,"@file").text,parent:=ssn(node,"ancestor::main/@file").text,posinfo:=positions.ssn("//main[@file='" parent "']/file[@file='" file "']"),doc:=ssn(node,"@sc").text,ea:=xml.ea(posinfo),fold:=ea.fold,breakpoint:=ea.breakpoint
+	SetTimer,fold,-1
+	return
+	fold:
 	if(ea.file){
 		Loop,Parse,fold,`,
-			sc.2231(A_LoopField) ;*[My Breakpoint]
-		/*
-			Loop,Parse,breakpoint,`, ;*[Another (options to come later?)]
-				sc.2043(A_LoopField,1)
-		*/
+			sc.2231(A_LoopField)
 		if(ea.start&&ea.end)
 			sc.2160(ea.start,ea.end)
 		if(ea.scroll!="")
@@ -5247,9 +5245,9 @@ tv(tv:=0,open:="",history:=0){
 				dd.SetAttribute("sc",doc)
 		}else
 			sc.2358(0,doc.text),marginwidth(sc),current(1).SetAttribute("last",fn)
-		GuiControl,1:+Redraw,% sc.sc
 		Sleep,150
 		setpos(ei),uppos(),marginwidth(sc)
+		GuiControl,1:+Redraw,% sc.sc
 		if(history!=1)
 			History(fn)
 		if(open=2)

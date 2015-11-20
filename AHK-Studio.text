@@ -3,6 +3,7 @@ Added:
 -Options/Check For Update On Startup
 Fixed: Reported by noticz
 -Some Includes with %A_ScriptDir% were not parsing correctly
+-Folding remembering from load to load
 Added: Requested by noticz
 -Using Compile_AHK.exe if it is available
 1.002.7
