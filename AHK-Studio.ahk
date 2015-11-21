@@ -5569,6 +5569,8 @@ Compile_AHK_Studio(){
 		return m("AHK Studio is already compiled.")
 	SplitPath,A_ScriptFullPath,,,ext,nne
 	SplitPath,A_AhkPath,file,dirr
+	if(FileExist(A_ScriptDir "\" nne ".exe"))
+		FileDelete,%A_ScriptDir%\%nne%.exe
 	Loop,%A_ScriptDir%\*.ico
 		icon:=A_LoopFileFullPath
 	if(icon)
@@ -5576,7 +5578,11 @@ Compile_AHK_Studio(){
 	Loop,%dirr%\Ahk2Exe.exe,1,1
 		file:=A_LoopFileFullPath
 	RunWait,%file% /in "%A_ScriptDir%\%nne%.ahk" /out "%A_ScriptDir%\%nne%.exe" %add% /bin "%dirr%\Compiler\Unicode 32-bit.bin"
-	Run,%A_ScriptDir%\%nne%.exe
+	if(FileExist(A_ScriptDir "\" nne ".exe")){
+		Run,%A_ScriptDir%\%nne%.exe
+		FileMove,%A_ScriptFullPath%,%A_ScriptFullPath%.bak,1
+		FileDelete,%A_ScriptFullPath%.bak
+	}
 	ExitApp
 }
 Download_AHK_Studio_Source(){
