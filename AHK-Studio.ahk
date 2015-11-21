@@ -293,6 +293,7 @@ Check_For_Update(startup:=""){
 	if(icon)
 		add=/icon "%icon%"
 	if(ext="exe"){
+		SplashTextOn,200,50,Compiling,Please Wait...
 		FileMove,%A_ScriptFullPath%,%nne% - %version%.exe,1
 		SplitPath,A_AhkPath,file,dirr
 		Loop,%dirr%\Ahk2Exe.exe,1,1
@@ -5577,6 +5578,7 @@ Compile_AHK_Studio(){
 		add=/icon "%icon%"
 	Loop,%dirr%\Ahk2Exe.exe,1,1
 		file:=A_LoopFileFullPath
+	SplashTextOn,200,50,Compiling,Please Wait...
 	RunWait,%file% /in "%A_ScriptDir%\%nne%.ahk" /out "%A_ScriptDir%\%nne%.exe" %add% /bin "%dirr%\Compiler\Unicode 32-bit.bin"
 	if(FileExist(A_ScriptDir "\" nne ".exe")){
 		Run,%A_ScriptDir%\%nne%.exe
