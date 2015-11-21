@@ -1420,10 +1420,11 @@ Compile(main=""){
 	main:=ssn(current(1),"@file").Text,v.compiling:=1
 	SplitPath,main,,dir,,name
 	SplitPath,A_AhkPath,file,dirr
-	if(fileExist(dirr "\Compile_AHK.exe")) {
-		Loop,%dirr%\Compile_AHK.exe,1,1
-			file:=A_LoopFileFullPath
-		Run,% file Chr(34) current(2).file Chr(34)
+	Loop,%dirr%\Compile_AHK.exe,1,1
+		file:=A_LoopFileFullPath
+	if(fileExist(file)) {
+		run:=current(2).file
+		Run,%file% "%run%"
 		return
 	}
 	Loop,%dirr%\Ahk2Exe.exe,1,1
