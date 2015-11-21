@@ -285,8 +285,20 @@ Check_For_Update(startup:=""){
 	save(),settings.save(1),studio:=URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk")
 	if(!InStr(studio,";download complete"))
 		return m("There was an error. Please contact maestrith@gmail.com if this error continues")
-	FileMove,%A_ScriptFullPath%,%A_ScriptDir%\%A_ScriptName% - %version%,1
-	File:=FileOpen(A_ScriptFullPath,"rw"),File.seek(0),File.write(studio),File.length(File.position)
+	SplitPath,A_ScriptFullPath,,,ext,nne
+	FileMove,%nne%.ahk,%A_ScriptDir%\%nne% - %version%.ahk,1
+	File:=FileOpen(nne ".ahk","rw"),File.seek(0),File.write(studio),File.length(File.position)
+	Loop,%A_ScriptDir%\*.ico
+		icon:=A_LoopFileFullPath
+	if(icon)
+		add=/icon "%icon%"
+	if(ext="exe"){
+		FileMove,%A_ScriptFullPath%,%nne% - %version%.exe,1
+		SplitPath,A_AhkPath,file,dirr
+		Loop,%dirr%\Ahk2Exe.exe,1,1
+			file:=A_LoopFileFullPath
+		RunWait,%file% /in "%A_ScriptDir%\%nne%.ahk" /out "%A_ScriptDir%\%nne%.exe" %add% /bin "%dirr%\Compiler\Unicode 32-bit.bin"
+	}
 	Reload
 	ExitApp
 	return
@@ -1422,8 +1434,8 @@ Compile(main=""){
 	SplitPath,A_AhkPath,file,dirr
 	Loop,%dirr%\Compile_AHK.exe,1,1
 		compile:=A_LoopFileFullPath
-	if(fileExist(compile)) {
-		run:=current(2).file
+	if(FileExist(compile)){
+		run:=Current(2).file
 		Run,%compile% "%run%"
 		return
 	}
@@ -4937,11 +4949,15 @@ SelectAll(){
 }
 set_as_default_editor(){
 	RegRead,current,HKCU,SOFTWARE\Classes\AutoHotkeyScript\Shell\Edit\Command
-	New_Editor="%A_AhkPath%" "%A_ScriptFullPath%" "```%1"
+	SplitPath,A_ScriptFullPath,,,ext
+	if(ext="exe")
+		New_Editor="%A_ScriptFullPath%" "```%1"
+	else if(ext="ahk")
+		New_Editor="%A_AhkPath%" "%A_ScriptFullPath%" "```%1"
 	if(current=RegExReplace(New_Editor,Chr(96)))
 		New_Editor="%A_WinDir%\Notepad.exe" "```%1"
 	pgm=RegWrite,REG_SZ,HKCU,SOFTWARE\Classes\AutoHotkeyScript\Shell\Edit\Command,,%New_Editor%
-	dynarun(pgm)
+	DynaRun(pgm)
 	Sleep,250
 	RegRead,output,HKCU,SOFTWARE\Classes\AutoHotkeyScript\Shell\Edit\Command
 	if(InStr(output,"ahk studio"))
@@ -5548,3 +5564,23 @@ Scintilla(return:=""){
 		return list
 }
 ;/plugin
+Compile_AHK_Studio(){
+	if(StrSplit(A_ScriptFullPath,".").2="exe")
+		return m("AHK Studio is already compiled.")
+	SplitPath,A_ScriptFullPath,,,ext,nne
+	SplitPath,A_AhkPath,file,dirr
+	Loop,%A_ScriptDir%\*.ico
+		icon:=A_LoopFileFullPath
+	if(icon)
+		add=/icon "%icon%"
+	Loop,%dirr%\Ahk2Exe.exe,1,1
+		file:=A_LoopFileFullPath
+	RunWait,%file% /in "%A_ScriptDir%\%nne%.ahk" /out "%A_ScriptDir%\%nne%.exe" %add% /bin "%dirr%\Compiler\Unicode 32-bit.bin"
+	Run,%A_ScriptDir%\%nne%.exe
+	ExitApp
+}
+Download_AHK_Studio_Source(){
+	if(StrSplit(A_ScriptFullPath,".").2="ahk")
+		return m("The file is already on your system as " A_ScriptFullPath)
+	file:=FileOpen(A_ScriptDir "\AHK-Studio.ahk","rw","UTF-8"),file.write(URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk")),file.length(file.position),file.Close()
+}
