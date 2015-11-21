@@ -77,7 +77,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.8"
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.9"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -273,7 +273,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.8"
+	Version:="1.002.9"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
@@ -702,11 +702,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.8"
+		Version:="1.002.9"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.8"
+		Version:="1.002.9"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -1593,6 +1593,8 @@ ContextMenu(){
 		item:=clean(A_ThisMenuItem)
 		if(IsFunc(item))
 			%item%()
+		if(IsLabel(item))
+			SetTimer,%item%,-1
 		return
 	}else if(ctl="Static1"||ctl="Edit1"){
 		Menu,qfm,Add,% "Move to " (v.options.top_find?"Bottom":"Top"),Top_Find
