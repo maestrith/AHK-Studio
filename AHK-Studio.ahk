@@ -1421,10 +1421,10 @@ Compile(main=""){
 	SplitPath,main,,dir,,name
 	SplitPath,A_AhkPath,file,dirr
 	Loop,%dirr%\Compile_AHK.exe,1,1
-		file:=A_LoopFileFullPath
-	if(fileExist(file)) {
+		compile:=A_LoopFileFullPath
+	if(fileExist(compile)) {
 		run:=current(2).file
-		Run,%file% "%run%"
+		Run,%compile% "%run%"
 		return
 	}
 	Loop,%dirr%\Ahk2Exe.exe,1,1
