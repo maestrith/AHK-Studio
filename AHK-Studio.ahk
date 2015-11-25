@@ -217,9 +217,12 @@ Center(win){
 	return "x" x+centerx " y" y+centery
 }
 CenterSel(){
-	sc:=csc(),sc.2169
-	if(v.options.center_caret!=1)
-		a:=sc.2166(sc.2585(sc.2575)),total:=sc.2370/2-1,first:=sc.2152,line:=a-Floor(total),line:=line>=0?line:0,sc.2613(line)
+	sc:=csc(),sc.2169,a:=sc.2166(sc.2585(sc.2575)),total:=sc.2370/2-1
+	if(v.options.center_caret!=1){
+		sc.2403(0x04|0x08)
+		Sleep,1
+		sc.2169(),sc.2403(0,0)
+	}
 }
 Check_For_Edited(){
 	all:=files.sn("//file"),sc:=csc()
@@ -5025,7 +5028,7 @@ SetPos(oea:=""){
 		if(ea.scroll)
 			sc.2613(ea.scroll),sc.2400()
 		return
-	}
+	}CenterSel()
 	return
 }
 SetStatus(text,part=""){
