@@ -77,7 +77,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.9"
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.8"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -220,7 +220,7 @@ CenterSel(){
 	sc:=csc(),sc.2169,a:=sc.2166(sc.2585(sc.2575)),total:=sc.2370/2-1
 	if(v.options.center_caret!=1){
 		sc.2403(0x04|0x08)
-		Sleep,1
+		Sleep,40
 		sc.2169(),sc.2403(0,0)
 	}
 }
@@ -273,7 +273,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.9"
+	Version:="1.002.8"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
@@ -702,11 +702,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.9"
+		Version:="1.002.8"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.9"
+		Version:="1.002.8"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -980,6 +980,7 @@ class toolbar{
 		static count:=0
 		static
 		count++
+		;mask:=mask?mask:0x0040|0x10|0x0008|0x800|0x0004|0x20
 		mask:=mask?mask:0x100|0x0040|0x10|0x0008|0x800|0x0004|0x20
 		Gui,%win%:Default
 		Gui,%win%:Add,Custom,ClassToolbarWindow32 hwndhwnd +%mask% gtoolbar vtoolbar%count%
@@ -1315,7 +1316,8 @@ Close(x:=1,all:="",Redraw:=1){
 	Gui,1:Default
 	Gui,1:TreeView,SysTreeView321
 	GuiControl,1:-Redraw,SysTreeView321
-	all:=all?"/@file":"[@file='" current(2).file "']/@file",close:=files.sn("//main" all),up:=update("get")
+	cfile:=current(2).file
+	all:=all?"/@file":"[@file='" cfile "']/@file",close:=files.sn("//main" all),up:=update("get")
 	while,file:=close.item[A_Index-1],file:=file.text{
 		rem:=cexml.ssn("//main[@file='" file "']"),rem.ParentNode.RemoveChild(rem),all:=files.sn("//main[@file='" file "']/descendant::file"),Previous_Scripts(file),rem:=settings.ssn("//open/file[text()='" file "']"),rem.ParentNode.RemoveChild(rem)
 		while,aa:=all.item[A_Index-1],ea:=xml.ea(aa){
@@ -1332,6 +1334,12 @@ Close(x:=1,all:="",Redraw:=1){
 		GuiControl,1:+Redraw,SysTreeView321
 	if(!files.sn("//main").length)
 		New(1)
+	if(InStr(cfile,"untitled.ahk")){
+		SplitPath,cfile,,dir
+		FileRead,text,%cfile%
+		if(Trim(text)="")
+			FileRemoveDir,%dir%,1
+	}
 }
 Close_All(){
 	Close(1,1),New(1)
@@ -3484,6 +3492,7 @@ Notify(csc:=""){
 		MouseGetPos,,,win
 		if(win=hwnd(1))
 			SetTimer,LButton,-20
+		csc({hwnd:NumGet(info+0)})
 		/* 
 			Sleep,20
 			sc:=focus.sc?focus:csc(1),maincaret:=1
@@ -5475,6 +5484,33 @@ Words_In_Document(){
 		StringReplace,list,list,%word%%A_Space%,,All
 	sc.2100(StrLen(word),Trim(list))
 }
+Compile_AHK_Studio(){
+	if(StrSplit(A_ScriptFullPath,".").2="exe")
+		return m("AHK Studio is already compiled.")
+	SplitPath,A_ScriptFullPath,,,ext,nne
+	SplitPath,A_AhkPath,file,dirr
+	if(FileExist(A_ScriptDir "\" nne ".exe"))
+		FileDelete,%A_ScriptDir%\%nne%.exe
+	Loop,%A_ScriptDir%\*.ico
+		icon:=A_LoopFileFullPath
+	if(icon)
+		add=/icon "%icon%"
+	Loop,%dirr%\Ahk2Exe.exe,1,1
+		file:=A_LoopFileFullPath
+	SplashTextOn,200,50,Compiling,Please Wait...
+	RunWait,%file% /in "%A_ScriptDir%\%nne%.ahk" /out "%A_ScriptDir%\%nne%.exe" %add% /bin "%dirr%\Compiler\Unicode 32-bit.bin"
+	if(FileExist(A_ScriptDir "\" nne ".exe")){
+		Run,%A_ScriptDir%\%nne%.exe
+		FileMove,%A_ScriptFullPath%,%A_ScriptFullPath%.bak,1
+		FileDelete,%A_ScriptFullPath%.bak
+	}
+	ExitApp
+}
+Download_AHK_Studio_Source(){
+	if(StrSplit(A_ScriptFullPath,".").2="ahk")
+		return m("The file is already on your system as " A_ScriptFullPath)
+	file:=FileOpen(A_ScriptDir "\AHK-Studio.ahk","rw","UTF-8"),file.write(URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk")),file.length(file.position),file.Close()
+}
 ;plugin
 Quick_Scintilla_Code_Lookup(){
 	static list
@@ -5567,30 +5603,3 @@ Scintilla(return:=""){
 		return list
 }
 ;/plugin
-Compile_AHK_Studio(){
-	if(StrSplit(A_ScriptFullPath,".").2="exe")
-		return m("AHK Studio is already compiled.")
-	SplitPath,A_ScriptFullPath,,,ext,nne
-	SplitPath,A_AhkPath,file,dirr
-	if(FileExist(A_ScriptDir "\" nne ".exe"))
-		FileDelete,%A_ScriptDir%\%nne%.exe
-	Loop,%A_ScriptDir%\*.ico
-		icon:=A_LoopFileFullPath
-	if(icon)
-		add=/icon "%icon%"
-	Loop,%dirr%\Ahk2Exe.exe,1,1
-		file:=A_LoopFileFullPath
-	SplashTextOn,200,50,Compiling,Please Wait...
-	RunWait,%file% /in "%A_ScriptDir%\%nne%.ahk" /out "%A_ScriptDir%\%nne%.exe" %add% /bin "%dirr%\Compiler\Unicode 32-bit.bin"
-	if(FileExist(A_ScriptDir "\" nne ".exe")){
-		Run,%A_ScriptDir%\%nne%.exe
-		FileMove,%A_ScriptFullPath%,%A_ScriptFullPath%.bak,1
-		FileDelete,%A_ScriptFullPath%.bak
-	}
-	ExitApp
-}
-Download_AHK_Studio_Source(){
-	if(StrSplit(A_ScriptFullPath,".").2="ahk")
-		return m("The file is already on your system as " A_ScriptFullPath)
-	file:=FileOpen(A_ScriptDir "\AHK-Studio.ahk","rw","UTF-8"),file.write(URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk")),file.length(file.position),file.Close()
-}
