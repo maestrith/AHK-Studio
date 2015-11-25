@@ -5002,8 +5002,8 @@ SetPos(oea:=""){
 			tv(cea.tv,2,1)
 		(oea.line!="")?(end:=sc.2136(oea.line),start:=sc.2128(oea.line)):(end:=oea.end,start:=oea.start)
 		fix.SetAttribute("start",oea.start),fix.SetAttribute("end",oea.end),sc.2160(start,end)
-		SetTimer,CenterSel,-50
-		SetTimer,Enable,-250
+		SetTimer,Enable,-50
+		SetTimer,CenterSel,-80
 		return
 	}
 	delay:=(WinActive("A")=hwnd(1))?1:300
@@ -5028,7 +5028,7 @@ SetPos(oea:=""){
 		if(ea.scroll)
 			sc.2613(ea.scroll),sc.2400()
 		return
-	}CenterSel()
+	}
 	return
 }
 SetStatus(text,part=""){
