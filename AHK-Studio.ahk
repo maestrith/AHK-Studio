@@ -150,11 +150,9 @@ Brace(){
 		if(sc.2010(sc.2008)=13)
 			return sc.2003(sc.2008,Chr(34)),sc.2025(sc.2008+1)
 	hotkey:=SubStr(A_ThisHotkey,0),add:=ea.add
-	/*
-		if(!add)
-			return
-	*/
-	if(sc.2102&&v.options.Disable_Auto_Insert_Complete!=1){
+	if(ea.trigger="'"&&sc.2267(sc.2008-1,1)=sc.2008)
+		return sc.2003(sc.2008,"'"),sc.2025(sc.2008+1)
+	if(sc.2102&&v.options.Disable_Auto_Insert_Complete!=1&&(ea.trigger~="\(|\{")){
 		word:=sc.getword()
 		if(xml.ea(cexml.ssn("//*[@upper='" upper(word) "']")).type~="Method|Function")
 			sc.2101
@@ -163,8 +161,9 @@ Brace(){
 			if(Chr(sc.2007(sc.2008-1))=hotkey)
 				return
 		}
-	}else
+	}else{
 		sc.2101()
+	}
 	if(sc.2007(sc.2008)=Asc(ea.add)&&v.options.Auto_Advance&&sc.2007(sc.2008)!=0)
 		return sc.2025(sc.2008+1)
 	if(ea.trigger!=ea.add)
