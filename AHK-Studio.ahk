@@ -77,7 +77,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.9"
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.10"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -141,41 +141,40 @@ BookEnd(add,hotkey){
 }
 Brace(){
 	ControlGetFocus,Focus,A
-	sc:=csc(),cp:=sc.2008,line:=sc.2166(cp),et:=xml.ea(settings.find("//autoadd/key/@trigger",A_ThisHotkey)),ea:=xml.ea(settings.find("//autoadd/key/@add",A_ThisHotkey)),hotkey:=SubStr(A_ThisHotkey,0)
+	sc:=csc(),cp:=sc.2008,line:=sc.2166(cp),hotkey:=SubStr(A_ThisHotkey,0)
+	pos:=PosInfo()
 	if(!InStr(Focus,"Scintilla")){
 		Send,{%hotkey%}
 		return
-	}
-	if(A_ThisHotkey=Chr(34))
-		if(sc.2010(sc.2008)=13)
-			return sc.2003(sc.2008,Chr(34)),sc.2025(sc.2008+1)
-	hotkey:=SubStr(A_ThisHotkey,0),add:=ea.add
-	if(ea.trigger="'"&&sc.2267(sc.2008-1,1)=sc.2008)
-		return sc.2003(sc.2008,"'"),sc.2025(sc.2008+1)
-	if(sc.2102&&v.options.Disable_Auto_Insert_Complete!=1&&(ea.trigger~="\(|\{")){
-		word:=sc.getword()
-		if(xml.ea(cexml.ssn("//*[@upper='" upper(word) "']")).type~="Method|Function")
-			sc.2101
-		else{
-			sc.2104(),cp:=sc.2008
-			if(Chr(sc.2007(sc.2008-1))=hotkey)
-				return
-		}
-	}else{
+	}add:=v.brace[Hotkey]?v.brace[Hotkey]:v.bracematch[Hotkey]
+	if(v.brace[Hotkey]){
+		if(pos.start!=pos.end&&v.brace[Hotkey])
+			return BookEnd(add,hotkey)
+		if(A_ThisHotkey=Chr(34))
+			if(sc.2010(sc.2008)=13)
+				return sc.2003(sc.2008,Chr(34)),sc.2025(sc.2008+1)
+		if(hotkey="'"&&sc.2267(sc.2008-1,1)=sc.2008)
+			return sc.2003(sc.2008,"'"),sc.2025(sc.2008+1)
+		if(sc.2102&&v.options.Disable_Auto_Insert_Complete!=1&&(hotkey~="\(|\{")){
+			word:=sc.getword()
+			if(xml.ea(cexml.ssn("//*[@upper='" upper(word) "']")).type~="Method|Function")
+				sc.2101
+			else{
+				sc.2104(),cp:=sc.2008
+				if(Chr(sc.2007(sc.2008-1))=hotkey)
+					return
+	}}}else
 		sc.2101()
-	}
-	if(sc.2007(sc.2008)=Asc(ea.add)&&v.options.Auto_Advance&&sc.2007(sc.2008)!=0)
+	if(sc.2007(sc.2008)=Asc(hotkey)&&v.options.Auto_Advance&&sc.2007(sc.2008)!=0)
 		return sc.2025(sc.2008+1)
-	if(ea.trigger!=ea.add)
-		return sc.2003(sc.2008,ea.add),sc.2025(sc.2008+1)
 	if(sc.2008!=sc.2009)
-		return bookend(et.add,hotkey)
+		return bookend(add,hotkey)
 	if(hotkey="{"&&sc.2128(line)=cp&&cp=sc.2136(line)&&v.options.full_auto)
 		sc.2003(cp,"{`n`n}"),fix_indent(),sc.2025(sc.2136(line+1))
 	else if(hotkey="{"&&sc.2128(line)=cp&&cp!=sc.2136(line)&&v.options.full_auto)
 		sc.2078(),backup:=Clipboard,sc.2419(cp,sc.2136(line)),sc.2645(cp,sc.2136(line)-cp),sc.2003(cp,"{`n" clipboard "`n}"),fix_indent(),Clipboard:=backup,sc.2079()
 	else
-		sc.2003(cp,hotkey et.add),sc.2025(cp+1)
+		sc.2003(cp,hotkey add),sc.2025(cp+1)
 	SetStatus("Last Entered Character: " hotkey " Code:" Asc(hotkey),2),replace()
 	return
 	match:
@@ -188,25 +187,23 @@ Brace(){
 	SetStatus("Last Entered Character: " A_ThisHotkey " Code:" Asc(A_ThisHotkey),2)
 	return
 }
-BraceSetup(Win=1){
+BraceSetup(Win:=1){
 	static oldkeys:=[]
 	Hotkey,IfWinActive,% hwnd([win])
 	for a in oldkeys
 		Hotkey,%a%,brace,Off
-	v.brace:=[],autoadd:=settings.sn("//autoadd/*")
+	v.brace:=[],autoadd:=settings.sn("//autoadd/*"),v.braceadvance:=[],oldkeys:=[]
 	if(!RegExReplace(test:=settings.ssn("//autoadd/*/@trigger").text,"\d"))
 		while,aa:=autoadd.item[A_Index-1],ea:=xml.ea(aa)
 			aa.SetAttribute("trigger",Chr(ea.trigger)),aa.SetAttribute("add",Chr(ea.add))
-	v.braceadvance:=[],oldkeys:=[]
 	while,aa:=autoadd.item(a_index-1),ea:=xml.ea(aa){
 		if(ea.trigger){
 			v.brace[ea.trigger]:=ea.add,v.braceadvance[ea.add]:=Asc(ea.add),oldkeys[ea.trigger]:=1
 			if(ea.trigger!=ea.add)
 				oldkeys[ea.Add]:=1
-		}
-	}
-	for a in oldkeys
+	}}for a in oldkeys
 		Hotkey,%a%,brace,On
+	SetMatch()
 }
 Center(win){
 	Gui,%win%:Show,Hide
@@ -272,7 +269,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.9"
+	Version:="1.002.10"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
@@ -701,11 +698,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.9"
+		Version:="1.002.10"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.9"
+		Version:="1.002.10"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -2772,7 +2769,7 @@ Gui(){
 	WinSetTitle,% hwnd([1]),,AHK Studio - Indexing Lib Files
 	Index_Lib_Files(),OnMessage(5,"Resize"),open:=settings.sn("//open/file"),options()
 	Gui,1:Show,%pos% %max% Hide,AHK Studio
-	Margin_Left(1),csc().2400,BraceSetup(1),SetMatch(),Resize("rebar")
+	Margin_Left(1),csc().2400,BraceSetup(1),Resize("rebar")
 	RefreshThemes(),debug.off()
 	Gui,Show,%max%
 	SetTimer,rsize,-0
@@ -5147,7 +5144,6 @@ Testing(x:=0){
 	;m(menus[],"ico:?")
 	;v.ddd.send("breakpoint_list")
 	;m(v.color.personal)
-	Custom_Version()
 }
 Toggle_Comment_Line(){
 	sc:=csc(),sc.2078
@@ -5603,3 +5599,25 @@ Scintilla(return:=""){
 		return list
 }
 ;/plugin
+Move_Selected_Word_Left(){
+	sc:=csc(),pos:=PosInfo()
+	if(pos.start!=pos.end){
+		wordstart:=sc.2266(pos.start,1),indent:=sc.2128(pos.line)
+		if(wordstart!=pos.start)
+			text:=sc.getseltext(),sc.2645(pos.start,pos.end-pos.start),sc.2003(wordstart,[text]),sc.2160(wordstart,wordstart+(pos.end-pos.start))
+		if(wordstart<=indent)
+			return
+		if(RegExMatch(Chr(sc.2007(pos.start-1)),"\s|\W"))
+			text:=sc.getseltext(),sc.2645(pos.start,pos.end-pos.start),sc.2003(pos.start-1,[text]),sc.2160(pos.start-1,pos.start-1+(pos.end-pos.start))
+}}
+Move_Selected_Word_Right(){
+	sc:=csc(),pos:=PosInfo()
+	if(pos.start!=pos.end){
+		wordend:=sc.2267(pos.start,1)
+		if(wordend!=pos.end)
+			sc.2003(wordend,[sc.getseltext()]),sc.2160(wordend,wordend+(pos.end-pos.start)),sc.2645(pos.start,pos.end-pos.start)
+		else if(pos.end=sc.2136(pos.line))
+			sc.2003(pos.start," "),sc.2160(pos.start+1,pos.start+1+(pos.end-pos.start))
+		else if(RegExMatch(Chr(sc.2007(pos.end)),"\s|\W"))
+			sc.2003(pos.end+1,[sc.getseltext()]),sc.2160(pos.end+1,pos.end+1+(pos.end-pos.start)),sc.2645(pos.start,pos.end-pos.start)
+}}
