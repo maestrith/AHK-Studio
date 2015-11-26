@@ -4996,7 +4996,7 @@ SetPos(oea:=""){
 			top:=positions.add("main",{file:current},,1)
 		if(!fix:=ssn(top,"descendant::file[@file='" oea.file "']"))
 			fix:=settings.under(top,"file",{file:oea.file})
-		nea:=files.ea("//*[@sc='" sc.2357 "']"),cea:=files.ea("//*[@file='" oea.file "']")
+		fix.RemoveAttribute("scroll"),nea:=files.ea("//*[@sc='" sc.2357 "']"),cea:=files.ea("//*[@file='" oea.file "']")
 		SetTimer,Disable,-1
 		Sleep,2
 		if(oea.file!=nea.file)
@@ -5004,7 +5004,7 @@ SetPos(oea:=""){
 		(oea.line!="")?(end:=sc.2136(oea.line),start:=sc.2128(oea.line)):(end:=oea.end,start:=oea.start)
 		fix.SetAttribute("start",oea.start),fix.SetAttribute("end",oea.end),sc.2160(start,end)
 		SetTimer,CenterSel,-80
-		SetTimer,Enable,-50
+		SetTimer,Enable,-150
 		return
 	}
 	delay:=(WinActive("A")=hwnd(1))?1:300
