@@ -5144,6 +5144,7 @@ Testing(x:=0){
 	;m(menus[],"ico:?")
 	;v.ddd.send("breakpoint_list")
 	;m(v.color.personal)
+	;these are words
 }
 Toggle_Comment_Line(){
 	sc:=csc(),sc.2078
@@ -5613,7 +5614,7 @@ Move_Selected_Word_Left(){
 Move_Selected_Word_Right(){
 	sc:=csc(),pos:=PosInfo()
 	if(pos.start!=pos.end){
-		wordend:=sc.2267(pos.start,1)
+		wordend:=sc.2267(pos.end,1)
 		if(wordend!=pos.end)
 			sc.2003(wordend,[sc.getseltext()]),sc.2160(wordend,wordend+(pos.end-pos.start)),sc.2645(pos.start,pos.end-pos.start)
 		else if(pos.end=sc.2136(pos.line))
