@@ -77,7 +77,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.8"
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.9"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -273,7 +273,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.8"
+	Version:="1.002.9"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
@@ -702,11 +702,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.8"
+		Version:="1.002.9"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.8"
+		Version:="1.002.9"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -2414,7 +2414,7 @@ Find(){
 	}else if(Button="jump"){
 		Gui,1:+Disabled
 		ea:=foundinfo[TV_GetSelection()],SetPos(ea),xpos:=sc.2164(0,ea.start),ypos:=sc.2165(0,ea.start)
-		Sleep,300
+		Sleep,200
 		WinGetPos,xx,yy,ww,hh,% newwin.ahkid
 		WinGetPos,px,py,,,% "ahk_id" sc.sc
 		WinGet,trans,Transparent,% newwin.ahkid
@@ -2423,6 +2423,7 @@ Find(){
 			WinSet,Transparent,50,% newwin.ahkid
 		else if(trans=50)
 			WinSet,Transparent,255,% newwin.ahk
+		SetTimer,CenterSel,-10
 	}else{
 		sel:=TV_GetSelection(),TV_Modify(sel,ec:=TV_Get(sel,"E")?"-Expand":"Expand")
 		SetTimer,findlabel,-200
@@ -5002,8 +5003,8 @@ SetPos(oea:=""){
 			tv(cea.tv,2,1)
 		(oea.line!="")?(end:=sc.2136(oea.line),start:=sc.2128(oea.line)):(end:=oea.end,start:=oea.start)
 		fix.SetAttribute("start",oea.start),fix.SetAttribute("end",oea.end),sc.2160(start,end)
-		SetTimer,Enable,-50
 		SetTimer,CenterSel,-80
+		SetTimer,Enable,-50
 		return
 	}
 	delay:=(WinActive("A")=hwnd(1))?1:300
