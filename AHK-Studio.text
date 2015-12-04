@@ -1,6 +1,8 @@
 1.002.11
 Fixed: Reported by zotune and noticz
 -Set As Default Editor: Giving false errors when setting as default editor
+Fixed: Reported by noticz
+-When downloading updates and menu items that do not have a header are created, it completely messed up the menu structure
 Fixed:
 -Undo/Redo: Adding hotkeys to them caused major issues
 -Cut/Copy/Paste: Hotkeys were causing issues
