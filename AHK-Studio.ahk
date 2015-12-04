@@ -1721,7 +1721,8 @@ Custom_Version(){
 		settings.add("auto_version").text:=cc
 }
 Cut(){
-	Send,^x
+	ControlGetFocus,Focus,% hwnd([1])
+	SendMessage,0x300,0,0,%Focus%,% hwnd([1])
 }
 Debug_Settings(){
 	static values:=["max_depth","max_children"],newwin
