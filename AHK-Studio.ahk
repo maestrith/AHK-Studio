@@ -1663,8 +1663,6 @@ ContextMenu(){
 }
 Convert_Hotkey(key){
 	StringUpper,key,key
-	if(InStr(key,"^v"))
-		return
 	for a,b in [{Shift:"+"},{Win:"#"},{Ctrl:"^"},{Alt:"!"}]
 		for c,d in b
 			key:=RegExReplace(key,"\" d,c "+")
@@ -3229,7 +3227,6 @@ Menu(menuname:="main"){
 		parent:=pea.name?pea.name:menuname
 		if(ea.hide)
 			Continue
-		
 		if(!aa.haschildnodes()){
 			if(aa.nodename="separator"){
 				Menu,%parent%,Add
@@ -4041,7 +4038,7 @@ Paste_Func(){
 	SetTimer,paste,-1
 	return
 	paste:
-	Send,^v
+	csc().2179
 	ControlGetFocus,Focus,A
 	if(!InStr(focus,"scintilla"))
 		return
