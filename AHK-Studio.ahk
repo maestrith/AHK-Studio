@@ -77,7 +77,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.10"
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.11"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -269,7 +269,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.10"
+	Version:="1.002.11"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
@@ -698,11 +698,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.10"
+		Version:="1.002.11"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.10"
+		Version:="1.002.11"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -3229,6 +3229,7 @@ Menu(menuname:="main"){
 		parent:=pea.name?pea.name:menuname
 		if(ea.hide)
 			Continue
+		
 		if(!aa.haschildnodes()){
 			if(aa.nodename="separator"){
 				Menu,%parent%,Add
@@ -4397,7 +4398,7 @@ QFS(){
 	settings.ssn("//Quick_Find_Settings").SetAttribute(clean(A_GuiControl),value),v.options[clean(A_GuiControl)]:=value,qf()
 }
 Redo(){
-	Send,^y
+	csc().2011
 }
 Refresh_Current_Project(file:=""){
 	GuiControl,1:+g,SysTreeView321
@@ -4969,7 +4970,7 @@ set_as_default_editor(){
 	DynaRun(pgm)
 	Sleep,250
 	RegRead,output,HKCU,SOFTWARE\Classes\AutoHotkeyScript\Shell\Edit\Command
-	if(InStr(output,"ahk studio"))
+	if(InStr(output,A_ScriptName))
 		m("AHK Studio is now your default editor for .ahk file")
 	else if InStr(output,"notepad.exe")
 		m("Notepad.exe is now your default editor")
@@ -5139,12 +5140,9 @@ Test_Plugin(){
 	return
 }
 Testing(x:=0){
-	;m("Testing","ico:?")
+	m("Testing","ico:?")
 	;m(files.ssn("//*[@tv='" TV_GetSelection() "']").xml)
 	;m(menus[],"ico:?")
-	;v.ddd.send("breakpoint_list")
-	;m(v.color.personal)
-	;these are words
 }
 Toggle_Comment_Line(){
 	sc:=csc(),sc.2078
@@ -5328,7 +5326,7 @@ TVIcons(x:=""){
 	tv_setimagelist(il)
 }
 Undo(){
-	Send,^z
+	csc().2176
 }
 Update(info){
 	static update:=[],updated:=[]
