@@ -4045,9 +4045,12 @@ Paste_Func(){
 	return
 	paste:
 	ControlGetFocus,Focus,% hwnd([1])
-	if(InStr(focus,"scintilla"))
-		return csc().2179
-	else
+	if(InStr(focus,"scintilla")){
+		csc().2179
+		if(v.options.full_auto)
+			NewIndent()
+		return
+	}else
 		SendMessage,0x302,0,0,%focus%,% hwnd([1])
 	if(v.options.full_auto)
 		SetTimer,NewIndent,-1

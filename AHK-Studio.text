@@ -3,7 +3,7 @@ Fixed: Reported by zotune and noticz
 -Set As Default Editor: Giving false errors when setting as default editor
 Fixed:
 -Undo/Redo: Adding hotkeys to them caused major issues
--Copy/Paste: Hotkeys were causing issues
+-Cut/Copy/Paste: Hotkeys were causing issues
 1.002.10
 Added: Suggested by zotune
 -Move Selected Words Left/Right: Just like Up/Down but Left/Right :)
