@@ -1670,6 +1670,11 @@ Convert_Hotkey(key){
 }
 Copy(){
 	copy:
+	ControlGetFocus,focus,% hwnd([1])
+	if(!InStr(Focus,"scintilla")){
+		SendMessage,0x301,0,0,%Focus%,% hwnd([1])
+		return
+	}
 	sc:=csc()
 	if(!sc.getseltext())
 		sc.2455()
@@ -4038,10 +4043,11 @@ Paste_Func(){
 	SetTimer,paste,-1
 	return
 	paste:
-	csc().2179
-	ControlGetFocus,Focus,A
-	if(!InStr(focus,"scintilla"))
-		return
+	ControlGetFocus,Focus,% hwnd([1])
+	if(InStr(focus,"scintilla"))
+		return csc().2179
+	else
+		SendMessage,0x302,0,0,%focus%,% hwnd([1])
 	if(v.options.full_auto)
 		SetTimer,NewIndent,-1
 	uppos(),MarginWidth()
