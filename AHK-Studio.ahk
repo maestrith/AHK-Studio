@@ -77,7 +77,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.11"
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.12"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -269,7 +269,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.11"
+	Version:="1.002.12"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
@@ -698,11 +698,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.11"
+		Version:="1.002.12"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.11"
+		Version:="1.002.12"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -2141,7 +2141,6 @@ FEAdd(value,parent,options){
 	}
 	return TV_Add(value,parent,options)
 }
-
 FileCheck(file){
 	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151126165701,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151112182156,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
@@ -2179,24 +2178,22 @@ FileCheck(file){
 				if(menus.sn("//*").length=1)
 					menus.xml.loadxml(temp[])
 				else{
-					menu:=temp.sn("//*")
+					menu:=temp.sn("//*"),NewItem:=[]
 					while,mm:=menu.item[A_Index-1],ea:=xml.ea(mm){
 						if(!ea.clean)
 							Continue
 						if(!menus.ssn("//*[@clean='" ea.clean "']")){
-							pea:=xml.ea(mm.ParentNode)
-							if((!parent:=menus.ssn("//*[@clean='" ssn(mm.ParentNode,"@clean").text "']"))&&mm.ParentNode.NodeName!="main")
-								parent:=menus.add("menus/main/menu",pea,"",1)
-							next:=0,new:=menus.under(parent,"menu",ea),order:=[],list:=sn(parent,"*"),nn:=xml.ea(new)
-							while,ll:=list.Item[A_Index-1],ea:=xml.ea(ll)
-								order[ea.clean]:=ll
-							for a,b in order{
-								if(next){
-									parent.insertbefore(new,b)
-									break
-								}if(a=nn.clean)
-									next:=1
-					}}}options:=temp.sn("//*[@option='1']")
+							current:=mm,struct:=[]
+							while,(current.ParentNode.NodeName!="main")
+								current:=current.ParentNode,struct.push(xml.ea(current).clean)
+							top:=menus.ssn("//main")
+							for a,b in struct
+								top:=ssn(top,"descendant::*[@clean='" struct[struct.MaxIndex()-(A_Index-1)] "']")
+							if(!mm.haschildnodes())
+								if(!NewItem[ssn(top,"@clean").text])
+									new:=menus.under(top,"separator",{clean:"<Separator>"}),NewItem[ssn(top,"@clean").text]:=new.ParentNode.InsertBefore(new,top.FirstChild)
+							current:=menus.under(top,"menu",ea),current.ParentNode.InsertBefore(current,NewItem[ssn(top,"@clean").text])
+					}}options:=temp.sn("//*[@option='1']")
 					while,oo:=options.item[A_Index-1],ea:=xml.ea(oo)
 						menus.ssn("//*[@clean='" ea.clean "']").SetAttribute("option",1)
 				}menus.add("date",,b.date),menus.save(1),options:=temp.sn("//*[@clean='Options']/*")
@@ -5628,3 +5625,14 @@ Move_Selected_Word_Right(){
 		else if(RegExMatch(Chr(sc.2007(pos.end)),"\s|\W"))
 			sc.2003(pos.end+1,[sc.getseltext()]),sc.2160(pos.end+1,pos.end+1+(pos.end-pos.start)),sc.2645(pos.start,pos.end-pos.start)
 }}
+New_AHK_Script(){
+	FileSelectFile,filename,S,,Create A New AHK Script,*.ahk
+	if(ErrorLevel||filename="")
+		return
+	if(FileExist(filename))
+		return m("File already exists")
+	filename:=SubStr(filename,-3)=".ahk"?filename:filename ".ahk"
+	ts:=settings.ssn("//template").text,file:=FileOpen("c:\windows\shellnew\template.ahk",0),td:=file.Read(file.length),file.close(),template:=ts?ts:td,index:=0
+	FileAppend,%template%,%filename%,Utf-8
+	Open(filename,1,1),tv(files.ssn("//*[@file='" filename "']/@tv").text)
+}
