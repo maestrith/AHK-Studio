@@ -1433,6 +1433,33 @@ Command_Help(){
 	}
 	return
 }
+Compile_AHK_Studio(){
+	if(StrSplit(A_ScriptFullPath,".").2="exe")
+		return m("AHK Studio is already compiled.")
+	SplitPath,A_ScriptFullPath,,,ext,nne
+	SplitPath,A_AhkPath,file,dirr
+	if(FileExist(A_ScriptDir "\" nne ".exe"))
+		FileDelete,%A_ScriptDir%\%nne%.exe
+	Loop,%A_ScriptDir%\*.ico
+		icon:=A_LoopFileFullPath
+	if(icon)
+		add=/icon "%icon%"
+	Loop,%dirr%\Ahk2Exe.exe,1,1
+		file:=A_LoopFileFullPath
+	SplashTextOn,200,50,Compiling,Please Wait...
+	RunWait,%file% /in "%A_ScriptDir%\%nne%.ahk" /out "%A_ScriptDir%\%nne%.exe" %add% /bin "%dirr%\Compiler\Unicode 32-bit.bin"
+	if(FileExist(A_ScriptDir "\" nne ".exe")){
+		Run,%A_ScriptDir%\%nne%.exe
+		FileMove,%A_ScriptFullPath%,%A_ScriptFullPath%.bak,1
+		FileDelete,%A_ScriptFullPath%.bak
+	}
+	ExitApp
+}
+Download_AHK_Studio_Source(){
+	if(StrSplit(A_ScriptFullPath,".").2="ahk")
+		return m("The file is already on your system as " A_ScriptFullPath)
+	file:=FileOpen(A_ScriptDir "\AHK-Studio.ahk","rw","UTF-8"),file.write(URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk")),file.length(file.position),file.Close()
+}
 Compile(main=""){
 	main:=ssn(current(1),"@file").Text,v.compiling:=1
 	SplitPath,main,,dir,,name
@@ -3324,6 +3351,28 @@ Move_Selected_Lines_Up(){
 		newindent(1)
 	GuiControl,1:+Redraw,% sc.sc
 }
+Move_Selected_Word_Left(){
+	sc:=csc(),pos:=PosInfo()
+	if(pos.start!=pos.end){
+		wordstart:=sc.2266(pos.start,1),indent:=sc.2128(pos.line)
+		if(wordstart!=pos.start)
+			text:=sc.getseltext(),sc.2645(pos.start,pos.end-pos.start),sc.2003(wordstart,[text]),sc.2160(wordstart,wordstart+(pos.end-pos.start))
+		if(wordstart<=indent)
+			return
+		if(RegExMatch(Chr(sc.2007(pos.start-1)),"\s|\W"))
+			text:=sc.getseltext(),sc.2645(pos.start,pos.end-pos.start),sc.2003(pos.start-1,[text]),sc.2160(pos.start-1,pos.start-1+(pos.end-pos.start))
+}}
+Move_Selected_Word_Right(){
+	sc:=csc(),pos:=PosInfo()
+	if(pos.start!=pos.end){
+		wordend:=sc.2267(pos.end,1)
+		if(wordend!=pos.end)
+			sc.2003(wordend,[sc.getseltext()]),sc.2160(wordend,wordend+(pos.end-pos.start)),sc.2645(pos.start,pos.end-pos.start)
+		else if(pos.end=sc.2136(pos.line))
+			sc.2003(pos.start," "),sc.2160(pos.start+1,pos.start+1+(pos.end-pos.start))
+		else if(RegExMatch(Chr(sc.2007(pos.end)),"\s|\W"))
+			sc.2003(pos.end+1,[sc.getseltext()]),sc.2160(pos.end+1,pos.end+1+(pos.end-pos.start)),sc.2645(pos.start,pos.end-pos.start)
+}}
 t(x*){
 	for a,b in x
 		list.=b "`n"
@@ -3412,7 +3461,7 @@ New_Segment(new:="",text:="",adjusted:=""){
 }
 New(filename:="",text:=""){
 	ts:=settings.ssn("//template").text,file:=FileOpen("c:\windows\shellnew\template.ahk",0),td:=file.Read(file.length),file.close(),template:=ts?ts:td,index:=0
-	filename:=(list:=files.sn("//main[@untitled]").length)?"Untitled" list ".ahk":"Untitled.ahk",update({file:filename,text:template}),top:=files.ssn("//*"),main:=files.under(top,"main",{file:filename,untitled:1}),files.under(main,"file",{tv:tv:=TV_Add(filename),file:filename,filename:filename,github:filename,untitled:1}),top:=cexml.add("main",{file:filename},,1),scan:=cexml.under(top,"file",{file:filename,type:"File",name:filename,text:filename,dir:"Virtual",order:"name,type,dir"}),tv(tv)
+	filename:=(list:=files.sn("//main[@untitled]").length)?"Untitled" list ".ahk":"Untitled.ahk",update({file:filename,text:template}),top:=files.ssn("//*"),main:=files.under(top,"main",{file:filename,untitled:1}),files.under(main,"file",{tv:tv:=TV_Add(filename),file:filename,filename:filename,github:filename,untitled:1}),top:=cexml.add("main",{file:filename},,1),scan:=cexml.under(top,"file",{file:filename,type:"File",name:filename,text:filename,dir:"Virtual",order:"name,type,dir"}),tv(tv),update("updated")[filename]:=1
 }
 NewLines(text){
 	for a,b in {"``n":"`n","``r":"`n","``t":"`t","\r":"`n","\t":"`t","\n":"`n"}
@@ -4728,6 +4777,7 @@ RunFunc(){
 	func:=v.runfunc,%func%()
 }
 Save_As(){
+	Send,{Alt Up}
 	current:=current(1),currentfile:=current(2).file
 	SplitPath,currentfile,,dir
 	FileSelectFile,newfile,S,%dir%,Save File As...,*.ahk
@@ -4753,7 +4803,7 @@ Save_As(){
 	SplashTextOff
 	Close(),Open(newfile),tv(files.ssn("//file[@file='" newfile "']/@tv").text)
 }
-save(option=""){
+Save(option=""){
 	sc:=csc(),getpos(),update({sc:sc.2357}),info:=update("get"),now:=A_Now
 	if(option=1){
 		for a,b in info.2{
@@ -4763,12 +4813,15 @@ save(option=""){
 			IfMsgBox,Cancel
 				return "cancel"
 		}
-	}savedfiles:=[]
+	}savedfiles:=[],saveas:=[]
 	for filename in info.2{
 		if(v.options.Virtual_Scratch_Pad&&filename="Virtual Scratch Pad.ahk")
 			Continue
-		if(files.ea("//main[@file='" filename "']").untitled=1)
+		if(files.ea("//main[@file='" filename "']").untitled=1){
+			if(current(2).file=filename)
+				saveas.push(filename)
 			Continue
+		}
 		text:=info.1[filename],main:=ssn(current(1),"@file").text,savedfiles.push(1)
 		if(settings.ssn("//options/@Enable_Close_On_Save").text)
 			for process in ComObjGet("winmgmts:").ExecQuery("Select * from Win32_Process"){
@@ -4818,6 +4871,19 @@ save(option=""){
 		if(sc.2533(A_Index-1)=30)
 			sc.2532(A_Index-1,31)
 	}savegui(),vversion.save(1),lastfiles(),update("clearupdated"),PERefresh()
+	if(saveas.MinIndex()){
+		v.saveas:=saveas
+		SetTimer,saveuntitled,-1
+	}
+	return
+	saveuntitled:
+	for a,b in v.saveas{
+		tv:=files.ssn("//*[@file='" b "']/@tv").text
+		tv(tv)
+		Sleep,300
+		Save_As()
+	}
+	return
 }
 SaveGUI(win:=1){
 	WinGet,max,MinMax,% hwnd([win])
@@ -5321,6 +5387,25 @@ TVIcons(x:=""){
 Undo(){
 	csc().2176
 }
+UnSaved(){
+	un:=files.sn("//main[@untitled]")
+	while,uu:=un.item[A_Index-1],ea:=xml.ea(uu.FirstChild){
+		tv(ea.tv)
+		Sleep,300
+		MsgBox,36,Save this project?,There is unsaved information, Save it?`nAll Unsaved Data Will Be Lost!
+		IfMsgBox,Yes
+		{
+			FileSelectFile,newfile,S16,,Save Untitled File,*.ahk
+			if(ErrorLevel||newfile="")
+				Continue
+			file:=FileOpen(newfile,"RW","UTF-8"),file.seek(0),file.write(RegExReplace(csc().getuni(),"\R","`r`n")),file.length(file.position),file.close()
+			if(!settings.ssn("//open/file[text()='" newfile "']")&&newfile)
+				settings.add("open/file",,newfile)
+			settings.add("last/file",,newfile)
+		}
+	}
+	v.unsaved:=1
+}
 Update(info){
 	static update:=[],updated:=[]
 	if(info="updated")
@@ -5472,33 +5557,6 @@ Words_In_Document(){
 		StringReplace,list,list,%word%%A_Space%,,All
 	sc.2100(StrLen(word),Trim(list))
 }
-Compile_AHK_Studio(){
-	if(StrSplit(A_ScriptFullPath,".").2="exe")
-		return m("AHK Studio is already compiled.")
-	SplitPath,A_ScriptFullPath,,,ext,nne
-	SplitPath,A_AhkPath,file,dirr
-	if(FileExist(A_ScriptDir "\" nne ".exe"))
-		FileDelete,%A_ScriptDir%\%nne%.exe
-	Loop,%A_ScriptDir%\*.ico
-		icon:=A_LoopFileFullPath
-	if(icon)
-		add=/icon "%icon%"
-	Loop,%dirr%\Ahk2Exe.exe,1,1
-		file:=A_LoopFileFullPath
-	SplashTextOn,200,50,Compiling,Please Wait...
-	RunWait,%file% /in "%A_ScriptDir%\%nne%.ahk" /out "%A_ScriptDir%\%nne%.exe" %add% /bin "%dirr%\Compiler\Unicode 32-bit.bin"
-	if(FileExist(A_ScriptDir "\" nne ".exe")){
-		Run,%A_ScriptDir%\%nne%.exe
-		FileMove,%A_ScriptFullPath%,%A_ScriptFullPath%.bak,1
-		FileDelete,%A_ScriptFullPath%.bak
-	}
-	ExitApp
-}
-Download_AHK_Studio_Source(){
-	if(StrSplit(A_ScriptFullPath,".").2="ahk")
-		return m("The file is already on your system as " A_ScriptFullPath)
-	file:=FileOpen(A_ScriptDir "\AHK-Studio.ahk","rw","UTF-8"),file.write(URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk")),file.length(file.position),file.Close()
-}
 ;plugin
 Quick_Scintilla_Code_Lookup(){
 	static list
@@ -5591,55 +5649,3 @@ Scintilla(return:=""){
 		return list
 }
 ;/plugin
-Move_Selected_Word_Left(){
-	sc:=csc(),pos:=PosInfo()
-	if(pos.start!=pos.end){
-		wordstart:=sc.2266(pos.start,1),indent:=sc.2128(pos.line)
-		if(wordstart!=pos.start)
-			text:=sc.getseltext(),sc.2645(pos.start,pos.end-pos.start),sc.2003(wordstart,[text]),sc.2160(wordstart,wordstart+(pos.end-pos.start))
-		if(wordstart<=indent)
-			return
-		if(RegExMatch(Chr(sc.2007(pos.start-1)),"\s|\W"))
-			text:=sc.getseltext(),sc.2645(pos.start,pos.end-pos.start),sc.2003(pos.start-1,[text]),sc.2160(pos.start-1,pos.start-1+(pos.end-pos.start))
-}}
-Move_Selected_Word_Right(){
-	sc:=csc(),pos:=PosInfo()
-	if(pos.start!=pos.end){
-		wordend:=sc.2267(pos.end,1)
-		if(wordend!=pos.end)
-			sc.2003(wordend,[sc.getseltext()]),sc.2160(wordend,wordend+(pos.end-pos.start)),sc.2645(pos.start,pos.end-pos.start)
-		else if(pos.end=sc.2136(pos.line))
-			sc.2003(pos.start," "),sc.2160(pos.start+1,pos.start+1+(pos.end-pos.start))
-		else if(RegExMatch(Chr(sc.2007(pos.end)),"\s|\W"))
-			sc.2003(pos.end+1,[sc.getseltext()]),sc.2160(pos.end+1,pos.end+1+(pos.end-pos.start)),sc.2645(pos.start,pos.end-pos.start)
-}}
-New_AHK_Script(){
-	FileSelectFile,filename,S,,Create A New AHK Script,*.ahk
-	if(ErrorLevel||filename="")
-		return
-	if(FileExist(filename))
-		return m("File already exists")
-	filename:=SubStr(filename,-3)=".ahk"?filename:filename ".ahk"
-	ts:=settings.ssn("//template").text,file:=FileOpen("c:\windows\shellnew\template.ahk",0),td:=file.Read(file.length),file.close(),template:=ts?ts:td,index:=0
-	FileAppend,%template%,%filename%,Utf-8
-	Open(filename,1,1),tv(files.ssn("//*[@file='" filename "']/@tv").text)
-}
-UnSaved(){
-	un:=files.sn("//main[@untitled]")
-	while,uu:=un.item[A_Index-1],ea:=xml.ea(uu.FirstChild){
-		tv(ea.tv)
-		Sleep,300
-		MsgBox,36,Save this project?,There is unsaved information, Save it?`nAll Unsaved Data Will Be Lost!
-		IfMsgBox,Yes
-		{
-			FileSelectFile,newfile,S16,,Save Untitled File,*.ahk
-			if(ErrorLevel||newfile="")
-				Continue
-			file:=FileOpen(newfile,"RW","UTF-8"),file.seek(0),file.write(RegExReplace(csc().getuni(),"\R","`r`n")),file.length(file.position),file.close()
-			if(!settings.ssn("//open/file[text()='" newfile "']")&&newfile)
-				settings.add("open/file",,newfile)
-			settings.add("last/file",,newfile)
-		}
-	}
-	v.unsaved:=1
-}
