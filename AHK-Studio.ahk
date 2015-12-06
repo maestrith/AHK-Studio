@@ -2005,7 +2005,7 @@ Dyna_Run(){
 	ExecScript(publish(1))
 }
 Exit(x:="",reload:=0){
-	Exit:
+	Send,{Alt Up}
 	rem:=settings.ssn("//last"),rem.ParentNode.RemoveChild(rem),notesxml.save(1),savegui(),vault.save(1)
 	for a,b in s.main{
 		file:=files.ssn("//*[@sc='" b.2357 "']/@file").text
@@ -2025,9 +2025,10 @@ Exit(x:="",reload:=0){
 		return
 	if(Reload)
 		return
+	if(files.sn("//main[@untitled]").length)
+		UnSaved()
 	if(x=""||InStr(A_ThisLabel,"Gui"))
 		ExitApp
-	return
 }
 Export(){
 	indir:=settings.ssn("//export/file[@file='" ssn(current(1),"@file").text "']"),warn:=settings.ssn("//options/@Warn_Overwrite_On_Export").text?"S16":""
@@ -2187,7 +2188,7 @@ FileCheck(file){
 							while,(current.ParentNode.NodeName!="main")
 								current:=current.ParentNode,struct.push(xml.ea(current).clean)
 							top:=menus.ssn("//main")
-							for a,b in struct
+							for c in struct
 								top:=ssn(top,"descendant::*[@clean='" struct[struct.MaxIndex()-(A_Index-1)] "']")
 							if(!mm.haschildnodes())
 								if(!NewItem[ssn(top,"@clean").text])
@@ -2196,9 +2197,12 @@ FileCheck(file){
 					}}options:=temp.sn("//*[@option='1']")
 					while,oo:=options.item[A_Index-1],ea:=xml.ea(oo)
 						menus.ssn("//*[@clean='" ea.clean "']").SetAttribute("option",1)
-				}menus.add("date",,b.date),menus.save(1),options:=temp.sn("//*[@clean='Options']/*")
-				while,oo:=options.item[A_Index-1],ea:=xml.ea(oo)
-					menus.ssn("//*[@clean='" ea.clean "']").SetAttribute("option",1)
+				}menus.add("date",,b.date),menus.save(1)
+				/*
+					options:=temp.sn("//*[@clean='Options']/*")
+					while,oo:=options.item[A_Index-1],ea:=xml.ea(oo)
+						menus.ssn("//*[@clean='" ea.clean "']").SetAttribute("option",1)
+				*/
 		}}else if((time<b.date)&&b.type=1){
 			SplashTextOn,200,100,% "Downloading " b.loc,Please Wait....
 			UrlDownloadToFile,% url b.url,% b.loc
@@ -2207,8 +2211,7 @@ FileCheck(file){
 			SplashTextOn,200,100,% "Downloading " b.loc,Please Wait....
 			UrlDownloadToFile,% url b.url,% b.loc
 			FileSetTime,% b.date,% b.loc,M
-	}}
-	if(!FileExist("plugins\settings.ahk")){
+	}}if(!FileExist("plugins\settings.ahk")){
 		SplashTextOn,300,50,Downloading Settings.ahk,Please Wait...
 		FileCreateDir,Plugins
 		URLDownloadToFile,https://raw.githubusercontent.com/maestrith/AHK-Studio-Plugins/master/Settings.ahk,plugins\Settings.ahk
@@ -2807,8 +2810,9 @@ Gui(){
 	csc(1),Refresh(),Check_For_Update(1)
 	WinSet,Redraw,,% hwnd([1])
 	return
+	exit:
 	GuiClose:
-	SetTimer,Exit,-1
+	exit()
 	return
 	deadend:
 	return
@@ -3254,7 +3258,6 @@ Menu(menuname:="main"){
 		}if(ea.icon!=""&&ea.filename)
 			Menu,%Parent%,Icon,% ea.name hotkey,% ea.filename,% ea.icon
 	}
-	;m(Clipboard:=fixlist)
 	for a,b in track{
 		if(!Exist[b.name])
 			Menu,% b.parent,Delete,% b.name
@@ -3270,7 +3273,6 @@ Menu(menuname:="main"){
 			MissingPlugin(plugin,item)
 		else
 			Run,"%plugin%" %option%
-		; , , ,
 		return
 	}
 	if(IsFunc(item))
@@ -3374,6 +3376,8 @@ New_Scintilla_Window(file=""){
 	sc.2400(),sc.show(),Resize("rebar")
 }
 New_Segment(new:="",text:="",adjusted:=""){
+	if(current(2).untitled)
+		return m("You can not add Segments to untitled documents.  Please save this project before attempting to add Segments to it.")
 	cur:=adjusted?adjusted:current(2).file,sc:=csc(),parent:=mainfile:=current(2).file
 	SplitPath,cur,,dir
 	maindir:=dir
@@ -3408,28 +3412,7 @@ New_Segment(new:="",text:="",adjusted:=""){
 }
 New(filename:="",text:=""){
 	ts:=settings.ssn("//template").text,file:=FileOpen("c:\windows\shellnew\template.ahk",0),td:=file.Read(file.length),file.close(),template:=ts?ts:td,index:=0
-	if(filename=1||text=""){
-		while,FileExist(A_WorkingDir "\Projects\Untitled\Untitled" A_Index)
-			index:=A_Index
-		index++
-		FileCreateDir,% A_WorkingDir "\Projects\Untitled\Untitled" index
-		filename:=A_WorkingDir "\Projects\Untitled\Untitled" index "\Untitled.ahk"
-		FileAppend,%template%,%filename%
-	}else if(filename=""){
-		FileSelectFile,filename,S,% ProjectFolder(),Create A New Project,*.ahk
-		if(ErrorLevel)
-			return
-		filename:=SubStr(filename,-3,1)="."?filename:filename ".ahk"
-		if(InStr(filename,".ahk"))
-			FileAppend,%template%,%filename%
-	}else if(text){
-		SplitPath,filename,,outdir
-		FileCreateDir,%outdir%
-		FileAppend,%text%,%filename%
-	}
-	Gui,1:Default
-	Gui,1:TreeView,SysTreeView321
-	tv:=open(filename,1),tv(tv)
+	filename:=(list:=files.sn("//main[@untitled]").length)?"Untitled" list ".ahk":"Untitled.ahk",update({file:filename,text:template}),top:=files.ssn("//*"),main:=files.under(top,"main",{file:filename,untitled:1}),files.under(main,"file",{tv:tv:=TV_Add(filename),file:filename,filename:filename,github:filename,untitled:1}),top:=cexml.add("main",{file:filename},,1),scan:=cexml.under(top,"file",{file:filename,type:"File",name:filename,text:filename,dir:"Virtual",order:"name,type,dir"}),tv(tv)
 }
 NewLines(text){
 	for a,b in {"``n":"`n","``r":"`n","``t":"`t","\r":"`n","\t":"`t","\n":"`n"}
@@ -4418,6 +4401,8 @@ Refresh_Plugins(){
 }
 Refresh_Project_Explorer(openfile:=""){
 	static parent,file
+	if(files.sn("//main[@untitled]").length)
+		UnSaved()
 	Gui,1:Default
 	GuiControl,1:-Redraw,SysTreeView321
 	parent:=current(2).file,file:=current(3).file,Save(),files:=new xml("files"),open:=settings.sn("//open/*"),cexml:=new xml("code_explorer"),Index_Lib_Files(),omni_search_class.menus()
@@ -4699,9 +4684,10 @@ Run_Program(){
 }
 Run(){
 	if(v.options.Virtual_Scratch_Pad&&InStr(current(2).file,"Scratch Pad.ahk")){
-		DynaRun(csc().getuni())
-		return
+		return DynaRun(csc().getuni())
 	}
+	if(current(2).untitled)
+		return DynaRun(csc().getuni())
 	sc:=csc(),getpos(),save(),file:=ssn(current(1),"@file").text
 	SplitPath,file,,dir,ext
 	if(!current(1).xml)
@@ -4780,6 +4766,8 @@ save(option=""){
 	}savedfiles:=[]
 	for filename in info.2{
 		if(v.options.Virtual_Scratch_Pad&&filename="Virtual Scratch Pad.ahk")
+			Continue
+		if(files.ea("//main[@file='" filename "']").untitled=1)
 			Continue
 		text:=info.1[filename],main:=ssn(current(1),"@file").text,savedfiles.push(1)
 		if(settings.ssn("//options/@Enable_Close_On_Save").text)
@@ -5635,4 +5623,23 @@ New_AHK_Script(){
 	ts:=settings.ssn("//template").text,file:=FileOpen("c:\windows\shellnew\template.ahk",0),td:=file.Read(file.length),file.close(),template:=ts?ts:td,index:=0
 	FileAppend,%template%,%filename%,Utf-8
 	Open(filename,1,1),tv(files.ssn("//*[@file='" filename "']/@tv").text)
+}
+UnSaved(){
+	un:=files.sn("//main[@untitled]")
+	while,uu:=un.item[A_Index-1],ea:=xml.ea(uu.FirstChild){
+		tv(ea.tv)
+		Sleep,300
+		MsgBox,36,Save this project?,There is unsaved information, Save it?`nAll Unsaved Data Will Be Lost!
+		IfMsgBox,Yes
+		{
+			FileSelectFile,newfile,S16,,Save Untitled File,*.ahk
+			if(ErrorLevel||newfile="")
+				Continue
+			file:=FileOpen(newfile,"RW","UTF-8"),file.seek(0),file.write(RegExReplace(csc().getuni(),"\R","`r`n")),file.length(file.position),file.close()
+			if(!settings.ssn("//open/file[text()='" newfile "']")&&newfile)
+				settings.add("open/file",,newfile)
+			settings.add("last/file",,newfile)
+		}
+	}
+	v.unsaved:=1
 }

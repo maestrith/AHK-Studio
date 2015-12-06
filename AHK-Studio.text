@@ -1,6 +1,7 @@
 1.002.12
 Changed:
 -New menu items will be added to the top of the parent menu with a separator so that they are easy to spot.  You can then use Settings to re-arange them.
+-File/New: Now creates a virtual file rather than a file on your hard drive.
 1.002.11
 Fixed: Reported by zotune and noticz
 -Set As Default Editor: Giving false errors when setting as default editor
