@@ -2213,17 +2213,22 @@ FileCheck(file){
 						if(!menus.ssn("//*[@clean='" ea.clean "']")){
 							pea:=xml.ea(mm.ParentNode)
 							if(!parent:=menus.ssn("//*[@clean='" ssn(mm.ParentNode,"@clean").text "']"))
-								parent:=menus.add("menus/main/menu",pea,"",1)
+								parent:=menus.under(menus.ssn("//main"),"menu",ea)
 							next:=0,new:=menus.under(parent,"menu",ea),order:=[],list:=sn(parent,"*"),nn:=xml.ea(new)
-							while,ll:=list.Item[A_Index-1],ea:=xml.ea(ll)
-								order[ea.clean]:=ll
-							for a,b in order{
-								if(next){
-									parent.insertbefore(new,b)
-									break
-								}if(a=nn.clean)
-									next:=1
-					}}}options:=temp.sn("//*[@option='1']")
+							/*
+								while,ll:=list.Item[A_Index-1],ea:=xml.ea(ll)
+									order[ea.clean]:=ll
+								for a,b in order{
+									if(next){
+										parent.insertbefore(new,b)
+										break
+									}if(a=nn.clean)
+										next:=1
+								}
+							*/
+						}
+					}
+					options:=temp.sn("//*[@option='1']")
 					while,oo:=options.item[A_Index-1],ea:=xml.ea(oo)
 						menus.ssn("//*[@clean='" ea.clean "']").SetAttribute("option",1)
 				}menus.add("date",,b.date),menus.save(1),options:=temp.sn("//*[@clean='Options']/*")
