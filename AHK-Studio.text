@@ -1,4 +1,6 @@
 1.002.13
+!NOTICE
+-This will download a new version of SciLexer.dll
 Fixed:
 -Command Help: Wasn't updating if it was already open
 1.002.12
