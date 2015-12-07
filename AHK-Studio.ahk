@@ -1401,7 +1401,6 @@ Color(con:=""){
 Command_Help(){
 	static stuff,hwnd,ifurl:={between:"commands/IfBetween.htm",in:"commands/IfIn.htm",contains:"commands/IfIn.htm",is:"commands/IfIs.htm"}
 	sc:=csc(),info:=context(1),line:=sc.getline(sc.2166(sc.2008)),found1:=info.word
-	m(info.word,info.last)
 	RegRead,outdir,HKEY_LOCAL_MACHINE,SOFTWARE\AutoHotkey,InstallDir
 	if(!outdir)
 		SplitPath,A_AhkPath,,outdir
@@ -1412,11 +1411,10 @@ Command_Help(){
 		if(found1~="(FileExist|GetKeyState|InStr|SubStr|StrLen|StrSplit|WinActive|WinExist|Asc|Chr|GetKeyName|IsByRef|IsFunc|IsLabel|IsObject|NumGet|NumPut|StrGet|StrPut|RegisterCallback|Trim|Abs|Ceil|Exp|Floor|Log|Ln|Mod|Round|Sqrt|Sin|ASin|ACos|ATan)"){
 			url.="Functions.htm#" found1
 		}else if(found1~="i)^if"){
-			url.=ifurl[info.last]?ifurl[info.last]:"commands/IfExpression.htm"
-			m(url,info.word,info.last,"flan")
-			/*
-				if flan in farts
-			*/
+			if(found1~="i)\bIfEqual|IfNotEqual|IfLess|IfLessOrEqual|IfGreater|IfGreaterOrEqual\b")
+				url.="commands/IfEqual.htm"
+			else
+				url.=ifurl[info.last]?ifurl[info.last]:"commands/IfExpression.htm"
 		}Else{
 			url.="commands/" found1:=RegExReplace(found1,"#","_") ".htm"
 			if(InStr(stuff.document.body.innerhtml,"//ieframe.dll/dnserrordiagoff.htm#")){
@@ -1441,11 +1439,6 @@ Command_Help(){
 	}
 	return
 }
-/*
-		if flan in flap  
-			if flan contains farts
-				if flan between 1 and 4
-*/
 Compile_AHK_Studio(){
 	if(StrSplit(A_ScriptFullPath,".").2="exe")
 		return m("AHK Studio is already compiled.")
@@ -1575,7 +1568,7 @@ Context(return=""){
 			start:=sc.2128(line:=sc.2166(sc.2008)),end:=sc.2136(line)
 			for a,b in ["contains","in","between","is"]{
 				sc.2686(start,end),pos:=sc.2197(StrLen(b),b)
-				if((sc.2010(pos)~="13")=0&&pos>0){
+				if((sc.2010(pos)~="3")=0&&pos>0){
 					last:=b
 					break
 			}}synmatch.push("if " commands.ssn("//Context/if/descendant-or-self::syntax[text()='" (last?last:"if") "']/@syntax").text)
@@ -1585,14 +1578,12 @@ Context(return=""){
 	}if(wordstartpos-start>0)
 		string:=LTrim(SubStr(string,wordstartpos-start),",")
 	if(return)
-		return word
+		return {word:word,last:last}
 	syntax:=""
 	for a,b in synmatch{
 		if(syntax~="\b\Q" b "\E"=0)
 			syntax.=b "`n"
 	}syntax:=Trim(syntax,"`n")
-	if(return)
-		return {word:word,last:last}
 	if(!syntax)
 		return
 	synbak:=RegExReplace(syntax,"(\n.*)")
@@ -2184,7 +2175,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151207112732,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151207094616,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151207130352,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151207094616,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
