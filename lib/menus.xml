@@ -296,13 +296,13 @@
 			<menu name="Show Functions" clean="Show_Functions" hotkey="!O" no="1"></menu>
 			<menu name="Sho&amp;w Scintilla Code In Line" hotkey="F4" clean="Show_Scintilla_Code_In_Line"></menu></menu>
 		<menu name="&amp;Help" clean="Help">
-			<menu name="Chec&amp;k For Update" clean="Check_For_Update" hotkey="" option=""></menu>
-			<menu name="&amp;About" clean="About"></menu>
-			<menu name="Command Help" hotkey="F1" clean="Command_Help"></menu>
-			<menu clean="Donate" name="Donate"></menu>
 			<menu name="&amp;Forum" clean="Forum" no="1"></menu>
 			<menu clean="Online_Help" name="Online Help" no="1"></menu>
 			<menu name="&amp;Social" clean="Social" no="1"></menu>
+			<menu name="&amp;About" clean="About"></menu>
+			<menu name="Chec&amp;k For Update" clean="Check_For_Update" hotkey="" option=""></menu>
+			<menu name="Command Help" hotkey="F1" clean="Command_Help"></menu>
+			<menu clean="Donate" name="Donate"></menu>
 			<menu clean="Testing" name="Testing" hotkey="^K"></menu></menu>
 	</main>
 	<date>20151126165701</date>
