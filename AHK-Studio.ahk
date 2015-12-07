@@ -110,7 +110,7 @@ AutoMenu(){
 	sc:=csc()
 	if(sc.2007(sc.2008-1)~="40|123")
 		return
-	command:=RegExReplace(context(1),"#")
+	command:=RegExReplace(context(1).word,"#")
 	if(v.word&&sc.2102=0&&v.options.Disable_Auto_Complete!=1){
 		if(l:=commands.ssn("//Context/" command "/descendant-or-self::list[text()='" RegExReplace(v.word,"#") "']")){
 			if(!list:=ssn(l,"@list"))
@@ -1399,26 +1399,34 @@ Color(con:=""){
 	}marginwidth()
 }
 Command_Help(){
-	static stuff,hwnd
-	sc:=csc(),found1:=context(1)
+	static stuff,hwnd,ifurl:={between:"commands/IfBetween.htm",in:"commands/IfIn.htm",contains:"commands/IfIn.htm",is:"commands/IfIs.htm"}
+	sc:=csc(),info:=context(1),line:=sc.getline(sc.2166(sc.2008)),found1:=info.word
+	m(info.word,info.last)
 	RegRead,outdir,HKEY_LOCAL_MACHINE,SOFTWARE\AutoHotkey,InstallDir
 	if(!outdir)
 		SplitPath,A_AhkPath,,outdir
 	if(!found1)
-		RegExMatch(sc.getline(sc.2166(sc.2008)),"[\s+]?(\w+)",found)
+		RegExMatch(line,"[\s+]?(\w+)",found)
 	if(InStr(commands.ssn("//Commands/Commands").text,found1)){
+		url:="mk:@MSITStore:" outdir "/AutoHotkey.chm::/docs/"
 		if(found1~="(FileExist|GetKeyState|InStr|SubStr|StrLen|StrSplit|WinActive|WinExist|Asc|Chr|GetKeyName|IsByRef|IsFunc|IsLabel|IsObject|NumGet|NumPut|StrGet|StrPut|RegisterCallback|Trim|Abs|Ceil|Exp|Floor|Log|Ln|Mod|Round|Sqrt|Sin|ASin|ACos|ATan)"){
-			url:="mk:@MSITStore:" outdir "/AutoHotkey.chm::/docs/Functions.htm#" found1
+			url.="Functions.htm#" found1
+		}else if(found1~="i)^if"){
+			url.=ifurl[info.last]?ifurl[info.last]:"commands/IfExpression.htm"
+			m(url,info.word,info.last,"flan")
+			/*
+				if flan in farts
+			*/
 		}Else{
-			url:="mk:@MSITStore:" outdir "/AutoHotkey.chm::/docs/commands/" found1:=RegExReplace(found1,"#","_") ".htm"
+			url.="commands/" found1:=RegExReplace(found1,"#","_") ".htm"
 			if(InStr(stuff.document.body.innerhtml,"//ieframe.dll/dnserrordiagoff.htm#")){
-				url:="mk:@MSITStore:" outdir "/AutoHotkey.chm::/docs/Functions.htm#" found1
+				url.="Functions.htm#" found1
 				if(found1="object")
-					url:="mk:@MSITStore:" outdir "/AutoHotkey.chm::/docs/Objects.htm#Usage_Associative_Arrays"
+					url.="Objects.htm#Usage_Associative_Arrays"
 				Else if(found1="_ltrim")
-					url:="mk:@MSITStore:" outdir "/AutoHotkey.chm::/docs/Scripts.htm#LTrim"
+					url.="Scripts.htm#LTrim"
 				Else
-					url:="mk:@MSITStore:" outdir "/AutoHotkey.chm::/docs/Functions.htm#" found1
+					url.="Functions.htm#" found1
 			}
 		}
 		if(WinExist("AutoHotkey Help ahk_class HH Parent")=0){
@@ -1433,6 +1441,11 @@ Command_Help(){
 	}
 	return
 }
+/*
+		if flan in flap  
+			if flan contains farts
+				if flan between 1 and 4
+*/
 Compile_AHK_Studio(){
 	if(StrSplit(A_ScriptFullPath,".").2="exe")
 		return m("AHK Studio is already compiled.")
@@ -1559,12 +1572,13 @@ Context(return=""){
 			}if(syntax:=commands.ssn("//Context/" word "/descendant-or-self::syntax[contains(text(),'" last "')]/@syntax").text)
 				synmatch.push(Trim(build,",") " " syntax)
 		}else if(word="if"){
-			for a,b in StrSplit(string," ")
-				if(RegExMatch(b,"Oi)\b(" list ")\b",found)&&InStr(b,"if")=0){
-					last:=found.1,build.=a_index=1?",":b ","
+			start:=sc.2128(line:=sc.2166(sc.2008)),end:=sc.2136(line)
+			for a,b in ["contains","in","between","is"]{
+				sc.2686(start,end),pos:=sc.2197(StrLen(b),b)
+				if((sc.2010(pos)~="13")=0&&pos>0){
+					last:=b
 					break
-				}
-			synmatch.push("if " commands.ssn("//Context/if/descendant-or-self::syntax[text()='" (last?last:"if") "']/@syntax").text)
+			}}synmatch.push("if " commands.ssn("//Context/if/descendant-or-self::syntax[text()='" (last?last:"if") "']/@syntax").text)
 		}else
 			if(syntax:=commands.ssn("//Commands/commands[text()='#" word "' or text()='" word "']/@syntax").text)
 				synmatch.push(word " " syntax)
@@ -1578,7 +1592,7 @@ Context(return=""){
 			syntax.=b "`n"
 	}syntax:=Trim(syntax,"`n")
 	if(return)
-		return word
+		return {word:word,last:last}
 	if(!syntax)
 		return
 	synbak:=RegExReplace(syntax,"(\n.*)")
@@ -4728,9 +4742,8 @@ Run_Program(){
 	v.ddd.send("run")
 }
 Run(){
-	if(v.options.Virtual_Scratch_Pad&&InStr(current(2).file,"Scratch Pad.ahk")){
+	if(v.options.Virtual_Scratch_Pad&&InStr(current(2).file,"Scratch Pad.ahk"))
 		return DynaRun(csc().getuni())
-	}
 	if(current(2).untitled)
 		return DynaRun(csc().getuni())
 	sc:=csc(),getpos(),save(),file:=ssn(current(1),"@file").text
@@ -4739,9 +4752,7 @@ Run(){
 		return
 	if(file=A_ScriptFullPath)
 		exit(1)
-	main:=ssn(current(1),"@file").text
-	run:=FileExist(dir "\AutoHotkey.exe")?Chr(34) dir "\AutoHotkey.exe" Chr(34) " " Chr(34) file Chr(34):Chr(34) file Chr(34)
-	admin:=v.options.run_as_admin?"*RunAs ":""
+	main:=ssn(current(1),"@file").text,run:=FileExist(dir "\AutoHotkey.exe")?Chr(34) dir "\AutoHotkey.exe" Chr(34) " " Chr(34) file Chr(34):Chr(34) file Chr(34),admin:=v.options.run_as_admin?"*RunAs ":""
 	Run,%admin%%run%,%dir%,,pid
 	if(!IsObject(v.runpid))
 		v.runpid:=[]
