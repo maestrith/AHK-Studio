@@ -2170,7 +2170,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151207102625,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151207094616,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151207110009,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151207094616,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
@@ -2202,7 +2202,7 @@ FileCheck(file){
 		if(b.type=2){
 			if(menus.ssn("//date").text!=b.date){
 				SplashTextOn,300,100,Downloading Menus XML,Please Wait...
-				temp:=new xml("temp"),temp.xml.loadxml(URLDownloadToVar(url b.url)),menus:=new xml("menus","lib\menus.xml")
+				temp:=new xml("temp"),temp.xml.loadxml(URLDownloadToVar(url b.url)),menus:=new xml("menus","lib\menus.xml"),newitems:=[]
 				if(menus.sn("//*").length=1)
 					menus.xml.loadxml(temp[])
 				else{
@@ -2214,21 +2214,12 @@ FileCheck(file){
 							pea:=xml.ea(mm.ParentNode)
 							if(!parent:=menus.ssn("//*[@clean='" ssn(mm.ParentNode,"@clean").text "']"))
 								parent:=menus.under(menus.ssn("//main"),"menu",ea)
-							next:=0,new:=menus.under(parent,"menu",ea),order:=[],list:=sn(parent,"*"),nn:=xml.ea(new)
-							/*
-								while,ll:=list.Item[A_Index-1],ea:=xml.ea(ll)
-									order[ea.clean]:=ll
-								for a,b in order{
-									if(next){
-										parent.insertbefore(new,b)
-										break
-									}if(a=nn.clean)
-										next:=1
-								}
-							*/
-						}
-					}
-					options:=temp.sn("//*[@option='1']")
+							if(!mm.haschildnodes()){
+								next:=0,new:=menus.under(parent,"menu",ea),order:=[],list:=sn(parent,"*"),nn:=xml.ea(new)
+								if(!newitems[pea.clean])
+									sep:=menus.under(Parent,"separator",{clean:"<Separator>"}),newitems[pea.clean]:=parent.InsertBefore(sep,parent.FirstChild)
+								parent.InsertBefore(new,newitems[pea.clean])
+					}}}options:=temp.sn("//*[@option='1']")
 					while,oo:=options.item[A_Index-1],ea:=xml.ea(oo)
 						menus.ssn("//*[@clean='" ea.clean "']").SetAttribute("option",1)
 				}menus.add("date",,b.date),menus.save(1),options:=temp.sn("//*[@clean='Options']/*")
@@ -5654,3 +5645,6 @@ Scintilla(return:=""){
 		return list
 }
 ;/plugin
+Online_Help(){
+	Run,https://github.com/maestrith/AHK-Studio/wiki
+}
