@@ -3209,10 +3209,18 @@ Keywords(){
 		else
 			commands.ssn("//Commands/Commands").AppendChild(new)
 	}
-	while,new:=col.item[A_Index-1].clonenode(1)
-		commands.ssn("//Color").replaceChild(new,commands.ssn("//Color/" new.nodename))
-	while,new:=con.item[A_Index-1].clonenode(1)
-		commands.ssn("//Context").replaceChild(new,commands.ssn("//Context/" new.nodename))
+	while,new:=col.item[A_Index-1].clonenode(1){
+		if(replace:=commands.ssn("//Color/" new.nodename))
+			commands.ssn("//Color").replaceChild(new,replace)
+		else
+			commands.ssn("//Color").AppendChild(new)
+	}
+	while,new:=con.item[A_Index-1].clonenode(1){
+		if(Replace:=commands.ssn("//Context/" new.nodename))
+			commands.ssn("//Context").replaceChild(new,Replace)
+		else
+			commands.ssn("//Context").AppendChild(new)
+	}
 	v.keywords:=[],v.kw:=[],v.custom:=[],colors:=commands.sn("//Color/*")
 	while,color:=colors.item[A_Index-1]{
 		text:=color.text,all.=text " "
@@ -5225,9 +5233,16 @@ Test_Plugin(){
 }
 Testing(x:=0){
 	m("Testing","ico:?")
+	/*
+		split lines by width of window.
+		sc:=csc()
+		sc.2686(0,sc.2006)
+		sc.2289(0)
+	*/
 	;m(files.ssn("//*[@tv='" TV_GetSelection() "']").xml)
 	;m(menus[],"ico:?")
 }
+
 Toggle_Comment_Line(){
 	sc:=csc(),sc.2078
 	pi:=posinfo(),sl:=sc.2166(pi.start),el:=sc.2166(pi.end),end:=pi.end,single:=sl=el?1:0
