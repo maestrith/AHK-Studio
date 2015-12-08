@@ -1,0 +1,142 @@
+1.002.14
+Added:
+-Custom Commands: Allows you to add/change the default syntax and auto-fill menus
+1.002.13
+!NOTICE
+-This will download a new version of SciLexer.dll
+Fixed:
+-Command Help: Wasn't updating if it was already open
+Improved:
+-Command Help: All If statements should be found
+1.002.12
+Changed:
+-New menu items will be added to the top of the parent menu with a separator so that they are easy to spot.  You can then use Settings to re-arange them.
+-File/New: Now creates a virtual file rather than a file on your hard drive.
+1.002.11
+Fixed: Reported by zotune and noticz
+-Set As Default Editor: Giving false errors when setting as default editor
+Fixed: Reported by noticz
+-When downloading updates and menu items that do not have a header are created, it completely messed up the menu structure
+Fixed:
+-Undo/Redo: Adding hotkeys to them caused major issues
+-Cut/Copy/Paste: Hotkeys were causing issues
+1.002.10
+Added: Suggested by zotune
+-Move Selected Words Left/Right: Just like Up/Down but Left/Right :)
+1.002.9
+Fixed: Reported by Zotune
+-Find: Was not centering the selected text properly
+1.002.8
+Added:
+-Options/Check For Update On Startup
+Fixed: Reported by noticz
+-Some Includes with %A_ScriptDir% were not parsing correctly
+-Folding remembering from load to load
+Added: Requested by noticz
+-Using Compile_AHK.exe if it is available
+1.002.7
+Fixed: Reported by zotune and number1nub
+-Menus were getting resetting on updates :(
+Added: Requested by number1nub
+-Quick Find: Can have custom forground/background colors for it being on top or bottom
+-Double Click Tray Icon: Shows Studio
+-Quick Find: Edit background color
+Fixed: Programmed by number1nub
+-Black on white wasn't working
+Changed: Suggested by number1nub
+-Context Menu: Changed ifs to else ifs
+-Rename Current Segment: was broken
+1.002.6
+Fixed: Reported by number1nub
+o Split Code
+- Leaves the final closing brace of classes behind in the main script when splitting
+- Options/Includes In Place: No longer places the include commands at the bottom of the main script-- not sure if this was on purpose, but it sometimes causes workingdir issues, and is far less convenient in general having to find and move the include lines in a big file
+- Files split into a Lib folder no longer use the "#Include <FileName>" notation
+
+o Theme Editor
+- Export Theme isn't pointing to the Themes folder in Studio's root folder
+- Personal Variables are no longer shown on the GUI to be customized
+
+o Find Replace
+- Replace command doesn't work; nothing is changed unless the Replace All command is used
+
+RE-ADDED: Words_In_Document
+RE-ADDED: Highlight_to_Matching_Brace
+RE-ADDED: Select_Current_Word
+RE-ADDED: Select_Next_Duplicate
+RE-ADDED: Remove_Current_Selection
+RE-ADDED: Previous_Found
+RE-ADDED: split_code
+CHANGED: Fixed ProjectFolder() to default to "Projects" instead of "Project" to match the new "Untitled" script location
+CHANGED: Bookmark insert -- Changed back to require shift to be held to insert bookmark on margin click. Also added in Options/Shift BreakPoint
+1.002.5
+Fixed: Reported by number1nub
+-Find Replace: Replace was not replacing a single found item
+Fixed: Reported by KaoSDlanor
+-Code Explorer: Clicking again on an item that is already selected was not re-selecting it in the code
+-Code Explorer: Quickly clicking on items was causing the first item to show but not the second
+-Alt+I (Display Functions): When no functions were available it changed everything to 0()
+Added: Requested by Driedman
+-Right Click Menu: Menus for SciLexer controls
+1.002.4
+Added:
+-Edit/Find: If the found text is behind the window it will change the transparency of the window so you can see the text behind it.
+Fixed: Reported by Run1e
+-Words within () before a , were not properly highlighting
+-Omni-Search: Spaces cause issues.
+1.002.3
+NOTICE!
+-This will download a new copy of SciLexer.dll
+
+Fixed: Reported by huckleberry
+-Escaped commas `, were causing the context sensitive help to advance
+Changed:
+-Commas inside { }, [ ], and () have a different color code.  This can be changed in the Themes plugin.
+Fixed: Reported by zotune
+-Jumping of selection and positions on focus
+-Find is a lot more stable and accurate.
+1.002.2
+Changed:
+-Added the margin width adjuster to +Enter
+-Fuzzy Search: Inside Omni-Search
+-Display Function: If there is already () after the current word it will not add ()
+Fixed: Reported by Run1e
+-If you have an #Include for the file in that file it caused Studio to crash
+Added: Suggested by Run1e
+-Options/Virtual Scratch Pad: Does not create a file on your drive
+1.002.1
+Changed:
+-All files not point to Github
+1.002.0
+Soup branch is now the main
+Replaced the master with the single file release
+Uploading xml files and Scilexer.dll
+0.000.15
+Fixed:
+-Save As: nasty little bug that was deleting things if you saved as to the same directory
+Changed: Suggested by Arahnoid
+-Omni-Search: If you add a ? then choose one of the prefixes and hit enter
+0.000.29
+Testing things out
+0.000.28
+Fixed:
+-An error in publish that was causing code to be incomplete
+0.000.27
+Fixed: Reported by Arahnoid
+-Menus on first run were not populating correctly
+0.000.25
+Re-Added:
+-Run As Ansii/U32/U64
+Removed:
+-Menu Editor
+Added:
+-Edit/Settings: Replaces Menu Editor and Options Dialog
+Changed:
+-Menu Editor: It is now Settings
+0.000.22
+Changed:
+-Delete Project: Made it a bit safer...I had a bad thing happen
+-Commands.xml: Getting ready to make things editable
+-Context Sensitive fixes
+0.000.21
+
