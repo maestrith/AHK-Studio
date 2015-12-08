@@ -54,6 +54,7 @@
 			<menu name="Create S&amp;egment From Selection" hotkey="+^n" clean="Create_Segment_From_Selection"></menu>
 			<menu name="Togg&amp;le Comment Line" hotkey="^J" clean="Toggle_Comment_Line"></menu>
 			<menu name="Fi&amp;x Indent" clean="Fix_Indent"></menu>
+			<menu clean="Custom_Commands" hotkey="" name="Custom Commands" option="" plugin="plugins\Custom Commands.ahk"></menu>
 			<menu clean="Spacing" name="Spacing">
 				<menu name="Add Space After Commas" clean="Add_Space_After_Commas" option="ac" plugin="plugins\Add Spaces.ahk"></menu>
 				<menu name="Add Space Before And After Commas" clean="Add_Space_Before_And_After_Commas" option="baa" plugin="plugins\Add Spaces.ahk"></menu>

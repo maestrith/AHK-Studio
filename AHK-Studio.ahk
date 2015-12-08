@@ -1562,8 +1562,20 @@ Context(return=""){
 					RegExMatch(list,"Oi)\b(" found.1 ")\b",found),last:=found.1,build.=a_index=1?",":b ","
 				else
 					Break
-			}if(syntax:=commands.ssn("//Context/" word "/descendant-or-self::syntax[contains(text(),'" last "')]/@syntax").text)
-				synmatch.push(Trim(build,",") " " syntax)
+			}
+			if(top:=commands.ssn("//Context/" word)){
+				list:=sn(top,"list"),find:="",build:=word ","
+				while,ll:=list.item[A_Index-1],ea:=xml.ea(ll)
+					find.=ea.list " "
+				start:=sc.2128(line:=sc.2166(sc.2008)),end:=sc.2136(line)
+				for a,b in StrSplit(Trim(find)," "){
+					sc.2686(start,end),pos:=sc.2197(StrLen(b),b)
+					if((sc.2010(pos)~="3")=0&&pos>0)
+						last:=b,build.=b ","
+				}
+				if(syntax:=ssn(top,"syntax[contains(text(),'" last "')]/@syntax").text)
+					synmatch.push(Trim(build,",") " " syntax)
+			}
 		}else if(word="if"){
 			start:=sc.2128(line:=sc.2166(sc.2008)),end:=sc.2136(line)
 			for a,b in ["contains","in","between","is"]{
@@ -2175,7 +2187,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151207130352,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151207132220,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151208030814,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151207132220,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
@@ -3182,8 +3194,12 @@ Jump_To(find:=""){
 Keywords(){
 	commands:=new xml("commands","lib\commands.xml"),list:=settings.sn("//commands/*"),top:=commands.ssn("//Commands/Commands")
 	cmd:=Custom_Commands.sn("//Commands/commands"),col:=Custom_Commands.sn("//Color/*"),con:=Custom_Commands.sn("//Context/*")
-	while,new:=cmd.item[A_Index-1].clonenode(1)
-		commands.ssn("//Commands/Commands").replaceChild(new,commands.ssn("//Commands/commands[text()='" new.text "']"))
+	while,new:=cmd.item[A_Index-1].clonenode(1){
+		if(old:=commands.ssn("//Commands/commands[text()='" new.text "']"))
+			commands.ssn("//Commands/Commands").replaceChild(new,old)
+		else
+			commands.ssn("//Commands/Commands").AppendChild(new)
+	}
 	while,new:=col.item[A_Index-1].clonenode(1)
 		commands.ssn("//Color").replaceChild(new,commands.ssn("//Color/" new.nodename))
 	while,new:=con.item[A_Index-1].clonenode(1)
