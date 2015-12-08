@@ -2193,6 +2193,10 @@ FileCheck(file){
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
 	}if(FileExist("lib\Studio.ahk"))
 		FileMove,lib\Studio.ahk,%A_MyDocuments%\Autohotkey\Lib\Studio.ahk,1
+	if(!file&&x:=ComObjActive("AHK-Studio")){
+		x.activate()
+		ExitApp
+	}
 	if(file){
 		if(file){
 			if(!settings.ssn("//open/file[text()='" file "']"))

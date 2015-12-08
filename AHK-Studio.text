@@ -1,6 +1,8 @@
 1.002.14
 Added:
 -Custom Commands: Allows you to add/change the default syntax and auto-fill menus
+Changed:
+-If you already have AHK Studio open and you run it again, it will now just activate the already running window.
 1.002.13
 !NOTICE
 -This will download a new version of SciLexer.dll
