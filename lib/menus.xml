@@ -34,7 +34,6 @@
 			<menu clean="Compile_Ahk_Studio" name="Compile Ahk Studio"></menu>
 			<menu clean="Download_Ahk_Studio_Source" name="Download Ahk Studio Source"></menu>
 			<menu clean="Additional_Publish" hotkey="" name="Additional Publish" option="" plugin="plugins\Additional Publish.ahk"></menu>
-			<separator clean="&lt;Separator&gt;"></separator>
 			<menu clean="Run_Current_Segment" hotkey="" name="Run Current Segment" option="segment" plugin="plugins\Run Selected Text.ahk"></menu>
 			<menu clean="Mark_All_Files_For_Update" hotkey="" name="Mark All Files For Update" option="" plugin="plugins\Mark All Files For Update.ahk"></menu>
 			<menu clean="Backup" hotkey="" name="Backup" option="" plugin="plugins\Backup.ahk"></menu></menu>
