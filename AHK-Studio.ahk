@@ -76,7 +76,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.14"
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.15"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -268,7 +268,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.14"
+	Version:="1.002.15"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
@@ -697,11 +697,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.14"
+		Version:="1.002.15"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.14"
+		Version:="1.002.15"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -2187,7 +2187,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151209165432,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151207132220,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151209170712,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151207132220,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
@@ -4786,7 +4786,7 @@ Run(){
 	Run,%admin%%run%,%dir%,,pid
 	if(!IsObject(v.runpid))
 		v.runpid:=[]
-	v.runpid.Insert(pid)
+	v.runpid[pid]:=1
 	if(file=A_ScriptFullPath)
 		ExitApp
 }
@@ -4803,7 +4803,10 @@ Run_As(exe){
 	file:=current(2).file
 	SplitPath,A_AhkPath,,dir
 	SplitPath,file,,fdir
-	Run,%dir%\%exe% "%file%",%fdir%
+	Run,%dir%\%exe% "%file%",%fdir%,,pid
+	if(!IsObject(v.runpid))
+		v.runpid:=[]
+	v.runpid[pid]:=1
 }
 runfile(file){
 	SplitPath,file,,dir
@@ -5695,4 +5698,51 @@ Scintilla(return:=""){
 ;/plugin
 Online_Help(){
 	Run,https://github.com/maestrith/AHK-Studio/wiki
+}
+Kill_Process(){
+	static newwin,pid
+	if(!v.runpid.MinIndex())
+		return m("No Running Processes")
+	newwin:=new GUIKeep("Kill_Process"),newwin.add("ListView,w200 h200,Processes|Name,wh","Button,gkillit Default,Kill Process")
+	WinGet,list,list,ahk_class AutoHotkeyGUI
+	obj:=[]
+	Loop,%list%{
+		WinGetTitle,name,% "ahk_id" list%A_Index%
+		WinGet,pid,pid,% "ahk_id" list%A_Index%
+		obj[pid]:={name:name,hwnd:list%A_Index%}
+		total:=name "`n"
+	}
+	for a in v.runpid
+		LV_Add("",a,obj[a].name)
+	newwin.show("Kill Process")
+	Loop,2
+		LV_Modify(A_Index,"AutoHDR")
+	return
+	killit:
+	if(!LV_GetNext())
+		return m("Select an item to kill first")
+	LV_GetText(pid,LV_GetNext())
+	WinGet,id,id,ahk_pid%a%
+	Process,Close,%pid%
+	SetTimer,checkkill,200
+	count:=0
+	return
+	checkkill:
+	Process,Exist,%pid%
+	Exist:=ErrorLevel
+	if(count>20){
+		m("Could not close this process.")
+		SetTimer,checkkill,Off
+	}
+	if(!Exist){
+		Gui,Kill_Process:Default
+		Gui,ListView,SysListView321
+		LV_Delete(LV_GetNext())
+		SetTimer,checkkill,Off
+	}count++
+	return
+	Kill_Processguiescape:
+	Kill_Processguiclose:
+	newwin.Destroy()
+	return
 }

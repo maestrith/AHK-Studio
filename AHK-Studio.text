@@ -1,3 +1,6 @@
+1.002.15
+Added: Suggested by noticz
+-Kill Process: Kills a process created using AHK Studio
 1.002.14
 Added:
 -Custom Commands: Allows you to add/change the default syntax and auto-fill menus
