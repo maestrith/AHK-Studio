@@ -2,7 +2,6 @@
 <Commands>
 	<Commands>
 		<commands syntax="(Start Position[,Length])">RemoveAt</commands>
-		<commands>if</commands>
 		<commands syntax="My Syntax">#ClipboardTimeout</commands>
 		<commands syntax="(String [, Delimiters, OmitChars])">StrSplit</commands>
 		<commands syntax="[NewString : default is ;]">#CommentFlag</commands>
@@ -97,7 +96,6 @@
 		<commands syntax=", GroupName, WinTitle [, WinText, Label, ExcludeTitle, ExcludeText]">GroupAdd</commands>
 		<commands syntax=", GroupName [, A|R]">GroupClose</commands>
 		<commands syntax=", GroupName [, R]">GroupDeactivate</commands>
-		<commands>Gui</commands>
 		<commands syntax="([GuiHwnd, CtrlHwnd, EventInfo, IsRightClick, X, Y])">GuiContextMenu</commands>
 		<commands syntax="([GuiHwnd, FileArray, CtrlHwnd, X, Y])">GuiDropFiles</commands>
 		<commands syntax="([GuiHwnd])`nCalled when the GUI is closed. Return a non-zero value to prevent closing.">GuiClose</commands>
@@ -128,7 +126,6 @@
 		<commands syntax="[, OutputVar, Options, EndKeys, MatchList]">Input</commands>
 		<commands syntax=", OutputVar [, Title, Prompt, HIDE, Width, Height, X, Y, Font, Timeout, Default]">InputBox</commands>
 		<commands syntax=", KeyName [, Options]">KeyWait</commands>
-		<commands>Loop</commands>
 		<commands syntax=", MenuName, Cmd [, P3, P4, P5]">Menu</commands>
 		<commands syntax=", WhichButton [, X, Y, ClickCount, Speed, D|U, R]">MouseClick</commands>
 		<commands syntax=", WhichButton, X1, Y1, X2, Y2 [, Speed, R]">MouseClickDrag</commands>

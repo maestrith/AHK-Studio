@@ -1291,7 +1291,7 @@ ssn(node,path){
 sn(node,path){
 	return node.SelectNodes(path)
 }
-clean(clean,tab=""){
+Clean(clean,tab=""){
 	if(tab)
 		return RegExReplace(clean,"[^\w ]")
 	clean:=RegExReplace(RegExReplace(clean,"&")," ","_")
@@ -2187,7 +2187,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151208032336,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151207132220,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151209122811,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151207132220,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
@@ -2397,7 +2397,7 @@ Find(){
 	sc:=csc(),order:=[],file:=current(2).file,infopos:=positions.ssn("//*[@file='" file "']"),last:=ssn(infopos,"@search").text,search:=last?last:"Type in your query here",ea:=settings.ea("//search/find"),newwin:=new GUIKeep(5),value:=[],order[sc.2585(0)]:=1,order[sc.2587(0)]:=1,last:=(order.MinIndex()!=order.MaxIndex())?sc.textrange(order.MinIndex(),order.MaxIndex()):last
 	for a,b in ea
 		value[a]:=b?"Checked":""
-	newwin.Add("Edit,gfindcheck w400 vfind r1,,w","TreeView,w400 h200 gstate,,wh","Checkbox,vregex " value.regex ",Regex Search,y","Checkbox,vgr x+10 " value.gr ",Greed,y","Checkbox,xm vcs " value.cs ",Case Sensitive,y","Checkbox,vsort gfsort " value.sort ",Sort by Segment,y","Checkbox,vallfiles " value.allfiles ",Search in All Files,y","Checkbox,vacdc " value.acdc ",Auto Close on Double Click,y","Button,gsearch Default,   Search   ,y","Button,gcomment,Toggle Comment,y"),newwin.Show("Search"),hotkeys([5],{"^Backspace":"findback"})
+	newwin.Add("Edit,gfindcheck w400 vfind r1,,w","TreeView,w400 h200 gstate,,wh","Checkbox,vregex gfindfocus " value.regex ",&Regex Search,y","Checkbox,vgr x+10 gfindfocus " value.gr ",&Greed,y","Checkbox,xm vcs gfindfocus " value.cs ",&Case Sensitive,y","Checkbox,vsort gfsort " value.sort ",Sort by &Segment,y","Checkbox,vallfiles gfindfocus " value.allfiles ",Search in &All Files,y","Checkbox,vacdc gfindfocus " value.acdc ",Auto Close on &Double Click gfindfocus,y","Button,gsearch Default,   Search   ,y","Button,gcomment,Toggle Comment,y"),newwin.Show("Search"),hotkeys([5],{"^Backspace":"findback"})
 	if(value.regex&&order.MinIndex()!=order.MaxIndex())
 		for a,b in StrSplit("\.*?+[{|()^$")
 			StringReplace,last,last,%b%,\%b%,All
@@ -2518,6 +2518,9 @@ Find(){
 	comment:
 	sc:=csc()
 	toggle_comment_line()
+	return
+	FindFocus:
+	ControlFocus,Edit1,% hwnd([5])
 	return
 }
 fix_indent(sc=""){
@@ -3049,10 +3052,10 @@ Hotkeys(win,item,track:=0){
 	ControlFocus,Edit1,% hwnd([1])
 	return
 	function:
-	if(InStr(A_ThisHotkey,"!"))
+	func:=v.hotkeyobj[A_ThisHotkey]
+	if(InStr(A_ThisHotkey,"!")&&func~="i)run|test_plugin")
 		for a,b in StrSplit(A_ThisHotkey)
 			DllCall("keybd_event",int,GetKeyVK(key:=b="!"?"Alt":b),int,0,int,2,int,0)
-	func:=v.hotkeyobj[A_ThisHotkey]
 	if(IsFunc(func))
 		%Func%()
 	else
@@ -3226,10 +3229,12 @@ Keywords(){
 		text:=color.text,all.=text " "
 		stringlower,text,text
 		v.color[color.nodename]:=text
-	}
-	personal:=settings.ssn("//Variables").text,all.=personal
+	}personal:=settings.ssn("//Variables").text,all.=personal
 	StringLower,per,personal
-	v.color.Personal:=Trim(per),v.indentregex:=RegExReplace(v.color.indent," ","|"),command:=commands.ssn("//Commands/Commands").text
+	v.color.Personal:=Trim(per),v.indentregex:=RegExReplace(v.color.indent," ","|"),command:=commands.ssn("//Commands/Commands").text,extra:=Custom_Commands.sn("//Context/*")
+	while,ee:=extra.item[A_Index-1]
+		command.=" " ee.nodename
+	Sort,command,UD%A_Space%
 	Sleep,4
 	Loop,Parse,command,%A_Space%,%A_Space%
 		v.kw[A_LoopField]:=A_LoopField,all.=" " A_LoopField
@@ -4153,8 +4158,7 @@ Personal_Variable_List(){
 	keywords(),hwnd({rem:6}),refreshthemes()
 	return
 }
-Plugins(refresh:=0){
-	Plugins:
+Plug(refresh:=0){
 	if(!FileExist("plugins"))
 		FileCreateDir,Plugins
 	plHks:=[]
@@ -4480,7 +4484,7 @@ Refresh_Current_Project(file:=""){
 	GuiControl,1:+Redraw,SysTreeView321
 }
 Refresh_Plugins(){
-	Plugins(1)
+	Plug(1)
 }
 Refresh_Project_Explorer(openfile:=""){
 	static parent,file
