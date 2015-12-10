@@ -2240,8 +2240,7 @@ FileCheck(file){
 								if(!parent:=menus.ssn("//*[@clean='New_Menu_Items']"))
 									parent:=menus.under(menus.ssn("//main"),"menu",{clean:"New_Menu_Items",name:"Ne&w Menu Items"})
 							menus.under(parent,"menu",ea)
-						}
-					}options:=temp.sn("//*[@option='1']")
+					}}options:=temp.sn("//*[@option='1']")
 					while,oo:=options.item[A_Index-1],ea:=xml.ea(oo)
 						menus.ssn("//*[@clean='" ea.clean "']").SetAttribute("option",1)
 				}menus.add("date",,b.date),menus.save(1),options:=temp.sn("//*[@clean='Options']/*")
@@ -3052,6 +3051,7 @@ Hotkeys(win,item,track:=0){
 			if(track)
 				last.push({win:b,key:key})
 		}launch:=""
+		v.hotkeyobj[key]:=label
 	}
 	Hotkey,IfWinActive
 	return
