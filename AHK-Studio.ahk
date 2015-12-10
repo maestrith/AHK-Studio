@@ -76,7 +76,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.15"
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.16"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -268,7 +268,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.15"
+	Version:="1.002.16"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
@@ -697,11 +697,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.15"
+		Version:="1.002.16"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.15"
+		Version:="1.002.16"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -2230,18 +2230,18 @@ FileCheck(file){
 				else{
 					menu:=temp.sn("//*")
 					while,mm:=menu.item[A_Index-1],ea:=xml.ea(mm){
+						if(mm.haschildnodes())
+							Continue
 						if(!ea.clean)
 							Continue
 						if(!menus.ssn("//*[@clean='" ea.clean "']")){
 							pea:=xml.ea(mm.ParentNode)
-							if(!parent:=menus.ssn("//*[@clean='" ssn(mm.ParentNode,"@clean").text "']"))
-								parent:=menus.under(menus.ssn("//main"),"menu",ea)
-							if(!mm.haschildnodes()){
-								next:=0,new:=menus.under(parent,"menu",ea),order:=[],list:=sn(parent,"*"),nn:=xml.ea(new)
-								if(!newitems[pea.clean])
-									sep:=menus.under(Parent,"separator",{clean:"<Separator>"}),newitems[pea.clean]:=parent.InsertBefore(sep,parent.FirstChild)
-								parent.InsertBefore(new,newitems[pea.clean])
-					}}}options:=temp.sn("//*[@option='1']")
+							if(!parent:=menus.ssn("//*[@clean='" pea.clean "']"))
+								if(!parent:=menus.ssn("//*[@clean='New_Menu_Items']"))
+									parent:=menus.under(menus.ssn("//main"),"menu",{clean:"New_Menu_Items",name:"Ne&w Menu Items"})
+							menus.under(parent,"menu",ea)
+						}
+					}options:=temp.sn("//*[@option='1']")
 					while,oo:=options.item[A_Index-1],ea:=xml.ea(oo)
 						menus.ssn("//*[@clean='" ea.clean "']").SetAttribute("option",1)
 				}menus.add("date",,b.date),menus.save(1),options:=temp.sn("//*[@clean='Options']/*")
@@ -3655,7 +3655,7 @@ Notify(csc:=""){
 			return
 		}cpos:=sc.2008,start:=sc.2266(cpos,1),end:=sc.2267(cpos,1),word:=sc.textrange(start,sc.2008)
 		if((StrLen(word)>1&&sc.2102=0&&v.options.Disable_Auto_Complete!=1)){
-			if((!sc.2202&&v.options.Disable_Auto_Complete_While_Tips_Are_Visible=1)||(sc.2010(cpos)~="\b(13|1|11|3)\b"=1&&v.options.Disable_Auto_Complete_In_Quotes=1)){
+			if((sc.2202&&v.options.Disable_Auto_Complete_While_Tips_Are_Visible=1)||(sc.2010(cpos)~="\b(13|1|11|3)\b"=1&&v.options.Disable_Auto_Complete_In_Quotes=1)){
 			}else{
 				word:=RegExReplace(word,"^\d*"),list:=Trim(v.keywords[SubStr(word,1,1)]),code_explorer.varlist[current(2).file]
 				if(list&&instr(list,word))
