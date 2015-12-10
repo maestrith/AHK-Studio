@@ -223,8 +223,8 @@
 			<menu name="Remove Current Selection" hotkey="^F3" clean="Remove_Current_Selection"></menu>
 			<menu name="Move Selected Lines Down" hotkey="+^DOWN" clean="Move_Selected_Lines_Down"></menu>
 			<menu name="Move Selected Lines Up" hotkey="+^UP" clean="Move_Selected_Lines_Up"></menu>
-			<menu clean="Move_Selected_Word_Right" hotkey="+^Right" name="Move Selected Word Right"></menu>
-			<menu clean="Move_Selected_Word_Left" hotkey="+^Left" name="Move Selected Word Left"></menu>
+			<menu clean="Move_Selected_Word_Right" hotkey="+!Right" name="Move Selected Word Right"></menu>
+			<menu clean="Move_Selected_Word_Left" hotkey="+!Left" name="Move Selected Word Left"></menu>
 			<menu name="S&amp;ort Selected" clean="Sort_Selected" option="" plugin="plugins\Sort Selected.ahk"></menu>
 			<menu name="Split Code" clean="Split_Code" option="" plugin="plugins\Split Code.ahk"></menu>
 			<menu name="Delete Matching Brace" clean="Delete_Matching_Brace" hotkey="+^DELETE"></menu></menu>
