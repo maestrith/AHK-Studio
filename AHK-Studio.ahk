@@ -1306,12 +1306,11 @@ Clear_Line_Status(){
 			b.2532(A_Index-1,33)
 }
 Close(x:=1,all:="",Redraw:=1){
-	if(x=1)
-		save()
+	save()
 	Gui,1:Default
 	Gui,1:TreeView,SysTreeView321
 	GuiControl,1:-Redraw,SysTreeView321
-	cfile:=current(2).file
+	cfile:=(file:=ssn(x,"@file").text)?file:current(2).file
 	all:=all?"/@file":"[@file='" cfile "']/@file",close:=files.sn("//main" all),up:=update("get")
 	while,file:=close.item[A_Index-1],file:=file.text{
 		rem:=cexml.ssn("//main[@file='" file "']"),rem.ParentNode.RemoveChild(rem),all:=files.sn("//main[@file='" file "']/descendant::file"),Previous_Scripts(file),rem:=settings.ssn("//open/file[text()='" file "']"),rem.ParentNode.RemoveChild(rem)
@@ -1663,7 +1662,7 @@ ContextMenu(){
 			for a,b in {Disable_Folders_In_Project_Explorer:"Disable Folders In Project Explorer",Folder_Icon:"Folder Icon"}
 				Menu,rcm,Add,%b%,%a%
 		}else
-			for a,b in StrSplit("New Project,Close Project,Open,Rename,Remove Segment,,Copy File Path,Copy Folder Path,Open Folder,Width,Hide/Show Icons,File Icon",",")
+			for a,b in StrSplit("New Project,Close Project,Open,Rename,Remove Segment,Notes,,Copy File Path,Copy Folder Path,Open Folder,Width,Hide/Show Icons,File Icon",",")
 				Menu,rcm,Add,%b%,rcm
 		Menu,rcm,show
 		Menu,rcm,DeleteAll
@@ -1698,6 +1697,8 @@ ContextMenu(){
 			new()
 		else if(A_ThisMenuItem="Open Folder")
 			open_folder()
+		else if(IsLabel(A_ThisMenuItem)||IsFunc(A_ThisMenuItem))
+			SetTimer,%A_ThisMenuItem%,-10
 		else
 			m("Coming Soon....maybe")
 		return
@@ -2555,9 +2556,15 @@ NewIndent(indentwidth:=""){
 	SplitPath,filename,,,ext
 	if(ext="xml")
 		return
-	sc.Enable()
+	sc.Enable(),skipcompile:=0
 	for a,text in code{
 		text:=Trim(text,"`t ")
+		if(text~="i)\Q* * * Compile_AHK\E"){
+			skipcompile:=skipcompile?0:1
+			Continue
+		}
+		if(skipcompile)
+			Continue
 		if(SubStr(text,1,1)=";")
 			Continue
 		firsttwo:=SubStr(text,1,2)
@@ -4115,15 +4122,22 @@ Paste_Func(){
 	paste:
 	ControlGetFocus,Focus,% hwnd([1])
 	if(InStr(focus,"scintilla")){
-		csc().2179
+		sc:=csc(),sc.2179
 		if(v.options.full_auto)
 			NewIndent()
+		if(v.pastefold)
+			SetTimer,foldpaste,-20
 		return
 	}else
 		SendMessage,0x302,0,0,%focus%,% hwnd([1])
 	if(v.options.full_auto)
 		SetTimer,NewIndent,-1
 	uppos(),MarginWidth()
+	return
+	foldpaste:
+	v.pastefold:=0
+	line:=sc.2166(sc.2008)
+	sc.2231(sc.2225(line-1))
 	return
 }
 PERefresh(){
@@ -5045,6 +5059,8 @@ SelectAll(){
 		return
 	}
 	sc:=csc(),count:=Abs(sc.2008-sc.2009)
+	if(!sc.2230(line:=sc.2166(sc.2008)))
+		return level:=sc.2223(line),last:=sc.2224(line,level),start:=sc.2167(line),end:=sc.2136(last),sc.2160(start,end),v.pastefold:=1
 	if(v.selectedduplicates){
 		for a,b in v.selectedduplicates
 			if(A_Index=1)
@@ -5056,6 +5072,25 @@ SelectAll(){
 		sc.2013
 	return
 }
+
+
+
+
+/*
+	this{
+		
+		
+		
+		
+		
+		
+		
+		fuck
+	}
+	}
+*/	
+*/
+
 set_as_default_editor(){
 	RegRead,current,HKCU,SOFTWARE\Classes\AutoHotkeyScript\Shell\Edit\Command
 	SplitPath,A_ScriptFullPath,,,ext
