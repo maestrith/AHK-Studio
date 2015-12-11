@@ -19,6 +19,7 @@
 			<menu name="Rename Current Segment" clean="Rename_Current_Segment"></menu>
 			<menu name="Remove Segmen&amp;t" clean="Remove_Segment"></menu>
 			<menu name="&amp;Run" clean="Run" hotkey="!r"></menu>
+			<menu clean="Kill_Process" name="Kill Process"></menu>
 			<menu name="&amp;Upload" clean="Upload" option="" plugin="plugins\Upload.ahk"></menu>
 			<menu name="&amp;Publish" clean="Publish"></menu>
 			<menu name="Notes" clean="Notes" hotkey="^!n"></menu>
@@ -133,7 +134,7 @@
 				<menu clean="Add_Bookmark" name="Add Bookmark" hotkey="!B" option="ab" plugin="plugins\BookMarks.ahk"></menu>
 				<menu clean="Delete_Bookmark" name="Delete Bookmark" option="db" plugin="plugins\BookMarks.ahk"></menu>
 				<menu clean="Edit_Custom_Bookmark" name="Edit Custom Bookmark" option="ecb" plugin="plugins\BookMarks.ahk"></menu>
-				<menu clean="Jump_To_Next_Bookmark" name="Jump To Next Bookmark" hotkey="^!RIGHT" option="jtnb" plugin="plugins\BookMarks.ahk"></menu>
+				<menu clean="Jump_To_Next_Bookmark" name="Jump To Next Bookmark" option="jtnb" plugin="plugins\BookMarks.ahk" hotkey="^!RIGHT"></menu>
 				<menu clean="Jump_To_Previous_Bookmark" name="Jump To Previous Bookmark" hotkey="^!LEFT" option="jtpb" plugin="plugins\BookMarks.ahk"></menu>
 				<menu clean="Manage_Bookmarks" name="Manage Bookmarks" hotkey="^M" option="mb" plugin="plugins\BookMarks.ahk"></menu></menu>
 			<menu name="Scratch &amp;Pad" clean="Scratch_Pad" hotkey="^!p"></menu>
@@ -213,6 +214,7 @@
 			<menu name="Add Space Before Commas" clean="Add_Space_Before_Commas" option="bc" plugin="plugins\Add Spaces.ahk"></menu>
 			<menu clean="Remove_Blank_Lines" hotkey="" name="Remove Blank Lines" option="" plugin="plugins\Remove Blank Lines.ahk"></menu>
 			<menu clean="Remove_Comments" hotkey="" name="Remove Comments" option="" plugin="plugins\Remove Comments.ahk"></menu>
+			<menu clean="End_Document_At_Last_Line" name="End Document At Last Line"></menu>
 			<menu clean="Split_Line_By_Comma" hotkey="!," name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk"></menu>
 			<menu clean="Make_One_Line" hotkey="![" name="Make One Line" option="" plugin="plugins\Make One Line.ahk"></menu>
 			<menu clean="Increment_Selected" hotkey="" name="Increment Selected" option="" plugin="plugins\Increment Selected.ahk"></menu>
@@ -248,7 +250,7 @@
 			<menu name="Tab To Next Comma" clean="Tab_To_Next_Comma" hotkey="^TAB" no="1"></menu>
 			<menu name="Tab To Previous Comma" clean="Tab_To_Previous_Comma" hotkey="+^TAB" no="1"></menu></menu>
 		<menu name="&amp;View" clean="View">
-			<menu name="Widths" clean="Widths" hide="1"></menu>
+			<menu name="Widths" clean="Widths" hide="1" hotkey="^!e"></menu>
 			<menu clean="Toggle_Fullscreen" hotkey="" name="Toggle Fullscreen" option="" plugin="plugins\Toggle Fullscreen.ahk"></menu>
 			<menu clean="Display_Classes" name="Display Classes"></menu>
 			<menu name="Display Functions" clean="Display_Functions" hotkey="!i"></menu>
@@ -263,6 +265,6 @@
 			<menu name="&amp;Forum" clean="Forum" no="1"></menu>
 			<menu clean="Online_Help" name="Online Help"></menu>
 			<menu name="&amp;Social" clean="Social" no="1"></menu>
-			<menu clean="Testing" name="Testing" hotkey="^K"></menu></menu>
+			<menu clean="Testing" hotkey="^K" name="Testing"></menu></menu>
 	</main>
 </menus>
