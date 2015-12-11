@@ -4,6 +4,7 @@ Fixed: Reported by number1nub
 -Hotkeys not launching all functions
 Added: Requested by noticz
 -Shift+Enter: at the end of a contracted fold line will create the new line below the folded text
+-End Document At Last Line: Option to make the document stop scrolling when it reaches the end of the screen.
 1.002.15
 Added: Suggested by noticz
 -Kill Process: Kills a process created using AHK Studio

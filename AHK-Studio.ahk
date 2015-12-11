@@ -900,8 +900,8 @@ class s{
 			s.main.push(this)
 		if(info.temp)
 			s.temp.push(this)
-		this.2246(2,1),this.2052(32,0),this.2051(32,0xaaaaaa),this.2050,this.2052(33,0x222222),this.2069(0xAAAAAA),this.2601(0xaa88aa),this.2563(1),this.2614(1),this.2565(1),this.2660(1),this.2036(width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5),this.2124(1),this.2260(1),this.2122(5),this.2277(0),this.2056(38,"Consolas"),this.2516(1),color(this)
-		this.2359(0x1|0x2|0x10|0x400),this.2663(4)
+		this.2246(2,1),this.2052(32,0),this.2051(32,0xaaaaaa),this.2050,this.2052(33,0x222222),this.2069(0xAAAAAA),this.2601(0xaa88aa),this.2563(1),this.2614(1),this.2565(1),this.2660(1),this.2036(width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5),this.2124(1),this.2260(1),this.2122(5),this.2056(38,"Consolas"),this.2516(1),color(this)
+		this.2359(0x1|0x2|0x10|0x400),this.2663(4),this.2277(0)
 		return this
 	}
 	clear(){
@@ -2189,7 +2189,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151209170712,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151207132220,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151211081829,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151207132220,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
@@ -3990,7 +3990,7 @@ Open(filelist="",show="",Redraw:=1){
 	return
 }
 Options(x:=0){
-	static list:={Virtual_Space:[2596,3],show_eol:2356,Show_Caret_Line:2096,show_whitespace:2021,word_wrap:2268,Hide_Indentation_Guides:2132,center_caret:[2403,15,75]}
+	static list:={Virtual_Space:[2596,3],End_Document_At_Last_Line:2277,show_eol:2356,Show_Caret_Line:2096,show_whitespace:2021,word_wrap:2268,Hide_Indentation_Guides:2132,center_caret:[2403,15,75]}
 	static main:="Center_Caret,Disable_Auto_Complete,Disable_Auto_Complete_While_Tips_Are_Visible,Disable_Autosave,Disable_Backup,Disable_Line_Status,Disable_Variable_List,Disable_Word_Wrap_Indicators,Force_Utf8,Hide_Code_Explorer,Hide_File_Extensions,Hide_Indentation_Guides,Hide_Project_Explorer,Remove_Directory_Slash,Show_Caret_Line,Show_EOL,Show_Type_Prefix,Show_WhiteSpace,Virtual_Space,Warn_Overwrite_On_Export,Word_Wrap,Run_As_Admin"
 	static next:="Auto_Space_After_Comma,Autocomplete_Enter_Newline,Disable_Auto_Delete,Disable_Auto_Insert_Complete,Disable_Folders_In_Project_Explorer,Disable_Include_Dialog,Enable_Close_On_Save,Full_Tree,Highlight_Current_Area,Manual_Continuation_Line,Small_Icons,Top_Find"
 	static bit:="Auto_Advance,Auto_Close_Find,Auto_Set_Area_On_Quick_Find,Build_Comment,Check_For_Edited_Files_On_Focus,Disable_Auto_Indent_For_Non_Ahk_Files,Full_Backup_All_Files"
@@ -4021,6 +4021,7 @@ Options(x:=0){
 	Warn_Overwrite_On_Export:
 	Word_Wrap:
 	Run_As_Admin:
+	End_Document_At_Last_Line:
 	sc:=csc(),onoff:=settings.ssn("//options/@" A_ThisLabel).text?0:1,att:=[],att[A_ThisLabel]:=onoff,settings.add("options",att),togglemenu(A_ThisLabel),v.options[A_ThisLabel]:=onoff,sc[list[A_ThisLabel]](onoff),option:=settings.ssn("//options"),ea:=settings.ea(option)
 	for c,d in s.main{
 		for a,b in ea{
