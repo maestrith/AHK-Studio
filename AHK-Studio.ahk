@@ -12,24 +12,24 @@ ComObjError(0)
 CoordMode,ToolTip,Screen
 if(!FileExist("lib"))
 	FileCreateDir,Lib
-global v:=[],settings:=new xml("settings","lib\Settings.xml"),files:=new xml("files"),menus,commands:=new xml("commands","lib\commands.xml"),positions:=new xml("positions","lib\positions.xml"),vversion,access_token,vault:=new xml("vault","lib\Vault.xml"),preset,scintilla,bookmarks,cexml:=new xml("code_explorer"),notesxml,language:=new xml("language","lib\en-us.xml"),vversion:=new xml("version","lib\version.xml"),Custom_Commands:=new XML("custom","lib\Custom Commands.xml")
-scintilla:=new xml("scintilla","lib\scintilla.xml"),v.pluginversion:=1,menus:=new xml("menus","lib\menus.xml"),FileCheck(file)
+global v:=[],settings:=New XML("settings","lib\Settings.XML"),files:=New XML("files"),menus,commands:=New XML("commands","lib\commands.XML"),positions:=New XML("positions","lib\positions.XML"),vversion,access_token,vault:=New XML("vault","lib\Vault.XML"),preset,Scintilla,bookmarks,cexml:=New XML("Code_Explorer"),notesxml,language:=New XML("language","lib\en-us.XML"),vversion:=New XML("version","lib\version.XML"),Custom_Commands:=New XML("custom","lib\Custom Commands.XML")
+Scintilla:=New XML("Scintilla","lib\Scintilla.XML"),v.pluginversion:=1,menus:=New XML("menus","lib\menus.XML"),FileCheck(file)
 if(FileExist("AHKStudio.ico"))
 	Menu,Tray,Icon,AHKStudio.ico
-new omni_search_class(),v.filelist:=[],v.options:=[],var(),keywords(),Gui(),v.match:={"{":"}","[":"]","<":">","(":")",Chr(34):Chr(34),"'":"'","%":"%"},v.filescan:=[]
-ObjRegisterActive(pluginclass),preset:=new xml("preset","lib\preset.xml")
+New Omni_Search_Class(),v.filelist:=[],v.Options:=[],var(),Keywords(),Gui(),v.match:={"{":"}","[":"]","<":">","(":")",Chr(34):Chr(34),"'":"'","%":"%"},v.filescan:=[]
+ObjRegisterActive(PluginClass),preset:=New XML("preset","lib\preset.XML")
 SetWorkingDir,%A_ScriptDir%
-ea:=settings.ea("//options")
+ea:=settings.ea("//Options")
 for a,b in ea
-	v.options[a]:=b
-v.options.full_auto:=settings.ssn("//Auto_Indent/@Full_Auto").text
+	v.Options[a]:=b
+v.Options.Full_Auto:=settings.ssn("//Auto_Indent/@Full_Auto").Text
 return
 SetTimer,Color
 GuiDropFiles:
-tv:=open(A_GuiEvent,1),openfile:=StrSplit(A_GuiEvent,"`n").1,main:=files.ssn("//main[@file='" openfile "']"),tv(tv)
+tv:=Open(A_GuiEvent,1),openfile:=StrSplit(A_GuiEvent,"`n").1,main:=files.ssn("//main[@file='" openfile "']"),tv(tv)
 return
 selectfile:
-tv(files.ssn("//*[@file='" v.openfile "']/@tv").text)
+tv(files.ssn("//*[@file='" v.openfile "']/@tv").Text)
 return
 #Include %A_ScriptDir%
 About(){
@@ -636,7 +636,7 @@ Class Icon_Browser{
 		GuiControl,85:+Redraw,SysListView321
 	}
 }
-class omni_search_class{
+Class Omni_Search_Class{
 	static prefix:={"@":"Menu","^":"File",":":"Label","(":"Function","{":"Class","[":"Method","&":"Hotkey","+":"Function","#":"Bookmark",".":"Property","%":"Variable","<":"Instance","*":"Breakpoint"}
 	static iprefix:={Menu:"@",File:"^",Label:":",Function:"(",Class:"{",Method:"[",Hotkey:"&",Bookmark:"#",Property:".",Variable:"%",Instance:"<",Breakpoint:"*"}
 	__New(){
@@ -1900,8 +1900,8 @@ Download_Plugins(){
 	pluglist:=""
 	while,num:=LV_GetNext(0,"C"){
 		LV_GetText(name,num),pos:=1,text:=URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio-Plugins/master/" name ".ahk"),list:=""
-		date:=plug.ssn("//*[@name='" name "']/@date").text
-		while,pos:=RegExMatch(text,"Oim)\;menu\s*(.*)\R",found,pos)
+		date:=plug.ssn("//*[@name='" name "']/@date").text,pos:=1
+		while,pos:=RegExMatch(text,"Oim)^\s*\;menu\s*(.*)\R",found,pos)
 			item:=StrSplit(found.1,","),item.1:=Trim(item.1,"`r|`r`n|`n"),list.=item.1 "`n",pos:=found.Pos(1)+1
 		pluglist.=list=""?"Error in " name "`n":list
 		if(list){
@@ -2052,12 +2052,16 @@ Dyna_Run(){
 }
 Exit(x:="",reload:=0){
 	Send,{Alt Up}
-	rem:=settings.ssn("//last"),rem.ParentNode.RemoveChild(rem),notesxml.save(1),savegui(),vault.save(1)
+	last:=current(3).file,rem:=settings.ssn("//last"),rem.ParentNode.RemoveChild(rem),notesxml.save(1),savegui(),vault.save(1)
 	for a,b in s.main{
 		file:=files.ssn("//*[@sc='" b.2357 "']/@file").text
 		if(file!="Virtual Scratch Pad.ahk")
 			settings.add("last/file",,file,,1)
 	}
+	if(files.sn("//main[@untitled]").length)
+		UnSaved()
+	if((node:=settings.ssn("//last/file")).text="untitled.ahk")
+		node.text:=files.ssn("//main/@file").text
 	toolbar.save(),positions.save(1),rebar.save(),menus.save(1),getpos(),settings.add({path:"gui",att:{zoom:csc().2374}}),settings.save(1),bookmarks.save(1)
 	for a in pluginclass.close
 		If(WinExist("ahk_id" a))
@@ -2071,8 +2075,6 @@ Exit(x:="",reload:=0){
 		return
 	if(Reload)
 		return
-	if(files.sn("//main[@untitled]").length)
-		UnSaved()
 	if(x=""||InStr(A_ThisLabel,"Gui"))
 		ExitApp
 }
@@ -2825,7 +2827,7 @@ Gui(){
 	v.status:=h,Menu("main"),max:=ssn(pos,"@max").text?"Maximize":"",pos:=pos.text?pos.text:"w750 h500"
 	Gui,Show,%pos% Hide,AHK Studio
 	WinSetTitle,% hwnd([1]),,AHK Studio - Indexing Lib Files
-	Index_Lib_Files(),OnMessage(5,"Resize"),open:=settings.sn("//open/file"),options()
+	Index_Lib_Files(),OnMessage(5,"Resize"),open:=settings.sn("//open/file"),Options()
 	Gui,1:Show,%pos% %max% Hide,AHK Studio
 	Margin_Left(1),csc().2400,BraceSetup(1),Resize("rebar")
 	RefreshThemes(),debug.off()
@@ -2849,7 +2851,6 @@ Gui(){
 		csc({hwnd:s.main.1.sc}).2400
 	}
 	WinSet,Redraw,,% hwnd([1])
-	OnExit,Exit
 	v.opening:=0,TrayMenu()
 	GuiControl,1:+gtv,SysTreeView321
 	if(select:=settings.ssn("//open/file[@select='1']"))
@@ -2863,7 +2864,6 @@ Gui(){
 	csc(1),Refresh(),Check_For_Update(1)
 	WinSet,Redraw,,% hwnd([1])
 	return
-	exit:
 	GuiClose:
 	exit()
 	return

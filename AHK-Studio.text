@@ -5,6 +5,8 @@ Fixed: Reported by number1nub
 Added: Requested by noticz
 -Shift+Enter: at the end of a contracted fold line will create the new line below the folded text
 -End Document At Last Line: Option to make the document stop scrolling when it reaches the end of the screen.
+Fixed:
+-When you exited AHK Studio and you had unsaved untitled files it was causing it to loop twice for each unsaved file.
 1.002.15
 Added: Suggested by noticz
 -Kill Process: Kills a process created using AHK Studio
