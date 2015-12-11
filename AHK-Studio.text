@@ -2,6 +2,8 @@
 Fixed: Reported by number1nub
 -New menu items will now come up in a menu called "New Menu Items" and not create any menus that are not in your current setup
 -Hotkeys not launching all functions
+Added: Requested by noticz
+-Shift+Enter: at the end of a contracted fold line will create the new line below the folded text
 1.002.15
 Added: Suggested by noticz
 -Kill Process: Kills a process created using AHK Studio

@@ -900,7 +900,7 @@ class s{
 			s.main.push(this)
 		if(info.temp)
 			s.temp.push(this)
-		this.2246(2,1),this.2052(32,0),this.2051(32,0xaaaaaa),this.2050,this.2052(33,0x222222),this.2069(0xAAAAAA),this.2601(0xaa88aa),this.2563(1),this.2614(1),this.2565(1),this.2660(1),this.2036(width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5),this.2124(1),this.2260(1),this.2122(5),this.2277(0),this.2056(38,"Consolas"),this.2516(1),color(this),this.2359(0x1|0x2|0x10)
+		this.2246(2,1),this.2052(32,0),this.2051(32,0xaaaaaa),this.2050,this.2052(33,0x222222),this.2069(0xAAAAAA),this.2601(0xaa88aa),this.2563(1),this.2614(1),this.2565(1),this.2660(1),this.2036(width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5),this.2124(1),this.2260(1),this.2122(5),this.2277(0),this.2056(38,"Consolas"),this.2516(1),color(this),this.2359(0x1|0x2|0x10),this.2663(4)
 		return this
 	}
 	clear(){
@@ -3553,16 +3553,6 @@ Notify(csc:=""){
 	if(info=256||info=512||info=768)
 		return
 	sc:=csc()
-	/*
-		if(code=2029||(code=2007&&WinActive(hwnd([1]))=0)||csc="setpos"){
-			getpos(),focus:=sc:=csc(),obj:=lastpos[current(3).sc]:=[]
-			last:=sc.sc
-			if(!WinActive(hwnd([1])))
-				Loop,% sc.2570
-					caret:=sc.2577(A_Index-1),anchor:=sc.2579(A_Index-1),(A_Index=1)?obj.push({2008:caret,2009:anchor,2152:sc.2152,main:caret=sc.2577(sc.2575)}):obj.push({2008:caret,2009:anchor,main:caret:=sc.2577(A_Index-1)})
-			return
-		}
-	*/
 	if(code=2028){
 		if(v.options.Check_For_Edited_Files_On_Focus=1)
 			Check_For_Edited()
@@ -3570,26 +3560,17 @@ Notify(csc:=""){
 		if(win=hwnd(1))
 			SetTimer,LButton,-20
 		csc({hwnd:NumGet(info+0)})
-		/* 
-			Sleep,20
-			sc:=focus.sc?focus:csc(1),maincaret:=1
-			return
-			focus:
-			for a,b in lastpos[current(3).sc]
-				maincaret:=b.main?A_Index:maincaret,(A_Index=1)?(sc.2160(b.2008,b.2009)):sc.2573(b.2008,b.2009)
-			sc.2574(maincaret-1)
-			if(fl:=lastpos[current(3).sc].1.2152)
-				sc.2613(fl)
-			SetTimer,Enable,-10
-		*/
 		return
 	}if(!s.ctrl[NumGet(info+0)])
 		return csc(1)
-	if code not in 2001,2005,2002,2004,2006,2007,2008,2010,2014,2018,2019,2021,2022,2027
+	if code not in 2001,2005,2002,2004,2006,2007,2008,2010,2014,2018,2019,2021,2022,2027,2011
 		return 0
 	;0:"Obj",2:"Code",4:"ch",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",17:"listType",22:"updated"
-	for a,b in {0:"Obj",2:"Code",3:"position",4:"ch",5:"mod",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",17:"listType",22:"updated"}
+	for a,b in {0:"Obj",2:"Code",3:"position",4:"ch",5:"mod",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",15:"prevfold",17:"listType",22:"updated"}
 		fn[b]:=NumGet(Info+(A_PtrSize*a))
+	{
+		
+	}
 	/*
 		if(fn.ch=32){
 		;this is also where you would check for new words
@@ -4463,6 +4444,10 @@ QF(){
 		goto,qf
 	return
 	checkqf:
+	sc:=csc()
+	if(A_ThisHotkey="+enter")
+		if(sc.2008=sc.2136(line:=sc.2166(sc.2008))&&sc.2230(line)=0)
+			end:=sc.2136(sc.2224(line,sc.2223(line))),sc.2003(end,"`n"),sc.2025(end+1)
 	ControlGetFocus,Focus,% hwnd([1])
 	if(Focus="Edit1")
 		goto,qf
