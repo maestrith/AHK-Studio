@@ -37,7 +37,7 @@
 			<menu clean="Additional_Publish" hotkey="" name="Additional Publish" option="" plugin="plugins\Additional Publish.ahk"></menu>
 			<menu clean="Run_Current_Segment" hotkey="" name="Run Current Segment" option="segment" plugin="plugins\Run Selected Text.ahk"></menu>
 			<menu clean="Mark_All_Files_For_Update" hotkey="" name="Mark All Files For Update" option="" plugin="plugins\Mark All Files For Update.ahk"></menu>
-			<menu clean="Backup" hotkey="" name="Backup" option="" no="1"></menu></menu>
+			<menu clean="Backup" hotkey="" name="Backup" option="" plugin="plugins\Backup.ahk"></menu></menu>
 		<menu name="&amp;Edit" clean="Edit" tv="1988816">
 			<menu name="Compare" clean="Compare" no="1"></menu>
 			<menu name="Add Selected To Personal Variables" clean="Add_Selected_To_Personal_Variables" no="1"></menu>
@@ -258,7 +258,7 @@
 			<menu name="Show Functions" clean="Show_Functions" hotkey="!O" no="1"></menu>
 			<menu name="Sho&amp;w Scintilla Code In Line" hotkey="F4" clean="Show_Scintilla_Code_In_Line"></menu></menu>
 		<menu name="&amp;Help" clean="Help" tv="1988600">
-			<menu clean="Menu_Help" name="Menu Help" plugin="plugins\Menu Help.ahk" option=""></menu>
+			<menu clean="Menu_Help" name="Menu Help" option="" plugin="plugins\Menu Help.ahk"></menu>
 			<menu name="Chec&amp;k For Update" clean="Check_For_Update" hotkey="" option=""></menu>
 			<menu name="&amp;About" clean="About"></menu>
 			<menu name="Command Help" hotkey="F1" clean="Command_Help"></menu>
