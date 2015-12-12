@@ -5273,17 +5273,40 @@ Test_Plugin(){
 	return
 }
 Testing(x:=0){
-	m("Testing","ico:?")
 	/*
+		m("Testing","ico:?")
 		split lines by width of window.
-		sc:=csc()
 		sc.2686(0,sc.2006)
 		sc.2289(0)
 	*/
+	sc:=csc()
+	SGDIPrint_HDC_Width:=240,SGDIPrint_HDC_Height:=240
+	VarSetCapacity(range,40,0)
+	VarSetCapacity(rect,16)
+	VarSetCapacity(rect1,16)
+	VarSetCapacity(chrs,8)
+	hdc:=DllCall("GetDC",uptr,hwnd(1))
+	for a,b in [100,100,SGDIPrint_HDC_Width-100,SGDIPrint_HDC_Height-100]
+		NumPut(0,rect,(A_Index-1)*A_PtrSize,"int")
+	for a,b in [0,0,SGDIPrint_HDC_Width,SGDIPrint_HDC_Height]
+		NumPut(b,rect1,(A_Index-1)*A_PtrSize,"int")
+	for a,b in [0,300]
+		NumPut(b,chrs,(A_Index-1)*A_PtrSize,"int")
+	NumPut(hdc,&range,0,"uptr")
+	NumPut(hdc,&range,4,"uptr")
+	NumPut(&rect1,&range,8,"uptr")
+	NumPut(&rect,&range,12,"uptr")
+	NumPut(&chrs,&range,16,"uptr")
+	sc.2148(4),sc.2146(0),sc.2406(1)
+	/*
+		pos:=sc.2151(0,&range)
+	*/
+	pos:=DllCall(sc.fn,"Ptr",sc.ptr,"UInt",2151,"int",0,"uptr",&range,"Cdecl")
+	m(pos,hdc,ErrorLevel)
 	;m(files.ssn("//*[@tv='" TV_GetSelection() "']").xml)
 	;m(menus[],"ico:?")
+	
 }
-
 Toggle_Comment_Line(){
 	sc:=csc(),sc.2078
 	pi:=posinfo(),sl:=sc.2166(pi.start),el:=sc.2166(pi.end),end:=pi.end,single:=sl=el?1:0
