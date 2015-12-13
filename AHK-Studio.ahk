@@ -2101,7 +2101,7 @@ Extract(fileobj,top,rootfile){
 	}
 	for a,filename in fileobj{
 		SplitPath,filename,fn,dir
-		maindir:=dir,fff:=FileOpen(filename,"R","utf-8"),encoding:=fff.encoding,text:=file:=fff.read(fff.length),fff.Close(),dir:=Trim(dir,"\"),text:=RegExReplace(text,"\R","`n"),update({file:filename,text:text,load:1}),update:=files.ssn("//main[@file='" rootfile "']/descendant::file[@file='" filename "']")
+		maindir:=dir,fff:=FileOpen(filename,"R"),encoding:=fff.encoding,text:=file:=fff.read(fff.length),fff.Close(),dir:=Trim(dir,"\"),text:=RegExReplace(text,"\R","`n"),update({file:filename,text:text,load:1}),update:=files.ssn("//main[@file='" rootfile "']/descendant::file[@file='" filename "']")
 		for a,b in {filename:fn,encoding:encoding}
 			update.SetAttribute(a,b)
 		for a,b in StrSplit(text,"`n"){
@@ -2169,7 +2169,7 @@ Extract(fileobj,top,rootfile){
 						}
 					}
 					FileGetTime,time,%spfile%
-					files.under(next,"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(next,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme})
+					files.under(tvxml:=files.ssn("//main[@file='" ssn(top,"@file").text "']/descendant::file[@file='" filename "']"),"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(tvxml,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme})
 					cexml.under(main,"file",{type:"File",parent:rootfile,file:spfile,name:fnme,folder:folder,order:"name,type,folder"})
 					spfile:=""
 				}
@@ -4899,7 +4899,7 @@ Save(option=""){
 		*/
 		if(v.options.Force_UTF8)
 			encoding:="UTF-8"
-		file:=fileopen(filename,"rw",encoding),file.seek(0),file.write(text),file.length(file.position)
+		file:=fileopen(filename,"rw"),file.seek(0),file.write(text),file.length(file.position),file.close()
 		Gui,1:TreeView,% hwnd("fe")
 		multi:=files.sn("//file[@file='" filename "']")
 		while,mm:=multi.item[A_Index-1]{
