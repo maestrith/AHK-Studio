@@ -3183,9 +3183,9 @@ Jump_To(find:=""){
 		ea:=xml.ea(found),TV(files.ssn("//main[@file='" ssn(found,"ancestor::main/@file").text "']/descendant::file[@file='" ssn(found,"ancestor::file/@file").text "']/@tv").text)
 		Sleep,200
 		csc().2160(ea.pos,ea.pos+StrPut(ea.text,"Utf-8")-1+_:=ea.type="class"?+6:+0),v.sc.2169,v.sc.2400
-	}else if(InStr(text:=sc.textrange(sc.2128(line:=sc.2166(sc.2008)),sc.2136(line)),Chr(35) "include"))
+	}else if(InStr(text:=sc.textrange(sc.2128(line:=sc.2166(sc.2008)),sc.2136(line)),Chr(35) "include")){
 		main:=files.ssn("//main[@file='" current(2).file "']"),tv(ssn(main,"descendant::file[@include='" text "']/@tv").text)
-	else if(SubStr(word,1,1)~="i)(g|v)"){
+	}else if(SubStr(word,1,1)~="i)(g|v)"){
 		word:=SubStr(word,2),search:=find?"[@type='" find "'][@upper='" word "']":"[@upper='" word "']"
 		if(found:=cexml.ssn("//main[@file='" current(2).file "']/descendant::info" search)){
 			ea:=xml.ea(found),TV(files.ssn("//main[@file='" ssn(found,"ancestor::main/@file").text "']/descendant::file[@file='" ssn(found,"ancestor::file/@file").text "']/@tv").text)
@@ -5152,7 +5152,7 @@ SetPos(oea:=""){
 			SetTimer,setscrollpos,-1
 		return
 		setscrollpos:
-		if(ea.scroll)
+		if(ea.scroll!="")
 			sc.2613(ea.scroll),sc.2400()
 		return
 	}
@@ -5429,13 +5429,12 @@ tv(tv:=0,open:="",history:=0){
 		}else
 			sc.2358(0,doc.text),marginwidth(sc),current(1).SetAttribute("last",fn)
 		Sleep,150
-		setpos(ei),uppos(),marginwidth(sc)
+		SetPos(ei),uppos(),marginwidth(sc)
 		GuiControl,1:+Redraw,% sc.sc
 		if(history!=1)
 			History(fn)
 		if(open=2)
-			
-		history:=0
+			history:=0
 		WinSetTitle,% hwnd([1]),,AHK Studio - %fn%
 		sc.4004("fold",[1])
 		Sleep,150
