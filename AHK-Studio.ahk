@@ -2169,7 +2169,7 @@ Extract(fileobj,top,rootfile){
 						}
 					}
 					FileGetTime,time,%spfile%
-					files.under(tvxml:=files.ssn("//main[@file='" ssn(top,"@file").text "']/descendant::file[@file='" filename "']"),"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(tvxml,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme})
+					files.under(tvxml:=files.ssn("//main[@file='" ssn(top,"@file").text "']/descendant::file[@file='" filename "']"),"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(tvxml,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme,strlen:StrLen(spfile)})
 					cexml.under(main,"file",{type:"File",parent:rootfile,file:spfile,name:fnme,folder:folder,order:"name,type,folder"})
 					spfile:=""
 				}
@@ -5275,30 +5275,59 @@ Testing(x:=0){
 		sc.2686(0,sc.2006)
 		sc.2289(0)
 	*/
-	sc:=csc()
-	SGDIPrint_HDC_Width:=240,SGDIPrint_HDC_Height:=240
-	VarSetCapacity(range,40,0)
-	VarSetCapacity(rect,16)
-	VarSetCapacity(rect1,16)
-	VarSetCapacity(chrs,8)
-	hdc:=DllCall("GetDC",uptr,hwnd(1))
-	for a,b in [100,100,SGDIPrint_HDC_Width-100,SGDIPrint_HDC_Height-100]
-		NumPut(0,rect,(A_Index-1)*A_PtrSize,"int")
-	for a,b in [0,0,SGDIPrint_HDC_Width,SGDIPrint_HDC_Height]
-		NumPut(b,rect1,(A_Index-1)*A_PtrSize,"int")
-	for a,b in [0,300]
-		NumPut(b,chrs,(A_Index-1)*A_PtrSize,"int")
-	NumPut(hdc,&range,0,"uptr")
-	NumPut(hdc,&range,4,"uptr")
-	NumPut(&rect1,&range,8,"uptr")
-	NumPut(&rect,&range,12,"uptr")
-	NumPut(&chrs,&range,16,"uptr")
-	sc.2148(4),sc.2146(0),sc.2406(1)
 	/*
+		sc:=csc()
+		SGDIPrint_HDC_Width:=240,SGDIPrint_HDC_Height:=240
+		VarSetCapacity(range,40,0)
+		VarSetCapacity(rect,16)
+		VarSetCapacity(rect1,16)
+		VarSetCapacity(chrs,8)
+		hdc:=DllCall("GetDC",uptr,hwnd(1))
+		for a,b in [100,100,SGDIPrint_HDC_Width-100,SGDIPrint_HDC_Height-100]
+			NumPut(0,rect,(A_Index-1)*A_PtrSize,"int")
+		for a,b in [0,0,SGDIPrint_HDC_Width,SGDIPrint_HDC_Height]
+			NumPut(b,rect1,(A_Index-1)*A_PtrSize,"int")
+		for a,b in [0,300]
+			NumPut(b,chrs,(A_Index-1)*A_PtrSize,"int")
+		NumPut(hdc,&range,0,"uptr")
+		NumPut(hdc,&range,4,"uptr")
+		NumPut(&rect1,&range,8,"uptr")
+		NumPut(&rect,&range,12,"uptr")
+		NumPut(&chrs,&range,16,"uptr")
+		sc.2148(4),sc.2146(0),sc.2406(1)
 		pos:=sc.2151(0,&range)
+		pos:=DllCall(sc.fn,"Ptr",sc.ptr,"UInt",2151,"int",0,"uptr",&range,"Cdecl")
+		m(pos,hdc,ErrorLevel)
 	*/
-	pos:=DllCall(sc.fn,"Ptr",sc.ptr,"UInt",2151,"int",0,"uptr",&range,"Cdecl")
-	m(pos,hdc,ErrorLevel)
+	;TVM_GETITEMRECT=(TV_FIRST + 4)
+	sc:=csc()
+	top:=files.sn("//file[@sc='" sc.2357 "']/../*"),max:=0
+	tick:=A_TickCount
+	while,tt:=top.item[A_Index-1],ea:=xml.ea(tt){
+		if(ea.strlen>max)
+			ltv:=ea.tv,last:=tt
+		max:=ea.strlen>max?ea.strlen:max
+	}
+	VarSetCapacity(rect,16)
+	NumPut(ltv,rect,0)
+	SendMessage,0x1100+4,1,&rect,SysTreeView321,% hwnd([1])
+	SendMessage,0x1100+6,0,0,SysTreeView321,% hwnd([1])
+	width:=ErrorLevel,count:=1
+	tv:=TV_GetSelection()
+	while,TV_GetParent(tv)
+		count++,tv:=TV_GetParent(tv)
+	tvwidth:=NumGet(rect,8)
+	/*
+		m(width*count,tvwidth,NumGet(rect,8),NumGet(rect,0))
+	*/
+	/*
+		for a,b in [0,4,8,12]
+			m(NumGet(rect,b))
+	*/
+	total:=(width*count)+tvwidth
+	settings.ssn("//gui/@projectwidth").text:=total,Resize("rebar")
+	;m(total,width,count,tvwidth,NumGet(rect,8),NumGet(rect,0))
+	;TVM_GETINDENT=(TV_FIRST + 6)
 	;m(files.ssn("//*[@tv='" TV_GetSelection() "']").xml)
 	;m(menus[],"ico:?")
 	
