@@ -4021,7 +4021,6 @@ Options(x:=0){
 	Word_Wrap:
 	Run_As_Admin:
 	End_Document_At_Last_Line:
-	t("HERE!!!!!",A_ThisLabel)
 	sc:=csc(),onoff:=settings.ssn("//options/@" A_ThisLabel).text?0:1,att:=[],att[A_ThisLabel]:=onoff,settings.add("options",att),togglemenu(A_ThisLabel),v.options[A_ThisLabel]:=onoff,sc[list[A_ThisLabel]](onoff),option:=settings.ssn("//options"),ea:=settings.ea(option)
 	for c,d in s.main{
 		for a,b in ea{
