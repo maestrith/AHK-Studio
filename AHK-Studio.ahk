@@ -76,7 +76,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.16"
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.17"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -268,7 +268,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.16"
+	Version:="1.002.17"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
@@ -697,11 +697,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.16"
+		Version:="1.002.17"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.16"
+		Version:="1.002.17"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -4579,6 +4579,7 @@ RegisterID(CLSID,APPID){
 	RegWrite,REG_SZ,HKCU,Software\Classes\%APPID%\CLSID,,%CLSID%
 	RegWrite,REG_SZ,HKCU,Software\Classes\CLSID\%CLSID%,,%APPID%
 }
+;(!value)?RegisterID("{DBD5A90A-A85C-11E4-B0C7-43449580656B}","AHK-Studio"):""
 RelativePath(main,new){
 	SplitPath,main,,mdir
 	SplitPath,new,filename,ndir
@@ -5027,7 +5028,7 @@ Create_Segment_From_Selection(){
 			return m("Segment name already exists. Please choose another")
 		text:=sc.getseltext(),pos:=posinfo()
 		if(v.options.Includes_In_Place=1)
-			sc.2003(sc.2008,"#Include " relative:=RelativePath(current(3).file,newsegment))
+			sc.2003(pos.end,"#Include " relative:=RelativePath(current(3).file,newsegment))
 		else
 			Relative:=RegExReplace(RelativePath(current(2).file,newsegment),"i)^lib\\([^\\]+)\.ahk$","<$1>"),maintext:=Update({get:current(2).file}),update({file:current(2).file,text:maintext "`n#Include " Relative})
 		sc.2645(pos.start,pos.end-pos.start),file:=FileOpen(newsegment,1,"UTF-8"),file.seek(0),file.write(text),file.length(file.position),file.Close(),update({file:newsegment,text:text}),Refresh_Current_Project()
