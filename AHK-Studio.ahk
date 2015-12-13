@@ -4176,10 +4176,6 @@ Plug(refresh:=0){
 		while,pl:=menus.sn("//menu[@clean='Plugin']/menu[@hotkey!='']").item[A_Index-1],ea:=xml.ea(pl)
 			plHks[ea.name]:=ea.hotkey
 		rem:=menus.ssn("//menu[@clean='Plugin']"),rem.ParentNode.RemoveChild(rem)
-		rem:=menus.sn("//*[@plugin]")
-		while,rr:=rem.item[A_Index-1]{
-			rr.RemoveAttribute("plugin")
-		}
 	}all:=menus.sn("//*[@clean]")
 	while,aa:=all.item[A_Index-1],ea:=menus.ea(aa)
 		if((dup:=menus.sn("//*[@clean='" ea.clean "']")).length>1)
