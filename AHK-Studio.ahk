@@ -277,7 +277,7 @@ Check_For_Update(startup:=""){
 		ControlSetText,Edit1,% http.ResponseText,% newwin.ahkid
 	return
 	autoupdate:
-	save(),settings.save(1),studio:=URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk")
+	save(),settings.save(1),menus.save(1),studio:=URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk")
 	if(!InStr(studio,";download complete"))
 		return m("There was an error. Please contact maestrith@gmail.com if this error continues")
 	SplitPath,A_ScriptFullPath,,,ext,nne

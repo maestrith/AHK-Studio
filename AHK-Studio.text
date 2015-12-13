@@ -2,6 +2,7 @@
 Fixed: Reported by gallaxhar
 -Selecting text from the bottom to the top and splitting the code into segments was causing an issue
 -Scroll Position: Messing up from time to time
+-Changing hotkeys then updating the script would cause all changes to be lost
 1.002.16
 Fixed: Reported by number1nub
 -New menu items will now come up in a menu called "New Menu Items" and not create any menus that are not in your current setup
