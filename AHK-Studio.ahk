@@ -1371,7 +1371,7 @@ Color(con:=""){
 		con[b.1](b.2,b.3)
 	if(!v.options.Disable_Word_Wrap_Indicators)
 		con.2460(4)
-	con.2472(2),con.2036(width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5),con.2080(3,6),con.2082(3,0xFFFFFF),con.2470(50)
+	con.2472(2),con.2036(width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5),con.2080(3,6),con.2082(3,0xFFFFFF)
 	if(!settings.ssn("//fonts/font[@code='2082']"))
 		con.2082(7,0xff00ff)
 	if(!(settings.ssn("//fonts/font[@style='34']")))
@@ -4021,6 +4021,7 @@ Options(x:=0){
 	Word_Wrap:
 	Run_As_Admin:
 	End_Document_At_Last_Line:
+	t("HERE!!!!!",A_ThisLabel)
 	sc:=csc(),onoff:=settings.ssn("//options/@" A_ThisLabel).text?0:1,att:=[],att[A_ThisLabel]:=onoff,settings.add("options",att),togglemenu(A_ThisLabel),v.options[A_ThisLabel]:=onoff,sc[list[A_ThisLabel]](onoff),option:=settings.ssn("//options"),ea:=settings.ea(option)
 	for c,d in s.main{
 		for a,b in ea{
