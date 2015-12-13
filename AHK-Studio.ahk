@@ -764,8 +764,7 @@ Class PluginClass{
 	}files(){
 		return update("get").1
 	}SetText(contents){
-		length:=VarSetCapacity(text,strput(contents,"utf-8")),StrPut(contents,&text,length,"utf-8")
-		csc().2181(0,&text)
+		length:=VarSetCapacity(text,strput(contents,"utf-8")),StrPut(contents,&text,length,"utf-8"),csc().2181(0,&text)
 	}ReplaceSelected(text){
 		csc().2170(0,&text:=encode(text))
 	}calltip(text){
@@ -1372,7 +1371,7 @@ Color(con:=""){
 		con[b.1](b.2,b.3)
 	if(!v.options.Disable_Word_Wrap_Indicators)
 		con.2460(4)
-	con.2472(2),con.2036(width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5),con.2080(3,6),con.2082(3,0xFFFFFF)
+	con.2472(2),con.2036(width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5),con.2080(3,6),con.2082(3,0xFFFFFF),con.2470(50)
 	if(!settings.ssn("//fonts/font[@code='2082']"))
 		con.2082(7,0xff00ff)
 	if(!(settings.ssn("//fonts/font[@style='34']")))

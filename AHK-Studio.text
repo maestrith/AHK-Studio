@@ -1,6 +1,8 @@
 1.002.17
 Fixed: Reported by gallaxhar
 -Selecting text from the bottom to the top and splitting the code into segments was causing an issue
+Changed: Reported by gallaxhar
+Caret Line Background: Changed the alpha to make it not react with the normal text so much
 1.002.16
 Fixed: Reported by number1nub
 -New menu items will now come up in a menu called "New Menu Items" and not create any menus that are not in your current setup
