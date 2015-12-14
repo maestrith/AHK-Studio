@@ -5500,9 +5500,7 @@ tv(tv:=0,open:="",history:=0){
 		tv(TV_GetSelection(),1)
 	return
 	auto-adjust:
-	obj:=[]
-	VarSetCapacity(rect,16),VarSetCapacity(sbinf,28),NumPut(28,sbinf,0),NumPut(0x1|0x2|0x4|0x10,sbinf,4)
-	tv:=0,DllCall("GetScrollInfo",ptr,v.ce,Int,1,ptr,&sbInf),info:=NumGet(sbinf,16),Default("TreeView","SysTreeView321")
+	obj:=[],VarSetCapacity(rect,16),VarSetCapacity(sbinf,28),NumPut(28,sbinf,0),NumPut(0x1|0x2|0x4|0x10,sbinf,4),tv:=0,DllCall("GetScrollInfo",ptr,v.ce,Int,1,ptr,&sbInf),info:=NumGet(sbinf,16),Default("TreeView","SysTreeView321")
 	while,tv:=TV_GetNext(tv,"F"){
 		NumPut(tv,rect,0)
 		SendMessage,0x1100+4,1,&rect,SysTreeView321,% hwnd([1])
