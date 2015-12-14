@@ -4,6 +4,8 @@ Fixed: Reported by gallaxhar
 -Scroll Position: Messing up from time to time
 -Changing hotkeys then updating the script would cause all changes to be lost
 -File encoding was odd
+Added: Suggested by gallaxar
+-Auto Project Explorer Width: Changes the width of the project explorer to match the content
 1.002.16
 Fixed: Reported by number1nub
 -New menu items will now come up in a menu called "New Menu Items" and not create any menus that are not in your current setup

@@ -2190,7 +2190,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151212133102,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151207132220,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
+	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151214092106,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151207132220,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
@@ -2752,9 +2752,9 @@ Gui(){
 	OnMessage(6,"Activate")
 	v.opening:=1
 	Gui,Margin,0,0
-	Gui,Add,TreeView,xm hwndce c0xff00ff w150
+	Gui,Add,TreeView,xm hwndce c0xff00ff w150 AltSubmit
 	Gui,Add,TreeView,hwndpe c0xff00ff w150 gcej AltSubmit
-	sc:=new s(1,{pos:"w200 h200",main:1}),TV_Add("Right Click to refresh")
+	sc:=new s(1,{pos:"w200 h200",main:1}),TV_Add("Right Click to refresh"),v.ce:=ce
 	Gui,Add,Text,xm+3 c0xAAAAAA,Quick Find
 	Gui,Add,Edit,x+2 w200 c0xAAAAAA gqf
 	ea:=settings.ea("//Quick_Find_Settings")
@@ -4072,6 +4072,7 @@ Options(x:=0){
 	Manual_Continuation_Line:
 	Small_Icons:
 	Top_Find:
+	Auto_Project_Explorer_Width:
 	onoff:=settings.ssn("//options/@ " A_ThisLabel).text?0:1,att:=[],att[A_ThisLabel]:=onoff,settings.add("options",att),togglemenu(A_ThisLabel)
 	if(A_ThisLabel="small_icons")
 		return m("Requires that you restart Studio to take effect.")
@@ -4080,12 +4081,13 @@ Options(x:=0){
 			hltline()
 		Else
 			sc:=csc(),sc.2045(2),sc.2045(3)
-	}
-	v.options[A_ThisLabel]:=onoff
+	}v.options[A_ThisLabel]:=onoff
 	if(A_ThisLabel="top_find")
 		Resize("Rebar"),RefreshThemes()
 	if(A_ThisLabel~="i)Disable_Folders_In_Project_Explorer|Full_Tree")
 		Refresh_Project_Explorer()
+	if(A_ThisLabel="Auto_Project_Explorer_Width")
+		tv(0,1)
 	return
 	;set bit only
 	Auto_Advance:
@@ -5300,23 +5302,25 @@ Testing(x:=0){
 		m(pos,hdc,ErrorLevel)
 	*/
 	;TVM_GETITEMRECT=(TV_FIRST + 4)
-	sc:=csc()
-	top:=files.sn("//file[@sc='" sc.2357 "']/../*"),max:=0
-	tick:=A_TickCount
-	while,tt:=top.item[A_Index-1],ea:=xml.ea(tt){
-		if(ea.strlen>max)
-			ltv:=ea.tv,last:=tt
-		max:=ea.strlen>max?ea.strlen:max
-	}
-	VarSetCapacity(rect,16)
-	NumPut(ltv,rect,0)
-	SendMessage,0x1100+4,1,&rect,SysTreeView321,% hwnd([1])
-	SendMessage,0x1100+6,0,0,SysTreeView321,% hwnd([1])
-	width:=ErrorLevel,count:=1
-	tv:=TV_GetSelection()
-	while,TV_GetParent(tv)
-		count++,tv:=TV_GetParent(tv)
-	tvwidth:=NumGet(rect,8)
+	/*
+		sc:=csc()
+		top:=files.sn("//file[@sc='" sc.2357 "']/../*"),max:=0
+		tick:=A_TickCount
+		while,tt:=top.item[A_Index-1],ea:=xml.ea(tt){
+			if(ea.strlen>max)
+				ltv:=ea.tv,last:=tt
+			max:=ea.strlen>max?ea.strlen:max
+		}
+		VarSetCapacity(rect,16)
+		NumPut(ltv,rect,0)
+		SendMessage,0x1100+4,1,&rect,SysTreeView321,% hwnd([1])
+		SendMessage,0x1100+6,0,0,SysTreeView321,% hwnd([1])
+		width:=ErrorLevel,count:=1
+		tv:=TV_GetSelection()
+		while,TV_GetParent(tv)
+			count++,tv:=TV_GetParent(tv)
+		tvwidth:=NumGet(rect,8)
+	*/
 	/*
 		m(width*count,tvwidth,NumGet(rect,8),NumGet(rect,0))
 	*/
@@ -5324,8 +5328,18 @@ Testing(x:=0){
 		for a,b in [0,4,8,12]
 			m(NumGet(rect,b))
 	*/
-	total:=(width*count)+tvwidth
-	settings.ssn("//gui/@projectwidth").text:=total,Resize("rebar")
+	/*
+		total:=(width*count)+tvwidth
+		settings.ssn("//gui/@projectwidth").text:=total,Resize("rebar")
+	*/
+	VarSetCapacity(info,28)
+	NumPut(28,info,0)
+	NumPut(256,info,4)
+	SendMessage,0xEA,0,&info,SysTreeView321,% hwnd([1])
+	m(ErrorLevel)
+	Loop,24
+		list.=A_Index " - " NumGet(info,(A_Index-1)) "`n"
+	m(list)
 	;m(total,width,count,tvwidth,NumGet(rect,8),NumGet(rect,0))
 	;TVM_GETINDENT=(TV_FIRST + 6)
 	;m(files.ssn("//*[@tv='" TV_GetSelection() "']").xml)
@@ -5418,7 +5432,7 @@ TrayMenu(){
 	Menu,Tray,Standard
 }
 tv(tv:=0,open:="",history:=0){
-	static fn,noredraw,tvbak
+	static fn,noredraw,tvbak,lastwidth
 	Gui,1:Default
 	Gui,1:TreeView,SysTreeView321
 	tvbak:=tv
@@ -5426,7 +5440,7 @@ tv(tv:=0,open:="",history:=0){
 	if(open=""&&history=0)
 		return
 	tv:
-	if(A_GuiEvent="S"||open||history){
+	if((A_GuiEvent="S"||open||history)&&A_EventInfo){
 		SetTimer,matchfile,Off
 		if(!v.startup)
 			getpos(),count:=0
@@ -5474,7 +5488,8 @@ tv(tv:=0,open:="",history:=0){
 				if(sc.2533(A_Index-1)=30)
 					sc.2532(A_Index-1,31)
 		}v.savelinestat.delete(fn),sc.Enable(1),MarginWidth() ;#[TV Figure out how to wait until the code is up and ready]
-	}
+	}if((A_GuiEvent="+"||A_GuiEvent="-"||open)&&v.options.Auto_Project_Explorer_Width)
+		SetTimer,auto-adjust,-100
 	return
 	matchfile:
 	Gui,1:Default
@@ -5483,6 +5498,19 @@ tv(tv:=0,open:="",history:=0){
 	doc:=sc.2357(),tv:=files.ssn("//*[@tv='" TV_GetSelection() "']"),ea:=xml.ea(tv)
 	if(doc!=ea.sc)
 		tv(TV_GetSelection(),1)
+	return
+	auto-adjust:
+	obj:=[]
+	VarSetCapacity(rect,16),VarSetCapacity(sbinf,28),NumPut(28,sbinf,0),NumPut(0x1|0x2|0x4|0x10,sbinf,4)
+	tv:=0,DllCall("GetScrollInfo",ptr,v.ce,Int,1,ptr,&sbInf),info:=NumGet(sbinf,16),Default("TreeView","SysTreeView321")
+	while,tv:=TV_GetNext(tv,"F"){
+		NumPut(tv,rect,0)
+		SendMessage,0x1100+4,1,&rect,SysTreeView321,% hwnd([1])
+		obj[NumGet(rect,8)+(info?25:5)]:=1
+	}
+	if(lastwidth!=obj.MaxIndex())
+		settings.ssn("//gui").SetAttribute("projectwidth",obj.MaxIndex()),Resize("rebar")
+	lastwidth:=obj.MaxIndex()
 	return
 }
 TVIcons(x:=""){
