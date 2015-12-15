@@ -5851,3 +5851,7 @@ Kill_Process(){
 	newwin.Destroy()
 	return
 }
+
+Forum(){
+	Run,https://autohotkey.com/boards/viewtopic.php?f=6&t=300&hilit=ahk+studio
+}

@@ -134,7 +134,7 @@ Added: Suggested by Run1e
 -Options/Virtual Scratch Pad: Does not create a file on your drive
 1.002.1
 Changed:
--All files not point to Github
+-All files now point to Github
 1.002.0
 Soup branch is now the main
 Replaced the master with the single file release
