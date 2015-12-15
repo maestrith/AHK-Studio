@@ -893,7 +893,7 @@ class s{
 		for a,b in {fn:2184,ptr:2185}
 			this[a]:=DllCall("SendMessageA",UInt,sc,int,b,int,0,int,0)
 		v.focus:=sc,this.2660(1)
-		for a,b in [[2563,1],[2565,1],[2614,1],[2402,15,75],[2124,1]]
+		for a,b in [[2563,1],[2565,1],[2614,1],[2124,1],[2402,0x1|0x4,120]]
 			this[b.1](b.2,b.3?b.3:0)
 		if(info.main)
 			s.main.push(this)
@@ -2089,16 +2089,13 @@ Export(){
 	if(outdir)
 		indir.text:=filename
 }
-Extract(fileobj,top,rootfile){
+Extract(fileobj,top,rootfile,count){
 	static ResDir:=ComObjCreate("Scripting.FileSystemObject")
 	SplitPath,A_AhkPath,,ahkdir
-	ahkdir.="\lib"
-	nextfile:=[],showicon:=settings.ssn("//icons/pe/@show").text
+	ahkdir.="\lib",nextfile:=[],showicon:=settings.ssn("//icons/pe/@show").text
 	SplitPath,rootfile,rootfn,rootfolder
-	if(!main:=cexml.ssn("//files/main[@file='" rootfile "']")){
-		main:=cexml.Add("files/main",{file:rootfile},"",1)
-		cexml.under(main,"file",{type:"File",parent:rootfile,file:rootfile,name:rootfn,folder:rootfolder,order:"name,type,folder"})
-	}
+	if(!main:=cexml.ssn("//files/main[@file='" rootfile "']"))
+		main:=cexml.Add("files/main",{file:rootfile},"",1),cexml.under(main,"file",{type:"File",parent:rootfile,file:rootfile,name:rootfn,folder:rootfolder,order:"name,type,folder"})
 	for a,filename in fileobj{
 		SplitPath,filename,fn,dir
 		maindir:=dir,fff:=FileOpen(filename,"R"),encoding:=fff.encoding,text:=file:=fff.read(fff.length),fff.Close(),dir:=Trim(dir,"\"),text:=RegExReplace(text,"\R","`n"),update({file:filename,text:text,load:1}),update:=files.ssn("//main[@file='" rootfile "']/descendant::file[@file='" filename "']")
@@ -2143,10 +2140,9 @@ Extract(fileobj,top,rootfile){
 							break
 						}
 					}
-				}else if(FileExist(incfile:=ResDir.GetAbsolutePathName(dir "\" found.1))){
+				}else if(FileExist(incfile:=ResDir.GetAbsolutePathName(dir "\" found.1)))
 					if(!ssn(top,"descendant::file[@file='" incfile "']"))
 						spfile:=incfile,nextfile.Push(incfile)
-				}
 				if(spfile){
 					SplitPath,spfile,fnme,folder
 					SplitPath,folder,last
@@ -2169,16 +2165,18 @@ Extract(fileobj,top,rootfile){
 						}
 					}
 					FileGetTime,time,%spfile%
-					files.under(tvxml:=files.ssn("//main[@file='" ssn(top,"@file").text "']/descendant::file[@file='" filename "']"),"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(tvxml,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme,strlen:StrLen(spfile)})
+					if(count>1)
+						files.under(tvxml:=ssn(top,"descendant::file[@file='" filename "']"),"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(tvxml,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme})
+					else
+						files.under(next,"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(next,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme})
 					cexml.under(main,"file",{type:"File",parent:rootfile,file:spfile,name:fnme,folder:folder,order:"name,type,folder"})
 					spfile:=""
-				}
-				incfile:=ext:=""
+				}incfile:=ext:=""
 			}
 		}
 	}
 	if(nextfile.1)
-		extract(nextfile,top,rootfile)
+		extract(nextfile,top,rootfile,++count)
 }
 FEAdd(value,parent,options){
 	Gui,1:Default
@@ -3972,7 +3970,7 @@ Open(filelist="",show="",Redraw:=1){
 	GuiControl,1:+g,SysTreeView321
 	GuiControl,1:-Redraw,SysTreeView321
 	top:=files.add("main",{file:filename},,1),next:=files.under(top,"file",{file:filename,tv:feadd(fn,0,"icon2 First sort"),github:fn,time:time})
-	Extract([filename],next,filename),ff:=files.sn("//file")
+	Extract([filename],next,filename,1),ff:=files.sn("//file")
 	if(!settings.ssn("//open/file[text()='" filename "']"))
 		settings.add("open/file",,filename,1)
 	Gui,1:Default

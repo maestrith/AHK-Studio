@@ -6,6 +6,7 @@ Fixed: Reported by gallaxhar
 -File encoding was odd
 Added: Suggested by gallaxar
 -Auto Project Explorer Width: Changes the width of the project explorer to match the content
+-File Explorer: Folder items were not populating items below them
 1.002.16
 Fixed: Reported by number1nub
 -New menu items will now come up in a menu called "New Menu Items" and not create any menus that are not in your current setup
