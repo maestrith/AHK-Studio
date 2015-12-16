@@ -1,616 +1,616 @@
 <?xml version="1.0"?>
 <scintilla>
 	<commands>
-		<item code="2001" name="AddText" syntax="(int length, string text)"></item>
-		<item code="2002" name="AddStyledText" syntax="(int length, cells c)"></item>
-		<item code="2003" name="InsertText" syntax="(position pos, string text)"></item>
-		<item code="2672" name="ChangeInsertion" syntax="(int length, string text)"></item>
-		<item code="2004" name="ClearAll"></item>
-		<item code="2645" name="DeleteRange" syntax="(position pos, int deleteLength)"></item>
-		<item code="2005" name="ClearDocumentStyle"></item>
-		<item code="2011" name="Redo"></item>
-		<item code="2013" name="SelectAll"></item>
-		<item code="2014" name="SetSavePoint"></item>
-		<item code="2018" name="MarkerDeleteHandle" syntax="(int handle)"></item>
-		<item code="2024" name="GotoLine" syntax="(int line)"></item>
-		<item code="2025" name="GotoPos" syntax="(position pos)"></item>
-		<item code="2029" name="ConvertEOLs" syntax="(int eolMode)"></item>
-		<item code="2032" name="StartStyling" syntax="(position pos, int mask)"></item>
-		<item code="2033" name="SetStyling" syntax="(int length, int style)"></item>
-		<item code="2675" name="ClearTabStops" syntax="(int line)"></item>
-		<item code="2676" name="AddTabStop" syntax="(int line, int x)"></item>
-		<item code="2040" name="MarkerDefine" syntax="(int markerNumber, int markerSymbol)"></item>
-		<item code="2293" name="MarkerEnableHighlight" syntax="(bool enabled)"></item>
-		<item code="2044" name="MarkerDelete" syntax="(int line, int markerNumber)"></item>
-		<item code="2045" name="MarkerDeleteAll" syntax="(int markerNumber)"></item>
-		<item code="2049" name="MarkerDefinePixmap" syntax="(int markerNumber, string pixmap)"></item>
-		<item code="2466" name="MarkerAddSet" syntax="(int line, int set)"></item>
-		<item code="2050" name="StyleClearAll"></item>
-		<item code="2058" name="StyleResetDefault"></item>
-		<item code="2067" name="SetSelFore" syntax="(bool useSetting, colour fore)"></item>
-		<item code="2068" name="SetSelBack" syntax="(bool useSetting, colour back)"></item>
-		<item code="2070" name="AssignCmdKey" syntax="(keymod km, int msg)"></item>
-		<item code="2071" name="ClearCmdKey" syntax="(keymod km)"></item>
-		<item code="2072" name="ClearAllCmdKeys"></item>
-		<item code="2073" name="SetStylingEx" syntax="(int length, string styles)"></item>
-		<item code="2078" name="BeginUndoAction"></item>
-		<item code="2079" name="EndUndoAction"></item>
-		<item code="2084" name="SetWhitespaceFore" syntax="(bool useSetting, colour fore)"></item>
-		<item code="2085" name="SetWhitespaceBack" syntax="(bool useSetting, colour back)"></item>
-		<item code="2100" name="AutoCShow" syntax="(int lenEntered, string itemList)"></item>
-		<item code="2101" name="AutoCCancel"></item>
-		<item code="2104" name="AutoCComplete"></item>
-		<item code="2105" name="AutoCStops" syntax="(NULL, string characterSet)"></item>
-		<item code="2108" name="AutoCSelect" syntax="(NULL, string text)"></item>
-		<item code="2117" name="UserListShow" syntax="(int listType, string itemList)"></item>
-		<item code="2405" name="RegisterImage" syntax="(int type, string xpmData)"></item>
-		<item code="2408" name="ClearRegisteredImages"></item>
-		<item code="2556" name="SetEmptySelection" syntax="(position pos)"></item>
-		<item code="2160" name="SetSel" syntax="(position start, position end)"></item>
-		<item code="2163" name="HideSelection" syntax="(bool normal)"></item>
-		<item code="2168" name="LineScroll" syntax="(int columns, int lines)"></item>
-		<item code="2169" name="ScrollCaret"></item>
-		<item code="2569" name="ScrollRange" syntax="(position secondary, position primary)"></item>
-		<item code="2170" name="ReplaceSel" syntax="(NULL, string text)"></item>
-		<item code="2172" name="Null"></item>
-		<item code="2175" name="EmptyUndoBuffer"></item>
-		<item code="2176" name="Undo"></item>
-		<item code="2177" name="Cut"></item>
-		<item code="2178" name="Copy"></item>
-		<item code="2179" name="Paste"></item>
-		<item code="2180" name="Clear"></item>
-		<item code="2181" name="SetText" syntax="(NULL, string text)"></item>
-		<item code="2686" name="SetTargetRange" syntax="(position start, position end)"></item>
-		<item code="2287" name="TargetFromSelection"></item>
-		<item code="2690" name="TargetWholeDocument"></item>
-		<item code="2200" name="CallTipShow" syntax="(position pos, string definition)"></item>
-		<item code="2201" name="CallTipCancel"></item>
-		<item code="2204" name="CallTipSetHlt" syntax="(int start, int end)"></item>
-		<item code="2226" name="ShowLines" syntax="(int lineStart, int lineEnd)"></item>
-		<item code="2227" name="HideLines" syntax="(int lineStart, int lineEnd)"></item>
-		<item code="2231" name="ToggleFold" syntax="(int line)"></item>
-		<item code="2237" name="FoldLine" syntax="(int line, int action)"></item>
-		<item code="2238" name="FoldChildren" syntax="(int line, int action)"></item>
-		<item code="2239" name="ExpandChildren" syntax="(int line, int level)"></item>
-		<item code="2662" name="FoldAll" syntax="(int action)"></item>
-		<item code="2232" name="EnsureVisible" syntax="(int line)"></item>
-		<item code="2234" name="EnsureVisibleEnforcePolicy" syntax="(int line)"></item>
-		<item code="2282" name="AppendText" syntax="(int length, string text)"></item>
-		<item code="2288" name="LinesJoin"></item>
-		<item code="2289" name="LinesSplit" syntax="(int pixelWidth)"></item>
-		<item code="2290" name="SetFoldMarginColour" syntax="(bool useSetting, colour back)"></item>
-		<item code="2291" name="SetFoldMarginHiColour" syntax="(bool useSetting, colour fore)"></item>
-		<item code="2300" name="LineDown"></item>
-		<item code="2301" name="LineDownExtend"></item>
-		<item code="2302" name="LineUp"></item>
-		<item code="2303" name="LineUpExtend"></item>
-		<item code="2304" name="CharLeft"></item>
-		<item code="2305" name="CharLeftExtend"></item>
-		<item code="2306" name="CharRight"></item>
-		<item code="2307" name="CharRightExtend"></item>
-		<item code="2308" name="WordLeft"></item>
-		<item code="2309" name="WordLeftExtend"></item>
-		<item code="2310" name="WordRight"></item>
-		<item code="2311" name="WordRightExtend"></item>
-		<item code="2312" name="Home"></item>
-		<item code="2313" name="HomeExtend"></item>
-		<item code="2314" name="LineEnd"></item>
-		<item code="2315" name="LineEndExtend"></item>
-		<item code="2316" name="DocumentStart"></item>
-		<item code="2317" name="DocumentStartExtend"></item>
-		<item code="2318" name="DocumentEnd"></item>
-		<item code="2319" name="DocumentEndExtend"></item>
-		<item code="2320" name="PageUp"></item>
-		<item code="2321" name="PageUpExtend"></item>
-		<item code="2322" name="PageDown"></item>
-		<item code="2323" name="PageDownExtend"></item>
-		<item code="2324" name="EditToggleOvertype"></item>
-		<item code="2325" name="Cancel"></item>
-		<item code="2326" name="DeleteBack"></item>
-		<item code="2327" name="Tab"></item>
-		<item code="2328" name="BackTab"></item>
-		<item code="2329" name="NewLine"></item>
-		<item code="2330" name="FormFeed"></item>
-		<item code="2331" name="VCHome"></item>
-		<item code="2332" name="VCHomeExtend"></item>
-		<item code="2333" name="ZoomIn"></item>
-		<item code="2334" name="ZoomOut"></item>
-		<item code="2335" name="DelWordLeft"></item>
-		<item code="2336" name="DelWordRight"></item>
-		<item code="2518" name="DelWordRightEnd"></item>
-		<item code="2337" name="LineCut"></item>
-		<item code="2338" name="LineDelete"></item>
-		<item code="2339" name="LineTranspose"></item>
-		<item code="2404" name="LineDuplicate"></item>
-		<item code="2340" name="LowerCase"></item>
-		<item code="2341" name="UpperCase"></item>
-		<item code="2342" name="LineScrollDown"></item>
-		<item code="2343" name="LineScrollUp"></item>
-		<item code="2344" name="DeleteBackNotLine"></item>
-		<item code="2345" name="HomeDisplay"></item>
-		<item code="2346" name="HomeDisplayExtend"></item>
-		<item code="2347" name="LineEndDisplay"></item>
-		<item code="2348" name="LineEndDisplayExtend"></item>
-		<item code="2349" name="HomeWrap"></item>
-		<item code="2450" name="HomeWrapExtend"></item>
-		<item code="2451" name="LineEndWrap"></item>
-		<item code="2452" name="LineEndWrapExtend"></item>
-		<item code="2453" name="VCHomeWrap"></item>
-		<item code="2454" name="VCHomeWrapExtend"></item>
-		<item code="2455" name="LineCopy"></item>
-		<item code="2401" name="MoveCaretInsideView"></item>
-		<item code="2351" name="BraceHighlight" syntax="(position pos1, position pos2)"></item>
-		<item code="2498" name="BraceHighlightIndicator" syntax="(bool useBraceHighlightIndicator, int indicator)"></item>
-		<item code="2352" name="BraceBadLight" syntax="(position pos)"></item>
-		<item code="2499" name="BraceBadLightIndicator" syntax="(bool useBraceBadLightIndicator, int indicator)"></item>
-		<item code="2366" name="SearchAnchor"></item>
-		<item code="2371" name="UsePopUp" syntax="(bool allowPopUp)"></item>
-		<item code="2376" name="AddRefDocument" syntax="(NULL, int doc)"></item>
-		<item code="2377" name="ReleaseDocument" syntax="(NULL, int doc)"></item>
-		<item code="2390" name="WordPartLeft"></item>
-		<item code="2391" name="WordPartLeftExtend"></item>
-		<item code="2392" name="WordPartRight"></item>
-		<item code="2393" name="WordPartRightExtend"></item>
-		<item code="2394" name="SetVisiblePolicy" syntax="(int visiblePolicy, int visibleSlop)"></item>
-		<item code="2395" name="DelLineLeft"></item>
-		<item code="2396" name="DelLineRight"></item>
-		<item code="2399" name="ChooseCaretX"></item>
-		<item code="2400" name="GrabFocus"></item>
-		<item code="2402" name="SetXCaretPolicy" syntax="(int caretPolicy, int caretSlop)"></item>
-		<item code="2403" name="SetYCaretPolicy" syntax="(int caretPolicy, int caretSlop)"></item>
-		<item code="2413" name="ParaDown"></item>
-		<item code="2414" name="ParaDownExtend"></item>
-		<item code="2415" name="ParaUp"></item>
-		<item code="2416" name="ParaUpExtend"></item>
-		<item code="2419" name="CopyRange" syntax="(position start, position end)"></item>
-		<item code="2420" name="CopyText" syntax="(int length, string text)"></item>
-		<item code="2426" name="LineDownRectExtend"></item>
-		<item code="2427" name="LineUpRectExtend"></item>
-		<item code="2428" name="CharLeftRectExtend"></item>
-		<item code="2429" name="CharRightRectExtend"></item>
-		<item code="2430" name="HomeRectExtend"></item>
-		<item code="2431" name="VCHomeRectExtend"></item>
-		<item code="2432" name="LineEndRectExtend"></item>
-		<item code="2433" name="PageUpRectExtend"></item>
-		<item code="2434" name="PageDownRectExtend"></item>
-		<item code="2435" name="StutteredPageUp"></item>
-		<item code="2436" name="StutteredPageUpExtend"></item>
-		<item code="2437" name="StutteredPageDown"></item>
-		<item code="2438" name="StutteredPageDownExtend"></item>
-		<item code="2439" name="WordLeftEnd"></item>
-		<item code="2440" name="WordLeftEndExtend"></item>
-		<item code="2441" name="WordRightEnd"></item>
-		<item code="2442" name="WordRightEndExtend"></item>
-		<item code="2444" name="SetCharsDefault"></item>
-		<item code="2446" name="Allocate" syntax="(int bytes)"></item>
-		<item code="2448" name="SetLengthForEncode" syntax="(int bytes)"></item>
-		<item code="2459" name="ToggleCaretSticky"></item>
-		<item code="2469" name="SelectionDuplicate"></item>
-		<item code="2504" name="IndicatorFillRange" syntax="(int position, int fillLength)"></item>
-		<item code="2505" name="IndicatorClearRange" syntax="(int position, int clearLength)"></item>
-		<item code="2519" name="CopyAllowLine"></item>
-		<item code="2536" name="MarginTextClearAll"></item>
-		<item code="2547" name="AnnotationClearAll"></item>
-		<item code="2552" name="ReleaseAllExtendedStyles"></item>
-		<item code="2560" name="AddUndoAction" syntax="(int token, int flags)"></item>
-		<item code="2571" name="ClearSelections"></item>
-		<item code="2671" name="DropSelectionN" syntax="(int selection)"></item>
-		<item code="2606" name="RotateSelection"></item>
-		<item code="2607" name="SwapMainAnchorCaret"></item>
-		<item code="2688" name="MultipleSelectAddNext"></item>
-		<item code="2689" name="MultipleSelectAddEach"></item>
-		<item code="2619" name="VerticalCentreCaret"></item>
-		<item code="2620" name="MoveSelectedLinesUp"></item>
-		<item code="2621" name="MoveSelectedLinesDown"></item>
-		<item code="2626" name="MarkerDefineRGBAImage" syntax="(int markerNumber, string pixels)"></item>
-		<item code="2627" name="RegisterRGBAImage" syntax="(int type, string pixels)"></item>
-		<item code="2628" name="ScrollToStart"></item>
-		<item code="2629" name="ScrollToEnd"></item>
-		<item code="2640" name="FindIndicatorShow" syntax="(position start, position end)"></item>
-		<item code="2641" name="FindIndicatorFlash" syntax="(position start, position end)"></item>
-		<item code="2642" name="FindIndicatorHide"></item>
-		<item code="2652" name="VCHomeDisplay"></item>
-		<item code="2653" name="VCHomeDisplayExtend"></item>
-		<item code="2667" name="ClearRepresentation" syntax="(string encodedCharacter)"></item>
-		<item code="3001" name="StartRecord"></item>
-		<item code="3002" name="StopRecord"></item>
-		<item code="4003" name="Colourise" syntax="(position start, position end)"></item>
-		<item code="4007" name="LoadLexerLibrary" syntax="(NULL, string path)"></item>
-		<item code="4023" name="FreeSubStyles"></item>
-		<item code="2012" name="SetUndoCollection" syntax="(bool collectUndo)"></item>
-		<item code="2021" name="SetViewWS" syntax="(int viewWS)"></item>
-		<item code="2026" name="SetAnchor" syntax="(position posAnchor)"></item>
-		<item code="2031" name="SetEOLMode" syntax="(int eolMode)"></item>
-		<item code="2035" name="SetBufferedDraw" syntax="(bool buffered)"></item>
-		<item code="2036" name="SetTabWidth" syntax="(int tabWidth)"></item>
-		<item code="2037" name="SetCodePage" syntax="(int codePage)"></item>
-		<item code="2041" name="MarkerSetFore" syntax="(int markerNumber, colour fore)"></item>
-		<item code="2042" name="MarkerSetBack" syntax="(int markerNumber, colour back)"></item>
-		<item code="2292" name="MarkerSetBackSelected" syntax="(int markerNumber, colour back)"></item>
-		<item code="2476" name="MarkerSetAlpha" syntax="(int markerNumber, int alpha)"></item>
-		<item code="2240" name="SetMarginTypeN" syntax="(int margin, int marginType)"></item>
-		<item code="2242" name="SetMarginWidthN" syntax="(int margin, int pixelWidth)"></item>
-		<item code="2244" name="SetMarginMaskN" syntax="(int margin, int mask)"></item>
-		<item code="2246" name="SetMarginSensitiveN" syntax="(int margin, bool sensitive)"></item>
-		<item code="2248" name="SetMarginCursorN" syntax="(int margin, int cursor)"></item>
-		<item code="2051" name="StyleSetFore" syntax="(int style, colour fore)"></item>
-		<item code="2052" name="StyleSetBack" syntax="(int style, colour back)"></item>
-		<item code="2053" name="StyleSetBold" syntax="(int style, bool bold)"></item>
-		<item code="2054" name="StyleSetItalic" syntax="(int style, bool italic)"></item>
-		<item code="2055" name="StyleSetSize" syntax="(int style, int sizePoints)"></item>
-		<item code="2056" name="StyleSetFont" syntax="(int style, string fontName)"></item>
-		<item code="2057" name="StyleSetEOLFilled" syntax="(int style, bool filled)"></item>
-		<item code="2059" name="StyleSetUnderline" syntax="(int style, bool underline)"></item>
-		<item code="2060" name="StyleSetCase" syntax="(int style, int caseForce)"></item>
-		<item code="2061" name="StyleSetSizeFractional" syntax="(int style, int caseForce)"></item>
-		<item code="2063" name="StyleSetWeight" syntax="(int style, int weight)"></item>
-		<item code="2066" name="StyleSetCharacterSet" syntax="(int style, int characterSet)"></item>
-		<item code="2409" name="StyleSetHotSpot" syntax="(int style, bool hotspot)"></item>
-		<item code="2478" name="SetSelAlpha" syntax="(int alpha)"></item>
-		<item code="2480" name="SetSelEOLFilled" syntax="(bool filled)"></item>
-		<item code="2069" name="SetCaretFore" syntax="(colour fore)"></item>
-		<item code="2074" name="StyleSetVisible" syntax="(int style, bool visible)"></item>
-		<item code="2076" name="SetCaretPeriod" syntax="(int periodMilliseconds)"></item>
-		<item code="2077" name="SetWordChars" syntax="(NULL, string characters)"></item>
-		<item code="2080" name="IndicSetStyle" syntax="(int indic, int style)"></item>
-		<item code="2082" name="IndicSetFore" syntax="(int indic, colour fore)"></item>
-		<item code="2510" name="IndicSetUnder" syntax="(int indic, bool under)"></item>
-		<item code="2680" name="IndicSetHoverStyle" syntax="(int indic, int style)"></item>
-		<item code="2682" name="IndicSetHoverFore" syntax="(int indic, colour fore)"></item>
-		<item code="2684" name="IndicSetFlags" syntax="(int indic, int flags)"></item>
-		<item code="2086" name="SetWhitespaceSize" syntax="(int size)"></item>
-		<item code="2090" name="SetStyleBits" syntax="(int bits)"></item>
-		<item code="2092" name="SetLineState" syntax="(int line, int state)"></item>
-		<item code="2096" name="SetCaretLineVisible" syntax="(bool show)"></item>
-		<item code="2098" name="SetCaretLineBack" syntax="(colour back)"></item>
-		<item code="2099" name="StyleSetChangeable" syntax="(int style, bool changeable)"></item>
-		<item code="2106" name="AutoCSetSeparator" syntax="(int separatorCharacter)"></item>
-		<item code="2110" name="AutoCSetCancelAtStart" syntax="(bool cancel)"></item>
-		<item code="2112" name="AutoCSetFillUps" syntax="(NULL, string characterSet)"></item>
-		<item code="2113" name="AutoCSetChooseSingle" syntax="(bool chooseSingle)"></item>
-		<item code="2115" name="AutoCSetIgnoreCase" syntax="(bool ignoreCase)"></item>
-		<item code="2118" name="AutoCSetAutoHide" syntax="(bool autoHide)"></item>
-		<item code="2270" name="AutoCSetDropRestOfWord" syntax="(bool dropRestOfWord)"></item>
-		<item code="2286" name="AutoCSetTypeSeparator" syntax="(int separatorCharacter)"></item>
-		<item code="2208" name="AutoCSetMaxWidth" syntax="(int characterCount)"></item>
-		<item code="2210" name="AutoCSetMaxHeight" syntax="(int rowCount)"></item>
-		<item code="2122" name="SetIndent" syntax="(int indentSize)"></item>
-		<item code="2124" name="SetUseTabs" syntax="(bool useTabs)"></item>
-		<item code="2126" name="SetLineIndentation" syntax="(int line, int indentSize)"></item>
-		<item code="2130" name="SetHScrollBar" syntax="(bool show)"></item>
-		<item code="2132" name="SetIndentationGuides" syntax="(int indentView)"></item>
-		<item code="2134" name="SetHighlightGuide" syntax="(int column)"></item>
-		<item code="2141" name="SetCurrentPos" syntax="(position pos)"></item>
-		<item code="2142" name="SetSelectionStart" syntax="(position pos)"></item>
-		<item code="2144" name="SetSelectionEnd" syntax="(position pos)"></item>
-		<item code="2146" name="SetPrintMagnification" syntax="(int magnification)"></item>
-		<item code="2148" name="SetPrintColourMode" syntax="(int mode)"></item>
-		<item code="2155" name="SetMarginLeft" syntax="(NULL, int pixelWidth)"></item>
-		<item code="2157" name="SetMarginRight" syntax="(NULL, int pixelWidth)"></item>
-		<item code="2171" name="SetReadOnly" syntax="(bool readOnly)"></item>
-		<item code="2186" name="SetOvertype" syntax="(bool overtype)"></item>
-		<item code="2188" name="SetCaretWidth" syntax="(int pixelWidth)"></item>
-		<item code="2190" name="SetTargetStart" syntax="(position pos)"></item>
-		<item code="2192" name="SetTargetEnd" syntax="(position pos)"></item>
-		<item code="2198" name="SetSearchFlags" syntax="(int flags)"></item>
-		<item code="2214" name="CallTipSetPosStart" syntax="(int posStart)"></item>
-		<item code="2205" name="CallTipSetBack" syntax="(colour back)"></item>
-		<item code="2206" name="CallTipSetFore" syntax="(colour fore)"></item>
-		<item code="2207" name="CallTipSetForeHlt" syntax="(colour fore)"></item>
-		<item code="2212" name="CallTipUseStyle" syntax="(int tabSize)"></item>
-		<item code="2213" name="CallTipSetPosition" syntax="(bool above)"></item>
-		<item code="2222" name="SetFoldLevel" syntax="(int line, int level)"></item>
-		<item code="2229" name="SetFoldExpanded" syntax="(int line, bool expanded)"></item>
-		<item code="2663" name="SetAutomaticFold" syntax="(int automaticFold)"></item>
-		<item code="2233" name="SetFoldFlags" syntax="(int flags)"></item>
-		<item code="2260" name="SetTabIndents" syntax="(bool tabIndents)"></item>
-		<item code="2262" name="SetBackSpaceUnIndents" syntax="(bool bsUnIndents)"></item>
-		<item code="2264" name="SetMouseDwellTime" syntax="(int periodMilliseconds)"></item>
-		<item code="2268" name="SetWrapMode" syntax="(int mode)"></item>
-		<item code="2460" name="SetWrapVisualFlags" syntax="(int wrapVisualFlags)"></item>
-		<item code="2462" name="SetWrapVisualFlagsLocation" syntax="(int wrapVisualFlagsLocation)"></item>
-		<item code="2464" name="SetWrapStartIndent" syntax="(int indent)"></item>
-		<item code="2472" name="SetWrapIndentMode" syntax="(int mode)"></item>
-		<item code="2272" name="SetLayoutCache" syntax="(int mode)"></item>
-		<item code="2274" name="SetScrollWidth" syntax="(int pixelWidth)"></item>
-		<item code="2516" name="SetScrollWidthTracking" syntax="(bool tracking)"></item>
-		<item code="2277" name="SetEndAtLastLine" syntax="(bool endAtLastLine)"></item>
-		<item code="2280" name="SetVScrollBar" syntax="(bool show)"></item>
-		<item code="2284" name="SetTwoPhaseDraw" syntax="(bool twoPhase)"></item>
-		<item code="2674" name="SetPhasesDraw" syntax="(int phases)"></item>
-		<item code="2611" name="SetFontQuality" syntax="(int fontQuality)"></item>
-		<item code="2613" name="SetFirstVisibleLine" syntax="(int lineDisplay)"></item>
-		<item code="2614" name="SetMultiPaste" syntax="(int multiPaste)"></item>
-		<item code="2356" name="SetViewEOL" syntax="(bool visible)"></item>
-		<item code="2358" name="SetDocPointer" syntax="(NULL, int pointer)"></item>
-		<item code="2359" name="SetModEventMask" syntax="(int mask)"></item>
-		<item code="2361" name="SetEdgeColumn" syntax="(int column)"></item>
-		<item code="2363" name="SetEdgeMode" syntax="(int mode)"></item>
-		<item code="2365" name="SetEdgeColour" syntax="(colour edgeColour)"></item>
-		<item code="2373" name="SetZoom" syntax="(int zoom)"></item>
-		<item code="2380" name="SetFocus" syntax="(bool focus)"></item>
-		<item code="2382" name="SetStatus" syntax="(int statusCode)"></item>
-		<item code="2384" name="SetMouseDownCaptures" syntax="(bool captures)"></item>
-		<item code="2386" name="SetCursor" syntax="(int cursorType)"></item>
-		<item code="2388" name="SetControlCharSymbol" syntax="(int symbol)"></item>
-		<item code="2397" name="SetXOffset" syntax="(int newOffset)"></item>
-		<item code="2406" name="SetPrintWrapMode" syntax="(int mode)"></item>
-		<item code="2410" name="SetHotspotActiveFore" syntax="(bool useSetting, colour fore)"></item>
-		<item code="2411" name="SetHotspotActiveBack" syntax="(bool useSetting, colour back)"></item>
-		<item code="2412" name="SetHotspotActiveUnderline" syntax="(bool underline)"></item>
-		<item code="2421" name="SetHotspotSingleLine" syntax="(bool singleLine)"></item>
-		<item code="2422" name="SetSelectionMode" syntax="(int mode)"></item>
-		<item code="2443" name="SetWhitespaceChars" syntax="(NULL, string characters)"></item>
-		<item code="2648" name="SetPunctuationChars" syntax="(NULL, string characters)"></item>
-		<item code="2634" name="AutoCSetCaseInsensitiveBehaviour" syntax="(int behaviour)"></item>
-		<item code="2636" name="AutoCSetMulti" syntax="(int multi)"></item>
-		<item code="2660" name="AutoCSetOrder" syntax="(int order)"></item>
-		<item code="2458" name="SetCaretSticky" syntax="(int useCaretStickyBehaviour)"></item>
-		<item code="2467" name="SetPasteConvertEndings" syntax="(bool convert)"></item>
-		<item code="2470" name="SetCaretLineBackAlpha" syntax="(int alpha)"></item>
-		<item code="2512" name="SetCaretStyle" syntax="(int caretStyle)"></item>
-		<item code="2500" name="SetIndicatorCurrent" syntax="(int indicator)"></item>
-		<item code="2502" name="SetIndicatorValue" syntax="(int value)"></item>
-		<item code="2514" name="SetPositionCache" syntax="(int size)"></item>
-		<item code="2523" name="IndicSetAlpha" syntax="(int indicator, int alpha)"></item>
-		<item code="2558" name="IndicSetOutlineAlpha" syntax="(int indicator, int alpha)"></item>
-		<item code="2525" name="SetExtraAscent" syntax="(int extraAscent)"></item>
-		<item code="2527" name="SetExtraDescent" syntax="(int extraDescent)"></item>
-		<item code="2530" name="MarginSetText" syntax="(int line, string text)"></item>
-		<item code="2532" name="MarginSetStyle" syntax="(int line, int style)"></item>
-		<item code="2534" name="MarginSetStyles" syntax="(int line, string styles)"></item>
-		<item code="2537" name="MarginSetStyleOffset" syntax="(int style)"></item>
-		<item code="2539" name="SetMarginOptions" syntax="(int marginOptions)"></item>
-		<item code="2540" name="AnnotationSetText" syntax="(int line, string text)"></item>
-		<item code="2542" name="AnnotationSetStyle" syntax="(int line, int style)"></item>
-		<item code="2544" name="AnnotationSetStyles" syntax="(int line, string styles)"></item>
-		<item code="2548" name="AnnotationSetVisible" syntax="(int visible)"></item>
-		<item code="2550" name="AnnotationSetStyleOffset" syntax="(int style)"></item>
-		<item code="2668" name="SetMouseSelectionRectangularSwitch" syntax="(bool mouseSelectionRectangularSwitch)"></item>
-		<item code="2563" name="SetMultipleSelection" syntax="(bool multipleSelection)"></item>
-		<item code="2565" name="SetAdditionalSelectionTyping" syntax="(bool additionalSelectionTyping)"></item>
-		<item code="2567" name="SetAdditionalCaretsBlink" syntax="(bool additionalCaretsBlink)"></item>
-		<item code="2608" name="SetAdditionalCaretsVisible" syntax="(bool additionalCaretsBlink)"></item>
-		<item code="2574" name="SetMainSelection" syntax="(int selection)"></item>
-		<item code="2576" name="SetSelectionNCaret" syntax="(int selection, position pos)"></item>
-		<item code="2578" name="SetSelectionNAnchor" syntax="(int selection, position posAnchor)"></item>
-		<item code="2580" name="SetSelectionNCaretVirtualSpace" syntax="(int selection, int space)"></item>
-		<item code="2582" name="SetSelectionNAnchorVirtualSpace" syntax="(int selection, int space)"></item>
-		<item code="2584" name="SetSelectionNStart" syntax="(int selection, position pos)"></item>
-		<item code="2586" name="SetSelectionNEnd" syntax="(int selection, position pos)"></item>
-		<item code="2588" name="SetRectangularSelectionCaret" syntax="(position pos)"></item>
-		<item code="2590" name="SetRectangularSelectionAnchor" syntax="(position posAnchor)"></item>
-		<item code="2592" name="SetRectangularSelectionCaretVirtualSpace" syntax="(int space)"></item>
-		<item code="2594" name="SetRectangularSelectionAnchorVirtualSpace" syntax="(int space)"></item>
-		<item code="2596" name="SetVirtualSpaceOptions" syntax="(int virtualSpaceOptions)"></item>
-		<item code="2598" name="SetRectangularSelectionModifier" syntax="(int modifier)"></item>
-		<item code="2600" name="SetAdditionalSelFore" syntax="(colour fore)"></item>
-		<item code="2601" name="SetAdditionalSelBack" syntax="(colour back)"></item>
-		<item code="2602" name="SetAdditionalSelAlpha" syntax="(int alpha)"></item>
-		<item code="2604" name="SetAdditionalCaretFore" syntax="(colour fore)"></item>
-		<item code="2622" name="SetIdentifier" syntax="(int identifier)"></item>
-		<item code="2624" name="RGBAImageSetWidth" syntax="(int width)"></item>
-		<item code="2625" name="RGBAImageSetHeight" syntax="(int height)"></item>
-		<item code="2651" name="RGBAImageSetScale" syntax="(int scalePercent)"></item>
-		<item code="2630" name="SetTechnology" syntax="(int technology)"></item>
-		<item code="2655" name="SetCaretLineVisibleAlways" syntax="(bool alwaysVisible)"></item>
-		<item code="2656" name="SetLineEndTypesAllowed" syntax="(int lineEndBitSet)"></item>
-		<item code="2665" name="SetRepresentation" syntax="(string encodedCharacter, string representation)"></item>
-		<item code="4001" name="SetLexer" syntax="(int lexer)"></item>
-		<item code="4004" name="SetProperty" syntax="(string key, string value)"></item>
-		<item code="4005" name="SetKeyWords" syntax="(int keywordSet, string keyWords)"></item>
-		<item code="4006" name="SetLexerLanguage" syntax="(NULL, string language)"></item>
-		<item code="4024" name="SetIdentifiers" syntax="(int style, string identifiers)"></item>
-		<item code="2039" name="SetUsePalette" syntax="(bool usePalette)"></item>
-		<item code="2521" name="SetKeysUnicode" syntax="(bool keysUnicode)"></item>
-		<item code="2006" name="GetLength"></item>
-		<item code="2007" name="GetCharAt" syntax="(position pos)"></item>
-		<item code="2008" name="GetCurrentPos"></item>
-		<item code="2009" name="GetAnchor"></item>
-		<item code="2010" name="GetStyleAt" syntax="(position pos)"></item>
-		<item code="2019" name="GetUndoCollection"></item>
-		<item code="2020" name="GetViewWS"></item>
-		<item code="2028" name="GetEndStyled"></item>
-		<item code="2030" name="GetEOLMode"></item>
-		<item code="2034" name="GetBufferedDraw"></item>
-		<item code="2121" name="GetTabWidth"></item>
-		<item code="2678" name="GetIMEInteraction"></item>
-		<item code="2241" name="GetMarginTypeN" syntax="(int margin)"></item>
-		<item code="2243" name="GetMarginWidthN" syntax="(int margin)"></item>
-		<item code="2245" name="GetMarginMaskN" syntax="(int margin)"></item>
-		<item code="2247" name="GetMarginSensitiveN" syntax="(int margin)"></item>
-		<item code="2249" name="GetMarginCursorN" syntax="(int margin)"></item>
-		<item code="2481" name="StyleGetFore" syntax="(int style)"></item>
-		<item code="2482" name="StyleGetBack" syntax="(int style)"></item>
-		<item code="2483" name="StyleGetBold" syntax="(int style)"></item>
-		<item code="2484" name="StyleGetItalic" syntax="(int style)"></item>
-		<item code="2485" name="StyleGetSize" syntax="(int style)"></item>
-		<item code="2486" name="StyleGetFont" syntax="(int style, stringresult fontName)"></item>
-		<item code="2487" name="StyleGetEOLFilled" syntax="(int style)"></item>
-		<item code="2488" name="StyleGetUnderline" syntax="(int style)"></item>
-		<item code="2489" name="StyleGetCase" syntax="(int style)"></item>
-		<item code="2490" name="StyleGetCharacterSet" syntax="(int style)"></item>
-		<item code="2491" name="StyleGetVisible" syntax="(int style)"></item>
-		<item code="2492" name="StyleGetChangeable" syntax="(int style)"></item>
-		<item code="2493" name="StyleGetHotSpot" syntax="(int style)"></item>
-		<item code="2062" name="StyleGetSizeFractional" syntax="(int style)"></item>
-		<item code="2064" name="StyleGetWeight" syntax="(int style)"></item>
-		<item code="2477" name="GetSelAlpha"></item>
-		<item code="2479" name="GetSelEOLFilled"></item>
-		<item code="2075" name="GetCaretPeriod"></item>
-		<item code="2646" name="GetWordChars" syntax="(NULL, stringresult characters)"></item>
-		<item code="2081" name="IndicGetStyle" syntax="(int indic)"></item>
-		<item code="2083" name="IndicGetFore" syntax="(int indic)"></item>
-		<item code="2511" name="IndicGetUnder" syntax="(int indic)"></item>
-		<item code="2681" name="IndicGetHoverStyle" syntax="(int indic)"></item>
-		<item code="2683" name="IndicGetHoverFore" syntax="(int indic)"></item>
-		<item code="2685" name="IndicGetFlags" syntax="(int indic)"></item>
-		<item code="2087" name="GetWhitespaceSize"></item>
-		<item code="2091" name="GetStyleBits"></item>
-		<item code="2093" name="GetLineState" syntax="(int line)"></item>
-		<item code="2094" name="GetMaxLineState"></item>
-		<item code="2095" name="GetCaretLineVisible"></item>
-		<item code="2097" name="GetCaretLineBack"></item>
-		<item code="2107" name="AutoCGetSeparator"></item>
-		<item code="2111" name="AutoCGetCancelAtStart"></item>
-		<item code="2114" name="AutoCGetChooseSingle"></item>
-		<item code="2116" name="AutoCGetIgnoreCase"></item>
-		<item code="2119" name="AutoCGetAutoHide"></item>
-		<item code="2271" name="AutoCGetDropRestOfWord"></item>
-		<item code="2285" name="AutoCGetTypeSeparator"></item>
-		<item code="2209" name="AutoCGetMaxWidth"></item>
-		<item code="2211" name="AutoCGetMaxHeight"></item>
-		<item code="2123" name="GetIndent"></item>
-		<item code="2125" name="GetUseTabs"></item>
-		<item code="2127" name="GetLineIndentation" syntax="(int line)"></item>
-		<item code="2128" name="GetLineIndentPosition" syntax="(int line)"></item>
-		<item code="2129" name="GetColumn" syntax="(position pos)"></item>
-		<item code="2131" name="GetHScrollBar"></item>
-		<item code="2133" name="GetIndentationGuides"></item>
-		<item code="2135" name="GetHighlightGuide"></item>
-		<item code="2136" name="GetLineEndPosition" syntax="(int line)"></item>
-		<item code="2137" name="GetCodePage"></item>
-		<item code="2138" name="GetCaretFore"></item>
-		<item code="2140" name="GetReadOnly"></item>
-		<item code="2143" name="GetSelectionStart"></item>
-		<item code="2145" name="GetSelectionEnd"></item>
-		<item code="2147" name="GetPrintMagnification"></item>
-		<item code="2149" name="GetPrintColourMode"></item>
-		<item code="2152" name="GetFirstVisibleLine"></item>
-		<item code="2154" name="GetLineCount"></item>
-		<item code="2156" name="GetMarginLeft"></item>
-		<item code="2158" name="GetMarginRight"></item>
-		<item code="2159" name="GetModify"></item>
-		<item code="2183" name="GetTextLength"></item>
-		<item code="2184" name="GetDirectFunction"></item>
-		<item code="2185" name="GetDirectPointer"></item>
-		<item code="2187" name="GetOvertype"></item>
-		<item code="2189" name="GetCaretWidth"></item>
-		<item code="2191" name="GetTargetStart"></item>
-		<item code="2193" name="GetTargetEnd"></item>
-		<item code="2687" name="GetTargetText" syntax="(NULL, stringresult characters)"></item>
-		<item code="2199" name="GetSearchFlags"></item>
-		<item code="2223" name="GetFoldLevel" syntax="(int line)"></item>
-		<item code="2224" name="GetLastChild" syntax="(int line, int level)"></item>
-		<item code="2225" name="GetFoldParent" syntax="(int line)"></item>
-		<item code="2228" name="GetLineVisible" syntax="(int line)"></item>
-		<item code="2236" name="GetAllLinesVisible"></item>
-		<item code="2230" name="GetFoldExpanded" syntax="(int line)"></item>
-		<item code="2664" name="GetAutomaticFold"></item>
-		<item code="2261" name="GetTabIndents"></item>
-		<item code="2263" name="GetBackSpaceUnIndents"></item>
-		<item code="2265" name="GetMouseDwellTime"></item>
-		<item code="2269" name="GetWrapMode"></item>
-		<item code="2461" name="GetWrapVisualFlags"></item>
-		<item code="2463" name="GetWrapVisualFlagsLocation"></item>
-		<item code="2465" name="GetWrapStartIndent"></item>
-		<item code="2473" name="GetWrapIndentMode"></item>
-		<item code="2273" name="GetLayoutCache"></item>
-		<item code="2275" name="GetScrollWidth"></item>
-		<item code="2517" name="GetScrollWidthTracking"></item>
-		<item code="2278" name="GetEndAtLastLine"></item>
-		<item code="2281" name="GetVScrollBar"></item>
-		<item code="2283" name="GetTwoPhaseDraw"></item>
-		<item code="2673" name="GetPhasesDraw"></item>
-		<item code="2612" name="GetFontQuality"></item>
-		<item code="2615" name="GetMultiPaste"></item>
-		<item code="2616" name="GetTag" syntax="(int tagNumber, stringresult tagValue)"></item>
-		<item code="2355" name="GetViewEOL"></item>
-		<item code="2357" name="GetDocPointer"></item>
-		<item code="2360" name="GetEdgeColumn"></item>
-		<item code="2362" name="GetEdgeMode"></item>
-		<item code="2364" name="GetEdgeColour"></item>
-		<item code="2370" name="LinesOnScreen"></item>
-		<item code="2372" name="SelectionIsRectangle"></item>
-		<item code="2374" name="GetZoom"></item>
-		<item code="2378" name="GetModEventMask"></item>
-		<item code="2381" name="GetFocus"></item>
-		<item code="2383" name="GetStatus"></item>
-		<item code="2385" name="GetMouseDownCaptures"></item>
-		<item code="2387" name="GetCursor"></item>
-		<item code="2389" name="GetControlCharSymbol"></item>
-		<item code="2398" name="GetXOffset"></item>
-		<item code="2407" name="GetPrintWrapMode"></item>
-		<item code="2494" name="GetHotspotActiveFore"></item>
-		<item code="2495" name="GetHotspotActiveBack"></item>
-		<item code="2496" name="GetHotspotActiveUnderline"></item>
-		<item code="2497" name="GetHotspotSingleLine"></item>
-		<item code="2423" name="GetSelectionMode"></item>
-		<item code="2647" name="GetWhitespaceChars" syntax="(NULL, stringresult characters)"></item>
-		<item code="2649" name="GetPunctuationChars" syntax="(NULL, stringresult characters)"></item>
-		<item code="2445" name="AutoCGetCurrent"></item>
-		<item code="2610" name="AutoCGetCurrentText" syntax="(NULL, stringresult s)"></item>
-		<item code="2635" name="AutoCGetCaseInsensitiveBehaviour"></item>
-		<item code="2637" name="AutoCGetMulti"></item>
-		<item code="2661" name="AutoCGetOrder"></item>
-		<item code="2457" name="GetCaretSticky"></item>
-		<item code="2468" name="GetPasteConvertEndings"></item>
-		<item code="2471" name="GetCaretLineBackAlpha"></item>
-		<item code="2513" name="GetCaretStyle"></item>
-		<item code="2501" name="GetIndicatorCurrent"></item>
-		<item code="2503" name="GetIndicatorValue"></item>
-		<item code="2515" name="GetPositionCache"></item>
-		<item code="2520" name="GetCharacterPointer"></item>
-		<item code="2643" name="GetRangePointer" syntax="(int position, int rangeLength)"></item>
-		<item code="2644" name="GetGapPosition"></item>
-		<item code="2524" name="IndicGetAlpha" syntax="(int indicator)"></item>
-		<item code="2559" name="IndicGetOutlineAlpha" syntax="(int indicator)"></item>
-		<item code="2526" name="GetExtraAscent"></item>
-		<item code="2528" name="GetExtraDescent"></item>
-		<item code="2531" name="MarginGetText" syntax="(int line, stringresult text)"></item>
-		<item code="2533" name="MarginGetStyle" syntax="(int line)"></item>
-		<item code="2535" name="MarginGetStyles" syntax="(int line, stringresult styles)"></item>
-		<item code="2538" name="MarginGetStyleOffset"></item>
-		<item code="2557" name="GetMarginOptions"></item>
-		<item code="2541" name="AnnotationGetText" syntax="(int line, stringresult text)"></item>
-		<item code="2543" name="AnnotationGetStyle" syntax="(int line)"></item>
-		<item code="2545" name="AnnotationGetStyles" syntax="(int line, stringresult styles)"></item>
-		<item code="2546" name="AnnotationGetLines" syntax="(int line)"></item>
-		<item code="2549" name="AnnotationGetVisible"></item>
-		<item code="2551" name="AnnotationGetStyleOffset"></item>
-		<item code="2669" name="GetMouseSelectionRectangularSwitch"></item>
-		<item code="2564" name="GetMultipleSelection"></item>
-		<item code="2566" name="GetAdditionalSelectionTyping"></item>
-		<item code="2568" name="GetAdditionalCaretsBlink"></item>
-		<item code="2609" name="GetAdditionalCaretsVisible"></item>
-		<item code="2570" name="GetSelections"></item>
-		<item code="2650" name="GetSelectionEmpty"></item>
-		<item code="2575" name="GetMainSelection"></item>
-		<item code="2577" name="GetSelectionNCaret" syntax="(int selection)"></item>
-		<item code="2579" name="GetSelectionNAnchor" syntax="(int selection)"></item>
-		<item code="2581" name="GetSelectionNCaretVirtualSpace" syntax="(int selection)"></item>
-		<item code="2583" name="GetSelectionNAnchorVirtualSpace" syntax="(int selection)"></item>
-		<item code="2585" name="GetSelectionNStart" syntax="(int selection)"></item>
-		<item code="2587" name="GetSelectionNEnd" syntax="(int selection)"></item>
-		<item code="2589" name="GetRectangularSelectionCaret"></item>
-		<item code="2591" name="GetRectangularSelectionAnchor"></item>
-		<item code="2593" name="GetRectangularSelectionCaretVirtualSpace"></item>
-		<item code="2595" name="GetRectangularSelectionAnchorVirtualSpace"></item>
-		<item code="2597" name="GetVirtualSpaceOptions"></item>
-		<item code="2599" name="GetRectangularSelectionModifier"></item>
-		<item code="2603" name="GetAdditionalSelAlpha"></item>
-		<item code="2605" name="GetAdditionalCaretFore"></item>
-		<item code="2623" name="GetIdentifier"></item>
-		<item code="2631" name="GetTechnology"></item>
-		<item code="2654" name="GetCaretLineVisibleAlways"></item>
-		<item code="2657" name="GetLineEndTypesAllowed"></item>
-		<item code="2658" name="GetLineEndTypesActive"></item>
-		<item code="2666" name="GetRepresentation" syntax="(string encodedCharacter, stringresult representation)"></item>
-		<item code="4002" name="GetLexer"></item>
-		<item code="4008" name="GetProperty" syntax="(string key, stringresult buf)"></item>
-		<item code="4009" name="GetPropertyExpanded" syntax="(string key, stringresult buf)"></item>
-		<item code="4010" name="GetPropertyInt" syntax="(string key)"></item>
-		<item code="4011" name="GetStyleBitsNeeded"></item>
-		<item code="4012" name="GetLexerLanguage" syntax="(NULL, stringresult text)"></item>
-		<item code="4018" name="GetLineEndTypesSupported"></item>
-		<item code="4021" name="GetSubStylesStart" syntax="(int styleBase)"></item>
-		<item code="4022" name="GetSubStylesLength" syntax="(int styleBase)"></item>
-		<item code="4027" name="GetStyleFromSubStyle" syntax="(int subStyle)"></item>
-		<item code="4028" name="GetPrimaryStyleFromStyle" syntax="(int style)"></item>
-		<item code="4025" name="DistanceToSecondaryStyles"></item>
-		<item code="4026" name="GetSubStyleBases" syntax="(NULL, stringresult styles)"></item>
-		<item code="2139" name="GetUsePalette"></item>
-		<item code="2522" name="GetKeysUnicode"></item>
+		<item code="2001" name="ADDTEXT" syntax="(int length, string text)"></item>
+		<item code="2002" name="ADDSTYLEDTEXT" syntax="(int length, cells c)"></item>
+		<item code="2003" name="INSERTTEXT" syntax="(position pos, string text)"></item>
+		<item code="2672" name="CHANGEINSERTION" syntax="(int length, string text)"></item>
+		<item code="2004" name="CLEARALL"></item>
+		<item code="2645" name="DELETERANGE" syntax="(position pos, int deleteLength)"></item>
+		<item code="2005" name="CLEARDOCUMENTSTYLE"></item>
+		<item code="2011" name="REDO"></item>
+		<item code="2013" name="SELECTALL"></item>
+		<item code="2014" name="SETSAVEPOINT"></item>
+		<item code="2018" name="MARKERDELETEHANDLE" syntax="(int handle)"></item>
+		<item code="2024" name="GOTOLINE" syntax="(int line)"></item>
+		<item code="2025" name="GOTOPOS" syntax="(position pos)"></item>
+		<item code="2029" name="CONVERTEOLS" syntax="(int eolMode)"></item>
+		<item code="2032" name="STARTSTYLING" syntax="(position pos, int mask)"></item>
+		<item code="2033" name="SETSTYLING" syntax="(int length, int style)"></item>
+		<item code="2675" name="CLEARTABSTOPS" syntax="(int line)"></item>
+		<item code="2676" name="ADDTABSTOP" syntax="(int line, int x)"></item>
+		<item code="2040" name="MARKERDEFINE" syntax="(int markerNumber, int markerSymbol)"></item>
+		<item code="2293" name="MARKERENABLEHIGHLIGHT" syntax="(bool enabled)"></item>
+		<item code="2044" name="MARKERDELETE" syntax="(int line, int markerNumber)"></item>
+		<item code="2045" name="MARKERDELETEALL" syntax="(int markerNumber)"></item>
+		<item code="2049" name="MARKERDEFINEPIXMAP" syntax="(int markerNumber, string pixmap)"></item>
+		<item code="2466" name="MARKERADDSET" syntax="(int line, int set)"></item>
+		<item code="2050" name="STYLECLEARALL"></item>
+		<item code="2058" name="STYLERESETDEFAULT"></item>
+		<item code="2067" name="SETSELFORE" syntax="(bool useSetting, colour fore)"></item>
+		<item code="2068" name="SETSELBACK" syntax="(bool useSetting, colour back)"></item>
+		<item code="2070" name="ASSIGNCMDKEY" syntax="(keymod km, int msg)"></item>
+		<item code="2071" name="CLEARCMDKEY" syntax="(keymod km)"></item>
+		<item code="2072" name="CLEARALLCMDKEYS"></item>
+		<item code="2073" name="SETSTYLINGEX" syntax="(int length, string styles)"></item>
+		<item code="2078" name="BEGINUNDOACTION"></item>
+		<item code="2079" name="ENDUNDOACTION"></item>
+		<item code="2084" name="SETWHITESPACEFORE" syntax="(bool useSetting, colour fore)"></item>
+		<item code="2085" name="SETWHITESPACEBACK" syntax="(bool useSetting, colour back)"></item>
+		<item code="2100" name="AUTOCSHOW" syntax="(int lenEntered, string itemList)"></item>
+		<item code="2101" name="AUTOCCANCEL"></item>
+		<item code="2104" name="AUTOCCOMPLETE"></item>
+		<item code="2105" name="AUTOCSTOPS" syntax="(NULL, string characterSet)"></item>
+		<item code="2108" name="AUTOCSELECT" syntax="(NULL, string text)"></item>
+		<item code="2117" name="USERLISTSHOW" syntax="(int listType, string itemList)"></item>
+		<item code="2405" name="REGISTERIMAGE" syntax="(int type, string xpmData)"></item>
+		<item code="2408" name="CLEARREGISTEREDIMAGES"></item>
+		<item code="2556" name="SETEMPTYSELECTION" syntax="(position pos)"></item>
+		<item code="2160" name="SETSEL" syntax="(position start, position end)"></item>
+		<item code="2163" name="HIDESELECTION" syntax="(bool normal)"></item>
+		<item code="2168" name="LINESCROLL" syntax="(int columns, int lines)"></item>
+		<item code="2169" name="SCROLLCARET"></item>
+		<item code="2569" name="SCROLLRANGE" syntax="(position secondary, position primary)"></item>
+		<item code="2170" name="REPLACESEL" syntax="(NULL, string text)"></item>
+		<item code="2172" name="NULL"></item>
+		<item code="2175" name="EMPTYUNDOBUFFER"></item>
+		<item code="2176" name="UNDO"></item>
+		<item code="2177" name="CUT"></item>
+		<item code="2178" name="COPY"></item>
+		<item code="2179" name="PASTE"></item>
+		<item code="2180" name="CLEAR"></item>
+		<item code="2181" name="SETTEXT" syntax="(NULL, string text)"></item>
+		<item code="2686" name="SETTARGETRANGE" syntax="(position start, position end)"></item>
+		<item code="2287" name="TARGETFROMSELECTION"></item>
+		<item code="2690" name="TARGETWHOLEDOCUMENT"></item>
+		<item code="2200" name="CALLTIPSHOW" syntax="(position pos, string definition)"></item>
+		<item code="2201" name="CALLTIPCANCEL"></item>
+		<item code="2204" name="CALLTIPSETHLT" syntax="(int start, int end)"></item>
+		<item code="2226" name="SHOWLINES" syntax="(int lineStart, int lineEnd)"></item>
+		<item code="2227" name="HIDELINES" syntax="(int lineStart, int lineEnd)"></item>
+		<item code="2231" name="TOGGLEFOLD" syntax="(int line)"></item>
+		<item code="2237" name="FOLDLINE" syntax="(int line, int action)"></item>
+		<item code="2238" name="FOLDCHILDREN" syntax="(int line, int action)"></item>
+		<item code="2239" name="EXPANDCHILDREN" syntax="(int line, int level)"></item>
+		<item code="2662" name="FOLDALL" syntax="(int action)"></item>
+		<item code="2232" name="ENSUREVISIBLE" syntax="(int line)"></item>
+		<item code="2234" name="ENSUREVISIBLEENFORCEPOLICY" syntax="(int line)"></item>
+		<item code="2282" name="APPENDTEXT" syntax="(int length, string text)"></item>
+		<item code="2288" name="LINESJOIN"></item>
+		<item code="2289" name="LINESSPLIT" syntax="(int pixelWidth)"></item>
+		<item code="2290" name="SETFOLDMARGINCOLOUR" syntax="(bool useSetting, colour back)"></item>
+		<item code="2291" name="SETFOLDMARGINHICOLOUR" syntax="(bool useSetting, colour fore)"></item>
+		<item code="2300" name="LINEDOWN"></item>
+		<item code="2301" name="LINEDOWNEXTEND"></item>
+		<item code="2302" name="LINEUP"></item>
+		<item code="2303" name="LINEUPEXTEND"></item>
+		<item code="2304" name="CHARLEFT"></item>
+		<item code="2305" name="CHARLEFTEXTEND"></item>
+		<item code="2306" name="CHARRIGHT"></item>
+		<item code="2307" name="CHARRIGHTEXTEND"></item>
+		<item code="2308" name="WORDLEFT"></item>
+		<item code="2309" name="WORDLEFTEXTEND"></item>
+		<item code="2310" name="WORDRIGHT"></item>
+		<item code="2311" name="WORDRIGHTEXTEND"></item>
+		<item code="2312" name="HOME"></item>
+		<item code="2313" name="HOMEEXTEND"></item>
+		<item code="2314" name="LINEEND"></item>
+		<item code="2315" name="LINEENDEXTEND"></item>
+		<item code="2316" name="DOCUMENTSTART"></item>
+		<item code="2317" name="DOCUMENTSTARTEXTEND"></item>
+		<item code="2318" name="DOCUMENTEND"></item>
+		<item code="2319" name="DOCUMENTENDEXTEND"></item>
+		<item code="2320" name="PAGEUP"></item>
+		<item code="2321" name="PAGEUPEXTEND"></item>
+		<item code="2322" name="PAGEDOWN"></item>
+		<item code="2323" name="PAGEDOWNEXTEND"></item>
+		<item code="2324" name="EDITTOGGLEOVERTYPE"></item>
+		<item code="2325" name="CANCEL"></item>
+		<item code="2326" name="DELETEBACK"></item>
+		<item code="2327" name="TAB"></item>
+		<item code="2328" name="BACKTAB"></item>
+		<item code="2329" name="NEWLINE"></item>
+		<item code="2330" name="FORMFEED"></item>
+		<item code="2331" name="VCHOME"></item>
+		<item code="2332" name="VCHOMEEXTEND"></item>
+		<item code="2333" name="ZOOMIN"></item>
+		<item code="2334" name="ZOOMOUT"></item>
+		<item code="2335" name="DELWORDLEFT"></item>
+		<item code="2336" name="DELWORDRIGHT"></item>
+		<item code="2518" name="DELWORDRIGHTEND"></item>
+		<item code="2337" name="LINECUT"></item>
+		<item code="2338" name="LINEDELETE"></item>
+		<item code="2339" name="LINETRANSPOSE"></item>
+		<item code="2404" name="LINEDUPLICATE"></item>
+		<item code="2340" name="LOWERCASE"></item>
+		<item code="2341" name="UPPERCASE"></item>
+		<item code="2342" name="LINESCROLLDOWN"></item>
+		<item code="2343" name="LINESCROLLUP"></item>
+		<item code="2344" name="DELETEBACKNOTLINE"></item>
+		<item code="2345" name="HOMEDISPLAY"></item>
+		<item code="2346" name="HOMEDISPLAYEXTEND"></item>
+		<item code="2347" name="LINEENDDISPLAY"></item>
+		<item code="2348" name="LINEENDDISPLAYEXTEND"></item>
+		<item code="2349" name="HOMEWRAP"></item>
+		<item code="2450" name="HOMEWRAPEXTEND"></item>
+		<item code="2451" name="LINEENDWRAP"></item>
+		<item code="2452" name="LINEENDWRAPEXTEND"></item>
+		<item code="2453" name="VCHOMEWRAP"></item>
+		<item code="2454" name="VCHOMEWRAPEXTEND"></item>
+		<item code="2455" name="LINECOPY"></item>
+		<item code="2401" name="MOVECARETINSIDEVIEW"></item>
+		<item code="2351" name="BRACEHIGHLIGHT" syntax="(position pos1, position pos2)"></item>
+		<item code="2498" name="BRACEHIGHLIGHTINDICATOR" syntax="(bool useBraceHighlightIndicator, int indicator)"></item>
+		<item code="2352" name="BRACEBADLIGHT" syntax="(position pos)"></item>
+		<item code="2499" name="BRACEBADLIGHTINDICATOR" syntax="(bool useBraceBadLightIndicator, int indicator)"></item>
+		<item code="2366" name="SEARCHANCHOR"></item>
+		<item code="2371" name="USEPOPUP" syntax="(bool allowPopUp)"></item>
+		<item code="2376" name="ADDREFDOCUMENT" syntax="(NULL, int doc)"></item>
+		<item code="2377" name="RELEASEDOCUMENT" syntax="(NULL, int doc)"></item>
+		<item code="2390" name="WORDPARTLEFT"></item>
+		<item code="2391" name="WORDPARTLEFTEXTEND"></item>
+		<item code="2392" name="WORDPARTRIGHT"></item>
+		<item code="2393" name="WORDPARTRIGHTEXTEND"></item>
+		<item code="2394" name="SETVISIBLEPOLICY" syntax="(int visiblePolicy, int visibleSlop)"></item>
+		<item code="2395" name="DELLINELEFT"></item>
+		<item code="2396" name="DELLINERIGHT"></item>
+		<item code="2399" name="CHOOSECARETX"></item>
+		<item code="2400" name="GRABFOCUS"></item>
+		<item code="2402" name="SETXCARETPOLICY" syntax="(int caretPolicy, int caretSlop)"></item>
+		<item code="2403" name="SETYCARETPOLICY" syntax="(int caretPolicy, int caretSlop)"></item>
+		<item code="2413" name="PARADOWN"></item>
+		<item code="2414" name="PARADOWNEXTEND"></item>
+		<item code="2415" name="PARAUP"></item>
+		<item code="2416" name="PARAUPEXTEND"></item>
+		<item code="2419" name="COPYRANGE" syntax="(position start, position end)"></item>
+		<item code="2420" name="COPYTEXT" syntax="(int length, string text)"></item>
+		<item code="2426" name="LINEDOWNRECTEXTEND"></item>
+		<item code="2427" name="LINEUPRECTEXTEND"></item>
+		<item code="2428" name="CHARLEFTRECTEXTEND"></item>
+		<item code="2429" name="CHARRIGHTRECTEXTEND"></item>
+		<item code="2430" name="HOMERECTEXTEND"></item>
+		<item code="2431" name="VCHOMERECTEXTEND"></item>
+		<item code="2432" name="LINEENDRECTEXTEND"></item>
+		<item code="2433" name="PAGEUPRECTEXTEND"></item>
+		<item code="2434" name="PAGEDOWNRECTEXTEND"></item>
+		<item code="2435" name="STUTTEREDPAGEUP"></item>
+		<item code="2436" name="STUTTEREDPAGEUPEXTEND"></item>
+		<item code="2437" name="STUTTEREDPAGEDOWN"></item>
+		<item code="2438" name="STUTTEREDPAGEDOWNEXTEND"></item>
+		<item code="2439" name="WORDLEFTEND"></item>
+		<item code="2440" name="WORDLEFTENDEXTEND"></item>
+		<item code="2441" name="WORDRIGHTEND"></item>
+		<item code="2442" name="WORDRIGHTENDEXTEND"></item>
+		<item code="2444" name="SETCHARSDEFAULT"></item>
+		<item code="2446" name="ALLOCATE" syntax="(int bytes)"></item>
+		<item code="2448" name="SETLENGTHFORENCODE" syntax="(int bytes)"></item>
+		<item code="2459" name="TOGGLECARETSTICKY"></item>
+		<item code="2469" name="SELECTIONDUPLICATE"></item>
+		<item code="2504" name="INDICATORFILLRANGE" syntax="(int position, int fillLength)"></item>
+		<item code="2505" name="INDICATORCLEARRANGE" syntax="(int position, int clearLength)"></item>
+		<item code="2519" name="COPYALLOWLINE"></item>
+		<item code="2536" name="MARGINTEXTCLEARALL"></item>
+		<item code="2547" name="ANNOTATIONCLEARALL"></item>
+		<item code="2552" name="RELEASEALLEXTENDEDSTYLES"></item>
+		<item code="2560" name="ADDUNDOACTION" syntax="(int token, int flags)"></item>
+		<item code="2571" name="CLEARSELECTIONS"></item>
+		<item code="2671" name="DROPSELECTIONN" syntax="(int selection)"></item>
+		<item code="2606" name="ROTATESELECTION"></item>
+		<item code="2607" name="SWAPMAINANCHORCARET"></item>
+		<item code="2688" name="MULTIPLESELECTADDNEXT"></item>
+		<item code="2689" name="MULTIPLESELECTADDEACH"></item>
+		<item code="2619" name="VERTICALCENTRECARET"></item>
+		<item code="2620" name="MOVESELECTEDLINESUP"></item>
+		<item code="2621" name="MOVESELECTEDLINESDOWN"></item>
+		<item code="2626" name="MARKERDEFINERGBAIMAGE" syntax="(int markerNumber, string pixels)"></item>
+		<item code="2627" name="REGISTERRGBAIMAGE" syntax="(int type, string pixels)"></item>
+		<item code="2628" name="SCROLLTOSTART"></item>
+		<item code="2629" name="SCROLLTOEND"></item>
+		<item code="2640" name="FINDINDICATORSHOW" syntax="(position start, position end)"></item>
+		<item code="2641" name="FINDINDICATORFLASH" syntax="(position start, position end)"></item>
+		<item code="2642" name="FINDINDICATORHIDE"></item>
+		<item code="2652" name="VCHOMEDISPLAY"></item>
+		<item code="2653" name="VCHOMEDISPLAYEXTEND"></item>
+		<item code="2667" name="CLEARREPRESENTATION" syntax="(string encodedCharacter)"></item>
+		<item code="3001" name="STARTRECORD"></item>
+		<item code="3002" name="STOPRECORD"></item>
+		<item code="4003" name="COLOURISE" syntax="(position start, position end)"></item>
+		<item code="4007" name="LOADLEXERLIBRARY" syntax="(NULL, string path)"></item>
+		<item code="4023" name="FREESUBSTYLES"></item>
+		<item code="2012" name="SETUNDOCOLLECTION" syntax="(bool collectUndo)"></item>
+		<item code="2021" name="SETVIEWWS" syntax="(int viewWS)"></item>
+		<item code="2026" name="SETANCHOR" syntax="(position posAnchor)"></item>
+		<item code="2031" name="SETEOLMODE" syntax="(int eolMode)"></item>
+		<item code="2035" name="SETBUFFEREDDRAW" syntax="(bool buffered)"></item>
+		<item code="2036" name="SETTABWIDTH" syntax="(int tabWidth)"></item>
+		<item code="2037" name="SETCODEPAGE" syntax="(int codePage)"></item>
+		<item code="2041" name="MARKERSETFORE" syntax="(int markerNumber, colour fore)"></item>
+		<item code="2042" name="MARKERSETBACK" syntax="(int markerNumber, colour back)"></item>
+		<item code="2292" name="MARKERSETBACKSELECTED" syntax="(int markerNumber, colour back)"></item>
+		<item code="2476" name="MARKERSETALPHA" syntax="(int markerNumber, int alpha)"></item>
+		<item code="2240" name="SETMARGINTYPEN" syntax="(int margin, int marginType)"></item>
+		<item code="2242" name="SETMARGINWIDTHN" syntax="(int margin, int pixelWidth)"></item>
+		<item code="2244" name="SETMARGINMASKN" syntax="(int margin, int mask)"></item>
+		<item code="2246" name="SETMARGINSENSITIVEN" syntax="(int margin, bool sensitive)"></item>
+		<item code="2248" name="SETMARGINCURSORN" syntax="(int margin, int cursor)"></item>
+		<item code="2051" name="STYLESETFORE" syntax="(int style, colour fore)"></item>
+		<item code="2052" name="STYLESETBACK" syntax="(int style, colour back)"></item>
+		<item code="2053" name="STYLESETBOLD" syntax="(int style, bool bold)"></item>
+		<item code="2054" name="STYLESETITALIC" syntax="(int style, bool italic)"></item>
+		<item code="2055" name="STYLESETSIZE" syntax="(int style, int sizePoints)"></item>
+		<item code="2056" name="STYLESETFONT" syntax="(int style, string fontName)"></item>
+		<item code="2057" name="STYLESETEOLFILLED" syntax="(int style, bool filled)"></item>
+		<item code="2059" name="STYLESETUNDERLINE" syntax="(int style, bool underline)"></item>
+		<item code="2060" name="STYLESETCASE" syntax="(int style, int caseForce)"></item>
+		<item code="2061" name="STYLESETSIZEFRACTIONAL" syntax="(int style, int caseForce)"></item>
+		<item code="2063" name="STYLESETWEIGHT" syntax="(int style, int weight)"></item>
+		<item code="2066" name="STYLESETCHARACTERSET" syntax="(int style, int characterSet)"></item>
+		<item code="2409" name="STYLESETHOTSPOT" syntax="(int style, bool hotspot)"></item>
+		<item code="2478" name="SETSELALPHA" syntax="(int alpha)"></item>
+		<item code="2480" name="SETSELEOLFILLED" syntax="(bool filled)"></item>
+		<item code="2069" name="SETCARETFORE" syntax="(colour fore)"></item>
+		<item code="2074" name="STYLESETVISIBLE" syntax="(int style, bool visible)"></item>
+		<item code="2076" name="SETCARETPERIOD" syntax="(int periodMilliseconds)"></item>
+		<item code="2077" name="SETWORDCHARS" syntax="(NULL, string characters)"></item>
+		<item code="2080" name="INDICSETSTYLE" syntax="(int indic, int style)"></item>
+		<item code="2082" name="INDICSETFORE" syntax="(int indic, colour fore)"></item>
+		<item code="2510" name="INDICSETUNDER" syntax="(int indic, bool under)"></item>
+		<item code="2680" name="INDICSETHOVERSTYLE" syntax="(int indic, int style)"></item>
+		<item code="2682" name="INDICSETHOVERFORE" syntax="(int indic, colour fore)"></item>
+		<item code="2684" name="INDICSETFLAGS" syntax="(int indic, int flags)"></item>
+		<item code="2086" name="SETWHITESPACESIZE" syntax="(int size)"></item>
+		<item code="2090" name="SETSTYLEBITS" syntax="(int bits)"></item>
+		<item code="2092" name="SETLINESTATE" syntax="(int line, int state)"></item>
+		<item code="2096" name="SETCARETLINEVISIBLE" syntax="(bool show)"></item>
+		<item code="2098" name="SETCARETLINEBACK" syntax="(colour back)"></item>
+		<item code="2099" name="STYLESETCHANGEABLE" syntax="(int style, bool changeable)"></item>
+		<item code="2106" name="AUTOCSETSEPARATOR" syntax="(int separatorCharacter)"></item>
+		<item code="2110" name="AUTOCSETCANCELATSTART" syntax="(bool cancel)"></item>
+		<item code="2112" name="AUTOCSETFILLUPS" syntax="(NULL, string characterSet)"></item>
+		<item code="2113" name="AUTOCSETCHOOSESINGLE" syntax="(bool chooseSingle)"></item>
+		<item code="2115" name="AUTOCSETIGNORECASE" syntax="(bool ignoreCase)"></item>
+		<item code="2118" name="AUTOCSETAUTOHIDE" syntax="(bool autoHide)"></item>
+		<item code="2270" name="AUTOCSETDROPRESTOFWORD" syntax="(bool dropRestOfWord)"></item>
+		<item code="2286" name="AUTOCSETTYPESEPARATOR" syntax="(int separatorCharacter)"></item>
+		<item code="2208" name="AUTOCSETMAXWIDTH" syntax="(int characterCount)"></item>
+		<item code="2210" name="AUTOCSETMAXHEIGHT" syntax="(int rowCount)"></item>
+		<item code="2122" name="SETINDENT" syntax="(int indentSize)"></item>
+		<item code="2124" name="SETUSETABS" syntax="(bool useTabs)"></item>
+		<item code="2126" name="SETLINEINDENTATION" syntax="(int line, int indentSize)"></item>
+		<item code="2130" name="SETHSCROLLBAR" syntax="(bool show)"></item>
+		<item code="2132" name="SETINDENTATIONGUIDES" syntax="(int indentView)"></item>
+		<item code="2134" name="SETHIGHLIGHTGUIDE" syntax="(int column)"></item>
+		<item code="2141" name="SETCURRENTPOS" syntax="(position pos)"></item>
+		<item code="2142" name="SETSELECTIONSTART" syntax="(position pos)"></item>
+		<item code="2144" name="SETSELECTIONEND" syntax="(position pos)"></item>
+		<item code="2146" name="SETPRINTMAGNIFICATION" syntax="(int magnification)"></item>
+		<item code="2148" name="SETPRINTCOLOURMODE" syntax="(int mode)"></item>
+		<item code="2155" name="SETMARGINLEFT" syntax="(NULL, int pixelWidth)"></item>
+		<item code="2157" name="SETMARGINRIGHT" syntax="(NULL, int pixelWidth)"></item>
+		<item code="2171" name="SETREADONLY" syntax="(bool readOnly)"></item>
+		<item code="2186" name="SETOVERTYPE" syntax="(bool overtype)"></item>
+		<item code="2188" name="SETCARETWIDTH" syntax="(int pixelWidth)"></item>
+		<item code="2190" name="SETTARGETSTART" syntax="(position pos)"></item>
+		<item code="2192" name="SETTARGETEND" syntax="(position pos)"></item>
+		<item code="2198" name="SETSEARCHFLAGS" syntax="(int flags)"></item>
+		<item code="2214" name="CALLTIPSETPOSSTART" syntax="(int posStart)"></item>
+		<item code="2205" name="CALLTIPSETBACK" syntax="(colour back)"></item>
+		<item code="2206" name="CALLTIPSETFORE" syntax="(colour fore)"></item>
+		<item code="2207" name="CALLTIPSETFOREHLT" syntax="(colour fore)"></item>
+		<item code="2212" name="CALLTIPUSESTYLE" syntax="(int tabSize)"></item>
+		<item code="2213" name="CALLTIPSETPOSITION" syntax="(bool above)"></item>
+		<item code="2222" name="SETFOLDLEVEL" syntax="(int line, int level)"></item>
+		<item code="2229" name="SETFOLDEXPANDED" syntax="(int line, bool expanded)"></item>
+		<item code="2663" name="SETAUTOMATICFOLD" syntax="(int automaticFold)"></item>
+		<item code="2233" name="SETFOLDFLAGS" syntax="(int flags)"></item>
+		<item code="2260" name="SETTABINDENTS" syntax="(bool tabIndents)"></item>
+		<item code="2262" name="SETBACKSPACEUNINDENTS" syntax="(bool bsUnIndents)"></item>
+		<item code="2264" name="SETMOUSEDWELLTIME" syntax="(int periodMilliseconds)"></item>
+		<item code="2268" name="SETWRAPMODE" syntax="(int mode)"></item>
+		<item code="2460" name="SETWRAPVISUALFLAGS" syntax="(int wrapVisualFlags)"></item>
+		<item code="2462" name="SETWRAPVISUALFLAGSLOCATION" syntax="(int wrapVisualFlagsLocation)"></item>
+		<item code="2464" name="SETWRAPSTARTINDENT" syntax="(int indent)"></item>
+		<item code="2472" name="SETWRAPINDENTMODE" syntax="(int mode)"></item>
+		<item code="2272" name="SETLAYOUTCACHE" syntax="(int mode)"></item>
+		<item code="2274" name="SETSCROLLWIDTH" syntax="(int pixelWidth)"></item>
+		<item code="2516" name="SETSCROLLWIDTHTRACKING" syntax="(bool tracking)"></item>
+		<item code="2277" name="SETENDATLASTLINE" syntax="(bool endAtLastLine)"></item>
+		<item code="2280" name="SETVSCROLLBAR" syntax="(bool show)"></item>
+		<item code="2284" name="SETTWOPHASEDRAW" syntax="(bool twoPhase)"></item>
+		<item code="2674" name="SETPHASESDRAW" syntax="(int phases)"></item>
+		<item code="2611" name="SETFONTQUALITY" syntax="(int fontQuality)"></item>
+		<item code="2613" name="SETFIRSTVISIBLELINE" syntax="(int lineDisplay)"></item>
+		<item code="2614" name="SETMULTIPASTE" syntax="(int multiPaste)"></item>
+		<item code="2356" name="SETVIEWEOL" syntax="(bool visible)"></item>
+		<item code="2358" name="SETDOCPOINTER" syntax="(NULL, int pointer)"></item>
+		<item code="2359" name="SETMODEVENTMASK" syntax="(int mask)"></item>
+		<item code="2361" name="SETEDGECOLUMN" syntax="(int column)"></item>
+		<item code="2363" name="SETEDGEMODE" syntax="(int mode)"></item>
+		<item code="2365" name="SETEDGECOLOUR" syntax="(colour edgeColour)"></item>
+		<item code="2373" name="SETZOOM" syntax="(int zoom)"></item>
+		<item code="2380" name="SETFOCUS" syntax="(bool focus)"></item>
+		<item code="2382" name="SETSTATUS" syntax="(int statusCode)"></item>
+		<item code="2384" name="SETMOUSEDOWNCAPTURES" syntax="(bool captures)"></item>
+		<item code="2386" name="SETCURSOR" syntax="(int cursorType)"></item>
+		<item code="2388" name="SETCONTROLCHARSYMBOL" syntax="(int symbol)"></item>
+		<item code="2397" name="SETXOFFSET" syntax="(int newOffset)"></item>
+		<item code="2406" name="SETPRINTWRAPMODE" syntax="(int mode)"></item>
+		<item code="2410" name="SETHOTSPOTACTIVEFORE" syntax="(bool useSetting, colour fore)"></item>
+		<item code="2411" name="SETHOTSPOTACTIVEBACK" syntax="(bool useSetting, colour back)"></item>
+		<item code="2412" name="SETHOTSPOTACTIVEUNDERLINE" syntax="(bool underline)"></item>
+		<item code="2421" name="SETHOTSPOTSINGLELINE" syntax="(bool singleLine)"></item>
+		<item code="2422" name="SETSELECTIONMODE" syntax="(int mode)"></item>
+		<item code="2443" name="SETWHITESPACECHARS" syntax="(NULL, string characters)"></item>
+		<item code="2648" name="SETPUNCTUATIONCHARS" syntax="(NULL, string characters)"></item>
+		<item code="2634" name="AUTOCSETCASEINSENSITIVEBEHAVIOUR" syntax="(int behaviour)"></item>
+		<item code="2636" name="AUTOCSETMULTI" syntax="(int multi)"></item>
+		<item code="2660" name="AUTOCSETORDER" syntax="(int order)"></item>
+		<item code="2458" name="SETCARETSTICKY" syntax="(int useCaretStickyBehaviour)"></item>
+		<item code="2467" name="SETPASTECONVERTENDINGS" syntax="(bool convert)"></item>
+		<item code="2470" name="SETCARETLINEBACKALPHA" syntax="(int alpha)"></item>
+		<item code="2512" name="SETCARETSTYLE" syntax="(int caretStyle)"></item>
+		<item code="2500" name="SETINDICATORCURRENT" syntax="(int indicator)"></item>
+		<item code="2502" name="SETINDICATORVALUE" syntax="(int value)"></item>
+		<item code="2514" name="SETPOSITIONCACHE" syntax="(int size)"></item>
+		<item code="2523" name="INDICSETALPHA" syntax="(int indicator, int alpha)"></item>
+		<item code="2558" name="INDICSETOUTLINEALPHA" syntax="(int indicator, int alpha)"></item>
+		<item code="2525" name="SETEXTRAASCENT" syntax="(int extraAscent)"></item>
+		<item code="2527" name="SETEXTRADESCENT" syntax="(int extraDescent)"></item>
+		<item code="2530" name="MARGINSETTEXT" syntax="(int line, string text)"></item>
+		<item code="2532" name="MARGINSETSTYLE" syntax="(int line, int style)"></item>
+		<item code="2534" name="MARGINSETSTYLES" syntax="(int line, string styles)"></item>
+		<item code="2537" name="MARGINSETSTYLEOFFSET" syntax="(int style)"></item>
+		<item code="2539" name="SETMARGINOPTIONS" syntax="(int marginOptions)"></item>
+		<item code="2540" name="ANNOTATIONSETTEXT" syntax="(int line, string text)"></item>
+		<item code="2542" name="ANNOTATIONSETSTYLE" syntax="(int line, int style)"></item>
+		<item code="2544" name="ANNOTATIONSETSTYLES" syntax="(int line, string styles)"></item>
+		<item code="2548" name="ANNOTATIONSETVISIBLE" syntax="(int visible)"></item>
+		<item code="2550" name="ANNOTATIONSETSTYLEOFFSET" syntax="(int style)"></item>
+		<item code="2668" name="SETMOUSESELECTIONRECTANGULARSWITCH" syntax="(bool mouseSelectionRectangularSwitch)"></item>
+		<item code="2563" name="SETMULTIPLESELECTION" syntax="(bool multipleSelection)"></item>
+		<item code="2565" name="SETADDITIONALSELECTIONTYPING" syntax="(bool additionalSelectionTyping)"></item>
+		<item code="2567" name="SETADDITIONALCARETSBLINK" syntax="(bool additionalCaretsBlink)"></item>
+		<item code="2608" name="SETADDITIONALCARETSVISIBLE" syntax="(bool additionalCaretsBlink)"></item>
+		<item code="2574" name="SETMAINSELECTION" syntax="(int selection)"></item>
+		<item code="2576" name="SETSELECTIONNCARET" syntax="(int selection, position pos)"></item>
+		<item code="2578" name="SETSELECTIONNANCHOR" syntax="(int selection, position posAnchor)"></item>
+		<item code="2580" name="SETSELECTIONNCARETVIRTUALSPACE" syntax="(int selection, int space)"></item>
+		<item code="2582" name="SETSELECTIONNANCHORVIRTUALSPACE" syntax="(int selection, int space)"></item>
+		<item code="2584" name="SETSELECTIONNSTART" syntax="(int selection, position pos)"></item>
+		<item code="2586" name="SETSELECTIONNEND" syntax="(int selection, position pos)"></item>
+		<item code="2588" name="SETRECTANGULARSELECTIONCARET" syntax="(position pos)"></item>
+		<item code="2590" name="SETRECTANGULARSELECTIONANCHOR" syntax="(position posAnchor)"></item>
+		<item code="2592" name="SETRECTANGULARSELECTIONCARETVIRTUALSPACE" syntax="(int space)"></item>
+		<item code="2594" name="SETRECTANGULARSELECTIONANCHORVIRTUALSPACE" syntax="(int space)"></item>
+		<item code="2596" name="SETVIRTUALSPACEOPTIONS" syntax="(int virtualSpaceOptions)"></item>
+		<item code="2598" name="SETRECTANGULARSELECTIONMODIFIER" syntax="(int modifier)"></item>
+		<item code="2600" name="SETADDITIONALSELFORE" syntax="(colour fore)"></item>
+		<item code="2601" name="SETADDITIONALSELBACK" syntax="(colour back)"></item>
+		<item code="2602" name="SETADDITIONALSELALPHA" syntax="(int alpha)"></item>
+		<item code="2604" name="SETADDITIONALCARETFORE" syntax="(colour fore)"></item>
+		<item code="2622" name="SETIDENTIFIER" syntax="(int identifier)"></item>
+		<item code="2624" name="RGBAIMAGESETWIDTH" syntax="(int width)"></item>
+		<item code="2625" name="RGBAIMAGESETHEIGHT" syntax="(int height)"></item>
+		<item code="2651" name="RGBAIMAGESETSCALE" syntax="(int scalePercent)"></item>
+		<item code="2630" name="SETTECHNOLOGY" syntax="(int technology)"></item>
+		<item code="2655" name="SETCARETLINEVISIBLEALWAYS" syntax="(bool alwaysVisible)"></item>
+		<item code="2656" name="SETLINEENDTYPESALLOWED" syntax="(int lineEndBitSet)"></item>
+		<item code="2665" name="SETREPRESENTATION" syntax="(string encodedCharacter, string representation)"></item>
+		<item code="4001" name="SETLEXER" syntax="(int lexer)"></item>
+		<item code="4004" name="SETPROPERTY" syntax="(string key, string value)"></item>
+		<item code="4005" name="SETKEYWORDS" syntax="(int keywordSet, string keyWords)"></item>
+		<item code="4006" name="SETLEXERLANGUAGE" syntax="(NULL, string language)"></item>
+		<item code="4024" name="SETIDENTIFIERS" syntax="(int style, string identifiers)"></item>
+		<item code="2039" name="SETUSEPALETTE" syntax="(bool usePalette)"></item>
+		<item code="2521" name="SETKEYSUNICODE" syntax="(bool keysUnicode)"></item>
+		<item code="2006" name="GETLENGTH"></item>
+		<item code="2007" name="GETCHARAT" syntax="(position pos)"></item>
+		<item code="2008" name="GETCURRENTPOS"></item>
+		<item code="2009" name="GETANCHOR"></item>
+		<item code="2010" name="GETSTYLEAT" syntax="(position pos)"></item>
+		<item code="2019" name="GETUNDOCOLLECTION"></item>
+		<item code="2020" name="GETVIEWWS"></item>
+		<item code="2028" name="GETENDSTYLED"></item>
+		<item code="2030" name="GETEOLMODE"></item>
+		<item code="2034" name="GETBUFFEREDDRAW"></item>
+		<item code="2121" name="GETTABWIDTH"></item>
+		<item code="2678" name="GETIMEINTERACTION"></item>
+		<item code="2241" name="GETMARGINTYPEN" syntax="(int margin)"></item>
+		<item code="2243" name="GETMARGINWIDTHN" syntax="(int margin)"></item>
+		<item code="2245" name="GETMARGINMASKN" syntax="(int margin)"></item>
+		<item code="2247" name="GETMARGINSENSITIVEN" syntax="(int margin)"></item>
+		<item code="2249" name="GETMARGINCURSORN" syntax="(int margin)"></item>
+		<item code="2481" name="STYLEGETFORE" syntax="(int style)"></item>
+		<item code="2482" name="STYLEGETBACK" syntax="(int style)"></item>
+		<item code="2483" name="STYLEGETBOLD" syntax="(int style)"></item>
+		<item code="2484" name="STYLEGETITALIC" syntax="(int style)"></item>
+		<item code="2485" name="STYLEGETSIZE" syntax="(int style)"></item>
+		<item code="2486" name="STYLEGETFONT" syntax="(int style, stringresult fontName)"></item>
+		<item code="2487" name="STYLEGETEOLFILLED" syntax="(int style)"></item>
+		<item code="2488" name="STYLEGETUNDERLINE" syntax="(int style)"></item>
+		<item code="2489" name="STYLEGETCASE" syntax="(int style)"></item>
+		<item code="2490" name="STYLEGETCHARACTERSET" syntax="(int style)"></item>
+		<item code="2491" name="STYLEGETVISIBLE" syntax="(int style)"></item>
+		<item code="2492" name="STYLEGETCHANGEABLE" syntax="(int style)"></item>
+		<item code="2493" name="STYLEGETHOTSPOT" syntax="(int style)"></item>
+		<item code="2062" name="STYLEGETSIZEFRACTIONAL" syntax="(int style)"></item>
+		<item code="2064" name="STYLEGETWEIGHT" syntax="(int style)"></item>
+		<item code="2477" name="GETSELALPHA"></item>
+		<item code="2479" name="GETSELEOLFILLED"></item>
+		<item code="2075" name="GETCARETPERIOD"></item>
+		<item code="2646" name="GETWORDCHARS" syntax="(NULL, stringresult characters)"></item>
+		<item code="2081" name="INDICGETSTYLE" syntax="(int indic)"></item>
+		<item code="2083" name="INDICGETFORE" syntax="(int indic)"></item>
+		<item code="2511" name="INDICGETUNDER" syntax="(int indic)"></item>
+		<item code="2681" name="INDICGETHOVERSTYLE" syntax="(int indic)"></item>
+		<item code="2683" name="INDICGETHOVERFORE" syntax="(int indic)"></item>
+		<item code="2685" name="INDICGETFLAGS" syntax="(int indic)"></item>
+		<item code="2087" name="GETWHITESPACESIZE"></item>
+		<item code="2091" name="GETSTYLEBITS"></item>
+		<item code="2093" name="GETLINESTATE" syntax="(int line)"></item>
+		<item code="2094" name="GETMAXLINESTATE"></item>
+		<item code="2095" name="GETCARETLINEVISIBLE"></item>
+		<item code="2097" name="GETCARETLINEBACK"></item>
+		<item code="2107" name="AUTOCGETSEPARATOR"></item>
+		<item code="2111" name="AUTOCGETCANCELATSTART"></item>
+		<item code="2114" name="AUTOCGETCHOOSESINGLE"></item>
+		<item code="2116" name="AUTOCGETIGNORECASE"></item>
+		<item code="2119" name="AUTOCGETAUTOHIDE"></item>
+		<item code="2271" name="AUTOCGETDROPRESTOFWORD"></item>
+		<item code="2285" name="AUTOCGETTYPESEPARATOR"></item>
+		<item code="2209" name="AUTOCGETMAXWIDTH"></item>
+		<item code="2211" name="AUTOCGETMAXHEIGHT"></item>
+		<item code="2123" name="GETINDENT"></item>
+		<item code="2125" name="GETUSETABS"></item>
+		<item code="2127" name="GETLINEINDENTATION" syntax="(int line)"></item>
+		<item code="2128" name="GETLINEINDENTPOSITION" syntax="(int line)"></item>
+		<item code="2129" name="GETCOLUMN" syntax="(position pos)"></item>
+		<item code="2131" name="GETHSCROLLBAR"></item>
+		<item code="2133" name="GETINDENTATIONGUIDES"></item>
+		<item code="2135" name="GETHIGHLIGHTGUIDE"></item>
+		<item code="2136" name="GETLINEENDPOSITION" syntax="(int line)"></item>
+		<item code="2137" name="GETCODEPAGE"></item>
+		<item code="2138" name="GETCARETFORE"></item>
+		<item code="2140" name="GETREADONLY"></item>
+		<item code="2143" name="GETSELECTIONSTART"></item>
+		<item code="2145" name="GETSELECTIONEND"></item>
+		<item code="2147" name="GETPRINTMAGNIFICATION"></item>
+		<item code="2149" name="GETPRINTCOLOURMODE"></item>
+		<item code="2152" name="GETFIRSTVISIBLELINE"></item>
+		<item code="2154" name="GETLINECOUNT"></item>
+		<item code="2156" name="GETMARGINLEFT"></item>
+		<item code="2158" name="GETMARGINRIGHT"></item>
+		<item code="2159" name="GETMODIFY"></item>
+		<item code="2183" name="GETTEXTLENGTH"></item>
+		<item code="2184" name="GETDIRECTFUNCTION"></item>
+		<item code="2185" name="GETDIRECTPOINTER"></item>
+		<item code="2187" name="GETOVERTYPE"></item>
+		<item code="2189" name="GETCARETWIDTH"></item>
+		<item code="2191" name="GETTARGETSTART"></item>
+		<item code="2193" name="GETTARGETEND"></item>
+		<item code="2687" name="GETTARGETTEXT" syntax="(NULL, stringresult characters)"></item>
+		<item code="2199" name="GETSEARCHFLAGS"></item>
+		<item code="2223" name="GETFOLDLEVEL" syntax="(int line)"></item>
+		<item code="2224" name="GETLASTCHILD" syntax="(int line, int level)"></item>
+		<item code="2225" name="GETFOLDPARENT" syntax="(int line)"></item>
+		<item code="2228" name="GETLINEVISIBLE" syntax="(int line)"></item>
+		<item code="2236" name="GETALLLINESVISIBLE"></item>
+		<item code="2230" name="GETFOLDEXPANDED" syntax="(int line)"></item>
+		<item code="2664" name="GETAUTOMATICFOLD"></item>
+		<item code="2261" name="GETTABINDENTS"></item>
+		<item code="2263" name="GETBACKSPACEUNINDENTS"></item>
+		<item code="2265" name="GETMOUSEDWELLTIME"></item>
+		<item code="2269" name="GETWRAPMODE"></item>
+		<item code="2461" name="GETWRAPVISUALFLAGS"></item>
+		<item code="2463" name="GETWRAPVISUALFLAGSLOCATION"></item>
+		<item code="2465" name="GETWRAPSTARTINDENT"></item>
+		<item code="2473" name="GETWRAPINDENTMODE"></item>
+		<item code="2273" name="GETLAYOUTCACHE"></item>
+		<item code="2275" name="GETSCROLLWIDTH"></item>
+		<item code="2517" name="GETSCROLLWIDTHTRACKING"></item>
+		<item code="2278" name="GETENDATLASTLINE"></item>
+		<item code="2281" name="GETVSCROLLBAR"></item>
+		<item code="2283" name="GETTWOPHASEDRAW"></item>
+		<item code="2673" name="GETPHASESDRAW"></item>
+		<item code="2612" name="GETFONTQUALITY"></item>
+		<item code="2615" name="GETMULTIPASTE"></item>
+		<item code="2616" name="GETTAG" syntax="(int tagNumber, stringresult tagValue)"></item>
+		<item code="2355" name="GETVIEWEOL"></item>
+		<item code="2357" name="GETDOCPOINTER"></item>
+		<item code="2360" name="GETEDGECOLUMN"></item>
+		<item code="2362" name="GETEDGEMODE"></item>
+		<item code="2364" name="GETEDGECOLOUR"></item>
+		<item code="2370" name="LINESONSCREEN"></item>
+		<item code="2372" name="SELECTIONISRECTANGLE"></item>
+		<item code="2374" name="GETZOOM"></item>
+		<item code="2378" name="GETMODEVENTMASK"></item>
+		<item code="2381" name="GETFOCUS"></item>
+		<item code="2383" name="GETSTATUS"></item>
+		<item code="2385" name="GETMOUSEDOWNCAPTURES"></item>
+		<item code="2387" name="GETCURSOR"></item>
+		<item code="2389" name="GETCONTROLCHARSYMBOL"></item>
+		<item code="2398" name="GETXOFFSET"></item>
+		<item code="2407" name="GETPRINTWRAPMODE"></item>
+		<item code="2494" name="GETHOTSPOTACTIVEFORE"></item>
+		<item code="2495" name="GETHOTSPOTACTIVEBACK"></item>
+		<item code="2496" name="GETHOTSPOTACTIVEUNDERLINE"></item>
+		<item code="2497" name="GETHOTSPOTSINGLELINE"></item>
+		<item code="2423" name="GETSELECTIONMODE"></item>
+		<item code="2647" name="GETWHITESPACECHARS" syntax="(NULL, stringresult characters)"></item>
+		<item code="2649" name="GETPUNCTUATIONCHARS" syntax="(NULL, stringresult characters)"></item>
+		<item code="2445" name="AUTOCGETCURRENT"></item>
+		<item code="2610" name="AUTOCGETCURRENTTEXT" syntax="(NULL, stringresult s)"></item>
+		<item code="2635" name="AUTOCGETCASEINSENSITIVEBEHAVIOUR"></item>
+		<item code="2637" name="AUTOCGETMULTI"></item>
+		<item code="2661" name="AUTOCGETORDER"></item>
+		<item code="2457" name="GETCARETSTICKY"></item>
+		<item code="2468" name="GETPASTECONVERTENDINGS"></item>
+		<item code="2471" name="GETCARETLINEBACKALPHA"></item>
+		<item code="2513" name="GETCARETSTYLE"></item>
+		<item code="2501" name="GETINDICATORCURRENT"></item>
+		<item code="2503" name="GETINDICATORVALUE"></item>
+		<item code="2515" name="GETPOSITIONCACHE"></item>
+		<item code="2520" name="GETCHARACTERPOINTER"></item>
+		<item code="2643" name="GETRANGEPOINTER" syntax="(int position, int rangeLength)"></item>
+		<item code="2644" name="GETGAPPOSITION"></item>
+		<item code="2524" name="INDICGETALPHA" syntax="(int indicator)"></item>
+		<item code="2559" name="INDICGETOUTLINEALPHA" syntax="(int indicator)"></item>
+		<item code="2526" name="GETEXTRAASCENT"></item>
+		<item code="2528" name="GETEXTRADESCENT"></item>
+		<item code="2531" name="MARGINGETTEXT" syntax="(int line, stringresult text)"></item>
+		<item code="2533" name="MARGINGETSTYLE" syntax="(int line)"></item>
+		<item code="2535" name="MARGINGETSTYLES" syntax="(int line, stringresult styles)"></item>
+		<item code="2538" name="MARGINGETSTYLEOFFSET"></item>
+		<item code="2557" name="GETMARGINOPTIONS"></item>
+		<item code="2541" name="ANNOTATIONGETTEXT" syntax="(int line, stringresult text)"></item>
+		<item code="2543" name="ANNOTATIONGETSTYLE" syntax="(int line)"></item>
+		<item code="2545" name="ANNOTATIONGETSTYLES" syntax="(int line, stringresult styles)"></item>
+		<item code="2546" name="ANNOTATIONGETLINES" syntax="(int line)"></item>
+		<item code="2549" name="ANNOTATIONGETVISIBLE"></item>
+		<item code="2551" name="ANNOTATIONGETSTYLEOFFSET"></item>
+		<item code="2669" name="GETMOUSESELECTIONRECTANGULARSWITCH"></item>
+		<item code="2564" name="GETMULTIPLESELECTION"></item>
+		<item code="2566" name="GETADDITIONALSELECTIONTYPING"></item>
+		<item code="2568" name="GETADDITIONALCARETSBLINK"></item>
+		<item code="2609" name="GETADDITIONALCARETSVISIBLE"></item>
+		<item code="2570" name="GETSELECTIONS"></item>
+		<item code="2650" name="GETSELECTIONEMPTY"></item>
+		<item code="2575" name="GETMAINSELECTION"></item>
+		<item code="2577" name="GETSELECTIONNCARET" syntax="(int selection)"></item>
+		<item code="2579" name="GETSELECTIONNANCHOR" syntax="(int selection)"></item>
+		<item code="2581" name="GETSELECTIONNCARETVIRTUALSPACE" syntax="(int selection)"></item>
+		<item code="2583" name="GETSELECTIONNANCHORVIRTUALSPACE" syntax="(int selection)"></item>
+		<item code="2585" name="GETSELECTIONNSTART" syntax="(int selection)"></item>
+		<item code="2587" name="GETSELECTIONNEND" syntax="(int selection)"></item>
+		<item code="2589" name="GETRECTANGULARSELECTIONCARET"></item>
+		<item code="2591" name="GETRECTANGULARSELECTIONANCHOR"></item>
+		<item code="2593" name="GETRECTANGULARSELECTIONCARETVIRTUALSPACE"></item>
+		<item code="2595" name="GETRECTANGULARSELECTIONANCHORVIRTUALSPACE"></item>
+		<item code="2597" name="GETVIRTUALSPACEOPTIONS"></item>
+		<item code="2599" name="GETRECTANGULARSELECTIONMODIFIER"></item>
+		<item code="2603" name="GETADDITIONALSELALPHA"></item>
+		<item code="2605" name="GETADDITIONALCARETFORE"></item>
+		<item code="2623" name="GETIDENTIFIER"></item>
+		<item code="2631" name="GETTECHNOLOGY"></item>
+		<item code="2654" name="GETCARETLINEVISIBLEALWAYS"></item>
+		<item code="2657" name="GETLINEENDTYPESALLOWED"></item>
+		<item code="2658" name="GETLINEENDTYPESACTIVE"></item>
+		<item code="2666" name="GETREPRESENTATION" syntax="(string encodedCharacter, stringresult representation)"></item>
+		<item code="4002" name="GETLEXER"></item>
+		<item code="4008" name="GETPROPERTY" syntax="(string key, stringresult buf)"></item>
+		<item code="4009" name="GETPROPERTYEXPANDED" syntax="(string key, stringresult buf)"></item>
+		<item code="4010" name="GETPROPERTYINT" syntax="(string key)"></item>
+		<item code="4011" name="GETSTYLEBITSNEEDED"></item>
+		<item code="4012" name="GETLEXERLANGUAGE" syntax="(NULL, stringresult text)"></item>
+		<item code="4018" name="GETLINEENDTYPESSUPPORTED"></item>
+		<item code="4021" name="GETSUBSTYLESSTART" syntax="(int styleBase)"></item>
+		<item code="4022" name="GETSUBSTYLESLENGTH" syntax="(int styleBase)"></item>
+		<item code="4027" name="GETSTYLEFROMSUBSTYLE" syntax="(int subStyle)"></item>
+		<item code="4028" name="GETPRIMARYSTYLEFROMSTYLE" syntax="(int style)"></item>
+		<item code="4025" name="DISTANCETOSECONDARYSTYLES"></item>
+		<item code="4026" name="GETSUBSTYLEBASES" syntax="(NULL, stringresult styles)"></item>
+		<item code="2139" name="GETUSEPALETTE"></item>
+		<item code="2522" name="GETKEYSUNICODE"></item>
 	</commands>
 	<constants>
 		<item code="-1" name=" INVALID_POSITION"></item>
@@ -925,35 +925,35 @@
 		<item code="1" name=" SC_CP_DBCS"></item>
 	</constants>
 	<notifications>
-		<item code="2000" name="StyleNeeded" syntax="(int position)"></item>
-		<item code="2001" name="CharAdded" syntax="(int ch)"></item>
-		<item code="2002" name="SavePointReached"></item>
-		<item code="2003" name="SavePointLeft"></item>
-		<item code="2004" name="ModifyAttemptRO"></item>
-		<item code="2005" name="Key" syntax="(int ch, int modifiers)"></item>
-		<item code="2006" name="DoubleClick" syntax="(int modifiers, int position, int line)"></item>
-		<item code="2007" name="UpdateUI" syntax="(int updated)"></item>
-		<item code="2008" name="Modified" syntax="(int position, int modificationType, string text, int length, int linesAdded, int line, int foldLevelNow, int foldLevelPrev, int token, int annotationLinesAdded)"></item>
-		<item code="2009" name="MacroRecord" syntax="(int message, int wParam, int lParam)"></item>
-		<item code="2010" name="MarginClick" syntax="(int modifiers, int position, int margin)"></item>
-		<item code="2011" name="NeedShown" syntax="(int position, int length)"></item>
-		<item code="2013" name="Painted"></item>
-		<item code="2014" name="UserListSelection" syntax="(int listType, string text, int positionint, int ch, CompletionMethods listCompletionMethod)"></item>
-		<item code="2015" name="URIDropped" syntax="(string text)"></item>
-		<item code="2016" name="DwellStart" syntax="(int position, int x, int y)"></item>
-		<item code="2017" name="DwellEnd" syntax="(int position, int x, int y)"></item>
-		<item code="2018" name="Zoom"></item>
-		<item code="2019" name="HotSpotClick" syntax="(int modifiers, int position)"></item>
-		<item code="2020" name="HotSpotDoubleClick" syntax="(int modifiers, int position)"></item>
-		<item code="2021" name="CallTipClick" syntax="(int position)"></item>
-		<item code="2022" name="AutoCSelection" syntax="(string text, int position, int ch, CompletionMethods listCompletionMethod)"></item>
-		<item code="2023" name="IndicatorClick" syntax="(int modifiers, int position)"></item>
-		<item code="2024" name="IndicatorRelease" syntax="(int modifiers, int position)"></item>
-		<item code="2025" name="AutoCCancelled"></item>
-		<item code="2026" name="AutoCCharDeleted"></item>
-		<item code="2027" name="HotSpotReleaseClick" syntax="(int modifiers, int position)"></item>
-		<item code="2028" name="FocusIn"></item>
-		<item code="2029" name="FocusOut"></item>
-		<item code="2030" name="AutoCCompleted" syntax="(string text, int position, int ch, CompletionMethods listCompletionMethod)"></item>
+		<item code="2000" name="STYLENEEDED" syntax="(int position)"></item>
+		<item code="2001" name="CHARADDED" syntax="(int ch)"></item>
+		<item code="2002" name="SAVEPOINTREACHED"></item>
+		<item code="2003" name="SAVEPOINTLEFT"></item>
+		<item code="2004" name="MODIFYATTEMPTRO"></item>
+		<item code="2005" name="KEY" syntax="(int ch, int modifiers)"></item>
+		<item code="2006" name="DOUBLECLICK" syntax="(int modifiers, int position, int line)"></item>
+		<item code="2007" name="UPDATEUI" syntax="(int updated)"></item>
+		<item code="2008" name="MODIFIED" syntax="(int position, int modificationType, string text, int length, int linesAdded, int line, int foldLevelNow, int foldLevelPrev, int token, int annotationLinesAdded)"></item>
+		<item code="2009" name="MACRORECORD" syntax="(int message, int wParam, int lParam)"></item>
+		<item code="2010" name="MARGINCLICK" syntax="(int modifiers, int position, int margin)"></item>
+		<item code="2011" name="NEEDSHOWN" syntax="(int position, int length)"></item>
+		<item code="2013" name="PAINTED"></item>
+		<item code="2014" name="USERLISTSELECTION" syntax="(int listType, string text, int positionint, int ch, CompletionMethods listCompletionMethod)"></item>
+		<item code="2015" name="URIDROPPED" syntax="(string text)"></item>
+		<item code="2016" name="DWELLSTART" syntax="(int position, int x, int y)"></item>
+		<item code="2017" name="DWELLEND" syntax="(int position, int x, int y)"></item>
+		<item code="2018" name="ZOOM"></item>
+		<item code="2019" name="HOTSPOTCLICK" syntax="(int modifiers, int position)"></item>
+		<item code="2020" name="HOTSPOTDOUBLECLICK" syntax="(int modifiers, int position)"></item>
+		<item code="2021" name="CALLTIPCLICK" syntax="(int position)"></item>
+		<item code="2022" name="AUTOCSELECTION" syntax="(string text, int position, int ch, CompletionMethods listCompletionMethod)"></item>
+		<item code="2023" name="INDICATORCLICK" syntax="(int modifiers, int position)"></item>
+		<item code="2024" name="INDICATORRELEASE" syntax="(int modifiers, int position)"></item>
+		<item code="2025" name="AUTOCCANCELLED"></item>
+		<item code="2026" name="AUTOCCHARDELETED"></item>
+		<item code="2027" name="HOTSPOTRELEASECLICK" syntax="(int modifiers, int position)"></item>
+		<item code="2028" name="FOCUSIN"></item>
+		<item code="2029" name="FOCUSOUT"></item>
+		<item code="2030" name="AUTOCCOMPLETED" syntax="(string text, int position, int ch, CompletionMethods listCompletionMethod)"></item>
 	</notifications>
 </scintilla>
