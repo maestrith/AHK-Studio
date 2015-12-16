@@ -13,7 +13,7 @@ CoordMode,ToolTip,Screen
 if(!FileExist("lib"))
 	FileCreateDir,Lib
 global v:=[],settings:=New XML("settings","lib\Settings.XML"),files:=New XML("files"),menus,commands:=New XML("commands","lib\commands.XML"),positions:=New XML("positions","lib\positions.XML"),vversion,access_token,vault:=New XML("vault","lib\Vault.XML"),preset,Scintilla,bookmarks,cexml:=New XML("Code_Explorer"),notesxml,language:=New XML("language","lib\en-us.XML"),vversion:=New XML("version","lib\version.XML"),Custom_Commands:=New XML("custom","lib\Custom Commands.XML")
-Scintilla:=New XML("Scintilla","lib\Scintilla.XML"),v.pluginversion:=1,menus:=New XML("menus","lib\menus.XML"),FileCheck(file)
+v.pluginversion:=1,menus:=New XML("menus","lib\menus.XML"),FileCheck(file)
 if(FileExist("AHKStudio.ico"))
 	Menu,Tray,Icon,AHKStudio.ico
 New Omni_Search_Class(),v.filelist:=[],v.Options:=[],var(),Keywords(),Gui(),v.match:={"{":"}","[":"]","<":">","(":")",Chr(34):Chr(34),"'":"'","%":"%"},v.filescan:=[]
@@ -76,7 +76,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.17"
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.18"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -268,7 +268,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.17"
+	Version:="1.002.18"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
@@ -697,11 +697,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.17"
+		Version:="1.002.18"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.17"
+		Version:="1.002.18"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -5188,7 +5188,7 @@ Show_Class_Methods(object){
 	}
 }
 Show_Scintilla_Code_In_Line(){
-	scintilla(),sc:=csc()
+	Scintilla(),sc:=csc()
 	text:=sc.textrange(sc.2128(sc.2166(sc.2008)),sc.2136(sc.2166(sc.2008))),pos:=1
 	while,pos:=RegExMatch(text,"(\d\d\d\d)",found,pos){
 		codes:=scintilla.sn("//*[@code='" found1 "']"),list.="Code : " found1 " = "
@@ -5697,10 +5697,7 @@ Words_In_Document(){
 }
 ;plugin
 Quick_Scintilla_Code_Lookup(){
-	static list
-	sc:=csc(),word:=upper(sc.textrange(start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1)))
-	if(!list)
-		list:=scintilla(1)
+	sc:=csc(),word:=upper(sc.textrange(start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1))),Scintilla()
 	ea:=scintilla.ea("//commands/item[@name='" word "']")
 	if(ea.code){
 		syn:=ea.syntax?ea.code "()":ea.code,sc.2160(start,end),sc.2170(0,[syn])
@@ -5717,7 +5714,7 @@ Quick_Scintilla_Code_Lookup(){
 }
 Scintilla_Code_Lookup(){
 	static slist,cs,newwin
-	scintilla(),slist:=scintilla.sn("//commands/item")
+	Scintilla(),slist:=scintilla.sn("//commands/item")
 	newwin:=new GUIKeep(8)
 	newwin.Add("Edit,Uppercase w500 gcodesort vcs,,w","ListView,w720 h500 -Multi,Name|Code|Syntax,wh","Radio,xm Checked gcodesort,&Commands,y","Radio,x+5 gcodesort,C&onstants,y","Radio,x+5 gcodesort,&Notifications,y","Button,xm ginsert Default,Insert code into script,y","Button,gdocsite,Goto Scintilla Document Site,y")
 	while,sl:=slist.item(A_Index-1)
@@ -5764,27 +5761,17 @@ Scintilla_Code_Lookup(){
 	hwnd({rem:8})
 	return
 }
-Scintilla(return:=""){
+Scintilla(){
 	static list
-	filedate:=20151111121313
-	FileGetTime,time,lib\scintilla.xml
-	if(time<=filedate)
-		FileDelete,lib\scintilla.xml
 	if(!FileExist("lib\scintilla.xml")){
 		SplashTextOn,300,100,Downloading definitions,Please wait
-		URLDownloadToFile,http://files.maestrith.com/AHK-Studio/scintilla.xml,lib\scintilla.xml
+		URLDownloadToFile,https://raw.githubusercontent.com/maestrith/AHK-Studio/master/lib/scintilla.xml,lib\scintilla.xml
+		Sleep,500
 		SplashTextOff
-		FileSetTime,%filedate%,lib\scintilla.xml
 	}
 	if(!IsObject(scintilla)){
-		ll:=scintilla.sn("//commands/*")
-		while,l:=ssn(ll.item[A_Index-1],"@name").text
-			list.=l " "
-		list:=Trim(list)
 		scintilla:=new xml("scintilla","lib\scintilla.xml")
 	}
-	if(return)
-		return list
 }
 ;/plugin
 Online_Help(){
