@@ -1,6 +1,6 @@
 1.002.18
 Fixed:
--Scintilla Information: Was downloading the wrong xml file.
+-Scintilla Information: Was downloading the wrong xml file. (Delete your lib\scintilla.xml file)
 1.002.17
 Fixed: Reported by gallaxhar
 -Selecting text from the bottom to the top and splitting the code into segments was causing an issue
