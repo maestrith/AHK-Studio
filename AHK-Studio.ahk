@@ -5067,25 +5067,6 @@ SelectAll(){
 		sc.2013
 	return
 }
-
-
-
-
-/*
-	this{
-		
-		
-		
-		
-		
-		
-		
-		fuck
-	}
-	}
-*/	
-*/
-
 set_as_default_editor(){
 	RegRead,current,HKCU,SOFTWARE\Classes\AutoHotkeyScript\Shell\Edit\Command
 	SplitPath,A_ScriptFullPath,,,ext
