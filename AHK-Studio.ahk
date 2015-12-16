@@ -3268,6 +3268,8 @@ lastfiles(){
 LButton(){
 	if(!GetKeyState("LButton","P"))
 		MouseClick,Left,,,,,U
+	if(WinActive(hwnd([20])))
+		hwnd({rem:20})
 }
 ListVars(){
 	List_Variables:
@@ -3746,7 +3748,7 @@ Omni_Search(start=""){
 	Gui,20:Margin,0,0
 	width:=w-50,newwin.Add("Edit,goss w" width " vsearch," start,"ListView,w" width " r15 -hdr -Multi gosgo,Menu Command|Additional|1|2|Rating|index")
 	Gui,20:-Caption
-	hotkeys([20],{up:"omnikey",down:"omnikey",PgUp:"omnikey",PgDn:"omnikey","^Backspace":"deleteback",Enter:"osgo"})
+	hotkeys([20],{up:"omnikey",down:"omnikey",PgUp:"omnikey",PgDn:"omnikey","^Backspace":"deleteback",Enter:"osgo",LButton:"LButton"})
 	Gui,20:Show,% Center(20) " AutoSize",Omni-Search
 	ControlSend,Edit1,^{End},% hwnd([20])
 	bm:=bookmarks.sn("//mark")
