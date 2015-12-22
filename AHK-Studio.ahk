@@ -1306,7 +1306,7 @@ Clear_Line_Status(){
 			b.2532(A_Index-1,33)
 }
 Close(x:=1,all:="",Redraw:=1){
-	save()
+	Save()
 	Gui,1:Default
 	Gui,1:TreeView,SysTreeView321
 	GuiControl,1:-Redraw,SysTreeView321
@@ -1867,8 +1867,9 @@ Download_Plugins(){
 	static plug
 	if(!FileExist("plugins"))
 		FileCreateDir,Plugins
-	DllCall("InetCpl.cpl\ClearMyTracksByProcess",uint,8)
+	;DllCall("InetCpl.cpl\ClearMyTracksByProcess",uint,8)
 	SplashTextOn,,,Downloading Plugin List,Please Wait...
+	Run,RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
 	plug:=new xml("plugins"),plug.xml.loadxml(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio-Plugins/master/Index.xml"))
 	SplashTextOff
 	if(!plug[])
@@ -2188,7 +2189,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151023111914,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151216122300,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151216122300,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
+	static dates:={commands:{date:20151222093855,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20151216122300,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20151216122300,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
@@ -3509,8 +3510,20 @@ New_Segment(new:="",text:="",adjusted:=""){
 	sc.2025(StrLen(function)+1),NewIndent()
 }
 New(filename:="",text:=""){
-	ts:=settings.ssn("//template").text,file:=FileOpen("c:\windows\shellnew\template.ahk",0),td:=file.Read(file.length),file.close(),template:=ts?ts:td,index:=0
-	filename:=(list:=files.sn("//main[@untitled]").length)?"Untitled" list ".ahk":"Untitled.ahk",update({file:filename,text:template}),top:=files.ssn("//*"),main:=files.under(top,"main",{file:filename,untitled:1}),files.under(main,"file",{tv:tv:=TV_Add(filename),file:filename,filename:filename,github:filename,untitled:1}),top:=cexml.add("main",{file:filename},,1),scan:=cexml.under(top,"file",{file:filename,type:"File",name:filename,text:filename,dir:"Virtual",order:"name,type,dir"}),tv(tv),update("updated")[filename]:=1
+	ts:=settings.ssn("//template").text
+	file:=FileOpen("c:\windows\shellnew\template.ahk",0)
+	td:=file.Read(file.length)
+	file.close()
+	template:=ts?ts:td
+	filename:=(list:=files.sn("//main[@untitled]").length)?"Untitled" list ".ahk":"Untitled.ahk"
+	update({file:filename,text:template})
+	top:=files.ssn("//*")
+	main:=files.under(top,"main",{file:filename,untitled:1})
+	files.under(main,"file",{tv:tv:=TV_Add(filename),file:filename,filename:filename,github:filename,untitled:1})
+	top:=cexml.add("main",{file:filename},,1)
+	scan:=cexml.under(top,"file",{file:filename,type:"File",name:filename,text:filename,dir:"Virtual",order:"name,type,dir"})
+	tv(tv)
+	update("updated").Delete(filename)
 }
 NewLines(text){
 	for a,b in {"``n":"`n","``r":"`n","``t":"`t","\r":"`n","\t":"`t","\n":"`n"}
@@ -4932,8 +4945,7 @@ Save(option=""){
 	return
 	saveuntitled:
 	for a,b in v.saveas{
-		tv:=files.ssn("//*[@file='" b "']/@tv").text
-		tv(tv)
+		tv(files.ssn("//*[@file='" b "']/@tv").text)
 		Sleep,300
 		Save_As()
 	}
