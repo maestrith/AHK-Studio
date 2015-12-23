@@ -1395,7 +1395,6 @@ Color(con:=""){
 		Loop,7
 			con.2041(24+A_Index,ea.color!=""?ea.color:"0"),con.2042(24+A_Index,ea.background!=""?ea.Background:"0xaaaaaa")
 	}marginwidth()
-	con.2422(1)
 }
 Command_Help(){
 	static stuff,hwnd,ifurl:={between:"commands/IfBetween.htm",in:"commands/IfIn.htm",contains:"commands/IfIn.htm",is:"commands/IfIs.htm"}
@@ -3586,20 +3585,17 @@ Notify(csc:=""){
 	for a,b in {0:"Obj",2:"Code",3:"position",4:"ch",5:"mod",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",15:"prevfold",17:"listType",22:"updated"}
 		fn[b]:=NumGet(Info+(A_PtrSize*a))
 	if(code="2008"){
-		/*
-			t("|" StrGet(fn.text,"utf-8") "|")
-		*/
-		
-		
-		
-		
-		/*
-			if(fn.ch=10)
-				m("ENTER")
-		*/
-	}
-	{
-		
+		if(sc.2423=3&&sc.2570>1){
+			list:=[]
+			Loop,% sc.2570
+				list.push(sc.2577(A_Index-1))
+			for a,b in list{
+				if(A_Index=1)
+					sc.2160(b,b)
+				else
+					sc.2573(b,b)
+			}
+		}
 	}
 	/*
 		if(fn.ch=32){
