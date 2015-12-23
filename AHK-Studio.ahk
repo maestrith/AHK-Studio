@@ -1395,6 +1395,7 @@ Color(con:=""){
 		Loop,7
 			con.2041(24+A_Index,ea.color!=""?ea.color:"0"),con.2042(24+A_Index,ea.background!=""?ea.Background:"0xaaaaaa")
 	}marginwidth()
+	con.2422(1)
 }
 Command_Help(){
 	static stuff,hwnd,ifurl:={between:"commands/IfBetween.htm",in:"commands/IfIn.htm",contains:"commands/IfIn.htm",is:"commands/IfIs.htm"}
