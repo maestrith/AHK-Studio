@@ -76,7 +76,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.18"
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.19"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -123,6 +123,8 @@ AutoMenu(){
 	return
 }
 BookEnd(add,hotkey){
+	if(!(add&&hotkey))
+		return
 	sc:=csc(),forward:=[],rev:=[],sc.2078,add:=add?add:v.match[hotkey]
 	loop,% sc.2570
 		start:=sc.2585(A_Index-1),end:=sc.2587(A_Index-1),forward[start]:={start:start,end:End}
@@ -268,7 +270,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.18"
+	Version:="1.002.19"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
@@ -697,11 +699,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.18"
+		Version:="1.002.19"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.18"
+		Version:="1.002.19"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
