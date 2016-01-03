@@ -770,7 +770,7 @@ Class PluginClass{
 	}calltip(text){
 		sc:=csc(),sc.2200(sc.2128(sc.2166(sc.2008)),text)
 	}InsertText(text){
-		sc:=csc(),sc.2003(sc.2008,&text)
+		sc:=csc(),sc.2003(sc.2008,&text:=encode(text))
 	}
 }
 class rebar{
