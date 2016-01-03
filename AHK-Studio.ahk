@@ -769,7 +769,10 @@ Class PluginClass{
 		csc().2170(0,&text:=encode(text))
 	}calltip(text){
 		sc:=csc(),sc.2200(sc.2128(sc.2166(sc.2008)),text)
-}}
+	}InsertText(text){
+		sc:=csc(),sc.2003(sc.2008,&text)
+	}
+}
 class rebar{
 	static hw:=[],keep:=[]
 	__New(win=1,hwnd="",special=""){
@@ -3588,12 +3591,12 @@ Notify(csc:=""){
 		if(sc.2423=3&&sc.2570>1){
 			list:=[]
 			Loop,% sc.2570
-				list.push(sc.2577(A_Index-1))
+				list.push({caret:sc.2577(A_Index-1),anchor:sc.2579(A_Index-1)})
 			for a,b in list{
 				if(A_Index=1)
-					sc.2160(b,b)
+					sc.2160(b.anchor,b.caret)
 				else
-					sc.2573(b,b)
+					sc.2573(b.caret,b.anchor)
 			}
 		}
 	}
