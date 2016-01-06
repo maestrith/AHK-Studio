@@ -76,7 +76,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.19"
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.20"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -137,8 +137,7 @@ BookEnd(add,hotkey){
 			sc.2160(b.start+1,b.end+1)
 		else
 			sc.2573(b.end+(A_Index*2)-1,b.start+(A_Index*2)-1)
-	}
-	sc.2079
+	}sc.2079
 }
 Brace(){
 	ControlGetFocus,Focus,A
@@ -270,7 +269,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.19"
+	Version:="1.002.20"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
@@ -699,11 +698,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.19"
+		Version:="1.002.20"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.19"
+		Version:="1.002.20"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -2707,6 +2706,8 @@ GetInclude(){
 	return
 }
 GetPos(){
+	static count
+	count++
 	if(!current(1).xml)
 		return
 	sc:=csc(),current:=current(2).file,code_explorer.scan(current()),cf:=current(3).file
@@ -2721,13 +2722,6 @@ GetPos(){
 		list.=fold ",",fold++
 	if(list)
 		fix.SetAttribute("fold",Trim(list,","))
-	pos:=positions.ssn("//main[@file='" current(2).file "']/file[@file='" current(3).file "']"),line:=0,bp:=""
-	while,sc.2047(line,2)>=0,line:=sc.2047(line,2)
-		bp.=line ",",line++
-	if(bp:=Trim(bp,","))
-		pos.SetAttribute("breakpoint",bp)
-	else
-		pos.RemoveAttribute("breakpoint")
 }
 Go_To_Line(){
 	sc:=csc()
@@ -2737,7 +2731,10 @@ Go_To_Line(){
 	sc.2025(sc.2128(value-1))
 }
 Google_Search_Selected(){
-	
+	sc:=csc(),text:=sc.getseltext()
+	if(!text)
+		return m("Please select some text to search for")
+	Run,https://www.google.com/search?q=%text%
 }
 Goto(){
 	goto:
@@ -2962,28 +2959,25 @@ Highlight_to_Matching_Brace(){
 		sc.2160(start+1,sc.2008)
 }
 History(file=""){
-	static back:=[],forward:=[],last:=[]
-	if(file.back||file.forward){
-		if(back.2&&file.back)
-			forward.push(hh:=back.pop()),hh:=back[back.MaxIndex()]
-		else if(file.forward&&forward.1)
-			back.push(hh:=forward.pop())
-		if(hh.parent){
-			Gui,1:Default
-			tv:=files.ssn("//main[@file='" hh.parent "']/descendant::file[@file='" hh.file "']"),ea:=xml.ea(tv)
-			GuiControl,1:+g,SysTreeView321
-			getpos(),TV_Modify(ea.tv,"Select Vis Focus"),_:=ea.sc?csc().2358(0,ea.sc):tv(ea.tv,1,1)
-			WinSetTitle,% hwnd([1]),,% "AHK Studio - " hh.file
-			last.push(ea.tv)
-			GuiControl,1:+gtv,SysTreeView321
-			SetTimer,historyset,-20
+	static history:=new XML("history")
+	GetPos()
+	for a,b in ["forward","back"]
+		if(!%b%:=history.ssn("//" b))
+			%b%:=history.add(b)
+	if(file.back){
+		if(sn(back,"*").length=1)
 			return
-			historyset:
-			SetPos(ltv:=last.pop())
+		forward.AppendChild(back.LastChild()),last:=back.LastChild(),ea:=xml.ea(last)
+		tv(files.ssn("//main[@file='" ea.parent "']/descendant::file[@file='" ea.file "']/@tv").text,1,1)
+	}else if(file.forward){
+		if(!sn(forward,"*").length)
 			return
-		}
-	}else
-		forward:=[],back.push({parent:current(2).file,file:current(3).file})
+		last:=forward.LastChild(),ea:=xml.ea(last),tv(files.ssn("//main[@file='" ea.parent "']/descendant::file[@file='" ea.file "']/@tv").text,1,1),back.AppendChild(last)
+	}else{
+		forward.ParentNode.RemoveChild(Forward),ea:=xml.ea(back.LastChild())
+		if(ea.file!=file)
+			history.under(back,"file",{parent:Current(2).file,file:file})
+	}
 	return
 	Back:
 	Forward:
@@ -3353,8 +3347,10 @@ Menu(menuname:="main"){
 	if(plugin){
 		if(!FileExist(plugin))
 			MissingPlugin(plugin,item)
-		else
-			Run,"%plugin%" %option%
+		else{
+			SplitPath,plugin,,dir
+			Run,"%plugin%" %option%,%dir%
+		}
 		return
 	}
 	if(IsFunc(item))
@@ -3589,6 +3585,24 @@ Notify(csc:=""){
 	;0:"Obj",2:"Code",4:"ch",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",17:"listType",22:"updated"
 	for a,b in {0:"Obj",2:"Code",3:"position",4:"ch",5:"mod",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",15:"prevfold",17:"listType",22:"updated"}
 		fn[b]:=NumGet(Info+(A_PtrSize*a))
+	if(code=2006){
+		if((match:=sc.2353(pos:=fn.position))>0){
+			if(pos>match)
+				match++
+			else
+				pos++
+			sc.2160(pos,match)
+		}else if((match:=sc.2353(pos:=fn.position-1))>0){
+			if(pos>match)
+				match++
+			else
+				pos++
+			sc.2160(pos,match)
+		}
+		/*
+			t("lol tidbit")
+		*/
+	}
 	if(code="2008"){
 		if(sc.2423=3&&sc.2570>1){
 			list:=[]
@@ -5269,80 +5283,10 @@ Test_Plugin(){
 	return
 }
 Testing(x:=0){
-	/*
-		m("Testing","ico:?")
-		split lines by width of window.
-		sc.2686(0,sc.2006)
-		sc.2289(0)
-	*/
-	/*
-		sc:=csc()
-		SGDIPrint_HDC_Width:=240,SGDIPrint_HDC_Height:=240
-		VarSetCapacity(range,40,0)
-		VarSetCapacity(rect,16)
-		VarSetCapacity(rect1,16)
-		VarSetCapacity(chrs,8)
-		hdc:=DllCall("GetDC",uptr,hwnd(1))
-		for a,b in [100,100,SGDIPrint_HDC_Width-100,SGDIPrint_HDC_Height-100]
-			NumPut(0,rect,(A_Index-1)*A_PtrSize,"int")
-		for a,b in [0,0,SGDIPrint_HDC_Width,SGDIPrint_HDC_Height]
-			NumPut(b,rect1,(A_Index-1)*A_PtrSize,"int")
-		for a,b in [0,300]
-			NumPut(b,chrs,(A_Index-1)*A_PtrSize,"int")
-		NumPut(hdc,&range,0,"uptr")
-		NumPut(hdc,&range,4,"uptr")
-		NumPut(&rect1,&range,8,"uptr")
-		NumPut(&rect,&range,12,"uptr")
-		NumPut(&chrs,&range,16,"uptr")
-		sc.2148(4),sc.2146(0),sc.2406(1)
-		pos:=sc.2151(0,&range)
-		pos:=DllCall(sc.fn,"Ptr",sc.ptr,"UInt",2151,"int",0,"uptr",&range,"Cdecl")
-		m(pos,hdc,ErrorLevel)
-	*/
-	;TVM_GETITEMRECT=(TV_FIRST + 4)
-	/*
-		sc:=csc()
-		top:=files.sn("//file[@sc='" sc.2357 "']/../*"),max:=0
-		tick:=A_TickCount
-		while,tt:=top.item[A_Index-1],ea:=xml.ea(tt){
-			if(ea.strlen>max)
-				ltv:=ea.tv,last:=tt
-			max:=ea.strlen>max?ea.strlen:max
-		}
-		VarSetCapacity(rect,16)
-		NumPut(ltv,rect,0)
-		SendMessage,0x1100+4,1,&rect,SysTreeView321,% hwnd([1])
-		SendMessage,0x1100+6,0,0,SysTreeView321,% hwnd([1])
-		width:=ErrorLevel,count:=1
-		tv:=TV_GetSelection()
-		while,TV_GetParent(tv)
-			count++,tv:=TV_GetParent(tv)
-		tvwidth:=NumGet(rect,8)
-	*/
-	/*
-		m(width*count,tvwidth,NumGet(rect,8),NumGet(rect,0))
-	*/
-	/*
-		for a,b in [0,4,8,12]
-			m(NumGet(rect,b))
-	*/
-	/*
-		total:=(width*count)+tvwidth
-		settings.ssn("//gui/@projectwidth").text:=total,Resize("rebar")
-	*/
-	VarSetCapacity(info,28)
-	NumPut(28,info,0)
-	NumPut(256,info,4)
-	SendMessage,0xEA,0,&info,SysTreeView321,% hwnd([1])
-	m(ErrorLevel)
-	Loop,24
-		list.=A_Index " - " NumGet(info,(A_Index-1)) "`n"
-	m(list)
-	;m(total,width,count,tvwidth,NumGet(rect,8),NumGet(rect,0))
-	;TVM_GETINDENT=(TV_FIRST + 6)
-	;m(files.ssn("//*[@tv='" TV_GetSelection() "']").xml)
-	;m(menus[],"ico:?")
-	
+	m("Testing","ico:?")
+}
+Testing1(){
+	m("neat :)")
 }
 Toggle_Comment_Line(){
 	sc:=csc(),sc.2078
@@ -5438,10 +5382,10 @@ tv(tv:=0,open:="",history:=0){
 	if(open=""&&history=0)
 		return
 	tv:
-	if((A_GuiEvent="S"||open||history)&&A_EventInfo){
+	if((A_GuiEvent="S"||open||history)){
 		SetTimer,matchfile,Off
-		if(!v.startup)
-			getpos(),count:=0
+		if(!v.startup&&!history)
+			GetPos(),count:=0
 		ei:=open?tvbak:a_eventinfo,sc:=csc(),file:=files.ssn("//*[@tv='" ei "']"),fn:=ssn(file,"@file").text
 		sc.Enable()
 		if(file.nodename!="file")
@@ -5470,7 +5414,7 @@ tv(tv:=0,open:="",history:=0){
 		}else
 			sc.2358(0,doc.text),marginwidth(sc),current(1).SetAttribute("last",fn)
 		Sleep,150
-		SetPos(ei),uppos(),marginwidth(sc)
+		SetPos(ei),uppos(),MarginWidth(sc)
 		GuiControl,1:+Redraw,% sc.sc
 		if(history!=1)
 			History(fn)
