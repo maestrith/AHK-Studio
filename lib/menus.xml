@@ -265,7 +265,7 @@
 				<menu name="Refresh Project Explorer" clean="Refresh_Project_Explorer" index="4"></menu>
 				<menu name="Refresh Plugins" clean="Refresh_Plugins" index="5"></menu></menu>
 			<menu clean="Display_Classes" name="Display Classes"></menu>
-			<menu name="Display Functions" clean="Display_Functions" hotkey="^I" index="7"></menu>
+			<menu name="Display Functions" clean="Display_Functions" hotkey="!I" index="7"></menu>
 			<menu name="Show Classes" clean="Show_Classes" hotkey="!I" no="1"></menu>
 			<menu name="Show Functions" clean="Show_Functions" hotkey="!O" no="1"></menu>
 			<menu name="Sho&amp;w Scintilla Code In Line" hotkey="F4" clean="Show_Scintilla_Code_In_Line" index="28"></menu>
