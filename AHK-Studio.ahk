@@ -366,11 +366,6 @@ Class Code_Explorer{
 					}
 				*/
 			}
-			;((\w|[^\x00-\x7F])+)
-			/*
-				^!c::
-				return
-			*/
 		}for type,find in {Hotkey:"OUi`nm)^(((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*)+\s+&\s+)*(\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*)+)::",Label:this.label}{ ;*\w+([ |\t]*\&[ |\t]*[#|!|^|\+|~|\$|&|<|>|*]*\w+)?
 			pos:=1
 			while,RegExMatch(text,find,fun,pos),pos:=fun.pos(1)+fun.len(1)
@@ -385,6 +380,12 @@ Class Code_Explorer{
 			while,pos:=RegExMatch(text,"Osm`n)(\w+)\s*:=",var,pos),pos:=var.Pos(1)+var.len(1)
 				if(!ssn(main,"descendant::*[@type='Variable'][@text='" var.1 "'] or descendant::*[@type='Instance'][@text='" var.1 "']"))
 					cexml.under(next,"info",{type:"Variable",upper:upper(var.1),pos:StrPut(SubStr(text,1,var.Pos(1)),"utf-8")-3,text:var.1})
+		}pos:=1
+		while,RegExMatch(text,"OUi);gui\[(.*)\].*\R(.*)\R;/gui\[.*\]",found,pos),pos:=found.Pos(1)+found.len(1){
+			cexml.under(next,"info",{type:"Gui",opos:found.Pos(1)-1,pos:ppp:=StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-3,text:found.1,upper:upper(found.1)})
+			/*
+				cexml.under(next,"info",{type:"Gui",upper:upper(found.1),pos:(start:=StrPut(SubStr(text,1,var.Pos(1)),"utf-8")-3),text:found.1,end:start+})
+			*/
 		}
 		for a,b in {Bookmark:"\s+;#\[(.*)\]",Breakpoint:"\s+;\*\[(.*)\]"}{
 			pos:=1
@@ -458,6 +459,11 @@ Class Code_Explorer{
 		}
 		return
 }}
+;gui[flan]
+Gui,Add,Button,,testing
+Gui,Add,Edit,,Ok
+Gui,Show
+;/gui[flan]
 Class FTP{
 	__New(name){
 		ea:=settings.ea("//ftp/server[@name='" name "']"),this.error:=0
@@ -4851,7 +4857,12 @@ Run(){
 		return
 	if(file=A_ScriptFullPath)
 		exit(1)
-	main:=ssn(current(1),"@file").text,run:=FileExist(dir "\AutoHotkey.exe")?Chr(34) dir "\AutoHotkey.exe" Chr(34) " " Chr(34) file Chr(34):Chr(34) file Chr(34),admin:=v.options.run_as_admin?"*RunAs ":""
+	main:=ssn(current(1),"@file").text
+	if(FileExist(A_ScriptDir "\AutoHotkey.exe"))
+		run:=Chr(34) A_ScriptDir "\AutoHotkey.exe" Chr(34) " " Chr(34) file Chr(34)
+	else
+		run:=FileExist(dir "\AutoHotkey.exe")?Chr(34) dir "\AutoHotkey.exe" Chr(34) " " Chr(34) file Chr(34):Chr(34) file Chr(34)
+	admin:=v.options.run_as_admin?"*RunAs ":""
 	Run,%admin%%run%,%dir%,,pid
 	if(!IsObject(v.runpid))
 		v.runpid:=[]
