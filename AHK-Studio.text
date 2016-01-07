@@ -1,6 +1,8 @@
 1.002.20
 Fixed: Reported by haxxurtje
 -Search Using Google was not working
+Added:
+-Options New File Dialog: Will ask where to put the new file
 1.002.19
 Fixed: Reported by Driedman
 -Adding a )>}]% with a selection was causing a 0 to be inserted

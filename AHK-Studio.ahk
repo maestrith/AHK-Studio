@@ -2193,7 +2193,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151222093855,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20160106132404,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20160106132203,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
+	static dates:={commands:{date:20151222093855,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20160106203739,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20160106132203,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
@@ -3511,12 +3511,16 @@ New_Segment(new:="",text:="",adjusted:=""){
 	sc.2025(StrLen(function)+1),NewIndent()
 }
 New(filename:="",text:=""){
-	ts:=settings.ssn("//template").text
-	file:=FileOpen("c:\windows\shellnew\template.ahk",0)
-	td:=file.Read(file.length)
-	file.close()
-	template:=ts?ts:td
-	filename:=(list:=files.sn("//main[@untitled]").length)?"Untitled" list ".ahk":"Untitled.ahk"
+	ts:=settings.ssn("//template").text,file:=FileOpen("c:\windows\shellnew\template.ahk",0),td:=file.Read(file.length),file.close(),template:=ts?ts:td
+	if(v.options.New_File_Dialog){
+		FileSelectFile,filename,S16,,Enter a filename for a new project,*.ahk
+		if(!filename)
+			return
+		filename:=SubStr(filename,-3)=".ahk"?filename:filename ".ahk"
+		if(FileExist(filename))
+			return tv(Open(filename))
+	}else
+		filename:=(list:=files.sn("//main[@untitled]").length)?"Untitled" list ".ahk":"Untitled.ahk"
 	update({file:filename,text:template})
 	top:=files.ssn("//*")
 	main:=files.under(top,"main",{file:filename,untitled:1})
@@ -4135,6 +4139,7 @@ Options(x:=0){
 	Includes_In_Place:
 	Shift_Breakpoint:
 	Check_For_Update_On_Startup:
+	New_File_Dialog:
 	onoff:=settings.ssn("//options/@ " A_ThisLabel).text?0:1
 	att:=[],att[A_ThisLabel]:=onoff,v.options[A_ThisLabel]:=onoff
 	settings.add("options",att)
@@ -5782,7 +5787,6 @@ Kill_Process(){
 	newwin.Destroy()
 	return
 }
-
 Forum(){
 	Run,https://autohotkey.com/boards/viewtopic.php?f=6&t=300&hilit=ahk+studio
 }
