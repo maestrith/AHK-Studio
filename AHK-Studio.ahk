@@ -348,7 +348,6 @@ Class Code_Explorer{
 					braces++,start:=1
 				lbraces:=braces
 			}
-			
 			lasteapos:=ea.pos,total:=Trim(total,"`n"),cc.SetAttribute("end",np:=ea.pos+StrPut(total,"utf-8")-1)
 			for a,b in {Property:Code_Explorer.property,Method:Code_Explorer.function}{
 				pos:=1
@@ -368,7 +367,11 @@ Class Code_Explorer{
 				*/
 			}
 			;((\w|[^\x00-\x7F])+)
-		}for type,find in {Hotkey:"OUi`nm)^(((\w|[^\x00-\x7F]|#|!|^|\+|~|\$|&|<|>|\*)+\s+&\s+)*(\w|[^\x00-\x7F]|#|!|^|\+|~|\$|&|<|>|\*)+)::",Label:this.label}{ ;*\w+([ |\t]*\&[ |\t]*[#|!|^|\+|~|\$|&|<|>|*]*\w+)?
+			/*
+				^!c::
+				return
+			*/
+		}for type,find in {Hotkey:"OUi`nm)^(((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*)+\s+&\s+)*(\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*)+)::",Label:this.label}{ ;*\w+([ |\t]*\&[ |\t]*[#|!|^|\+|~|\$|&|<|>|*]*\w+)?
 			pos:=1
 			while,RegExMatch(text,find,fun,pos),pos:=fun.pos(1)+fun.len(1)
 				if(!no.ssn("//bad[@min<'" fun.pos(1) "' and @max>'" fun.pos(1) "' and @type!='Class']"))
