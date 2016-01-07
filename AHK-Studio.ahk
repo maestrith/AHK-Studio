@@ -367,7 +367,8 @@ Class Code_Explorer{
 					}
 				*/
 			}
-		}for type,find in {Hotkey:"Om`n)^\s*([#|!|^|\+|~|\$|&|<|>|*]*\w+([ |\t]*\&[ |\t]*[#|!|^|\+|~|\$|&|<|>|*]*\w+)?)::",Label:this.label}{
+			;((\w|[^\x00-\x7F])+)
+		}for type,find in {Hotkey:"OUi`nm)^(((\w|[^\x00-\x7F]|#|!|^|\+|~|\$|&|<|>|\*)+\s+&\s+)*(\w|[^\x00-\x7F]|#|!|^|\+|~|\$|&|<|>|\*)+)::",Label:this.label}{ ;*\w+([ |\t]*\&[ |\t]*[#|!|^|\+|~|\$|&|<|>|*]*\w+)?
 			pos:=1
 			while,RegExMatch(text,find,fun,pos),pos:=fun.pos(1)+fun.len(1)
 				if(!no.ssn("//bad[@min<'" fun.pos(1) "' and @max>'" fun.pos(1) "' and @type!='Class']"))
@@ -5224,26 +5225,17 @@ Setup(window,nodisable=""){
 }
 Show_Class_Methods(object){
 	static list
-	if(object="this"){
-		sc:=csc(),list:=cexml.sn("//main[@file='" current(2).file "']/descendant::file[@file='" current(3).file "']/descendant::*[@type='Class' and @pos<'" sc.2008 "' and @end>'" sc.2008 "']/*[@type='Method']")
-		while,ll:=list.item[A_Index-1],ea:=xml.ea(ll)
-			total.=ea.text " "
-		if(total:=Trim(total))
-			sc.2100(0,total)
-		return
-	}
-	ea:=xml.ea(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Instance' and @upper='" upper(object) "']"))
-	if(ea.class){
-		disp:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Class' and @upper='" upper(ea.class) "']"),show:=sn(disp,"*[@type='Method' or @type='Property']"),list:=""
-		while,ss:=show.item[A_Index-1],ea:=xml.ea(ss)
-			list.=ea.text " "
-		SetTimer,scl,-10
-		return
-		scl:
-		if(list)
-			csc().2117(3,Trim(list))
-		return
-	}
+	sc:=csc()
+	if(object="this")
+		Code_Explorer.scan(Current()),list:=cexml.sn("//main[@file='" current(2).file "']/descendant::file[@file='" current(3).file "']/descendant::*[@type='Class' and @pos<'" sc.2008 "' and @end>'" sc.2008 "']/*[@type='Method']")
+	else if(parent:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Class' and @upper='" upper(object) "']"))
+		list:=sn(parent,"*[@type='Method']")
+	else if(ea:=xml.ea(parent:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Instance' and @upper='" upper(object) "']")))
+		list:=cexml.sn("//main[@file='" Current(2).file "']/descendant::*[@type='Class' and @upper='" Upper(ea.class) "']/descendant::*[@type='Method']")
+	while,ll:=list.item[A_Index-1],ea:=xml.ea(ll)
+		total.=ea.text " "
+	if(total:=Trim(total))
+		sc.2117(3,total)
 }
 Show_Scintilla_Code_In_Line(){
 	Scintilla(),sc:=csc()
