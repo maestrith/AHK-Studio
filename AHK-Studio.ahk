@@ -3174,39 +3174,49 @@ Jump_to_Segment(){
 		return omni_search("^")
 	return	
 }
-Jump_To(find:=""){
-	sc:=csc(),cpos:=sc.2008,word:=sc.getword(),Index_Current_File(),word:=upper(word)
-	search:=find?"[@type='" find "'][@upper='" word "']":"[@upper='" word "']"
-	if(found:=cexml.ssn("//main[@file='" current(2).file "']/descendant::info" search)){
-		ea:=xml.ea(found),TV(files.ssn("//main[@file='" ssn(found,"ancestor::main/@file").text "']/descendant::file[@file='" ssn(found,"ancestor::file/@file").text "']/@tv").text)
-		Sleep,200
-		csc().2160(ea.pos,ea.pos+StrPut(ea.text,"Utf-8")-1+_:=ea.type="class"?+6:+0),v.sc.2169,v.sc.2400
-	}else if(InStr(text:=sc.textrange(sc.2128(line:=sc.2166(sc.2008)),sc.2136(line)),Chr(35) "include")){
-		main:=files.ssn("//main[@file='" current(2).file "']"),tv(ssn(main,"descendant::file[@include='" text "']/@tv").text)
-	}else if(SubStr(word,1,1)~="i)(g|v)"){
-		word:=SubStr(word,2),search:=find?"[@type='" find "'][@upper='" word "']":"[@upper='" word "']"
-		if(found:=cexml.ssn("//main[@file='" current(2).file "']/descendant::info" search)){
-			ea:=xml.ea(found),TV(files.ssn("//main[@file='" ssn(found,"ancestor::main/@file").text "']/descendant::file[@file='" ssn(found,"ancestor::file/@file").text "']/@tv").text)
-			Sleep,200
-			csc().2160(ea.pos,ea.pos+StrPut(ea.text,"Utf-8")-1+_:=ea.type="class"?+6:+0),v.sc.2169,v.sc.2400
-		}
-	}
-}Jump_To_Class(){
-	Jump_To("Class")
-}Jump_To_First_Available(){
+Jump_To_First_Available(){
 	sc:=csc(),line:=sc.getline(sc.2166(sc.2008))
-	if(RegExMatch(line,"Oi)^\s*#include\s*(.*)",found))
-		Jump_To("include")
-	else
-		Jump_To()
-}Jump_To_Function(){
+	if(RegExMatch(line,"Oim`n)^\s*#include\s*(.*)\s*;$",found)){
+		Jump_To_Include()
+	}else{
+		word:=Upper(sc.getword()),dup:=[]
+		if(!(list:=cexml.sn("//main[@file='" current(2).file "']/descendant::*[@upper='" word "']")).length)
+			list:=cexml.sn("//main[@file='" current(2).file "']/descendant::*[@upper='" SubStr(word,2) "']")
+		if((v.firstlist:=list).length=1)
+			cexmlsel(v.firstlist.item[0])
+		else{
+			while,ll:=v.firstlist.item[A_Index-1],ea:=xml.ea(ll)
+				if(!dup[ea.type])
+					total.=ea.type " ",dup[ea.type]:=1
+			if(total:=Trim(total))
+				sc.2660(0),sc.2117(6,total),sc.2660(1)
+	}}
+}
+Jump_To(type){
+	sc:=csc(),line:=sc.getline(sc.2166(sc.2008)),word:=Upper(sc.getword())
+	if(node:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='" type "' and @upper='" word "']"))
+		cexmlsel(node)
+}
+Jump_To_Function(){
 	Jump_To("Function")
 }Jump_To_Include(){
-	Jump_To("Include")
+	sc:=csc(),line:=sc.getline(sc.2166(sc.2008))
+	if(RegExMatch(line,"Oim`n)^\s*#include\s*(.*)\s*;$",found))
+		if(node:=cexml.ssn("//main[@file='" current(2).file "']/descendant::file[@name='" Trim(found.1,"`t, ") "']"))
+			tv(files.ssn("//main[@file='" current(2).file "']/descendant::file[@file='" ssn(node,"@file").text "']/@tv").text)
 }Jump_To_Label(){
 	Jump_To("Label")
 }Jump_To_Method(){
 	Jump_To("Method")
+}Jump_To_Class(){
+	Jump_To("Class")
+}
+cexmlsel(node){
+	if(!IsObject(node))
+		return
+	sc:=csc(),main:=xml.ea(ssn(node,"ancestor::main")),file:=xml.ea(ssn(node,"ancestor::file")),ea:=xml.ea(node),tv(files.ssn("//main[@file='" main.file "']/descendant::file[@file='" file.file "']/@tv").text)
+	Sleep,200
+	sc.2160(ea.pos,ea.pos+StrLen(ea.text))
 }
 Keywords(){
 	commands:=new xml("commands","lib\commands.xml"),list:=settings.sn("//commands/*"),top:=commands.ssn("//Commands/Commands")
@@ -3738,8 +3748,19 @@ Notify(csc:=""){
 		else if(fn.listtype=5){
 			text:=StrGet(fn.text,"utf-8"),start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),add:=sc.2007(end)=40?"":"()",sc.2645(start,end-start),sc.2003(sc.2008,text add),sc.2025(sc.2008+StrLen(text "."))
 			SetTimer,context,-10
-		}
-	}
+		}else if(fn.listtype=6){
+			text:=StrGet(fn.text,"utf-8"),list:=v.firstlist
+			while,ll:=list.item[A_Index-1],ea:=xml.ea(ll){
+				if(ea.type=text){
+					cexmlsel(ll)
+					/*
+						pea:=xml.ea(ssn(ll,"ancestor::file"))
+						tv(files.ssn("//main[@file='" ssn(ll,"ancestor::main/@file").text "']/descendant::file[@file='" pea.file "']/@tv").text)
+						Sleep,200
+						sc.2160(ea.pos,ea.pos+StrLen(ea.text))
+					*/
+					break
+	}}}}
 	return
 	sendenter:
 	SetTimer,sendenter,Off
