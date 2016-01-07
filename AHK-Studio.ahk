@@ -3190,14 +3190,11 @@ Jump_To_First_Available(){
 					total.=ea.type " ",dup[ea.type]:=1
 			if(total:=Trim(total))
 				sc.2660(0),sc.2117(6,total),sc.2660(1)
-	}}
-}
-Jump_To(type){
+}}}Jump_To(type){
 	sc:=csc(),line:=sc.getline(sc.2166(sc.2008)),word:=Upper(sc.getword())
 	if(node:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='" type "' and @upper='" word "']"))
 		cexmlsel(node)
-}
-Jump_To_Function(){
+}Jump_To_Function(){
 	Jump_To("Function")
 }Jump_To_Include(){
 	sc:=csc(),line:=sc.getline(sc.2166(sc.2008))
@@ -3210,8 +3207,7 @@ Jump_To_Function(){
 	Jump_To("Method")
 }Jump_To_Class(){
 	Jump_To("Class")
-}
-cexmlsel(node){
+}cexmlsel(node){
 	if(!IsObject(node))
 		return
 	sc:=csc(),main:=xml.ea(ssn(node,"ancestor::main")),file:=xml.ea(ssn(node,"ancestor::file")),ea:=xml.ea(node),tv(files.ssn("//main[@file='" main.file "']/descendant::file[@file='" file.file "']/@tv").text)
@@ -5228,6 +5224,14 @@ Setup(window,nodisable=""){
 }
 Show_Class_Methods(object){
 	static list
+	if(object="this"){
+		sc:=csc(),list:=cexml.sn("//main[@file='" current(2).file "']/descendant::file[@file='" current(3).file "']/descendant::*[@type='Class' and @pos<'" sc.2008 "' and @end>'" sc.2008 "']/*[@type='Method']")
+		while,ll:=list.item[A_Index-1],ea:=xml.ea(ll)
+			total.=ea.text " "
+		if(total:=Trim(total))
+			sc.2100(0,total)
+		return
+	}
 	ea:=xml.ea(cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Instance' and @upper='" upper(object) "']"))
 	if(ea.class){
 		disp:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='Class' and @upper='" upper(ea.class) "']"),show:=sn(disp,"*[@type='Method' or @type='Property']"),list:=""

@@ -4,6 +4,7 @@ Fixed: Reported by haxxurtje
 Added:
 -Options New File Dialog: Will ask where to put the new file
 Changed: Jump To First Available: Now shows a list if there is more than one type
+-this references in classes will bring up a method list
 1.002.19
 Fixed: Reported by Driedman
 -Adding a )>}]% with a selection was causing a 0 to be inserted
