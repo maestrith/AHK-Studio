@@ -3365,6 +3365,7 @@ Menu(menuname:="main"){
 			MissingPlugin(plugin,item)
 		else{
 			SplitPath,plugin,,dir
+			dir:=(dir="plugins")?"":dir
 			Run,"%plugin%" %option%,%dir%
 		}
 		return
