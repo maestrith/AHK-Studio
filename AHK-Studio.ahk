@@ -4235,10 +4235,10 @@ Plug(refresh:=0){
 	plHks:=[]
 	if(refresh){
 		list:=menus.sn("//main/menu[@clean='Plugin']/menu")
-		while,ll:=list.item[A_Index-1],ea:=xml.ea(ll){
+		while,ll:=list.item[A_Index-1],ea:=xml.ea(ll)
 			if(!FileExist(ea.plugin))
 				ll.ParentNode.RemoveChild(ll)
-	}}
+	}
 	Loop,plugins\*.ahk
 	{
 		if(!plugin:=menus.ssn("//menu[@clean='Plugin']"))
@@ -4247,10 +4247,9 @@ Plug(refresh:=0){
 		pos:=1
 		while,pos:=RegExMatch(plg,"Oim)\;menu\s+(.*)\R",found,pos){
 			item:=StrSplit(found.1,","),item.1:=Trim(item.1,"`r|`r`n|`n")
-			if(!ii:=menus.ssn("//*[@clean='" clean(Trim(item.1)) "']")){
-				m(Trim(item.1))
+			if(!ii:=menus.ssn("//*[@clean='" clean(Trim(item.1)) "']"))
 				menus.under(plugin,"menu",{name:Trim(item.1),clean:clean(item.1),plugin:A_LoopFileFullPath,option:item.2,hotkey:plHks[item.1]})
-			}else
+			else
 				ii.SetAttribute("plugin",A_LoopFileFullPath),ii.SetAttribute("option",item.2)
 			pos:=found.Pos(1)+1
 		}
