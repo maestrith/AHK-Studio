@@ -7,6 +7,9 @@ Changed: Jump To First Available: Now shows a list if there is more than one typ
 -this references in classes will bring up a method list
 Fixed: Reported by raspen
 -Hotkeys were not being captured correctly
+-Plugins were not running properly
+Added: Requested by raspen
+-Delete Line
 1.002.19
 Fixed: Reported by Driedman
 -Adding a )>}]% with a selection was causing a 0 to be inserted
