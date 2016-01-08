@@ -1,3 +1,9 @@
+1.002.21
+Changed:
+-Delete Matching Brace: Was causing errors from time to time in adding extra text
+-New File Dialog: Was not creating the file properly
+Fixed: Reported by huckleberry
+-Duplicate plugin items were displaying.
 1.002.20
 Fixed: Reported by haxxurtje
 -Search Using Google was not working

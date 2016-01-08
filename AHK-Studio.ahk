@@ -76,7 +76,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.20"
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.21"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -269,7 +269,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.20"
+	Version:="1.002.21"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
@@ -382,7 +382,7 @@ Class Code_Explorer{
 					cexml.under(next,"info",{type:"Variable",upper:upper(var.1),pos:StrPut(SubStr(text,1,var.Pos(1)),"utf-8")-3,text:var.1})
 		}pos:=1
 		while,RegExMatch(text,"OUi);gui\[(.*)\].*\R(.*)\R;/gui\[.*\]",found,pos),pos:=found.Pos(1)+found.len(1){
-			cexml.under(next,"info",{type:"Gui",opos:found.Pos(1)-1,pos:ppp:=StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-3,text:found.1,upper:upper(found.1)})
+			cexml.under(next,"info",{type:"Gui",opos:found.Pos(1)-1,pos:ppp:=StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-3,start:found.Pos(2)-1,end:found.Pos(2)+found.len(2),text:found.1,upper:upper(found.1)})
 			/*
 				cexml.under(next,"info",{type:"Gui",upper:upper(found.1),pos:(start:=StrPut(SubStr(text,1,var.Pos(1)),"utf-8")-3),text:found.1,end:start+})
 			*/
@@ -459,11 +459,6 @@ Class Code_Explorer{
 		}
 		return
 }}
-;gui[flan]
-Gui,Add,Button,,testing
-Gui,Add,Edit,,Ok
-Gui,Show
-;/gui[flan]
 Class FTP{
 	__New(name){
 		ea:=settings.ea("//ftp/server[@name='" name "']"),this.error:=0
@@ -648,8 +643,8 @@ Class Icon_Browser{
 	}
 }
 Class Omni_Search_Class{
-	static prefix:={"@":"Menu","^":"File",":":"Label","(":"Function","{":"Class","[":"Method","&":"Hotkey","+":"Function","#":"Bookmark",".":"Property","%":"Variable","<":"Instance","*":"Breakpoint"}
-	static iprefix:={Menu:"@",File:"^",Label:":",Function:"(",Class:"{",Method:"[",Hotkey:"&",Bookmark:"#",Property:".",Variable:"%",Instance:"<",Breakpoint:"*"}
+	static prefix:={"@":"Menu","^":"File",":":"Label","(":"Function","{":"Class","[":"Method","&":"Hotkey","+":"Function","#":"Bookmark",".":"Property","%":"Variable","<":"Instance","*":"Breakpoint",">":"Gui"}
+	static iprefix:={Menu:"@",File:"^",Label:":",Function:"(",Class:"{",Method:"[",Hotkey:"&",Bookmark:"#",Property:".",Variable:"%",Instance:"<",Breakpoint:"*",Gui:">"}
 	__New(){
 		this.menus()
 		return this
@@ -708,11 +703,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.20"
+		Version:="1.002.21"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.20"
+		Version:="1.002.21"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -1815,31 +1810,18 @@ defaultfont(){
 }
 Delete_Matching_Brace(){
 	sc:=csc(),value:=[]
+	GuiControl,1:+g,% sc.sc
 	for a,b in [v.braceend,v.bracestart]
 		value[b]:=1
 	max:=value.MaxIndex(),min:=value.MinIndex()
 	if(v.braceend&&v.bracestart){
-		sc.2078(),minline:=sc.2166(min),maxline:=sc.2166(max),sc.2645(max,1),sc.2645(min,1),max--,min--,maxtext:=sc.getline(sc.2166(max)),mintext:=sc.getline(sc.2166(min))
-		for a,b in {mintext:mintext,maxtext:maxtext}
-			%a%:=RegExReplace(RegExReplace(b,"(\t|\R|\s)*$"),"^(\t|\R|\s)*")
-		if(maxtext="")
-			sc.2645(start:=sc.2136(maxline-1),sc.2136(maxline)-start)
-		if(mintext="")
-			sc.2645(start:=sc.2136(minline-1),sc.2136(minline)-start)
-		if(maxtext){
-			sc.2190(sc.2128(maxline)),sc.2192(sc.2136(maxline)),sc.2194(StrLen(maxtext),maxtext)
-			if(sc.2166(sc.2008)=maxline)
-				sc.2025(sc.2136(maxline))
-		}
-		if(mintext){
-			sc.2190(sc.2128(minline)),sc.2192(sc.2136(minline)),sc.2194(StrLen(mintext),mintext)
-			if(sc.2166(sc.2008)=minline)
-				sc.2025(sc.2136(minline))
-		}
-		if(v.options.full_auto)
-			NewIndent()
-		sc.2079()
+		sc.2078(),minline:=sc.2166(min),maxline:=sc.2166(max),sc.2645(max,1),sc.2645(min,1)
+		if(minline!=maxline)
+			if(sc.2128(maxline)=sc.2136(maxline))
+				max:=sc.2136(maxline-1),sc.2645(max,sc.2128(maxline)-max),max++
+		sc.2160(min,max-1),sc.2079()
 	}
+	GuiControl,1:+gnotify,% sc.sc
 }
 Delete_Project(x:=0){
 	project:=current(2).file
@@ -2970,6 +2952,12 @@ Highlight_to_Matching_Brace(){
 }
 History(file=""){
 	static history:=new XML("history")
+	if(file.show){
+		history.transform()
+		ToolTip,% history[],0,0,2
+		Sleep,2000
+		ToolTip,,,,2
+	}
 	GetPos()
 	for a,b in ["forward","back"]
 		if(!%b%:=history.ssn("//" b))
@@ -3534,6 +3522,7 @@ New(filename:="",text:=""){
 		if(!filename)
 			return
 		filename:=SubStr(filename,-3)=".ahk"?filename:filename ".ahk"
+		file:=FileOpen(filename,"RW"),file.seek(0),file.write(template),file.length(file.position)
 		if(FileExist(filename))
 			return tv(Open(filename))
 	}else
@@ -3949,6 +3938,12 @@ Omni_Search(start=""){
 		Sleep,200
 		item.text:=item.type="class"?"class " item.text:item.text
 		(item.type~="i)bookmark|breakpoint")?(sc:=csc(),line:=sc.2166(item.pos),sc.2160(sc.2128(line),sc.2136(line)),hwnd({rem:20}),CenterSel()):(csc().2160(item.pos,item.pos+StrPut(item.text,"Utf-8")-1),v.sc.2169,getpos(),v.sc.2400)
+	}else if(item.type="gui"){
+		hwnd({rem:20}),tv(files.ssn("//main[@file='" item.parent "']/descendant::file[@file='" item.file "']/@tv").text)
+		Sleep,200
+		csc().2160(item.pos,item.pos+StrLen(item.text)),CenterSel()
+		text:=update({get:item.file})
+		m(SubStr(text,item.start,item.end-item.start))
 	}
 	return
 	omnikey:
@@ -4239,21 +4234,11 @@ Plug(refresh:=0){
 		FileCreateDir,Plugins
 	plHks:=[]
 	if(refresh){
-		while,pl:=menus.sn("//menu[@clean='Plugin']/menu[@hotkey!='']").item[A_Index-1],ea:=xml.ea(pl)
-			plHks[ea.name]:=ea.hotkey
-		rem:=menus.ssn("//menu[@clean='Plugin']"),rem.ParentNode.RemoveChild(rem)
-	}all:=menus.sn("//*[@clean]")
-	while,aa:=all.item[A_Index-1],ea:=menus.ea(aa)
-		if((dup:=menus.sn("//*[@clean='" ea.clean "']")).length>1)
-			while,dd:=dup.item[A_Index-1]
-				if(A_Index>1)
-					dd.ParentNode.RemoveChild(dd)
-	pin:=menus.sn("//*[@clean='Plugin']/descendant::menu")
-	while,pp:=pin.item[A_Index-1],ea:=xml.ea(pp)
-		if(!FileExist(ea.plugin))
-			pp.ParentNode.RemoveChild(pp)
-	if(!menus.sn("//*[@clean='Plugin']/descendant::menu").length)
-		rem:=menus.ssn("//*[@clean='Plugin']"),rem.ParentNode.RemoveChild(rem)
+		list:=menus.sn("//main/menu[@clean='Plugin']/menu")
+		while,ll:=list.item[A_Index-1],ea:=xml.ea(ll){
+			if(!FileExist(ea.plugin))
+				ll.ParentNode.RemoveChild(ll)
+	}}
 	Loop,plugins\*.ahk
 	{
 		if(!plugin:=menus.ssn("//menu[@clean='Plugin']"))
@@ -4262,9 +4247,10 @@ Plug(refresh:=0){
 		pos:=1
 		while,pos:=RegExMatch(plg,"Oim)\;menu\s+(.*)\R",found,pos){
 			item:=StrSplit(found.1,","),item.1:=Trim(item.1,"`r|`r`n|`n")
-			if(!ii:=menus.ssn("//*[@clean='" clean(Trim(item.1)) "']"))
+			if(!ii:=menus.ssn("//*[@clean='" clean(Trim(item.1)) "']")){
+				m(Trim(item.1))
 				menus.under(plugin,"menu",{name:Trim(item.1),clean:clean(item.1),plugin:A_LoopFileFullPath,option:item.2,hotkey:plHks[item.1]})
-			else
+			}else
 				ii.SetAttribute("plugin",A_LoopFileFullPath),ii.SetAttribute("option",item.2)
 			pos:=found.Pos(1)+1
 		}
@@ -5320,10 +5306,7 @@ Test_Plugin(){
 	return
 }
 Testing(x:=0){
-	m("Testing","ico:?")
-}
-Testing1(){
-	m("neat :)")
+	History({show:1})
 }
 Toggle_Comment_Line(){
 	sc:=csc(),sc.2078
@@ -5450,7 +5433,7 @@ tv(tv:=0,open:="",history:=0){
 				dd.SetAttribute("sc",doc)
 		}else
 			sc.2358(0,doc.text),marginwidth(sc),current(1).SetAttribute("last",fn)
-		Sleep,150
+		Sleep,250
 		SetPos(ei),uppos(),MarginWidth(sc)
 		GuiControl,1:+Redraw,% sc.sc
 		if(history!=1)
