@@ -2699,12 +2699,11 @@ GetInclude(){
 		SplitPath,filename,,dir
 		if(!FileExist(dir))
 			FileCreateDir,%dir%
-		FileAppend,,%filename%
+		FileAppend,,%filename%,UTF-8
 	}
 	Refresh_Project_Explorer(newfile)
 	return
 }
-
 GetPos(){
 	static count
 	count++
