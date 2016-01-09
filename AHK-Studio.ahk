@@ -3508,10 +3508,10 @@ New_Segment(new:="",text:="",adjusted:=""){
 	Gui,1:Default
 	Relative:=RegExReplace(relativepath(cur,new),"i)^lib\\([^\\]+)\.ahk$","<$1>")
 	if(v.options.Includes_In_Place=1)
-		sc.2003(sc.2008,"#Include " relative)
+		sc.2003(sc.2008,"#Include " &text:=Encode(relative))
 	else{
 		if(files.ssn("//*[@sc='" sc.2357 "']/@file").text=current(2).file)
-			sc.2003(sc.2006,"`n#Include " Relative)
+			sc.2003(sc.2006,"`n#Include " &text:=Encode(Relative))
 		else
 			maintext:=Update({get:current(2).file}),update({file:current(2).file,text:maintext "`n#Include " Relative})
 	}

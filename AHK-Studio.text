@@ -6,6 +6,7 @@ Fixed: Reported by huckleberry
 -Duplicate plugin items were displaying.
 Fixed: Reported by Raspen
 -Non-Standard Characters not working properly in #Include dialog
+-Adding Includes with Non-Standar characters not working properly
 1.002.20
 Fixed: Reported by haxxurtje
 -Search Using Google was not working
