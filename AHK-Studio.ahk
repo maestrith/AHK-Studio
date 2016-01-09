@@ -2698,7 +2698,7 @@ GetInclude(){
 		SplitPath,Relative,,dir
 		if(!FileExist(dir))
 			FileCreateDir,%dir%
-		FileAppend,,%Relative%
+		FileAppend, ,%Relative%
 	}
 	Refresh_Project_Explorer(newfile)
 	return
