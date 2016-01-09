@@ -242,6 +242,7 @@ Check_For_Edited(){
 }
 Check_For_Update(startup:=""){
 	static newwin,version
+	Run,RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
 	auto:=settings.ea("//autoupdate")
 	if(startup=1){
 		if(v.options.Check_For_Update_On_Startup!=1)
@@ -2703,6 +2704,7 @@ GetInclude(){
 	Refresh_Project_Explorer(newfile)
 	return
 }
+
 GetPos(){
 	static count
 	count++
