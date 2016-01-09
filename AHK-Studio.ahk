@@ -2694,11 +2694,11 @@ GetInclude(){
 	sc.2003(sc.2008,&text:=Encode(" " Relative))
 	Gui,1:Default
 	Gui,1:TreeView,SysTreeView321
-	if(!FileExist(Relative)){
-		SplitPath,Relative,,dir
+	if(!FileExist(filename)){
+		SplitPath,filename,,dir
 		if(!FileExist(dir))
 			FileCreateDir,%dir%
-		FileAppend, ,%Relative%
+		FileAppend,,%filename%
 	}
 	Refresh_Project_Explorer(newfile)
 	return
