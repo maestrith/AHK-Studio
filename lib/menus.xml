@@ -286,10 +286,5 @@
 				<menu name="&amp;Social" clean="Social" no="1"></menu>
 				<menu clean="Testing" name="Testing" hotkey="^K"></menu></menu>
 			<menu name="&amp;About" clean="About"></menu></menu>
-		<menu clean="Plugin" name="P&amp;lugin" tv="1403120">
-			<menu clean="Run_With_Arduino" hotkey="" name="Run With Arduino" option="" plugin="plugins\Arduino.ahk"></menu>
-			<menu clean="Maestrith_Code" hotkey="" name="Maestrith Code" option="" plugin="plugins\Maestrith Code.ahk"></menu>
-			<menu clean="OTB" hotkey="" name="OTB" option="" plugin="plugins\OTB.ahk"></menu>
-			<menu clean="Swap_Key_Value" hotkey="" name="Swap Key Value" option="" plugin="plugins\Swap Key Value.ahk"></menu></menu>
 	</main>
 </menus>
