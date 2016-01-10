@@ -3069,6 +3069,8 @@ Hotkeys(win,item,track:=0){
 	if(InStr(A_ThisHotkey,"!")&&func~="i)run|test_plugin")
 		for a,b in StrSplit(A_ThisHotkey)
 			DllCall("keybd_event",int,GetKeyVK(key:=b="!"?"Alt":b),int,0,int,2,int,0)
+	if(v.options.osd)
+		ShowOSD(func)
 	if(IsFunc(func))
 		%Func%()
 	else
@@ -3083,6 +3085,8 @@ Hotkeys(win,item,track:=0){
 	if(IsFunc(func))
 		return %func%()
 	ea:=menus.ea("//*[@hotkey='" current "']")
+	if(v.options.osd)
+		ShowOSD(ea.clean)
 	if(ea.plugin){
 		if(!FileExist(ea.plugin))
 			MissingPlugin(ea.plugin,ea.clean)
@@ -3104,7 +3108,8 @@ hwnd(win,hwnd=""){
 		Else
 			DllCall("DestroyWindow",uptr,window[win.rem])
 		window[win.rem]:=""
-		WinActivate,% hwnd([1])
+		if(!win.na)
+			WinActivate,% hwnd([1])
 	}
 	if(IsObject(win))
 		return "ahk_id" window[win.1]
@@ -4174,6 +4179,7 @@ Options(x:=0){
 	Check_For_Update_On_Startup:
 	New_File_Dialog:
 	Copy_Selected_Text_on_Quick_Find:
+	OSD:
 	onoff:=settings.ssn("//options/@ " A_ThisLabel).text?0:1
 	att:=[],att[A_ThisLabel]:=onoff,v.options[A_ThisLabel]:=onoff
 	settings.add("options",att)
@@ -5820,4 +5826,42 @@ Forum(){
 }
 Delete_Line(){
 	csc().2338
+}
+ShowOSD(show){
+	static list:=new XML("osd"),top
+	if(!hwnd(98)){
+		rem:=list.ssn("//list"),rem.ParentNode.RemoveChild(rem)
+		Gui,98:Destroy
+		Gui,98:Default
+		Gui,Color,0x111111,0x111111
+		Gui,+hwndhwnd +Owner1
+		Gui,Margin,0,0
+		hwnd(98,hwnd)
+		Gui,Font,s12 c0xff00ff,Consolas
+		Gui,Add,ListView,w300 h400 -Hdr,info|x
+		Gui,Show,NA,OSD
+		Gui,-Caption
+	}
+	top:=list.Add("list")
+	if(!node:=list.ssn("//item[@name='" show "']"))
+		node:=list.under(top,"item",{name:show,count:0})
+	count:=ssn(node,"@count").text
+	count++,node.SetAttribute("count",count)
+	list.Transform()
+	WinGetPos,x,y,w,h,% "ahk_id" csc().sc
+	Gui,98:Default
+	Gui,98:ListView,SysListView321
+	LV_Delete()
+	all:=list.sn("//item")
+	while,aa:=all.item[A_Index-1],ea:=xml.ea(aa)
+		LV_Add("",ea.name,ea.count)
+	Loop,2
+		LV_ModifyCol(A_Index,"AutoHDR")
+	WinGetPos,,,ww,hh,% hwnd([98])
+	Gui,98:Show,% "x" x+w-ww " y" y " NA AutoSize",OSD
+	SetTimer,killosd,-3000
+	return
+	killosd:
+	hwnd({rem:98,na:1}),rem:=list.ssn("//list"),rem.ParentNode.RemoveAttribute(rem)
+	return
 }
