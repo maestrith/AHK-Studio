@@ -2,6 +2,7 @@
 Added: Requested by Treyin
 -Option to the Find window that disables the clipboard changing the text
 -Option to Copy Selected Text on Quick Find
+-Clipboard History: Options/Clipboard History to enable it, then Display Clipboard History to have Omni show it ")" for prefix
 Added:
 -Basic OSD for Studio
 1.002.21

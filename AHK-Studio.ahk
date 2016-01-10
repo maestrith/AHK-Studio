@@ -13,7 +13,7 @@ CoordMode,ToolTip,Screen
 if(!FileExist("lib"))
 	FileCreateDir,Lib
 global v:=[],settings:=New XML("settings","lib\Settings.XML"),files:=New XML("files"),menus,commands:=New XML("commands","lib\commands.XML"),positions:=New XML("positions","lib\positions.XML"),vversion,access_token,vault:=New XML("vault","lib\Vault.XML"),preset,Scintilla,bookmarks,cexml:=New XML("Code_Explorer"),notesxml,language:=New XML("language","lib\en-us.XML"),vversion:=New XML("version","lib\version.XML"),Custom_Commands:=New XML("custom","lib\Custom Commands.XML")
-v.pluginversion:=1,menus:=New XML("menus","lib\menus.XML"),FileCheck(file)
+v.pluginversion:=1,menus:=New XML("menus","lib\menus.XML"),FileCheck(file),v.Clipboard:=[]
 if(FileExist("AHKStudio.ico"))
 	Menu,Tray,Icon,AHKStudio.ico
 New Omni_Search_Class(),v.filelist:=[],v.Options:=[],var(),Keywords(),Gui(),v.match:={"{":"}","[":"]","<":">","(":")",Chr(34):Chr(34),"'":"'","%":"%"},v.filescan:=[]
@@ -644,8 +644,8 @@ Class Icon_Browser{
 	}
 }
 Class Omni_Search_Class{
-	static prefix:={"@":"Menu","^":"File",":":"Label","(":"Function","{":"Class","[":"Method","&":"Hotkey","+":"Function","#":"Bookmark",".":"Property","%":"Variable","<":"Instance","*":"Breakpoint",">":"Gui"}
-	static iprefix:={Menu:"@",File:"^",Label:":",Function:"(",Class:"{",Method:"[",Hotkey:"&",Bookmark:"#",Property:".",Variable:"%",Instance:"<",Breakpoint:"*",Gui:">"}
+	static prefix:={"@":"Menu","^":"File",":":"Label","(":"Function","{":"Class","[":"Method","&":"Hotkey","+":"Function","#":"Bookmark",".":"Property","%":"Variable","<":"Instance","*":"Breakpoint",">":"Gui",")":"Clipboard"}
+	static iprefix:={Menu:"@",File:"^",Label:":",Function:"(",Class:"{",Method:"[",Hotkey:"&",Bookmark:"#",Property:".",Variable:"%",Instance:"<",Breakpoint:"*",Gui:">",Clipboard:")"}
 	__New(){
 		this.menus()
 		return this
@@ -1735,6 +1735,16 @@ Copy(){
 	else
 		Clipboard:=sc.getseltext()
 	Clipboard:=RegExReplace(Clipboard,"\n","`r`n")
+	if(v.options.Clipboard_History){
+		for a,b in v.Clipboard
+			if(b=Clipboard)
+				return
+		v.Clipboard.push(Clipboard)
+	}
+	/*
+		if(!v.Clipboard[Clipboard])
+			v.Clipboard[Clipboard]:=1
+	*/
 	if(hwnd(30)){
 		WinActivate,% hwnd([30])
 		Sleep,50
@@ -1777,7 +1787,12 @@ Custom_Version(){
 Cut(){
 	ControlGetFocus,Focus,% hwnd([1])
 	SendMessage,0x300,0,0,%Focus%,% hwnd([1])
-}
+	if(v.options.Clipboard_History){
+		for a,b in v.Clipboard
+			if(b=Clipboard)
+				return
+		v.Clipboard.push(Clipboard)
+}}
 Debug_Settings(){
 	static values:=["max_depth","max_children"],newwin
 	newwin:=new GUIKeep("Debug_Settings"),ea:=settings.ea("//features")
@@ -2186,7 +2201,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151222093855,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20160109214651,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20160106132203,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
+	static dates:={commands:{date:20151222093855,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20160110031854,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20160106132203,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
@@ -3806,7 +3821,7 @@ ObjRegisterActive(Object,CLSID:="{DBD5A90A-A85C-11E4-B0C7-43449580656B}",Flags:=
 	cookieJar[Object]:=cookie
 }
 Omni_Search(start=""){
-	static newwin,select:=[],obj:=[],pre
+	static newwin,select:=[],obj:=[],pre,sort
 	if(hwnd(20))
 		return
 	code_explorer.scan(current())
@@ -3835,6 +3850,18 @@ Omni_Search(start=""){
 	Gui,20:Default
 	GuiControl,20:-Redraw,SysListView321
 	osearch:=search:=newwin[].search,Select:=[],LV_Delete(),sort:=[],stext:=[],fsearch:=search="^"?1:0
+	if(InStr(search,")")){
+		if(!v.options.Clipboard_History){
+			SetTimer,Clipboard_History,-10
+			m("Clipboard History was off. Turning it on now")
+			return
+		}LV_Delete()
+		for a in v.Clipboard
+			b:=v.Clipboard[v.Clipboard.MaxIndex()-(A_Index-1)],Sort[LV_Add("",b)]:=b
+		LV_ModifyCol(1,"AutoHDR")
+		GuiControl,20:+Redraw,SysListView321
+		return
+	}
 	for a,b in StrSplit("@^({[&+#%<")
 		osearch:=RegExReplace(osearch,"\Q" b "\E")
 	if(InStr(search,"?")){
@@ -3916,6 +3943,10 @@ Omni_Search(start=""){
 	osgo:
 	Gui,20:Default
 	LV_GetText(num,LV_GetNext(),6),item:=Select[num],search:=newwin[].search,pre:=SubStr(search,1,1)
+	if(SubStr(search,1,1)=")"){
+		text:=sort[LV_GetNext()]
+		return Clipboard:=text,m("Clipboard now contains:",text,"time:1")
+	}
 	if(InStr(search,"?")){
 		LV_GetText(pre,LV_GetNext())
 		ControlSetText,Edit1,%pre%,% newwin.id
@@ -4180,6 +4211,7 @@ Options(x:=0){
 	New_File_Dialog:
 	Copy_Selected_Text_on_Quick_Find:
 	OSD:
+	Clipboard_History:
 	onoff:=settings.ssn("//options/@ " A_ThisLabel).text?0:1
 	att:=[],att[A_ThisLabel]:=onoff,v.options[A_ThisLabel]:=onoff
 	settings.add("options",att)
@@ -5864,4 +5896,11 @@ ShowOSD(show){
 	killosd:
 	hwnd({rem:98,na:1}),rem:=list.ssn("//list"),rem.ParentNode.RemoveAttribute(rem)
 	return
+}
+
+Clear_Clipboard_History(){
+	v.Clipboard:=[]
+}
+Display_Clipboard_History(){
+	Omni_Search(")")
 }
