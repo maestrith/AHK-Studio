@@ -1,3 +1,7 @@
+1.002.22
+Added: Requested by Treyin
+-Option to the Find window that disables the clipboard changing the text
+-Option to Copy Selected Text on Quick Find
 1.002.21
 Changed:
 -Delete Matching Brace: Was causing errors from time to time in adding extra text

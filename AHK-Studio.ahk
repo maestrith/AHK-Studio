@@ -76,7 +76,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.21"
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.22"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -270,7 +270,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.21"
+	Version:="1.002.22"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
@@ -704,11 +704,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.21"
+		Version:="1.002.22"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.21"
+		Version:="1.002.22"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -2186,7 +2186,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151222093855,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20160107193411,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20160106132203,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
+	static dates:={commands:{date:20151222093855,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20160109214651,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20160106132203,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
@@ -2395,7 +2395,7 @@ Find(){
 	sc:=csc(),order:=[],file:=current(2).file,infopos:=positions.ssn("//*[@file='" file "']"),last:=ssn(infopos,"@search").text,search:=last?last:"Type in your query here",ea:=settings.ea("//search/find"),newwin:=new GUIKeep(5),value:=[],order[sc.2585(0)]:=1,order[sc.2587(0)]:=1,last:=(order.MinIndex()!=order.MaxIndex())?sc.textrange(order.MinIndex(),order.MaxIndex()):last
 	for a,b in ea
 		value[a]:=b?"Checked":""
-	newwin.Add("Edit,gfindcheck w400 vfind r1,,w","TreeView,w400 h200 gstate,,wh","Checkbox,vregex gfindfocus " value.regex ",&Regex Search,y","Checkbox,vgr x+10 gfindfocus " value.gr ",&Greed,y","Checkbox,xm vcs gfindfocus " value.cs ",&Case Sensitive,y","Checkbox,vsort gfsort " value.sort ",Sort by &Segment,y","Checkbox,vallfiles gfindfocus " value.allfiles ",Search in &All Files,y","Checkbox,vacdc gfindfocus " value.acdc ",Auto Close on &Double Click gfindfocus,y","Button,gsearch Default,   Search   ,y","Button,gcomment,Toggle Comment,y"),newwin.Show("Search"),hotkeys([5],{"^Backspace":"findback"})
+	newwin.Add("Edit,gfindcheck w400 vfind r1,,w","TreeView,w400 h200 gstate,,wh","Checkbox,vregex gfindfocus " value.regex ",&Regex Search,y","Checkbox,vgr x+10 gfindfocus " value.gr ",&Greed,y","Checkbox,xm vcs gfindfocus " value.cs ",&Case Sensitive,y","Checkbox,vsort gfsort " value.sort ",Sort by &Segment,y","Checkbox,vallfiles gfindfocus " value.allfiles ",Search in &All Files,y","Checkbox,vacdc gfindfocus " value.acdc ",Auto Close on &Double Click,y","Checkbox,vdaioc " value.daioc ",Disable Auto Insert On Copy,y","Button,gsearch Default,   Search   ,y","Button,gcomment,Toggle Comment,y"),newwin.Show("Search"),hotkeys([5],{"^Backspace":"findback"})
 	if(value.regex&&order.MinIndex()!=order.MaxIndex())
 		for a,b in StrSplit("\.*?+[{|()^$")
 			StringReplace,last,last,%b%,\%b%,All
@@ -2406,7 +2406,10 @@ Find(){
 	OnClipboardChange:
 	if(hwnd(5)||hwnd(30)){
 		win:=hwnd(5)?hwnd([5]):hwnd([30])
-		ControlSetText,Edit1,%Clipboard%,%win%
+		if(win=hwnd([5])&&newwin[].daioc=0)
+			ControlSetText,Edit1,%Clipboard%,%win%
+		if(WinActive(hwnd([30]))&&hwnd(30))
+			ControlSetText,Edit1,%Clipboard%,%win%
 	}
 	return
 	findback:
@@ -2415,12 +2418,12 @@ Find(){
 	GuiControl,5:+Redraw,Edit1
 	return
 	findcheck:
-	ControlGetText,Button,Button7,% hwnd([5])
+	ControlGetText,Button,Button8,% hwnd([5])
 	if(Button!="search")
-		ControlSetText,Button7,Search,% hwnd([5])
+		ControlSetText,Button8,Search,% hwnd([5])
 	return
 	search:
-	ControlGetText,Button,Button7,% hwnd([5])
+	ControlGetText,Button,Button8,% hwnd([5])
 	if(InStr(button,"search")){
 		ea:=newwin[],count:=0
 		if(!find:=ea.find)
@@ -2502,16 +2505,16 @@ Find(){
 		Buttontext:=TV_Get(sel,"E")?"Contract":"Expand"
 	else if(TV_GetCount()&&TV_GetChild(sel)=0)
 		Buttontext:="Jump"
-	ControlSetText,Button7,%Buttontext%,% hwnd([5])
+	ControlSetText,Button8,%Buttontext%,% hwnd([5])
 	return
 	fsort:
-	ControlSetText,Button7,Search,% hwnd([5])
+	ControlSetText,Button8,Search,% hwnd([5])
 	goto,search
 	return
 	5GuiEscape:
 	5GuiClose:
 	Gui,5:Submit,NoHide
-	ea:=newwin[],settings.add("search/find",{acdc:ea.acdc,regex:ea.regex,cs:ea.cs,sort:ea.sort,gr:ea.gr,allfiles:ea.allfiles}),foundinfo:="",positions.ssn("//*[@file='" file "']/@search").text:=ea.find,hwnd({rem:5})
+	ea:=newwin[],settings.add("search/find",{daioc:ea.daioc,acdc:ea.acdc,regex:ea.regex,cs:ea.cs,sort:ea.sort,gr:ea.gr,allfiles:ea.allfiles}),foundinfo:="",positions.ssn("//*[@file='" file "']/@search").text:=ea.find,hwnd({rem:5})
 	return
 	comment:
 	sc:=csc()
@@ -3890,11 +3893,8 @@ Omni_Search(start=""){
 					rating+=400/pos
 				if(currentparent=ssn(ll,"ancestor::main/@file").text)
 					rating+=100
-			}
-		}
-		two:=info.2="type"&&v.options.Show_Type_Prefix?omni_search_class.iprefix[b[info.2]] "  " b[info.2]:b[info.2]
-		item:=LV_Add("",b[info.1],two,b[info.3],b[info.4],rating,LV_GetCount()+1)
-		Select[item]:=b
+		}}
+		two:=info.2="type"&&v.options.Show_Type_Prefix?omni_search_class.iprefix[b[info.2]] "  " b[info.2]:b[info.2],item:=LV_Add("",b[info.1],two,b[info.3],b[info.4],rating,LV_GetCount()+1),Select[item]:=b
 	}
 	Loop,4
 		LV_ModifyCol(A_Index,"Auto")
@@ -3950,7 +3950,10 @@ Omni_Search(start=""){
 		Sleep,200
 		csc().2160(item.pos,item.pos+StrLen(item.text)),CenterSel()
 		text:=update({get:item.file})
-		m(SubStr(text,item.start,item.end-item.start))
+		if(search~=">.*>")
+			m("Edit this GUI",SubStr(text,item.start,item.end-item.start))
+		else
+			m("Go to " item.text,SubStr(text,item.start,item.end-item.start))
 	}
 	return
 	omnikey:
@@ -4170,6 +4173,7 @@ Options(x:=0){
 	Shift_Breakpoint:
 	Check_For_Update_On_Startup:
 	New_File_Dialog:
+	Copy_Selected_Text_on_Quick_Find:
 	onoff:=settings.ssn("//options/@ " A_ThisLabel).text?0:1
 	att:=[],att[A_ThisLabel]:=onoff,v.options[A_ThisLabel]:=onoff
 	settings.add("options",att)
@@ -4495,6 +4499,9 @@ QF(){
 		sc.2504(b.min,b.max-b.min)
 	return
 	Quick_Find:
+	if(v.options.Copy_Selected_Text_on_Quick_Find){
+		ControlSetText,Edit1,% csc().getseltext(),% hwnd([1])
+	}
 	if(v.options.Auto_Set_Area_On_Quick_Find)
 		gosub,Set_Selection
 	ControlFocus,Edit1,% hwnd([1])
