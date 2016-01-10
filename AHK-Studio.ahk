@@ -358,7 +358,7 @@ Class Code_Explorer{
 			}no.Add("bad/bad",{min:ea.pos,max:np,type:"Class"},,1)
 		}pos:=1
 		while,RegExMatch(text,Code_Explorer.Function,found,pos),pos:=found.pos(1)+found.len(1){
-			if(no.ssn("//bad[@min<'" found.pos(1) "' and @max>'" found.pos(1)+1 "']")=""&&found.1!="if"){
+			if(no.ssn("//bad[@min<'" found.pos(1) "' and @max>'" found.pos(1)+1 "']")=""&&found.1~="i)if|while"=0){
 				cexml.under(next,"info",{args:found.3,type:"Function",text:found.1,upper:upper(found.1),pos:StrPut(SubStr(text,1,found.pos(1)))-3})
 				/*
 					if(RegExMatch(tq:=SubStr(text,found.Pos(0)+found.len(0)),"OU)^\s*(\;.*)\n",fq)){
@@ -2473,7 +2473,6 @@ Find(){
 		SetTimer,findlabel,-200
 		GuiControl,5:+gstate,SysTreeView321
 	}else if(Button="jump"){
-		Gui,1:+Disabled
 		ea:=foundinfo[TV_GetSelection()],SetPos(ea),xpos:=sc.2164(0,ea.start),ypos:=sc.2165(0,ea.start)
 		Sleep,200
 		WinGetPos,xx,yy,ww,hh,% newwin.ahkid
@@ -2485,6 +2484,7 @@ Find(){
 		else if(trans=50)
 			WinSet,Transparent,255,% newwin.ahk
 		SetTimer,CenterSel,-10
+		WinActivate,% hwnd([5])
 	}else{
 		sel:=TV_GetSelection(),TV_Modify(sel,ec:=TV_Get(sel,"E")?"-Expand":"Expand")
 		SetTimer,findlabel,-200
@@ -2762,8 +2762,19 @@ Goto(){
 	sc.2100(0,Trim(labels))
 	return
 }
+/*
+	spoop(a,b,c,hwnd){
+		if(a=18){
+			ControlGetPos,x,y,w,h,,ahk_id%hwnd%
+			t(x,y,w,h)
+		}
+	}
+*/
 Gui(){
 	static
+	/*
+		OnMessage(0xA0,"spoop") ;#[Working here :)]
+	*/
 	static controls:=["Static1","Edit1","Button1","Button2","Button3","Button4"]
 	Gui,+hwndhwnd +Resize +OwnDialogs
 	hwnd(1,hwnd),rb:=new rebar(1,hwnd),v.rb:=rb,pos:=settings.ssn("//gui/position[@window='1']")
