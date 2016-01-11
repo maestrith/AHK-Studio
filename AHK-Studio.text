@@ -7,6 +7,7 @@ Added:
 -Basic OSD for Studio
 Fixed: Reported by Treyin
 -While can look like a function as well as if...who knew...
+Fixed: Create Segment From Selection
 1.002.21
 Changed:
 -Delete Matching Brace: Was causing errors from time to time in adding extra text
