@@ -459,10 +459,6 @@ Class Code_Explorer{
 			return
 		}
 		return
-	}flan(){
-		while(farts!=1){
-			farts:=1
-		}
 	}
 }
 Class FTP{
