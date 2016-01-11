@@ -353,7 +353,7 @@ Class Code_Explorer{
 			for a,b in {Property:Code_Explorer.property,Method:Code_Explorer.function}{
 				pos:=1
 				while,RegExMatch(total,b,found,pos),pos:=found.Pos(1)+found.len(1)
-					if(no.ssn("//bad[@min<'" ea.pos+found.pos(1) "' and @max>'" ea.pos+found.pos(1) "']")=""&&found.1!="if")
+					if(no.ssn("//bad[@min<'" ea.pos+found.pos(1) "' and @max>'" ea.pos+found.pos(1) "']")=""&&found.1~="i)if|while"=0)
 						add:=a="property"?"[":"(",cexml.under(cc,"info",{type:a,pos:ea.pos+StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-2,text:found.1,upper:upper(found.1),args:found.value(3),class:ea.text})
 			}no.Add("bad/bad",{min:ea.pos,max:np,type:"Class"},,1)
 		}pos:=1
@@ -459,7 +459,12 @@ Class Code_Explorer{
 			return
 		}
 		return
-}}
+	}flan(){
+		while(farts!=1){
+			farts:=1
+		}
+	}
+}
 Class FTP{
 	__New(name){
 		ea:=settings.ea("//ftp/server[@name='" name "']"),this.error:=0
