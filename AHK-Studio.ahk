@@ -2960,7 +2960,7 @@ Class GuiKeep{
 				(d~="w|h")?(obj[d]:=b[d]-%d%):(d~="x|y")?(val:=flip[d],obj[d]:=b[d]-%val%)
 		}
 		pos:=settings.ssn("//gui/position[@window='" this.win "']").text,pos:=pos?pos:center(this.win),showpos:=nopos?"AutoSize":pos
-		Gui,% this.win ":Show",%showpos%,%name%
+		Gui,% this.win ":Show",% RegExReplace(showpos,"-"),%name%
 		if(!this.Resize)
 			Gui,% this.win ":Show",AutoSize
 		v.activate:=this.win
