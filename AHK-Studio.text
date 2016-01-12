@@ -1,3 +1,6 @@
+1.002.23
+Fixed: Reported by run1e
+-{} on a non-US keyboard were not working
 1.002.22
 Added: Requested by Treyin
 -Option to the Find window that disables the clipboard changing the text

@@ -76,7 +76,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.22"
+	setup(11),hotkeys([11],{"Esc":"11GuiClose"}), Version:="1.002.23"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -195,12 +195,12 @@ BraceSetup(Win:=1){
 	v.brace:=[],autoadd:=settings.sn("//autoadd/*"),v.braceadvance:=[],oldkeys:=[]
 	if(!RegExReplace(test:=settings.ssn("//autoadd/*/@trigger").text,"\d"))
 		while,aa:=autoadd.item[A_Index-1],ea:=xml.ea(aa)
-			aa.SetAttribute("trigger",Chr(ea.trigger)),aa.SetAttribute("add",Chr(ea.add))
+			aa.SetAttribute("trigger",Chr(SubStr(ea.trigger,0))),aa.SetAttribute("add",Chr(SubStr(ea.add,0)))
 	while,aa:=autoadd.item(a_index-1),ea:=xml.ea(aa){
 		if(ea.trigger){
-			v.brace[ea.trigger]:=ea.add,v.braceadvance[ea.add]:=Asc(ea.add),oldkeys[ea.trigger]:=1
+			v.brace[SubStr(ea.trigger,0)]:=ea.add,v.braceadvance[SubStr(ea.add,0)]:=Asc(SubStr(ea.add,0)),oldkeys[ea.trigger]:=1
 			if(ea.trigger!=ea.add)
-				oldkeys[ea.Add]:=1
+				oldkeys[SubStr(ea.Add,0)]:=1
 	}}for a in oldkeys
 		Hotkey,%a%,brace,On
 	SetMatch()
@@ -270,7 +270,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.22"
+	Version:="1.002.23"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"),"\R","`r`n")),file.length(file.position),file.Close()
@@ -705,11 +705,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.22"
+		Version:="1.002.23"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.22"
+		Version:="1.002.23"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -2960,6 +2960,9 @@ Class GuiKeep{
 				(d~="w|h")?(obj[d]:=b[d]-%d%):(d~="x|y")?(val:=flip[d],obj[d]:=b[d]-%val%)
 		}
 		pos:=settings.ssn("//gui/position[@window='" this.win "']").text,pos:=pos?pos:center(this.win),showpos:=nopos?"AutoSize":pos
+		/*
+			change this to have it check monitor values and if it is outside either x or y then move it
+		*/
 		Gui,% this.win ":Show",% RegExReplace(showpos,"-"),%name%
 		if(!this.Resize)
 			Gui,% this.win ":Show",AutoSize
