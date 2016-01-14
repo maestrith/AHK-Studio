@@ -4477,7 +4477,7 @@ PublishIndent(Code,Indent:="`t",Newline:="`r`n"){
 	return SubStr(Out,StrLen(Newline)+1)
 }
 QF(){
-	static quickfind:=[],find,lastfind,minmax,break,select
+	static quickfind:=[],find,lastfind,break,select
 	qf:
 	sc:=csc(),startpos:=sc.2008,break:=1
 	ControlGetText,find,Edit1,% hwnd([1])
@@ -4496,9 +4496,12 @@ QF(){
 			text:=SubStr(text,1,end)
 	}
 	sc.Enable(),pos:=start?start:1,pos:=pos=0?1:pos,mainsel:="",index:=1,break:=0
-	if(!IsObject(minmax))
-		minmax:=[],minmax.1:={min:0,max:sc.2006},delete:=1
-	for a,b in MinMax{
+	if(!IsObject(v.minmax))
+		v.minmax:=[],v.minmax.1:={min:0,max:sc.2006},delete:=1
+	for a,b in v.MinMax{
+		/*
+			ToolTip,% "Min=" b.min ",Max=" b.max,0,0,2
+		*/
 		search:=sc.textrange(b.min,b.max,1),pos:=1,start:=b.min-1
 		while,RegExMatch(search,find1,found,pos){
 			if(found.len(1)=0)
@@ -4540,22 +4543,23 @@ QF(){
 	sc:=csc(),sc.2606(),sc.2169()
 	return
 	Clear_Selection:
-	sc:=csc(),sc.2500(2),sc.2505(0,sc.2006),quickfind.remove(sc.2357),minmax:=""
+	sc:=csc(),sc.2500(2),sc.2505(0,sc.2006),quickfind.remove(sc.2357),v.minmax:=""
 	return
 	Set_Selection:
 	sc:=csc(),sc.2505(0,sc.2006),sc.2500(2)
 	if(sc.2008=sc.2009)
 		goto,Clear_Selection
-	if(!IsObject(MinMax)),pos:=posinfo()
-		minmax:=[]
+	if(!IsObject(v.MinMax)),pos:=posinfo()
+		v.minmax:=[]
 	Loop,% sc.2570
-		o:=[],o[sc.2577(A_Index-1)]:=1,o[sc.2579(A_Index-1)]:=1,minmax.Insert({min:o.MinIndex(),max:o.MaxIndex()})
-	for a,b in minmax
+		o:=[],o[sc.2577(A_Index-1)]:=1,o[sc.2579(A_Index-1)]:=1,v.minmax.Insert({min:o.MinIndex(),max:o.MaxIndex()})
+	for a,b in v.minmax
 		sc.2504(b.min,b.max-b.min)
 	return
 	Quick_Find:
 	if(v.options.Copy_Selected_Text_on_Quick_Find){
-		ControlSetText,Edit1,% csc().getseltext(),% hwnd([1])
+		if(text:=csc().getseltext())
+			ControlSetText,Edit1,% text,% hwnd([1])
 	}
 	if(v.options.Auto_Set_Area_On_Quick_Find)
 		gosub,Set_Selection
@@ -5521,6 +5525,7 @@ tv(tv:=0,open:="",history:=0){
 		}v.savelinestat.delete(fn),sc.Enable(1),MarginWidth() ;#[TV Figure out how to wait until the code is up and ready]
 	}if((A_GuiEvent="+"||A_GuiEvent="-"||open)&&v.options.Auto_Project_Explorer_Width)
 		SetTimer,auto-adjust,-100
+	v.minmax:=""
 	return
 	matchfile:
 	Gui,1:Default
