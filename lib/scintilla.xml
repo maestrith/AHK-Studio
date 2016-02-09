@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Scintilla>
+<scintilla>
 	<commands>
 		<item code="2001" name="ADDTEXT" syntax="(int length, string text)"></item>
 		<item code="2002" name="ADDSTYLEDTEXT" syntax="(int length, cells c)"></item>
@@ -749,4 +749,4 @@
 		<item code="2029" name="FOCUSOUT" syntax="(void)"></item>
 		<item code="2030" name="AUTOCCOMPLETED" syntax="(string text, int position, int ch, CompletionMethods listCompletionMethod)"></item>
 	</notifications>
-</Scintilla>
+</scintilla>
