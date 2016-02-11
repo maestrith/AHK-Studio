@@ -933,36 +933,25 @@ class s{
 		}
 		if(!init)
 			DllCall("LoadLibrary","str","scilexer.dll"),init:=1
-		v.im:=info.main,v.ip:=info.pos,v.iw:=info.win,notify:=info.notify
-		win:=window?window:1,pos:=info.pos?info.pos:"x0 y0 w0 h0"
+		v.im:=info.main,v.ip:=info.pos,v.iw:=info.win,notify:=info.notify,win:=window?window:1,pos:=info.pos?info.pos:"x0 y0 w0 h0"
 		if(info.hide)
 			pos.=" Hide"
 		mask:=0x10000000|0x400000|0x40000000
 		Gui,%win%:Add,custom,%pos% classScintilla +%mask% hwndsc g%notify% ; +1387331584
 		for a,b in {fn:2184,ptr:2185}
 			this[a]:=DllCall("SendMessageA",UInt,sc,int,b,int,0,int,0)
-		this.parent:=sc,this.sc:=sc,s.ctrl[sc]:=this
-		this.2660(1)
+		this.parent:=sc,this.sc:=sc,s.ctrl[sc]:=this,this.2660(1)
 		for a,b in [[2563,1],[2565,1],[2614,1],[2124,1],[2402,0x1|0x4,120]]
 			this[b.1](b.2,b.3?b.3:0)
 		if(info.main)
 			s.main.push(this)
 		if(info.temp)
 			s.temp.push(this)
-		this.2246(2,1),this.2052(32,0),this.2051(32,0xaaaaaa),this.2050,this.2052(33,0x222222),this.2069(0xAAAAAA),this.2601(0xaa88aa),this.2563(1),this.2614(1),this.2565(1),this.2660(1),this.2036(width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5),this.2124(1),this.2260(1),this.2122(5),this.2056(38,"Consolas"),this.2516(1)
-		this.2359(0x1|0x2|0x10|0x400),this.2663(4),this.2277(0)
-		Color(this)
+		this.2246(2,1),this.2052(32,0),this.2051(32,0xaaaaaa),this.2050,this.2052(33,0x222222),this.2069(0xAAAAAA),this.2601(0xaa88aa),this.2563(1),this.2614(1),this.2565(1),this.2660(1),this.2036(width:=settings.ssn("//tab").text?settings.ssn("//tab").text:5),this.2124(1),this.2260(1),this.2122(5),this.2056(38,"Consolas"),this.2516(1),this.2359(0x1|0x2|0x10|0x400),this.2663(4),this.2277(0),Color(this)
 		return this
-	}
-	__Get(x*){
+	}__Get(x*){
 		return DllCall(this.fn,"Ptr",this.ptr,"UInt",x.1,int,0,int,0,"Cdecl")
-	}
-	__Call(code,lparam=0,wparam=0,extra=""){
-		if(this.killed){
-			t("blank","fn=" this.fn,"ptr=" this.ptr,"Code=" code,"wparam=" wparam,"lparam=" lparam,"extra=" extra,"sc=" this.sc+0,"removed=" v.removedcontrol,"tick=" A_TickCount)
-			return DllCall(this.fn,"Ptr",this.ptr,"UInt",code,lp,lparam,wp,wparam,"Cdecl")
-			return 0
-		}
+	}__Call(code,lparam=0,wparam=0,extra=""){
 		if(code="enable"){
 			if(lparam){
 				GuiControl,1:+Redraw,% this.sc
@@ -970,46 +959,34 @@ class s{
 			}else{
 				GuiControl,1:-Redraw,% this.sc
 				GuiControl,1:+g,% this.sc
-			}
-		}
-		if(code="getword"){
+		}}if(code="getword"){
 			sc:=csc(),cpos:=lparam?lparam:sc.2008
 			return sc.textrange(sc.2266(cpos,1),sc.2267(cpos,1))
-		}
-		if(code="getseltext"){
+		}if(code="getseltext"){
 			VarSetCapacity(text,this.2161),length:=this.2161(0,&text)
 			return StrGet(&text,length,"UTF-8")
-		}
-		if(code="textrange"){
+		}if(code="textrange"){
 			cap:=VarSetCapacity(text,abs(lparam-wparam)),VarSetCapacity(textrange,12,0),NumPut(lparam,textrange,0),NumPut(wparam,textrange,4),NumPut(&text,textrange,8),this.2162(0,&textrange)
 			return strget(&text,cap,"UTF-8")
-		}
-		if(code="getline"){
+		}if(code="getline"){
 			length:=this.2350(lparam),cap:=VarSetCapacity(text,length,0),this.2153(lparam,&text)
 			return StrGet(&text,length,"UTF-8")
-		}
-		if(code="gettext"){
+		}if(code="gettext"){
 			cap:=VarSetCapacity(text,vv:=this.2182),this.2182(vv,&text),t:=strget(&text,vv,"UTF-8")
 			return t
-		}
-		if(code="getuni"){
+		}if(code="getuni"){
 			cap:=VarSetCapacity(text,vv:=this.2182),this.2182(vv,&text),t:=StrGet(&text,vv,"UTF-8")
 			return t
-		}
-		wp:=(wparam+0)!=""?"Int":"AStr",lp:=(lparam+0)!=""?"Int":"AStr"
+		}wp:=(wparam+0)!=""?"Int":"AStr",lp:=(lparam+0)!=""?"Int":"AStr"
 		if(wparam.1)
 			wp:="AStr",wparam:=wparam.1
 		wparam:=wparam=""?0:wparam,lparam:=lparam=""?0:lparam
 		if(wparam=""||lparam="")
 			return
-		info:=DllCall(this.fn,"Ptr",this.ptr,"UInt",code,lp,lparam,wp,wparam,"Cdecl")
-		return info
+		return DllCall(this.fn,"Ptr",this.ptr,"UInt",code,lp,lparam,wp,wparam,"Cdecl")
 	}Kill(hwnd){
 		if(sc:=s.ctrl[hwnd])
 			s.ctrl[hwnd],sc.hidden:=1,s.hidden.push(sc.sc+0),SetWinPos(sc.sc+0,0,0,0,0)
-	}show(){
-		m("here")
-		GuiControl,+Show,% this.sc
 }}
 class SGUI{
 	static table:=[],showlist:=[],xml:=new XML("gui")
@@ -5564,7 +5541,7 @@ RMCtrl(rb){
 			csc(1).2400()
 	}
 	if(rb.type="Tracked Notes")
-		SetWinPos(hwnd("Tracked_Notes"),0,0,0,0) ;,s.Kill(v.tnsc.sc)
+		SetWinPos(hwnd("Tracked_Notes"),0,0,0,0)
 	if((rb.type="Toolbar")&&rb.win)
 		Gui,% rb.win ":Destroy"
 }
@@ -6897,5 +6874,7 @@ Switch_Focus(){
 			list.=ea.file ",",v.jts[ea.file]:=ea.hwnd
 		else
 			list.="Tracked Notes,",v.jts["Tracked Notes"]:=v.tngui.sc.sc
-	}sc.2106(44),sc.2117(7,Trim(list,",")),sc.2106(32)
+	}if(!InStr(Trim(list,","),","))
+		return s.ctrl[v.jts[Trim(list,",")]].2400()
+	sc.2106(44),sc.2117(7,Trim(list,",")),sc.2106(32)
 }
