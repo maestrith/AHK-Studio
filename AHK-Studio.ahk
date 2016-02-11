@@ -316,15 +316,9 @@ BuildSwitch(ctrl){
 		InputBox,bar,New Toolbar Name,Toolbars Must have a name,,,,,,,,My New Toolbar %A_Now%
 		if(ErrorLevel||bar="")
 			return
-		new:=settings.under(settings.ssn("//toolbar"),"bar",{id:bar?bar:"My Toolbar " A_Now}),backupctrl.SetAttribute("id",xml.ea(new).id),NewCtrl(backupctrl,"Toolbar")
-		/*
-			v.edittoolbar:=bar
-			SetTimer,edittoolbar,-100
-			return
-			edittoolbar:
-		*/
-		Toolbar_Editor(gui.ssn("//*[@id='" bar "' and @type='Toolbar']"))
-		return
+		if(settings.ssn("//toolbar/bar[@id='" bar "']"))
+			return m("Toolbar already exists.  Please choose another name.")
+		return new:=settings.under(settings.ssn("//toolbar"),"bar",{id:bar?bar:"My Toolbar " A_Now}),backupctrl.SetAttribute("id",xml.ea(new).id),NewCtrl(backupctrl,"Toolbar"),Toolbar_Editor(gui.ssn("//*[@id='" bar "' and @type='Toolbar']"))
 	}if(action="Edit Toolbar")
 		Toolbar_Editor(backupctrl)
 	if(action="Customize Toolbar")
