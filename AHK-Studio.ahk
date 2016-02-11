@@ -291,8 +291,10 @@ BuildSwitch(ctrl){
 			Menu,type,Add,%b%,SwitchControl
 	Menu,type,Add,Scintilla,SwitchControl
 	Menu,rcm,Add,Control Typ&e,:type
+	Menu,toolbar,Add,New Toolbar,ToolbarHandler
+	Menu.push("New Toolbar")
 	if(ea.type="Toolbar"){
-		for a,b in ["New Toolbar","Edit Toolbar","Customize Toolbar","Rename Toolbar"]{
+		for a,b in ["Edit Toolbar","Customize Toolbar","Rename Toolbar"]{
 			Menu,toolbar,Add,%b%,ToolbarHandler
 			menu.push(b)
 		}
@@ -314,13 +316,21 @@ BuildSwitch(ctrl){
 		InputBox,bar,New Toolbar Name,Toolbars Must have a name,,,,,,,,My New Toolbar %A_Now%
 		if(ErrorLevel||bar="")
 			return
-		new:=settings.under(settings.ssn("//toolbar"),"bar",{id:bar?bar:"My Toolbar " A_Now}),backupctrl.SetAttribute("id",xml.ea(new).id),NewCtrl(backupctrl,"Toolbar"),Toolbar_Editor(backupctrl)
+		new:=settings.under(settings.ssn("//toolbar"),"bar",{id:bar?bar:"My Toolbar " A_Now}),backupctrl.SetAttribute("id",xml.ea(new).id),NewCtrl(backupctrl,"Toolbar")
+		/*
+			v.edittoolbar:=bar
+			SetTimer,edittoolbar,-100
+			return
+			edittoolbar:
+		*/
+		Toolbar_Editor(gui.ssn("//*[@id='" bar "' and @type='Toolbar']"))
+		return
 	}if(action="Edit Toolbar")
 		Toolbar_Editor(backupctrl)
 	if(action="Customize Toolbar")
 		tb:=toolbar.keep[xml.ea(backupctrl).hwnd],tb.customize()
 	if(action="Rename Toolbar"){
-		new:=InputBox(hwnd(1),"Rename Toolbar","Eneter a new name for this toolbar",ssn(backupctrl,"@id").text)
+		new:=InputBox(hwnd(1),"Rename Toolbar","Enter a new name for this toolbar",ssn(backupctrl,"@id").text)
 		if(!new)
 			return
 		ea:=xml.ea(backupctrl),node:=settings.ssn("//toolbar/bar[@id='" ea.id "']"),node.SetAttribute("id",new),backupctrl.SetAttribute("id",new),NewCtrl(backupctrl,"Toolbar")
