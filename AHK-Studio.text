@@ -5,7 +5,6 @@ Changed: BE ADVISED!
 -Switching over to a layout based system.
 -Your items will be changed, but I think for the better.
 -When asking to save unsaved untitled.ahk files it will no longer focus them and mess up your last file.  Also it "shouldn't" ask multiple times for the same file
--When adding Auto-Insert items <([{'" and you are to the right of them it will add a new matching pair rather than jumping inside.
 -Some layouts were causing the Top/Left to lose its proper position
 -Can resize 3/4 adjacent windows as well as 2
 -Most of the flicker from moving the treeviews.  Scrollbar for some reason still flips out.
@@ -22,7 +21,7 @@ Fixed:
 -A couple errors in Quick Find (hopefully all of them)
 -History: Now remembers the history for each individual control
 -Omni-Search: some items were causing blank lines to appear.
--Quick Find multi-select causing miltiple words
+-Quick Find multi-select causing multiple words
 Changed: Programmed by number1nub
 -Studio will look for the AHK install directory in the registry before checking the variable location
 Added:
@@ -36,7 +35,7 @@ Added: Suggested by number1nub
 -Pressing Ctrl when your mouse is hovering over a multiple duplicate will toggle its selected state
 -Closing files refreshes the Code Explorer
 -Toggle Lock: Can toggle all locks for a control
--Scintilla Control: Shows a list of Scintilla Controls
+-Switch Focus: Shows a list of Scintilla Controls and allows you to change between them using your keyboard
 Updated:
 -Previous Scripts: Can now open multiple selected files
 -Find Replace: Much faster when replacing items in files that you have viewed before
