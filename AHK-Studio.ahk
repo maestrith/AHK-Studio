@@ -1098,9 +1098,12 @@ class SGUI{
 				Tracked_Notes.style:=pos.w<pos.h,Tracked_Notes.Switch(pos.w<pos.h),flan:=1
 		all:=SGUI.xml.sn("//gui[@gui='" gui "']/control")
 		while(aa:=all.item[A_Index-1]),ea:=xml.ea(aa){
-			for a,b in {x:ea.x,y:ea.y,w:ea.w,h:ea.h}
-				if(b!=""){
-					GuiControl,%gui%:MoveDraw,% ea.hwnd,% a (a~="y|h"?pos.h:pos.w)+b
+			if(ea.move)
+				SetWinPos(ea.hwnd,0,0,pos.w,pos.h)
+			else
+				for a,b in {x:ea.x,y:ea.y,w:ea.w,h:ea.h}
+					if(b!=""){
+						GuiControl,%gui%:MoveDraw,% ea.hwnd,% a (a~="y|h"?pos.h:pos.w)+b
 		}}
 	}
 	Show(name){
@@ -1154,7 +1157,8 @@ class ToolBar{
 		parent:=NewWin()
 		Gui,% parent.win ":Default"
 		Gui,% parent.win ":Add",Custom,ClassToolbarWindow32 hwndhwnd +%mask% gtoolbar vtoolbar%count% w300 h80
-		v.bound[parent.win]:=hwnd+0,this.name:=name,this.iconlist:=[],this.hwnd:=hwnd,this.count:=count,this.buttons:=[],this.returnbutton:=[],this.keep[hwnd]:=this,this.ahkid:="ahk_id" hwnd,this.parent:=parent.hwnd,this.win:=parent.win,this.imagelist:=IL_Create(20,1,settings.ssn("//options/@Small_Icons").text?0:1),this.SetImageList(),this.list[id]:=this,this.id:=id,this.setmaxtextrows()
+		xx:=SGUI.xml,root:=xx.ssn("//*"),top:=xx.under(root,"gui",{gui:parent.win}),xx.under(top,"control",{w:0,h:0,hwnd:hwnd+0,move:1})
+		this.name:=name,this.iconlist:=[],this.hwnd:=hwnd,this.count:=count,this.buttons:=[],this.returnbutton:=[],this.keep[hwnd]:=this,this.ahkid:="ahk_id" hwnd,this.parent:=parent.hwnd,this.win:=parent.win,this.imagelist:=IL_Create(20,1,settings.ssn("//options/@Small_Icons").text?0:1),this.SetImageList(),this.list[id]:=this,this.id:=id,this.setmaxtextrows()
 		return this
 	}SetState(button,state){
 		SendMessage,0x400+17,button,0<<16|state&0xffff,,% this.ahkid
@@ -4107,6 +4111,7 @@ NewWin(name:=""){
 	*/
 }
 Windowsize(a,b:="",c:="",d:=""){
+	m("here")
 	if(a:=v.bound[A_Gui])
 		width:=A_GuiWidth?A_GuiWidth:1000,height:=A_GuiHeight?A_GuiHeight:400,SetWinPos(a,0,0,width,height)
 }
@@ -6088,6 +6093,8 @@ Test_Plugin(){
 	return
 }
 Testing(x:=0){
+	sgui.xml.transform()
+	m(SGUI.xml[])
 	/*
 		while(aa:=all.item[A_Index-1]),ea:=xml.ea(aa){
 			m(aa.xml)
