@@ -1,3 +1,45 @@
+1.002.25
+Known Issues:
+-Sometimes changing a control to a Toolbar can lockup the program (trying to figure it out)
+Changed: BE ADVISED!
+-Switching over to a layout based system.
+-Your items will be changed, but I think for the better.
+-When asking to save unsaved untitled.ahk files it will no longer focus them and mess up your last file.  Also it "shouldn't" ask multiple times for the same file
+-When adding Auto-Insert items <([{'" and you are to the right of them it will add a new matching pair rather than jumping inside.
+-Some layouts were causing the Top/Left to lose its proper position
+-Can resize 3/4 adjacent windows as well as 2
+-Most of the flicker from moving the treeviews.  Scrollbar for some reason still flips out.
+-Massive backend change for Options()
+-Jump To First Available: Now shows a list if there are multiple items with the same name.
+-Words In Document: it will remember the words from that document and put it into the Auto-Complete list. You still have to use the command to update the list.
+-Separate history for each Scintilla control
+Removed:
+-Auto Project Explorer Width
+Fixed:
+-Constraints for resizing windows.
+-Issue with History
+-An error downloading and installing plugins that do not have proper `r`n formatting
+-A couple errors in Quick Find (hopefully all of them)
+-History: Now remembers the history for each individual control
+-Omni-Search: some items were causing blank lines to appear.
+-Quick Find multi-select causing miltiple words
+Changed: Programmed by number1nub
+-Studio will look for the AHK install directory in the registry before checking the variable location
+Added:
+-Tracked Notes: You can have notes for anything, but you can also have individual notes for Projects and Segments as well (Right click)
+--Auto-Switch orientation suggested by number1nub
+-New Right Click Menu items: New Control/Left/Right/Above/Below
+-"Dirty" file indicator to the title
+-Switch Focus: Keyboard means of switching between edit windows
+Added: Suggested by number1nub
+-Disable Compile AHK: Disables the compile with Compile_AHK2 integration
+-Pressing Ctrl when your mouse is hovering over a multiple duplicate will toggle its selected state
+-Closing files refreshes the Code Explorer
+-Toggle Lock: Can toggle all locks for a control
+-Scintilla Control: Shows a list of Scintilla Controls
+Updated:
+-Previous Scripts: Can now open multiple selected files
+-Find Replace: Much faster when replacing items in files that you have viewed before
 1.002.24
 Working On: Reported by zotune
 -Quick Find: Stops working at odd times
