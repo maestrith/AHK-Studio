@@ -1,3 +1,6 @@
+1.002.26
+Fixed: Reported by huckleberry
+-Positions not saving properly
 1.002.25
 Known Issues:
 -Sometimes changing a control to a Toolbar can lockup the program (trying to figure it out)

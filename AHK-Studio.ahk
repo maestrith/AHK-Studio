@@ -71,7 +71,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	setup(11),Hotkeys(11,{"Esc":"11GuiClose"}), Version:="1.002.25"
+	setup(11),Hotkeys(11,{"Esc":"11GuiClose"}), Version:="1.002.26"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	
@@ -157,6 +157,7 @@ Brace(){
 	ControlGetFocus,Focus,A
 	sc:=csc(),cp:=sc.2008,line:=sc.2166(cp),Hotkey:=SubStr(A_ThisHotkey,0)
 	/*
+		lol
 		figure out where you are in the line and how to determine if you are outside of the |"" to add a new pair rather than move into them
 		if(Hotkey=Chr(34)){
 			m(sc.2010(sc.2008-1))
@@ -408,7 +409,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.002.25"
+	Version:="1.002.26"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar(DownloadURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -847,11 +848,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.002.25"
+		Version:="1.002.26"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}version(){
-		Version:="1.002.25"
+		Version:="1.002.26"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -2424,96 +2425,176 @@ EXSM(){
 	WinSet,Redraw,,% hwnd([1])
 	return
 }
-Extract(fileobj,top,rootfile,count){
-	static ResDir:=ComObjCreate("Scripting.FileSystemObject")
-	SplitPath,A_AhkPath,,ahkdir
-	ahkdir.="\lib",nextfile:=[],showicon:=settings.ssn("//icons/pe/@show").text
-	SplitPath,rootfile,rootfn,rootfolder
-	if(!main:=cexml.ssn("//files/main[@file='" rootfile "']"))
-		main:=cexml.Add("files/main",{file:rootfile},"",1),cexml.under(main,"file",{type:"File",parent:rootfile,file:rootfile,name:rootfn,folder:rootfolder,order:"name,type,folder"})
-	for a,filename in fileobj{
-		SplitPath,filename,fn,dir
-		maindir:=dir,fff:=FileOpen(filename,"R"),encoding:=fff.encoding,text:=file:=fff.read(fff.length),fff.Close(),dir:=Trim(dir,"\"),text:=RegExReplace(text,"\R","`n"),update({file:filename,text:text,load:1}),update:=files.ssn("//main[@file='" rootfile "']/descendant::file[@file='" filename "']")
-		for a,b in {filename:fn,encoding:encoding}
-			update.SetAttribute(a,b)
-		for a,b in StrSplit(text,"`n"){
-			if(InStr(b,"*i"))
-				StringReplace,b,b,*i ,,All
-			if(RegExMatch(b,"iOm`n)^\s*\x23Include\s*,?\s*(.*)",found)){
-				ff:=RegExReplace(found.1,"\R")
-				SplitPath,ff,incfn,,ext
-				if(InStr(found.1,":"))
-					incfile:=ResDir.GetAbsolutePathName(found.1)
-				else if(InStr(found.1,".."))
-					incfile:=ResDir.GetAbsolutePathName(dir "\" found.1)
-				if(!incfile)
-					incfile:=ResDir.GetAbsolutePathName(rootfolder "\" found.1)
-				if(ext=""&&InStr(found.1,"<")=0){
-					dir:=InStr(found.1,"%A_ScriptDir%")?RegExReplace(found.1,"i)\x25A_ScriptDir\x25",maindir):found.1,dir:=Trim(dir,"\")
-					incfile:=ext:=""
-					Continue
-				}else if(FileExist(incfile)&&ext){
-					if(!ssn(top,"descendant::file[@file='" incfile "']"))
-						spfile:=incfile,nextfile.Push(incfile)
-				}else if(InStr(found.1,"<")||InStr(found.1,"%")){
-					if(InStr(found.1,"<")){
-						if(look:=RegExReplace(found.1,"(<|>)"))
-							look.=".ahk"
-					}else
-						look:=found.1
-					if(!FileExist(look))
-						if(SubStr(look,-3)!=".ahk")
-							if(FileExist(look ".ahk"))
+Extract(mainfile){
+	FileList:=[],file:=mainfile,main:=files.under(files.ssn("//*"),"main",{file:mainfile}),pool:=[]
+	SplitPath,mainfile,mfn,maindir,,mnne
+	node:=files.under(main,"file",{file:file,dir:maindir,filename:mfn,nne:mnne})
+	node.setattribute("tv",FEAdd(v.options.hide_file_extensions?mnne:mfn,ssn(set.parentnode,"@tv").text,"Icon1 First Sort"))
+	if(!main:=cexml.find("//files/main/@file", mainfile))
+		main:=cexml.Add("files/main",{file:mainfile},"",1)
+	/*
+		Should have this just to extract, have the TreeView populate outside of here.
+		possibly the cexml as well...
+		title bar is messed up for
+		-Main Files
+		sub-files ok
+	*/
+	pool[maindir]:=1
+	tick:=A_TickCount
+	ExtractNext:
+	if(InStr(file,"'"))
+		return m("Sorry but currently files and directories with ' in them are not usable.",file)
+	fff:=FileOpen(file,"R"),encoding:=fff.encoding,text:=fff.read(fff.length),fff.Close(),dir:=Trim(dir,"\")
+	FileGetTime,time,%file%
+	splitpath,file,filename,dir,,nne
+	set:=files.find(node,"descendant-or-self::file/@file",file),set.setattribute("time",time)
+	if(!ssn(set,"@tv"))
+		set.setattribute("tv",FEAdd(v.options.hide_file_extensions?nne:filename,ssn(set.parentnode,"@tv").text,"Icon1 First Sort"))
+	cexml.under(main,"file",{type:"File",parent:mainfile,file:file,name:filename,folder:dir,order:"name,type,folder"})
+	StringReplace,text,text,`r`n,`n,all
+	update({file:file,text:text,load:1})
+	pos:=1
+	while(RegExMatch(text,"iOm`nU)^\s*\x23Include\s*,?\s*(.*)(\s+;.*)?$",found,pos)),pos:=found.pos(1)+found.len(1){
+		info:=found.1,info:=RegExReplace(Trim(found.1,", `t`r`n"),"i)\Q*i\E\s*")
+		if(InStr(info,"%")){
+			if(InStr(info,"%A_ScriptDir%")){
+				for a in pool
+					if(FileExist(check:=RegExReplace(info,"i)%A_ScriptDir%",a))~="D"&&!pool[check]){
+						pool[check]:=1
+						Break
+			}}if(InStr(info,"%A_AppData%")){
+				check:=RegExReplace(info,"i)%A_AppData%",A_AppData)
+				if(FileExist(check)="D"&&!pool[check])
+					pool[check]:=1
+			}if(InStr(info,"%A_AppDataCommon%")){
+				check:=RegExReplace(info,"i)%A_AppDataCommon%",A_AppDataCommon)
+				if(FileExist(check)="D"&&!pool[check])
+					pool[check]:=1
+			}if(FileExist(check)="A"){
+				FileList[check]:={file:check,include:found.0,inside:file}
+				Continue
+			}info:=check
+		}if(InStr(info,"<")){
+			info:=RegExReplace(info,"\<|\>")
+			if(FileExist(fn:=A_MyDocuments "\AutoHotkey\lib\" info ".ahk"))
+				FileList[fn]:={file:fn,include:found.0,inside:file}
+			else
+				while(a:=pool.item[A_Index-1].text)
+					if(FileExist(fn:=a "\lib\" info ".ahk")){
+						FileList[fn]:={file:fn,include:found.0,inside:file}
+						break
+		}}
+		for a in pool
+			if(FileExist(a "\" info)="A"){
+				FileList[a "\" info]:={file:a "\" info,include:found.0,inside:file}
+				Break
+	}}
+	for fn,obj in filelist{
+		if(!files.find(node,"descendant::file[@file='" obj.file "']")){
+			filelist.delete(fn)
+			file:=obj.file
+			SplitPath,file,filename,dir,,nne
+			new:=files.under(node,"file",obj) ;,new.SetAttribute("github",(maindir=dir?filename:"lib\" filename))
+			for a,b in {file:file,filename:filename,dir:dir,nne:nne,github:(maindir=dir?filename:"lib\" filename)}
+				new.setattribute(a,b)
+			Goto,ExtractNext
+}}}
+#SingleInstance,Force
+msgbox hehe
+
+
+/*
+	Extract(fileobj,top,rootfile,count){
+		static ResDir:=ComObjCreate("Scripting.FileSystemObject")
+		SplitPath,A_AhkPath,,ahkdir
+		ahkdir.="\lib",nextfile:=[],showicon:=settings.ssn("//icons/pe/@show").text
+		SplitPath,rootfile,rootfn,rootfolder
+		if(!main:=cexml.ssn("//files/main[@file='" rootfile "']"))
+			main:=cexml.Add("files/main",{file:rootfile},"",1),cexml.under(main,"file",{type:"File",parent:rootfile,file:rootfile,name:rootfn,folder:rootfolder,order:"name,type,folder"})
+		for a,filename in fileobj{
+			SplitPath,filename,fn,dir
+			maindir:=dir,fff:=FileOpen(filename,"R"),encoding:=fff.encoding,text:=file:=fff.read(fff.length),fff.Close(),dir:=Trim(dir,"\"),text:=RegExReplace(text,"\R","`n"),update({file:filename,text:text,load:1}),update:=files.ssn("//main[@file='" rootfile "']/descendant::file[@file='" filename "']")
+			for a,b in {filename:fn,encoding:encoding}
+				update.SetAttribute(a,b)
+			for a,b in StrSplit(text,"`n"){
+				if(InStr(b,"*i"))
+					StringReplace,b,b,*i ,,All
+				if(RegExMatch(b,"iOm`n)^\s*\x23Include\s*,?\s*(.*)",found)){
+					ff:=RegExReplace(found.1,"\R")
+					SplitPath,ff,incfn,,ext
+					if(InStr(found.1,":"))
+						incfile:=ResDir.GetAbsolutePathName(found.1)
+					else if(InStr(found.1,".."))
+						incfile:=ResDir.GetAbsolutePathName(dir "\" found.1)
+					if(!incfile)
+						incfile:=ResDir.GetAbsolutePathName(rootfolder "\" found.1)
+					if(ext=""&&InStr(found.1,"<")=0){
+						dir:=InStr(found.1,"%A_ScriptDir%")?RegExReplace(found.1,"i)\x25A_ScriptDir\x25",maindir):found.1,dir:=Trim(dir,"\")
+						incfile:=ext:=""
+						Continue
+					}else if(FileExist(incfile)&&ext){
+						if(!ssn(top,"descendant::file[@file='" incfile "']"))
+							spfile:=incfile,nextfile.Push(incfile)
+					}else if(InStr(found.1,"<")||InStr(found.1,"%")){
+						if(InStr(found.1,"<")){
+							if(look:=RegExReplace(found.1,"(<|>)"))
 								look.=".ahk"
-					for c,d in {"ahkdir":ahkdir,"%A_ScriptDir%":maindir,"%A_MyDocuments%":A_MyDocuments "\AutoHotkey\Lib","lib":maindir "\lib","%A_AppData%":A_AppData,"%A_AppDataCommon%":A_AppDataCommon}{
-						if(InStr(look,c))
-							look:=RegExReplace(look,"i)" c "\\")
-						if(FileExist(d "\" look)&&!ssn(top,"descendant::file[@file='" d "\" look "']")){
-							nextfile.Push(d "\" look)
-							if(!ssn(top,"descendant::file[@file='" d "\" look "']"))
-								spfile:=d "\" look
-							break
+						}else
+							look:=found.1
+						if(!FileExist(look))
+							if(SubStr(look,-3)!=".ahk")
+								if(FileExist(look ".ahk"))
+									look.=".ahk"
+						for c,d in {"ahkdir":ahkdir,"%A_ScriptDir%":maindir,"%A_MyDocuments%":A_MyDocuments "\AutoHotkey\Lib","lib":maindir "\lib","%A_AppData%":A_AppData,"%A_AppDataCommon%":A_AppDataCommon}{
+							if(InStr(look,c))
+								look:=RegExReplace(look,"i)" c "\\")
+							if(FileExist(d "\" look)&&!ssn(top,"descendant::file[@file='" d "\" look "']")){
+								nextfile.Push(d "\" look)
+								if(!ssn(top,"descendant::file[@file='" d "\" look "']"))
+									spfile:=d "\" look
+								break
+							}
 						}
-					}
-				}else if(FileExist(incfile:=ResDir.GetAbsolutePathName(dir "\" found.1)))
-					if(!ssn(top,"descendant::file[@file='" incfile "']"))
-						spfile:=incfile,nextfile.Push(incfile)
-				if(spfile){
-					SplitPath,spfile,fnme,folder
-					SplitPath,folder,last
-					last:=last?last:"lib",next:=top
-					if(folder!=rootfolder&&v.options.Disable_Folders_In_Project_Explorer!=1){
-						if(v.options.Full_Tree){
-							relative:=StrSplit(RelativePath(rootfile,spfile),"\")
-							for a,b in relative
-								if(a=relative.MaxIndex())
-									Continue
-							else if(!foldernode:=ssn(next,"folder[@name='" b "']"))
-								next:=files.under(next,"folder",{name:b,tv:FEAdd(b,ssn(next,"@tv").text,"Icon1 First Sort")})
-							else
-								next:=foldernode
-						}else{
-							if(!ssn(top,"folder[@name='" last "']"))
-								slash:=v.options.Remove_Directory_Slash?"":"\",next:=files.under(top,"folder",{name:last,tv:FEAdd(slash last,ssn(top,"@tv").text,"Icon1 First Sort")})
-							else
-								next:=ssn(top,"folder[@name='" last "']")
+					}else if(FileExist(incfile:=ResDir.GetAbsolutePathName(dir "\" found.1)))
+						if(!ssn(top,"descendant::file[@file='" incfile "']"))
+							spfile:=incfile,nextfile.Push(incfile)
+					if(spfile){
+						SplitPath,spfile,fnme,folder
+						SplitPath,folder,last
+						last:=last?last:"lib",next:=top
+						if(folder!=rootfolder&&v.options.Disable_Folders_In_Project_Explorer!=1){
+							if(v.options.Full_Tree){
+								relative:=StrSplit(RelativePath(rootfile,spfile),"\")
+								for a,b in relative
+									if(a=relative.MaxIndex())
+										Continue
+								else if(!foldernode:=ssn(next,"folder[@name='" b "']"))
+									next:=files.under(next,"folder",{name:b,tv:FEAdd(b,ssn(next,"@tv").text,"Icon1 First Sort")})
+								else
+									next:=foldernode
+							}else{
+								if(!ssn(top,"folder[@name='" last "']"))
+									slash:=v.options.Remove_Directory_Slash?"":"\",next:=files.under(top,"folder",{name:last,tv:FEAdd(slash last,ssn(top,"@tv").text,"Icon1 First Sort")})
+								else
+									next:=ssn(top,"folder[@name='" last "']")
+							}
 						}
-					}
-					FileGetTime,time,%spfile%
-					SplitPath,spfile,,fdir,,nne
-					if(count>1)
-						files.under(tvxml:=ssn(top,"descendant::file[@file='" filename "']"),"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(tvxml,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme,dir:fdir,nne:nne})
-					else
-						files.under(next,"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(next,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme,dir:fdir,nne:nne})
-					cexml.under(main,"file",{type:"File",parent:rootfile,file:spfile,name:fnme,folder:folder,order:"name,type,folder"})
-					spfile:=""
-				}incfile:=ext:=""
+						FileGetTime,time,%spfile%
+						SplitPath,spfile,,fdir,,nne
+						if(count>1)
+							files.under(tvxml:=ssn(top,"descendant::file[@file='" filename "']"),"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(tvxml,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme,dir:fdir,nne:nne})
+						else
+							files.under(next,"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(next,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme,dir:fdir,nne:nne})
+						cexml.under(main,"file",{type:"File",parent:rootfile,file:spfile,name:fnme,folder:folder,order:"name,type,folder"})
+						spfile:=""
+					}incfile:=ext:=""
+				}
 			}
 		}
+		if(nextfile.1)
+			extract(nextfile,top,rootfile,++count)
 	}
-	if(nextfile.1)
-		extract(nextfile,top,rootfile,++count)
-}
+*/
 FEAdd(value,parent,options){
 	Gui,1:Default
 	Gui,1:TreeView,SysTreeView321
@@ -3298,7 +3379,7 @@ History(file="",ctrl:=""){
 			return TVState(1)
 		return TVState(),tv([files.ssn("//*[@file='" last.text "']/@tv").text]),back.AppendChild(last),TVState(1)
 	}
-	if(!IsObject(file)){
+	if(!IsObject(file)&&file!=""){
 		Forward.ParentNode.RemoveChild(Forward)
 		if(!last:=back.LastChild())
 			last:=history.under(back,"file",,file)
@@ -3504,7 +3585,7 @@ Jump_To_First_Available(){
 		if(v.firstscan=1)
 			ScanFiles()
 	*/
-	sc:=csc(),line:=sc.getline(sc.2166(sc.2008)),Code_Explorer.scan(current()),v.jtfa:=[]
+	sc:=csc(),GetPos(),line:=sc.getline(sc.2166(sc.2008)),Code_Explorer.scan(current()),v.jtfa:=[]
 	if(RegExMatch(line,"Oim`n)^\s*#include\s*(.*)\s*;$",found)){
 		Jump_To_Include()
 	}else{
@@ -3524,13 +3605,13 @@ Jump_To_First_Available(){
 		if(v.firstscan=1)
 			ScanFiles()
 	*/
-	sc:=csc(),line:=sc.getline(sc.2166(sc.2008)),word:=Upper(sc.getword())
+	sc:=csc(),GetPos(),line:=sc.getline(sc.2166(sc.2008)),word:=Upper(sc.getword())
 	if(node:=cexml.ssn("//main[@file='" current(2).file "']/descendant::*[@type='" type "' and @upper='" word "']"))
 		cexmlsel(node)
 }Jump_To_Function(){
 	Jump_To("Function")
 }Jump_To_Include(){
-	sc:=csc(),line:=sc.getline(sc.2166(sc.2008))
+	sc:=csc(),GetPos(),line:=sc.getline(sc.2166(sc.2008))
 	if(RegExMatch(line,"Oim`n)^\s*#include\s*(.*)\s*;$",found))
 		if(node:=cexml.ssn("//main[@file='" current(2).file "']/descendant::file[@name='" Trim(found.1,"`t, ") "']"))
 			tv(files.ssn("//main[@file='" current(2).file "']/descendant::file[@file='" ssn(node,"@file").text "']/@tv").text)
@@ -3987,6 +4068,7 @@ New_Segment(new:="",text:="",adjusted:=""){
 New(filename:="",text:=""){
 	ts:=settings.ssn("//template").text,file:=FileOpen("c:\windows\shellnew\template.ahk",0),td:=file.Read(file.length),file.close(),template:=ts?ts:td
 	if(v.options.New_File_Dialog&&!filename){
+		m("New File")
 		FileSelectFile,filename,S16,,Enter a filename for a new project,*.ahk
 		if(!filename)
 			return
@@ -4588,6 +4670,7 @@ Open(filelist="",show="",Redraw:=1){
 		openfile:=current(2).file
 		SplitPath,openfile,,dir
 		Gui,1:+OwnDialogs
+		m("oh!")
 		FileSelectFile,filename,,%dir%,,*.ahk
 		if(ErrorLevel)
 			return
@@ -4630,8 +4713,11 @@ Open(filelist="",show="",Redraw:=1){
 	FileGetTime,time,%filename%
 	GuiControl,1:+g,SysTreeView321
 	GuiControl,1:-Redraw,SysTreeView321
-	top:=files.add("main",{file:filename},,1),next:=files.under(top,"file",{file:filename,tv:feadd(fn,0,"icon2 First sort"),github:fn,time:time,dir:dir,nne:nne})
-	Extract([filename],next,filename,1),ff:=files.sn("//file")
+	/*
+		top:=files.add("main",{file:filename},,1),next:=files.under(top,"file",{file:filename,tv:feadd(fn,0,"icon2 First sort"),github:fn,time:time,dir:dir,nne:nne})
+	*/
+	;Extract([filename],next,filename,1)
+	Extract(filename),ff:=files.sn("//file")
 	if(!settings.ssn("//open/file[text()='" filename "']"))
 		settings.add("open/file",,filename,1)
 	Gui,1:Default
@@ -5206,6 +5292,7 @@ Refresh_Project_Explorer(openfile:=""){
 	}
 	Gui,1:Default
 	Gui,1:TreeView,SysTreeView321
+	m(OpenFileList)
 	TV_Delete(),Open(Trim(openfilelist,"`n"))
 	for a,b in [openfile,file]
 		if(tv:=files.ssn("//main[@file='" parent "']/descendant::file[@file='" b "']/@tv").text)
@@ -5740,12 +5827,19 @@ SaveGUI(win:=1){
 }
 ScanFiles(){
 	allfiles:=files.sn("//file"),Default("SysTreeView322"),TV_Delete(),TV_Add("Scanning Files Please Wait...")
-	while,aa:=allfiles.item[A_Index-1]
+	while,aa:=allfiles.item[A_Index-1]{
 		Code_Explorer.scan(aa),WinSetTitle(1,"AHK Studio: Scanning " ssn(aa,"@file").text)
+	}
 	if(gui.ssn("//*[@win='1']/descendant::control[@type='Code Explorer']"))
 		SetTimer,RCE,-500
 	else
 		WinSetTitle(1,files.ea("//*[@sc='" csc().2357 "']"))
+}
+Scintilla_Control(){
+	sc:=csc(),test:=gui.sn("//*[@type='Scintilla']"),list:="",v.jts:=[]
+	while,ss:=test.item[A_Index-1],ea:=xml.ea(ss)
+		list.=ea.file ",",v.jts[ea.file]:=ea
+	sc.2106(44),sc.2117(7,Trim(list,",")),sc.2106(32)
 }
 Scratch_Pad(){
 	static
@@ -6048,6 +6142,21 @@ stop(x:=0){
 	v.ddd.debug.disconnect(),v.ddd.debug.off()
 	csc("Scintilla1")
 	return
+}
+Switch_Focus(){
+	GetPos()
+	ControlGetFocus,focus,% hwnd([1])
+	ControlGet,hwnd,hwnd,,%focus%,% hwnd([1])
+	hwnd:=hwnd=v.tngui.sc.sc?v.tngui.hwnd+0:hwnd+0
+	sc:=csc(),test:=gui.sn("//*[(@type='Scintilla' or @type='Tracked Notes') and @hwnd!='" hwnd+0 "']"),list:="",v.jts:=[]
+	while,ss:=test.item[A_Index-1],ea:=xml.ea(ss){
+		if(ea.type="scintilla")
+			list.=ea.file ",",v.jts[ea.file]:=ea.hwnd
+		else
+			list.="Tracked Notes,",v.jts["Tracked Notes"]:=v.tngui.sc.sc
+	}if(!InStr(Trim(list,","),","))
+		return s.ctrl[v.jts[Trim(list,",")]].2400()
+	sc.2106(44),sc.2117(7,Trim(list,",")),sc.2106(32)
 }
 Tab_Width(){
 	static
@@ -6523,8 +6632,8 @@ tv(tv*){
 		obj[NumGet(rect,8)+(info?25:5)]:=1
 	}
 	if(node:=gui.ssn("//*[@type='Project Explorer']"))
-		ea:=xml.ea(node),t(obj.MaxIndex(),ea.r-ea.l,"time:3")
-	return
+	,t	ea:=xml.ea(node),t(obj.MaxIndex(),ea.r-ea.l,"time:3")
+		return
 }
 TVIcons(x:=""){
 	static il,track:=[]
@@ -6857,24 +6966,3 @@ Scintilla(){
 	}
 }
 ;/plugin
-Scintilla_Control(){
-	sc:=csc(),test:=gui.sn("//*[@type='Scintilla']"),list:="",v.jts:=[]
-	while,ss:=test.item[A_Index-1],ea:=xml.ea(ss)
-		list.=ea.file ",",v.jts[ea.file]:=ea
-	sc.2106(44),sc.2117(7,Trim(list,",")),sc.2106(32)
-}
-Switch_Focus(){
-	GetPos()
-	ControlGetFocus,focus,% hwnd([1])
-	ControlGet,hwnd,hwnd,,%focus%,% hwnd([1])
-	hwnd:=hwnd=v.tngui.sc.sc?v.tngui.hwnd+0:hwnd+0
-	sc:=csc(),test:=gui.sn("//*[(@type='Scintilla' or @type='Tracked Notes') and @hwnd!='" hwnd+0 "']"),list:="",v.jts:=[]
-	while,ss:=test.item[A_Index-1],ea:=xml.ea(ss){
-		if(ea.type="scintilla")
-			list.=ea.file ",",v.jts[ea.file]:=ea.hwnd
-		else
-			list.="Tracked Notes,",v.jts["Tracked Notes"]:=v.tngui.sc.sc
-	}if(!InStr(Trim(list,","),","))
-		return s.ctrl[v.jts[Trim(list,",")]].2400()
-	sc.2106(44),sc.2117(7,Trim(list,",")),sc.2106(32)
-}
