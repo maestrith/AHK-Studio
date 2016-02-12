@@ -2603,7 +2603,7 @@ FEAdd(value,parent,options){
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
-	static dates:={commands:{date:20151222093855,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20160210100828,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20160106132203,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
+	static dates:={commands:{date:20151222093855,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20160212172013,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20160106132203,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
 		FileCreateDir,% A_MyDocuments "\Autohotkey\Lib"
@@ -4707,7 +4707,16 @@ Open(filelist="",show="",Redraw:=1){
 		return files.ssn("//main[@file='" StrSplit(filelist,"`n").1 "']/file/@tv").text,PERefresh()
 	}
 	return root
+	AutoExpand:
+	Default("SysTreeView321"),current:=TV_GetSelection()
+	next:=0
+	TVState()
+	while(next:=TV_GetNext(next))
+		TV_Modify(next,"+Expand")
+	TVState(1),TV_Modify(current,"Select Vis Focus")
+	return
 	addfile:
+	;Auto_Expand_Includes
 	Gui,1:Default
 	SplitPath,filename,fn,dir,,nne
 	FileGetTime,time,%filename%
@@ -4737,7 +4746,7 @@ Options(x:=0){
 	static list:={Virtual_Space:[2596,3],End_Document_At_Last_Line:2277,Show_EOL:2356,Show_Caret_Line:2096,Show_Whitespace:2021,Word_Wrap:2268,Hide_Indentation_Guides:2132,Center_Caret:[2403,15,75],Disable_Word_Wrap_Indicators:2460}
 	if(x="startup"){
 		v.options:=[]
-		for a,b in StrSplit("Add_Margins_To_Windows,Auto_Advance,Auto_Close_Find,Auto_Indent_Comment_Lines,Auto_Set_Area_On_Quick_Find,Auto_Space_After_Comma,Autocomplete_Enter_Newline,Build_Comment,Center_Caret,Check_For_Edited_Files_On_Focus,Check_For_Update_On_Startup,Clipboard_History,Copy_Selected_Text_on_Quick_Find,Disable_Auto_Complete,Disable_Auto_Complete_In_Quotes,Disable_Auto_Complete_While_Tips_Are_Visible,Disable_Auto_Delete,Disable_Auto_Indent_For_Non_Ahk_Files,Disable_Auto_Insert_Complete,Disable_Autosave,Disable_Backup,Disable_Compile_AHK,Disable_Folders_In_Project_Explorer,Disable_Include_Dialog,Disable_Line_Status,Disable_Variable_List,Disable_Word_Wrap_Indicators,Enable_Close_On_Save,End_Document_At_Last_Line,Force_Utf8,Full_Auto,Full_Backup_All_Files,Full_Tree,Hide_File_Extensions,Hide_Indentation_Guides,Highlight_Current_Area,Includes_In_Place,Manual_Continuation_Line,New_File_Dialog,OSD,Remove_Directory_Slash,Run_As_Admin,Shift_Breakpoint,Show_Caret_Line,Show_EOL,Show_Type_Prefix,Show_WhiteSpace,Small_Icons,Top_Find,Virtual_Scratch_Pad,Virtual_Space,Warn_Overwrite_On_Export,Word_Wrap")
+		for a,b in StrSplit("Add_Margins_To_Windows,Auto_Advance,Auto_Close_Find,Auto_Expand_Includes,Auto_Indent_Comment_Lines,Auto_Set_Area_On_Quick_Find,Auto_Space_After_Comma,Autocomplete_Enter_Newline,Build_Comment,Center_Caret,Check_For_Edited_Files_On_Focus,Check_For_Update_On_Startup,Clipboard_History,Copy_Selected_Text_on_Quick_Find,Disable_Auto_Complete,Disable_Auto_Complete_In_Quotes,Disable_Auto_Complete_While_Tips_Are_Visible,Disable_Auto_Delete,Disable_Auto_Indent_For_Non_Ahk_Files,Disable_Auto_Insert_Complete,Disable_Autosave,Disable_Backup,Disable_Compile_AHK,Disable_Folders_In_Project_Explorer,Disable_Include_Dialog,Disable_Line_Status,Disable_Variable_List,Disable_Word_Wrap_Indicators,Enable_Close_On_Save,End_Document_At_Last_Line,Force_Utf8,Full_Auto,Full_Backup_All_Files,Full_Tree,Hide_File_Extensions,Hide_Indentation_Guides,Highlight_Current_Area,Includes_In_Place,Manual_Continuation_Line,New_File_Dialog,OSD,Remove_Directory_Slash,Run_As_Admin,Shift_Breakpoint,Show_Caret_Line,Show_EOL,Show_Type_Prefix,Show_WhiteSpace,Small_Icons,Top_Find,Virtual_Scratch_Pad,Virtual_Space,Warn_Overwrite_On_Export,Word_Wrap")
 			v.options[b]:=0
 		if(settings.ssn("//options[@Auto_Project_Explorer_Width]"))
 			settings.ssn("//options").RemoveAttribute("Auto_Project_Explorer_Width")
@@ -5836,6 +5845,8 @@ ScanFiles(){
 		SetTimer,RCE,-500
 	else
 		WinSetTitle(1,files.ea("//*[@sc='" csc().2357 "']"))
+	if(v.options.Auto_Expand_Includes)
+		SetTimer,AutoExpand,-200
 }
 Scintilla_Control(){
 	sc:=csc(),test:=gui.sn("//*[@type='Scintilla']"),list:="",v.jts:=[]
