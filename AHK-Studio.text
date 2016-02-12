@@ -2,6 +2,8 @@
 Fixed: Reported by huckleberry
 -Positions not saving properly
 -Check For Update: Was downloading the source for AHK Studio rather than the changelog
+Fixed: Reported by Raspen
+-Check For Update: I am dumb.
 1.002.25
 Known Issues:
 -Sometimes changing a control to a Toolbar can lockup the program (trying to figure it out)
