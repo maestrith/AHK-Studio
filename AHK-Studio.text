@@ -4,6 +4,8 @@ Fixed: Reported by huckleberry
 -Check For Update: Was downloading the source for AHK Studio rather than the changelog
 Fixed: Reported by Raspen
 -Check For Update: I am dumb.
+Fixed: Reported by Peared and Raspen
+-Toolbars were not being created properly
 1.002.25
 Known Issues:
 -Sometimes changing a control to a Toolbar can lockup the program (trying to figure it out)

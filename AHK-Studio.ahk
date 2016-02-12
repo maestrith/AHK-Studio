@@ -319,7 +319,7 @@ BuildSwitch(ctrl){
 			return
 		if(settings.ssn("//toolbar/bar[@id='" bar "']"))
 			return m("Toolbar already exists.  Please choose another name.")
-		return new:=settings.under(settings.ssn("//toolbar"),"bar",{id:bar?bar:"My Toolbar " A_Now}),backupctrl.SetAttribute("id",xml.ea(new).id),NewCtrl(backupctrl,"Toolbar"),Toolbar_Editor(gui.ssn("//*[@id='" bar "' and @type='Toolbar']"))
+		return new:=settings.under(settings.add("toolbar"),"bar",{id:bar?bar:"My Toolbar " A_Now}),backupctrl.SetAttribute("id",xml.ea(new).id),NewCtrl(backupctrl,"Toolbar"),Toolbar_Editor(gui.ssn("//*[@id='" bar "' and @type='Toolbar']"))
 	}if(action="Edit Toolbar")
 		Toolbar_Editor(backupctrl)
 	if(action="Customize Toolbar")
