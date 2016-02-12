@@ -275,6 +275,7 @@
 				<menu name="Refresh Project Explorer" clean="Refresh_Project_Explorer"></menu>
 				<menu name="Refresh Plugins" clean="Refresh_Plugins"></menu></menu>
 			<menu clean="Display_Classes" name="Display Classes"></menu>
+			<menu clean="Auto_Expand_Includes" name="Auto Expand Includes"></menu>
 			<menu clean="Display_Clipboard_History" name="Display Clipboard History"></menu>
 			<menu name="Display Functions" clean="Display_Functions" hotkey="!I"></menu>
 			<menu name="Show Functions" clean="Show_Functions" hotkey="!O" no="1"></menu>
