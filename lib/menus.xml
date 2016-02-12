@@ -150,7 +150,6 @@
 			<menu name="Post &amp;All In One Gist" clean="Post_All_In_One_Gist" no="1"></menu>
 			<menu name="Post &amp;Multiple Segment Gist" clean="Post_Multiple_Segment_Gist" no="1"></menu>
 			<menu name="FT&amp;P Servers" clean="Ftp_Servers" option="" plugin="plugins\Ftp Servers.ahk"></menu>
-			<menu name="Manage Toolbars" clean="Manage_Toolbars" option="" plugin="plugins\Manage Toolbars.ahk"></menu>
 			<menu name="Auto Insert" clean="Auto_Insert" hide="1" option="" plugin="plugins\Auto Insert.ahk"></menu>
 			<menu clean="Settings" name="Settings" option="" plugin="plugins\Settings.ahk"></menu>
 			<menu clean="FTP_Servers" name="FT&amp;P Servers" option="" plugin="plugins\Ftp Servers.ahk"></menu>
