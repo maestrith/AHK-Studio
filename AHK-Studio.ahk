@@ -2499,8 +2499,6 @@ Extract(mainfile){
 				new.setattribute(a,b)
 			Goto,ExtractNext
 }}}
-#SingleInstance,Force
-msgbox hehe
 
 
 /*
@@ -4670,7 +4668,9 @@ Open(filelist="",show="",Redraw:=1){
 		openfile:=current(2).file
 		SplitPath,openfile,,dir
 		Gui,1:+OwnDialogs
-		m("oh!")
+		/*
+			m("oh!")
+		*/
 		FileSelectFile,filename,,%dir%,,*.ahk
 		if(ErrorLevel)
 			return
@@ -5292,7 +5292,9 @@ Refresh_Project_Explorer(openfile:=""){
 	}
 	Gui,1:Default
 	Gui,1:TreeView,SysTreeView321
-	m(OpenFileList)
+	/*
+		m(OpenFileList)
+	*/
 	TV_Delete(),Open(Trim(openfilelist,"`n"))
 	for a,b in [openfile,file]
 		if(tv:=files.ssn("//main[@file='" parent "']/descendant::file[@file='" b "']/@tv").text)
@@ -5931,7 +5933,16 @@ Create_Segment_From_Selection(){
 		Relative:=RegExReplace(RelativePath(current(2).file,newsegment),"i)^lib\\([^\\]+)\.ahk$","<$1>"),maintext:=Update({get:current(2).file}),update({file:current(2).file,text:maintext "`n#Include " Relative})
 	if(current(3).file=current(2).file)
 		start:=sc.2008(),sc.2181(0,maintext "`n#Include " Relative),sc.2160(start,start),CenterSel()
-	sc.2645(pos.start,pos.end-pos.start),file:=FileOpen(newsegment,1,"UTF-8"),file.seek(0),file.write(text),file.length(file.position),file.Close(),update({file:newsegment,text:text}),Refresh_Current_Project()
+	
+	sc.2645(pos.start,pos.end-pos.start)
+	file:=FileOpen(newsegment,1,"UTF-8")
+	file.seek(0)
+	file.write(text)
+	file.length(file.position)
+	file.Close()
+	update({file:newsegment,text:text})
+	Refresh_Current_Project()
+	
 	GuiControl,1:+Redraw,SysTreeView321
 }
 Select_All(){
