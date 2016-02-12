@@ -1542,7 +1542,7 @@ Color(con:=""){
 		for a,b in ea
 			if(ea.Background!="")
 				con.2082(ea.indic,ea.Background)
-	con.2080(2,8),con.2082(2,0xff00ff),con.2636(1)
+	con.2080(2,8),con.2082(2,0xff00ff),con.2636(1),con.2516(1)
 	if(zoom:=settings.ssn("//gui/@zoom").text)
 		con.2373(zoom)
 	for a,b in options
