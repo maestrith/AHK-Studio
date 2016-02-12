@@ -412,7 +412,7 @@ Check_For_Update(startup:=""){
 	Version:="1.002.26"
 	newwin:=new GUIKeep("CFU"),newwin.add("Edit,w400 h400 ReadOnly,No New Updated,wh","Button,gautoupdate,Update,y","Button,x+5 gcurrentinfo,Current Changelog,y","Button,x+5 gextrainfo,Changelog History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
-		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar(DownloadURL),"\R","`r`n")),file.length(file.position),file.Close()
+		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(UrlDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
 		ControlSetText,Edit1,%update%,% newwin.ahkid
 	}if(!found.1)
 		ControlSetText,Edit1,% http.ResponseText,% newwin.ahkid
