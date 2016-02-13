@@ -10,6 +10,7 @@ Added: Requested by Raspen
 -Auto Expand Includes
 Fixed:
 -Bug that was causing files you have not opened to show at the last line
+-With the option Includes In Place: It was not working properly
 1.002.25
 Known Issues:
 -Sometimes changing a control to a Toolbar can lockup the program (trying to figure it out)

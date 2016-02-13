@@ -4035,7 +4035,7 @@ New_Segment(new:="",text:="",adjusted:=""){
 	SplitPath,cur,,dir
 	maindir:=dir
 	if(!new){
-		FileSelectFile,new,s,%dir%,Create a new Segment,*.ahk
+		FileSelectFile,new,S,%dir%,Create a new Segment,*.ahk
 		if(ErrorLevel)
 			return
 		new:=new~="\.ahk$"?new:new ".ahk"
@@ -4284,7 +4284,7 @@ Notify(csc:=""){
 		}
 	*/
 	if(fn.code=2002){
-		ea:=files.ea("//*[@sc='" doc "']"),file:=ea.file,updated:=update("get").2,updated.Delete(ea.file)
+		ea:=files.ea("//*[@sc='" doc "']"),file:=ea.file,updated:=Update("get").2,updated.Delete(ea.file)
 		SplitPath,file,,,,nne
 		TV_Modify(ea.tv,"",v.options.Hide_File_Extensions?nne:ea.filename)
 	}if(fn.code=2010){
@@ -4371,7 +4371,7 @@ Notify(csc:=""){
 		if(sc.sc=v.tnsc.sc)
 			v.TNGui.Write()
 		else if((fn.modtype&0x01)||(fn.modtype&0x02))
-			update({sc:doc})
+			Update({sc:doc})
 		if(fn.linesadded)
 			MarginWidth(sc)
 		return
@@ -5939,21 +5939,15 @@ Create_Segment_From_Selection(){
 		return m("Segment name already exists. Please choose another")
 	text:=sc.getseltext(),pos:=posinfo()
 	if(v.options.Includes_In_Place=1)
-		sc.2003(pos.end,"#Include " relative:=RelativePath(current(3).file,newsegment))
+		sc.2170(0,"#Include " relative:=RelativePath(current(3).file,newsegment))
 	else
-		Relative:=RegExReplace(RelativePath(current(2).file,newsegment),"i)^lib\\([^\\]+)\.ahk$","<$1>"),maintext:=Update({get:current(2).file}),update({file:current(2).file,text:maintext "`n#Include " Relative})
+		Relative:=RegExReplace(RelativePath(current(2).file,newsegment),"i)^lib\\([^\\]+)\.ahk$","<$1>"),maintext:=Update({get:current(2).file}),Update({file:current(2).file,text:maintext "`n#Include " Relative})
 	if(current(3).file=current(2).file)
 		start:=sc.2008(),sc.2181(0,maintext "`n#Include " Relative),sc.2160(start,start),CenterSel()
-	
 	sc.2645(pos.start,pos.end-pos.start)
-	file:=FileOpen(newsegment,1,"UTF-8")
-	file.seek(0)
-	file.write(text)
-	file.length(file.position)
-	file.Close()
+	file:=FileOpen(newsegment,1,"UTF-8"),file.seek(0),file.write(text),file.length(file.position),file.Close()
 	update({file:newsegment,text:text})
 	Refresh_Current_Project()
-	
 	GuiControl,1:+Redraw,SysTreeView321
 }
 Select_All(){
