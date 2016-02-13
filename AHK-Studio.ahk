@@ -6631,7 +6631,8 @@ tv(tv*){
 				for a,b in StrSplit(pos.fold,",")
 					sc.2237(b,0)
 		}else{
-			pos:=positions.ea("//main[@file='" ssn(node.ParentNode,"@file").text "']/file[@file='" ssn(node,"@file").text "']"),sc.2613(pos.scroll),sc.2160(pos.start,pos.end)
+			pos:=positions.ea("//main[@file='" ssn(node.ParentNode,"@file").text "']/file[@file='" ssn(node,"@file").text "']")
+			(pos.scroll)?sc.2613(pos.scroll):"",(pos.start||pos.end)?sc.2160(pos.start,pos.end):""
 			if(pos.fold!="")
 				for a,b in StrSplit(pos.fold,",")
 					sc.2237(b,0)
