@@ -2497,6 +2497,106 @@ FEAdd(value,parent,options){
 	Default("SysTreeView321")
 	return TV_Add(value,parent,options)
 }
+FEUpdate(file:="",Redraw:=0){
+	if(!maincexml:=cexml.find("//files/main/@file",file))
+		maincexml:=cexml.Add("files/main",{file:file},"",1)
+	GuiControl,1:-Redraw,% v.pe
+	TVState()
+	if(Redraw){
+		Default("SysTreeView321"),TV_Delete(),list:=files.sn("//main/file")
+	}else{
+		list:=files.find("//file/@file",file,1)
+	}
+	if(v.options.Disable_Folders_In_Project_Explorer||v.options.Full_Tree){
+		if((all:=files.sn("//folder/descendant::file")).length){
+			while,aa:=all.item[A_Index-1],ea:=xml.ea(aa)
+				files.find("//main/file/@file",ea.inside).AppendChild(aa)
+			folders:=files.sn("//folder")
+			while,ff:=folders.item[A_Index-1]
+				ff.ParentNode.RemoveChild(ff)
+	}}else{
+		if((folders:=files.sn("//folder")).length){
+			all:=files.sn("//folder/descendant::file")
+			while,aa:=all.item[A_Index-1],ea:=xml.ea(aa)
+				files.find("//main/file/@file",ea.inside).AppendChild(aa)
+			while,ff:=folders.item[A_Index-1]
+				ff.ParentNode.RemoveChild(ff)
+		}
+	}
+	if(Redraw){
+		all:=files.sn("//*[@tv]")
+		while,aa:=all.item[A_Index-1]
+			aa.RemoveAttribute("tv")
+	}if(!v.options.Disable_Folders_In_Project_Explorer)
+		while,ll:=list.item[A_Index-1],ea:=xml.ea(ll){
+			root:=ll,file:=ea.file
+			all:=sn(ll,"descendant-or-self::file")
+			while,aa:=all.item[A_Index-1],ea:=xml.ea(aa){
+				Relative:=StrSplit(rel:=RelativePath(file,ea.file),"\")
+				if(Relative.2&&!v.options.Disable_Folders_In_Project_Explorer){
+					if(v.options.Full_Tree){
+						if(!last:=files.find(root,"descendant::folder/@build",find:=SubStr(rel,1,InStr(rel,"\",0,0,1)))){
+							build:="",last:=root
+							for a,b in Relative{
+								if(a=Relative.MaxIndex())
+									Break
+								build.=b "\"
+								if(!check:=files.find(last,"descendant::folder/@build",build))
+									last:=files.under(last,"folder",{name:b,build:build})
+								else
+									last:=check
+						}}last.AppendChild(aa)
+					}else{
+						folder:=Relative[Relative.MaxIndex()-1]
+						if(!under:=files.find(root,"folder/@name",folder))
+							under:=files.under(root,"folder",{name:folder})
+						under.AppendChild(aa)
+		}}}}
+	while,ll:=list.item[A_Index-1],ea:=xml.ea(ll){
+		all:=sn(ll,"descendant-or-self::*")
+		while,aa:=all.item[A_Index-1],ea:=xml.ea(aa){
+			if(!ea.tv)
+				aa.SetAttribute("tv",FEAdd(aa.NodeName="folder"?ea.name:v.options.hide_file_extensions?ea.nne:ea.filename,ssn(aa.ParentNode,"@tv").text,"Icon" (aa.nodename="folder"?1:2) " Sort"))
+			if(!files.find(maincexml,"descendant::file/@file",ea.file))
+				cexml.under(maincexml,"file",{type:"File",parent:ssn(aa.ParentNode,"@file").text,file:ea.file,name:ea.filename,folder:ea.dir,order:"name,type,folder"})
+	}}
+	GuiControl,1:+Redraw,% v.pe
+	TVState(1)
+	if(Redraw)
+		Default("SysTreeView321"),TV_Modify(files.ssn("//*[@sc='" csc().2357 "']/@tv").text,"Select Vis Focus")
+}
+
+/*
+	if(spfile){
+		SplitPath,spfile,fnme,folder
+		SplitPath,folder,last
+		last:=last?last:"lib",next:=top
+		if(folder!=rootfolder&&v.options.Disable_Folders_In_Project_Explorer!=1){
+			if(v.options.Full_Tree){
+				Relative:=StrSplit(RelativePath(rootfile,spfile),"\")
+				for a,b in Relative{
+					if(a=Relative.MaxIndex())
+						Continue
+					else if(!foldernode:=ssn(next,"folder[@name='" b "']"))
+						next:=files.under(next,"folder",{name:b,tv:FEAdd(b,ssn(next,"@tv").text,"Icon1 First Sort")})
+					else
+						next:=foldernode
+				}
+			}else{
+				if(!ssn(top,"folder[@name='" last "']"))
+					slash:=v.options.Remove_Directory_Slash?"":"\",next:=files.under(top,"folder",{name:last,tv:FEAdd(slash last,ssn(top,"@tv").text,"Icon1 First Sort")})
+				else
+					next:=ssn(top,"folder[@name='" last "']")
+			}
+		}
+		if(count>1)
+			files.under(tvxml:=ssn(top,"descendant::file[@file='" filename "']"),"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(tvxml,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme,dir:fdir,nne:nne})
+		else
+			files.under(next,"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(next,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme,dir:fdir,nne:nne})
+		cexml.under(main,"file",{type:"File",parent:rootfile,file:spfile,name:fnme,folder:folder,order:"name,type,folder"})
+		spfile:=""
+	}incfile:=ext:=""
+*/
 FileCheck(file){
 	static dates:={commands:{date:20151222093855,loc:"lib\commands.xml",url:"lib/commands.xml",type:1},menus:{date:20160212172013,loc:"lib\menus.xml",url:"lib/menus.xml",type:2},scilexer:{date:20160106132203,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20151021125614,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}},url:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	if(!FileExist(A_MyDocuments "\Autohotkey")){
@@ -4702,7 +4802,7 @@ Options(x:=0){
 			}
 			GuiControl,1:+Redraw,SysTreeView321
 		}if(x="Remove_Directory_Slash")
-			Refresh_Project_Explorer()
+			FEUpdate(0,1)
 		if(x="margin_left")
 			csc().2155(0,6)
 	}else if(x~="Auto_Space_After_Comma|Autocomplete_Enter_Newline|Disable_Auto_Delete|Disable_Auto_Insert_Complete|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Enable_Close_On_Save|Full_Tree|Highlight_Current_Area|Manual_Continuation_Line|Small_Icons|Top_Find"){
@@ -6804,102 +6904,6 @@ Words_In_Document(){
 	v.words[sc.2357]:=Trim(list)
 	sc.2100(StrLen(word),Trim(list))
 }
-FEUpdate(file:="",Redraw:=0){
-	files.transform()
-	if(!maincexml:=cexml.find("//files/main/@file",file))
-		maincexml:=cexml.Add("files/main",{file:file},"",1)
-	GuiControl,1:-Redraw,% v.pe
-	if(Redraw){
-		Default("SysTreeView321"),TV_Delete(),list:=files.sn("//main/file")
-	}else{
-		list:=files.find("//file/@file",file,1)
-	}
-	if(v.options.Disable_Folders_In_Project_Explorer||v.options.Full_Tree){
-		if((all:=files.sn("//folder/descendant::file")).length){
-			while,aa:=all.item[A_Index-1],ea:=xml.ea(aa)
-				files.find("//main/file/@file",ea.inside).AppendChild(aa)
-			folders:=files.sn("//folder")
-			while,ff:=folders.item[A_Index-1]
-				ff.ParentNode.RemoveChild(ff)
-	}}
-	if(Redraw){
-		all:=files.sn("//*[@tv]")
-		while,aa:=all.item[A_Index-1]
-			aa.RemoveAttribute("tv")
-	}if(!v.options.Disable_Folders_In_Project_Explorer)
-		while,ll:=list.item[A_Index-1],ea:=xml.ea(ll){
-			root:=ll,file:=ea.file
-			all:=sn(ll,"descendant-or-self::file")
-			while,aa:=all.item[A_Index-1],ea:=xml.ea(aa){
-				Relative:=StrSplit(rel:=RelativePath(file,ea.file),"\")
-				if(Relative.2&&!v.options.Disable_Folders_In_Project_Explorer){
-					if(v.options.Full_Tree){
-						build:="",last:=root
-						if(!last:=files.find(root,"descendant::folder[@build='" SubStr(rel,1,InStr(rel,"\",0,0,1)) "']"))
-							for a,b in Relative{
-								if(a=Relative.MaxIndex())
-									Continue
-								build.=b "\"
-								if(!check:=files.find(last,"descendant::folder[@build='" build "']"))
-									last:=files.under(last,"folder",{name:b,build:build})
-								else
-									last:=check
-							}
-						last.AppendChild(aa)
-					}else{
-						folder:=Relative[Relative.MaxIndex()-1]
-						if(!under:=files.find(root,"folder/@name",folder))
-							under:=files.under(root,"folder",{name:folder})
-						under.AppendChild(aa)
-					}
-				}
-			}
-		}
-	while,ll:=list.item[A_Index-1],ea:=xml.ea(ll){
-		all:=sn(ll,"descendant-or-self::*")
-		while,aa:=all.item[A_Index-1],ea:=xml.ea(aa){
-			if(!ea.tv)
-				aa.SetAttribute("tv",FEAdd(aa.NodeName="folder"?ea.name:v.options.hide_file_extensions?ea.nne:ea.filename,ssn(aa.ParentNode,"@tv").text,"Icon" (aa.nodename="folder"?1:2) " Sort"))
-			if(!files.find(maincexml,"descendant::file/@file",ea.file))
-				cexml.under(maincexml,"file",{type:"File",parent:ssn(aa.ParentNode,"@file").text,file:ea.file,name:ea.filename,folder:ea.dir,order:"name,type,folder"})
-		}
-	}
-	GuiControl,1:+Redraw,% v.pe
-	if(Redraw)
-		Default("SysTreeView321"),TV_Modify(files.ssn("//*[@sc='" csc().2357 "']/@tv").text,"Select Vis Focus")
-}
-
-/*
-	if(spfile){
-		SplitPath,spfile,fnme,folder
-		SplitPath,folder,last
-		last:=last?last:"lib",next:=top
-		if(folder!=rootfolder&&v.options.Disable_Folders_In_Project_Explorer!=1){
-			if(v.options.Full_Tree){
-				Relative:=StrSplit(RelativePath(rootfile,spfile),"\")
-				for a,b in Relative{
-					if(a=Relative.MaxIndex())
-						Continue
-					else if(!foldernode:=ssn(next,"folder[@name='" b "']"))
-						next:=files.under(next,"folder",{name:b,tv:FEAdd(b,ssn(next,"@tv").text,"Icon1 First Sort")})
-					else
-						next:=foldernode
-				}
-			}else{
-				if(!ssn(top,"folder[@name='" last "']"))
-					slash:=v.options.Remove_Directory_Slash?"":"\",next:=files.under(top,"folder",{name:last,tv:FEAdd(slash last,ssn(top,"@tv").text,"Icon1 First Sort")})
-				else
-					next:=ssn(top,"folder[@name='" last "']")
-			}
-		}
-		if(count>1)
-			files.under(tvxml:=ssn(top,"descendant::file[@file='" filename "']"),"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(tvxml,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme,dir:fdir,nne:nne})
-		else
-			files.under(next,"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(next,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme,dir:fdir,nne:nne})
-		cexml.under(main,"file",{type:"File",parent:rootfile,file:spfile,name:fnme,folder:folder,order:"name,type,folder"})
-		spfile:=""
-	}incfile:=ext:=""
-*/
 ;plugin
 Quick_Scintilla_Code_Lookup(){
 	sc:=csc(),word:=upper(sc.textrange(start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1))),Scintilla()
