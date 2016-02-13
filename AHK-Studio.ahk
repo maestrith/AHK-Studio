@@ -24,7 +24,9 @@ SetWorkingDir,%A_ScriptDir%
 return
 SetTimer,Color
 GuiDropFiles:
-tv:=Open(A_GuiEvent,1),openfile:=StrSplit(A_GuiEvent,"`n").1,main:=files.ssn("//main[@file='" openfile "']"),tv(tv)
+for a,b in StrSplit(A_GuiEvent,"`n")
+	tv:=Open(b,1)
+tv(tv)
 return
 #Include %A_ScriptDir%
 About(){
@@ -1365,13 +1367,13 @@ Class XML{
 	find(info*){
 		doc:=info.1.NodeName?info.1:this.xml
 		if(info.1.NodeName)
-			node:=info.2,find:=info.3
+			node:=info.2,find:=info.3,return:=info.4?"SelectNodes":"SelectSingleNode"
 		else
-			node:=info.1,find:=info.2
+			node:=info.1,find:=info.2,return:=info.3?"SelectNodes":"SelectSingleNode"
 		if(InStr(find,"'"))
-			return doc.SelectSingleNode(node "[.=concat('" RegExReplace(find,"'","'," Chr(34) "'" Chr(34) ",'") "')]/..")
+			return doc[return](node "[.=concat('" RegExReplace(find,"'","'," Chr(34) "'" Chr(34) ",'") "')]/..")
 		else
-			return doc.SelectSingleNode(node "[.='" find "']/..")
+			return doc[return](node "[.='" find "']/..")
 	}
 	under(under,node:="",att:="",text:="",list:=""){
 		if(node="")
@@ -2426,33 +2428,23 @@ EXSM(){
 	return
 }
 Extract(mainfile){
-	FileList:=[],file:=mainfile,main:=files.under(files.ssn("//*"),"main",{file:mainfile}),pool:=[]
+	FileList:=[],file:=mainfile,pool:=[]
+	if(!main:=files.find("//main/@file",mainfile))
+		main:=files.under(files.ssn("//*"),"main",{file:mainfile})
 	SplitPath,mainfile,mfn,maindir,,mnne
-	node:=files.under(main,"file",{file:file,dir:maindir,filename:mfn,nne:mnne})
-	node.setattribute("tv",FEAdd(v.options.hide_file_extensions?mnne:mfn,ssn(set.parentnode,"@tv").text,"Icon1 First Sort"))
-	if(!main:=cexml.find("//files/main/@file", mainfile))
-		main:=cexml.Add("files/main",{file:mainfile},"",1)
-	/*
-		Should have this just to extract, have the TreeView populate outside of here.
-		possibly the cexml as well...
-		title bar is messed up for
-		-Main Files
-		sub-files ok
-	*/
 	pool[maindir]:=1
-	tick:=A_TickCount
+	if(!node:=files.find(main,"descendant::file/@file",file))
+		node:=files.under(main,"file",{file:file,dir:maindir,filename:mfn,nne:mnne})
 	ExtractNext:
 	if(InStr(file,"'"))
-		return m("Sorry but currently files and directories with ' in them are not usable.",file)
+		return m("Sorry but currently files and directories with ' (apostrophes) in them are not usable.",file)
 	fff:=FileOpen(file,"R"),encoding:=fff.encoding,text:=fff.read(fff.length),fff.Close(),dir:=Trim(dir,"\")
 	FileGetTime,time,%file%
-	splitpath,file,filename,dir,,nne
+	SplitPath,file,filename,dir,,nne
 	set:=files.find(node,"descendant-or-self::file/@file",file),set.setattribute("time",time)
-	if(!ssn(set,"@tv"))
-		set.setattribute("tv",FEAdd(v.options.hide_file_extensions?nne:filename,ssn(set.parentnode,"@tv").text,"Icon1 First Sort"))
-	cexml.under(main,"file",{type:"File",parent:mainfile,file:file,name:filename,folder:dir,order:"name,type,folder"})
-	StringReplace,text,text,`r`n,`n,all
-	update({file:file,text:text,load:1})
+	StringReplace,text,text,`r`n,`n,All
+	if(!Update({get:file}))
+		Update({file:file,text:text,load:1})
 	pos:=1
 	while(RegExMatch(text,"iOm`nU)^\s*\x23Include\s*,?\s*(.*)(\s+;.*)?$",found,pos)),pos:=found.pos(1)+found.len(1){
 		info:=found.1,info:=RegExReplace(Trim(found.1,", `t`r`n"),"i)\Q*i\E\s*")
@@ -2483,123 +2475,26 @@ Extract(mainfile){
 					if(FileExist(fn:=a "\lib\" info ".ahk")){
 						FileList[fn]:={file:fn,include:found.0,inside:file}
 						break
-		}}
-		for a in pool
+		}}for a in pool
 			if(FileExist(a "\" info)="A"){
 				FileList[a "\" info]:={file:a "\" info,include:found.0,inside:file}
 				Break
 	}}
 	for fn,obj in filelist{
 		if(!files.find(node,"descendant::file[@file='" obj.file "']")){
-			filelist.delete(fn)
-			file:=obj.file
+			filelist.delete(fn),file:=obj.file
 			SplitPath,file,filename,dir,,nne
-			new:=files.under(node,"file",obj) ;,new.SetAttribute("github",(maindir=dir?filename:"lib\" filename))
+			new:=files.under(node,"file",obj)
 			for a,b in {file:file,filename:filename,dir:dir,nne:nne,github:(maindir=dir?filename:"lib\" filename)}
 				new.setattribute(a,b)
 			Goto,ExtractNext
 }}}
-
-
-/*
-	Extract(fileobj,top,rootfile,count){
-		static ResDir:=ComObjCreate("Scripting.FileSystemObject")
-		SplitPath,A_AhkPath,,ahkdir
-		ahkdir.="\lib",nextfile:=[],showicon:=settings.ssn("//icons/pe/@show").text
-		SplitPath,rootfile,rootfn,rootfolder
-		if(!main:=cexml.ssn("//files/main[@file='" rootfile "']"))
-			main:=cexml.Add("files/main",{file:rootfile},"",1),cexml.under(main,"file",{type:"File",parent:rootfile,file:rootfile,name:rootfn,folder:rootfolder,order:"name,type,folder"})
-		for a,filename in fileobj{
-			SplitPath,filename,fn,dir
-			maindir:=dir,fff:=FileOpen(filename,"R"),encoding:=fff.encoding,text:=file:=fff.read(fff.length),fff.Close(),dir:=Trim(dir,"\"),text:=RegExReplace(text,"\R","`n"),update({file:filename,text:text,load:1}),update:=files.ssn("//main[@file='" rootfile "']/descendant::file[@file='" filename "']")
-			for a,b in {filename:fn,encoding:encoding}
-				update.SetAttribute(a,b)
-			for a,b in StrSplit(text,"`n"){
-				if(InStr(b,"*i"))
-					StringReplace,b,b,*i ,,All
-				if(RegExMatch(b,"iOm`n)^\s*\x23Include\s*,?\s*(.*)",found)){
-					ff:=RegExReplace(found.1,"\R")
-					SplitPath,ff,incfn,,ext
-					if(InStr(found.1,":"))
-						incfile:=ResDir.GetAbsolutePathName(found.1)
-					else if(InStr(found.1,".."))
-						incfile:=ResDir.GetAbsolutePathName(dir "\" found.1)
-					if(!incfile)
-						incfile:=ResDir.GetAbsolutePathName(rootfolder "\" found.1)
-					if(ext=""&&InStr(found.1,"<")=0){
-						dir:=InStr(found.1,"%A_ScriptDir%")?RegExReplace(found.1,"i)\x25A_ScriptDir\x25",maindir):found.1,dir:=Trim(dir,"\")
-						incfile:=ext:=""
-						Continue
-					}else if(FileExist(incfile)&&ext){
-						if(!ssn(top,"descendant::file[@file='" incfile "']"))
-							spfile:=incfile,nextfile.Push(incfile)
-					}else if(InStr(found.1,"<")||InStr(found.1,"%")){
-						if(InStr(found.1,"<")){
-							if(look:=RegExReplace(found.1,"(<|>)"))
-								look.=".ahk"
-						}else
-							look:=found.1
-						if(!FileExist(look))
-							if(SubStr(look,-3)!=".ahk")
-								if(FileExist(look ".ahk"))
-									look.=".ahk"
-						for c,d in {"ahkdir":ahkdir,"%A_ScriptDir%":maindir,"%A_MyDocuments%":A_MyDocuments "\AutoHotkey\Lib","lib":maindir "\lib","%A_AppData%":A_AppData,"%A_AppDataCommon%":A_AppDataCommon}{
-							if(InStr(look,c))
-								look:=RegExReplace(look,"i)" c "\\")
-							if(FileExist(d "\" look)&&!ssn(top,"descendant::file[@file='" d "\" look "']")){
-								nextfile.Push(d "\" look)
-								if(!ssn(top,"descendant::file[@file='" d "\" look "']"))
-									spfile:=d "\" look
-								break
-							}
-						}
-					}else if(FileExist(incfile:=ResDir.GetAbsolutePathName(dir "\" found.1)))
-						if(!ssn(top,"descendant::file[@file='" incfile "']"))
-							spfile:=incfile,nextfile.Push(incfile)
-					if(spfile){
-						SplitPath,spfile,fnme,folder
-						SplitPath,folder,last
-						last:=last?last:"lib",next:=top
-						if(folder!=rootfolder&&v.options.Disable_Folders_In_Project_Explorer!=1){
-							if(v.options.Full_Tree){
-								relative:=StrSplit(RelativePath(rootfile,spfile),"\")
-								for a,b in relative
-									if(a=relative.MaxIndex())
-										Continue
-								else if(!foldernode:=ssn(next,"folder[@name='" b "']"))
-									next:=files.under(next,"folder",{name:b,tv:FEAdd(b,ssn(next,"@tv").text,"Icon1 First Sort")})
-								else
-									next:=foldernode
-							}else{
-								if(!ssn(top,"folder[@name='" last "']"))
-									slash:=v.options.Remove_Directory_Slash?"":"\",next:=files.under(top,"folder",{name:last,tv:FEAdd(slash last,ssn(top,"@tv").text,"Icon1 First Sort")})
-								else
-									next:=ssn(top,"folder[@name='" last "']")
-							}
-						}
-						FileGetTime,time,%spfile%
-						SplitPath,spfile,,fdir,,nne
-						if(count>1)
-							files.under(tvxml:=ssn(top,"descendant::file[@file='" filename "']"),"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(tvxml,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme,dir:fdir,nne:nne})
-						else
-							files.under(next,"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(next,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme,dir:fdir,nne:nne})
-						cexml.under(main,"file",{type:"File",parent:rootfile,file:spfile,name:fnme,folder:folder,order:"name,type,folder"})
-						spfile:=""
-					}incfile:=ext:=""
-				}
-			}
-		}
-		if(nextfile.1)
-			extract(nextfile,top,rootfile,++count)
-	}
-*/
 FEAdd(value,parent,options){
-	Gui,1:Default
-	Gui,1:TreeView,SysTreeView321
 	if(v.options.hide_file_extensions){
 		SplitPath,value,,,ext,name
 		value:=ext="ahk"?name:value
 	}
+	Default("SysTreeView321")
 	return TV_Add(value,parent,options)
 }
 FileCheck(file){
@@ -3160,6 +3055,8 @@ Gui(){
 	hwnd(1,hwnd),pos:=settings.ssn("//gui/position[@window='1']")
 	Gui,Margin,0,0
 	Gui,Add,TreeView,x0 y0 hwndpe c0xff00ff w0 h0 AltSubmit +0x400000
+	if(settings.ssn("//icons/pe/@show").text)
+		TVIcons()
 	Gui,Add,TreeView,x0 y0 hwndce c0xff00ff w0 h0 gcej AltSubmit +0x400000
 	OnMessage(0xA0,"ChangePointer"),OnMessage(6,"Activate"),OnMessage(5,"Resize"),OnMessage(0xA1,"MoveControl"),OnMessage(0x232,"exsm"),OnMessage(0x231,"esm")
 	v.opening:=1,v.startup:=1
@@ -3204,6 +3101,7 @@ Gui(){
 	}else
 		pos:=WinPos(),add:=v.options.top_find?v.qfh:0,top:=gui.under(gui.ssn("//gui"),"controls",{win:1}),ss:=gui.under(top,"control",{hwnd:tick:=a_tickcount,type:"Scintilla",parent:tick,l:0,t:add,r:pos.w,b:pos.h}),ctrl:=NewCtrl(ss),lf:=settings.ssn("//lastfile/@file").text,lf:=lf?lf:"",OpenAll.push({sc:s.ctrl[ssn(ctrl,"@hwnd").text],file:lf,last:ea.last})
 	pos:=!IsObject(pos)?pos:"w500 h500"
+	
 	Gui,1:Show,%pos% %max%,AHK Studio
 	while,oo:=open.item[A_Index-1]{
 		if(!FileExist(oo.text)){
@@ -4066,7 +3964,6 @@ New_Segment(new:="",text:="",adjusted:=""){
 New(filename:="",text:=""){
 	ts:=settings.ssn("//template").text,file:=FileOpen("c:\windows\shellnew\template.ahk",0),td:=file.Read(file.length),file.close(),template:=ts?ts:td
 	if(v.options.New_File_Dialog&&!filename){
-		m("New File")
 		FileSelectFile,filename,S16,,Enter a filename for a new project,*.ahk
 		if(!filename)
 			return
@@ -4725,8 +4622,7 @@ Open(filelist="",show="",Redraw:=1){
 	/*
 		top:=files.add("main",{file:filename},,1),next:=files.under(top,"file",{file:filename,tv:feadd(fn,0,"icon2 First sort"),github:fn,time:time,dir:dir,nne:nne})
 	*/
-	;Extract([filename],next,filename,1)
-	Extract(filename),ff:=files.sn("//file")
+	Extract(filename),FEUpdate(filename)
 	if(!settings.ssn("//open/file[text()='" filename "']"))
 		settings.add("open/file",,filename,1)
 	Gui,1:Default
@@ -4825,7 +4721,7 @@ Options(x:=0){
 			Resize("rebar"),RefreshThemes(),DllCall("RedrawWindow",int,hwnd(1),int,0,int,0,uint,0x1)
 		}
 		if(x~="i)Disable_Folders_In_Project_Explorer|Full_Tree")
-			Refresh_Project_Explorer()
+			FEUpdate(0,1)
 	}else
 		onoff:=settings.ssn("//options/@" x).text?0:1,att:=[],att[x]:=onoff,v.options[x]:=onoff,settings.add("options",att),ToggleMenu(x)
 }
@@ -5937,14 +5833,15 @@ Create_Segment_From_Selection(){
 		return
 	if(FileExist(newsegment))
 		return m("Segment name already exists. Please choose another")
-	text:=sc.getseltext(),pos:=posinfo()
+	text:=sc.GetSelText(),pos:=posinfo()
 	if(v.options.Includes_In_Place=1)
 		sc.2170(0,"#Include " relative:=RelativePath(current(3).file,newsegment))
-	else
+	else{
 		Relative:=RegExReplace(RelativePath(current(2).file,newsegment),"i)^lib\\([^\\]+)\.ahk$","<$1>"),maintext:=Update({get:current(2).file}),Update({file:current(2).file,text:maintext "`n#Include " Relative})
-	if(current(3).file=current(2).file)
-		start:=sc.2008(),sc.2181(0,maintext "`n#Include " Relative),sc.2160(start,start),CenterSel()
-	sc.2645(pos.start,pos.end-pos.start)
+		if(current(3).file=current(2).file)
+			start:=sc.2008(),sc.2181(0,maintext "`n#Include " Relative),sc.2160(start,start),CenterSel()
+	}
+	;sc.2645(pos.start,pos.end-pos.start)
 	file:=FileOpen(newsegment,1,"UTF-8"),file.seek(0),file.write(text),file.length(file.position),file.Close()
 	update({file:newsegment,text:text})
 	Refresh_Current_Project()
@@ -6603,7 +6500,10 @@ tv(tv*){
 	if(IsObject(tv.1))
 		sel:=tv.1.1
 	if(sel){
-		GetPos(),sc:=csc(),node:=files.ssn("//*[@tv='" sel "']"),ea:=xml.ea(node),sc.Enable()
+		GetPos(),sc:=csc(),node:=files.ssn("//*[@tv='" sel "']"),ea:=xml.ea(node)
+		if(node.NodeName="folder")
+			return
+		sc.Enable()
 		if(sc.sc=v.tnsc.sc)
 			return
 		if(ea.sc)
@@ -6677,7 +6577,7 @@ TVIcons(x:=""){
 		ea:=settings.ea("//icons/pe"),il:=IL_Create(3,1,0),IL_Add(il,ea.folderfile?ea.folderfile:"shell32.dll",ea.folder?ea.folder:4),IL_Add(il,ea.filefile?ea.filefile:"shell32.dll",ea.file?ea.file:2)
 	else
 		IL_Destroy(il)
-	tv_setimagelist(il)
+	TV_SetImageList(il)
 }
 TVState(x:=0){
 	if(x)
@@ -6764,7 +6664,7 @@ Update(info){
 		if(update[item]=sc.getuni())
 			return
 		if(updated[item]=""){
-			TV_Modify(ea.tv,"","*" (v.options.Hide_File_Extensions?ea.nne:ea.filename)),updated[item]:=1,WinSetTitle(1,ea)
+			Default("SysTreeView321"),TV_Modify(ea.tv,"","*" (v.options.Hide_File_Extensions?ea.nne:ea.filename)),updated[item]:=1,WinSetTitle(1,ea)
 		}if(v.options.disable_line_status!=1){
 			pos:=posinfo(),line:=sc.2166(pos.start),end:=sc.2166(pos.end)
 			if(line!=end){
@@ -6904,6 +6804,102 @@ Words_In_Document(){
 	v.words[sc.2357]:=Trim(list)
 	sc.2100(StrLen(word),Trim(list))
 }
+FEUpdate(file:="",Redraw:=0){
+	files.transform()
+	if(!maincexml:=cexml.find("//files/main/@file",file))
+		maincexml:=cexml.Add("files/main",{file:file},"",1)
+	GuiControl,1:-Redraw,% v.pe
+	if(Redraw){
+		Default("SysTreeView321"),TV_Delete(),list:=files.sn("//main/file")
+	}else{
+		list:=files.find("//file/@file",file,1)
+	}
+	if(v.options.Disable_Folders_In_Project_Explorer||v.options.Full_Tree){
+		if((all:=files.sn("//folder/descendant::file")).length){
+			while,aa:=all.item[A_Index-1],ea:=xml.ea(aa)
+				files.find("//main/file/@file",ea.inside).AppendChild(aa)
+			folders:=files.sn("//folder")
+			while,ff:=folders.item[A_Index-1]
+				ff.ParentNode.RemoveChild(ff)
+	}}
+	if(Redraw){
+		all:=files.sn("//*[@tv]")
+		while,aa:=all.item[A_Index-1]
+			aa.RemoveAttribute("tv")
+	}if(!v.options.Disable_Folders_In_Project_Explorer)
+		while,ll:=list.item[A_Index-1],ea:=xml.ea(ll){
+			root:=ll,file:=ea.file
+			all:=sn(ll,"descendant-or-self::file")
+			while,aa:=all.item[A_Index-1],ea:=xml.ea(aa){
+				Relative:=StrSplit(rel:=RelativePath(file,ea.file),"\")
+				if(Relative.2&&!v.options.Disable_Folders_In_Project_Explorer){
+					if(v.options.Full_Tree){
+						build:="",last:=root
+						if(!last:=files.find(root,"descendant::folder[@build='" SubStr(rel,1,InStr(rel,"\",0,0,1)) "']"))
+							for a,b in Relative{
+								if(a=Relative.MaxIndex())
+									Continue
+								build.=b "\"
+								if(!check:=files.find(last,"descendant::folder[@build='" build "']"))
+									last:=files.under(last,"folder",{name:b,build:build})
+								else
+									last:=check
+							}
+						last.AppendChild(aa)
+					}else{
+						folder:=Relative[Relative.MaxIndex()-1]
+						if(!under:=files.find(root,"folder/@name",folder))
+							under:=files.under(root,"folder",{name:folder})
+						under.AppendChild(aa)
+					}
+				}
+			}
+		}
+	while,ll:=list.item[A_Index-1],ea:=xml.ea(ll){
+		all:=sn(ll,"descendant-or-self::*")
+		while,aa:=all.item[A_Index-1],ea:=xml.ea(aa){
+			if(!ea.tv)
+				aa.SetAttribute("tv",FEAdd(aa.NodeName="folder"?ea.name:v.options.hide_file_extensions?ea.nne:ea.filename,ssn(aa.ParentNode,"@tv").text,"Icon" (aa.nodename="folder"?1:2) " Sort"))
+			if(!files.find(maincexml,"descendant::file/@file",ea.file))
+				cexml.under(maincexml,"file",{type:"File",parent:ssn(aa.ParentNode,"@file").text,file:ea.file,name:ea.filename,folder:ea.dir,order:"name,type,folder"})
+		}
+	}
+	GuiControl,1:+Redraw,% v.pe
+	if(Redraw)
+		Default("SysTreeView321"),TV_Modify(files.ssn("//*[@sc='" csc().2357 "']/@tv").text,"Select Vis Focus")
+}
+
+/*
+	if(spfile){
+		SplitPath,spfile,fnme,folder
+		SplitPath,folder,last
+		last:=last?last:"lib",next:=top
+		if(folder!=rootfolder&&v.options.Disable_Folders_In_Project_Explorer!=1){
+			if(v.options.Full_Tree){
+				Relative:=StrSplit(RelativePath(rootfile,spfile),"\")
+				for a,b in Relative{
+					if(a=Relative.MaxIndex())
+						Continue
+					else if(!foldernode:=ssn(next,"folder[@name='" b "']"))
+						next:=files.under(next,"folder",{name:b,tv:FEAdd(b,ssn(next,"@tv").text,"Icon1 First Sort")})
+					else
+						next:=foldernode
+				}
+			}else{
+				if(!ssn(top,"folder[@name='" last "']"))
+					slash:=v.options.Remove_Directory_Slash?"":"\",next:=files.under(top,"folder",{name:last,tv:FEAdd(slash last,ssn(top,"@tv").text,"Icon1 First Sort")})
+				else
+					next:=ssn(top,"folder[@name='" last "']")
+			}
+		}
+		if(count>1)
+			files.under(tvxml:=ssn(top,"descendant::file[@file='" filename "']"),"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(tvxml,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme,dir:fdir,nne:nne})
+		else
+			files.under(next,"file",{time:time,file:spfile,include:Trim(found.0,"`n"),tv:FEAdd(fnme,ssn(next,"@tv").text,"Icon2 First Sort"),github:(folder!=rootfolder)?last "\" fnme:fnme,dir:fdir,nne:nne})
+		cexml.under(main,"file",{type:"File",parent:rootfile,file:spfile,name:fnme,folder:folder,order:"name,type,folder"})
+		spfile:=""
+	}incfile:=ext:=""
+*/
 ;plugin
 Quick_Scintilla_Code_Lookup(){
 	sc:=csc(),word:=upper(sc.textrange(start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1))),Scintilla()

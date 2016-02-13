@@ -11,6 +11,9 @@ Added: Requested by Raspen
 Fixed:
 -Bug that was causing files you have not opened to show at the last line
 -With the option Includes In Place: It was not working properly
+-Project Explorer folders and icons
+Changed:
+-Drag/Drop multiple files will now open all of them (be careful)
 1.002.25
 Known Issues:
 -Sometimes changing a control to a Toolbar can lockup the program (trying to figure it out)
