@@ -5931,7 +5931,7 @@ Create_Segment_From_Selection(){
 		return m("Please select some text to create a new segment from")
 	text:=sc.getseltext(),RegExMatch(text,"^(\w+)",segment),filename:=ssn(current(1),"@file").text
 	SplitPath,filename,,dir
-	FileSelectFile,newsegment,,%dir%\%segment1%
+	FileSelectFile,newsegment,S,%dir%\%segment1%
 	newsegment:=InStr(newsegment,".ahk")?newsegment:newsegment ".ahk"
 	if(ErrorLevel)
 		return
