@@ -1,3 +1,7 @@
+1.002.27
+Added: Requested by peared
+-RCM: Open
+-Omni-Search: Re-Sizable
 1.002.26
 Fixed: Reported by huckleberry
 -Positions not saving properly
@@ -20,7 +24,7 @@ Known Issues:
 Changed: BE ADVISED!
 -Switching over to a layout based system.
 -Your items will be changed, but I think for the better.
--When asking to save unsaved untitled.ahk files it will no longer focus them and mess up your last file.  Also it "shouldn't" ask multiple times for the same file
+-When asking to save unsaved untitled.ahk files it will no longer focus them and mess up your last file.  Also it \"shouldn't\" ask multiple times for the same file
 -Some layouts were causing the Top/Left to lose its proper position
 -Can resize 3/4 adjacent windows as well as 2
 -Most of the flicker from moving the treeviews.  Scrollbar for some reason still flips out.
@@ -44,7 +48,7 @@ Added:
 -Tracked Notes: You can have notes for anything, but you can also have individual notes for Projects and Segments as well (Right click)
 --Auto-Switch orientation suggested by number1nub
 -New Right Click Menu items: New Control/Left/Right/Above/Below
--"Dirty" file indicator to the title
+-\"Dirty\" file indicator to the title
 -Switch Focus: Keyboard means of switching between edit windows
 Added: Suggested by number1nub
 -Disable Compile AHK: Disables the compile with Compile_AHK2 integration
@@ -65,7 +69,7 @@ Fixed: Reported by run1e
 Added: Requested by Treyin
 -Option to the Find window that disables the clipboard changing the text
 -Option to Copy Selected Text on Quick Find
--Clipboard History: Options/Clipboard History to enable it, then Display Clipboard History to have Omni show it ")" for prefix
+-Clipboard History: Options/Clipboard History to enable it, then Display Clipboard History to have Omni show it \")\" for prefix
 Added:
 -Basic OSD for Studio
 Fixed: Reported by Treyin
@@ -97,7 +101,7 @@ Fixed: Reported by Driedman
 -Adding a )>}]% with a selection was causing a 0 to be inserted
 1.002.18
 Fixed:
--Scintilla Information: Was downloading the wrong xml file. (Delete your lib\scintilla.xml file)
+-Scintilla Information: Was downloading the wrong xml file. (Delete your lib\\scintilla.xml file)
 1.002.17
 Fixed: Reported by gallaxhar
 -Selecting text from the bottom to the top and splitting the code into segments was causing an issue
@@ -110,7 +114,7 @@ Added: Suggested by gallaxar
 -Left Click outside of Omni-Search: Closes Omni-Search
 1.002.16
 Fixed: Reported by number1nub
--New menu items will now come up in a menu called "New Menu Items" and not create any menus that are not in your current setup
+-New menu items will now come up in a menu called \"New Menu Items\" and not create any menus that are not in your current setup
 -Hotkeys not launching all functions
 Added: Requested by noticz
 -Shift+Enter: at the end of a contracted fold line will create the new line below the folded text
@@ -153,8 +157,8 @@ Fixed:
 Added: Suggested by zotune
 -Move Selected Words Left/Right: Just like Up/Down but Left/Right :)
 1.002.9
-Fixed: Reported by Zotune
--Find: Was not centering the selected text properly
+Fixed: Reported by Driedman
+-RCM: Paste not working
 1.002.8
 Added:
 -Options/Check For Update On Startup
@@ -180,7 +184,7 @@ Fixed: Reported by number1nub
 o Split Code
 - Leaves the final closing brace of classes behind in the main script when splitting
 - Options/Includes In Place: No longer places the include commands at the bottom of the main script-- not sure if this was on purpose, but it sometimes causes workingdir issues, and is far less convenient in general having to find and move the include lines in a big file
-- Files split into a Lib folder no longer use the "#Include <FileName>" notation
+- Files split into a Lib folder no longer use the \"#Include <FileName>\" notation
 
 o Theme Editor
 - Export Theme isn't pointing to the Themes folder in Studio's root folder
@@ -196,7 +200,7 @@ RE-ADDED: Select_Next_Duplicate
 RE-ADDED: Remove_Current_Selection
 RE-ADDED: Previous_Found
 RE-ADDED: split_code
-CHANGED: Fixed ProjectFolder() to default to "Projects" instead of "Project" to match the new "Untitled" script location
+CHANGED: Fixed ProjectFolder() to default to \"Projects\" instead of \"Project\" to match the new \"Untitled\" script location
 CHANGED: Bookmark insert -- Changed back to require shift to be held to insert bookmark on margin click. Also added in Options/Shift BreakPoint
 1.002.5
 Fixed: Reported by number1nub
@@ -235,7 +239,7 @@ Added: Suggested by Run1e
 -Options/Virtual Scratch Pad: Does not create a file on your drive
 1.002.1
 Changed:
--All files now point to Github
+-All files not point to Github
 1.002.0
 Soup branch is now the main
 Replaced the master with the single file release
@@ -244,28 +248,7 @@ Uploading xml files and Scilexer.dll
 Fixed:
 -Save As: nasty little bug that was deleting things if you saved as to the same directory
 Changed: Suggested by Arahnoid
--Omni-Search: If you add a ? then choose one of the prefixes and hit enter
+-Omni-Search: If you add a ? then choose one of the prefixes and hit enter, it changes the prefix
+
 0.000.29
 Testing things out
-0.000.28
-Fixed:
--An error in publish that was causing code to be incomplete
-0.000.27
-Fixed: Reported by Arahnoid
--Menus on first run were not populating correctly
-0.000.25
-Re-Added:
--Run As Ansii/U32/U64
-Removed:
--Menu Editor
-Added:
--Edit/Settings: Replaces Menu Editor and Options Dialog
-Changed:
--Menu Editor: It is now Settings
-0.000.22
-Changed:
--Delete Project: Made it a bit safer...I had a bad thing happen
--Commands.xml: Getting ready to make things editable
--Context Sensitive fixes
-0.000.21
-
