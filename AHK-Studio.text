@@ -1,6 +1,7 @@
 1.002.28
 Fixed: Reported by peared
 -Some include file structures were causing an infinite loop and locked up Studio
+-Hopefully ansi encoded files
 1.002.27
 Added: Requested by peared
 -RCM: Open
