@@ -226,10 +226,8 @@
 				<menu name="Auto Set Area On Quick Find" clean="Auto_Set_Area_On_Quick_Find" option="1"></menu></menu>
 			<menu clean="Explorer_Menu_Options" name="Explorer Menu Options" tv="11459368" option="1">
 				<menu name="Full Tree" clean="Full_Tree" option="1"></menu>
-				<menu name="Hide Code Explorer" clean="Hide_Code_Explorer" option="1"></menu>
 				<menu name="Hide File Extensions" clean="Hide_File_Extensions" option="1"></menu>
-				<menu clean="Disable_Folders_In_Project_Explorer" name="Disable Folders In Project Explorer" option="1"></menu>
-				<menu name="Hide Project Explorer" clean="Hide_Project_Explorer" option="1"></menu></menu>
+				<menu clean="Disable_Folders_In_Project_Explorer" name="Disable Folders In Project Explorer" option="1"></menu></menu>
 			<menu clean="New_File_Dialog" name="New File Dialog"></menu>
 			<menu clean="Clipboard_History" name="Clipboard History"></menu>
 			<menu clean="Disable_Compile_AHK" name="Disable Compile AHK"></menu>
