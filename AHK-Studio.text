@@ -2,6 +2,9 @@
 Fixed: Reported by peared
 -Some include file structures were causing an infinite loop and locked up Studio
 -Hopefully ansi encoded files
+-No close for folders on Right Click
+Fixed:
+-RCM: Copy File/Folder path to the clipboard
 1.002.27
 Added: Requested by peared
 -RCM: Open
