@@ -5,6 +5,7 @@ Fixed: Reported by peared
 -No close for folders on Right Click
 Fixed:
 -RCM: Copy File/Folder path to the clipboard
+-Previous Scripts: Was not tracking them
 1.002.27
 Added: Requested by peared
 -RCM: Open
