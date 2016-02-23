@@ -1,4 +1,6 @@
 1.002.29
+Added: Requested by Peared
+-Disable Context Sensitive Help: It does get in the way sometimes
 Fixed:
 -Quick Find: Compensation for UTF character width when selecting found items
 Fixed: (Hopefully for the last time) Reported by Raspen
