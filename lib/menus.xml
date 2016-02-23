@@ -157,6 +157,7 @@
 		<menu name="O&amp;ptions" clean="Options" tv="11459584">
 			<menu name="&amp;Word Wrap" clean="Word_Wrap" option="1"></menu>
 			<menu name="Disable Word Wrap Indicators" clean="Disable_Word_Wrap_Indicators" option="1"></menu>
+			<menu name="Disable Context Sensitive Help" clean="Disable_Context_Sensitive_Help"></menu>
 			<menu name="&amp;Auto Indent" clean="Auto_Indent" tv="11459080">
 				<menu name="Auto Indent Comment Lines" clean="Auto_Indent_Comment_Lines"></menu>
 				<menu name="&amp;Full Auto" clean="Full_Auto"></menu></menu>
