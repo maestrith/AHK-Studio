@@ -1,3 +1,9 @@
+1.002.29
+Fixed:
+-Quick Find: Compensation for UTF character width when selecting found items
+Fixed: (Hopefully for the last time) Reported by Raspen
+-Encoding for Ansi files
+-Find: Extended characters (eg. ä)
 1.002.28
 Fixed: Reported by peared
 -Some include file structures were causing an infinite loop and locked up Studio
