@@ -6,6 +6,8 @@ Fixed:
 Fixed: (Hopefully for the last time) Reported by Raspen
 -Encoding for Ansi files
 -Find: Extended characters (eg. ä)
+Fixed: Reported by smsrkr
+-Plugin report was off the screen if you download a lot of them
 1.002.28
 Fixed: Reported by peared
 -Some include file structures were causing an infinite loop and locked up Studio
