@@ -3,6 +3,13 @@ Changed: Reported by BGM
 -Opening files with an #Include library was not working properly.
 Known Issue:
 -Anything encoded with UTF-16 just will not work.  I have put several days into encoding and I have it mostly working but for whatever reason I can not get Studio to work with UTF-16 files.  I am sorry.
+Fixed:
+-When opening and closing a project it will update the Tracked Notes to reflect the remaining open files
+-if you add a call to a method after hitting . after a class name, this, or instance it'll put in the () even if they are already there
+-When changing themes you do not need to restart the program
+Added:
+-When using the Display Classes/Functions hotkeys it will check the list for the one you set first and then do the opposite if nothing is found
+-Display Classes: After using this hotkey (or the failure state of the Display Functions hotkey) it will bring up a list of the methods in that class
 1.002.29
 Added: Requested by Peared
 -Disable Context Sensitive Help: It does get in the way sometimes
