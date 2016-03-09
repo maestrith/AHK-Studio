@@ -10,6 +10,8 @@ Fixed:
 Added:
 -When using the Display Classes/Functions hotkeys it will check the list for the one you set first and then do the opposite if nothing is found
 -Display Classes: After using this hotkey (or the failure state of the Display Functions hotkey) it will bring up a list of the methods in that class
+Fixed: Reported by huckelberry
+-Jump To First Available: Wasn't working for includes (still could use some work)
 1.002.29
 Added: Requested by Peared
 -Disable Context Sensitive Help: It does get in the way sometimes
