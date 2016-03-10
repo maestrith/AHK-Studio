@@ -1,6 +1,7 @@
 1.002.30
 Changed: Reported by BGM
 -Opening files with an #Include library was not working properly.
+-Icons from custom icl files sometimes having issues with the latest build of AHK
 Known Issue:
 -Anything encoded with UTF-16 just will not work.  I have put several days into encoding and I have it mostly working but for whatever reason I can not get Studio to work with UTF-16 files.  I am sorry.
 Fixed:
