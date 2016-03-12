@@ -11,6 +11,7 @@ Fixed:
 Added:
 -When using the Display Classes/Functions hotkeys it will check the list for the one you set first and then do the opposite if nothing is found
 -Display Classes: After using this hotkey (or the failure state of the Display Functions hotkey) it will bring up a list of the methods in that class
+-Jump To First Available: This will now look to see if the word is a Function or Method first and properly display the list for that instance if it is a Method
 Fixed: Reported by huckelberry
 -Jump To First Available: Wasn't working for includes (still could use some work)
 1.002.29
