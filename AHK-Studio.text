@@ -1,3 +1,6 @@
+1.002.31
+Added:
+-Auto Complete: Will have your list of Classes and Functions as well as the standard list of commands
 1.002.30
 Changed: Reported by BGM
 -Opening files with an #Include library was not working properly.
