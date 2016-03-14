@@ -38,6 +38,7 @@
 			<menu name="Replace &amp;Selected" clean="Replace_Selected"></menu>
 			<menu name="Ed&amp;it Replacements" clean="Edit_Replacements"></menu>
 			<menu name="Create S&amp;egment From Selection" hotkey="+^n" clean="Create_Segment_From_Selection"></menu>
+			<menu name="New Segment From Current Word" clean="New_Segment_From_Current_Word"></menu>
 			<menu name="Togg&amp;le Comment Line" hotkey="^J" clean="Toggle_Comment_Line"></menu>
 			<menu name="Fi&amp;x Indent" clean="Fix_Indent"></menu>
 			<menu clean="Spacing" name="Spacing" tv="11457208">
