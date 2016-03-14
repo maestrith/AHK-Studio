@@ -3,6 +3,7 @@ Added:
 -Auto Complete: Will have your list of Classes, Functions, and Instances as well as the standard list of commands
 Fixed:
 -Adding #Includes will not cause an Untitled file to be created
+-Omni-Search: Some options were not getting populated
 1.002.30
 Changed: Reported by BGM
 -Opening files with an #Include library was not working properly.
