@@ -4,6 +4,8 @@ Added:
 Fixed:
 -Adding #Includes will not cause an Untitled file to be created
 -Omni-Search: Some options were not getting populated
+Fixed: Reported by BGM
+-Some files were not indexing properly
 1.002.30
 Changed: Reported by BGM
 -Opening files with an #Include library was not working properly.
