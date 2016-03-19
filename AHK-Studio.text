@@ -8,6 +8,8 @@ Fixed: Reported by BGM
 -Some files were not indexing properly
 Fixed: Reported by Huckleberry
 -Right Click on Project Explorer: Open Folder
+Added: Requested by Huckleberry
+-Next/Previous Project: Will jump to the Next/Previous Project rather than the Next/Previous include
 1.002.30
 Changed: Reported by BGM
 -Opening files with an #Include library was not working properly.
