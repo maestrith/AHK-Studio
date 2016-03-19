@@ -260,7 +260,7 @@
 		<menu name="&amp;Navigate" clean="Navigate" tv="11459296">
 			<menu name="Next File" hotkey="+!DOWN" clean="Next_File"></menu>
 			<menu name="Previous File" hotkey="+!UP" clean="Previous_File"></menu>
-			<menu name="Previous Project" hotkey="^PgDn" clean="Previous_Project"></menu>
+			<menu name="Previous Project" hotkey="^PgUp" clean="Previous_Project"></menu>
 			<menu name="Next Project" hotkey="^PgDn" clean="Next_Project"></menu>
 			<menu clean="Back" name="Back" hotkey="!LEFT"></menu>
 			<menu clean="Forward" name="Forward" hotkey="!RIGHT"></menu>
