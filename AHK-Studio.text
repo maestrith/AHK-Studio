@@ -10,6 +10,8 @@ Fixed: Reported by Huckleberry
 -Right Click on Project Explorer: Open Folder
 Added: Requested by Huckleberry
 -Next/Previous Project: Will jump to the Next/Previous Project rather than the Next/Previous include
+Fixed: Reported by rogeriodec
+-When opening Studio for the first time it will not display any files
 1.002.30
 Changed: Reported by BGM
 -Opening files with an #Include library was not working properly.
