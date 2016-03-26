@@ -26,6 +26,8 @@
 			<menu name="Edit Hotkeys" clean="Edit_Hotkeys"></menu>
 			<menu name="Insert Current Time" clean="Insert_Current_Time"></menu>
 			<menu name="&amp;Undo" clean="Undo"></menu>
+			<menu name="Increment" clean="Increment" hotkey="^!Up"></menu>
+			<menu name="Decrement" clean="Decrement" hotkey="^!Down"></menu>
 			<menu name="Red&amp;o" clean="Redo"></menu>
 			<menu name="Cut" clean="Cut" hotkey="^X"></menu>
 			<menu name="Copy" clean="Copy" hotkey="^C"></menu>
