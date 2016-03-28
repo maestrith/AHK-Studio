@@ -1,4 +1,8 @@
 1.002.32
+NOTICE!!!!
+-A new version of SciLexer.dll will be downloaded.  Fixed some bugs with coloring and added in custom colors for:
+--Labels
+--Variables
 Added: Suggested by Huckleberry
 -Increment/Decrement: Increases/Decreases integers
 -Re-Wrote a lot of the backend for Context Sensitive Text
