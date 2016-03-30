@@ -1,6 +1,8 @@
 1.002.33
 Changed: Reported by Odylg
 -Moving the caret to the bottom of a page was causing it to jump an entire page
+Fixed: Reported by Tre4shunter
+-Files with literal paths were not being indexed
 1.002.32
 NOTICE!!!!
 -A new version of SciLexer.dll will be downloaded.  Fixed some bugs with coloring and added in custom colors for:
