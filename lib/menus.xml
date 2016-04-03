@@ -196,7 +196,6 @@
 				<menu name="Highlight Current Area" clean="Highlight_Current_Area" option="1"></menu>
 				<menu clean="Includes_In_Place" name="Includes In Place" option="1"></menu>
 				<menu name="Manual Continuation Line" clean="Manual_Continuation_Line" option="1"></menu>
-				<menu name="Remove Directory Slash" clean="Remove_Directory_Slash" option="1"></menu>
 				<menu clean="Shift_Breakpoint" name="Shift Breakpoint" option="1"></menu>
 				<menu name="Show Caret Line" clean="Show_Caret_Line" option="1"></menu>
 				<menu name="Show EOL" clean="Show_EOL" option="1"></menu>
@@ -212,7 +211,6 @@
 				<menu name="Warn Overwrite On Export" clean="Warn_Overwrite_On_Export" option="1"></menu>
 				<menu clean="Custom_Version" name="Custom Version"></menu>
 				<menu clean="Reset_Zoom" name="Reset Zoom"></menu>
-				<menu name="Force Utf8" clean="Force_Utf8" option="1"></menu>
 				<menu name="Small &amp;Icons" clean="Small_Icons" option="1"></menu>
 				<menu clean="Top_Find" name="Top Find" option="1"></menu>
 				<menu clean="Proxy_Settings" name="Proxy Settings" no="1"></menu>
