@@ -1,3 +1,6 @@
+1.002.34
+Fixed: Reported by tscv11
+-When saving an unsaved file to overwrite another file that already exists, it was messing up depending on the encoding. (you can understand why I missed this...)
 1.002.33
 Changed: Reported by Odylg
 -Moving the caret to the bottom of a page was causing it to jump an entire page
