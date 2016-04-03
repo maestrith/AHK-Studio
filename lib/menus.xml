@@ -174,7 +174,6 @@
 			<menu name="Tab Width" clean="Tab_Width"></menu>
 			<menu name="&amp;Theme" clean="Theme" option="" plugin="plugins\Theme.ahk"></menu>
 			<menu name="Margin Left" clean="Margin_Left"></menu>
-			<menu name="Widths" clean="Widths" hide="1"></menu>
 			<menu name="Q&amp;uick Find Settings" clean="Quick_Find_Settings" tv="11460592">
 				<menu name="&amp;Case Sensitive" clean="Case_Sensitive"></menu>
 				<menu name="Cle&amp;ar Selection" clean="Clear_Selection" hotkey="^F2"></menu>
