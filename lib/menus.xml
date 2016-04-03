@@ -188,6 +188,7 @@
 				<menu name="Edit Comment Insert" clean="Edit_Comment_Insert" option="1" no="1"></menu>
 				<menu clean="Custom_Case_Settings" name="Custom Case Settings" no="1"></menu>
 				<menu name="Auto Space After Comma" clean="Auto_Space_After_Comma" option="1"></menu>
+				<menu name="Auto Space Before Comma" clean="Auto_Space_Before_Comma" option="1"></menu>
 				<menu name="Autocomplete Enter Newline" clean="Autocomplete_Enter_Newline" option="1"></menu>
 				<menu name="Build Comment" clean="Build_Comment" option="1"></menu>
 				<menu name="Center Caret" clean="Center_Caret" option="1"></menu>
