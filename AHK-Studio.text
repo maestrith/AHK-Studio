@@ -4,6 +4,21 @@ Fixed: Reported by tscv11
 -Version information was not updating
 Added: Requested by tscv11
 -Auto Space Before Comma
+Fixed: Reported by Huckleberry
+-Typo in the window managment error message
+Fixed:
+-Virtual Scratch Pad
+-Insert Current Time: now places the cursor after the inserted %A_Now%
+-Options that get checked in menus are now toggling
+Added:
+-A lot of options that were missing in the Omni-Search
+-Option state in Omni-Search
+Changed:
+-Settings:
+--Once again a built in function (the plugin will be removed soon)
+--MUCH more stable
+--Icons can now be givin to Top Level menu items
+-Manage Toolbar: total re-write.  Highlighting which toolbar you are working on, and the available icons are in the window.
 1.002.33
 Changed: Reported by Odylg
 -Moving the caret to the bottom of a page was causing it to jump an entire page
