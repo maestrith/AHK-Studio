@@ -2,6 +2,8 @@
 Fixed:
 -Remove Segment: Was causing it to open an additional Untitled file if you only have 1 Project open
 -File Encoding:  I have had a lot of trouble with this but I think I have a better handle on it now.  Files encoded UTF-16 are now working and any file that is encoded in ANSI that you add UTF characters to will be automatically re-encoded into UTF-8
+Added: Requested by noticz
+-Help/Bug Reports: A quick link to the bug reporting area for AHK Studio (a Github account is not required but is helpful)
 1.002.34
 Fixed: Reported by tscv11
 -When saving an unsaved file to overwrite another file that already exists, it was messing up depending on the encoding. (you can understand why I missed this...)
