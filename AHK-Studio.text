@@ -1,3 +1,10 @@
+1.002.36
+NOTICE:
+-Will download Scilexer.dll
+Fixed:
+-% issues with coloring
+-Other coloring issues
+-Hex coloring
 1.002.35
 Fixed:
 -Remove Segment: Was causing it to open an additional Untitled file if you only have 1 Project open
