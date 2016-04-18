@@ -7,6 +7,10 @@ Fixed:
 -Hex coloring (Update your Theme plugin)
 Added:
 -Wrap Word In Quotes: Wrap the current word in ""
+-If you press escape to cancel Context Sensitive Help it will not pop up again until you move to another line
+-Toolbar Editor:
+--Highlight Color
+--Next Button
 1.002.35
 Fixed:
 -Remove Segment: Was causing it to open an additional Untitled file if you only have 1 Project open
