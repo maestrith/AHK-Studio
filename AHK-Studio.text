@@ -13,6 +13,8 @@ Added:
 --Next Button
 -Project Specific AutoComplete
 -Add Selected To Project Specific AutoComplete
+Added: Requested by Noticz (and I think a few others)
+-All of your %A_MyDocuments%\Autohotkey\Lib and %A_AhkPath%\lib files are now opened/indexed
 1.002.35
 Fixed:
 -Remove Segment: Was causing it to open an additional Untitled file if you only have 1 Project open
