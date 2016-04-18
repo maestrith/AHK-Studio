@@ -245,6 +245,7 @@
 			<menu clean="End_Document_At_Last_Line" name="End Document At Last Line"></menu>
 			<menu clean="RemoveSpacesFromAroundCommas" hotkey="" name="RemoveSpacesFromAroundCommas" option="rsfac" plugin="plugins\Add Spaces.ahk"></menu>
 			<menu clean="Move_Selected_Word_Right" hotkey="+!Right" name="Move Selected Word Right"></menu>
+			<menu clean="Wrap_Word_In_Quotes" name="Wrap Word In Quotes"></menu>
 			<menu clean="Move_Selected_Word_Left" hotkey="+!Left" name="Move Selected Word Left"></menu></menu>
 		<menu name="&amp;Commands" clean="Commands" tv="11460016">
 			<menu name="Toggle &amp;Multiple Line Comment" hotkey="+F1" clean="Toggle_Multiple_Line_Comment"></menu>
