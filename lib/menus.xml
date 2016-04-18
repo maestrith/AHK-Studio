@@ -89,6 +89,8 @@
 				<menu name="Search Label" clean="Search_Label" hotkey="+^;"></menu>
 				<menu name="Variable Search" clean="Variable_Search"></menu></menu></menu>
 		<menu name="&amp;Tools" clean="Tools" tv="11456992">
+			<menu name="Add Selected To Project Specific AutoComplete" clean="Add_Selected_To_Project_Specific_AutoComplete"></menu>
+			<menu name="Project Specific AutoComplete" clean="Project_Specific_AutoComplete"></menu>
 			<menu name="Co&amp;mpile" clean="Compile" hotkey="^F7"></menu>
 			<menu clean="Debug" name="Debug" tv="11458792">
 				<menu name="Debug Current Script" clean="Debug_Current_Script" hotkey="^D" option="" plugin="plugins\Debug Current Script.ahk"></menu>
