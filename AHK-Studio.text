@@ -1,6 +1,7 @@
 1.002.37
 Added:
 -Tracked Nodes: Fold, Selection, and Scroll positions
+-New Segment: When you create a new segment with the word Class as the first word it will ask if you want to create a new class rather than a new function
 1.002.36
 NOTICE:
 -Will download Scilexer.dll
