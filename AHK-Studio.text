@@ -4,6 +4,10 @@ Added:
 -New Segment: When you create a new segment with the word Class as the first word it will ask if you want to create a new class rather than a new function
 Added: Suggested by Run1e
 -Set Hotkey button on Edit Hotkeys
+Fixed: Reported by Run1e
+-Right Click on the Project Explorer blank area had extra separators.
+Changed: Requested by Run1e
+-No horizontal scrollbars if not necessary in the Scintilla Controls
 1.002.36
 NOTICE:
 -Will download Scilexer.dll
