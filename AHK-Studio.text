@@ -6,6 +6,7 @@ Added: Suggested by Run1e
 -Set Hotkey button on Edit Hotkeys
 Fixed: Reported by Run1e
 -Right Click on the Project Explorer blank area had extra separators.
+-Slightly off resizing
 Changed: Requested by Run1e
 -No horizontal scrollbars if not necessary in the Scintilla Controls
 1.002.36
