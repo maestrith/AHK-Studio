@@ -2,6 +2,8 @@
 Added:
 -Tracked Nodes: Fold, Selection, and Scroll positions
 -New Segment: When you create a new segment with the word Class as the first word it will ask if you want to create a new class rather than a new function
+Added: Suggested by Run1e
+-Set Hotkey button on Edit Hotkeys
 1.002.36
 NOTICE:
 -Will download Scilexer.dll
