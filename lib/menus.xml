@@ -155,7 +155,7 @@
 			<menu name="Post &amp;Multiple Segment Gist" clean="Post_Multiple_Segment_Gist" no="1"></menu>
 			<menu name="FT&amp;P Servers" clean="Ftp_Servers" option="" plugin="plugins\Ftp Servers.ahk"></menu>
 			<menu name="Auto Insert" clean="Auto_Insert" hide="1" option="" plugin="plugins\Auto Insert.ahk"></menu>
-			<menu clean="Settings" name="Settings" option="" plugin="plugins\Settings.ahk"></menu>
+			<menu clean="Settings" name="Settings" option=""></menu>
 			<menu clean="FTP_Servers" name="FT&amp;P Servers" option="" plugin="plugins\Ftp Servers.ahk"></menu>
 			<menu clean="Google_Search_Selected" name="Google Search Selected"></menu></menu>
 		<menu name="O&amp;ptions" clean="Options" tv="11459584">
