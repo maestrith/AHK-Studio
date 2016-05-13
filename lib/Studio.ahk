@@ -210,7 +210,7 @@ Class sciclass{
 		GuiControl,+Show,% this.sc
 	}
 }
-ea(node){
+EA(node){
 	ea:=[],all:=node.SelectNodes("@*")
 	while,aa:=all.item[A_Index-1]
 		ea[aa.NodeName]:=aa.text
@@ -240,7 +240,7 @@ Class XML{
 	CreateElement(doc,root){
 		return doc.AppendChild(this.xml.CreateElement(root)).parentnode
 	}
-	search(node,find,return=""){
+	Search(node,find,return=""){
 		found:=this.xml.SelectNodes(node "[contains(.,'" RegExReplace(find,"&","')][contains(.,'") "')]")
 		while,ff:=found.item(a_index-1)
 			if (ff.text=find){
@@ -249,11 +249,11 @@ Class XML{
 				return ff.SelectSingleNode("..")
 			}
 	}
-	lang(info){
+	Lang(info){
 		info:=info=""?"XPath":"XSLPattern"
 		this.xml.temp.setProperty("SelectionLanguage",info)
 	}
-	add(path,att:="",text:="",dup:=0,list:=""){
+	Add(path,att:="",text:="",dup:=0,list:=""){
 		p:="/",dup1:=this.ssn("//" path)?1:0,next:=this.ssn("//" path),last:=SubStr(path,InStr(path,"/",0,0)+1)
 		if !next.xml{
 			next:=this.ssn("//*")
@@ -270,7 +270,7 @@ Class XML{
 			next.text:=text
 		return next
 	}
-	find(info*){
+	Find(info*){
 		doc:=info.1.NodeName?info.1:this.xml
 		if(info.1.NodeName)
 			node:=info.2,find:=info.3
@@ -281,7 +281,7 @@ Class XML{
 		else
 			return doc.SelectSingleNode(node "[.='" find "']/..")
 	}
-	under(under,node:="",att:="",text:="",list:=""){
+	Under(under,node:="",att:="",text:="",list:=""){
 		if(node="")
 			node:=under.node,att:=under.att,list:=under.list,under:=under.under
 		new:=under.appendchild(this.xml.createelement(node))
@@ -293,10 +293,10 @@ Class XML{
 			new.text:=text
 		return new
 	}
-	ssn(path){
+	SSN(path){
 		return this.xml.SelectSingleNode(path)
 	}
-	sn(path){
+	SN(path){
 		return this.xml.SelectNodes(path)
 	}
 	__Get(x=""){
@@ -305,7 +305,7 @@ Class XML{
 	Get(path,Default){
 		return value:=this.ssn(path).text!=""?this.ssn(path).text:Default
 	}
-	transform(){
+	Transform(){
 		static
 		if !IsObject(xsl){
 			xsl:=ComObjCreate("MSXML2.DOMDocument")
@@ -314,7 +314,7 @@ Class XML{
 		}
 		this.xml.transformNodeToObject(xsl,this.xml)
 	}
-	save(x*){
+	Save(x*){
 		if x.1=1
 			this.Transform()
 		filename:=this.file?this.file:x.1.1,encoding:=ffff.pos=3?"UTF-8":ffff.pos=2?"UTF-16":"CP0",enc:=RegExMatch(this[],"[^\x00-\x7F]")?"utf-16":"utf-8"
@@ -324,7 +324,7 @@ Class XML{
 			return
 		file:=fileopen(filename,"rw",encoding),file.seek(0),file.write(this[]),file.length(file.position)
 	}
-	ea(path){
+	EA(path){
 		list:=[]
 		if nodes:=path.nodename
 			nodes:=path.SelectNodes("@*")
@@ -340,13 +340,13 @@ Class XML{
 		return list
 	}
 }
-ssn(node,path){
+SSN(node,path){
 	return node.SelectSingleNode(path)
 }
-sn(node,path){
+SN(node,path){
 	return node.SelectNodes(path)
 }
-att(node,info){
+ATT(node,info){
 	for a,b in info
 		node.setattribute(a,b)
 }
