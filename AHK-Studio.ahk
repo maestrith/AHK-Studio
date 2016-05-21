@@ -977,7 +977,7 @@ class s{
 			return sc
 		}
 		if(!init)
-			DllCall("LoadLibrary","str","scilexer.dll"),init:=1
+			DllCall("LoadLibrary","str",A_ScriptDir "\scilexer.dll"),init:=1
 		v.im:=info.main,v.ip:=info.pos,v.iw:=info.win,notify:=info.notify,win:=window?window:1,pos:=info.pos?info.pos:"x0 y0 w0 h0"
 		if(info.hide)
 			pos.=" Hide"
