@@ -102,7 +102,7 @@
 				<menu name="List Variables" clean="List_Variables"></menu>
 				<menu clean="Debug_Settings" name="Debug Settings"></menu></menu>
 			<menu name="&amp;Run" clean="Run" hotkey="!r"></menu>
-			<menu clean="Kill_Process" name="Kill Process" hotkey="^End"></menu>
+			<menu clean="Kill_Process" name="Kill Process"></menu>
 			<menu name="Run Se&amp;lected Text" clean="Run_Selected_Text" option="" plugin="plugins\Run Selected Text.ahk"></menu>
 			<menu clean="Run_Comment_Block" name="Run Comment Block" hotkey="!^V" option="" plugin="plugins\Run Comment Block.ahk"></menu>
 			<menu clean="Run_As" name="Run As" tv="11457424">
