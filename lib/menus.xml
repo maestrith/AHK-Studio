@@ -224,6 +224,8 @@
 				<menu name="Check For Edited Files On Focus" clean="Check_For_Edited_Files_On_Focus" option="1"></menu>
 				<menu clean="Check_For_Update_On_Startup" name="Check For Update On Startup" option="1"></menu>
 				<menu name="Add Margins To Windows" clean="Add_Margins_To_Windows" option="1"></menu>
+				<menu name="Hide Vertical Scrollbars" clean="Hide_Vertical_Scrollbars" option="1"></menu>
+				<menu name="Hide Horizontal Scrollbars" clean="Hide_Horizontal_Scrollbars" option="1"></menu>
 				<menu name="Auto Advance" clean="Auto_Advance" option="1"></menu>
 				<menu clean="Auto_Close_Find" name="Auto Close Find" option="1"></menu>
 				<menu name="Auto Set Area On Quick Find" clean="Auto_Set_Area_On_Quick_Find" option="1"></menu></menu>
