@@ -257,7 +257,6 @@
 			<menu name="Quick Scintilla Code Lookup" hotkey="+ESCAPE" clean="Quick_Scintilla_Code_Lookup"></menu>
 			<menu name="&amp;Scintilla Code Lookup" hotkey="F6" clean="Scintilla_Code_Lookup"></menu>
 			<menu name="Insert Code Vault Text" clean="Insert_Code_Vault_Text" hotkey="+^ESCAPE"></menu>
-			<menu clean="Add_button" name="Add Button" no="1"></menu>
 			<menu name="New Caret Above" clean="New_Caret_Above" hotkey="+^!Up"></menu>
 			<menu name="New Caret Below" clean="New_Caret_Below" hotkey="+^!Down"></menu>
 			<menu name="Clear Clipboard History" clean="Clear_Clipboard_History"></menu></menu>
