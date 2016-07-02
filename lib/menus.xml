@@ -293,6 +293,7 @@
 			<menu name="Chec&amp;k For Update" clean="Check_For_Update" hotkey="" option=""></menu>
 			<menu clean="Donate" name="Donate"></menu>
 			<menu clean="Report_Bugs" name="Report Bugs"></menu>
+			<menu clean="Display_Hotkeys" name="Display Hotkeys"></menu>
 			<menu name="Misc" clean="Misc" tv="11460232">
 				<menu clean="Compile_Ahk_Studio" name="Compile Ahk Studio"></menu>
 				<menu clean="Download_Ahk_Studio_Source" name="Download Ahk Studio Source"></menu>
