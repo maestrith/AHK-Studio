@@ -32,7 +32,6 @@
 			<menu name="Cut" clean="Cut" hotkey="^X"></menu>
 			<menu name="Copy" clean="Copy" hotkey="^C"></menu>
 			<menu name="Paste" clean="Paste" hotkey="^V"></menu>
-			<menu name="Compare" clean="Compare" no="1"></menu>
 			<menu name="Add Selected To Personal Variables" clean="Add_Selected_To_Personal_Variables" no="1"></menu>
 			<menu name="&amp;Duplicate Line" hotkey="F2" clean="Duplicate_Line"></menu>
 			<menu name="Delete Line" clean="Delete_Line" hotkey="+F2"></menu>
