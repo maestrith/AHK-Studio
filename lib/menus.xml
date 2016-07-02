@@ -18,7 +18,6 @@
 			<menu name="Remove Segmen&amp;t" clean="Remove_Segment"></menu>
 			<menu name="&amp;Upload" clean="Upload" option="" plugin="plugins\Upload.ahk"></menu>
 			<menu name="&amp;Publish" clean="Publish"></menu>
-			<menu name="Notes" clean="Notes" hotkey="^!n"></menu>
 			<menu name="Delete Project" clean="Delete_Project"></menu>
 			<menu name="Pre&amp;vious Scripts" clean="Previous_Scripts"></menu>
 			<menu name="E&amp;xit" clean="Exit" hotkey=""></menu></menu>
