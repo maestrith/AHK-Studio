@@ -220,7 +220,7 @@
 				<menu name="Enable Close On Save" clean="Enable_Close_On_Save" option="1"></menu>
 				<menu name="Full Backup All Files" clean="Full_Backup_All_Files" option="1"></menu>
 				<menu name="Check For Edited Files On Focus" clean="Check_For_Edited_Files_On_Focus" option="1"></menu>
-				<menu clean="Check_For_Update_On_Startup" name="Check For Update On Startup" option="1"></menu>
+				<menu clean="Auto_Check_For_Update_On_Startup" name="Auto Check For Update On Startup" option="1"></menu>
 				<menu name="Add Margins To Windows" clean="Add_Margins_To_Windows" option="1"></menu>
 				<menu name="Hide Vertical Scrollbars" clean="Hide_Vertical_Scrollbars" option="1"></menu>
 				<menu name="Hide Horizontal Scrollbars" clean="Hide_Horizontal_Scrollbars" option="1"></menu>
