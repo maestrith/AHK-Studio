@@ -208,6 +208,7 @@
 				<menu clean="Run_As_Admin" name="Run As Admin" option="1"></menu>
 				<menu name="Warn Overwrite On Export" clean="Warn_Overwrite_On_Export" option="1"></menu>
 				<menu clean="Custom_Version" name="Custom Version"></menu>
+				<menu clean="Hide_Tray_Icon" name="Hide Tray Icon"></menu>
 				<menu clean="Reset_Zoom" name="Reset Zoom"></menu>
 				<menu name="Small &amp;Icons" clean="Small_Icons" option="1"></menu>
 				<menu clean="Top_Find" name="Top Find" option="1"></menu>
