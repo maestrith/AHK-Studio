@@ -71,7 +71,8 @@
 				<menu clean="Jump_To_Function" name="Jump To Function"></menu>
 				<menu clean="Jump_To_Include" name="Jump To Include" hotkey="+^i"></menu>
 				<menu clean="Jump_To_Label" name="Jump To Label"></menu>
-				<menu clean="Jump_To_Method" name="Jump To Method"></menu></menu>
+				<menu clean="Jump_To_Method" name="Jump To Method"></menu>
+				<menu clean="Jump_To_Matching_Brace" name="Jump To Matching Brace"></menu></menu>
 			<menu clean="Omni-Search" name="Omni-Search" tv="11458000">
 				<menu clean="Add_Function_Call" name="Add Function Call" hotkey="^="></menu>
 				<menu clean="Bookmark_Search" name="Bookmark Search" hotkey="+^3"></menu>
