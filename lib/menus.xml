@@ -229,6 +229,7 @@
 				<menu name="Disable Auto Advance" clean="Disable_Auto_Advance" option="1"></menu>
 				<menu clean="Auto_Close_Find" name="Auto Close Find" option="1"></menu>
 				<menu clean="Omni_Search_Stats" name="Omni Search Stats" option="1"></menu>
+				<menu clean="Verbose_Debug_Window" name="Verbose Debug Window"></menu>
 				<menu name="Auto Set Area On Quick Find" clean="Auto_Set_Area_On_Quick_Find" option="1"></menu></menu>
 			<menu clean="Explorer_Menu_Options" name="Explorer Menu Options" tv="11459368" option="1">
 				<menu name="Full Tree" clean="Full_Tree" option="1"></menu>
