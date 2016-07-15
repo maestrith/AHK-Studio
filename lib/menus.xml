@@ -100,7 +100,7 @@
 				<menu clean="Step_Over" name="Step Over"></menu>
 				<menu name="List Variables" clean="List_Variables"></menu>
 				<menu clean="Debug_Settings" name="Debug Settings"></menu>
-				<menu clean="Focus_Studio_On_Debug_Breakpoint" name="Focus Studio On Debug Breakpoint"></menu></menu>
+				<menu clean="Disable_Focus_Studio_On_Debug_Breakpoint" name="Disable Focus Studio On Debug Breakpoint"></menu></menu>
 			<menu name="&amp;Run" clean="Run" hotkey="!r"></menu>
 			<menu clean="Kill_Process" name="Kill Process"></menu>
 			<menu name="Run Se&amp;lected Text" clean="Run_Selected_Text" option="" plugin="plugins\Run Selected Text.ahk"></menu>
