@@ -243,7 +243,8 @@
 			<menu clean="New_File_Dialog" name="New File Dialog"></menu>
 			<menu clean="Clipboard_History" name="Clipboard History"></menu>
 			<menu clean="Disable_Compile_AHK" name="Disable Compile AHK"></menu>
-			<menu clean="OSD" name="OSD"></menu></menu>
+			<menu clean="OSD" name="OSD"></menu>
+			<menu clean="Manage_Quick_Options" name="Manage Quick Options"></menu></menu>
 		<menu name="Fo&amp;rmat" clean="Format" tv="11459800">
 			<menu clean="Align_Selected_Text" hotkey="" name="Align Selected Text" option="" plugin="plugins\Align Selected Text.ahk"></menu>
 			<menu name="Clear Line Status" clean="Clear_Line_Status"></menu>
