@@ -180,7 +180,7 @@
 				<menu name="&amp;Case Sensitive" clean="Case_Sensitive"></menu>
 				<menu name="Cle&amp;ar Selection" clean="Clear_Selection" hotkey="^F2"></menu>
 				<menu name="Greed" clean="Greed" hotkey="!G"></menu>
-				<menu name="Multi-Line" clean="Multi-Line"></menu>
+				<menu name="Multi Line" clean="Multi_Line"></menu>
 				<menu name="&amp;Regex" clean="Regex" hotkey="^!r"></menu>
 				<menu name="Copy Selected Text on Quick Find" clean="Copy_Selected_Text_on_Quick_Find"></menu>
 				<menu name="&amp;Set Selection" clean="Set_Selection" hotkey="^F1"></menu></menu>
