@@ -165,7 +165,6 @@
 			<menu name="&amp;Auto Indent" clean="Auto_Indent" tv="11459080">
 				<menu name="Auto Indent Comment Lines" clean="Auto_Indent_Comment_Lines"></menu>
 				<menu name="&amp;Full Auto" clean="Full_Auto"></menu></menu>
-			<menu name="&amp;Menu Editor" func="flan" clean="Menu_Editor" no="1"></menu>
 			<menu name="Add Toolbar" clean="Add_Toolbar" no="1"></menu>
 			<menu name="Virtual Scratch Pad" clean="Virtual_Scratch_Pad" hotkey="" option="1"></menu>
 			<menu name="Virtual Space" clean="Virtual_Space" option="1"></menu>
