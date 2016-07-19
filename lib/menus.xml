@@ -287,7 +287,6 @@
 			<menu clean="Auto_Expand_Includes" name="Auto Expand Includes"></menu>
 			<menu clean="Display_Clipboard_History" name="Display Clipboard History"></menu>
 			<menu name="Display Functions" clean="Display_Functions" hotkey="!I"></menu>
-			<menu name="Show Functions" clean="Show_Functions" hotkey="!O" no="1"></menu>
 			<menu name="Sho&amp;w Scintilla Code In Line" hotkey="F4" clean="Show_Scintilla_Code_In_Line"></menu>
 			<menu name="Switch Focus" clean="Switch_Focus" hotkey="^SPACE"></menu>
 			<menu clean="Auto_Project_Explorer_Width" name="Auto Project Explorer Width"></menu></menu>
