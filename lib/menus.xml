@@ -165,7 +165,6 @@
 			<menu name="&amp;Auto Indent" clean="Auto_Indent" tv="11459080">
 				<menu name="Auto Indent Comment Lines" clean="Auto_Indent_Comment_Lines"></menu>
 				<menu name="&amp;Full Auto" clean="Full_Auto"></menu></menu>
-			<menu name="Add Toolbar" clean="Add_Toolbar" no="1"></menu>
 			<menu name="Virtual Scratch Pad" clean="Virtual_Scratch_Pad" hotkey="" option="1"></menu>
 			<menu name="Virtual Space" clean="Virtual_Space" option="1"></menu>
 			<menu name="Set &amp;As Default Editor" clean="Set_As_Default_Editor"></menu>
@@ -241,8 +240,7 @@
 			<menu clean="Clipboard_History" name="Clipboard History"></menu>
 			<menu clean="Disable_Compile_AHK" name="Disable Compile AHK"></menu>
 			<menu clean="OSD" name="OSD"></menu>
-			<menu clean="Quick_Options" name="Quick Options"></menu>
-			<menu clean="Manage_Quick_Options" name="Manage Quick Options"></menu></menu>
+			<menu clean="Quick_Options" name="Quick Options"></menu></menu>
 		<menu name="Fo&amp;rmat" clean="Format" tv="11459800">
 			<menu clean="Align_Selected_Text" hotkey="" name="Align Selected Text" option="" plugin="plugins\Align Selected Text.ahk"></menu>
 			<menu name="Clear Line Status" clean="Clear_Line_Status"></menu>
