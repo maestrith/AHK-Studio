@@ -201,7 +201,7 @@
 				<menu name="Show EOL" clean="Show_EOL" option="1"></menu>
 				<menu name="Show WhiteSpace" clean="Show_WhiteSpace" option="1"></menu>
 				<menu name="Auto Complete" clean="Auto_Complete" option="1"></menu>
-				<menu name="Disable Auto Complete In Quotes" clean="Disable_Auto_Complete_In_Quotes" option="1"></menu>
+				<menu name="Auto Complete In Quotes" clean="Auto_Complete_In_Quotes" option="1"></menu>
 				<menu name="Disable Auto Complete While Tips Are Visible" clean="Disable_Auto_Complete_While_Tips_Are_Visible" option="1"></menu>
 				<menu name="Disable Auto Delete" clean="Disable_Auto_Delete" option="1"></menu>
 				<menu clean="Disable_Auto_Indent_For_Non_Ahk_Files" name="Disable Auto Indent For Non Ahk Files" option="1"></menu>
