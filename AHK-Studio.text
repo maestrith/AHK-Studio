@@ -13,6 +13,8 @@ Changed:
 -When running untitled files and it encounters a runtime error it will create a debug window to show what the error is.
 Merged:
 -This is now the master
+Fixed: Reported by Run1e
+-By default only certain types of files can be opened
 1.002.38
 Fixed: Reported by lexikos
 -Resizing handles were showing E/W when they should have been showing N/S
