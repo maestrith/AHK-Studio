@@ -100,6 +100,7 @@
 				<menu clean="Step_Out" name="Step Out"></menu>
 				<menu clean="Step_Over" name="Step Over"></menu>
 				<menu name="List Variables" clean="List_Variables"></menu>
+				<menu name="Auto Variable Browser" clean="Auto_Variable_Browser"></menu>
 				<menu clean="Focus_Studio_On_Debug_Breakpoint" name="Focus Studio On Debug Breakpoint"></menu></menu>
 			<menu name="&amp;Run" clean="Run" hotkey="!r"></menu>
 			<menu clean="Kill_Process" name="Kill Process"></menu>
