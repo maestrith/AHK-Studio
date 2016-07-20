@@ -1,3 +1,91 @@
+1.002.39
+Re-Added:
+-Test Plugin (Alt+T)
+-Move Selected Word Left/Right
+-Tab To Previous/Next Comma
+-Compile AHK Studio
+Added:
+-Buttons to the Variable Browser
+-Auto Variable Browser
+-Smart Delete: Option to help you stop accidently deleting (){}<>[]""''
+-Hovering over the text of a variable in a script that is being debugged will display its current contents if it has any
+Changed:
+-When running untitled files and it encounters a runtime error it will create a debug window to show what the error is.
+Merged:
+-This is now the master
+1.002.38
+Fixed: Reported by lexikos
+-Resizing handles were showing E/W when they should have been showing N/S
+-Moving any scrollbar was causing the resize handles to stop working
+-Overlap of some controls on resize
+-DPIScale was off for all of the child windows
+-Error on the Edit Toolbar window dealing with colors
+-When you choose File/Save on an untitled document it would ask you if you want to save it even if you did not edit the file
+-Closing a file when there are only 2 open was causing the main edit window to keep the text of the file that was closed
+-Saving a modified Untitled.ahk was causing a copy of the Untitled.ahk file to be saved in the main Studio directory
+-When opening a file and there is only an Untitled file it will close the untitled file
+-When you cancel a save of an Untitled item on Exit, it will not exit the program
+-When saving an Untitled file, it "should" now close the Untitled item
+-Toolbars
+--Re-Wrote the code and about 70% working.  Some small issues left
+Added: Requested by evilC
+-Visual difference when debugging
+--The caret will change to a width of 3 and will turn red while debugging is active and return to your chosen color/width afterward
+-Select Current Debug Line
+-Global Debug Hotkeys
+-Disable Focus Studio On Debug Breakpoint
+Fixed: Based off of some example code by evilC
+-Classes that extend other classes were not handled correctly
+-Using the Omni Search window while anything other than the main Scintilla control was active caused it to be destroyed
+Changed:
+-Renamed most items that were "Disable X" to reduce confusion
+-Debugging: A lot more useful
+--Debugging is now even better than the last time Thanks evilC for the QA help
+---If you have an exe in the main AHK-Studio folder it will debug using that version rather than the one that is installed
+-File Scanning:
+--It is done when you first open a script like normal but now as you edit lines it will scan those lines
+-Code Explorer: Along with the new file scanning system it will also update in near real time (as you change lines or a few other things)
+--Nested Classes
+-Class_Name. <----typing after the . will bring up the list of methods even after you hit escape
+-Words In Document: It is now automatic but it can still be refreshed using the menu option
+-Omni-Search: Searching by initials now works with capitolized letters in the same word (wid would find WordsInDocument)
+-Backspace and Delete: When you do not have a selection and you delete items in/arround () it does something fun
+Fixed:
+-Word Wrap wasn't staying on
+-Context Sensitive Help
+-Command Help: If it goes to a "This page can’t be displayed", it will default to the main page
+-Select Next Duplicate and Select All when an item is selected that has duplicates
+-Removed the ' restriction for files/folders
+-when typing a word like "it's" it will only add one ' but when your caret is "it|'s" and you type a ' it will just move to the other side of the '
+-Large Single File Scripts:
+--Open/Close/Omni/Saving/Exiting/Everything in general has sped up a lot
+-Main GUI: The TreeView and Scintilla control in Tracked Notes can be resized
+--Total re-write of the backend for future control types
+-Fuzzy Search: When searching for files using the . at the end of the filename will give it a higher score
+-Remove Control no longer needs matching borders
+-Jump To First Available: Added #Include <file> and cleaned up anything that wasn't working (for the most part)
+-Just changing the case of a word in the text was not updating the file correctly
+Fixed: Reported by Henrik Jensen
+-SciLexer.dll not working properly without a direct link to the dll
+Fixed: Reported by Run1e
+-Dragging the window to the top of the screen to resize was really messing with the positions of the controls
+-Made an acceptable file extension list so you can not accidently open a media file
+--Manage File Types
+Fixed: Reported by Huckleberry
+-Alt+F4 closing Studio was not saving position data
+Added: Suggested by Joe Glines
+-Right Click Menus for all controls are now editable
+Improved:
+-Delete Line will now remember what column your caret is in
+-Most instances (let me know if it doesn't and what causes it) of the edited indicators in the line "should" be a lot better.
+-When deleting text sometimes it would delete a )}>'" (in some cases it still will happen)
+Added: Suggested by Joe Glines
+-Automatically display duplicate words
+-Right Click Code: Kill Current Script
+-Fixed: Include files in the A_AhkPath\lib
+-Hide Tray Icon
+Added: Suggested by evilC
+-Jump To Matching Brace
 1.002.37
 Added:
 -Tracked Nodes: Fold, Selection, and Scroll positions
@@ -17,7 +105,7 @@ Fixed:
 -Other coloring issues
 -Hex coloring (Update your Theme plugin)
 Added:
--Wrap Word In Quotes: Wrap the current word in ""
+-Wrap Word In Quotes: Wrap the current word in \"\"
 -If you press escape to cancel Context Sensitive Help it will not pop up again until you move to another line
 -Toolbar Editor:
 --Highlight Color
@@ -25,7 +113,7 @@ Added:
 -Project Specific AutoComplete
 -Add Selected To Project Specific AutoComplete
 Added: Requested by Noticz (and I think a few others)
--All of your %A_MyDocuments%\Autohotkey\Lib and %A_AhkPath%\lib files are now opened/indexed
+-All of your %A_MyDocuments%\\Autohotkey\\Lib and %A_AhkPath%\\lib files are now opened/indexed
 1.002.35
 Fixed:
 -Remove Segment: Was causing it to open an additional Untitled file if you only have 1 Project open
@@ -278,96 +366,3 @@ Added: Suggested by zotune
 1.002.9
 Fixed: Reported by Driedman
 -RCM: Paste not working
-1.002.8
-Added:
--Options/Check For Update On Startup
-Fixed: Reported by noticz
--Some Includes with %A_ScriptDir% were not parsing correctly
--Folding remembering from load to load
-Added: Requested by noticz
--Using Compile_AHK.exe if it is available
-1.002.7
-Fixed: Reported by zotune and number1nub
--Menus were getting resetting on updates :(
-Added: Requested by number1nub
--Quick Find: Can have custom forground/background colors for it being on top or bottom
--Double Click Tray Icon: Shows Studio
--Quick Find: Edit background color
-Fixed: Programmed by number1nub
--Black on white wasn't working
-Changed: Suggested by number1nub
--Context Menu: Changed ifs to else ifs
--Rename Current Segment: was broken
-1.002.6
-Fixed: Reported by number1nub
-o Split Code
-- Leaves the final closing brace of classes behind in the main script when splitting
-- Options/Includes In Place: No longer places the include commands at the bottom of the main script-- not sure if this was on purpose, but it sometimes causes workingdir issues, and is far less convenient in general having to find and move the include lines in a big file
-- Files split into a Lib folder no longer use the \"#Include <FileName>\" notation
-
-o Theme Editor
-- Export Theme isn't pointing to the Themes folder in Studio's root folder
-- Personal Variables are no longer shown on the GUI to be customized
-
-o Find Replace
-- Replace command doesn't work; nothing is changed unless the Replace All command is used
-
-RE-ADDED: Words_In_Document
-RE-ADDED: Highlight_to_Matching_Brace
-RE-ADDED: Select_Current_Word
-RE-ADDED: Select_Next_Duplicate
-RE-ADDED: Remove_Current_Selection
-RE-ADDED: Previous_Found
-RE-ADDED: split_code
-CHANGED: Fixed ProjectFolder() to default to \"Projects\" instead of \"Project\" to match the new \"Untitled\" script location
-CHANGED: Bookmark insert -- Changed back to require shift to be held to insert bookmark on margin click. Also added in Options/Shift BreakPoint
-1.002.5
-Fixed: Reported by number1nub
--Find Replace: Replace was not replacing a single found item
-Fixed: Reported by KaoSDlanor
--Code Explorer: Clicking again on an item that is already selected was not re-selecting it in the code
--Code Explorer: Quickly clicking on items was causing the first item to show but not the second
--Alt+I (Display Functions): When no functions were available it changed everything to 0()
-Added: Requested by Driedman
--Right Click Menu: Menus for SciLexer controls
-1.002.4
-Added:
--Edit/Find: If the found text is behind the window it will change the transparency of the window so you can see the text behind it.
-Fixed: Reported by Run1e
--Words within () before a , were not properly highlighting
--Omni-Search: Spaces cause issues.
-1.002.3
-NOTICE!
--This will download a new copy of SciLexer.dll
-
-Fixed: Reported by huckleberry
--Escaped commas `, were causing the context sensitive help to advance
-Changed:
--Commas inside { }, [ ], and () have a different color code.  This can be changed in the Themes plugin.
-Fixed: Reported by zotune
--Jumping of selection and positions on focus
--Find is a lot more stable and accurate.
-1.002.2
-Changed:
--Added the margin width adjuster to +Enter
--Fuzzy Search: Inside Omni-Search
--Display Function: If there is already () after the current word it will not add ()
-Fixed: Reported by Run1e
--If you have an #Include for the file in that file it caused Studio to crash
-Added: Suggested by Run1e
--Options/Virtual Scratch Pad: Does not create a file on your drive
-1.002.1
-Changed:
--All files not point to Github
-1.002.0
-Soup branch is now the main
-Replaced the master with the single file release
-Uploading xml files and Scilexer.dll
-0.000.15
-Fixed:
--Save As: nasty little bug that was deleting things if you saved as to the same directory
-Changed: Suggested by Arahnoid
--Omni-Search: If you add a ? then choose one of the prefixes and hit enter, it changes the prefix
-
-0.000.29
-Testing things out
