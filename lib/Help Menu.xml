@@ -5,20 +5,20 @@
 			<menu name="&amp;New" hotkey="^N" clean="New" tv="9814424">Creates a new project.</menu>
 			<menu name="&amp;Open" clean="Open" tv="9815000">Opens an AHK file or Project for editing.</menu>
 			<menu name="Open Fol&amp;der" clean="Open_Folder" hotkey="^!D" tv="9814064">Opens an explorer window to the folder where the current Project is stored.</menu>
-			<menu clean="Close" name="&amp;Close" tv="9813704">Closes the current Project. This will also close the parent project if you are currently in a Segment.</menu>
+			<menu clean="Close" name="&amp;Close" tv="9813704">Closes the current Project. This will also close the parent project if you are currently in a Include.</menu>
 			<menu name="Close All" clean="Close_All" hotkey="" tv="9814208">Closes all of the open projects.</menu>
-			<menu name="&amp;Save" clean="Save" filename="Shell32.dll" icon="9" tv="9814784">Saves all unsaved files. (All Projects and Segments are saved as well as backups of previous versions which can be accessed by using the Edit/Restore feature or by navigating to the directory where the Project is stored and then into the Backup directory)</menu>
+			<menu name="&amp;Save" clean="Save" filename="Shell32.dll" icon="9" tv="9814784">Saves all unsaved files. (All Projects and Includes are saved as well as backups of previous versions which can be accessed by using the Edit/Restore feature or by navigating to the directory where the Project is stored and then into the Backup directory)</menu>
 			<menu clean="Save_As" name="Save &amp;As" tv="9814640">Save the project As a new project. This will leave the old project in tact so you need to delete the old one.</menu>
-			<menu name="Export" clean="Export" filename="Shell32.dll" icon="10" tv="9814712">Compiles all of the Segments of a Project and saves it to a file. (Does not make an EXE, Use Compile for that)</menu>
+			<menu name="Export" clean="Export" filename="Shell32.dll" icon="10" tv="9814712">Compiles all of the Includes of a Project and saves it to a file. (Does not make an EXE, Use Compile for that)</menu>
 			<separator clean="&lt;Separator&gt;" option="1"></separator>
 			<menu name="New Scintilla Window" clean="New_Scintilla_Window" tv="9814856">Creates a new Scintilla edit control.</menu>
 			<menu name="Remove Scintilla Window" clean="Remove_Scintilla_Window" tv="9815072">Removes the current Scintilla control, You must have more than 1 or this will not work.</menu>
-			<menu name="New Se&amp;gment" clean="New_Segment" tv="9815360">Creates a new Segment for the current Project (adds an include)</menu>
-			<menu name="Rename Current Segment" clean="Rename_Current_Segment" tv="9815144">Rename the current Segment.</menu>
-			<menu name="Remove Segmen&amp;t" clean="Remove_Segment" tv="9815216">Removes a segment (include) from the project.</menu>
+			<menu name="New Include" clean="New_Include" tv="9815360">Creates a new Include for the current Project (adds an include)</menu>
+			<menu name="Rename Current Include" clean="Rename_Current_Include" tv="9815144">Rename the current Include.</menu>
+			<menu name="Remove Include" clean="Remove_Include" tv="9815216">Removes a Include (include) from the project.</menu>
 			<menu name="&amp;Upload" clean="Upload" option="" plugin="plugins\Upload.ahk" tv="9816872">Provides a basic FTP setup to upload your Projects.</menu>
-			<menu name="&amp;Publish" clean="Publish" tv="9817448">Saves all of the Segments (if you have any) into one script and places it into your clipboard so you can paste it on whatever forum, file, or website you like.</menu>
-			<menu name="Delete Project" clean="Delete_Project" tv="9816368">This will delete the current project, along with all Segments and Backups associated with the Project.</menu>
+			<menu name="&amp;Publish" clean="Publish" tv="9817448">Saves all of the Includes (if you have any) into one script and places it into your clipboard so you can paste it on whatever forum, file, or website you like.</menu>
+			<menu name="Delete Project" clean="Delete_Project" tv="9816368">This will delete the current project, along with all Includes and Backups associated with the Project.</menu>
 			<menu name="Pre&amp;vious Scripts" clean="Previous_Scripts" tv="9816224">Opens a gui that shows the scripts you have closed.</menu>
 			<menu name="E&amp;xit" clean="Exit" hotkey="" tv="9817376">Exits the program. This saves all of your edited files and saves the old version to %A_ScriptDir%\Backup.</menu>
 			<menu clean="Manage_File_Types" name="Manage File Types" tv="9816440">You can add different file types that AHK Studio can open.  This is done to keep you from accidentally opening media files that could crash Studio.</menu></menu>
@@ -31,15 +31,15 @@
 			<menu name="Red&amp;o" clean="Redo" tv="9817304">Redoes steps that you have Undone. (Same as Ctrl+Y)</menu>
 			<menu name="Cut" clean="Cut" hotkey="^X" tv="9816152">Cuts the currently selected text to the clipboard. (Ctrl+X)</menu>
 			<menu name="Copy" clean="Copy" hotkey="^C" tv="9816656">Copies the currently selected text to the clipboard. (Ctrl+C)</menu>
-			<menu name="Paste" clean="Paste" hotkey="^V" tv="9815936">Pastes the contents of your clipboard into the current Segment or Project at the caret position. (Ctrl+V)</menu>
+			<menu name="Paste" clean="Paste" hotkey="^V" tv="9815936">Pastes the contents of your clipboard into the current Include or Project at the caret position. (Ctrl+V)</menu>
 			<menu name="Add Selected To Personal Variables" clean="Add_Selected_To_Personal_Variables" tv="9816008">Adds the currently selected text to your Personal Variable List.</menu>
 			<menu name="&amp;Duplicate Line" hotkey="F2" clean="Duplicate_Line" tv="9816296">Creates a duplicate of the line that your caret is in, or if you have text selected it will duplicate that.</menu>
 			<menu name="Delete Line" clean="Delete_Line" hotkey="!D" tv="9817160">Deletes the current line where your Caret is located.</menu>
 			<menu name="Select Next Duplicate" clean="Select_Next_Duplicate" hotkey="+^F3" tv="9817232">Selects the next duplicate word or words that you have selected.</menu>
 			<menu name="Replace &amp;Selected" clean="Replace_Selected" tv="9816728">Shows an InputBox for you to enter the text to replace the currently selected text.  Will work with multiple selections.</menu>
 			<menu name="Ed&amp;it Replacements" clean="Edit_Replacements" tv="9816800">Shows a dialog to add replacement text to. Eg. (g,Gui) would replace lower case g with Gui if you type (" ",",",or "(") after it.</menu>
-			<menu name="Create S&amp;egment From Selection" hotkey="+^n" clean="Create_Segment_From_Selection" tv="9816944">Adds a new segment to your project using the currently selected text.</menu>
-			<menu name="New Segment From Current Word" clean="New_Segment_From_Current_Word" tv="9990744">Creates a new Segment (Include) using the current word where your Caret is located.  It will also create a function with the same name.</menu>
+			<menu name="Create Include From Selection" hotkey="+^n" clean="Create_Include_From_Selection" tv="9816944">Adds a new Include to your project using the currently selected text.</menu>
+			<menu name="New Include From Current Word" clean="New_Include_From_Current_Word" tv="9990744">Creates a new Include (Include) using the current word where your Caret is located.  It will also create a function with the same name.</menu>
 			<menu name="Togg&amp;le Comment Line" hotkey="^J" clean="Toggle_Comment_Line" tv="9990096">Adds or removes ; at the beginning of a line. You can use Edit Comment Insert to change it to whatever you like.</menu>
 			<menu name="Fi&amp;x Indent" clean="Fix_Indent" tv="9991968">This option is mainly used for those who decide to turn off Full Auto. It indents your code by Blocks (code between { and }) but will also move all indentations of anything outside of code blocks to the left.</menu>
 			<menu clean="Spacing" name="Spacing" top="1" tv="9991320">
@@ -57,15 +57,15 @@
 				<menu clean="Unfold_Level_X" name="Unfold Level X" option="ux" plugin="plugins\Fold.ahk" tv="9990672">Unfolds the lines from the entered level.</menu></menu></menu>
 		<menu clean="Search" name="&amp;Search" top="1" tv="9991248">
 			<menu name="Scintilla Control" clean="Scintilla_Control" tv="9990600">Shows a list of all of the Scintilla Controls and you can choose which one to focus.</menu>
-			<menu name="&amp;Find" clean="Find" hotkey="^F" tv="9990168">Searches through all of the Segments under the current Project for specified text and displays the results. Select the result you wish to jump to and press enter.</menu>
+			<menu name="&amp;Find" clean="Find" hotkey="^F" tv="9990168">Searches through all of the Includes under the current Project for specified text and displays the results. Select the result you wish to jump to and press enter.</menu>
 			<menu name="&amp;Next Found" hotkey="F3" clean="Next_Found" tv="9991680">Jumps to the next selected text.</menu>
 			<menu name="Previous Found" hotkey="+F3" clean="Previous_Found" tv="9991392">Jumps to the previous selected text.</menu>
 			<menu clean="Find_Replace" hotkey="^H" name="Find Replace" tv="9992040">Searches for a search string and allows you to replace it with another string.</menu>
 			<menu name="Words In Document" clean="Words_In_Document" hotkey="!W" tv="9991464">Displays a dropdown list of all of the text in that document.</menu>
 			<menu clean="Go_To_Line" name="Go To Line" tv="9991536">Opens a dialog to ask what line you would like to go to.</menu>
-			<menu name="&amp;Quick Find" hotkey="!q" clean="Quick_Find" tv="9990312">Sets focus to the Quick Find edit control. This searches through the current Segment (Include) using normal or Regex search. Use the CheckBoxes next to it to change the behavior.</menu>
-			<menu name="&amp;Jump to Segment" hotkey="!j" clean="Jump_to_Segment" tv="9991608">Opens the Omni-Search window with ^.</menu>
-			<menu name="Jump to Proj&amp;ect" clean="Jump_to_Project" hotkey="!^S" tv="9990240">Opens the Omni-Search window with ^. (Same as Jump To Segment)</menu>
+			<menu name="&amp;Quick Find" hotkey="!q" clean="Quick_Find" tv="9990312">Sets focus to the Quick Find edit control. This searches through the current Include (Include) using normal or Regex search. Use the CheckBoxes next to it to change the behavior.</menu>
+			<menu name="&amp;Jump to Include" hotkey="!j" clean="Jump_to_Include" tv="9991608">Opens the Omni-Search window with ^.</menu>
+			<menu name="Jump to Proj&amp;ect" clean="Jump_to_Project" hotkey="!^S" tv="9990240">Opens the Omni-Search window with ^. (Same as Jump To Include)</menu>
 			<menu clean="Jump_To" name="Jump To" top="1" tv="9991752">
 				<menu clean="Jump_To_Class" name="Jump To Class" tv="9990384">Wherever your caret it within a word you can jump to the Class associated with that text.</menu>
 				<menu clean="Jump_To_First_Available" name="Jump To First Available" hotkey="!F1" tv="9991824">Wherever your caret it within a word you can jump to the First Available Text associated with that text.</menu>
@@ -104,7 +104,7 @@
 				<menu clean="Auto_Variable_Browser" name="Auto Variable Browser" tv="9997840">Starts Debugging with the Variable Browser automatically open.</menu></menu>
 			<menu name="&amp;Run" clean="Run" hotkey="!R" tv="9996400">Executes the current Project.</menu>
 			<menu clean="Kill_Process" name="Kill Process" hotkey="^End" tv="9996904">When you run a script using AHK Studio it keeps track of the processes.  This will allow you to kill those running processes.</menu>
-			<menu name="Run Se&amp;lected Text" clean="Run_Selected_Text" option="" plugin="plugins\Run Selected Text.ahk" tv="9996544">Executes whatever selected text that is in the current Segment.</menu>
+			<menu name="Run Se&amp;lected Text" clean="Run_Selected_Text" option="" plugin="plugins\Run Selected Text.ahk" tv="9996544">Executes whatever selected text that is in the current Include.</menu>
 			<menu clean="Run_Comment_Block" name="Run Comment Block" hotkey="!^V" option="" plugin="plugins\Run Comment Block.ahk" tv="9996688">If you create a comment block with usable code and then Run Comment Block it will run what is inside that comment block.</menu>
 			<menu clean="Run_As" name="Run As" top="1" tv="9998344">
 				<menu name="Run As Ansii" clean="Run_As_Ansii" hotkey="^!A" tv="9998200">Executes the current Project using the Ansii binaries.</menu>
@@ -113,7 +113,7 @@
 			<menu clean="Backup_and_Restore" name="Backup and Restore" top="1" tv="9996616">
 				<menu name="One Backup" clean="One_Backup" hotkey="+^O" tv="9996832">Works pretty much the same as Full Backup but removes all previous Full Backups.</menu>
 				<menu name="&amp;Full Backup" clean="Full_Backup" tv="9996976">When you have your Project working properly you can do a Full Backup and it will get rid of all of the backup files that you have made since the last Full Backup.</menu>
-				<menu name="&amp;Restore Current File" clean="Restore_Current_File" option="" plugin="plugins\Restore Current File.ahk" tv="9997984">Brings up a dialog containing all of the backup files of the current Segment. You can browse through the list of backed up Segments and then you can restore them to a previous state.</menu></menu>
+				<menu name="&amp;Restore Current File" clean="Restore_Current_File" option="" plugin="plugins\Restore Current File.ahk" tv="9997984">Brings up a dialog containing all of the backup files of the current Include. You can browse through the list of backed up Includes and then you can restore them to a previous state.</menu></menu>
 			<menu clean="Bookmarks" name="Bookmarks" top="1" tv="9997048">
 				<menu clean="Manage_Bookmarks" name="Manage Bookmarks" hotkey="^M" option="mb" plugin="plugins\BookMarks.ahk" tv="9997120">Opens a dialog so you can manage your bookmarks.</menu>
 				<menu clean="Add_Bookmark" name="Add Bookmark" hotkey="^B" option="ab" plugin="plugins\BookMarks.ahk" tv="9998056">Add a bookmark.</menu>
@@ -139,7 +139,7 @@
 				<menu clean="Paste_Clipboard" hotkey="^!P" name="Paste Clipboard" option="Clipboard" plugin="plugins\Paste Script.ahk" tv="9999784">Pastes your clipboard to p.ahkscript.org</menu>
 				<menu clean="Remove_Blank_Lines" hotkey="" name="Remove Blank Lines" option="" plugin="plugins\Remove Blank Lines.ahk" tv="9998560">Removes lines that are blank (`n`n)</menu>
 				<menu clean="Remove_Comments" hotkey="" name="Remove Comments" option="" plugin="plugins\Remove Comments.ahk" tv="9999424">Removes all text between /* */ and all ; comments</menu>
-				<menu clean="Run_Current_Segment" hotkey="" name="Run Current Segment" option="segment" plugin="plugins\Run Selected Text.ahk" tv="9999352">Will dynamically run the current segment</menu>
+				<menu clean="Run_Current_Include" hotkey="" name="Run Current Include" option="Include" plugin="plugins\Run Selected Text.ahk" tv="9999352">Will dynamically run the current Include</menu>
 				<menu clean="Split_Line_By_Comma" hotkey="!," name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk" tv="9999208">Plugin: Will split a line (or at least attempt to) by significant ,'s</menu>
 				<menu clean="Toggle_Fullscreen" hotkey="" name="Toggle Fullscreen" option="" plugin="plugins\Toggle Fullscreen.ahk" tv="9998992">Plugin: Gets rid of the window caption</menu>
 				<menu clean="Update_Repository" hotkey="" name="Update Repository" option="" plugin="plugins\Update Repository.ahk" tv="9999280">Plugin: Allows you to create and maintain a Github Repository</menu></menu>
@@ -152,7 +152,7 @@
 			<menu name="Github Repository" hotkey="^G" clean="Github_Repository" option="" plugin="plugins\Github Repository.ahk" tv="9998632">Opens a dialog to upload your script to Github.</menu>
 			<menu name="Update Github Info" clean="Update_Github_Info" tv="9998776">Dialog for entering your Github information.</menu>
 			<menu name="Post &amp;All In One Gist" clean="Post_All_In_One_Gist" no="1" tv="9999712">Currently Unavailable.</menu>
-			<menu name="Post &amp;Multiple Segment Gist" clean="Post_Multiple_Segment_Gist" no="1" tv="10008352">Currently Unavailable.</menu>
+			<menu name="Post &amp;Multiple Include Gist" clean="Post_Multiple_Include_Gist" no="1" tv="10008352">Currently Unavailable.</menu>
 			<menu name="FT&amp;P Servers" clean="Ftp_Servers" option="" plugin="plugins\Ftp Servers.ahk" tv="10006984">Dialog for adding your own FTP servers so that you can upload your code using File/Upload.</menu>
 			<menu name="Auto Insert" clean="Auto_Insert" hide="1" option="" plugin="plugins\Auto Insert.ahk" tv="10007200">By default ( enters ), { enters }, &lt; enters &gt;, ' enters ', " enters ", and enters . This dialog will allow you to edit that functionality.</menu>
 			<menu clean="Settings" name="Settings" option="" tv="10007920">Re-organize the menus, change hotkeys, and quick access to the options.</menu>
@@ -188,7 +188,7 @@
 				<menu name="Center Caret" clean="Center_Caret" option="1" tv="10004536">When scrolling down a large document the caret will stay centered vertically.</menu>
 				<menu clean="Hide_Indentation_Guides" name="Hide Indentation Guides" option="1" tv="10006264">Hides the Indentation Guides (Look like vertical line of dots to show indentation).</menu>
 				<menu name="Highlight Current Area" clean="Highlight_Current_Area" option="1" tv="10005040">Can be buggy! Highlights the current indentation.</menu>
-				<menu clean="Includes_In_Place" name="Includes In Place" option="1" tv="10006552">Option: When you create an include using Create Segment From Selection this will add the #Include line where the text was rather than in the main Project file.</menu>
+				<menu clean="Includes_In_Place" name="Includes In Place" option="1" tv="10006552">Option: When you create an include using Create Include From Selection this will add the #Include line where the text was rather than in the main Project file.</menu>
 				<menu name="Manual Continuation Line" clean="Manual_Continuation_Line" option="1" tv="10006696">Allows you to indent lines that start with (. , and or) however you like.</menu>
 				<menu clean="Shift_Breakpoint" name="Shift Breakpoint" option="1" tv="10005832">Requires you to hold Shift when creating a Breakpoint.</menu>
 				<menu name="Show Caret Line" clean="Show_Caret_Line" option="1" tv="10004752">Highlights the current row your caret is in.</menu>
@@ -269,8 +269,8 @@
 			<menu name="Previous File" hotkey="+!UP" clean="Previous_File" tv="10022888">Displays the previous file in your Project Explorer.</menu>
 			<menu name="Previous Project" hotkey="^PgUp" clean="Previous_Project" tv="10022528">Displays the previous Project in your Project Explorer.</menu>
 			<menu name="Next Project" hotkey="^PgDn" clean="Next_Project" tv="10023824">Displays the next Project in your Project Explorer.</menu>
-			<menu clean="Back" name="Back" hotkey="!LEFT" tv="10022744">Jumps to the previous Segment that you were editing.</menu>
-			<menu clean="Forward" name="Forward" hotkey="!RIGHT" tv="10022960">Jumps to the next Segment that was saved from the Back command.</menu>
+			<menu clean="Back" name="Back" hotkey="!LEFT" tv="10022744">Jumps to the previous Include that you were editing.</menu>
+			<menu clean="Forward" name="Forward" hotkey="!RIGHT" tv="10022960">Jumps to the next Include that was saved from the Back command.</menu>
 			<menu name="Highlight to Matching Brace" clean="Highlight_to_Matching_Brace" hotkey="^!M" tv="10022600">When next to a brace it will highlight all text up until the matching brace.</menu>
 			<menu name="Tab To Next Comma" clean="Tab_To_Next_Comma" hotkey="^TAB" tv="10023104">Will place your caret after the next comma in that line.</menu>
 			<menu name="Tab To Previous Comma" clean="Tab_To_Previous_Comma" hotkey="+^TAB" tv="10022312">Will place your caret after the previous comma in that line.</menu></menu>
