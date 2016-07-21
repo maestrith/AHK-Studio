@@ -284,8 +284,7 @@
 			<menu clean="Display_Clipboard_History" name="Display Clipboard History"></menu>
 			<menu name="Display Functions" clean="Display_Functions" hotkey="!I"></menu>
 			<menu name="Sho&amp;w Scintilla Code In Line" hotkey="F4" clean="Show_Scintilla_Code_In_Line"></menu>
-			<menu name="Switch Focus" clean="Switch_Focus" hotkey="^SPACE"></menu>
-			<menu clean="Auto_Project_Explorer_Width" name="Auto Project Explorer Width"></menu></menu>
+			<menu name="Switch Focus" clean="Switch_Focus" hotkey="^SPACE"></menu></menu>
 		<menu name="&amp;Help" clean="Help" tv="11460160">
 			<menu name="Command Help" hotkey="F1" clean="Command_Help"></menu>
 			<menu clean="Menu_Help" name="Menu Help" option="" plugin="plugins\Menu Help.ahk"></menu>
