@@ -151,7 +151,6 @@
 			<menu name="Update Github Info" clean="Update_Github_Info" no="1"></menu>
 			<menu name="Post &amp;All In One Gist" clean="Post_All_In_One_Gist" no="1"></menu>
 			<menu name="Post &amp;Multiple Include Gist" clean="Post_Multiple_Include_Gist" no="1"></menu>
-			<menu name="FT&amp;P Servers" clean="Ftp_Servers" option="" plugin="plugins\Ftp Servers.ahk"></menu>
 			<menu name="Auto Insert" clean="Auto_Insert" hide="1" option="" plugin="plugins\Auto Insert.ahk"></menu>
 			<menu clean="Settings" name="Settings" option=""></menu>
 			<menu clean="FTP_Servers" name="FT&amp;P Servers" option="" plugin="plugins\Ftp Servers.ahk"></menu>
