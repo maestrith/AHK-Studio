@@ -8,6 +8,7 @@ Changed: Sorry if this ruins things but if you have setup hotkeys you will need 
 Fixed:
 -Edit Hotkeys: Old hotkeys were still in effect after changing them
 -Auto Expand Includes
+-Find Replace: Single replace was not working properly at all
 1.002.39
 Re-Added:
 -Test Plugin (Alt+T)
