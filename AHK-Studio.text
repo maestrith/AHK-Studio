@@ -2,6 +2,7 @@
 Added:
 -Online Help: Launches the AHK Studio Wiki on Github
 -Menu Help: Dialog for brief descriptions of menu items
+-Auto Insert: Dialog for editing the {} [] '' "" etc Auto Inserts
 1.002.39
 Re-Added:
 -Test Plugin (Alt+T)
