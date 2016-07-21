@@ -284,7 +284,7 @@
 				<menu name="Refresh Project Explorer" clean="Refresh_Project_Explorer" tv="10023320">Re-Indexes all of your Projects and fixes errors in the Project Explorer.</menu>
 				<menu name="Refresh Plugins" clean="Refresh_Plugins" tv="10022672">Refreshes your plugins in the AHK Studio\Plugins directory.</menu></menu>
 			<menu clean="Display_Classes" name="Display Classes" tv="10022816">Shows an Auto-Complete list of all of your Classes in the current project.</menu>
-			<menu clean="Auto_Expand_Includes" name="Auto Expand Includes" tv="10023392">Currently does nothing.</menu>
+			<menu clean="Auto_Expand_Includes" name="Auto Expand Includes" tv="10023392">Expands all child nodes of a Projects Tree</menu>
 			<menu clean="Display_Clipboard_History" name="Display Clipboard History" tv="10023464">Currently Unavailable.</menu>
 			<menu name="Display Functions" clean="Display_Functions" hotkey="!I" tv="10021592">Displays an Auto-Complete list of Functions in the current Project.</menu>
 			<menu name="Sho&amp;w Scintilla Code In Line" hotkey="F4" clean="Show_Scintilla_Code_In_Line" tv="10020296">This will show all Scintilla codes that are in the current line.</menu>
