@@ -1,3 +1,7 @@
+1.003.0
+Added:
+-Online Help: Launches the AHK Studio Wiki on Github
+-Menu Help: Dialog for brief descriptions of menu items
 1.002.39
 Re-Added:
 -Test Plugin (Alt+T)
