@@ -3,6 +3,10 @@ Added:
 -Online Help: Launches the AHK Studio Wiki on Github
 -Menu Help: Dialog for brief descriptions of menu items
 -Auto Insert: Dialog for editing the {} [] '' "" etc Auto Inserts
+Changed: Sorry if this ruins things but if you have setup hotkeys you will need to change them:
+-All items with Segment have been changed to Include....I don't know why I started with Segment in the first place.
+Fixed:
+-Edit Hotkeys: Old hotkeys were still in effect after changing them
 1.002.39
 Re-Added:
 -Test Plugin (Alt+T)
