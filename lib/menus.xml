@@ -144,7 +144,6 @@
 				<menu clean="Toggle_Fullscreen" hotkey="" name="Toggle Fullscreen" option="" plugin="plugins\Toggle Fullscreen.ahk"></menu>
 				<menu clean="Update_Repository" hotkey="" name="Update Repository" option="" plugin="plugins\Update Repository.ahk"></menu></menu>
 			<menu clean="Custom_Commands" hotkey="" name="Custom Commands" option="" plugin="plugins\Custom Commands.ahk"></menu>
-			<menu name="Scratch &amp;Pad" clean="Scratch_Pad" hotkey="^!p"></menu>
 			<menu name="Personal &amp;Variable List" clean="Personal_Variable_List"></menu>
 			<menu name="Code &amp;Vault" clean="Code_Vault" hotkey="+^F1" option="" plugin="plugins\Code Vault.ahk"></menu>
 			<menu name="Create Launcher" clean="Create_Launcher" option="" plugin="plugins\Create Launcher.ahk"></menu>
@@ -165,7 +164,6 @@
 			<menu name="&amp;Auto Indent" clean="Auto_Indent" tv="11459080">
 				<menu name="Auto Indent Comment Lines" clean="Auto_Indent_Comment_Lines"></menu>
 				<menu name="&amp;Full Auto" clean="Full_Auto"></menu></menu>
-			<menu name="Virtual Scratch Pad" clean="Virtual_Scratch_Pad" hotkey="" option="1"></menu>
 			<menu name="Virtual Space" clean="Virtual_Space" option="1"></menu>
 			<menu name="Set &amp;As Default Editor" clean="Set_As_Default_Editor"></menu>
 			<menu clean="New_File_Template" name="New File Template"></menu>
