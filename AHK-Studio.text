@@ -5,10 +5,12 @@ Added:
 -Auto Insert: Dialog for editing the {} [] '' "" etc Auto Inserts
 Changed: Sorry if this ruins things but if you have setup hotkeys you will need to change them:
 -All items with Segment have been changed to Include....I don't know why I started with Segment in the first place.
+-Breakpoints can be set and removed while debugging is active
 Fixed:
 -Edit Hotkeys: Old hotkeys were still in effect after changing them
 -Auto Expand Includes
 -Find Replace: Single replace was not working properly at all
+-OSD and the Varible Browser had the same Window Name
 1.002.39
 Re-Added:
 -Test Plugin (Alt+T)
