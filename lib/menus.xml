@@ -78,7 +78,7 @@
 				<menu clean="Add_Function_Call" name="Add Function Call" hotkey="^="></menu>
 				<menu clean="Bookmark_Search" name="Bookmark Search" hotkey="+^3"></menu>
 				<menu name="Class Search" hotkey="^!C" clean="Class_Search"></menu>
-				<menu name="File Search" hotkey="+!O" clean="File_Search" no="1"></menu>
+				<menu name="File Search" hotkey="^J" clean="File_Search" no="1"></menu>
 				<menu name="Function Search" clean="Function_Search" hotkey="+^9"></menu>
 				<menu name="Hotkey Search" hotkey="+^7" clean="Hotkey_Search"></menu>
 				<menu name="Instance Search" clean="Instance_Search"></menu>
