@@ -13,9 +13,9 @@
 			<separator clean="&lt;Separator&gt;" option="1"></separator>
 			<menu name="New Scintilla Window" clean="New_Scintilla_Window"></menu>
 			<menu name="Remove Scintilla Window" clean="Remove_Scintilla_Window"></menu>
-			<menu name="New Se&amp;gment" clean="New_Segment"></menu>
-			<menu name="Rename Current Segment" clean="Rename_Current_Segment"></menu>
-			<menu name="Remove Segmen&amp;t" clean="Remove_Segment"></menu>
+			<menu name="New Include" clean="New_Include"></menu>
+			<menu name="Rename Current Include" clean="Rename_Current_Include"></menu>
+			<menu name="Remove Include" clean="Remove_Include"></menu>
 			<menu name="&amp;Upload" clean="Upload" option="" plugin="plugins\Upload.ahk"></menu>
 			<menu name="&amp;Publish" clean="Publish"></menu>
 			<menu name="Delete Project" clean="Delete_Project"></menu>
@@ -38,8 +38,8 @@
 			<menu name="Select Next Duplicate" clean="Select_Next_Duplicate" hotkey="+^F3"></menu>
 			<menu name="Replace &amp;Selected" clean="Replace_Selected"></menu>
 			<menu name="Ed&amp;it Replacements" clean="Edit_Replacements"></menu>
-			<menu name="Create S&amp;egment From Selection" hotkey="+^n" clean="Create_Segment_From_Selection"></menu>
-			<menu name="New Segment From Current Word" clean="New_Segment_From_Current_Word"></menu>
+			<menu name="Create Include From Selection" hotkey="+^n" clean="Create_Include_From_Selection"></menu>
+			<menu name="New Include From Current Word" clean="New_Include_From_Current_Word"></menu>
 			<menu name="Togg&amp;le Comment Line" hotkey="^J" clean="Toggle_Comment_Line"></menu>
 			<menu name="Fi&amp;x Indent" clean="Fix_Indent"></menu>
 			<menu clean="Spacing" name="Spacing" tv="11457208">
@@ -64,7 +64,7 @@
 			<menu name="Words In Document" clean="Words_In_Document" hotkey="^W"></menu>
 			<menu clean="Go_To_Line" hotkey="^G" name="Go To Line"></menu>
 			<menu name="&amp;Quick Find" hotkey="!q" clean="Quick_Find"></menu>
-			<menu name="&amp;Jump to Segment" hotkey="!j" clean="Jump_to_Segment"></menu>
+			<menu name="&amp;Jump to Include" hotkey="!j" clean="Jump_to_Include"></menu>
 			<menu name="Jump to Proj&amp;ect" clean="Jump_to_Project" hotkey="!^S" no="1"></menu>
 			<menu clean="Jump_To" name="Jump To" tv="11457568">
 				<menu clean="Jump_To_Class" name="Jump To Class"></menu>
@@ -139,7 +139,7 @@
 				<menu clean="Paste_Clipboard" hotkey="" name="Paste Clipboard" option="Clipboard" plugin="plugins\Paste Script.ahk"></menu>
 				<menu clean="Remove_Blank_Lines" hotkey="" name="Remove Blank Lines" option="" plugin="plugins\Remove Blank Lines.ahk"></menu>
 				<menu clean="Remove_Comments" hotkey="" name="Remove Comments" option="" plugin="plugins\Remove Comments.ahk"></menu>
-				<menu clean="Run_Current_Segment" hotkey="" name="Run Current Segment" option="segment" plugin="plugins\Run Selected Text.ahk"></menu>
+				<menu clean="Run_Current_Include" hotkey="" name="Run Current Include" option="Include" plugin="plugins\Run Selected Text.ahk"></menu>
 				<menu clean="Split_Line_By_Comma" hotkey="" name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk"></menu>
 				<menu clean="Toggle_Fullscreen" hotkey="" name="Toggle Fullscreen" option="" plugin="plugins\Toggle Fullscreen.ahk"></menu>
 				<menu clean="Update_Repository" hotkey="" name="Update Repository" option="" plugin="plugins\Update Repository.ahk"></menu></menu>
@@ -150,7 +150,7 @@
 			<menu name="Github Repository" hotkey="!^G" clean="Github_Repository" option="" plugin="plugins\Github Repository.ahk"></menu>
 			<menu name="Update Github Info" clean="Update_Github_Info" no="1"></menu>
 			<menu name="Post &amp;All In One Gist" clean="Post_All_In_One_Gist" no="1"></menu>
-			<menu name="Post &amp;Multiple Segment Gist" clean="Post_Multiple_Segment_Gist" no="1"></menu>
+			<menu name="Post &amp;Multiple Include Gist" clean="Post_Multiple_Include_Gist" no="1"></menu>
 			<menu name="FT&amp;P Servers" clean="Ftp_Servers" option="" plugin="plugins\Ftp Servers.ahk"></menu>
 			<menu name="Auto Insert" clean="Auto_Insert" hide="1" option="" plugin="plugins\Auto Insert.ahk"></menu>
 			<menu clean="Settings" name="Settings" option=""></menu>
