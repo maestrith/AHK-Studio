@@ -161,7 +161,7 @@
 			<menu name="Context Sensitive Help" clean="Context_Sensitive_Help"></menu>
 			<menu name="&amp;Auto Indent" clean="Auto_Indent" tv="11459080">
 				<menu name="Auto Indent Comment Lines" clean="Auto_Indent_Comment_Lines"></menu>
-				<menu name="&amp;Full Auto" clean="Full_Auto"></menu></menu>
+				<menu name="&amp;Full Auto Indentation" clean="Full_Auto_Indentation"></menu></menu>
 			<menu name="Virtual Space" clean="Virtual_Space" option="1"></menu>
 			<menu name="Set &amp;As Default Editor" clean="Set_As_Default_Editor"></menu>
 			<menu clean="New_File_Template" name="New File Template"></menu>
