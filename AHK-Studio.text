@@ -1,3 +1,7 @@
+1.003.1
+Changed:
+-Previous Scripts: Search feature only works in the filename not the entire path
+-Editing Hotkeys: You now must hit enter, or click the button to set/change the hotkey
 1.003.0
 Added:
 -Online Help: Launches the AHK Studio Wiki on Github
