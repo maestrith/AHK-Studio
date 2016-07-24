@@ -3,6 +3,7 @@ Added:
 -Require Enter For Search: When you have larger files and you start to use a search string with a common letter it can take a bit of time for the highlighting to complete.  This helps a lot with that.
 Fixed: Reported by Run1e
 -Setting Studio as the Default Editor was causing an error with the variable name.
+-Oddities with Alt+Gr
 1.003.1
 Changed:
 -Previous Scripts: Search feature only works in the filename not the entire path
