@@ -1,3 +1,6 @@
+1.003.2
+Added:
+-Require Enter For Search: When you have larger files and you start to use a search string with a common letter it can take a bit of time for the highlighting to complete.  This helps a lot with that.
 1.003.1
 Changed:
 -Previous Scripts: Search feature only works in the filename not the entire path
