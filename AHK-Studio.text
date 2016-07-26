@@ -3,6 +3,15 @@ Added:
 -Require Enter For Search: When you have larger files and you start to use a search string with a common letter it can take a bit of time for the highlighting to complete. 
 This helps a lot with that.
 -Added a delay on the quick find text entry to help with the above issue as well.
+-Multiple Selection: The cursor will change to reflect the fact that you have multiple selections active.
+Changed:
+-Settings:
+--Menu Editor: Where you can edit the Main Menus for AHK-Studio.
+--Options: A ListView where you can quickly set all of the Options in AHK Studio.
+--Auto Insert: Control of what characters get automatically inserted () {} [] <> etc.
+--Edit Replacements: Allows you to setup replacements for text (eg. gab -> Gui, Add, Button)
+Fixed:
+-Closing the About window was causing the program to stop responding
 Fixed: Reported by Run1e
 -Setting Studio as the Default Editor was causing an error with the variable name.
 -Oddities with Alt+Gr
