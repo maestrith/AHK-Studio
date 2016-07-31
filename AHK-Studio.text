@@ -17,6 +17,8 @@ Fixed: Reported by Run1e
 -Oddities with Alt+Gr
 Fixed: Reported by tscv11
 -Word Wrap: Checkmark out of phase with the option
+Changed: Suggested by Run1e, evilC, and I am sure others
+-Windows that are out of bounds of the monitor (hopefully even with multiple monitor setups) will be centered into the main monitor.
 1.003.1
 Changed:
 -Previous Scripts: Search feature only works in the filename not the entire path
