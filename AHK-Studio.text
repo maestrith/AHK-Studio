@@ -15,6 +15,8 @@ Fixed:
 Fixed: Reported by Run1e
 -Setting Studio as the Default Editor was causing an error with the variable name.
 -Oddities with Alt+Gr
+Fixed: Reported by tscv11
+-Word Wrap: Checkmark out of phase with the option
 1.003.1
 Changed:
 -Previous Scripts: Search feature only works in the filename not the entire path
@@ -402,5 +404,7 @@ Added: Suggested by zotune
 1.002.9
 Fixed: Reported by Driedman
 -RCM: Paste not working
+1
+
 1
 
