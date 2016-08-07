@@ -11,13 +11,14 @@ Changed:
 --Auto Insert: Control of what characters get automatically inserted () {} [] <> etc.
 --Edit Replacements: Allows you to setup replacements for text (eg. gab -> Gui, Add, Button)
 Fixed:
--Closing the About window was causing the program to stop responding
+-Closing the About window was causing the program to stop responding.
+-If you have multiple Projects that use the same Includes they will show edited markers and also the same file when editing them.
 Fixed: Reported by Run1e
 -Setting Studio as the Default Editor was causing an error with the variable name.
--Oddities with Alt+Gr
+-Oddities with Alt+Gr.
 Fixed: Reported by tscv11
--Word Wrap: Checkmark out of phase with the option
-Changed: Suggested by Run1e, evilC, and I am sure others
+-Word Wrap: Checkmark out of phase with the option.
+Changed: Suggested by Run1e, evilC, and I am sure others.
 -Windows that are out of bounds of the monitor (hopefully even with multiple monitor setups) will be centered into the main monitor.
 Fixed: Reported by Graushwein
 -Double Selections: This is caused when you have the mouse near the selection and hit Ctrl+C
