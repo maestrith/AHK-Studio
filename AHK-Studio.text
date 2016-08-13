@@ -21,7 +21,9 @@ Fixed: Reported by tscv11
 Changed: Suggested by Run1e, evilC, and I am sure others.
 -Windows that are out of bounds of the monitor (hopefully even with multiple monitor setups) will be centered into the main monitor.
 Fixed: Reported by Graushwein
--Double Selections: This is caused when you have the mouse near the selection and hit Ctrl+C
+-Double Selections: This is caused when you have the mouse near the selection and hit Ctrl+C.
+Fixed: Reported by Run1e
+-Having multiple instances of the same Include in more than 1 Project and then removing it from a project was causing issues.
 1.003.1
 Changed:
 -Previous Scripts: Search feature only works in the filename not the entire path
