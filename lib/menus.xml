@@ -13,7 +13,7 @@
 			<separator clean="&lt;Separator&gt;" option="1"></separator>
 			<menu name="New Scintilla Window" clean="New_Scintilla_Window"></menu>
 			<menu name="Remove Scintilla Window" clean="Remove_Scintilla_Window"></menu>
-			<menu name="New &Include" clean="New_Include"></menu>
+			<menu name="New &amp;Include" clean="New_Include"></menu>
 			<menu name="Rename Current Include" clean="Rename_Current_Include"></menu>
 			<menu name="Remove Include" clean="Remove_Include"></menu>
 			<menu name="&amp;Upload" clean="Upload" option="" plugin="plugins\Upload.ahk"></menu>
