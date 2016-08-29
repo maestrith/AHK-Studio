@@ -64,7 +64,7 @@
 			<menu name="Words In Document" clean="Words_In_Document" hotkey="^W"></menu>
 			<menu clean="Go_To_Line" hotkey="^G" name="Go To Line"></menu>
 			<menu name="&amp;Quick Find" hotkey="!q" clean="Quick_Find"></menu>
-			<menu name="&amp;Jump to Include" hotkey="!j" clean="Jump_to_Include"></menu>
+			<menu name="&amp;Jump to Include" clean="Jump_to_Include"></menu>
 			<menu name="Jump to Proj&amp;ect" clean="Jump_to_Project" hotkey="!^S" no="1"></menu>
 			<menu clean="Jump_To" name="Jump To" tv="11457568">
 				<menu clean="Jump_To_Class" name="Jump To Class"></menu>
@@ -78,7 +78,7 @@
 				<menu clean="Add_Function_Call" name="Add Function Call" hotkey="^="></menu>
 				<menu clean="Bookmark_Search" name="Bookmark Search" hotkey="+^3"></menu>
 				<menu name="Class Search" hotkey="^!C" clean="Class_Search"></menu>
-				<menu name="File Search" hotkey="^J" clean="File_Search" no="1"></menu>
+				<menu name="File Search" hotkey="!J" clean="File_Search" no="1"></menu>
 				<menu name="Function Search" clean="Function_Search" hotkey="+^9"></menu>
 				<menu name="Hotkey Search" hotkey="+^7" clean="Hotkey_Search"></menu>
 				<menu name="Instance Search" clean="Instance_Search"></menu>
