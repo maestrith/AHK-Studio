@@ -6,6 +6,7 @@ Added:
 --Split Control now has the available controls below them so you can quickly add in whatever type control you want (All but Toolbars)
 Fixed: Reported by AfterLemon
 -Inline open braces with text after them was causing a major issue
+-Fixed an issue with the Omni-Search/Code Explorer
 1.003.2
 Added:
 -Require Enter For Search: When you have larger files and you start to use a search string with a common letter it can take a bit of time for the highlighting to complete. 
