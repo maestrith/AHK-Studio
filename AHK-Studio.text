@@ -8,6 +8,7 @@ Fixed: Reported by AfterLemon
 -Inline open braces with text after them was causing a major issue
 -Fixed an issue with the Omni-Search/Code Explorer
 -Position data getting messed up causing incorrect caret positions
+-Highlight Current Area: Ability to change it, not yet implemented in the Themes just yet
 1.003.2
 Added:
 -Require Enter For Search: When you have larger files and you start to use a search string with a common letter it can take a bit of time for the highlighting to complete. 
