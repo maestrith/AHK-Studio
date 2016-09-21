@@ -12,6 +12,8 @@ Fixed: Reported by AfterLemon
 Fixed:
 -Includes In Place
 -Position data not updating when using anything other than the Project Explorer to change files
+Fixed: Reported by evil-C
+-Find Replace: dumb mistake
 1.003.2
 Added:
 -Require Enter For Search: When you have larger files and you start to use a search string with a common letter it can take a bit of time for the highlighting to complete. 
