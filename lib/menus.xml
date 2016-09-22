@@ -41,6 +41,7 @@
 			<menu name="Create Include From Selection" hotkey="+^n" clean="Create_Include_From_Selection"></menu>
 			<menu name="New Include From Current Word" clean="New_Include_From_Current_Word"></menu>
 			<menu name="Togg&amp;le Comment Line" hotkey="^J" clean="Toggle_Comment_Line"></menu>
+			<menu name="Edit Proxy Server" clean="Edit_Proxy_Server"></menu>
 			<menu name="Fi&amp;x Indent" clean="Fix_Indent"></menu>
 			<menu clean="Spacing" name="Spacing" tv="11457208">
 				<menu name="Add Space After Commas" clean="Add_Space_After_Commas" option="ac" plugin="plugins\Add Spaces.ahk"></menu>
