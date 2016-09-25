@@ -1,3 +1,11 @@
+1.003.4
+Fixed: Reported by evilC
+-Auto-Complete not stopping when adding (){}<>...etc #84
+-When using a hotkey and saying no to downloading a plugin it would throw an error #80
+-Having to select single % when deleting a % with Smart Delete enabled #78
+-If you are debugging code that is folded and it needs to show a line it should now expand the folds #76
+Fixed: Reported by megabugman
+-When using Save As on a single file it was creating a new Untitled file #67
 1.003.3
 Changed:
 -Re-Wrote the backend for the GUI
