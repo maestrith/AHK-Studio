@@ -6,6 +6,8 @@ Fixed: Reported by evilC
 -If you are debugging code that is folded and it needs to show a line it should now expand the folds #76
 Fixed: Reported by megabugman
 -When using Save As on a single file it was creating a new Untitled file #67
+Fixed:
+-Jump To First Available: Issue with g-labels
 1.003.3
 Changed:
 -Re-Wrote the backend for the GUI
