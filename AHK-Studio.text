@@ -1,3 +1,6 @@
+1.003.5
+Fixed (hopefully): Reported by huckleberry
+-Tracked Notes: Sometimes changing to the code that you select from the Project Explorer
 1.003.4
 Fixed: Reported by evilC
 -Auto-Complete not stopping when adding (){}<>...etc #84
