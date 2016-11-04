@@ -1,6 +1,6 @@
 1.003.6
 Added: Requested by Joe Glines
--Adding a file called HotStrings.ahk and adding all the hotstrings you want to it will make them work in AHK Studio
+-Adding a file called HotStrings.ahk and adding all the hotstrings you want to it will make them work in AHK Studio (ONLY WORKS IN UN-COMPILED VERSION)
 1.003.5
 Fixed (hopefully): Reported by huckleberry
 -Tracked Notes: Sometimes changing to the code that you select from the Project Explorer
