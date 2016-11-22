@@ -3,6 +3,8 @@ Fixed: Reported by Joe Glines and Run1e
 -Center Caret: Was not disabling correctly
 Fixed: Reported by jpack
 -Added -DPIScale to the file Studio.ahk
+Fixed: (hopefully) Reported by Run1e
+-When you hit enter too quickly in Omni-Search it was causing an error
 1.003.6
 Added: Requested by Joe Glines
 -Adding a file called HotStrings.ahk and adding all the hotstrings you want to it will make them work in AHK Studio (ONLY WORKS IN UN-COMPILED VERSION)
