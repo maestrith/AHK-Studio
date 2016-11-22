@@ -15,7 +15,7 @@ class GUIKeep{
 		if(FileExist(path "\AHKStudio.ico"))
 			Menu,Tray,Icon,%path%\AHKStudio.ico
 		Gui,%win%:Destroy
-		Gui,%win%:+owner%owner% +hwndhwnd
+		Gui,%win%:+owner%owner% +hwndhwnd -DPIScale
 		Gui,%win%:+ToolWindow
 		if(settings.ssn("//options/@Add_Margins_To_Windows").text!=1)
 			Gui,%win%:Margin,0,0
