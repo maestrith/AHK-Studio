@@ -1,3 +1,6 @@
+1.003.8
+Fixed: Reported by jpack
+-Code Explorer: Clicking on an item that you have already selected was not working again
 1.003.7
 Fixed: Reported by Joe Glines and Run1e
 -Center Caret: Was not disabling correctly
