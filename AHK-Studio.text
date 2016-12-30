@@ -1,3 +1,6 @@
+1.003.9
+Fixed: Reported by michaelbeijer
+-Setting AHK Studio as the default editor was not working on the compiled version
 1.003.8
 Fixed: Reported by jpack
 -Code Explorer: Clicking on an item that you have already selected was not working again
