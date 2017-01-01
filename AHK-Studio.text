@@ -1,3 +1,6 @@
+1.003.10
+Fixed: Reported by Darth_diggler
+-Plugins on some systems were not working properly
 1.003.9
 Fixed: Reported by michaelbeijer
 -Setting AHK Studio as the default editor was not working on the compiled version
