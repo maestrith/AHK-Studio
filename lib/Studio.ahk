@@ -3,7 +3,11 @@ Studio(ico:=0){
 	global x
 	if(ico)
 		Menu,Tray,Icon
-	return x:=ComObjActive("AHK-Studio"),x.autoclose(A_ScriptHwnd)
+	Try
+		x:=ComObjActive("AHK-Studio")
+	Catch m
+		x:=ComObjActive("{DBD5A90A-A85C-11E4-B0C7-43449580656B}")
+	return x,x.autoclose(A_ScriptHwnd)
 }
 class GUIKeep{
 	static table:=[],showlist:=[]
