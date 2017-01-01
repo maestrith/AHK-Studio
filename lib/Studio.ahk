@@ -13,7 +13,11 @@ class GUIKeep{
 	static table:=[],showlist:=[]
 	__New(win,parent:=""){
 		#NoTrayIcon
-		x:=ComObjActive("AHK-Studio"),path:=x.path(),info:=x.style(),settings:=x.get("settings")
+		Try
+			x:=ComObjActive("AHK-Studio")
+		Catch m
+			x:=ComObjActive("{DBD5A90A-A85C-11E4-B0C7-43449580656B}")
+		path:=x.path(),info:=x.style(),settings:=x.get("settings")
 		owner:=WinExist("ahk_id" parent)?parent:x.hwnd(1)
 		DetectHiddenWindows,On
 		if(FileExist(path "\AHKStudio.ico"))
@@ -159,7 +163,10 @@ t(x*){
 Class sciclass{
 	static ctrl:=[],main:=[],temp:=[]
 	__New(window,info){
-		x:=ComObjActive("AHK-Studio")
+		Try
+			x:=ComObjActive("AHK-Studio")
+		Catch m
+			x:=ComObjActive("{DBD5A90A-A85C-11E4-B0C7-43449580656B}")
 		static int,count:=1
 		if !init
 			DllCall("LoadLibrary","str",x.path() "\scilexer.dll"),init:=1
