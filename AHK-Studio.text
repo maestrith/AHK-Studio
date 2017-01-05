@@ -5,6 +5,8 @@ Fixed: Reported by Darth_diggler
 -Toolbars are not following the main background color
 Changed:
 -Cleaned up the code a bit and fixed some of the case issues.
+Fixed: Reported by MANY people.
+-IfEqual and other things indent.
 1.003.9
 Fixed: Reported by michaelbeijer
 -Setting AHK Studio as the default editor was not working on the compiled version
