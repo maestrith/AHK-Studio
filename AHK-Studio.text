@@ -4,6 +4,7 @@ Fixed: Reported by Darth_diggler
 -Compiled version of AHK Studio, the run command was not working
 -Toolbars are not following the main background color
 -Toolbars can have external programs in them (was there before but forgot to re-add it)
+-Unchecking an external program will remove it from the toolbar
 -Shift+Click+Drag icons to re-arrange the icons or DoubleClick on the toolbar to bring up a GUI to sort/arrange them
 Changed:
 -Cleaned up the code a bit and fixed some of the case issues.
