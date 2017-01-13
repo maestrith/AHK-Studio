@@ -3,6 +3,8 @@ Fixed: Reported by many...
 -When moving the window to another screen or position and then maximizing it, it "should" remember what screen it was on and the last position it was in before maximizing
 Removed: Reported by smarq8
 -New Scintilla Window: Old code that does not work anymore.
+Fixed: Reported by jpack
+-Hotkeys with - in them were not working with the Code Explorer and Omni
 1.003.10
 Fixed: Reported by Darth_diggler
 -Plugins on some systems were not working properly
