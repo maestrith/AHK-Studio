@@ -1,3 +1,24 @@
+1.003.13
+Changed: Reported by megabugman
+-Context Menu for Undo/Redo were displaying when there was not data for them #98
+-Deleting umlaut characters was causing an issue #97
+-Inline commands for hotkeys were not displaying parameters #96
+-Odd issue with resizing controls when clicking on Omni-Search #95
+-Error message when cancelling a plugin download from menus #93
+-Run Selected Text
+--Added Run Selected Text to the main code and changed how it works with multiple selected lines #92
+--Added Run Code Block to the main code Fixed the SingleInstance issue #91
+-Ctrl+R and Ctrl+E were adding odd control characters to the script #90
+-Right Click: Selection will not change when right clicking #89
+-Double Click on anything like #NoEnv and it will now select the # #88
+Fixed:
+-Delete/Backspace would go letter by letter when using a single caret.  Multiple carets will still do this.
+-If you add a space in the tab previous to the first word of a line it would crash Studi
+Added:
+-Command Help (F1):
+--Directives now work
+--Selected words will also work if it is found by AHK Studio
+--No need to have the Caret after the Command
 1.003.12
 Fixed: Reported by smarq8
 -#Include using %A_LineFile% "Should" work
