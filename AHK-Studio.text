@@ -1,6 +1,6 @@
 1.003.13
 Changed: Reported by megabugman
--Context Menu for Undo/Redo were displaying when there was not data for them #98
+-Context Menu: items that are not applicable are greyed out #98
 -Deleting umlaut characters was causing an issue #97
 -Inline commands for hotkeys were not displaying parameters #96
 -Odd issue with resizing controls when clicking on Omni-Search #95
