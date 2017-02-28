@@ -1,5 +1,6 @@
 1.003.13
 Changed: Reported by megabugman
+-Zoom causing line numbers to get cropped #108
 -Context Menu: items that are not applicable are greyed out #98
 -Deleting umlaut characters was causing an issue #97
 -Inline commands for hotkeys were not displaying parameters #96
