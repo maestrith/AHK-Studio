@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<Themes>
+<themes>
 	<fonts>
 		<author>Peared</author>
 		<font background="0x202020" bold="1" color="0xDCE1E6" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
@@ -720,4 +720,4 @@
 		<custom control="SysTreeView321" gui="1" color="16777215"></custom>
 		<custom control="msctls_statusbar321" gui="1" bold="0" color="0" font="" italic="0" size="12" strikeout="0" underline="0"></custom>
 	</fonts>
-</Themes>
+</themes>
