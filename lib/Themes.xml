@@ -612,39 +612,6 @@
 		<font code="2600" color="3355443"></font>
 	</fonts>
 	<fonts>
-		<name>Zenburn_dark</name>
-		<author>Run1e</author>
-		<font background="3158064" bold="0" color="16777215" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
-		<font background="3355443" style="33" color="15000804"></font>
-		<font style="0" color="13495789"></font>
-		<font style="1" color="8363903" bold="0" italic="1" size="10" strikeout="0" underline="0"></font>
-		<font style="2" color="8421616"></font>
-		<font style="3" color="8816334"></font>
-		<font style="4" color="16777215"></font>
-		<font style="11" color="8363903" bold="0" italic="1" size="10" strikeout="0" underline="0"></font>
-		<font style="13" color="255" background="0"></font>
-		<font style="15" color="12110995"></font>
-		<font style="17" color="7843024"></font>
-		<font style="18" color="13617276"></font>
-		<font style="19" color="16758590"></font>
-		<font style="21" color="9749720"></font>
-		<font style="22" color="14732901"></font>
-		<font style="37" color="13495789"></font>
-		<font bool="1" code="2067" color="0xFFFFFF"></font>
-		<font bool="1" code="2068" color="0x5e0000"></font>
-		<font code="2069" color="16777215"></font>
-		<font code="2098" color="4473924"></font>
-		<font code="2600" color="15450263"></font>
-		<font code="2601" color="6160384"></font>
-		<font style="20" color="16759366"></font>
-		<font style="24" color="15458669"></font>
-		<font style="23" color="8241367"></font>
-		<font style="9" color="11184810"></font>
-		<font style="8" color="9737364"></font>
-		<font style="10" color="255" background="0"></font>
-		<font style="16" color="5741559"></font>
-	</fonts>
-	<fonts>
 		<name>Zenburn</name>
 		<author>GeekDude</author>
 		<font background="4144959" bold="1" color="13495789" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
