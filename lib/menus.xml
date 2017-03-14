@@ -22,6 +22,7 @@
 			<menu name="Manage File Types" clean="Manage_File_Types"></menu>
 			<menu name="E&amp;xit" clean="Exit" hotkey=""></menu></menu>
 		<menu name="&amp;Edit" clean="Edit" tv="11457352">
+			<menu name="Menus" clean="Menus"></menu>
 			<menu name="Edit Hotkeys" clean="Edit_Hotkeys"></menu>
 			<menu name="Insert Current Time" clean="Insert_Current_Time"></menu>
 			<menu name="&amp;Undo" clean="Undo"></menu>
