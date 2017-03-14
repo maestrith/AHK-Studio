@@ -1,4 +1,26 @@
+1.003.15
+Added:
+-Completely re-wrote the Settings dialog
+--Auto Insert: You can edit when you add a ( it will add the ) or anything you like
+--Edit Replacements: Replaces www with World Wide Web or anything you like
+--Manage File Types: AHK Studio can only edit text based files and I have added in a few types but if you wish to have other types, you can add them here
+--Menus: You can completely change the menus fonts and order
+--Options: AHK Studio had quite a few options and this is a way to quickly set them
+--Theme: Completely change the theme of AHK Studio
+1.003.14
+Changed:
+-Edit Replacements: Added |E for End Of Line
+-Replacements: Will now goto the end of the replacement if you do not specify $| or $E
+-Settings: Completely re-wrote the entire code to include
+--Auto Insert: For managing adding > when you add a < or removing items from that list
+--Edit Replacements: You can have www(Space, Comma, Shift+Enter) expand to World Wide Web
+--Manage File Types: Studio can only open text based files so I have limited it to .txt,.ahk,.html and a few other file extensions.  You can change that here
+--Menus: Add/Change icons for menu items and rearrange them to how you want them to be ordered
+--Options: Quickly set some of the many different options that Studio has to offer
+--Themes: Edit the look of AHK Studio and download some pre-made themes as well
 1.003.13
+Added: Requested by Run1e
+-Omni-Search: Hotkeys for prefixes if they have any associated with them
 Changed: Reported by megabugman
 -Omni-Search: Removed the Omni-Search option from Omni-Search
 -Zoom causing line numbers to get cropped #108
