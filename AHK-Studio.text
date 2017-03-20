@@ -1,3 +1,9 @@
+1.003.16
+Fixed: Reported by megabugman #98
+-Right Click Menu: Cut not working
+-Split Control then RCM Open Folder not being greyed out in the new control
+Fixed: Reported by jsilverstreak #111
+-Hide Tray Icon: Was not remembering from run to run
 1.003.15
 Added:
 -Completely re-wrote the Settings dialog
