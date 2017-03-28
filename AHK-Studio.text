@@ -4,6 +4,8 @@ Fixed: Reported by megabugman #98
 -Split Control then RCM Open Folder not being greyed out in the new control
 Fixed: Reported by jsilverstreak #111
 -Hide Tray Icon: Was not remembering from run to run
+Fixed: Reported by nnnik
+-Pressing Delete was not causing the file to be edited
 1.003.15
 Added:
 -Completely re-wrote the Settings dialog
