@@ -1,3 +1,6 @@
+1.003.17
+Added: Suggested by Run1e
+-Adding ;Startup (Case Sensitive) will add a plugin to the startup of Studio
 1.003.16
 Fixed: Reported by megabugman #98
 -Right Click Menu: Cut not working
