@@ -3,6 +3,8 @@ Added: Suggested by Run1e
 -Adding ;Startup (Case Sensitive) will add a plugin to the startup of Studio
 Fixed:
 -Smart Delete: I made some changes and broke it.
+Fixed: Reported by Run1e
+-Some commands were not being colored correctly
 1.003.16
 Fixed: Reported by megabugman #98
 -Right Click Menu: Cut not working
