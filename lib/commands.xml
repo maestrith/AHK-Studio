@@ -284,6 +284,7 @@
 		<commands syntax="(Number)">Sin</commands>
 		<commands syntax="(Number)">Sqrt</commands>
 		<commands syntax="(String)">StrLen</commands>
+		<commands syntax="(Item)">Push</commands>
 		<commands syntax="(String, StartingPos [, Length])">SubStr</commands>
 		<commands syntax="(Number)">Tan</commands>
 		<commands syntax="(Name, [ParentItemID, Options])">TV_Add</commands>
