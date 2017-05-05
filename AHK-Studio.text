@@ -5,6 +5,8 @@ Fixed:
 -Smart Delete: I made some changes and broke it.
 Fixed: Reported by Run1e
 -Some commands were not being colored correctly
+Fixed: Reported by Someone I am sure but I forgot who :( sorry
+-Right Click: When Studio is the active window and you are right clicking outside of Studio it was giving a Studio menu
 1.003.16
 Fixed: Reported by megabugman #98
 -Right Click Menu: Cut not working
