@@ -1,0 +1,310 @@
+<?xml version="1.0"?>
+<menus>
+	<main>
+		<menu name="&amp;File" clean="File" top="1" tv="9813848">
+			<menu name="&amp;New" hotkey="^N" clean="New" tv="9814424">Creates a new project.</menu>
+			<menu name="&amp;Open" clean="Open" tv="9815000">Opens an AHK file or Project for editing.</menu>
+			<menu name="Open Fol&amp;der" clean="Open_Folder" hotkey="^!D" tv="9814064">Opens an explorer window to the folder where the current Project is stored.</menu>
+			<menu clean="Close" name="&amp;Close" tv="9813704">Closes the current Project. This will also close the parent project if you are currently in a Include.</menu>
+			<menu name="Close All" clean="Close_All" hotkey="" tv="9814208">Closes all of the open projects.</menu>
+			<menu name="&amp;Save" clean="Save" filename="Shell32.dll" icon="9" tv="9814784">Saves all unsaved files. (All Projects and Includes are saved as well as backups of previous versions which can be accessed by using the Edit/Restore feature or by navigating to the directory where the Project is stored and then into the Backup directory)</menu>
+			<menu clean="Save_As" name="Save &amp;As" tv="9814640">Save the project As a new project. This will leave the old project in tact so you need to delete the old one.</menu>
+			<menu name="Export" clean="Export" filename="Shell32.dll" icon="10" tv="9814712">Compiles all of the Includes of a Project and saves it to a file. (Does not make an EXE, Use Compile for that)</menu>
+			<separator clean="&lt;Separator&gt;" option="1"></separator>
+			<menu name="New Scintilla Window" clean="New_Scintilla_Window" tv="9814856">Creates a new Scintilla edit control.</menu>
+			<menu name="Remove Scintilla Window" clean="Remove_Scintilla_Window" tv="9815072">Removes the current Scintilla control, You must have more than 1 or this will not work.</menu>
+			<menu name="New Include" clean="New_Include" tv="9815360">Creates a new Include for the current Project (adds an include)</menu>
+			<menu name="Rename Current Include" clean="Rename_Current_Include" tv="9815144">Rename the current Include.</menu>
+			<menu name="Remove Include" clean="Remove_Include" tv="9815216">Removes a Include (include) from the project.</menu>
+			<menu name="&amp;Upload" clean="Upload" option="" plugin="plugins\Upload.ahk" tv="9816872">Provides a basic FTP setup to upload your Projects.</menu>
+			<menu name="&amp;Publish" clean="Publish" tv="9817448">Saves all of the Includes (if you have any) into one script and places it into your clipboard so you can paste it on whatever forum, file, or website you like.</menu>
+			<menu name="Delete Project" clean="Delete_Project" tv="9816368">This will delete the current project, along with all Includes and Backups associated with the Project.</menu>
+			<menu name="Pre&amp;vious Scripts" clean="Previous_Scripts" tv="9816224">Opens a gui that shows the scripts you have closed.</menu>
+			<menu name="E&amp;xit" clean="Exit" hotkey="" tv="9817376">Exits the program. This saves all of your edited files and saves the old version to %A_ScriptDir%\Backup.</menu>
+			<menu clean="Manage_File_Types" name="Manage File Types" tv="9816440">You can add different file types that AHK Studio can open.  This is done to keep you from accidentally opening media files that could crash Studio.</menu></menu>
+		<menu name="&amp;Edit" clean="Edit" top="1" tv="9817088">
+			<menu name="Edit Hotkeys" clean="Edit_Hotkeys" tv="9816080">Opens a new dialog that allows you to bind a hotkey to any of AHK Studios menu items.</menu>
+			<menu name="Insert Current Time" clean="Insert_Current_Time" tv="9817520">Inserts the current time in YYYYMMDDHH24MISS format.</menu>
+			<menu name="&amp;Undo" clean="Undo" tv="9816512">Reverts to a previous point in the document history. (Same as Ctrl+Z)</menu>
+			<menu name="Increment" clean="Increment" hotkey="^!Up" tv="9817592">Increments an integer where your Caret is located.</menu>
+			<menu name="Decrement" clean="Decrement" hotkey="^!Down" tv="9816584">Decrements an integer where your Caret is located.</menu>
+			<menu name="Red&amp;o" clean="Redo" tv="9817304">Redoes steps that you have Undone. (Same as Ctrl+Y)</menu>
+			<menu name="Cut" clean="Cut" hotkey="^X" tv="9816152">Cuts the currently selected text to the clipboard. (Ctrl+X)</menu>
+			<menu name="Copy" clean="Copy" hotkey="^C" tv="9816656">Copies the currently selected text to the clipboard. (Ctrl+C)</menu>
+			<menu name="Paste" clean="Paste" hotkey="^V" tv="9815936">Pastes the contents of your clipboard into the current Include or Project at the caret position. (Ctrl+V)</menu>
+			<menu name="Add Selected To Personal Variables" clean="Add_Selected_To_Personal_Variables" tv="9816008">Adds the currently selected text to your Personal Variable List.</menu>
+			<menu name="&amp;Duplicate Line" hotkey="F2" clean="Duplicate_Line" tv="9816296">Creates a duplicate of the line that your caret is in, or if you have text selected it will duplicate that.</menu>
+			<menu name="Delete Line" clean="Delete_Line" hotkey="!D" tv="9817160">Deletes the current line where your Caret is located.</menu>
+			<menu name="Select Next Duplicate" clean="Select_Next_Duplicate" hotkey="+^F3" tv="9817232">Selects the next duplicate word or words that you have selected.</menu>
+			<menu name="Replace &amp;Selected" clean="Replace_Selected" tv="9816728">Shows an InputBox for you to enter the text to replace the currently selected text.  Will work with multiple selections.</menu>
+			<menu name="Ed&amp;it Replacements" clean="Edit_Replacements" tv="9816800">Shows a dialog to add replacement text to. Eg. (g,Gui) would replace lower case g with Gui if you type (" ",",",or "(") after it.</menu>
+			<menu name="Create Include From Selection" hotkey="+^n" clean="Create_Include_From_Selection" tv="9816944">Adds a new Include to your project using the currently selected text.</menu>
+			<menu name="New Include From Current Word" clean="New_Include_From_Current_Word" tv="9990744">Creates a new Include (Include) using the current word where your Caret is located.  It will also create a function with the same name.</menu>
+			<menu name="Togg&amp;le Comment Line" hotkey="^J" clean="Toggle_Comment_Line" tv="9990096">Adds or removes ; at the beginning of a line. You can use Edit Comment Insert to change it to whatever you like.</menu>
+			<menu name="Fi&amp;x Indent" clean="Fix_Indent" tv="9991968">This option is mainly used for those who decide to turn off Full Auto. It indents your code by Blocks (code between { and }) but will also move all indentations of anything outside of code blocks to the left.</menu>
+			<menu clean="Spacing" name="Spacing" top="1" tv="9991320">
+				<menu name="Add Space After Commas" clean="Add_Space_After_Commas" option="ac" plugin="plugins\Add Spaces.ahk" tv="9992328">Adds spaces after commas in selected text.</menu>
+				<menu name="Add Space Before And After Commas" clean="Add_Space_Before_And_After_Commas" option="baa" plugin="plugins\Add Spaces.ahk" tv="9992112">Adds spaces before and after commas in selected text.</menu>
+				<menu name="Add Space Before Commas" clean="Add_Space_Before_Commas" option="bc" plugin="plugins\Add Spaces.ahk" tv="9992184">Adds spaces before commas in selected text.</menu>
+				<menu name="Remove Spaces From Selected" hotkey="^!u" clean="Remove_Spaces_From_Selected" tv="9990960">Will remove all spaces from the selected text.</menu>
+				<menu name="Remove Spaces From Around Commas" clean="Remove_Spaces_From_Around_Commas" hotkey="!^E" option="rsfac" plugin="plugins\Add Spaces.ahk" tv="9991032">Removes all spaces from around commas.</menu></menu>
+			<menu clean="Folding" name="Folding" top="1" tv="9990456">
+				<menu clean="Fold_All" name="Fold All" option="all" plugin="plugins\Fold.ahk" tv="9991104">Folds all available folds.</menu>
+				<menu clean="Fold_Current_Level" name="Fold Current Level" option="fc" plugin="plugins\Fold.ahk" tv="9990816">Folds only the lines that are in the current fold level.</menu>
+				<menu clean="Fold_Level_X" name="Fold Level X" option="fx" plugin="plugins\Fold.ahk" tv="9991176">Allows you to choose what fold level to fold.  Each indentation is a fold level.</menu>
+				<menu clean="Unfold_All" name="Unfold All" option="ua" plugin="plugins\Fold.ahk" tv="9992256">Unfolds all folded lines.</menu>
+				<menu clean="Unfold_Current_Level" name="Unfold Current Level" option="uc" plugin="plugins\Fold.ahk" tv="9990888">Unfolds all of the folded lines in the current level.</menu>
+				<menu clean="Unfold_Level_X" name="Unfold Level X" option="ux" plugin="plugins\Fold.ahk" tv="9990672">Unfolds the lines from the entered level.</menu></menu></menu>
+		<menu clean="Search" name="&amp;Search" top="1" tv="9991248">
+			<menu name="Scintilla Control" clean="Scintilla_Control" tv="9990600">Shows a list of all of the Scintilla Controls and you can choose which one to focus.</menu>
+			<menu name="&amp;Find" clean="Find" hotkey="^F" tv="9990168">Searches through all of the Includes under the current Project for specified text and displays the results. Select the result you wish to jump to and press enter.</menu>
+			<menu name="&amp;Next Found" hotkey="F3" clean="Next_Found" tv="9991680">Jumps to the next selected text.</menu>
+			<menu name="Previous Found" hotkey="+F3" clean="Previous_Found" tv="9991392">Jumps to the previous selected text.</menu>
+			<menu clean="Find_Replace" hotkey="^H" name="Find Replace" tv="9992040">Searches for a search string and allows you to replace it with another string.</menu>
+			<menu name="Words In Document" clean="Words_In_Document" hotkey="!W" tv="9991464">Displays a dropdown list of all of the text in that document.</menu>
+			<menu clean="Go_To_Line" name="Go To Line" tv="9991536">Opens a dialog to ask what line you would like to go to.</menu>
+			<menu name="&amp;Quick Find" hotkey="!q" clean="Quick_Find" tv="9990312">Sets focus to the Quick Find edit control. This searches through the current Include (Include) using normal or Regex search. Use the CheckBoxes next to it to change the behavior.</menu>
+			<menu name="&amp;Jump to Include" hotkey="!j" clean="Jump_to_Include" tv="9991608">Opens the Omni-Search window with ^.</menu>
+			<menu name="Jump to Proj&amp;ect" clean="Jump_to_Project" hotkey="!^S" tv="9990240">Opens the Omni-Search window with ^. (Same as Jump To Include)</menu>
+			<menu clean="Jump_To" name="Jump To" top="1" tv="9991752">
+				<menu clean="Jump_To_Class" name="Jump To Class" tv="9990384">Wherever your caret it within a word you can jump to the Class associated with that text.</menu>
+				<menu clean="Jump_To_First_Available" name="Jump To First Available" hotkey="!F1" tv="9991824">Wherever your caret it within a word you can jump to the First Available Text associated with that text.</menu>
+				<menu clean="Jump_To_Function" name="Jump To Function" tv="9991896">Wherever your caret it within a word you can jump to the Function associated with that text.</menu>
+				<menu clean="Jump_To_Include" name="Jump To Include" hotkey="+^i" tv="9993624">Wherever your caret it within a word you can jump to the Include associated with that text.</menu>
+				<menu clean="Jump_To_Label" name="Jump To Label" tv="9993552">Wherever your caret it within a word you can jump to the Label associated with that text.</menu>
+				<menu clean="Jump_To_Method" name="Jump To Method" tv="9993480">Wherever your caret it within a word you can jump to the Method associated with that text.</menu>
+				<menu clean="Jump_To_Matching_Brace" name="Jump To Matching Brace" tv="9992616">If your caret is near a Brace (Either {} or also () &lt;&gt; []) it will place your caret near the matching item.</menu></menu>
+			<menu clean="Omni-Search" name="Omni-Search" top="1" tv="9993696">
+				<menu clean="Add_Function_Call" name="Add Function Call" hotkey="^=" tv="9993768">This will bring up a list of all of your Classes and Functions and insert a call to it in your code.</menu>
+				<menu clean="Bookmark_Search" name="Bookmark Search" hotkey="+^3" tv="9993048">Opens up the Omni-Search window with #.</menu>
+				<menu name="Class Search" hotkey="^!C" clean="Class_Search" tv="9992400">Opens up the Omni-Search window with {.</menu>
+				<menu name="File Search" hotkey="+!O" clean="File_Search" tv="9992832">Opens up the Omni-Search window with ^.</menu>
+				<menu name="Function Search" clean="Function_Search" hotkey="+^9" tv="9993264">Opens up the Omni-Search window with (.</menu>
+				<menu name="Hotkey Search" hotkey="+^7" clean="Hotkey_Search" tv="9992472">Opens up the Omni-Search window with &amp;.</menu>
+				<menu name="Instance Search" clean="Instance_Search" tv="9992976">Opens Omni-Search with &lt;.</menu>
+				<menu name="Menu Search" hotkey="!M" clean="Menu_Search" tv="9992544">Opens up the Omni-Search window with @.</menu>
+				<menu name="Method Search" hotkey="^!M" clean="Method_Search" tv="9993120">Opens up the Omni-Search window with [.</menu>
+				<menu name="Omni Search" hotkey="^!O" clean="Omni_Search" tv="9993408">Opens up the Omni-Search window with nothing entered.</menu>
+				<menu name="Property Search" clean="Property_Search" tv="9992904">Opens the Omni-Search window with .</menu>
+				<menu name="Search Label" clean="Search_Label" hotkey="+^;" tv="9993984">Opens up the Omni-Search window with :.</menu>
+				<menu name="Variable Search" clean="Variable_Search" tv="9993336">Opens the Omni-Search window with %.</menu></menu></menu>
+		<menu name="&amp;Tools" clean="Tools" top="1" tv="9993840">
+			<menu name="Add Selected To Project Specific AutoComplete" clean="Add_Selected_To_Project_Specific_AutoComplete" tv="9992688">This will add the selected text to the Project Specific AutoComplete list.</menu>
+			<menu name="Project Specific AutoComplete" clean="Project_Specific_AutoComplete" tv="9993912">Nearly identical to Personal Variable List but this allows you to have words in the Auto Complete that are specific to that Project.</menu>
+			<menu name="Co&amp;mpile" clean="Compile" hotkey="^F7" tv="9993192">Compiles the current project and places the exe file in the project directory. If the file upx.exe is in the AHK Studio directory it will also compress it.</menu>
+			<menu clean="Debug" name="Debug" top="1" tv="9992760">
+				<menu name="Debug Current Script" clean="Debug_Current_Script" hotkey="^D" option="" plugin="plugins\Debug Current Script.ahk" tv="9996472">Debugs your current script using the debugging engine.</menu>
+				<menu name="Stop Debugger" clean="Stop_Debugger" hotkey="!S" tv="9998128">Debugging: Stops the debugger.</menu>
+				<menu name="Run Program" clean="Run_Program" hotkey="!E" tv="9997480">Debugging: After you Debug the current script you use this to run the code.</menu>
+				<menu clean="Step_Into" name="Step Into" hotkey="!N" tv="9997768">Does the Step Into function for debugging.</menu>
+				<menu clean="Step_Out" name="Step Out" tv="9997624">Does the Step Out function for debugging.</menu>
+				<menu clean="Step_Over" name="Step Over" tv="9997696">Does the Step Over function for debugging.</menu>
+				<menu name="List Variables" clean="List_Variables" tv="9997192">Debugging: Shows a dialog with the current variables and their values.</menu>
+				<menu clean="Focus_Studio_On_Debug_Breakpoint" name="Focus Studio On Debug Breakpoint" tv="9996760">When you hit a breakpoint while debugging this option will re-focus AHK Studio if it is taken away.</menu>
+				<menu clean="Auto_Variable_Browser" name="Auto Variable Browser" tv="9997840">Starts Debugging with the Variable Browser automatically open.</menu></menu>
+			<menu name="&amp;Run" clean="Run" hotkey="!R" tv="9996400">Executes the current Project.</menu>
+			<menu clean="Kill_Process" name="Kill Process" hotkey="^End" tv="9996904">When you run a script using AHK Studio it keeps track of the processes.  This will allow you to kill those running processes.</menu>
+			<menu name="Run Se&amp;lected Text" clean="Run_Selected_Text" option="" plugin="plugins\Run Selected Text.ahk" tv="9996544">Executes whatever selected text that is in the current Include.</menu>
+			<menu clean="Run_Comment_Block" name="Run Comment Block" hotkey="!^V" option="" plugin="plugins\Run Comment Block.ahk" tv="9996688">If you create a comment block with usable code and then Run Comment Block it will run what is inside that comment block.</menu>
+			<menu clean="Run_As" name="Run As" top="1" tv="9998344">
+				<menu name="Run As Ansii" clean="Run_As_Ansii" hotkey="^!A" tv="9998200">Executes the current Project using the Ansii binaries.</menu>
+				<menu name="Run As U32" clean="Run_As_U32" tv="9997912">Executes the current Project using the U32 binaries.</menu>
+				<menu name="Run As U64" clean="Run_As_U64" tv="9998416">Executes the current Project using the U64 binaries.</menu></menu>
+			<menu clean="Backup_and_Restore" name="Backup and Restore" top="1" tv="9996616">
+				<menu name="One Backup" clean="One_Backup" hotkey="+^O" tv="9996832">Works pretty much the same as Full Backup but removes all previous Full Backups.</menu>
+				<menu name="&amp;Full Backup" clean="Full_Backup" tv="9996976">When you have your Project working properly you can do a Full Backup and it will get rid of all of the backup files that you have made since the last Full Backup.</menu>
+				<menu name="&amp;Restore Current File" clean="Restore_Current_File" option="" plugin="plugins\Restore Current File.ahk" tv="9997984">Brings up a dialog containing all of the backup files of the current Include. You can browse through the list of backed up Includes and then you can restore them to a previous state.</menu></menu>
+			<menu clean="Bookmarks" name="Bookmarks" top="1" tv="9997048">
+				<menu clean="Manage_Bookmarks" name="Manage Bookmarks" hotkey="^M" option="mb" plugin="plugins\BookMarks.ahk" tv="9997120">Opens a dialog so you can manage your bookmarks.</menu>
+				<menu clean="Add_Bookmark" name="Add Bookmark" hotkey="^B" option="ab" plugin="plugins\BookMarks.ahk" tv="9998056">Add a bookmark.</menu>
+				<menu clean="Delete_Bookmark" name="Delete Bookmark" option="db" plugin="plugins\BookMarks.ahk" tv="9997264">Delete a bookmark.</menu>
+				<menu clean="Edit_Custom_Bookmark" name="Edit Custom Bookmark" option="ecb" plugin="plugins\BookMarks.ahk" tv="9998488">This edits the custom bookmark.</menu>
+				<menu clean="Jump_To_Next_Bookmark" name="Jump To Next Bookmark" hotkey="^!RIGHT" option="jtnb" plugin="plugins\BookMarks.ahk" tv="9997336">Jumps to the next bookmark.</menu>
+				<menu clean="Jump_To_Previous_Bookmark" name="Jump To Previous Bookmark" hotkey="^!LEFT" option="jtpb" plugin="plugins\BookMarks.ahk" tv="9998272">Jumps to the previous bookmark.</menu></menu>
+			<menu clean="Plugins" name="P&amp;lugins" top="1" tv="9997408">
+				<menu name="Download Plugins" clean="Download_Plugins" tv="9997552">This will download plugins.</menu>
+				<menu clean="Test_Plugin" name="Test Plugin" hotkey="!t" tv="9996256">Will reload Studio.</menu>
+				<separator clean="&lt;Separator&gt;"></separator>
+				<menu clean="Additional_Publish" hotkey="" name="Additional Publish" option="" plugin="plugins\Additional Publish.ahk" tv="9996328">Similar to Publish but this will also get the lib functions that you do not make an #Include call to.</menu>
+				<menu clean="Backup" hotkey="" name="Backup" option="" plugin="plugins\Backup.ahk" tv="9999928"></menu>
+				<menu clean="Camel" hotkey="" name="Camel" option="" plugin="plugins\Camel.ahk" tv="9999856">Camel Cases Selected Text.</menu>
+				<menu clean="Clean_Position_Data" hotkey="" name="Clean Position Data" option="" plugin="plugins\Clean Position Data.ahk" tv="9998848">AHK Studio keeps track of the cursor position for all of your files.  As you delete or change the names of your projects this position data becomes obsolete.  This option gets rid of it.</menu>
+				<menu clean="Compile_Using_Unicode_32" hotkey="" name="Compile Using Unicode 32" option="" plugin="plugins\Compile Using Unicode 32.ahk" tv="9999136">Compiles your script using Unicode 32.  Same as Compile if you use the 32 bit install of AutoHotkey.</menu>
+				<menu clean="Toggle_Fold_All" hotkey="" name="Toggle Fold All" option="tfa" plugin="plugins\Fold.ahk" tv="10000216">Folds all text that can be folded.</menu>
+				<menu clean="Toggle_Fold" hotkey="" name="Toggle Fold" option="tf" plugin="plugins\Fold.ahk" tv="9998920">Folds the current line.</menu>
+				<menu clean="Increment_Selected" hotkey="" name="Increment Selected" option="" plugin="plugins\Increment Selected.ahk" tv="10000072">If you have multiple selections of Value1 it will increment all following selections to Value2, Value3 and so on.</menu>
+				<menu clean="Make_One_Line" hotkey="![" name="Make One Line" option="" plugin="plugins\Make One Line.ahk" tv="9999064">Combines all selected lines with a , between them.</menu>
+				<menu clean="Mark_All_Files_For_Update" hotkey="" name="Mark All Files For Update" option="" plugin="plugins\Mark All Files For Update.ahk" tv="9998704">This will trigger all of your files to save the current state.</menu>
+				<menu clean="Paste_To_p.ahkscript.org" hotkey="" name="Paste To p.ahkscript.org" option="" plugin="plugins\Paste Script.ahk" tv="10000000">Pastes the current project to p.ahkscript.org</menu>
+				<menu clean="Paste_Clipboard" hotkey="^!P" name="Paste Clipboard" option="Clipboard" plugin="plugins\Paste Script.ahk" tv="9999784">Pastes your clipboard to p.ahkscript.org</menu>
+				<menu clean="Remove_Blank_Lines" hotkey="" name="Remove Blank Lines" option="" plugin="plugins\Remove Blank Lines.ahk" tv="9998560">Removes lines that are blank (`n`n)</menu>
+				<menu clean="Remove_Comments" hotkey="" name="Remove Comments" option="" plugin="plugins\Remove Comments.ahk" tv="9999424">Removes all text between /* */ and all ; comments</menu>
+				<menu clean="Run_Current_Include" hotkey="" name="Run Current Include" option="Include" plugin="plugins\Run Selected Text.ahk" tv="9999352">Will dynamically run the current Include</menu>
+				<menu clean="Split_Line_By_Comma" hotkey="!," name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk" tv="9999208">Plugin: Will split a line (or at least attempt to) by significant ,'s</menu>
+				<menu clean="Toggle_Fullscreen" hotkey="" name="Toggle Fullscreen" option="" plugin="plugins\Toggle Fullscreen.ahk" tv="9998992">Plugin: Gets rid of the window caption</menu>
+				<menu clean="Update_Repository" hotkey="" name="Update Repository" option="" plugin="plugins\Update Repository.ahk" tv="9999280">Plugin: Allows you to create and maintain a Github Repository</menu></menu>
+			<menu clean="Custom_Commands" hotkey="" name="Custom Commands" option="" plugin="plugins\Custom Commands.ahk" tv="9999496">Allows you to edit the Syntax, Colored Text, and Auto Menus without having to worry about an update changing things.</menu>
+			<menu name="Scratch &amp;Pad" clean="Scratch_Pad" tv="12868088">A small Scintilla window that allows you to test some code</menu>
+			<menu name="Personal &amp;Variable List" clean="Personal_Variable_List" tv="9999568">Allows you to add your own personal variables to the program so when you type it will bring them up along with the standard commands.</menu>
+			<menu name="Code &amp;Vault" clean="Code_Vault" hotkey="+^F1" option="" plugin="plugins\Code Vault.ahk" tv="10000144">A place to store code snippets [Video Here](https://www.youtube.com/watch?v=URk_C9fE-Ok&amp;list=UUK-F1YEzAYtczSuMxwPaRtw)</menu>
+			<menu name="Create Launcher" clean="Create_Launcher" option="" plugin="plugins\Create Launcher.ahk" tv="13446088"></menu>
+			<menu name="Ms&amp;gBox Creator" clean="MsgBox_Creator" option="" plugin="plugins\MsgBox Creator.ahk" tv="9999640">Opens a dialog for creating a MsgBox.</menu>
+			<menu name="Github Repository" hotkey="^G" clean="Github_Repository" option="" plugin="plugins\Github Repository.ahk" tv="9998632">Opens a dialog to upload your script to Github.</menu>
+			<menu name="Update Github Info" clean="Update_Github_Info" tv="9998776">Dialog for entering your Github information.</menu>
+			<menu name="Post &amp;All In One Gist" clean="Post_All_In_One_Gist" no="1" tv="9999712">Currently Unavailable.</menu>
+			<menu name="Post &amp;Multiple Include Gist" clean="Post_Multiple_Include_Gist" no="1" tv="10008352">Currently Unavailable.</menu>
+			<menu name="FT&amp;P Servers" clean="Ftp_Servers" option="" plugin="plugins\Ftp Servers.ahk" tv="10006984">Dialog for adding your own FTP servers so that you can upload your code using File/Upload.</menu>
+			<menu name="Auto Insert" clean="Auto_Insert" hide="1" option="" plugin="plugins\Auto Insert.ahk" tv="10007200">By default ( enters ), { enters }, &lt; enters &gt;, ' enters ', " enters ", and enters . This dialog will allow you to edit that functionality.</menu>
+			<menu clean="Settings" name="Settings" option="" tv="10007920">Re-organize the menus, change hotkeys, and quick access to the options.</menu>
+			<menu clean="FTP_Servers" name="FT&amp;P Servers" option="" plugin="plugins\Ftp Servers.ahk" tv="10006768">Duplicate menu item that I haven't removed yet...</menu>
+			<menu clean="Google_Search_Selected" name="Google Search Selected" tv="10007848">Opens a Google search with the currently selected text.</menu></menu>
+		<menu name="O&amp;ptions" clean="Options" top="1" tv="10008064">
+			<menu name="&amp;Word Wrap" clean="Word_Wrap" option="1" tv="10007344">Enables Word Wrap.</menu>
+			<menu name="&amp;Auto Indent" clean="Auto_Indent" top="1" tv="10006912">
+				<menu name="Auto Indent Comment Lines" clean="Auto_Indent_Comment_Lines" tv="10007992">Keeps ;Comment Lines indented as well as normal lines.</menu>
+				<menu name="&amp;Full Auto" clean="Full_Auto" tv="10007488">Keeps track of the indenting of your script.</menu></menu>
+			<menu name="Virtual Scratch Pad" clean="Virtual_Scratch_Pad" hotkey="" option="1" tv="12874280">Without this option the Scratch Pad creates a local file on your HDD</menu>
+			<menu name="Virtual Space" clean="Virtual_Space" option="1" tv="10007272">Allows you to edit past the end of a line ==Word Wrap Removes the horizontal scroll bar and wraps the lines of text.</menu>
+			<menu name="Set &amp;As Default Editor" clean="Set_As_Default_Editor" tv="10007056">Sets AHK Studio as the default editor. May require the script to be ran as administrator.</menu>
+			<menu clean="New_File_Template" name="New File Template" tv="10008136">Gives you an edit control to add whatever you want to be pre-populated when you create a new Project.</menu>
+			<menu clean="Default_Project_Folder" name="Default Project Folder" tv="10007416">Gives you the ability to change the default Project folder when creating new Projects.</menu>
+			<menu name="Tab Width" clean="Tab_Width" tv="10008208">Allows you to adjust the amount of visual spaces for each tab indentation.</menu>
+			<menu name="&amp;Theme" clean="Theme" option="" plugin="plugins\Theme.ahk" tv="10006840">Use this to create, save, export, and import Themes. ![Theme.PNG](http://www.maestrith.com/files/AHKStudio/Theme.PNG)</menu>
+			<menu name="Margin Left" clean="Margin_Left" tv="10007560">Adds a margin to the left of the text.</menu>
+			<menu name="Q&amp;uick Find Settings" clean="Quick_Find_Settings" top="1" tv="10008280">
+				<menu name="&amp;Case Sensitive" clean="Case_Sensitive" tv="10008424">Makes the search Case Sensitive.</menu>
+				<menu name="Cle&amp;ar Selection" clean="Clear_Selection" hotkey="^F2" tv="10007128">Clears custom search areas created by "Set Selection".</menu>
+				<menu name="Greed" clean="Greed" hotkey="!G" tv="10007632">Uses the Greed option in regex.</menu>
+				<menu name="&amp;Regex" clean="Regex" hotkey="^!r" tv="10007704">Makes the search a regex search.</menu>
+				<menu name="Copy Selected Text on Quick Find" clean="Copy_Selected_Text_on_Quick_Find" tv="10007776">When you hit the hotkey for Quick Find it will automatically populate the edit control with the currently selected text.</menu>
+				<menu name="&amp;Set Selection" clean="Set_Selection" hotkey="^F1" tv="10004896">Creates a search selection based on what you have selected. Quick Find will only highlight the text that matches your search within this area.</menu>
+				<menu clean="Multi_Line" name="Multi Line" tv="10006480">Quick Find: Toggles Multi-Line.</menu></menu>
+			<menu clean="Formatting_Options" name="Formatting Options" option="1" top="1" tv="10006048">
+				<menu name="Edit Comment Insert" clean="Edit_Comment_Insert" option="1" tv="10004608">Shows a Dialog so that you can edit the text that will be inserted when you use Toggle Comment Line (Defaults to ;).</menu>
+				<menu name="Auto Space After Comma" clean="Auto_Space_After_Comma" option="1" tv="10005760">When entering a , it will automatically add a space after it.</menu>
+				<menu name="Auto Space Before Comma" clean="Auto_Space_Before_Comma" option="1" tv="10004968">When entering a , it will automatically add a space before it.</menu>
+				<menu name="Autocomplete Enter Newline" clean="Autocomplete_Enter_Newline" option="1" tv="10004680">When enabled and you press enter rather than tab to auto complete an item it will add a newline.</menu>
+				<menu name="Build Comment" clean="Build_Comment" option="1" tv="10005328">When creating comments this option will build another ; on top of any that are already there.</menu>
+				<menu name="Center Caret" clean="Center_Caret" option="1" tv="10004536">When scrolling down a large document the caret will stay centered vertically.</menu>
+				<menu clean="Hide_Indentation_Guides" name="Hide Indentation Guides" option="1" tv="10006264">Hides the Indentation Guides (Look like vertical line of dots to show indentation).</menu>
+				<menu name="Highlight Current Area" clean="Highlight_Current_Area" option="1" tv="10005040">Can be buggy! Highlights the current indentation.</menu>
+				<menu clean="Includes_In_Place" name="Includes In Place" option="1" tv="10006552">Option: When you create an include using Create Include From Selection this will add the #Include line where the text was rather than in the main Project file.</menu>
+				<menu name="Manual Continuation Line" clean="Manual_Continuation_Line" option="1" tv="10006696">Allows you to indent lines that start with (. , and or) however you like.</menu>
+				<menu clean="Shift_Breakpoint" name="Shift Breakpoint" option="1" tv="10005832">Requires you to hold Shift when creating a Breakpoint.</menu>
+				<menu name="Show Caret Line" clean="Show_Caret_Line" option="1" tv="10004752">Highlights the current row your caret is in.</menu>
+				<menu name="Show EOL" clean="Show_EOL" option="1" tv="10005904">Shows EOL characters.</menu>
+				<menu name="Show WhiteSpace" clean="Show_WhiteSpace" option="1" tv="10006120">Shows the whitespace characters.</menu>
+				<menu name="Disable Auto Delete" clean="Disable_Auto_Delete" option="1" tv="10326824">This will attempt to automatically delete matching ( ) { } [ ] etc but holding backspace to delete quickly will cause issues.</menu>
+				<menu clean="Disable_Auto_Indent_For_Non_Ahk_Files" name="Disable Auto Indent For Non Ahk Files" option="1" tv="10005976">If you are editing a non-ahk file it will not adjust the indents.</menu>
+				<menu name="Disable Auto Insert Complete" clean="Disable_Auto_Insert_Complete" option="1" tv="10005688">When you have ( ) { } etc set to auto insert it will not do the Auto Complete.</menu>
+				<menu clean="Auto_Complete" name="Auto Complete" option="1" tv="10005544">Shows a list of items that you can then hit enter to have Auto-Completed.</menu>
+				<menu clean="Auto_Complete_In_Quotes" name="Auto Complete In Quotes" option="1" tv="10005472">Shows the Auto-Complete list when you are inside "" or also in comments.</menu>
+				<menu clean="Auto_Complete_While_Tips_Are_Visible" name="Auto Complete While Tips Are Visible" option="1" tv="10006192">Shows the Auto-Complete list while the Context Sensitive Help tips are visible.</menu></menu>
+			<menu clean="Program_Options" name="Program Options" option="1" top="1" tv="10005112">
+				<menu clean="Run_As_Admin" name="Run As Admin" option="1" tv="10005184">Runs scripts as admin (will cause a popup if you do not edit your UAC).</menu>
+				<menu name="Warn Overwrite On Export" clean="Warn_Overwrite_On_Export" option="1" tv="10004824">Asks if you are sure you want to overwrite the file.</menu>
+				<menu clean="Custom_Version" name="Custom Version" tv="10006336">Dialog to change the syntax of the ;auto_version</menu>
+				<menu clean="Reset_Zoom" name="Reset Zoom" tv="10005616">Resets the zoom to 0.</menu>
+				<menu name="Small &amp;Icons" clean="Small_Icons" option="1" tv="10006408">Reduces the size of the icons in the toolbars. Requires a Restart!</menu>
+				<menu clean="Top_Find" name="Top Find" option="1" tv="10006624">Moves the Quick Find above the Scintilla edit window.</menu>
+				<menu clean="Proxy_Settings" name="Proxy Settings" no="1" tv="10004464">Currently Unavailable.</menu>
+				<menu clean="Disable_Autosave" name="Disable Autosave" option="1" tv="10005256">Disables the auto save feature of AHK Studio on exit.</menu>
+				<menu clean="Disable_Backup" name="Disable Backup" option="1" tv="10009792">Stops AHK Studio from creating backups of your changed files.</menu>
+				<menu name="Disable Include Dialog" clean="Disable_Include_Dialog" option="1" tv="10008928">When entering #Include and selecting the Auto-Complete in the dropdown it will not pop up and ask for a file.</menu>
+				<menu name="Disable Line Status" clean="Disable_Line_Status" option="1" tv="10009576">The, by default, red and green rectangles next to the line to show what has been edited will not be visible.</menu>
+				<menu clean="Disable_Variable_List" name="Disable Variable List" option="1" tv="10010224">Currently Unavailable.</menu>
+				<menu name="Enable Close On Save" clean="Enable_Close_On_Save" option="1" tv="10009936">When you save a program and it is still running it will kill the process.</menu>
+				<menu name="Full Backup All Files" clean="Full_Backup_All_Files" option="1" tv="10008640">This will backup all of the files in your project rather than just the include files that Full Backup will do.</menu>
+				<menu name="Check For Edited Files On Focus" clean="Check_For_Edited_Files_On_Focus" option="1" tv="10008712">If a file is edited while you are away from AHK Studio and focus is set back to it, it will popup with a dialog asking if you want to update your code to the new contents.</menu>
+				<menu name="Add Margins To Windows" clean="Add_Margins_To_Windows" option="1" tv="10009000">Dialog windows by default do not have margins.  This will add them.</menu>
+				<menu clean="Auto_Close_Find" name="Auto Close Find" option="1" tv="10010296">When using the Find window this option will close the Find window automatically.</menu>
+				<menu name="Auto Set Area On Quick Find" clean="Auto_Set_Area_On_Quick_Find" option="1" tv="10009072">When using the Quick Find hotkey or Edit/Quick Find it will automatically set the selection to search in if you have text selected.</menu>
+				<menu clean="Hide_Vertical_Scrollbars" name="Hide Vertical Scrollbars" option="1" tv="10010008">Hides the Vertical Scrollbars on all of your Scintilla controls.</menu>
+				<menu clean="Hide_Horizontal_Scrollbars" name="Hide Horizontal Scrollbars" option="1" tv="10008784">Hides the Horizontal Scrollbars on all of your Scintilla controls.</menu>
+				<menu clean="Omni_Search_Stats" name="Omni Search Stats" option="1" tv="10009432">Shows the Fuzzy Search value for the returned items.</menu>
+				<menu clean="Disable_Auto_Advance" name="Disable Auto Advance" option="1" tv="10009144">By default when your cursor is (|) &lt;--- within there and you type ) it will jump to the other side of the ) ()|, this disables that feature.</menu>
+				<menu clean="Hide_Tray_Icon" name="Hide Tray Icon" tv="10010800">Hides the System Tray icon for AHK Studio.</menu>
+				<menu clean="Verbose_Debug_Window" name="Verbose Debug Window" tv="10009288">When debugging it will give all of the information returned from the debugger.</menu>
+				<menu clean="Match_Any_Word" name="Match Any Word" tv="10009504">When selecting words or your Caret is within a word it will only show/highlight complete matches.</menu>
+				<menu clean="Select_Current_Debug_Line" name="Select_Current Debug Line" tv="10008856">When Debugging this will cause the current line to be selected (Moves the current Caret).</menu>
+				<menu clean="Global_Debug_Hotkeys" name="Global Debug Hotkeys" tv="10009864">Creates global hotkeys for all of the Step operations.</menu>
+				<menu clean="Smart_Delete" name="Smart Delete" tv="10010440">When you hit Delete/Backspace and there is something like {text} it will not delete the { or } unless the text inside them is gone.  It is to help stop you from accidentally deleting matching braces.</menu>
+				<menu clean="Auto_Check_For_Update_On_Startup" name="Auto Check For Update On Startup" option="1" tv="10009216">Will go to Github and check to see if I have pushed any updates to the program on startup.</menu></menu>
+			<menu clean="Explorer_Menu_Options" name="Explorer Menu Options" option="1" top="1" tv="10009648">
+				<menu name="Full Tree" clean="Full_Tree" option="1" tv="10010368">Displays the full tree in the Project Explorer for includes that are not in the main Projects directory.</menu>
+				<menu name="Hide File Extensions" clean="Hide_File_Extensions" option="1" tv="10010512">Hides the file extensions in the Project Explorer.</menu>
+				<menu clean="Disable_Folders_In_Project_Explorer" name="Disable Folders In Project Explorer" option="1" tv="10009360">Will not create the folder structure in the Project Explorer.</menu></menu>
+			<menu clean="New_File_Dialog" name="New File Dialog" tv="10009720">Will show a dialog to create a file rather than create an Untitled.ahk file.</menu>
+			<menu clean="Clipboard_History" name="Clipboard History" tv="10010080">Currently Unavailable.</menu>
+			<menu clean="Disable_Compile_AHK" name="Disable Compile AHK" tv="10010584">For those who use a separate compiler.</menu>
+			<menu clean="OSD" name="OSD" tv="10010656">Shows a small GUI that displays the functions you just used (Mostly for maestrith to make videos with).</menu>
+			<menu clean="Quick_Options" name="Quick Options" tv="10010728">Opens the Settings dialog with the Options tab displayed.</menu>
+			<menu clean="Word_Wrap_Indicators" name="Word Wrap Indicators" option="1" tv="10008568">Shows/Hides the Word Wrap Indicators.</menu>
+			<menu clean="Context_Sensitive_Help" name="Context Sensitive Help" tv="10011232">Enables/Disables the Context Sensitive Help.</menu></menu>
+		<menu name="Fo&amp;rmat" clean="Format" top="1" tv="10011952" last="1">
+			<menu clean="Align_Selected_Text" hotkey="" name="Align Selected Text" option="" plugin="plugins\Align Selected Text.ahk" tv="10011160">Plugin: Aligns selected text by a delimiter.</menu>
+			<menu name="Clear Line Status" clean="Clear_Line_Status" tv="10011304">Removes the colored statuses from the margin.</menu>
+			<menu name="Remove Current Selection" hotkey="^F3" clean="Remove_Current_Selection" tv="10011520">When you have multiple selections it will remove the current one.</menu>
+			<menu name="Move Selected Lines Down" hotkey="+^DOWN" clean="Move_Selected_Lines_Down" tv="10011376">Moves all selected lines Down one line.</menu>
+			<menu name="Move Selected Lines Up" hotkey="+^UP" clean="Move_Selected_Lines_Up" tv="10011736">Moves all selected lines Up one line.</menu>
+			<menu name="S&amp;ort Selected" clean="Sort_Selected" option="" plugin="plugins\Sort Selected.ahk" tv="10012384">Sorts all selected text by a delimiter. (Use \ to sort by `n)</menu>
+			<menu name="Split Code" clean="Split_Code" option="" plugin="plugins\Split Code.ahk" tv="10012024">Dialog that will do its best to split your current document into functions and classes (not perfect).</menu>
+			<menu name="Delete Matching Brace" clean="Delete_Matching_Brace" hotkey="+^DELETE" tv="10011016">When your Caret is near a brace that has a match it will be highlighted. Using this item will remove both of them.</menu>
+			<menu clean="End_Document_At_Last_Line" name="End Document At Last Line" tv="10011448">Prevents the edit window from scrolling past the end of the document.</menu>
+			<menu clean="RemoveSpacesFromAroundCommas" hotkey="" name="RemoveSpacesFromAroundCommas" option="rsfac" plugin="plugins\Add Spaces.ahk" tv="10012168">Removes spaces from around the commas in the selected text.</menu>
+			<menu clean="Move_Selected_Word_Right" hotkey="+!Right" name="Move Selected Word Right" tv="10012528">Moves a selected word to the right.</menu>
+			<menu clean="Wrap_Word_In_Quotes" name="Wrap Word In Quotes" hotkey="^;" tv="10011808">Will put " around the word that your Caret is currently in.</menu>
+			<menu clean="Move_Selected_Word_Left" hotkey="+!Left" name="Move Selected Word Left" tv="10012456">Moves a selected word to the left.</menu></menu>
+		<menu name="&amp;Commands" clean="Commands" top="1" tv="10010872">
+			<menu name="Toggle &amp;Multiple Line Comment" hotkey="+F1" clean="Toggle_Multiple_Line_Comment" tv="10012240">Creates/Removes a multiple line comment surrounding the selected text in /* and */.</menu>
+			<menu name="Select Current Word" clean="Select_Current_Word" tv="10011664">Selects the word that your caret is in.</menu>
+			<menu name="Quick Scintilla Code Lookup" hotkey="+ESCAPE" clean="Quick_Scintilla_Code_Lookup" tv="10011088">Displays Scintilla codes for you to select. If you have entered some text it will search for codes with that text in them.</menu>
+			<menu name="&amp;Scintilla Code Lookup" hotkey="F6" clean="Scintilla_Code_Lookup" tv="10011880">Dialog to search for Scintilla codes.</menu>
+			<menu name="Insert Code Vault Text" clean="Insert_Code_Vault_Text" hotkey="+^ESCAPE" tv="10012312">Shows an Auto-Complete list with all of your code vault entries.</menu>
+			<menu name="New Caret Above" clean="New_Caret_Above" hotkey="+^!Up" tv="10010944">Creates a new caret in the line directly above the current caret.</menu>
+			<menu name="New Caret Below" clean="New_Caret_Below" hotkey="+^!Down" tv="10022168">Creates a caret in the line directly below the current caret.</menu>
+			<menu name="Clear Clipboard History" clean="Clear_Clipboard_History" tv="10023680">Currently Unavailable.</menu></menu>
+		<menu name="&amp;Navigate" clean="Navigate" top="1" tv="10022456">
+			<menu name="Next File" hotkey="+!DOWN" clean="Next_File" tv="10023752">Displays the next file in your Project Explorer.</menu>
+			<menu name="Previous File" hotkey="+!UP" clean="Previous_File" tv="10022888">Displays the previous file in your Project Explorer.</menu>
+			<menu name="Previous Project" hotkey="^PgUp" clean="Previous_Project" tv="10022528">Displays the previous Project in your Project Explorer.</menu>
+			<menu name="Next Project" hotkey="^PgDn" clean="Next_Project" tv="10023824">Displays the next Project in your Project Explorer.</menu>
+			<menu clean="Back" name="Back" hotkey="!LEFT" tv="10022744">Jumps to the previous Include that you were editing.</menu>
+			<menu clean="Forward" name="Forward" hotkey="!RIGHT" tv="10022960">Jumps to the next Include that was saved from the Back command.</menu>
+			<menu name="Highlight to Matching Brace" clean="Highlight_to_Matching_Brace" hotkey="^!M" tv="10022600">When next to a brace it will highlight all text up until the matching brace.</menu>
+			<menu name="Tab To Next Comma" clean="Tab_To_Next_Comma" hotkey="^TAB" tv="10023104">Will place your caret after the next comma in that line.</menu>
+			<menu name="Tab To Previous Comma" clean="Tab_To_Previous_Comma" hotkey="+^TAB" tv="10022312">Will place your caret after the previous comma in that line.</menu></menu>
+		<menu name="&amp;View" clean="View" top="1" tv="10022240">
+			<menu name="Refresh" clean="Refresh" top="1" tv="10023032">
+				<menu name="Index Current File" clean="Index_Current_File" hotkey="F5" tv="10023176">Refreshes the information for Omni-Search for the current file.</menu>
+				<menu name="Refresh Code Explorer" clean="Refresh_Code_Explorer" tv="10023248">Re-Indexes all of the files that you have opened.</menu>
+				<menu clean="Refresh_Variable_List" name="Refresh Variable List" no="1" tv="10023536">Currently Unavailable.</menu>
+				<menu clean="Index_Lib_Files" name="Index Lib Files" tv="10022384">Re-Indexes your lib files in the off chance the Functions/Classes stop coming up.</menu>
+				<menu name="Refresh Current Project" clean="Refresh_Current_Project" tv="10023608">Refreshes the current Project if you change or remove an #Include in the text rather than doing it in Studios menus.</menu>
+				<menu name="Refresh Project Explorer" clean="Refresh_Project_Explorer" tv="10023320">Re-Indexes all of your Projects and fixes errors in the Project Explorer.</menu>
+				<menu name="Refresh Plugins" clean="Refresh_Plugins" tv="10022672">Refreshes your plugins in the AHK Studio\Plugins directory.</menu></menu>
+			<menu clean="Display_Classes" name="Display Classes" tv="10022816">Shows an Auto-Complete list of all of your Classes in the current project.</menu>
+			<menu clean="Auto_Expand_Includes" name="Auto Expand Includes" tv="10023392">Expands all child nodes of a Projects Tree</menu>
+			<menu clean="Display_Clipboard_History" name="Display Clipboard History" tv="10023464">Currently Unavailable.</menu>
+			<menu name="Display Functions" clean="Display_Functions" hotkey="!I" tv="10021592">Displays an Auto-Complete list of Functions in the current Project.</menu>
+			<menu name="Sho&amp;w Scintilla Code In Line" hotkey="F4" clean="Show_Scintilla_Code_In_Line" tv="10020296">This will show all Scintilla codes that are in the current line.</menu>
+			<menu name="Switch Focus" clean="Switch_Focus" hotkey="^SPACE" tv="10019936">Switches between your Scintilla Controls and also will switch to the Tracked Notes window if you have it.</menu>
+			<menu clean="Auto_Project_Explorer_Width" name="Auto Project Explorer Width" tv="1358504"></menu></menu>
+		<menu clean="Help" name="&amp;Help" top="1" tv="10020512">
+			<menu clean="Command_Help" hotkey="F1" name="Command Help" tv="10019864">Opens the help file to the command that your cursor is in.</menu>
+			<menu clean="Menu_Help" name="Menu Help" option="" plugin="plugins\Menu Help.ahk" tv="10021952">This Dialog.</menu>
+			<menu clean="Online_Help" name="Online Help" no="1" tv="10020944">Opens your default web browser to the AHK Studio Wiki.</menu>
+			<menu clean="Check_For_Update" hotkey="" name="Chec&amp;k For Update" option="" tv="10021880">Checks to see if there is an update for AHK Studio.</menu>
+			<menu clean="Donate" name="Donate" tv="10020584">Help me out with a little donation.</menu>
+			<menu clean="Report_Bugs" name="Report Bugs" tv="10020368">Opens your web browser to the Github Issues page.</menu>
+			<menu clean="Misc" name="Misc" top="1" tv="10022024">
+				<menu clean="Compile_Ahk_Studio" name="Compile Ahk Studio" tv="10020008">Compiles the AHK Studio script so that you can have it in your Taskbar.</menu>
+				<menu clean="Download_Ahk_Studio_Source" name="Download Ahk Studio Source" tv="10020800">Downloads the source code for Studio if you have compiled it.</menu>
+				<menu clean="Forum" name="&amp;Forum" tv="10021088">Opens the AHK Studio forum post.</menu>
+				<menu clean="Social" name="&amp;Social" tv="10021664">Currently Unavailable.</menu>
+				<menu clean="Testing" hotkey="^K" name="Testing" tv="10022096">Mostly for maestrith.  Usually will just say Testing.</menu></menu>
+			<menu clean="About" name="&amp;About" tv="10020728">Basic information about AHK Studio.</menu>
+			<menu clean="Display_Hotkeys" name="Display Hotkeys" plugin="plugins\display hotkeys.ahk" option="" tv="10020080">Shows a list of all of the current hotkeys for AHK Studio.</menu></menu>
+	</main>
+	<date>20160719203659</date>
+</menus>

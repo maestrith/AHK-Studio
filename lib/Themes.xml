@@ -1,0 +1,690 @@
+<?xml version="1.0"?>
+<themes>
+	<fonts>
+		<author>Peared</author>
+		<font background="0x202020" bold="1" color="0xDCE1E6" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="0x3A3A3A" style="33" color="14409958"></font>
+		<font code="2069" color="0x3A3A3A"></font>
+		<name>Ambiance</name>
+		<font style="13" color="0xD8845D" background="0x3A001F"></font>
+		<font style="3" color="0x00FF5D" background="0x006305"></font>
+		<font style="1" color="0xFD9726" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="2" color="0x376FFF"></font>
+		<font style="4" color="0x00DBE6"></font>
+		<font style="15" color="0x6EA7FF"></font>
+		<font style="18" color="0x00AB12"></font>
+		<font style="19" color="0x00B7E6"></font>
+		<font style="20" color="0xCC997B"></font>
+		<font style="24" color="0x98859B"></font>
+		<font style="23" color="0x2B34FF"></font>
+		<font style="40" color="0x00F4F4"></font>
+		<font style="41" color="0x12F8FF"></font>
+		<font style="42" color="0x93FFF0"></font>
+		<highlight>
+			<list1 list="1">custom list</list1>
+		</highlight>
+		<font style="22" color="0x3390FF"></font>
+		<font style="21" color="0x00B3BD"></font>
+		<font style="11" color="0x5E7175" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="17" color="0x9A93EB"></font>
+		<font bool="1" code="2068" color="0x3E4849"></font>
+		<font bool="1" code="2067" color="12910521"></font>
+		<font code="2098" color="0x4E5460"></font>
+		<font code="2188" value="1"></font>
+		<font code="2600" color="13238207"></font>
+		<indicator indic="3"></indicator>
+		<font code="2601" color="9211020"></font>
+	</fonts>
+	<fonts>
+		<author>bgmCoder</author>
+		<font background="15727867" bold="0" color="0" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="14740459" style="33" color="12632256"></font>
+		<font code="2069" color="0xFF8080"></font>
+		<name>bgmCoder</name>
+		<font style="13" color="0x2929EF" bold="0"></font>
+		<font style="3" color="4227327" bold="0"></font>
+		<font style="1" color="10066329" italic="1" bold="0"></font>
+		<font style="2" color="128" italic="0" bold="0"></font>
+		<font style="4" color="16711808"></font>
+		<font style="15" color="8421376"></font>
+		<font style="18" color="16711935"></font>
+		<font style="19" color="14851357" italic="0"></font>
+		<highlight>
+			<list1 list="1">custom list</list1>
+		</highlight>
+		<font style="22" color="16744576"></font>
+		<font style="21" color="14851357" italic="0"></font>
+		<font style="11" color="10066329" bold="0" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="17" color="8421631" italic="0" bold="1"></font>
+		<font bool="1" code="2068" color="14024703"></font>
+		<font bool="1" code="2067" color="5723991"></font>
+		<font code="2098" color="12189692"></font>
+		<font style="20" color="16711808" italic="1"></font>
+		<font style="23" color="255" italic="0" bold="1"></font>
+		<font style="24" color="16744576"></font>
+		<font style="9" color="0x4B9AFB"></font>
+		<font style="8" color="0x00AAFF"></font>
+		<font style="10" color="0x2929EF"></font>
+		<font code="2082"></font>
+		<font style="34" bold="1" color="255" italic="0" size="10" strikeout="0" underline="0" background="15727867" font="Consolas"></font>
+		<font style="55" color="16711680" bold="1"></font>
+		<font style="57" color="14851357" bold="1"></font>
+		<font style="41" color="16711935"></font>
+		<font style="56" color="12615680" bold="1"></font>
+		<font style="58" color="14851357"></font>
+		<font style="40" color="8388863"></font>
+		<font style="42" color="255" bold="1" italic="1"></font>
+		<fold color="11063767" background="10066329"></fold>
+	</fonts>
+	<fonts>
+		<name>Candy Swamp</name>
+		<author>AfterLemon</author>
+		<font background="2499614" bold="0" color="3538741" font="Droid Sans Mono" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="2499614" style="33" color="3538741" bold="0" italic="0"></font>
+		<font style="0" color="12632256" size="10"></font>
+		<font style="1" color="16755370" bold="0" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="2" color="13500213"></font>
+		<font style="3" color="33023"></font>
+		<font style="4" color="43520" size="10"></font>
+		<font style="11" color="16755370" bold="0" italic="0" size="10" strikeout="0" underline="0"></font>
+		<font style="13" color="3487231"></font>
+		<font style="15" color="12110995"></font>
+		<font style="17" color="12615680"></font>
+		<font style="18" color="13948116"></font>
+		<font style="19" color="16760704"></font>
+		<font style="21" color="16738357"></font>
+		<font style="22" color="16760704"></font>
+		<font style="37" color="4227327"></font>
+		<font bool="1" code="2068" color="5592320"></font>
+		<font code="2069" color="16777215"></font>
+		<font code="2098" color="4670520"></font>
+		<font code="2601" color="3486997"></font>
+		<font style="20" color="10106367"></font>
+		<font style="24" color="65535"></font>
+		<font style="23" color="12615680"></font>
+		<font style="9" color="11184810"></font>
+		<font style="8" color="9737364"></font>
+		<font style="10" color="255"></font>
+		<font style="16" color="5741559"></font>
+		<font style="55" color="12615680"></font>
+		<font style="56" color="65535"></font>
+		<font style="57" color="16744576"></font>
+		<font style="58" color="8388863"></font>
+		<font style="41" color="16776960"></font>
+		<font style="40" color="65408"></font>
+		<font style="42" color="0"></font>
+		<font style="30"></font>
+		<font style="31"></font>
+		<font code="2188" value="1"></font>
+		<font style="48"></font>
+		<custom control="msctls_statusbar321" gui="1" bold="0" color="0" font="Droid Sans Mono" italic="0" size="10" strikeout="0" underline="0"></custom>
+		<font style="34" bold="0" color="8388863" italic="0" size="12" strikeout="0" underline="0" font="Droid Sans Mono"></font>
+		<font style="97" color="8421504"></font>
+		<font style="99" color="16744576"></font>
+		<custom control="SysTreeView322" gui="1" bold="0" color="65280" font="Droid Sans Mono" italic="0" size="12" strikeout="0" underline="0" background="2499614"></custom>
+		<custom control="SysTreeView321" gui="1" bold="0" color="65280" font="Droid Sans Mono" italic="0" size="12" strikeout="0" underline="0"></custom>
+		<find qfb="2499614" tb="2499614" tf="2499614"></find>
+		<indicator indic="3"></indicator>
+		<fold color="2499614" background="12632256"></fold>
+		<font style="59" color="5636095"></font>
+	</fonts>
+	<fonts>
+		<author>Peared</author>
+		<font background="0x191919" bold="0" color="0x928365" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="0x232323" style="33" color="0x929285"></font>
+		<font code="2069" color="0x292929"></font>
+		<name>Clouds Midnight</name>
+		<font style="13" color="0x658392"></font>
+		<font style="3" color="0xCD905D"></font>
+		<font style="1" color="0x32403C" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="2" color="0xFDE0DF"></font>
+		<font style="4" color="0x3C443C"></font>
+		<font style="15" color="0xECF1FF"></font>
+		<font style="18" color="0x547C92"></font>
+		<font style="17" color="0x5D7C92"></font>
+		<font style="19" color="0x5D7C92"></font>
+		<font style="20" color="0x929292"></font>
+		<font style="24" color="0x928365"></font>
+		<font style="23" color="0x4A8639"></font>
+		<font style="40" color="0x306000"></font>
+		<font style="41" color="0x306000"></font>
+		<font style="42" color="0x306000" background="0x232323"></font>
+		<font style="57" color="0x5D7C92"></font>
+		<font style="58" color="0x2E2ECD"></font>
+		<highlight>
+			<list1 list="1">custom list</list1>
+		</highlight>
+		<font style="22" color="0x272EE9"></font>
+		<font style="21" color="0x4B4B4B"></font>
+		<font style="97" color="0xA1CAFF"></font>
+		<font style="98" color="0xA1CAFF"></font>
+		<font style="99" color="0xA1CAFF"></font>
+		<font style="11" color="0x3B403C" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0" background="0x191919"></font>
+		<font bool="1" code="2068" color="0x292929"></font>
+		<font bool="1" code="2067" color="0x859292"></font>
+		<font code="2098" color="0xCD905D"></font>
+		<font code="2188" value="2"></font>
+		<font code="2601" color="11908533"></font>
+		<font code="2600" color="3552822"></font>
+	</fonts>
+	<fonts>
+		<author>maestrith</author>
+		<font background="0" bold="0" color="8421504" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="8388672" style="33" color="16744448"></font>
+		<font code="2069" color="16744576"></font>
+		<font color="11184810" style="1" bold="1" italic="0" size="10" strikeout="0" underline="0" background="0"></font>
+		<font color="65280" style="2"></font>
+		<font color="16711680" style="3" bold="1" italic="0" size="10" strikeout="0" underline="0" background="0"></font>
+		<font color="16744448" style="4"></font>
+		<font color="65535" style="7" background="0" bold="1" italic="0" size="12" strikeout="0" underline="0"></font>
+		<font color="8421376" style="9" background="0" bold="1" italic="0" size="10" strikeout="0" underline="0"></font>
+		<font color="0" style="10" background="255"></font>
+		<font color="4210816" style="11"></font>
+		<font color="16744576" style="12" background="0" bold="1" italic="0" size="12" strikeout="0" underline="0"></font>
+		<name>Dark</name>
+		<font style="21" color="255"></font>
+		<font style="24" color="16711808"></font>
+		<font style="17" color="12615808"></font>
+		<font style="22" color="32768"></font>
+		<font style="23" color="8421376"></font>
+		<font style="18" color="4227327"></font>
+		<font style="19" color="16777088"></font>
+		<font style="20" color="4259584"></font>
+		<font style="15" color="8388736"></font>
+		<font style="8" color="16744576"></font>
+		<font style="40" color="16711808"></font>
+		<font style="41" color="8421376"></font>
+		<font style="42" color="0" background="255"></font>
+	</fonts>
+	<fonts>
+		<author>budRich</author>
+		<name>HatOfGod</name>
+		<font background="1250065" bold="1" color="11258827" font="Bitstream Vera Sans Mono" size="12" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="1250065" style="33" color="6974058"></font>
+		<font code="2069" color="16777215"></font>
+		<font style="11" color="0xBBBBBB" font="Consolas" italic="1" bold="0"></font>
+		<font style="13" color="255" font="Consolas" italic="0" bold="0"></font>
+		<font style="3" color="0xBBBBBB" font="Consolas" bold="0"></font>
+		<font style="1" color="0x888888" font="Consolas" italic="1" size="12" bold="0"></font>
+		<font style="2" color="0x1F97FD" bold="1" font="Consolas"></font>
+		<font style="4" color="12623600"></font>
+		<font style="15" color="0xEBC097"></font>
+		<font bool="1" code="2067" color="0"></font>
+		<font style="17" color="3067558"></font>
+		<font style="18" color="12623600"></font>
+		<font style="20" color="13617276" italic="1"></font>
+		<font style="19" color="5741559"></font>
+		<font style="23" color="6895298" italic="1"></font>
+		<font style="22" color="13617276"></font>
+		<font style="24" color="14257611"></font>
+		<font style="21" color="57599" bold="0"></font>
+		<font style="9" color="13617276"></font>
+		<font style="8" color="12623600"></font>
+		<font style="10" color="206"></font>
+	</fonts>
+	<fonts>
+		<name>Livid Dark</name>
+		<author>Sanctus</author>
+		<font background="262400" bold="1" color="16119285" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="3355443" style="33" color="15000804"></font>
+		<font style="0" color="13495789"></font>
+		<font style="1" color="46848" bold="0" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="2" color="2522612"></font>
+		<font style="3" color="9672908"></font>
+		<font style="4" color="16721047"></font>
+		<font style="11" color="46848" bold="0" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="13" color="255" background="0"></font>
+		<font style="15" color="12110995"></font>
+		<font style="17" color="10731469"></font>
+		<font style="18" color="10731469"></font>
+		<font style="19" color="16721047"></font>
+		<font style="21" color="16761220"></font>
+		<font style="22" color="7539902"></font>
+		<font style="37" color="13495789"></font>
+		<font bool="1" code="2067" color="491790"></font>
+		<font bool="1" code="2068" color="16765650"></font>
+		<font code="2069" color="16777215"></font>
+		<font code="2098" color="9633865"></font>
+		<font code="2600" color="15450263"></font>
+		<font code="2601" color="6160384"></font>
+		<font style="20" color="16119285"></font>
+		<font style="8" color="16761220"></font>
+		<font style="9" color="15073510"></font>
+		<font style="10" color="590803"></font>
+	</fonts>
+	<fonts>
+		<author>joedf</author>
+		<font background="0x222827" bold="1" color="0xF8F8F2" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="0x2D3534" style="33" color="0xECEEEE"></font>
+		<font code="2069" color="0xFF8080"></font>
+		<name>Monokai</name>
+		<font style="13" color="0x2929EF" background="0x222827"></font>
+		<font style="3" color="0x74DBE6"></font>
+		<font style="1" color="0x5E7175" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="2" color="0xFF81AE"></font>
+		<font style="4" color="0xAFA600"></font>
+		<font style="15" color="0x2D8BAA"></font>
+		<font style="18" color="0xEFD966"></font>
+		<font style="19" color="0x0000AE"></font>
+		<highlight>
+			<list1 list="1">custom list</list1>
+		</highlight>
+		<font style="22" color="0x8000FF"></font>
+		<font style="21" color="0x400080"></font>
+		<font style="11" color="0x5E7175" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="17" color="0x9A93EB"></font>
+		<font bool="1" code="2068" color="0x3E4849"></font>
+		<font bool="1" code="2067" color="0xECE000"></font>
+		<font code="2098" color="0x4E5460"></font>
+	</fonts>
+	<fonts>
+		<author>Uberi</author>
+		<font background="0xD8D8DC" bold="1" color="2703962" font="Tahoma" size="12" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="0xA0B3C2" style="33" color="0"></font>
+		<font code="2069" color="16744576"></font>
+		<name>Muted_Light</name>
+		<font style="13" color="0x800080" background="0xB1B1E9"></font>
+		<font style="3" color="0x800080"></font>
+		<font style="1" color="0x499300"></font>
+		<font style="2" color="0"></font>
+		<font style="4" color="0xAFA600"></font>
+		<font style="15" color="0x2D8BAA"></font>
+		<font style="18" color="0xB30000"></font>
+		<font style="19" color="0x0000AE"></font>
+		<highlight>
+			<list1 list="1">custom list</list1>
+		</highlight>
+		<font style="22" color="8388863"></font>
+		<font style="21" color="4194432"></font>
+	</fonts>
+	<fonts>
+		<author>Peared</author>
+		<font background="0x512400" bold="0" color="16513792" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="0x4B2000" style="33" color="0xB58873"></font>
+		<font code="2069" color="0x2056FF"></font>
+		<name>Night Blue</name>
+		<font style="13" color="0xAFC9FF" background="0x6E3400"></font>
+		<font style="3" color="0xA9F1D1" background="0x512400"></font>
+		<font style="1" color="0x8FC5FF" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="2" color="0xFFFFFF"></font>
+		<font style="4" color="11009796"></font>
+		<font style="15" color="0xFFDF8E"></font>
+		<font style="18" color="0xFFBBEB"></font>
+		<font style="17" color="0xCDBBEB"></font>
+		<font style="19" color="0xFFA381"></font>
+		<font style="20" color="0x7C89FF"></font>
+		<font style="24" color="0x8FC5FF"></font>
+		<font style="23" color="0xFFBBB7"></font>
+		<font style="40" color="0xD1F6FF" background="0x6E3400"></font>
+		<font style="41" color="0xD1F6FF" background="0x6E3400"></font>
+		<font style="42" color="0xD1F6FF" background="0x6E34000"></font>
+		<font style="57" color="0xFFDABB"></font>
+		<font style="58" color="0xFFDABB"></font>
+		<highlight>
+			<list1 list="1">custom list</list1>
+		</highlight>
+		<font style="22" color="0xEEDABB"></font>
+		<font style="21" color="0x72AEFF"></font>
+		<font style="97" color="0xA3EA8F"></font>
+		<font style="98" color="0xA3EA8F"></font>
+		<font style="99" color="0xA3EA8F"></font>
+		<font style="11" color="0xB78572" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0" background="0x512400"></font>
+		<font bool="1" code="2068" color="8870742"></font>
+		<font bool="1" code="2067" color="0xECE000"></font>
+		<font code="2098" color="0xA9F1D1"></font>
+		<font code="2188" value="2"></font>
+		<custom control="msctls_statusbar321" gui="1" bold="1" color="32896" font="Consolas" italic="0" size="12" strikeout="0" underline="0"></custom>
+		<font code="2601" color="15190474"></font>
+		<font code="2600" color="8026746"></font>
+	</fonts>
+	<fonts>
+		<name>Obsidian Sword</name>
+		<author>Chunjee</author>
+		<font background="3420457" bold="0" color="12632256" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="3355443" style="33" color="15000804"></font>
+		<font style="0" color="13495789"></font>
+		<font style="1" color="8363903" bold="0" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="2" color="8421616"></font>
+		<font style="3" color="8816334"></font>
+		<font style="4" color="16777215"></font>
+		<font style="11" color="8363903" bold="0" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="13" color="255"></font>
+		<font style="15" color="12110995"></font>
+		<font style="17" color="16759366"></font>
+		<font style="18" color="13617276"></font>
+		<font style="19" color="16758590"></font>
+		<font style="21" color="9749720"></font>
+		<font style="22" color="14732901"></font>
+		<font style="37" color="13495789"></font>
+		<font bool="1" code="2067" color="0xFFFFFF"></font>
+		<font bool="1" code="2068" color="7169878"></font>
+		<font code="2069" color="16777215"></font>
+		<font code="2098" color="4473924"></font>
+		<font code="2600" color="15450263"></font>
+		<font code="2601" color="6160384"></font>
+		<font style="20" color="3448548"></font>
+		<font style="24" color="15458669"></font>
+		<font style="23" color="8241367"></font>
+		<font style="9" color="11184810"></font>
+		<font style="8" color="9737364"></font>
+		<font style="10" color="255"></font>
+		<font style="16" color="5741559"></font>
+		<font style="40" color="16777215"></font>
+		<font style="42" color="255"></font>
+	</fonts>
+	<fonts>
+		<author>joedf</author>
+		<name>PlasticCodeWrap</name>
+		<font background="0x1D160B" bold="0" color="0xF8F8F2" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="0x36342E" style="33" color="0xECEEEE"></font>
+		<font code="2069" color="0xFF8080"></font>
+		<font style="13" color="0x2929EF" background="0x1D160B" bold="0"></font>
+		<font style="3" color="0x39E455" bold="0"></font>
+		<font style="1" color="0xE09A1E" font="Consolas" italic="1" bold="0"></font>
+		<font style="2" color="0x833AFF" font="Consolas" italic="0" bold="0"></font>
+		<font style="4" color="0x00AAFF"></font>
+		<font style="15" background="0x272112" color="0x0080FF"></font>
+		<font style="18" color="0x00AAFF"></font>
+		<font style="19" background="0x272112" color="0x9A93EB" font="Consolas" italic="0"></font>
+		<font style="22" color="0x54B4FF"></font>
+		<font style="21" color="0x0080FF" italic="1"></font>
+		<font style="11" color="0xE09A1E" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="17" color="0x00AAFF" italic="1"></font>
+		<font bool="1" code="2068" color="0x3D2E16"></font>
+		<font bool="1" code="2067" color="0xECE000"></font>
+		<font code="2098" color="0x583F11"></font>
+		<font style="20" color="0x0000FF" italic="1" background="0x272112"></font>
+		<font style="23" color="0x00AAFF" italic="1"></font>
+		<font style="24" color="0xFF00FF" background="0x272112"></font>
+		<font style="9" color="0x4B9AFB"></font>
+		<font style="8" color="0x00AAFF"></font>
+		<font style="10" color="0x2929EF"></font>
+	</fonts>
+	<fonts>
+		<author>Peared</author>
+		<font background="0x362B00" bold="0" color="13750731" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="0x3F3101" style="33" color="0xF7EDD0"></font>
+		<font code="2069" color="0x2056FF"></font>
+		<name>Solarized Dark</name>
+		<font style="13" color="0x899BFF" background="0x4A411A"></font>
+		<font style="3" color="0x837B65" background="0x3F3101"></font>
+		<font style="1" color="0xD28B1F" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="2" color="12303280"></font>
+		<font style="4" color="0x009985"></font>
+		<font style="15" color="0xDCE7FF"></font>
+		<font style="18" color="0x009985"></font>
+		<font style="17" color="167634"></font>
+		<font style="19" color="0x008643"></font>
+		<font style="20" color="0xD27A12"></font>
+		<font style="24" color="0x95BDFF"></font>
+		<font style="23" color="1619559"></font>
+		<font style="40" color="9699292" background="0x3F3101"></font>
+		<font style="41" color="9699292" background="0x3F3101"></font>
+		<font style="42" color="0xDBFFF3" background="0x3F3101"></font>
+		<font style="57" color="0x7EA17A"></font>
+		<font style="58" color="0xD28B26"></font>
+		<highlight>
+			<list1 list="1">custom list</list1>
+		</highlight>
+		<font style="22" color="0xD3E8FF"></font>
+		<font style="21" color="12048639"></font>
+		<font style="97" color="0xA1A162"></font>
+		<font style="98" color="0xA1A162"></font>
+		<font style="99" color="0xA1A162"></font>
+		<font style="11" color="0x9DFFC5" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0" background="0x362B00"></font>
+		<font bool="1" code="2068" color="0x3E4849"></font>
+		<font bool="1" code="2067" color="0xECE000"></font>
+		<font code="2098" color="0x074BFF"></font>
+		<font code="2188" value="2"></font>
+		<custom control="msctls_statusbar321" gui="1" bold="1" color="32896" font="Consolas" italic="0" size="12" strikeout="0" underline="0"></custom>
+		<font code="2601" color="11908533"></font>
+		<font code="2600" color="3223857"></font>
+	</fonts>
+	<fonts>
+		<author>Peared</author>
+		<font background="0xE3F6FD" bold="0" color="0x756E58" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="0xD3F1FB" style="33" color="0x33508B"></font>
+		<font code="2069" color="0xC8D8DA"></font>
+		<name>Solarized Light</name>
+		<font style="13" color="0x836E58" background="0xE3F6FD"></font>
+		<font style="3" color="0x2F4B00" background="0xE3F6FD"></font>
+		<font style="1" color="0xD28B49" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="2" color="0x756E58"></font>
+		<font style="0" color="0x756E58" background="0xE3F6FD"></font>
+		<font style="4" color="0x756E86"></font>
+		<font style="15" color="0x756E58"></font>
+		<font style="18" color="0x00A3B0"></font>
+		<font style="17" color="0x009985"></font>
+		<font style="19" color="0x75809D"></font>
+		<font style="20" color="0xD28B26"></font>
+		<font style="24" color="0x916E58"></font>
+		<font style="23" color="0x009993"></font>
+		<font style="40" color="0x756E6F" background="0xD5E8EE"></font>
+		<font style="41" color="0x756E6F" background="0xE3F6FD"></font>
+		<font style="42" color="0x756E6F" background="0xE3F6FD"></font>
+		<font style="57" color="0xD69EC7"></font>
+		<font style="58" color="0xB9458B"></font>
+		<highlight>
+			<list1 list="1">custom list</list1>
+		</highlight>
+		<font style="22" color="0xD28B26"></font>
+		<font style="21" color="0xD28B26"></font>
+		<font style="97" color="0x004EB5"></font>
+		<font style="98" color="0x004EB5"></font>
+		<font style="99" color="0x004EB5"></font>
+		<font style="11" color="0x0042B2" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0" background="0xD3F1FB"></font>
+		<font bool="1" code="2068" color="0xD5E5E7"></font>
+		<font bool="1" code="2067" color="5990495"></font>
+		<font code="2098" color="0xA9F1D1"></font>
+		<font code="2188" value="2"></font>
+		<font code="2601" color="7769948"></font>
+		<font code="2600" color="14016203"></font>
+	</fonts>
+	<fonts>
+		<author>Peared</author>
+		<font background="0xFFFFFF" bold="1" color="0x00005D" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="0xEBEBEB" style="33" color="0x333333"></font>
+		<font code="2069" color="0x3A3A3A"></font>
+		<name>SQL Server</name>
+		<font style="13" color="0x0000FF" background="0xDCDCDC"></font>
+		<font style="3" color="0x0000FF" background="0xFFFFFF"></font>
+		<font style="1" color="0x008F89" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="2" color="0x00002F"></font>
+		<font style="4" color="0xAED6FF"></font>
+		<font style="15" color="0x002EC8"></font>
+		<font style="18" color="0xFF0000"></font>
+		<font style="17" color="0xCE2800"></font>
+		<font style="19" color="0xFF2F89"></font>
+		<font style="20" color="0x958431"></font>
+		<font style="24" color="0x0E9606"></font>
+		<font style="23" color="0x003086"></font>
+		<font style="40" color="0x000000" background="0xFFD5B5"></font>
+		<font style="41" color="0x000000" background="0xFFD5B5"></font>
+		<font style="42" color="0x000000" background="0xFFD5B5"></font>
+		<font style="57" color="0x00286A"></font>
+		<font style="58" color="0x005B8C"></font>
+		<highlight>
+			<list1 list="1">custom list</list1>
+		</highlight>
+		<font style="22" color="0xFF00FF"></font>
+		<font style="21" color="0x7F97FD"></font>
+		<font style="97" color="0xAE8F80"></font>
+		<font style="98" color="0xAE8F80"></font>
+		<font style="99" color="0xAE8F80"></font>
+		<font style="11" color="0x5E7175" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0" background="0xEBEBEB"></font>
+		<font style="17" color="0x9A93EB"></font>
+		<font bool="1" code="2068" color="9872807"></font>
+		<font bool="1" code="2067" color="0xECE000"></font>
+		<font code="2098" color="0x4E5460"></font>
+		<font code="2188" value="1"></font>
+		<font code="2601" color="6052956"></font>
+		<font code="2600" color="12632256"></font>
+	</fonts>
+	<fonts>
+		<name>Sublime Text</name>
+		<author>zotune (originally made by Nikolay Samusik for Sublime Text)</author>
+		<font background="2238503" bold="0" color="0xF2F8F8" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="2238503" style="33" color="9080975"></font>
+		<font style="1" color="6189429" bold="0" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="2" color="16744878"></font>
+		<font style="3" color="0x74DBE6"></font>
+		<font style="4" color="7481081"></font>
+		<font style="11" color="6189429" bold="0" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="13" color="0xF2F8F8"></font>
+		<font style="15" color="7481081"></font>
+		<font style="17" color="15718748"></font>
+		<font style="18" color="5954534"></font>
+		<font style="19" color="15718748"></font>
+		<font style="21" color="7481081"></font>
+		<font style="22" color="3072678"></font>
+		<font style="37" color="9080975"></font>
+		<font bool="1" code="2068" color="0x92E7FF"></font>
+		<font code="2069" color="16777215"></font>
+		<font code="2098" color="1909025"></font>
+		<font code="2601" color="0x222827"></font>
+		<font style="20" color="15718748"></font>
+		<font style="24" color="7481081"></font>
+		<font style="23" color="7481081"></font>
+		<font style="9" color="11184810"></font>
+		<font style="8" color="9737364"></font>
+		<font style="10" color="255"></font>
+		<font style="16" color="0x7226F9"></font>
+		<font style="40" color="16777215"></font>
+		<font style="42" color="16777215"></font>
+		<font code="2082"></font>
+		<font style="55" color="3072678"></font>
+		<font style="56" color="15718748"></font>
+		<font style="57" color="3072678"></font>
+		<font style="58" color="3072678"></font>
+		<font style="41" color="7481081"></font>
+		<font style="30" background="0x7226F9"></font>
+		<font code="2188" value="1"></font>
+		<custom control="SysTreeView322" gui="1" bold="0" color="15923448" font="Calibri" italic="0" size="10" strikeout="0" underline="0" background="0x222827"></custom>
+		<custom control="SysTreeView321" gui="1" background="0xE6E6E6" bold="0" color="0" font="Calibri" italic="0" size="10" strikeout="0" underline="0"></custom>
+		<fold color="0x222827" background="0x8A908F"></fold>
+		<font background="0x2EE2A6" style="31"></font>
+		<font background="0xFFFFFF" style="48"></font>
+		<indicator indic="3" background="0x8A908F"></indicator>
+		<font style="97" color="0x7226F9"></font>
+		<font style="99" color="0x7226F9"></font>
+		<font bool="1" code="2067" color="0x222827"></font>
+		<font style="34" background="2238503" bold="0" color="0xF2F8F8" font="Consolas" italic="0" size="10" strikeout="0" underline="0"></font>
+		<font code="2600" color="0xFFFFFF"></font>
+	</fonts>
+	<fonts>
+		<author>Peared</author>
+		<font background="0x000000" bold="0" color="0xDEDEDE" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="0x05001A" style="33" color="0xB4823F"></font>
+		<font code="2069" color="0x009900"></font>
+		<name>Terminal</name>
+		<font style="13" color="0xC2DEC2"></font>
+		<font style="3" color="0x4ACA88"></font>
+		<font style="1" color="0x003BFF" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="2" color="0x00006C"></font>
+		<font style="4" color="0xC2DEDE"></font>
+		<font style="15" color="0x0045FF"></font>
+		<font style="18" color="0x2654FF"></font>
+		<font style="17" color="0x4763F0"></font>
+		<font style="19" color="0x4763F0"></font>
+		<font style="20" color="0x162CC5"></font>
+		<font style="24" color="0x2278E7"></font>
+		<font style="23" color="0x4763F0"></font>
+		<font style="40" color="0x4ACAB9"></font>
+		<font style="41" color="0x4ACAB9"></font>
+		<font style="42" color="0x4ACAB9" background="0x424242"></font>
+		<font style="57" color="0xDA7E35"></font>
+		<font style="58" color="0xDA7E35"></font>
+		<highlight>
+			<list1 list="1">custom list</list1>
+		</highlight>
+		<font style="22" color="0xDAA67A"></font>
+		<font style="21" color="0x458CE7"></font>
+		<font style="97" color="0x4A9956"></font>
+		<font style="98" color="0x4A9956"></font>
+		<font style="99" color="0x4A9956"></font>
+		<font style="11" color="0x003BCE" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0" background="0x000000"></font>
+		<font bool="1" code="2068" color="0x424242"></font>
+		<font bool="1" code="2067" color="0x009900"></font>
+		<font code="2098" color="0x4A9956"></font>
+		<font code="2188" value="2"></font>
+		<font style="0"></font>
+		<font code="2601" color="9276813"></font>
+		<font code="2600" color="3355443"></font>
+	</fonts>
+	<fonts>
+		<name>Zenburn</name>
+		<author>GeekDude</author>
+		<font background="4144959" bold="1" color="13495789" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="3355443" style="33" color="15000804"></font>
+		<font style="0" color="13495789"></font>
+		<font style="1" color="8363903" bold="0" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="2" color="5741559"></font>
+		<font style="3" color="9672908"></font>
+		<font style="4" color="15450263"></font>
+		<font style="11" color="8363903" bold="0" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="13" color="255" background="0"></font>
+		<font style="15" color="12110995"></font>
+		<font style="17" color="15592932" italic="1"></font>
+		<font style="18" color="0xCFC87C" italic="1"></font>
+		<font style="19" color="10731469"></font>
+		<font style="21" color="15592932" bold="0"></font>
+		<font style="22" color="13617276" bold="0" italic="1"></font>
+		<font style="37" color="13495789"></font>
+		<font bool="1" code="2067" color="0xFFFFFF"></font>
+		<font bool="1" code="2068" color="0x5e0000"></font>
+		<font code="2069" color="16777215"></font>
+		<font code="2098" color="4473924"></font>
+		<font code="2600" color="15450263"></font>
+		<font code="2601" color="6160384"></font>
+		<font style="20" color="6160384"></font>
+		<font style="24" color="14257611"></font>
+		<font style="23" color="15592932" italic="1"></font>
+		<font style="9" color="12110995"></font>
+		<font style="8" color="12110995"></font>
+		<font style="10" color="255" background="0"></font>
+		<font style="16" color="5741559"></font>
+		<font code="2082" color="14257611"></font>
+	</fonts>
+	<fonts>
+		<name>Zenburn_dark</name>
+		<author>Run1e</author>
+		<font background="3158064" bold="0" color="16777215" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="3355443" style="33" color="15000804"></font>
+		<font style="0" color="13495789"></font>
+		<font style="1" color="8363903" bold="0" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="2" color="8421616"></font>
+		<font style="3" color="8816334" bold="0"></font>
+		<font style="4" color="16777215"></font>
+		<font style="11" color="8363903" bold="0" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="13" color="255" background="0"></font>
+		<font style="15" color="12110995"></font>
+		<font style="17" color="9749720"></font>
+		<font style="18" color="16777215"></font>
+		<font style="19" color="16758590"></font>
+		<font style="21" color="9749720"></font>
+		<font style="22" color="16759366"></font>
+		<font style="37" color="13495789"></font>
+		<font bool="1" code="2067" color="0xFFFFFF"></font>
+		<font bool="1" code="2068" color="0x5e0000"></font>
+		<font code="2069" color="16777215"></font>
+		<font code="2098" color="4473924"></font>
+		<font code="2600" color="15450263"></font>
+		<font code="2601" color="6160384"></font>
+		<font style="20" color="16759366" italic="1"></font>
+		<font style="24" color="15458669"></font>
+		<font style="23" color="9749720"></font>
+		<font style="9" color="11184810"></font>
+		<font style="8" color="9737364"></font>
+		<font style="10" color="255" background="0"></font>
+		<font style="16" color="5741559"></font>
+		<font style="57" color="16733551" italic="1"></font>
+		<font style="58" color="2038527" italic="1"></font>
+		<fold color="4934475" background="6381921"></fold>
+		<font code="2082" color="6579300"></font>
+		<font style="61"></font>
+		<font style="55" color="9749720"></font>
+		<font code="2188" value="2"></font>
+		<custom control="SysTreeView321" gui="1" color="16777215"></custom>
+		<custom control="msctls_statusbar321" gui="1" bold="0" color="0" font="" italic="0" size="12" strikeout="0" underline="0"></custom>
+	</fonts>
+</themes>
