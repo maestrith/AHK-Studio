@@ -4,6 +4,8 @@ Added:
 Fixed:
 -Adding Toolbars used to cause issues when trying to edit them before reloading the script
 -Resizing Toolbars had some issues in some cases
+Updated:
+-lib\Studio.ahk: Forced files to be encoded in UTF-8
 1.003.18
 Fixed:
 -Run As U32/U64: was not saving files before running them.
