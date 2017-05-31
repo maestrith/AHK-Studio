@@ -328,9 +328,7 @@ Class XML{
 	Save(x*){
 		if x.1=1
 			this.Transform()
-		filename:=this.file?this.file:x.1.1,encoding:=ffff.pos=3?"UTF-8":ffff.pos=2?"UTF-16":"CP0",enc:=RegExMatch(this[],"[^\x00-\x7F]")?"utf-16":"utf-8"
-		if(encoding!=enc)
-			FileDelete,%filename%
+		filename:=this.file?this.file:x.1.1,Encoding:="UTF-8"
 		if(Trim(this[])="")
 			return
 		file:=fileopen(filename,"rw",encoding),file.seek(0),file.write(this[]),file.length(file.position)
