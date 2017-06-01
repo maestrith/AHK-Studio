@@ -9,7 +9,7 @@ global v:=[],MainWin,settings:=new XML("settings","lib\Settings.xml"),files:=new
 if(!settings[]){
 	Run,lib\settings.xml
 	m("Oh boy...check the settings file to see what's up.")
-} ;testing
+}
 v.LineEdited:=[],v.LinesEdited:=[],v.RunObject,v.OmniFind:={Function:"OUm`n)^[\s|}]*((\w|[^\x00-\x7F])+)\((.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,}",Class:"Oim`n)^[\s|}]*(class\s+((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)",Property:"Om`n)^[\s|}]*((\w|[^\x00-\x7F])+)\[(.*)\](\s*;.*\R){0,}\s*(\{)",Label:"UOm`n)^\s*((\w|[^\x00-\x7F])+):[\s|\R][\s+;]?",Hotkey:"OUi`nm)^\s*(((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*)+\s+&\s+)*(\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::",Bookmark:"OU);#\[(.*)\]",Breakpoint:"OU);\*\[(.*)\]",Instance:"OUi)(\w+)\s*:=\s*new\s*(\w+)\("},v.OmniFindText:={Function:["OUm`n)^[\s|}]*(",")\((.*)\)(\s*;.*\R){0,}\s*(\{)"],Class:["Oim`n)^[\s|}]*(class\s+(","))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)"],Method:["OUm`n)^[\s|}]*(",")\((.*)\)(\s*;.*\R){0,}\s*(\{)"],Property:["Om`n)^[\s|}]*(",")\[(.*)\](\s*;.*\R){0,}\s*(\{)"],Label:["UOm`n)^\s*(","):[\s|\R][\s+;]?"],Bookmark:["OU);#\[(",")\]"],Breakpoint:["OU);\*\[(",")\]"],Hotkey:["OUi`nm)^\s*(\Q","\E)::"],Instance:["OUi).*(",")\s*:=\s*new\s*(\w+)\("]},v.OmniFindMinimum:={Function:"OUm`n)^[\s|}]*((\w|[^\x00-\x7F])+)\(.*\)",Class:"Oim`n)^[\s|}]*(class\s+((\w|[^\x00-\x7F])+))",Property:"Om`n)^[\s|}]*((\w|[^\x00-\x7F])+)\[(.*)?\]"},v.OmniFindString:="OUm`n)(?<Function>^[\s|}]*((\w|[^\x00-\x7F])+)\((.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,})|(?<Class>^[\s|}]*(class\s+((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{))|(?<Property>^[\s|}]*((\w|[^\x00-\x7F])+)\[(.*)\](\s*;.*\R){0,}\s*(\{))|(?<Label>^\s*((\w|[^\x00-\x7F])+):[\s|\R][\s+;]?)|(?<Hotkey>^\s*(((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*)+\s+&\s+)*(\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::)|(?<Bookmark>;#\[(.*)\])|(?<Breakpoint>;\*\[(.*)\])|(?<Instance>(\w+)\s*:=\s*new\s*(\w+)\()"
 ComObjError(0),FileCheck(%true%),Options("startup"),menus:=new XML("menus","Lib\Menus.xml"),Keywords(),new Omni_Search_Class(),Gui(),DefaultRCM()
 return
@@ -2523,7 +2523,7 @@ Close(x:=1,all:="",Redraw:=1){
 		New()
 }
 Close_All(){
-	Close(1,1),New(1)
+	Close(1,1)
 }
 CloseSingleUntitled(){
 	count:=files.SN("//main[@file!='Libraries']")
@@ -6791,7 +6791,7 @@ Omni_Search(start=""){
 	Update({sc:sc.2357})
 	Code_Explorer.AutoCList(1)
 	newwin:=new GUIKeep(20),newwin.Add("Edit,goss w600 vsearch,,w","ListView,w600 h200 -hdr -Multi gosgo,Menu C|A|1|2|R|I,wh")
-	Gui,20:-Caption
+	;Gui,20:-Caption
 	Gui,1:-Disabled
 	GuiControl,20:,Edit1,%start%
 	newwin.Show("Omni-Search",,,StrLen(start))
@@ -6811,16 +6811,16 @@ Omni_Search(start=""){
 	GuiControl,20:-Redraw,SysListView321
 	FileSearch:=osearch:=search:=newwin[].search,Select:=[],LV_Delete(),sort:=[],stext:=[],fsearch:=search="^"?1:0
 	if(InStr(search,")")){
-		if(!v.options.Clipboard_History){
+		if(!v.Options.Clipboard_History){
 			Options("Clipboard_History")
 			m("Clipboard History was off. Turning it on now")
-			return
+			return running:=0
 		}LV_Delete()
 		for a in v.Clipboard
 			b:=v.Clipboard[v.Clipboard.MaxIndex()-(A_Index-1)],Sort[LV_Add("",b)]:=b
 		LV_ModifyCol(1,"AutoHDR")
 		GuiControl,20:+Redraw,SysListView321
-		return
+		return running:=0
 	}for a in Omni_Search_Class.prefix{
 		osearch:=RegExReplace(osearch,"\Q" a "\E")
 		if(a!=".")
@@ -6835,7 +6835,11 @@ Omni_Search(start=""){
 		Loop,4
 			LV_ModifyCol(A_Index,"AutoHDR")
 		LV_Modify(1,"Select Vis Focus")
-		return
+		GuiControl,20:+g,Edit1
+		GuiControl,20:,Edit1,Fuzzy Search find Check For Update by typing @CFU
+		SendMessage,0xB1,0,49,Edit1,% NewWin.ID
+		GuiControl,20:+goss,Edit1
+		return running:=0
 	}else if(RegExMatch(search,"O)(\W)",found)){
 		if(found.1="^")
 			OnlyTop:=1
@@ -6930,9 +6934,10 @@ Omni_Search(start=""){
 	return
 	osgo:
 	if(running)
-		return
+		return m("here?")
 	Gui,20:Default
 	LV_GetText(num,LV_GetNext(),6),item:=XML.EA(node:=Select[num]),search:=newwin[].search,pre:=SubStr(search,1,1)
+	LV_GetText(LV_Text,LV_GetNext())
 	if(!num){
 		LV_GetText(item,LV_GetNext())
 		ControlGetText,text,Edit1,% hwnd([20])
@@ -7000,8 +7005,10 @@ Omni_Search(start=""){
 			m("Edit this GUI",SubStr(text,item.start,item.end-item.start))
 		else
 			m("Go to " item.text,SubStr(text,item.start,item.end-item.start))
+	}else if(!item.text&&!item.type){
+		return
 	}else{
-		m(A_TickCount,"Omni-Search",item.text,item.type,"Broken :(") ;leave this until I figure things out.
+		m("Omni-Search",item.text,item.type,"Broken :(") ;leave this until I figure things out.
 	}
 	return
 	omnikey:
