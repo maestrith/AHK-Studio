@@ -6861,12 +6861,6 @@ Omni_Search(start=""){
 		find:=find1?"//*[" find1 "]":"//*"
 	}else
 		find:="//*"
-	/*
-		if the first symbol in find is &
-			make it so that it will just do a hotkey search for the rest of the text
-		cause hotkeys have all the ^+etc that can cause issues with the search
-		huck brought this up.
-	*/
 	if(OnlyTop&&!search)
 		find:="//main/file[1]",OnlyTop:=0
 	if(SubStr(newwin[].search,1,1)="&")
