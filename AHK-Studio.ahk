@@ -75,7 +75,6 @@ return
 		have it so that it asks first to replace the text rather than automaticxally
 		More languages (programming)
 	}
-	Fix Bugs
 	Misc Ideas:
 	more languages (spoken)
 	When you edit/add a line with an include:{
