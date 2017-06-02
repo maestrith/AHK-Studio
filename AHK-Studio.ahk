@@ -20,7 +20,7 @@ return
 		have the option to have the Variable browser dockable to the side of debug window.
 	}
 	Darth_diggler{
-		Right Click and Edit from Explorer not selecting the proper file when opening new files
+		Right Click and Edit from Explorer not selecting the proper file when opening new files.
 		Downloading plugins does not work in compiled version.
 		Also ability to add launching applications from the toolbar
 	}
