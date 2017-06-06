@@ -8288,7 +8288,7 @@ Save_As(){
 	filelist:=SN(Current(1),"descendant::*")
 	SplitPath,newfile,newfn,newdir
 	while(fl:=filelist.item[A_Index-1],ea:=XML.EA(fl)){
-		if(newfn=ea.filename)
+		if(newfn=ea.filename&&A_Index>1)
 			return m("File conflicts with an include.  Please choose another filename")
 	}
 	SplashTextOn,200,100,Creating New File(s)
