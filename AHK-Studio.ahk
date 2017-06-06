@@ -8276,12 +8276,15 @@ Save_As(){
 		aa.RemoveAttribute("untitled")
 	current.RemoveAttribute("untitled")
 	SplitPath,currentfile,,dir
-	FileSelectFile,newfile,S,%dir%,Save File As...,*.ahk
+	FileSelectFile,newfile,S16,%dir%,Save File As...,*.ahk
 	if(ErrorLevel||newfile="")
 		return
 	newfile:=SubStr(newfile,-3)=".ahk"?newfile:newfile ".ahk"
-	if(FileExist(newfile))
-		return m("File exists... Please choose another")
+	/*
+		if(FileExist(newfile)){
+			return m("File exists... Please choose another")
+		}
+	*/
 	filelist:=SN(Current(1),"descendant::*")
 	SplitPath,newfile,newfn,newdir
 	while(fl:=filelist.item[A_Index-1],ea:=XML.EA(fl)){
