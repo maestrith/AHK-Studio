@@ -10485,7 +10485,7 @@ Create_Toolbar(){
 	return {id:id,node:next}
 }
 ShowAutoComplete(){
-	sc:=csc(),cpos:=sc.2008,start:=sc.2266(cpos,1),end:=sc.2267(cpos,1),word:=sc.TextRange(start,cpos)
+	sc:=csc(),cpos:=sc.2008,SetWords(1),start:=sc.2266(cpos,1),end:=sc.2267(cpos,1),word:=sc.TextRange(start,cpos),SetWords(),word:=LTrim(word,"-")
 	if((sc.2202&&!v.Options.Auto_Complete_While_Tips_Are_Visible)||(sc.2010(cpos)~="\b(13|1|11|3)\b"=1&&!v.Options.Auto_Complete_In_Quotes)){
 	}else{
 		word:=RegExReplace(word,"^\d*"),list:=Trim(v.keywords[SubStr(word,1,1)])
