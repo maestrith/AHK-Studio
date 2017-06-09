@@ -6550,7 +6550,7 @@ Notify(csc*){
 		}else{
 			if(sc.2007((npos:=sc.2266(pos)-1))=35)
 				sc.2160(npos,sc.2267(pos))
-	}}if(code="2008"){
+	}}if(code=2008){
 		if(sc.2423=3&&sc.2570>1){
 			list:=[]
 			Loop,% sc.2570
@@ -6648,18 +6648,22 @@ Notify(csc*){
 			/*
 				work on dashes and remove them from the search if they are not needed
 			*/
-			if((sc.2202&&!v.Options.Auto_Complete_While_Tips_Are_Visible)||(sc.2010(cpos)~="\b(13|1|11|3)\b"=1&&!v.Options.Auto_Complete_In_Quotes)){
-			}else{
-				word:=RegExReplace(word,"^\d*"),list:=Trim(v.keywords[SubStr(word,1,1)])
-				if(v.words[sc.2357])
-					list.=" " v.words[sc.2357]
-				list.=" " Code_Explorer.AutoCList()
-				if(node:=settings.Find("//autocomplete/project/@file",Current(2).file))
-					list.=" " node.text
-				Sort,list,UCD%A_Space%
-				if(list&&InStr(list,word)&&word)
-					sc.2100(StrLen(word),Trim(list))
-		}}style:=sc.2010(cpos-2)
+			SetTimer,ShowAutoComplete,-300
+			/*
+				if((sc.2202&&!v.Options.Auto_Complete_While_Tips_Are_Visible)||(sc.2010(cpos)~="\b(13|1|11|3)\b"=1&&!v.Options.Auto_Complete_In_Quotes)){
+				}else{
+					word:=RegExReplace(word,"^\d*"),list:=Trim(v.keywords[SubStr(word,1,1)])
+					if(v.words[sc.2357])
+						list.=" " v.words[sc.2357]
+					list.=" " Code_Explorer.AutoCList()
+					if(node:=settings.Find("//autocomplete/project/@file",Current(2).file))
+						list.=" " node.text
+					Sort,list,UCD%A_Space%
+					if(list&&InStr(list,word)&&word)
+						sc.2100(StrLen(word),Trim(list))
+				}
+			*/
+		}style:=sc.2010(cpos-2)
 		if(v.Options.Context_Sensitive_Help)
 			SetTimer,Context,-150
 		c:=fn.ch
@@ -10479,4 +10483,19 @@ Create_Toolbar(){
 		settings.Under(next,"button",b)
 	Sleep,1
 	return {id:id,node:next}
+}
+ShowAutoComplete(){
+	sc:=csc(),cpos:=sc.2008,start:=sc.2266(cpos,1),end:=sc.2267(cpos,1),word:=sc.TextRange(start,cpos)
+	if((sc.2202&&!v.Options.Auto_Complete_While_Tips_Are_Visible)||(sc.2010(cpos)~="\b(13|1|11|3)\b"=1&&!v.Options.Auto_Complete_In_Quotes)){
+	}else{
+		word:=RegExReplace(word,"^\d*"),list:=Trim(v.keywords[SubStr(word,1,1)])
+		if(v.words[sc.2357])
+			list.=" " v.words[sc.2357]
+		list.=" " Code_Explorer.AutoCList()
+		if(node:=settings.Find("//autocomplete/project/@file",Current(2).file))
+			list.=" " node.text
+		Sort,list,UCD%A_Space%
+		if(list&&InStr(list,word)&&word)
+			sc.2100(StrLen(word),Trim(list))
+	}
 }

@@ -1,3 +1,6 @@
+1.003.21
+Added:
+-A slight delay for when AutoComplete pops up to help with missing keystrokes
 1.003.20
 Fixed: Reported by megabugman #114-Close All: Creates 2 new untitled filesChanged: Reported by megabugman #101-Removed the -Caption so that the window can be movedAdded: Suggested by megabugman #101-When you bring up the Omni-Search without a pre-entered prefix it will display Fuzzy Search find Check For Update by typing @CFU
 1.003.19
