@@ -2834,6 +2834,17 @@ Context(return=""){
 		if(RegExMatch(string,"O)^[\s|\W]*\w+::\s*(\w+)",ww))
 			word:=ww
 		word:=v.kw[word.1]?v.kw[word.1]:word.1,startpos:=start,loopword:=word,loopstring:=string,build:=word,start:=""
+		if(string~="i)^\s*#\b(Include|IncludeAgain)\b\s+$"){
+			current:=Current(2).file
+			SplitPath,current,,CurrentDir
+			for a,b in [CurrentDir "\Lib",A_MyDocuments "\AutoHotkey\Lib"]
+				Loop,Files,%b%\*.ahk
+				{
+					SplitPath,A_LoopFileName,,,,NNE
+					list.=A_LoopFileName "   |  " A_LoopFileLongPath "`n" A_LoopFileName "   |  <" NNE ">`n" 
+				}
+			sc.2106(10),sc.2117(10,Trim(list,"`n")),sc.2106(32)
+		}
 		if(Trim(string,";")~="^\s*#"){
 			if(RegExMatch(v.Keywords["#"],"i)#\b(" word ")\b",found))
 				if(node:=commands.SSN("//Commands/commands[text()='#" found1 "']"))
@@ -6644,26 +6655,9 @@ Notify(csc*){
 		if(sc.2007(start-1)=46){
 			if(Show_Class_Methods(pre:=sc.TextRange(sc.2266(start-2,1),sc.2267(start-2,1)),word))
 				return
-		}if((StrLen(word)>1&&sc.2102=0&&v.Options.Auto_Complete)){
-			/*
-				work on dashes and remove them from the search if they are not needed
-			*/
+		}if((StrLen(word)>1&&sc.2102=0&&v.Options.Auto_Complete))
 			SetTimer,ShowAutoComplete,-300
-			/*
-				if((sc.2202&&!v.Options.Auto_Complete_While_Tips_Are_Visible)||(sc.2010(cpos)~="\b(13|1|11|3)\b"=1&&!v.Options.Auto_Complete_In_Quotes)){
-				}else{
-					word:=RegExReplace(word,"^\d*"),list:=Trim(v.keywords[SubStr(word,1,1)])
-					if(v.words[sc.2357])
-						list.=" " v.words[sc.2357]
-					list.=" " Code_Explorer.AutoCList()
-					if(node:=settings.Find("//autocomplete/project/@file",Current(2).file))
-						list.=" " node.text
-					Sort,list,UCD%A_Space%
-					if(list&&InStr(list,word)&&word)
-						sc.2100(StrLen(word),Trim(list))
-				}
-			*/
-		}style:=sc.2010(cpos-2)
+		style:=sc.2010(cpos-2)
 		if(v.Options.Context_Sensitive_Help)
 			SetTimer,Context,-150
 		c:=fn.ch
@@ -6722,19 +6716,7 @@ Notify(csc*){
 			sc.2117(5,Trim(methods))
 			return
 		}else if(fn.listtype=9){
-			/*
-				for a,b in v.Options
-					if(b>0&&b!="")
-						Options(a),offlist.=a "`n"
-				if(node:=settings.SSN("//quickoptions/profile[@name='" StrGet(fn.text,"UTF-8") "']/optionlist")){
-					rem:=settings.SSN("//options"),rem.ParentNode.RemoveChild(rem),settings.Add("options",(ea:=XML.EA(node)))
-					for a,b in ea
-						if(v.Options[a]!=b)
-							Options(a),onlist.=a "`n"
-				}
-			*/
-			compare:=[]
-			sea:=settings.EA("//quickoptions/profile[@name='" StrGet(fn.text,"UTF-8") "']/optionlist")
+			compare:=[],sea:=settings.EA("//quickoptions/profile[@name='" StrGet(fn.text,"UTF-8") "']/optionlist")
 			for a,b in v.Options
 				if(b)
 					if(sea[a]!=b)
@@ -6743,21 +6725,16 @@ Notify(csc*){
 				if(b)
 					if(v.Options[sea]!=b)
 						Options(a)
-			;m("Remove:",remove,"Add:",add)
-			/*
-				for a,b in v.Options
-					if(!sea[a])
-						m(a " is on and is not on in the new one")
-			*/
 			m("hmm...")
-			;m("Off: " offlist,"On: " onlist)
-			
 			/*
 				ToggleMenu(x)
 				control:=x="Multi_Line"?"Multi-Line":RegExReplace(x,"_"," ")
 				GuiControl,Quick_Find:,%control%,%onoff%
 			*/
-			
+		}else if(fn.listtype=10){
+			name:=StrGet(fn.text,"UTF-8"),sc.2645(fn.Position,Abs(fn.Position-sc.2008)),RegExMatch(name,"O)\|\s+(.*)",Found),sc.2025(fn.Position),sc.2003(fn.Position,Found.1)
+			if(pos:=fn.Position+StrPut(Found.1,"UTF-8")-1)
+				sc.2025(pos)
 		}
 	}
 	return
