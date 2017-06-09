@@ -1,6 +1,6 @@
 1.003.21
 Added:
--A slight delay for when AutoComplete pops up to help with missing keystrokes
+-A slight delay for when AutoComplete pops up to help with missing keystrokes Changed to 200ms
 -#Include{Space} will bring up a list of your library files
 Fixed:
 -Things like -Redraw were not showing in AutoComplete

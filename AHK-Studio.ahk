@@ -6656,7 +6656,7 @@ Notify(csc*){
 			if(Show_Class_Methods(pre:=sc.TextRange(sc.2266(start-2,1),sc.2267(start-2,1)),word))
 				return
 		}if((StrLen(word)>1&&sc.2102=0&&v.Options.Auto_Complete))
-			SetTimer,ShowAutoComplete,-300
+			SetTimer,ShowAutoComplete,-200
 		style:=sc.2010(cpos-2)
 		if(v.Options.Context_Sensitive_Help)
 			SetTimer,Context,-150
