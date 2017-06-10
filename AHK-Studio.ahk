@@ -3152,6 +3152,17 @@ Convert_Hotkey(key){
 Copy(){
 	csc().2178(),Clipboard:=RegExReplace(Clipboard,"\R","`r`n")
 }
+Create_Toolbar(){
+	FormatTime,date,%A_Now%,longdate
+	FormatTime,time,%A_Now%,H:mm:ss
+	if(!top:=settings.SSN("//toolbar"))
+		top:=settings.Add("toolbar")
+	id:=date " " time "." A_MSec,next:=settings.Under(top,"bar",{id:id})
+	for a,b in [{file:"Shell32.dll",func:"Open",text:"Open",icon:3,id:10000,state:4,vis:1},{file:"Shell32.dll",func:"Run",text:"Run",icon:76,id:11102,state:4,vis:1}]
+		settings.Under(next,"button",b)
+	Sleep,1
+	return {id:id,node:next}
+}
 csc(set:=0){
 	static current,last
 	if(set.plugin)
@@ -4117,7 +4128,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20161107223002,XMLFiles:={menus:[20170314100037,"lib/menus.xml","lib\Menus.xml"],commands:[20160508000000,"lib/Commands.xml","lib\Commands.xml"]}
+	,scidate:=20161107223002,XMLFiles:={menus:[20170610103039,"lib/menus.xml","lib\Menus.xml"],commands:[20160508000000,"lib/Commands.xml","lib\Commands.xml"]}
 	,OtherFiles:={scilexer:{date:20161107223023,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170602054002,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!FileExist(A_MyDocuments "\Autohotkey\Lib")){
@@ -5320,17 +5331,13 @@ Create_Include_From_Selection(){
 	pos:=PosInfo(),sc:=csc()
 	if(pos.start=pos.end)
 		return m("Please select some text to create a new Include from")
-	text:=sc.GetSelText(),RegExMatch(text,"^(\w+)",Include),filename:=Current(2).file
-	SplitPath,filename,,dir
-	FileSelectFile,Filename,S16,% dir "\" RegExReplace(Include1,"_"," ") ".ahk",Confirm New File,*.ahk
-	if(ErrorLevel||Filename="")
-		return
+	text:=sc.GetSelText(),RegExMatch(text,"^(\w+)",Include)
+	Filename:=SelectFile(RegExReplace(Include1,"_"," ") ".ahk","New Include Filename")
 	if(FileExist(Filename))
 		return m("Include name already exists. Please choose another")
 	if(files.Find(Current(1),"//@file",Filename))
 		return m("This file is already included in this Project")
-	sc.2326()
-	AddInclude(Filename(Filename),text,{start:StrPut(Include1 "(","UTF-8")-1,end:StrPut(Include1 "(","UTF-8")-1},0)
+	sc.2326(),AddInclude(Filename(Filename),text,{start:StrPut(Include1 "(","UTF-8")-1,end:StrPut(Include1 "(","UTF-8")-1},0)
 }
 Include(MainFile,File){
 	Relative:=RelativePath(MainFile,Filename(file))
@@ -6044,15 +6051,9 @@ New_File_Template(){
 New_Include(){
 	if(Current(2).untitled)
 		return m("You can not add Includes to untitled documents.  Please save this project before attempting to add Includes to it.")
-	sc:=csc(),parent:=Current(2).file
-	SplitPath,parent,,dir
-	FileSelectFile,Filename,S16,%dir%,New Include Name (Include),*.ahk
-	if(ErrorLevel||Filename="")
-		return
-	Filename:=Filename(filename)
+	sc:=csc(),parent:=Current(2).file,Filename:=SelectFile("","New Include Name")
 	SplitPath,Filename,,,,nne
-	function:=Clean(nne)
-	text:=(function~="i)^class_")?(m("Create Class called " (RegExReplace(SubStr(nne,InStr(nne," ")+1)," ","_")) "?","btn:ync")="Yes"?"Class " (RegExReplace(SubStr(nne,InStr(nne," ")+1)," ","_")) "{`n`t`n}":"",pos:=StrPut(nne "{`t","UTF-8")):(m("Create Function called " function "?","btn:ync")="Yes"?function "(){`n`t`n}":"",pos:=StrPut(function "(","UTF-8")-1)
+	function:=Clean(nne),text:=(function~="i)^class_")?(m("Create Class called " (RegExReplace(SubStr(nne,InStr(nne," ")+1)," ","_")) "?","btn:ync")="Yes"?"Class " (RegExReplace(SubStr(nne,InStr(nne," ")+1)," ","_")) "{`n`t`n}":"",pos:=StrPut(nne "{`t","UTF-8")):(m("Create Function called " function "?","btn:ync")="Yes"?function "(){`n`t`n}":"",pos:=StrPut(function "(","UTF-8")-1)
 	AddInclude(Filename,text,{start:pos,end:pos})
 }
 NewIndent(indentwidth:=""){
@@ -8636,6 +8637,19 @@ SelectAll(){
 	}
 	return
 }
+SelectFile(Filename:="",Title:="New File",Ext:="*.ahk",Options:="S16"){
+	MainFile:=Current(2).file
+	SplitPath,MainFile,,Dir
+	if(Path:=Settings.SSN("//DefaultFolder").text){
+		Dir:=Dir "\" Path
+		if(!FileExist(Dir))
+			FileCreateDir,%Dir%
+	}
+	FileSelectFile,Filename,%Options%,% Dir "\" Filename,%Title%,*.ahk
+	if(ErrorLevel)
+		Exit
+	return Filename(Filename)
+}
 SelectText(item){
 	sc:=csc(),text:=sc.GetUNI(),find:=v.OmniFindText[item.type],string:=find.1 item.text find.2
 	if(item.NodeName){
@@ -8696,6 +8710,13 @@ Set_As_Default_Editor(){
 		m("Notepad.exe is now your default editor")
 	else
 		m("Something went wrong :( Please restart Studio and try again.")
+}
+Set_New_File_Default_Folder(){
+	NewFolder:=InputBox("","New Default File Folder","Enter the name of the folder you wish to have all new files created in",Settings.SSN("//DefaultFolder").text)
+	if(!NewFolder)
+		Rem:=Settings.SSN("//DefaultFolder"),Rem.ParentNode.RemoveChild(Rem)
+	else
+		Settings.Add("DefaultFolder",,NewFolder)
 }
 Set(sc:=""){
 	sc:=sc?sc:csc()
@@ -9484,6 +9505,21 @@ Show_Scintilla_Code_In_Line(){
 	}
 	if(list)
 		sc.2200(sc.2128(sc.2166(sc.2008)),Trim(list,"`n"))
+}
+ShowAutoComplete(){
+	sc:=csc(),cpos:=sc.2008,SetWords(1),start:=sc.2266(cpos,1),end:=sc.2267(cpos,1),word:=sc.TextRange(start,cpos),SetWords(),word:=LTrim(word,"-")
+	if((sc.2202&&!v.Options.Auto_Complete_While_Tips_Are_Visible)||(sc.2010(cpos)~="\b(13|1|11|3)\b"=1&&!v.Options.Auto_Complete_In_Quotes)){
+	}else{
+		word:=RegExReplace(word,"^\d*"),list:=Trim(v.keywords[SubStr(word,1,1)])
+		if(v.words[sc.2357])
+			list.=" " v.words[sc.2357]
+		list.=" " Code_Explorer.AutoCList()
+		if(node:=settings.Find("//autocomplete/project/@file",Current(2).file))
+			list.=" " node.text
+		Sort,list,UCD%A_Space%
+		if(list&&InStr(list,word)&&word)
+			sc.2100(StrLen(word),Trim(list))
+	}
 }
 ShowLabels(x:=0){
 	Code_Explorer.Scan(Current()),all:=cexml.SN("//main[@file'" Current(2).file "']/descendant::info[@type='Function' or @type='Label']/@text")
@@ -10449,30 +10485,4 @@ Words_In_Document(NoDisplay:=0,text:="",Remove:="",AllowLastWord:=0){
 }
 Wrap_Word_In_Quotes(){
 	sc:=csc(),sc.2078,cpos:=sc.2008,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2003(start,Chr(34)),sc.2003(end+1,Chr(34)),sc.2025(cpos+1),sc.2079
-}
-Create_Toolbar(){
-	FormatTime,date,%A_Now%,longdate
-	FormatTime,time,%A_Now%,H:mm:ss
-	if(!top:=settings.SSN("//toolbar"))
-		top:=settings.Add("toolbar")
-	id:=date " " time "." A_MSec,next:=settings.Under(top,"bar",{id:id})
-	for a,b in [{file:"Shell32.dll",func:"Open",text:"Open",icon:3,id:10000,state:4,vis:1},{file:"Shell32.dll",func:"Run",text:"Run",icon:76,id:11102,state:4,vis:1}]
-		settings.Under(next,"button",b)
-	Sleep,1
-	return {id:id,node:next}
-}
-ShowAutoComplete(){
-	sc:=csc(),cpos:=sc.2008,SetWords(1),start:=sc.2266(cpos,1),end:=sc.2267(cpos,1),word:=sc.TextRange(start,cpos),SetWords(),word:=LTrim(word,"-")
-	if((sc.2202&&!v.Options.Auto_Complete_While_Tips_Are_Visible)||(sc.2010(cpos)~="\b(13|1|11|3)\b"=1&&!v.Options.Auto_Complete_In_Quotes)){
-	}else{
-		word:=RegExReplace(word,"^\d*"),list:=Trim(v.keywords[SubStr(word,1,1)])
-		if(v.words[sc.2357])
-			list.=" " v.words[sc.2357]
-		list.=" " Code_Explorer.AutoCList()
-		if(node:=settings.Find("//autocomplete/project/@file",Current(2).file))
-			list.=" " node.text
-		Sort,list,UCD%A_Space%
-		if(list&&InStr(list,word)&&word)
-			sc.2100(StrLen(word),Trim(list))
-	}
 }

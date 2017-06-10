@@ -2,6 +2,7 @@
 Added:
 -A slight delay for when AutoComplete pops up to help with missing keystrokes Changed to 200ms
 -#Include{Space} will bring up a list of your library files
+-Set New File Default Folder: Currently works with Create Include From Selection, New Include
 Fixed:
 -Things like -Redraw were not showing in AutoComplete
 1.003.20
