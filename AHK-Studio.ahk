@@ -985,7 +985,7 @@ class Code_Explorer{
 		if((node:=cexml.SSN("//*[@cetv='" A_EventInfo "']"))&&(A_GuiEvent="S"||A_GuiEvent="Normal")){
 			if(!tv:=files.SSN("//*[@id='" SSN(node,"ancestor-or-self::file/@id").text "']/@tv").text)
 				return
-			tv(tv),SelectText(node)
+			tv(tv),SelectText(node),CenterSel()
 		}
 		return
 	}AutoCList(node:=0){
