@@ -3311,8 +3311,10 @@ Delete_Line(){
 Delete_Matching_Brace(){
 	sc:=csc(),value:=[]
 	GuiControl,1:+g,% sc.sc
-	for a,b in [v.braceend,v.bracestart]
-		value[b]:=1
+	if((Match:=sc.2353(sc.2008-1))>=0)
+		value[Match]:=1,value[sc.2008-1]:=1
+	else if((Match:=sc.2353(sc.2008))>=0)
+		value[Match]:=1,value[sc.2008]:=1
 	max:=value.MaxIndex(),min:=value.MinIndex()
 	if(v.braceend&&v.bracestart){
 		sc.2078(),minline:=sc.2166(min),maxline:=sc.2166(max),sc.2645(max,1),sc.2645(min,1)
