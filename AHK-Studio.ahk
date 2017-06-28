@@ -3309,12 +3309,12 @@ Delete_Line(){
 	sc:=csc(),line:=sc.2166(sc.2008),pos:=sc.2128(line),diff:=sc.2008-pos,sc.2338(),start:=sc.2128(line),end:=sc.2136(line),sc.2025(diff<=end-start?start+diff:end)
 }
 Delete_Matching_Brace(){
-	sc:=csc(),value:=[]
+	sc:=csc(),value:=[],cpos:=sc.2008
 	GuiControl,1:+g,% sc.sc
-	if((Match:=sc.2353(sc.2008-1))>=0)
-		value[Match]:=1,value[sc.2008-1]:=1
-	else if((Match:=sc.2353(sc.2008))>=0)
-		value[Match]:=1,value[sc.2008]:=1
+	if((Match:=sc.2353(cpos-1))>=0)
+		value[Match]:=1,value[cpos-1]:=1
+	else if((Match:=sc.2353(cpos))>=0)
+		value[Match]:=1,value[cpos]:=1
 	max:=value.MaxIndex(),min:=value.MinIndex()
 	if(v.braceend&&v.bracestart){
 		sc.2078(),minline:=sc.2166(min),maxline:=sc.2166(max),sc.2645(max,1),sc.2645(min,1)
@@ -6659,7 +6659,7 @@ Notify(csc*){
 			if(Show_Class_Methods(pre:=sc.TextRange(sc.2266(start-2,1),sc.2267(start-2,1)),word))
 				return
 		}if((StrLen(word)>1&&sc.2102=0&&v.Options.Auto_Complete))
-			SetTimer,ShowAutoComplete,-200
+			SetTimer,ShowAutoComplete,-150
 		style:=sc.2010(cpos-2)
 		if(v.Options.Context_Sensitive_Help)
 			SetTimer,Context,-150
@@ -10487,4 +10487,48 @@ Words_In_Document(NoDisplay:=0,text:="",Remove:="",AllowLastWord:=0){
 }
 Wrap_Word_In_Quotes(){
 	sc:=csc(),sc.2078,cpos:=sc.2008,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2003(start,Chr(34)),sc.2003(end+1,Chr(34)),sc.2025(cpos+1),sc.2079
+}
+Fold_All(){
+	csc().2662
+}
+UnFold_All(){
+	csc().2662(1)
+}
+Toggle_Fold_All(){
+	csc().2662(2)
+}
+Fold_Current_Level(){
+	sc:=csc(),level:=sc.2223(sc.2166(sc.2008))&0xff,level:=level-1>=0?level-1:level,Fold_Level_X(Level)
+}
+Unfold_Current_Level(){
+	sc:=csc(),level:=sc.2223(sc.2166(sc.2008))&0xff,Unfold_Level_X(Level)
+}
+Fold_Level_X(Level=""){
+	sc:=csc()
+	if(level="")
+		level:=InputBox(sc.sc,"Fold Levels","Enter a level to fold`n0-100")
+	current:=0
+	while,(current<sc.2154){
+		fold:=sc.2223(current)
+		if (fold&0xff=level)
+			sc.2237(current,0),current:=sc.2224(current,fold)
+		current+=1
+	}
+}
+Toggle_Fold(){
+	sc:=csc(),sc.2231(sc.2166(sc.2008))
+}
+Unfold_Level_X(Level=""){
+	sc:=csc()
+	if(level="")
+		level:=InputBox(sc.sc,"Fold Levels","Enter a level to Un-fold`n0-100")
+	if(ErrorLevel)
+		return
+	fold=0
+	while,sc.2618(fold)>=0,fold:=sc.2618(fold){
+		lev:=sc.2223(fold)
+		if(lev&0xff=level)
+			sc.2237(fold,1)
+		fold++
+	}
 }

@@ -8,12 +8,20 @@ Fixed:
 Changed: Suggested by jpack
 -When clicking items in the Code Explorer it will center the text
 -Delete Matching Brace: Was causing issues if you did it more than once without moving the caret
+Changed: Reported by yawikflame
+-Folding: All folding functions are now in the code rather than plugin
 1.003.20
 Fixed: Reported by megabugman #114-Close All: Creates 2 new untitled filesChanged: Reported by megabugman #101-Removed the -Caption so that the window can be movedAdded: Suggested by megabugman #101-When you bring up the Omni-Search without a pre-entered prefix it will display Fuzzy Search find Check For Update by typing @CFU
 1.003.19
 Added:-RCM/Split Control/Direction/ToolbarFixed:-Adding Toolbars used to cause issues when trying to edit them before reloading the script-Resizing Toolbars had some issues in some casesUpdated:-lib\\Studio.ahk: Forced files to be encoded in UTF-8
 1.003.18
-Fixed:-Run As U32/U64: was not saving files before running them.-Settings: Edit Replacements: Enter was not adding in a new lineUpdated:-lib\\Studio.ahk: XML was acting up.
+Fixed:
+-Run As U32/U64: was not saving files before running them.
+-Settings: Edit Replacements: Enter was not adding in a new line
+Updated:
+-lib\\Studio.ahk: XML was acting up.
+Changed:
+-Reduced the sleep time for the AutoComplete popup to 150ms
 1.003.17
 Added: Suggested by Run1e-Adding ;Startup (Case Sensitive) will add a plugin to the startup of StudioFixed:-Smart Delete: I made some changes and broke it.Fixed: Reported by Run1e-Some commands were not being colored correctlyFixed: Reported by Someone I am sure but I forgot who :( sorry-Right Click: When Studio is the active window and you are right clicking outside of Studio it was giving a Studio menu
 1.003.16
