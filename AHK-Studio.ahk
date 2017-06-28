@@ -156,7 +156,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:=""
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.21"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -164,6 +164,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 	Gui,Show,w700 h550,AHK Studio Help Version: %version%
 	sc.2181(0,about),sc.2025(0),sc.2268(1)
 	return
+	11Close:
 	11GuiClose:
 	11GuiEscape:
 	hwnd({rem:11})
@@ -748,7 +749,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:=""
+	Version:="1.003.21"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -1980,11 +1981,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:=""
+		Version:="1.003.21"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Version(){
-		Version:=""
+		Version:="1.003.21"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -7523,6 +7524,8 @@ Publish(return=""){
 	publish:=Update({encoded:mainfile})
 	includes:=SN(Current(1),"descendant::*/@include/..")
 	number:=SSN(vversion.Find("//info/@file",Current(2).file),"descendant::version/@number").text
+	if(!number)
+		number:=SSN(vversion.Find("//info/@file",Current(2).file),"descendant::version/@name").text
 	while,ii:=includes.item[A_Index-1]
 		if(InStr(publish,SSN(ii,"@include").text))
 			StringReplace,publish,publish,% SSN(ii,"@include").text,% Update({encoded:SSN(ii,"@file").text}),All
