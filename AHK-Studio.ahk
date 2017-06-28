@@ -16,6 +16,9 @@ ComObjError(0),FileCheck(%true%),Options("startup"),menus:=new XML("menus","Lib\
 return
 ;,Variable:"Osm`n)(\w+)\s*:=""
 /*
+	maybe make options a class
+*/
+/*
 	Add in #Include brings up a list of items in your library
 	Debugging Joe Glines{
 		have the option to have the Variable browser dockable to the side of debug window.
@@ -7145,7 +7148,8 @@ Options(x:=0){
 				settings.SSN("//options").RemoveAttribute(a)
 		}
 		return
-	}
+	}else if(x=0)
+		return new SettingsClass("Options")
 	if(x~=Disable){
 		sc:=csc(),onoff:=settings.SSN("//options/@" x).text?0:1,att:=[],att[x]:=onoff,settings.Add("options",att),v.Options[x]:=onoff,ToggleMenu(x),sc[list[x]](onoff),ea:=settings.EA("//options")
 		for c,d in s.ctrl{

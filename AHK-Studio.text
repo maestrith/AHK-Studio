@@ -5,6 +5,7 @@ Added:
 -Set New File Default Folder: Currently works with Create Include From Selection, New Include
 Fixed:
 -Things like -Redraw were not showing in AutoComplete
+-Options: Now opens the settings with Options
 Changed: Suggested by jpack
 -When clicking items in the Code Explorer it will center the text
 -Delete Matching Brace: Was causing issues if you did it more than once without moving the caret
