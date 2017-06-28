@@ -773,7 +773,7 @@ Check_For_Update(startup:=""){
 		FileMove,%A_ScriptFullPath%,%nne% - %version%.exe,1
 		SplitPath,A_AhkPath,file,dirr
 		Loop,%dirr%\Ahk2Exe.exe,1,1
-			file:=A_LoopFileFullPath
+			file:=A_LoopFileLongPath
 		RunWait,%file% /in "%A_ScriptDir%\%nne%.ahk" /out "%A_ScriptDir%\%nne%.exe" %add% /bin "%dirr%\Compiler\Unicode 32-bit.bin"
 	}
 	Reload
