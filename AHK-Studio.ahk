@@ -5,7 +5,8 @@ SetControlDelay,-1
 #MaxHotkeysPerInterval,2000
 DetectHiddenWindows,On
 CoordMode,ToolTip,Screen
-global v:=[],MainWin,settings:=new XML("settings","lib\Settings.xml"),files:=new XML("files"),Positions:=new XML("positions","lib\Positions.xml"),cexml:=new XML("cexml"),History:=new XML("HistoryXML"),vversion:=new XML("versions","lib\Versions.xml"),commands,menus,scintilla,TVC:=new EasyView(),RCMXML:=new XML("RCM","lib\RCM.xml"),TNotes,debugwin,Selection:=new SelectionClass(),Menus,scc:=[],vault:=new XML("vault","lib\Vault.xml")
+global v:=[],MainWin,settings:=new XML("settings","lib\Settings.xml"),files:=new XML("files"),Positions:=new XML("positions","lib\Positions.xml"),cexml:=new XML("cexml"),History:=new XML("HistoryXML"),vversion,commands,menus,scintilla,TVC:=new EasyView(),RCMXML:=new XML("RCM","lib\RCM.xml"),TNotes,debugwin,Selection:=new SelectionClass(),Menus,scc:=[],vault:=new XML("vault","lib\Vault.xml")
+vversion:=new XML("versions",(FileExist("lib\Github.xml")?"lib\Github.xml":"lib\Versions.xml"))
 if(!settings[]){
 	Run,lib\settings.xml
 	m("Oh boy...check the settings file to see what's up.")
@@ -155,7 +156,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.18"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:=""
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -747,7 +748,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.003.18"
+	Version:=""
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -1979,11 +1980,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.003.18"
+		Version:=""
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Version(){
-		Version:="1.003.18"
+		Version:=""
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
