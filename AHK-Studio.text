@@ -6,6 +6,9 @@ Added:
 Fixed:
 -Things like -Redraw were not showing in AutoComplete
 -Options: Now opens the settings with Options
+-All XML files are now saved as UTF-8
+FILE DOWNLOAD!:
+-Edited Lib\Studio.ahk to fix the encoding of XML files there too
 Changed: Suggested by jpack
 -When clicking items in the Code Explorer it will center the text
 -Delete Matching Brace: Was causing issues if you did it more than once without moving the caret
@@ -16,13 +19,7 @@ Fixed: Reported by megabugman #114-Close All: Creates 2 new untitled filesChan
 1.003.19
 Added:-RCM/Split Control/Direction/ToolbarFixed:-Adding Toolbars used to cause issues when trying to edit them before reloading the script-Resizing Toolbars had some issues in some casesUpdated:-lib\\Studio.ahk: Forced files to be encoded in UTF-8
 1.003.18
-Fixed:
--Run As U32/U64: was not saving files before running them.
--Settings: Edit Replacements: Enter was not adding in a new line
-Updated:
--lib\\Studio.ahk: XML was acting up.
-Changed:
--Reduced the sleep time for the AutoComplete popup to 150ms
+Fixed:-Run As U32/U64: was not saving files before running them.-Settings: Edit Replacements: Enter was not adding in a new lineUpdated:-lib\\Studio.ahk: XML was acting up.
 1.003.17
 Added: Suggested by Run1e-Adding ;Startup (Case Sensitive) will add a plugin to the startup of StudioFixed:-Smart Delete: I made some changes and broke it.Fixed: Reported by Run1e-Some commands were not being colored correctlyFixed: Reported by Someone I am sure but I forgot who :( sorry-Right Click: When Studio is the active window and you are right clicking outside of Studio it was giving a Studio menu
 1.003.16
@@ -75,5 +72,3 @@ Changed: Reported by Odylg-Moving the caret to the bottom of a page was causing
 NOTICE!!!!-A new version of SciLexer.dll will be downloaded.  Fixed some bugs with coloring and added in custom colors for:--Labels--VariablesAdded: Suggested by Huckleberry-Increment/Decrement: Increases/Decreases integers-Re-Wrote a lot of the backend for Context Sensitive Text
 1.002.31
 Added:-Auto Complete: Will have your list of Classes, Functions, and Instances as well as the standard list of commandsFixed:-Adding #Includes will not cause an Untitled file to be created-Omni-Search: Some options were not getting populatedFixed: Reported by BGM-Some files were not indexing properlyFixed: Reported by Huckleberry-Right Click on Project Explorer: Open FolderAdded: Requested by Huckleberry-Next/Previous Project: Will jump to the Next/Previous Project rather than the Next/Previous includeFixed: Reported by rogeriodec-When opening Studio for the first time it will not display any files
-1.002.30
-Changed: Reported by BGM-Opening files with an #Include library was not working properly.-Icons from custom icl files sometimes having issues with the latest build of AHKKnown Issue:-Anything encoded with UTF-16 just will not work.  I have put several days into encoding and I have it mostly working but for whatever reason I can not get Studio to work with UTF-16 files.  I am sorry.Fixed:-When opening and closing a project it will update the Tracked Notes to reflect the remaining open files-if you add a call to a method after hitting . after a class name, this, or instance it'll put in the () even if they are already there-When changing themes you do not need to restart the programAdded:-When using the Display Classes/Functions hotkeys it will check the list for the one you set first and then do the opposite if nothing is found-Display Classes: After using this hotkey (or the failure state of the Display Functions hotkey) it will bring up a list of the methods in that class-Jump To First Available: This will now look to see if the word is a Function or Method first and properly display the list for that instance if it is a MethodFixed: Reported by huckelberry-Jump To First Available: Wasn't working for includes (still could use some work)

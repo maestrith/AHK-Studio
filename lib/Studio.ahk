@@ -331,7 +331,7 @@ Class XML{
 		filename:=this.file?this.file:x.1.1
 		if(Trim(this[])="")
 			return
-		file:=FileOpen(filename,"rw","UTF-8"),file.seek(0),file.write(this[]),file.length(file.position)
+		file:=FileOpen(filename,"W","UTF-8"),file.write(this[]),file.length(file.position)
 	}
 	EA(path){
 		list:=[]

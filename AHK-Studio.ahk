@@ -159,7 +159,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.21"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.18"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -752,7 +752,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.003.21"
+	Version:="1.003.18"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -1984,11 +1984,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.003.21"
+		Version:="1.003.18"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Version(){
-		Version:="1.003.21"
+		Version:="1.003.18"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -2036,8 +2036,7 @@ Class PluginClass{
 	}Plugin(action,hwnd){
 		SetTimer,%action%,-10
 	}Open(info){
-		tv:=Open(info),tv(tv)
-		WinActivate(hwnd([1]))
+		tv:=Open(info),tv(tv),WinActivate(hwnd([1]))
 	}GuiControl(info*){
 		GuiControl,% info.1,% info.2,% info.3
 	}SSN(node,path){
@@ -2061,8 +2060,7 @@ Class PluginClass{
 		else if(end)
 			sc.2025(sc.2008+end)
 	}HotStrings(Text,String,end:=""){
-		sc:=csc(),cpos:=sc.2008,TextLength:=StrPut(Text,"UTF-8")-1,StringLength:=StrPut(String,"UTF-8")-1
-		sc.2686(cpos-TextLength,cpos),sc.2194(StringLength,[String]),sc.2025((!end?cpos+StringLength-TextLength:cpos+end))
+		sc:=csc(),cpos:=sc.2008,TextLength:=StrPut(Text,"UTF-8")-1,StringLength:=StrPut(String,"UTF-8")-1,sc.2686(cpos-TextLength,cpos),sc.2194(StringLength,[String]),sc.2025((!end?cpos+StringLength-TextLength:cpos+end))
 	}
 }
 class s{
@@ -2345,7 +2343,8 @@ Class XML{
 		;temp.preserveWhiteSpace:=1
 		root:=param.1,file:=param.2,file:=file?file:root ".xml",temp:=ComObjCreate("MSXML2.DOMDocument"),temp.SetProperty("SelectionLanguage","XPath"),this.xml:=temp,this.file:=file,XML.keep[root]:=this
 		if(FileExist(file)){
-			FileRead,info,%file%
+			;FileRead,info,%file%
+			ff:=FileOpen(file,"R","UTF-8"),info:=ff.Read(ff.Length),ff.Close()
 			if(info=""){
 				this.xml:=this.CreateElement(temp,root)
 				FileDelete,%file%
@@ -2400,11 +2399,19 @@ Class XML{
 			this.Transform()
 		if(this.XML.SelectSingleNode("*").xml="")
 			return m("Errors happened while trying to save " this.file ". Reverting to old version of the XML")
-		filename:=this.file?this.file:x.1.1,ff:=FileOpen(filename,0),text:=ff.Read(ff.length),ff.Close()
+		FileName:=this.file?this.file:x.1.1,ff:=FileOpen(FileName,"R"),text:=ff.Read(ff.length),ff.Close()
+		if(ff.encoding!="UTF-8"){
+			FileDelete,%FileName%
+		}
 		if(!this[])
 			return m("Error saving the " this.file " XML.  Please get in touch with maestrith if this happens often")
-		if(text!=this[])
-			file:=FileOpen(filename,"rw"),file.Seek(0),file.Write(this[]),file.Length(file.Position)
+		if(!FileExist(FileName)){
+			t("Had to fix " FileName)
+			Sleep,500
+			FileAppend,% this[],%FileName%,UTF-8
+		}else if(text!=this[]){
+			file:=FileOpen(FileName,"W","UTF-8"),file.Write(this[]),file.Length(file.Position),file.Close()
+		}
 	}SSN(XPath){
 		return this.XML.SelectSingleNode(XPath)
 	}SN(XPath){
@@ -4136,7 +4143,7 @@ FEUpdate(Redraw:=0){
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	,scidate:=20161107223002,XMLFiles:={menus:[20170610103039,"lib/menus.xml","lib\Menus.xml"],commands:[20160508000000,"lib/Commands.xml","lib\Commands.xml"]}
-	,OtherFiles:={scilexer:{date:20161107223023,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170602054002,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
+	,OtherFiles:={scilexer:{date:20161107223023,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170709122638,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!FileExist(A_MyDocuments "\Autohotkey\Lib")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
@@ -7148,8 +7155,9 @@ Options(x:=0){
 				settings.SSN("//options").RemoveAttribute(a)
 		}
 		return
-	}else if(x=0)
+	}else if(x=0){
 		return new SettingsClass("Options")
+	}
 	if(x~=Disable){
 		sc:=csc(),onoff:=settings.SSN("//options/@" x).text?0:1,att:=[],att[x]:=onoff,settings.Add("options",att),v.Options[x]:=onoff,ToggleMenu(x),sc[list[x]](onoff),ea:=settings.EA("//options")
 		for c,d in s.ctrl{
