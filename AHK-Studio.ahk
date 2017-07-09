@@ -159,7 +159,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.18"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.21"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -752,7 +752,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.003.18"
+	Version:="1.003.21"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -1984,11 +1984,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.003.18"
+		Version:="1.003.21"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Version(){
-		Version:="1.003.18"
+		Version:="1.003.21"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -2400,18 +2400,14 @@ Class XML{
 		if(this.XML.SelectSingleNode("*").xml="")
 			return m("Errors happened while trying to save " this.file ". Reverting to old version of the XML")
 		FileName:=this.file?this.file:x.1.1,ff:=FileOpen(FileName,"R"),text:=ff.Read(ff.length),ff.Close()
-		if(ff.encoding!="UTF-8"){
+		if(ff.encoding!="UTF-8")
 			FileDelete,%FileName%
-		}
 		if(!this[])
 			return m("Error saving the " this.file " XML.  Please get in touch with maestrith if this happens often")
-		if(!FileExist(FileName)){
-			t("Had to fix " FileName)
-			Sleep,500
+		if(!FileExist(FileName))
 			FileAppend,% this[],%FileName%,UTF-8
-		}else if(text!=this[]){
+		else if(text!=this[])
 			file:=FileOpen(FileName,"W","UTF-8"),file.Write(this[]),file.Length(file.Position),file.Close()
-		}
 	}SSN(XPath){
 		return this.XML.SelectSingleNode(XPath)
 	}SN(XPath){
