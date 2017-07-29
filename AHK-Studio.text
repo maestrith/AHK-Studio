@@ -1,3 +1,7 @@
+1.003.22
+Fixed:
+-Forward and Back: When going Back it would lose the Forward history and forget the cursor position
+-Jump To First Available: Cursor position issues
 1.003.21
 Added:
 -A slight delay for when AutoComplete pops up to help with missing keystrokes Changed to 200ms
