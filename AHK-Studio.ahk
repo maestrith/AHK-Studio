@@ -4191,8 +4191,7 @@ FileCheck(file:=""){
 	if(!FileExist("SciLexer.dll")||time<scidate){
 		SplashTextOn,200,100,Downloading SciLexer.dll,Please Wait....
 		UrlDownloadToFile,%base%/SciLexer.dll,SciLexer.dll
-	}
-	SplashTextOff
+	}SplashTextOff
 }
 Filename(filename){
 	return newfile:=filename~="\.ahk$"?filename:filename ".ahk"
