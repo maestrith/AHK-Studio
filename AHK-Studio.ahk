@@ -19,10 +19,6 @@ return
 	maybe make options a class
 */
 /*
-	Back and Forward!{
-		Back works but can't go forward
-		it also forgets positions :/
-	}
 	Add in #Include brings up a list of items in your library
 	Debugging Joe Glines{
 		have the option to have the Variable browser dockable to the side of debug window.
@@ -89,32 +85,6 @@ return
 		have it scan that line (add a thing in the Scan_Line() for it)
 	}
 */
-WinPos(hwnd){
-	VarSetCapacity(rect,16),DllCall("GetClientRect",ptr,hwnd,ptr,&rect)
-	WinGetPos,x,y,,,% "ahk_id" hwnd
-	w:=NumGet(rect,8),h:=NumGet(rect,12),text:=(x!=""&&y!=""&&w!=""&&h!="")?"x" x " y" y " w" w " h" h:""
-	return {x:x,y:y,w:w,h:h,ah:h-v.status-v.qfh,text:text}
-}
-DebugWindow(text){
-	static sc,NewWin
-	if(!WinExist("ahk_id" sc.sc)){
-		csc:=csc(),NewWin:=new GUIKeep("Debug"),NewWin.Add("s,w400 h200,,wh")
-		GuiControl,Debug:+g,% NewWin.sc.1.sc
-		NewWin.Show("Debug Window",,1),sc:=NewWin.sc.1,sc.2277(1),csc({hwnd:csc.sc})
-	}
-	text.="`n"
-	sc.2003(sc.2006,text),sc.2025(sc.2006)
-}
-DisplayStats(call){
-	static lastxml,lastfunc
-	ControlGetPos,x,y,w,h,,% "ahk_id" MainWin.gui.SSN("//*[@type='Toolbar']/@hwnd").text
-	MainWin.Gui.Transform()
-	WinGet,cl,ControlList,% MainWin.ID
-	(sc:=s.ctrl[MainWin.Gui.SSN("//win[@win='Tracked_Notes']/descendant::control[@type='Scintilla']/@hwnd").text]).2181(0,call "`n`n" MainWin.Gui[] "`n" lastfunc "`n`n" lastxml)
-	lastxml:=MainWin.Gui[],lastfunc:=call
-	MarginWidth()
-	return
-}
 #Include %A_ScriptDir%
 #IfWinActive
 	#IfWinActive,AHK Studio
@@ -1050,12 +1020,7 @@ class debug{
 		return debug.XML.SSN("//main")
 	}
 	AddrInfo(){
-		VarSetCapacity(hints,8*A_PtrSize,0)
-		/*
-			for a,b in {6:8,1:12}
-				NumPut(a,hints,b)
-		*/
-		DllCall("ws2_32\getaddrinfo",astr,"127.0.0.1",astr,"9000","uptr",hints,"ptr*",results)
+		VarSetCapacity(hints,8*A_PtrSize,0),DllCall("ws2_32\getaddrinfo",astr,"127.0.0.1",astr,"9000","uptr",hints,"ptr*",results)
 		return results
 	}
 	Run(filename){
@@ -1145,7 +1110,7 @@ class debug{
 			sendwait:
 			Sleep,20
 			if(debug.socket<=0)
-				return m("Debugging has stopped")
+				return t("Debugging has stopped")
 			While(debug.wait){
 				Sleep,10
 				if(debug.socket<1)
@@ -1162,13 +1127,11 @@ class debug{
 			if(c=0)
 				break
 			length.=Chr(c)
-		}
-		if(length<=0)
+		}if(length<=0)
 			return debug.wait:=0
 		VarSetCapacity(packet,++length,0),recd:=0
 		While(r<length){
-			index:=A_Index,rr:=r
-			r:=DllCall("ws2_32\recv","ptr",socket,"ptr",&packet,"int",length,"int",0x2)
+			index:=A_Index,rr:=r,r:=DllCall("ws2_32\recv","ptr",socket,"ptr",&packet,"int",length,"int",0x2)
 			if(!debug.socket)
 				m("Socket Disconnected, Debugging has stopped")
 			if(r<1)
@@ -1184,8 +1147,7 @@ class debug{
 		if(info:=StrGet(&packet,length-1,"UTF-8")){
 			v.displaymsg.Push(info)
 			SetTimer,Display,-10
-		}
-		if(crap){
+		}if(crap){
 			last.=r "!=" length "`n"
 			SetTimer,crap,-100
 		}else
@@ -2509,7 +2471,7 @@ Close(x:=1,all:="",Redraw:=1){
 				store:=ea.tv
 			else if(ea.tv)
 				TVC.Delete(1,ea.tv)
-			RemoveHistory(ea.id)
+			RemoveHistory(ea)
 		}if(store){
 			TVC.Delete(1,store)
 		}
@@ -2574,6 +2536,10 @@ Color(con:=""){
 				con.2050(),con.2052(30,0x0000ff),con.2052(31,0x00ff00),con.2052(48,0xff00ff)
 		}
 	}SetWords()
+	if(!settings.SSN("//fonts/font[@style='96']"))
+		con.2051(96,0xff00ff)
+	if(!settings.SSN("//fonts/font[@style='100']"))
+		con.2051(100,0x0000ff)
 	VarSetCapacity(lang,4)
 	ext:=SplitPath(Current(2).file).ext
 	ext:=ext="ahk"?"ahk":ext="xml"?"xml":"ahk"
@@ -3255,6 +3221,16 @@ SelectDebugLine(line){
 	else
 		first:=sc.2152,lines:=sc.2370,half:=Floor(lines/2),NewLine:=((((line)-half)>0)?(line)-half:0),sc.2613(NewLine)
 }
+DebugWindow(text){
+	static sc,NewWin
+	if(!WinExist("ahk_id" sc.sc)){
+		csc:=csc(),NewWin:=new GUIKeep("Debug"),NewWin.Add("s,w400 h200,,wh")
+		GuiControl,Debug:+g,% NewWin.sc.1.sc
+		NewWin.Show("Debug Window",,1),sc:=NewWin.sc.1,sc.2277(1),csc({hwnd:csc.sc})
+	}
+	text.="`n"
+	sc.2003(sc.2006,text),sc.2025(sc.2006)
+}
 Default_Project_Folder(){
 	FileSelectFolder,directory,,3,% "Current Default Folder: " settings.SSN("//directory").text
 	if(ErrorLevel)
@@ -3415,10 +3391,24 @@ Display(PopulateVarBrowser:=0){
 					if(WinExist(debugwin.id)){
 						WinSetTitle,% debugwin.id,,% "Variable Browser : Current Scope = " ea.where
 						scope:=receive.SN("//descendant::stack"),Default("SysListView321",98),LV_Delete()
+						/*
+							GuiControl,98:-Redraw,SysListView321
+						*/
 						while(ss:=scope.item[A_Index-1]),ea:=XML.EA(ss){
-							LV_Add("",ea.where,filename,ea.lineno)
-						}Loop,3
+							if(A_Index=1){
+								Default()
+								if(Node:=files.SSN("//*[@lower='" Format("{:L}",Filename) "']")){
+									if((tv:=SSN(Node,"@tv").text)&&tv!=TV_GetSelection())
+										tv(tv)
+								}
+							}
+							LV_Add("",ea.where,"|" filename "|",ea.lineno)
+						}
+						Loop,3
 							LV_ModifyCol(A_Index,"AutoHDR")
+						/*
+							GuiControl,98:+Redraw,SysListView321
+						*/
 			}}}DebugHighlight(),debug.Send("context_names -i Context_Names"),sc:=v.debug,debug.Focus()
 		}else if(rea.command="context_names"){
 			context:=receive.SN("//context")
@@ -3480,6 +3470,16 @@ Display(PopulateVarBrowser:=0){
 	return
 	GetContextInfo:
 	debug.Send("stack_get")
+	return
+}
+DisplayStats(call){
+	static lastxml,lastfunc
+	ControlGetPos,x,y,w,h,,% "ahk_id" MainWin.gui.SSN("//*[@type='Toolbar']/@hwnd").text
+	MainWin.Gui.Transform()
+	WinGet,cl,ControlList,% MainWin.ID
+	(sc:=s.ctrl[MainWin.Gui.SSN("//win[@win='Tracked_Notes']/descendant::control[@type='Scintilla']/@hwnd").text]).2181(0,call "`n`n" MainWin.Gui[] "`n" lastfunc "`n`n" lastxml)
+	lastxml:=MainWin.Gui[],lastfunc:=call
+	MarginWidth()
 	return
 }
 Dlg_Color(Color,hwnd){
@@ -3732,12 +3732,16 @@ Edit_Replacements(){
 }
 Edited(current:=""){
 	static Edited
-	current:=current?current:Current()
+	current:=current?current:Current(),sc:=csc()
+	if(MainWin.tnsc.sc=sc.sc)
+		return TNotes.Write()
+	if(!files.SSN("//*[@sc='" sc.2357 "']"))
+		return
 	if(!SSN(current,"@edited")){
 		current.SetAttribute("edited",1),ea:=XML.EA(current),all:=files.SN("//*[@id='" ea.id "']"),WinSetTitle(1,ea)
 		while(aa:=all.item[A_Index-1]),nea:=XML.EA(aa)
 			TVC.Modify(1,(v.Options.Hide_File_Extensions?"*" nea.nne:"*" nea.filename),nea.tv)
-	}list:=files.SN("//*[@edited]"),items:=""
+	}list:=files.SN("//*[@edited]"),items:="",WinSetTitle()
 	while(ll:=list.item[A_Index-1],ea:=XML.EA(ll))
 		items.=ea.file "`n"
 }
@@ -3969,7 +3973,7 @@ Extract(mainfile){
 	SplitPath,A_AhkPath,,ahkdir
 	pool[maindir]:=1,pool[ahkdir]:=1
 	if(!node:=files.Find(main,"descendant::file/@file",file))
-		node:=files.Under(main,"file",{file:file,dir:maindir,filename:mfn,id:id,nne:mnne,scan:1})
+		node:=files.Under(main,"file",{file:file,dir:maindir,filename:mfn,id:id,nne:mnne,scan:1,lower:Format("{:L}",file)})
 	out:=SplitPath(mainfile)
 	ExtractNext:
 	id:=GetID(),fff:=FileOpen(file,"R"),encoding:=fff.encoding,text:=fff.Read(fff.length),fff.Close(),dir:=Trim(dir,"\")
@@ -4040,7 +4044,7 @@ Extract(mainfile){
 		if(!files.Find(node,"descendant::file/@file",file)){
 			SplitPath,file,filename,dir,,nne
 			new:=files.Under(files.Find(node,"descendant-or-self::file/@file",obj.inside),"file",obj)
-			for a,b in {file:file,filename:filename,dir:dir,nne:nne,github:(maindir=dir?filename:"lib\" filename),scan:1}
+			for a,b in {file:file,filename:filename,dir:dir,nne:nne,github:(maindir=dir?filename:"lib\" filename),scan:1,lower:Format("{:L}",filename)}
 				new.SetAttribute(a,b)
 			qea:=XML.EA(new)
 		}
@@ -4112,7 +4116,7 @@ FEUpdate(Redraw:=0){
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	,scidate:=20161107223002,XMLFiles:={menus:[20170610103039,"lib/menus.xml","lib\Menus.xml"],commands:[20160508000000,"lib/Commands.xml","lib\Commands.xml"]}
-	,OtherFiles:={scilexer:{date:20161107223023,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170709122638,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
+	,OtherFiles:={scilexer:{date:20170813120925,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170709122638,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!FileExist(A_MyDocuments "\Autohotkey\Lib")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
@@ -4527,8 +4531,7 @@ FixLines(line,total,base:=""){
 		if(text~="i)\Q* * * Compile_AH" Chr "\E"){
 			skipcompile:=skipcompile?0:1
 			Continue
-		}
-		if(skipcompile)
+		}if(skipcompile)
 			Continue
 		if(SubStr(text,1,1)=";"&&v.Options.Auto_Indent_Comment_Lines!=1)
 			Continue
@@ -4539,15 +4542,13 @@ FixLines(line,total,base:=""){
 			if(RegExReplace(text,"\}","",count))
 				specialbrace-=count
 			Continue
-		}
-		if(InStr(text,Chr(59)))
+		}if(InStr(text,Chr(59)))
 			text:=RegExReplace(text,"\s+" Chr(59) ".*"),comment:=1
 		first:=SubStr(text,1,1),last:=SubStr(text,0,1),ss:=(text~="i)^\s*(&&|\bOR\b|\bAND\b|\.|\,|\|\||:|\?)\s*"),indentcheck:=(RegExMatch(text,"iA)}*\s*#?\b(" v.indentregex ")\b",string))
 		if(SubStr(string,1,2)="if"&&StrLen(string)>2)
 			indentcheck:=0
-		if(first="<"){
+		if(first="<")
 			Continue
-		}
 		if(InStr(string,"try"))
 			if(RegExReplace(text,"i)(\{|try|\s)"))
 				indentcheck:=0
@@ -4567,8 +4568,7 @@ FixLines(line,total,base:=""){
 				if(cur&&current.MaxIndex()<=1)
 					Break
 				special:=current.pop().ind,braces--
-			}
-		}if(first="{"&&aa)
+		}}if(first="{"&&aa)
 			aa--
 		tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind,tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind,tind+=Abs(specialbrace*indentation)
 		if(!(ss&&v.Options.Manual_Continuation_Line)&&sc.2127(a-1)!=tind+(base*ind))
@@ -4583,10 +4583,6 @@ FixLines(line,total,base:=""){
 			aa++
 		if(aa>0&&!(ss||indentcheck))
 			aa:=0
-		/*
-			if(firsttwo="{`t")
-				braces++,aa:=ss&&last="{"?aa-1:aa,!current.MinIndex()?current.Insert({ind:(aa+braces)*indentation,aa:aa,braces:braces}):current.Insert({ind:(aa+current[current.MaxIndex()].aa+braces)*indentation,aa:aa+current[current.MaxIndex()].aa,braces:braces}),aa:=0
-		*/
 		aaobj[cur]:=aa,special:=0,comment:=0
 	}Update({sc:sc.2357}),SetStatus(A_ThisFunc " Process Time: " A_TickCount-tick "ms @ " A_TickCount " lines: " total,3)
 }
@@ -4601,6 +4597,50 @@ Focus(a*){
 		if(a&&v.Options.Check_For_Edited_Files_On_Focus=1)
 			Check_For_Edited()
 		return 0
+	}
+}
+Fold_All(){
+	csc().2662
+}
+UnFold_All(){
+	csc().2662(1)
+}
+Toggle_Fold_All(){
+	csc().2662(2)
+}
+Fold_Current_Level(){
+	sc:=csc(),level:=sc.2223(sc.2166(sc.2008))&0xff,level:=level-1>=0?level-1:level,Fold_Level_X(Level)
+}
+Unfold_Current_Level(){
+	sc:=csc(),level:=sc.2223(sc.2166(sc.2008))&0xff,Unfold_Level_X(Level)
+}
+Fold_Level_X(Level=""){
+	sc:=csc()
+	if(level="")
+		level:=InputBox(sc.sc,"Fold Levels","Enter a level to fold`n0-100")
+	current:=0
+	while,(current<sc.2154){
+		fold:=sc.2223(current)
+		if (fold&0xff=level)
+			sc.2237(current,0),current:=sc.2224(current,fold)
+		current+=1
+	}
+}
+Toggle_Fold(){
+	sc:=csc(),sc.2231(sc.2166(sc.2008))
+}
+Unfold_Level_X(Level=""){
+	sc:=csc()
+	if(level="")
+		level:=InputBox(sc.sc,"Fold Levels","Enter a level to Un-fold`n0-100")
+	if(ErrorLevel)
+		return
+	fold=0
+	while,sc.2618(fold)>=0,fold:=sc.2618(fold){
+		lev:=sc.2223(fold)
+		if(lev&0xff=level)
+			sc.2237(fold,1)
+		fold++
 	}
 }
 FoldParent(){
@@ -4834,19 +4874,20 @@ GetPos(Node:=0){
 	if(!Current(1).xml)
 		return
 	sc:=csc(),cf:=Current(3).file
+	if(!files.SSN("//*[@sc='" sc.2357 "']"))
+		return
 	if(!cf)
 		return
-	if(!node)
-		if(!node:=positions.Find("descendant::file/@file",cf))
-			node:=settings.Under(positions.SSN("//*"),"file",{file:cf})
-	;m(node.xml)
-	for a,b in {start:sc.2008,end:sc.2009,scroll:sc.2152,file:SSN(node,"@file").text}
-		node.SetAttribute(a,b)
-	fold:=0,ff:=0,node.RemoveAttribute("fold")
-	while,sc.2618(fold)>=0,fold:=sc.2618(fold)
+	if(!Node)
+		if(!Node:=positions.Find("descendant::file/@file",cf))
+			Node:=settings.Under(positions.SSN("//*"),"file",{file:cf})
+	for a,b in {start:sc.2008,end:sc.2009,scroll:sc.2152,file:SSN(Node,"@file").text}
+		Node.SetAttribute(a,b)
+	fold:=0,Node.RemoveAttribute("fold")
+	while(sc.2618(fold)>=0,fold:=sc.2618(fold))
 		list.=fold ",",fold++
 	if(list)
-		node.SetAttribute("fold",Trim(list,","))
+		Node.SetAttribute("fold",Trim(list,","))
 }
 GetRange(start,otext){
 	start:=start-3>=0?start-3:0
@@ -6385,25 +6426,19 @@ Notify(csc*){
 	static last,lastline,lastpos:=[],focus:=[],dwellfold:="",text
 	if(csc.1=0)
 		return lastpos:=[]
-	fn:=[],info:=A_EventInfo,code:=NumGet(info+(A_PtrSize*2))
+	fn:=[],info:=A_EventInfo,code:=NumGet(info+8)
+	if(code="")
+		return
 	if(code=2007){
 		SetTimer,BraceHighlight,-1
 		if(NumGet(Info+(4*22))&2)
 			return UpPos()
 		return
 	}if(code=2029){
-		;ControlGetFocus,LastFocus,% hwnd([1])
-		;t(lastfocus)
-		/*
-			if(sc.2008&&sc.2009&&!v.startup)
-				GetPos()
-		*/
 		return 0
-	}
-	if(code=2028){
+	}if(code=2028){
 		if(s.ctrl[hwnd:=NumGet(info+0)])
 			sc:=csc({hwnd:hwnd})
-		;sc:=csc()
 		sc.2400
 		if(sc.sc=MainWin.tnsc.sc)
 			WinSetTitle(1,"Tracked Notes")
@@ -6418,8 +6453,6 @@ Notify(csc*){
 		TVC.Enable(1)
 		return 0
 	}
-	if(code="")
-		return
 	if((ctrl:=NumGet(info+0))=v.debug.sc&&v.debug.sc){
 		sc:=v.debug
 		if(code=2027){
@@ -6495,13 +6528,8 @@ Notify(csc*){
 		del:=SubStr((DeletedText:=StrGet(fn.text,fn.length,"UTF-8")),1,1)
 		if(fn.linesadded)
 			MarginWidth(sc)
-	}if(code=2008){
-		/*
-			if(v.NoCurrentEditFile&&!files.SSN("//*[@sc='" csc().2357 "']"))
-				m("HERE!",files.SSN("//*[@sc='" csc().2357 "']").xml)
-		*/
-		Update({sc:csc().2357}),Edited()
-	}
+	}if(code=2008)
+		Update({sc:sc.2357}) ;,Edited()
 	fn.code:=code,tn:=0
 	if(fn.ch=125){
 		SetTimer,FixBrace,-10
@@ -6567,7 +6595,6 @@ Notify(csc*){
 				SetTimer,notifynext,-1
 				return
 				notifynext:
-				sc:=csc()
 				Loop,% sc.2570{
 					cpos:=sc.2585(A_Index-1)
 					if(Chr(sc.2007(cpos))="(")
@@ -7811,35 +7838,27 @@ Remove_Current_Selection(){
 	sc:=csc(),main:=sc.2575,sc.2671(main),sc.2606,sc.2169
 }
 Remove_Include(){
-	current:=Current(),mainnode:=Current(1),curfile:=Current(3).file,Parent:=Current(1)
+	current:=Current(),mainnode:=Current(1),Parent:=Current(1)
 	if(Current(3).file=Current(2).file)
 		return m("Can not remove the main Project")
-	FileNode:=files.Find(Current(1),"descendant::file/@file",Current(3).file)
-	/*
-		m(FileNode.ParentNode.xml)
-		return
-		
-	*/
-	
 	if(m("Are you sure you want to remove this Include?","btn:yn","def:2")="no")
 		return
-	all:=files.SN("//main[@file='" Current(2).file "']/descendant::file"),contents:=Update("get").1,inc:=Current(3).include
+	MainTV:=files.SSN("//main[@id='" Current(2).ID "']/file/@tv").text,HistoryEA:=Current(3)
+	all:=files.SN("//main[@id='" Current(2).ID "']/descendant::file"),contents:=Update("get").1,inc:=Current(3).include
 	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
 		text:=contents[ea.file]
-		if(f:=InStr(text,inc)){
+		if(InStr(text,inc)){
 			if(m("Permanently delete this file?","btn:yn","def:2")="Yes")
-				FileDelete,% Current(3).file
-			FileNode:=files.Find(Current(1),"descendant::file/@file",Current(3).file)
+				FileDelete,% HistoryEA.file
 			Update({file:ea.file,text:RegExReplace(text,"\R?\Q" inc "\E\R?","`n")})
-			files.Find(files.Find("//main/@file",Current(2).file),"descendant::file/@file",Current(2).file).RemoveAttribute("sc")
-			;Update({delete:curfile})
-			if(tv:=SSN(FileNode,"@tv").text)
-				Default("SysTreeView321"),TV_Delete(tv),
-			all:=cexml.Find(cexml.Find("//main/@file",Current(2).file),"descendant::*/@file",Current(3).file,0)
-			while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa)
+			files.SSN("//main[@id='" Current(2).ID "']/file").RemoveAttribute("sc")
+			if(tv:=HistoryEA.tv)
+				Default("SysTreeView321"),TV_Delete(tv)
+			all:=cexml.SN("//*[@id='" HistoryEA.ID "']")
+			while(aa:=all.item[A_Index-1])
 				aa.ParentNode.RemoveChild(aa)
-			node:=files.Find(Parent,"descendant::file/@file",curfile),node.ParentNode.RemoveChild(node)
-			RemoveHistory(ea.ID),Edited(Current(1))
+			node:=files.SSN("//file[@id='" HistoryEA.ID "']"),node.ParentNode.RemoveChild(node)
+			tv(MainTV),RemoveHistory(HistoryEA),Edited(Current(1)),WinSetTitle(1,Current(3))
 			return
 		}
 	}
@@ -7869,10 +7888,9 @@ RemoveComment(text){
 		text:=RegExReplace(text,"\s+" Chr(59) ".*")
 	return text
 }
-RemoveHistory(id){
-	if((list:=History.SN("//*[@id='" id "']")).length)
-		while(ll:=list.item[A_Index-1])
-			ll.ParentNode.RemoveChild(ll)
+RemoveHistory(ea){
+	while(hh:=History.SSN("//*[@id='" ea.ID "']"))
+		hh.ParentNode.RemoveChild(hh)
 }
 RemoveLines(start,end){
 	static current,Classes,AllText,OText,node
@@ -8840,12 +8858,7 @@ Class SettingsClass{
 			aa.SetAttribute("tv",TV_Add(ea.name,SSN(aa.ParentNode,"@tv").text))
 		TV_Modify(xx.SSN("//top/@tv").text,"Expand Vis")
 		this.ThemeText()
-		SettingsClass.keep:=this
-		this.Color(),this.UpdateSavedThemes()
-		this.PopulateER()
-		this.PopulateAI()
-		this.PopulateMFT()
-		this.Default("Hotkeys")
+		SettingsClass.keep:=this,this.Color(),this.UpdateSavedThemes(),this.PopulateER(),this.PopulateAI(),this.PopulateMFT(),this.Default("Hotkeys")
 		for a,b in SettingsClass.Hotkeys
 			LV_Add("",b.1,Convert_Hotkey(b.2))
 		LV_ModifyCol()
@@ -8922,6 +8935,10 @@ Class SettingsClass{
 			if(!settings.SSN("//fonts/font[@code='2082']"))
 				this.2082(7,0xff00ff)
 		}
+		if(!settings.SSN("//fonts/font[@style='96']"))
+			this.2051(96,0xff00ff)
+		if(!settings.SSN("//fonts/font[@style='100']"))
+			this.2051(100,0x0000ff)
 		for a,b in [[2080,7,6],[2082,8,0xff00ff],[2080,8,1],[2080,6,14],[2080,2,8],[2082,2,0xff00ff],[2082,6,0xC08080],[2080,3,14],[2680,3,6],[2516,1]]
 			this[b.1](b.2,b.3)
 		text:=this.ThemeTextText,pos:=InStr(text,"("),this.2351(pos-1,this.2353(pos-1))
@@ -9399,7 +9416,7 @@ Class SettingsClass{
 			   ,["/*`n`tMulti-Line`n`tcomments`n*/",11],["`n`n",0]
 			   ,["Main Selection",70],[" - ",0],["Multiple Selection",71],[" <---- Additional Options in the TreeView to the Left with Main Selection * and Multiple Selection *`n`n",""]
 			   ,["This is a sample of normal text`n",5]
-			   ,[Chr(34) "incomplete quote`n",13],[Chr(34) "complete quote" Chr(34) "`n",3],[";comment`n",1]
+			   ,[Chr(34) "incomplete quote`n",13],[Chr(34) "complete quote" Chr(34) "`n",3],[";comment`n",1],["(",5],["`n`tContinuation Section`n",96],[")`n",5],["(Error))",100]
 			   ,["`n0123456789`n",2],["{}[]^&*()+~#\/!`,",4],["``b``a``c``k``t``i``c``k`n",15]
 			   ,["( ",4],[",,,,",97],[" )`n",4],["{[ ",4],[",,,,",99],[" ]}`n",4],["Variable:=`n",59]
 			   ,["Label:",55],["`nHotkey::`n",56],["Function()`n",57],["Abs()`n`n",58]
@@ -9946,7 +9963,7 @@ class Tracked_Notes{
 		sc:=MainWin.tnsc,fold:=0,node:=this.node,node.RemoveAttribute("fold")
 		for a,b in {start:sc.2008,end:sc.2009,scroll:sc.2152}
 			node.SetAttribute(a,b)
-		while,sc.2618(fold)>=0,fold:=sc.2618(fold)
+		while(sc.2618(fold)>=0,fold:=sc.2618(fold))
 			list.=fold ",",fold++
 		if(list)
 			node.SetAttribute("fold",list)
@@ -9960,15 +9977,16 @@ tv(tv*){
 		static fn,noredraw,tvbak,historysave
 	*/
 	static lasttv
-	Default("SysTreeView321",1),ctv:=TV_GetSelection(),Scan_Line(),GetPos()
+	Default("SysTreeView321",1),ctv:=TV_GetSelection(),Scan_Line()
 	if(tv.1=ctv)
 		return GetPos()
 	if(A_GuiEvent="S"&&!v.startup){
-		if(node:=positions.Find("//file/@file",(filename:=files.SSN("//*[@tv='" lasttv "']/@file").text)))
+		sc:=csc()
+		if(node:=positions.Find("//file/@file",(filename:=files.SSN("//*[@sc='" sc.2357 "']/@file").text)))
 			GetPos(node)
 		else
 			GetPos(positions.Under(positions.SSN("//*"),"file",{file:filename}))
-	}else
+	}else if(!v.statup)
 		GetPos()
 	if(!sel:=files.SSN("//*[@tv='" tv.1 "']/@tv").text)
 		sel:=files.SSN("//*[@tv='" tv.3 "']/@tv").text
@@ -9988,7 +10006,7 @@ tv(tv*){
 	if(tv.1="Split")
 		sel:=Current(3).tv
 	if(sel){
-		onode:=node:=files.SSN("//*[@tv='" sel "']"),ea:=XML.EA(node),v.DisableContext:=""
+		onode:=node:=files.SSN("//*[@tv='" sel "']"),ea:=XML.EA(node),v.DisableContext:="",TV_Modify(sel,"Vis")
 		Update({sc:sc.2357}),sc.2045(2),sc.2045(3)
 		if(node.NodeName="folder"||ea.folder=1)
 			return
@@ -10122,14 +10140,14 @@ Update_Github_Info(){
 	controls:={owner:"Owner (GitHub Username)",email:"Email",name:"Your Full Name"}
 	for a,b in {owner:100,email:200,name:100}{
 		Gui,Add,Text,xm,% controls[a]
-		Gui,Add,Edit,x+5 w%b% gupdate v%a%,% info[a]
+		Gui,Add,Edit,x+5 w%b% gUpdateGithubInfo v%a%,% info[a]
 	}
 	Gui,Add,Text,xm,Github Token
-	Gui,Add,Edit,xm w300 Password gupdate vtoken,% info.token
+	Gui,Add,Edit,xm w300 Password gUpdateGithubInfo vtoken,% info.token
 	Gui,Add,Button,ggettoken,Get A Token
 	Gui,Show,,Github Information
 	return
-	update:
+	UpdateGithubInfo:
 	Gui,36:Submit,NoHide
 	if !hub:=settings.SSN("//github")
 		hub:=settings.Add({path:"github"})
@@ -10189,7 +10207,7 @@ Update(info){
 	else if(info.encoding)
 		return encoding[info.file]:=info.encoding
 	else if(info.sc){
-		sc:=csc(),fn:=files.SSN("//*[@sc='" info.sc "']"),ea:=XML.EA(fn),item:=ea.file?ea.file:ea.note,text:=sc.GetUNI()
+		ea:=files.EA("//*[@sc='" info.sc "']"),item:=ea.file?ea.file:ea.note,text:=csc().GetUNI()
 		if(ea.virtual)
 			return
 		if(!item)
@@ -10284,9 +10302,25 @@ URLDownloadToVar(url){
 VarBrowser(){
 	static newwin,treeview
 	if(!debug.VarBrowser){
-		debugwin:=newwin:=new GUIKeep(98),newwin.Add("TreeView,w400 h200 gvalue vtreeview AltSubmit hwndtreeview,,wh","ListView,w400 r4 AltSubmit gVBGoto,Stack|File|Line,wy","Text,w200 Section,Debug Controls:,y","Button,gRun_Program,&Run,y","Button,x+M gStep_Into,Step &Into,y","Button,x+M gStep_Out,Step &Out,y","Button,x+M gStep_Over,Step O&ver,y","Button,x+M gStop_Debugger,&Stop,y"),newwin.show("Variable Browser"),hwnd:=newwin.XML.SSN("//*/@hwnd").text,debug.VarBrowser:=1
+		debugwin:=newwin:=new GUIKeep(98),newwin.Add("TreeView,w450 h200 gvalue vtreeview AltSubmit hwndtreeview,,wh","ListView,w450 r4 AltSubmit gVBGoto,Stack|File|Line,wy","Text,w200 Section,Debug Controls:,y"
+			,"Button,gRun_Program,&Run,y","Button,x+M gStep_Into,Step &Into,y","Button,x+M gStep_Out,Step &Out,y"
+			,"Button,x+M gStep_Over,Step O&ver,y","Button,x+M gVarBrowserRefresh,R&efresh Variables,y","Button,x+M gStop_Debugger,&Stop,y"),newwin.show("Variable Browser"),hwnd:=newwin.XML.SSN("//*/@hwnd").text,debug.VarBrowser:=1
 	}
 	SetTimer,ProcessDebugXML,-100
+	return
+	VarBrowserRefresh:
+	/*
+		SetTimer,VarBrowserAutoRefresh,500
+		return
+		VarBrowserAutoRefresh:
+	*/
+	if(debug.Socket<0){
+		/*
+			SetTimer,VarBrowserAutoRefresh,Off
+		*/
+		return
+	}
+	debug.Send("stack_get") ;#[VarBrowser()]
 	return
 	98Close:
 	98Escape:
@@ -10419,15 +10453,25 @@ WalkDownClasses(text,find){
 WinActivate(win){
 	WinActivate,%win%
 }
-WinSetTitle(win:=1,title:="AHK Studio",Open:=0){
-	if(IsObject(title)){
-		if(!title.dir)
+WinPos(hwnd){
+	VarSetCapacity(rect,16),DllCall("GetClientRect",ptr,hwnd,ptr,&rect)
+	WinGetPos,x,y,,,% "ahk_id" hwnd
+	w:=NumGet(rect,8),h:=NumGet(rect,12),text:=(x!=""&&y!=""&&w!=""&&h!="")?"x" x " y" y " w" w " h" h:""
+	return {x:x,y:y,w:w,h:h,ah:h-v.status-v.qfh,text:text}
+}
+WinSetTitle(win:=1,Title:="AHK Studio",Open:=0){
+	if(IsObject(Title)){
+		if(!Title.dir)
 			v.NoCurrentEditFile:=1
 		else
 			v.NoCurrentEditFile:=0
-		WinSetTitle,% hwnd([win]),,% (open?"Include Open!  -  ":"") "AHK Studio - " (Current(3).edited?"*":"") (title.dir "\" (v.Options.Hide_File_Extensions?title.nne:title.filename))
-	}else
-		WinSetTitle,% hwnd([win]),,%title%
+		WinSetTitle,% hwnd([win]),,% (open?"Include Open!  -  ":"") "AHK Studio - " (Current(3).edited?"*":"") (Title.dir "\" (v.Options.Hide_File_Extensions?Title.nne:Title.filename))
+	}else if(Title!="AHK Studio"){
+		WinSetTitle,% hwnd([win]),,%Title%
+	}else{
+		Info:=Current(3)
+		WinSetTitle,% hwnd([win]),,% (open?"Include Open!  -  ":"") "AHK Studio - " (Info.edited?"*":"") (Info.dir "\" (v.Options.Hide_File_Extensions?Info.nne:Info.filename))
+	}
 }
 Words_In_Document(NoDisplay:=0,text:="",Remove:="",AllowLastWord:=0){
 	sc:=csc(),AllText:=sc.GetUNI(),word:=sc.GetWord(),doc:=text?text:AllText,pos:=1
@@ -10461,48 +10505,4 @@ Words_In_Document(NoDisplay:=0,text:="",Remove:="",AllowLastWord:=0){
 }
 Wrap_Word_In_Quotes(){
 	sc:=csc(),sc.2078,cpos:=sc.2008,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2003(start,Chr(34)),sc.2003(end+1,Chr(34)),sc.2025(cpos+1),sc.2079
-}
-Fold_All(){
-	csc().2662
-}
-UnFold_All(){
-	csc().2662(1)
-}
-Toggle_Fold_All(){
-	csc().2662(2)
-}
-Fold_Current_Level(){
-	sc:=csc(),level:=sc.2223(sc.2166(sc.2008))&0xff,level:=level-1>=0?level-1:level,Fold_Level_X(Level)
-}
-Unfold_Current_Level(){
-	sc:=csc(),level:=sc.2223(sc.2166(sc.2008))&0xff,Unfold_Level_X(Level)
-}
-Fold_Level_X(Level=""){
-	sc:=csc()
-	if(level="")
-		level:=InputBox(sc.sc,"Fold Levels","Enter a level to fold`n0-100")
-	current:=0
-	while,(current<sc.2154){
-		fold:=sc.2223(current)
-		if (fold&0xff=level)
-			sc.2237(current,0),current:=sc.2224(current,fold)
-		current+=1
-	}
-}
-Toggle_Fold(){
-	sc:=csc(),sc.2231(sc.2166(sc.2008))
-}
-Unfold_Level_X(Level=""){
-	sc:=csc()
-	if(level="")
-		level:=InputBox(sc.sc,"Fold Levels","Enter a level to Un-fold`n0-100")
-	if(ErrorLevel)
-		return
-	fold=0
-	while,sc.2618(fold)>=0,fold:=sc.2618(fold){
-		lev:=sc.2223(fold)
-		if(lev&0xff=level)
-			sc.2237(fold,1)
-		fold++
-	}
 }

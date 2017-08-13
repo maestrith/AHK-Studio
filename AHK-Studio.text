@@ -1,7 +1,15 @@
+1.003.23
+Fixed: Reported by ali80
+-Continuation Sections: Formatting was getting all messed up and caused errors further down the code if you use /* */
 1.003.22
 Fixed:
 -Forward and Back: When going Back it would lose the Forward history and forget the cursor position
 -Jump To First Available: Cursor position issues
+-Remove Include: Clearing out the history properly
+-Issue with the first opened file being marked as edited
+-Tracked Notes:
+--When you just deleted text it would not keep the update
+--If you had the Tracked Notes focused it would change the position of the main files caret on exit
 1.003.21
 Added:
 -A slight delay for when AutoComplete pops up to help with missing keystrokes Changed to 200ms
