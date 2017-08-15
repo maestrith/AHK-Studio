@@ -133,7 +133,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.23"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.24"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -726,7 +726,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.003.23"
+	Version:="1.003.24"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -1950,11 +1950,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.003.23"
+		Version:="1.003.24"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Version(){
-		Version:="1.003.23"
+		Version:="1.003.24"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -2532,8 +2532,9 @@ Color(con:=""){
 				con[ea.code](ea.color,0)
 			else if(ea.code&&ea.bool)
 				con[ea.code](ea.bool,ea.color)
-			if(ea.style=32)
-				con.2050(),con.2052(30,0x0000ff),con.2052(31,0x00ff00),con.2052(48,0xff00ff)
+			if(ea.style=32){
+				con.2066(5,178),con.2050(),con.2052(30,0x0000ff),con.2052(31,0x00ff00),con.2052(48,0xff00ff)
+			}
 		}
 	}SetWords()
 	if(!settings.SSN("//fonts/font[@style='96']"))
@@ -2544,7 +2545,7 @@ Color(con:=""){
 	ext:=SplitPath(Current(2).file).ext
 	ext:=ext="ahk"?"ahk":ext="xml"?"xml":"ahk"
 	con.4006(0,ext)
-	for a,b in [[2040,25,13],[2244,3,0xFE000000],[2040,26,15],[2040,27,17],[2040,28,16],[2040,29,9],[2040,30,12],[2040,31,14],[2242,0,20],[2242,1,13],[2134,1],[2260,1],[2246,1,1],[2246,2,1],[2115,1],[2029,2],[2031,2],[2240,3,0],[2242,3,15],[2246,1,1],[2246,3,1],[2244,2,3],[2040,0,0],[2041,0,0],[2042,0,0xff],[2115,1],[2056,38,"Tahoma"],[2041,1,0],[2042,1,0xff0000],[2040,2,22],[2040,3,22],[2040,4,31],[2042,4,0xff0000],[2037,65001],[2132,v.Options.Hide_Indentation_Guides=1?0:1],[2280,v.Options.Hide_Vertical_Scrollbars=1?0:1],[2130,v.Options.Hide_Horizontal_Scrollbars=1?0:1],[2040,1,0],[2042,1,0x0000ff]]
+	for a,b in [[2040,25,13],[2244,3,0xFE000000],[2040,26,15],[2040,27,17],[2040,28,16],[2040,29,9],[2040,30,12],[2040,31,14],[2242,0,20],[2242,1,13],[2134,1],[2260,1],[2246,1,1],[2246,2,1],[2115,1],[2029,2],[2031,2],[2240,3,0],[2242,3,15],[2246,1,1],[2246,3,1],[2244,2,3],[2040,0,0],[2041,0,0],[2042,0,0xff],[2115,1],[2056,38,"Tahoma"],[2041,1,0],[2042,1,0xff0000],[2040,2,22],[2040,3,22],[2040,4,31],[2042,4,0xff0000],[2132,v.Options.Hide_Indentation_Guides=1?0:1],[2280,v.Options.Hide_Vertical_Scrollbars=1?0:1],[2130,v.Options.Hide_Horizontal_Scrollbars=1?0:1],[2040,1,0],[2042,1,0x0000ff],[2037,65001]]
 		con[b.1](b.2,b.3)
 	for a,b in [[2042,2,settings.Get("//fonts/font/@mca",0x444444)],[2042,3,settings.Get("//fonts/font/@sca",0x666666)]]
 		con[b.1](b.2,b.3)
@@ -2552,6 +2553,10 @@ Color(con:=""){
 		con.2460(4)
 	if(v.Options.Word_Wrap)
 		con.2268(1)
+	/*
+		Loop,200
+			con.2066(A_Index,178)
+	*/
 	con.2472(2),con.2036(width:=settings.SSN("//tab").text?settings.SSN("//tab").text:5)
 	con.2082(3,0xFFFFFF)
 	if(!settings.SSN("//fonts/font[@code='2082']"))
@@ -4135,8 +4140,7 @@ FileCheck(file:=""){
 		}if(x:=ComObjActive("AHK-Studio")){
 			x.Open(file),x.ScanFiles(),x.Show()
 			ExitApp
-	}}
-	if((A_PtrSize=8&&A_IsCompiled="")||!A_IsUnicode){
+	}}if((A_PtrSize=8&&A_IsCompiled="")||!A_IsUnicode){
 		SplitPath,A_AhkPath,,dir
 		if(!FileExist(correct:=dir "\AutoHotkeyU32.exe")){
 			m("Requires AutoHotkey 1.1 to run")
@@ -4149,8 +4153,7 @@ FileCheck(file:=""){
 		if(!FileExist(b.3)){
 			SplashTextOn,200,100,% "Downloading " b.2,Please Wait...
 			UrlDownloadToFile,% base b.2,% b.3
-		}
-		SplashTextOff
+		}SplashTextOff
 		new:=%a%:=new XML(a,b.3)
 		if(!new.SSN("//date"))
 			new.Add("date",,b.1),new.Save(1)
