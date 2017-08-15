@@ -1,6 +1,10 @@
+1.003.24
+Added: Reported by clu-- (and I'm sure many others) #125
+-Options/Force UTF-8: This will force Studio to open and write all files to UTF-8
 1.003.23
 Fixed: Reported by ali80
 -Continuation Sections: Formatting was getting all messed up and caused errors further down the code if you use /* */
+--Will download a new version of SciLexer.dll (if it doesn't close AHK-Studio and delete the file manually)
 1.003.22
 Fixed:
 -Forward and Back: When going Back it would lose the Forward history and forget the cursor position

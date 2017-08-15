@@ -3977,6 +3977,8 @@ Extract(mainfile){
 	out:=SplitPath(mainfile)
 	ExtractNext:
 	id:=GetID(),fff:=FileOpen(file,"R"),encoding:=fff.encoding,text:=fff.Read(fff.length),fff.Close(),dir:=Trim(dir,"\")
+	if(v.Options["Force_UTF-8"])
+		encoding:="UTF-8"
 	if(nnnn:=files.Find("//*/@file",file)){
 		if(SSN(nnnn,"@time"))
 			id:=SSN(nnnn,"@id").text
@@ -4115,7 +4117,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20161107223002,XMLFiles:={menus:[20170610103039,"lib/menus.xml","lib\Menus.xml"],commands:[20160508000000,"lib/Commands.xml","lib\Commands.xml"]}
+	,scidate:=20161107223002,XMLFiles:={menus:[20170814205757,"lib/menus.xml","lib\Menus.xml"],commands:[20160508000000,"lib/Commands.xml","lib\Commands.xml"]}
 	,OtherFiles:={scilexer:{date:20170813124132,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170709122638,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!FileExist(A_MyDocuments "\Autohotkey\Lib")){
@@ -7123,7 +7125,7 @@ Options(x:=0){
 		v.Options:=[]
 		disable:="Center_Caret|Disable_Autosave|Disable_Backup|Disable_Line_Status|Disable_Variable_List|Word_Wrap_Indicators|End_Document_At_Last_Line|Hide_File_Extensions|Hide_Indentation_Guides|Remove_Directory_Slash|Run_As_Admin|Show_Caret_Line|Show_EOL|Show_Type_Prefix|Show_WhiteSpace|Warn_Overwrite_On_Export|Hide_Horizontal_Scrollbars|Hide_Vertical_Scrollbars|Virtual_Space"
 		options:="Add_Margins_To_Windows|Disable_Auto_Advance|Auto_Close_Find|Auto_Expand_Includes|Auto_Indent_Comment_Lines|Auto_Set_Area_On_Quick_Find|Auto_Space_After_Comma|Autocomplete_Enter_Newline|Build_Comment|Center_Caret|Check_For_Edited_Files_On_Focus|Auto_Check_For_Update_On_Startup|Clipboard_History|Copy_Selected_Text_on_Quick_Find|Disable_Auto_Complete|Auto_Complete_In_Quotes|Auto_Complete|Auto_Complete_While_Tips_Are_Visible|Disable_Auto_Delete|Disable_Auto_Indent_For_Non_Ahk_Files|Disable_Auto_Insert_Complete|Disable_Autosave|Disable_Backup|Disable_Compile_AHK|Context_Sensitive_Help|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Disable_Line_Status|Disable_Variable_List|Enable_Close_On_Save|End_Document_At_Last_Line|Full_Auto_Indentation|Full_Backup_All_Files|Full_Tree|Hide_File_Extensions|Hide_Indentation_Guides|Highlight_Current_Area|Includes_In_Place|Manual_Continuation_Line|New_File_Dialog|OSD|Remove_Directory_Slash|Run_As_Admin|Shift_Breakpoint|Show_Caret_Line|Show_EOL|Show_Type_Prefix|Show_WhiteSpace|Small_Icons|Top_Find|Virtual_Scratch_Pad|Warn_Overwrite_On_Export|Regex|Case_Sensitive|Greed|Multi_Line|Require_Enter_For_Search|Omni_Search_Stats|Verbose_Debug_Window|Focus_Studio_On_Debug_Breakpoint|Select_Current_Debug_Line|Global_Debug_Hotkeys|Smart_Delete|Auto_Variable_Browser|Inline_Brace"
-		other:="Auto_Space_After_Comma|Auto_Space_Before_Comma|Autocomplete_Enter_Newline|Disable_Auto_Delete|Disable_Auto_Insert_Complete|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Enable_Close_On_Save|Full_Tree|Highlight_Current_Area|Manual_Continuation_Line|Small_Icons|Top_Find|Hide_Tray_Icon|Match_Any_Word"
+		other:="Auto_Space_After_Comma|Auto_Space_Before_Comma|Autocomplete_Enter_Newline|Disable_Auto_Delete|Disable_Auto_Insert_Complete|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Enable_Close_On_Save|Full_Tree|Highlight_Current_Area|Manual_Continuation_Line|Small_Icons|Top_Find|Hide_Tray_Icon|Match_Any_Word|Force_UTF-8"
 		special:="Word_Wrap"
 		alloptions.=disable "|" options "|" other "|" special
 		Sort,alloptions,UD|
@@ -8245,8 +8247,7 @@ Run_As(exe){
 }
 Save_As(){
 	Send,{Alt Up}
-	current:=Current(1),currentfile:=Current(2).file
-	all:=SN(current,"descendant-or-self::*[@untitled]")
+	current:=Current(1),currentfile:=Current(2).file,all:=SN(current,"descendant-or-self::*[@untitled]")
 	while(aa:=all.item[A_Index-1])
 		aa.RemoveAttribute("untitled")
 	current.RemoveAttribute("untitled")
@@ -8254,23 +8255,22 @@ Save_As(){
 	FileSelectFile,newfile,S16,%dir%,Save File As...,*.ahk
 	if(ErrorLevel||newfile="")
 		return
-	newfile:=SubStr(newfile,-3)=".ahk"?newfile:newfile ".ahk"
-	filelist:=SN(Current(1),"descendant::*")
+	newfile:=SubStr(newfile,-3)=".ahk"?newfile:newfile ".ahk",filelist:=SN(Current(1),"descendant::*")
 	SplitPath,newfile,newfn,newdir
 	while(fl:=filelist.item[A_Index-1],ea:=XML.EA(fl)){
 		if(newfn=ea.filename&&A_Index>1)
 			return m("File conflicts with an include.  Please choose another filename")
-	}
-	SplashTextOn,200,100,Creating New File(s)
-	while,fl:=filelist.item[A_Index-1],ea:=XML.EA(fl){
+	}SplashTextOn,200,100,Creating New File(s)
+	while(fl:=filelist.item[A_Index-1],ea:=XML.EA(fl)){
 		filename:=ea.file
 		SplitPath,filename,file
+		if(v.Options["Force_UTF-8"])
+			fl.SetAttribute("encoding","UTF-8"),ea.encoding:="UTF-8"
 		if(A_Index=1)
 			FileAppend,% Update({get:filename}),%newdir%\%newfn%,% ea.encoding
 		else if !FileExist(newdir "\" file)
 			FileAppend,% Update({get:filename}),%newdir%\%file%
-	}
-	SplashTextOff
+	}SplashTextOff
 	Open(newfile),Close(files.SN("//main[@id='" Current(2).id "']")),tv(SSN(files.Find("//file/@file",newfile),"@tv").text)
 }
 Save_Untitled(node,ask:=1){
@@ -8302,13 +8302,12 @@ Save_Untitled(node,ask:=1){
 	}
 }
 Save(option=""){
-	sc:=csc()
-	Update({sc:sc.2357}),info:=Update("get"),now:=A_Now,Scan_Line()
+	sc:=csc(),Update({sc:sc.2357}),info:=Update("get"),now:=A_Now,Scan_Line()
 	if(Current(3).untitled&&option!=4)
 		Save_Untitled(Current(),(option=""?0:1))
 	SavedFiles:=[],saveas:=[],all:=files.SN("//*[@edited]")
 	while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa){
-		SavedFiles.push(1),text:=RegExReplace(info.1[ea.file],"\R","`r`n"),SetStatus("Saving " ea.filename,3),updirty:=files.SN("//*[@id='" ea.id "']")
+		SavedFiles.Push(1),text:=RegExReplace(info.1[ea.file],"\R","`r`n"),SetStatus("Saving " ea.filename,3),updirty:=files.SN("//*[@id='" ea.id "']")
 		while(uu:=updirty.item[A_Index-1]),dea:=XML.EA(uu)
 			TVC.Modify(1,(v.Options.Hide_File_Extensions?dea.nne:dea.filename),dea.tv)
 		if(!SplitPath(ea.file).dir)
@@ -8316,8 +8315,7 @@ Save(option=""){
 		if(ea.untitled&&option=3){
 			Save_Untitled(aa)
 			Continue
-		}
-		if(ea.untitled)
+		}if(ea.untitled)
 			Continue
 		if(!v.Options.Disable_Backup){
 			parent:=SSN(aa,"ancestor::main/@file").text
@@ -8330,7 +8328,9 @@ Save(option=""){
 			if(ErrorLevel)
 				m("There was an issue saving " ea.file,"Please close any error messages and try again")
 		}LineStatus.Save(ea.id),encoding:=ea.encoding
-		if(encoding="UTF-16")
+		if(v.Options["Force_UTF-8"])
+			fl:=FileOpen(ea.file,"W","UTF-8"),fl.Write(text),fl.Length(fl.Position),fl.Close(),aa.SetAttribute("encoding","UTF-8")
+		else if(encoding="UTF-16")
 			len:=VarSetCapacity(var,(StrPut(text,encoding)*2)),StrPut(text,&var,len,encoding),tt:=StrGet(&var,len),fl:=FileOpen(ea.file,"W",encoding),fl.Write(RegExReplace(tt,"\R","`r`n")),fl.Length(fl.Position),fl.Close()
 		else if(RegExMatch(text,"[^\x0-\xFF]")&&encoding~="UTF-8"=0)
 			fl:=FileOpen(ea.file,"W","UTF-8"),fl.Write(text),fl.Length(fl.Position),fl.Close(),aa.SetAttribute("encoding","UTF-8")
