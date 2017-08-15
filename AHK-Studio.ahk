@@ -2533,7 +2533,7 @@ Color(con:=""){
 			else if(ea.code&&ea.bool)
 				con[ea.code](ea.bool,ea.color)
 			if(ea.style=32){
-				con.2066(5,178),con.2050(),con.2052(30,0x0000ff),con.2052(31,0x00ff00),con.2052(48,0xff00ff)
+				con.2066(32,178),con.2050(),con.2052(30,0x0000ff),con.2052(31,0x00ff00),con.2052(48,0xff00ff)
 			}
 		}
 	}SetWords()
