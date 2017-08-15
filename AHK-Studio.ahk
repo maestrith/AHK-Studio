@@ -678,23 +678,41 @@ CenterSel(){
 	}
 }
 Check_For_Edited(){
+	static ea,sc
 	all:=files.SN("//file"),sc:=csc()
 	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
 		FileGetTime,time,% ea.file
 		if(time!=ea.time&&ea.note!=1){
 			list.=ea.filename ",",aa.SetAttribute("time",time)
-			FileRead,text,% ea.file
+			fff:=FileOpen(ea.file,"R",(v.Options["Force_UTF-8"]?"UTF-8":"")),encoding:=fff.encoding,text:=fff.Read(fff.length),fff.Close(),dir:=Trim(dir,"\")
+			/*
+				FileRead,text,% ea.file
+			*/
+			sc.Enable(0)
 			text:=RegExReplace(text,"\r\n|\r","`n")
-			if(ea.sc=sc.2357)
-				sc.2181(0,[text])
-			else if(ea.sc&&ea.sc!=sc.2357)
+			Encode(text,tt,encoding)
+			if(ea.sc=sc.2357){
+				Node:=GetPos(),sc.2181(0,&tt)
+				ea:=XML.EA(Node)
+				for a,b in StrSplit(fold,",")
+					sc.2231(b)
+				if(ea.start&&ea.end)
+					sc.2160(ea.start,ea.end),sc.2399
+				if(ea.scroll!="")
+					SetTimer,setscrollpos2,-1
+			}else if(ea.sc&&ea.sc!=sc.2357)
 				sc.2377(ea.sc),aa.RemoveAttribute("sc")
 			Update({file:ea.file,text:text}),SetPos()
+			sc.Enable(1)
 		}
-	}
-	if(list)
+	}if(list)
 		SetStatus("Files Updated:" Trim(list,","),3)
 	return 1
+	setscrollpos2:
+	if(ea.scroll!="")
+		sc.2613(ea.scroll),sc.2400()
+	MarginWidth()
+	return
 }
 Check_For_Update(startup:=""){
 	static newwin
@@ -2532,12 +2550,8 @@ Color(con:=""){
 				con[ea.code](ea.color,0)
 			else if(ea.code&&ea.bool)
 				con[ea.code](ea.bool,ea.color)
-			if(ea.style=32){
-				/*
-					con.2066(32,178)
-				*/
+			if(ea.style=32)
 				con.2050(),con.2052(30,0x0000ff),con.2052(31,0x00ff00),con.2052(48,0xff00ff)
-			}
 		}
 	}SetWords()
 	if(!settings.SSN("//fonts/font[@style='96']"))
@@ -4123,7 +4137,7 @@ FEUpdate(Redraw:=0){
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	,scidate:=20161107223002,XMLFiles:={menus:[20170814205757,"lib/menus.xml","lib\Menus.xml"],commands:[20160508000000,"lib/Commands.xml","lib\Commands.xml"]}
-	,OtherFiles:={scilexer:{date:20170815001338,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170709122638,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
+	,OtherFiles:={scilexer:{date:20170815152823,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170709122638,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!FileExist(A_MyDocuments "\Autohotkey\Lib")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
@@ -4894,6 +4908,7 @@ GetPos(Node:=0){
 		list.=fold ",",fold++
 	if(list)
 		Node.SetAttribute("fold",Trim(list,","))
+	return Node
 }
 GetRange(start,otext){
 	start:=start-3>=0?start-3:0
@@ -6370,6 +6385,9 @@ Notifications(a*){
 		return
 	}
 	code:=NumGet(A_EventInfo,8)
+	if(Code=2010){
+		return m("Duh")
+	}
 	if(code=2007){
 		style:=SettingsClass.keep.2010(SettingsClass.keep.2008())
 		SB_SetText("Style at Caret: " (style~="\b(101|70|71|0)\b"?"N/A":style))
@@ -8752,8 +8770,8 @@ SetPos(oea:=""){
 	return
 	fold:
 	if(ea.file){
-		Loop,Parse,fold,`,
-			sc.2231(A_LoopField)
+		for a,b in StrSplit(fold,",")
+			sc.2231(b)
 		if(ea.start&&ea.end)
 			sc.2160(ea.start,ea.end),sc.2399
 		if(ea.scroll!="")
@@ -8972,6 +8990,7 @@ Class SettingsClass{
 		;remove unused markers above
 		for a,b in [[2043,13,28],[2043,11,29],[2043,12,29],[2043,10,31]]
 			this[b.1](b.2,b.3)
+		this.2246(0,1)
 		/*
 			Make an RCM that you can edit the font, color, etc.
 		*/
