@@ -3973,7 +3973,7 @@ Export(){
 		indir.text:=filename
 }
 Extract(mainfile){
-	static FileCount:=0
+	static FileCount:=0 ;,ADODB:=ComObjCreate("ADODB.Stream")
 	FileList:=[],file:=mainfile,pool:=[]
 	if(!main:=files.Find("//main/@file",mainfile))
 		main:=files.Under(files.SSN("//*"),"main",{file:mainfile,id:(inside:=id:=GetID())})
@@ -3984,13 +3984,10 @@ Extract(mainfile){
 		node:=files.Under(main,"file",{file:file,dir:maindir,filename:mfn,id:id,nne:mnne,scan:1,lower:Format("{:L}",file)})
 	out:=SplitPath(mainfile)
 	ExtractNext:
-	id:=GetID(),fff:=FileOpen(file,"R"),encoding:=fff.encoding,text:=fff.Read(fff.length),fff.Close(),dir:=Trim(dir,"\")
-	if(v.Options["Force_UTF-8"])
-		encoding:="UTF-8"
+	id:=GetID(),fff:=FileOpen(file,"R",(v.Options["Force_UTF-8"]?"UTF-8":"")),encoding:=fff.encoding,text:=fff.Read(fff.length),fff.Close(),dir:=Trim(dir,"\")
 	if(nnnn:=files.Find("//*/@file",file)){
 		if(SSN(nnnn,"@time"))
 			id:=SSN(nnnn,"@id").text
-		;m(nnnn.xml,"",mainfile)
 	}
 	FileGetTime,time,%file%
 	SplitPath,file,filename,dir,,nne
@@ -10031,7 +10028,16 @@ tv(tv*){
 			if(!ea.sc){
 				sc.2358(0,0)
 				Sleep,80
-				doc:=sc.2357,sc.2376(0,doc),node.SetAttribute("sc",doc),tt:=Update({get:ea.file}),encoding:=ea.encoding,sc.2037(65001),Encode(tt,text,encoding),sc.2181(0,&text),sc.2175(),Set(sc)
+				doc:=sc.2357
+				sc.2376(0,doc)
+				node.SetAttribute("sc",doc)
+				tt:=Update({get:ea.file})
+				encoding:=ea.encoding
+				sc.2037(65001)
+				Encode(tt,text,encoding)
+				sc.2181(0,&text)
+				sc.2175()
+				Set(sc)
 			}else
 				m("The current document is not the right document. If this continues to happen please let maestrith know."),tv(files.SSN("//main/file/@tv").text)
 		}TVC.Disable(1),TVC.Modify(1,"",sel,"Select Vis Focus"),TVC.Enable(1)
