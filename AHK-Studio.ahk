@@ -2533,7 +2533,10 @@ Color(con:=""){
 			else if(ea.code&&ea.bool)
 				con[ea.code](ea.bool,ea.color)
 			if(ea.style=32){
-				con.2066(32,178),con.2050(),con.2052(30,0x0000ff),con.2052(31,0x00ff00),con.2052(48,0xff00ff)
+				/*
+					con.2066(32,178)
+				*/
+				con.2050(),con.2052(30,0x0000ff),con.2052(31,0x00ff00),con.2052(48,0xff00ff)
 			}
 		}
 	}SetWords()
@@ -4123,7 +4126,7 @@ FEUpdate(Redraw:=0){
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	,scidate:=20161107223002,XMLFiles:={menus:[20170814205757,"lib/menus.xml","lib\Menus.xml"],commands:[20160508000000,"lib/Commands.xml","lib\Commands.xml"]}
-	,OtherFiles:={scilexer:{date:20170813124132,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170709122638,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
+	,OtherFiles:={scilexer:{date:20170815001338,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170709122638,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!FileExist(A_MyDocuments "\Autohotkey\Lib")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
@@ -4185,8 +4188,9 @@ FileCheck(file:=""){
 		if(time<b.date){
 			SplashTextOn,200,100,% "Downloading " b.url,"Please Wait..."
 			FileMove,% b.loc,% b.loc "bak"
-			URLDownloadToFile,% base b.url,% b.loc
+			URLDownloadToFile,% base b.url,% b.loc "new"
 			FileDelete,% b.loc "bak"
+			FileMove,% b.loc "new",% b.loc
 			SplashTextOff
 	}}RegRead,value,HKCU,Software\Classes\AHK-Studio
 	(!value)?RegisterID("{DBD5A90A-A85C-11E4-B0C7-43449580656B}","AHK-Studio"):""
