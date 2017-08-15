@@ -679,7 +679,7 @@ CenterSel(){
 }
 Check_For_Edited(){
 	all:=files.SN("//file"),sc:=csc()
-	while,aa:=all.item[A_Index-1],ea:=XML.EA(aa){
+	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
 		FileGetTime,time,% ea.file
 		if(time!=ea.time&&ea.note!=1){
 			list.=ea.filename ",",aa.SetAttribute("time",time)
@@ -6454,6 +6454,8 @@ Notify(csc*){
 		if(win=hwnd(1))
 			SetTimer,LButton,-200
 		TVC.Disable(1)
+		if(v.Options.Check_For_Edited_Files_On_Focus)
+			Check_For_Edited()
 		if(ea.tv)
 			TV_Modify(ea.tv,"Select Vis Focus")
 		TVC.Enable(1)
@@ -10035,7 +10037,7 @@ tv(tv*){
 				encoding:=ea.encoding
 				sc.2037(65001)
 				Encode(tt,text,encoding)
-				sc.2181(0,&text)
+				sc.2181(0,&text) ;tv
 				sc.2175()
 				Set(sc)
 			}else

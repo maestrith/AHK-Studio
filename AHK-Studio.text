@@ -3,6 +3,8 @@ Added: Reported by clu-- (and I'm sure many others) #125
 -Options/Force UTF-8: This will force Studio to open and write all files to UTF-8
 Fixed:
 -Dumb bug I had that was really messing with UTF-8 characters and a lot of other things
+Fixed: Reported by Joe Glines
+-Check For Edited Files On Focus: Wasn't working
 1.003.23
 Fixed: Reported by ali80
 -Continuation Sections: Formatting was getting all messed up and caused errors further down the code if you use /* */
