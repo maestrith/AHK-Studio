@@ -2526,25 +2526,23 @@ CloseSingleUntitled(){
 	return CloseID
 }
 Color(con:=""){
+	static options:={show_eol:2356,Show_Caret_Line:2096},list:={Font:2056,Size:2055,Color:2051,Background:2052,Bold:2053,Italic:2054,Underline:2059}
 	con:=con?con:v.con
 	if(!con.sc)
 		return v.con:=""
-	static options:={show_eol:2356,Show_Caret_Line:2096}
-	list:={Font:2056,Size:2055,Color:2051,Background:2052,Bold:2053,Italic:2054,Underline:2059},nodes:=settings.SN("//fonts/font")
-	while,n:=nodes.item(A_Index-1){
-		ea:=settings.EA(n)
+	nodes:=settings.SN("//fonts/font"),Default:=Settings.EA("//fonts/font[@style=5]")
+	while(n:=nodes.item(A_Index-1),ea:=settings.EA(n)){
 		if(ea.code=2082){
 			con.2082(7,ea.color)
 			Continue
-		}
-		if(ea.style=33)
+		}if(ea.style=33)
 			for a,b in [2290,2291]
-				con[b](1,ea.Background)
+				con[b](1,ea.Background?ea.Background:Default.Background)
 		ea.style:=ea.style=5?32:ea.style
 		for a,b in ea{
 			if(list[a]&&ea.style!="")
 				con[list[a]](ea.style,b)
-			if(ea.code&&ea.value)
+			if(ea.code&&ea.value!="")
 				con[ea.code](ea.value)
 			else if(ea.code&&ea.bool!=1)
 				con[ea.code](ea.color,0)
@@ -3993,10 +3991,9 @@ Extract(mainfile){
 		main:=files.Under(files.SSN("//*"),"main",{file:mainfile,id:(inside:=id:=GetID())})
 	SplitPath,mainfile,mfn,maindir,,mnne
 	SplitPath,A_AhkPath,,ahkdir
-	pool[maindir]:=1,pool[ahkdir]:=1
+	pool[maindir]:=1,pool[ahkdir]:=1,out:=SplitPath(mainfile)
 	if(!node:=files.Find(main,"descendant::file/@file",file))
 		node:=files.Under(main,"file",{file:file,dir:maindir,filename:mfn,id:id,nne:mnne,scan:1,lower:Format("{:L}",file)})
-	out:=SplitPath(mainfile)
 	ExtractNext:
 	id:=GetID(),fff:=FileOpen(file,"R",(v.Options["Force_UTF-8"]?"UTF-8":"")),encoding:=fff.encoding,text:=fff.Read(fff.length),fff.Close(),dir:=Trim(dir,"\")
 	if(nnnn:=files.Find("//*/@file",file)){
@@ -4043,8 +4040,7 @@ Extract(mainfile){
 					FileList[fn]:={file:fn,include:found.0,inside:file},libfile:=1,added:=1
 					break
 				}
-			}
-			if(FileExist(fn:=A_MyDocuments "\AutoHotkey\lib\" info ".ahk")&&!libfile){
+			}if(FileExist(fn:=A_MyDocuments "\AutoHotkey\lib\" info ".ahk")&&!libfile){
 				FileList[fn]:={file:fn,include:found.0,inside:file},added:=1
 			}libfile:=0
 		}for a in pool{
@@ -4060,16 +4056,14 @@ Extract(mainfile){
 		if(InStr(fn,"..")){
 			Loop,Files,%fn%,F
 				obj.file:=A_LoopFileLongPath
-		}
-		filelist.Delete(fn),file:=obj.file:=Trim(obj.file)
+		}filelist.Delete(fn),file:=obj.file:=Trim(obj.file)
 		if(!files.Find(node,"descendant::file/@file",file)){
 			SplitPath,file,filename,dir,,nne
 			new:=files.Under(files.Find(node,"descendant-or-self::file/@file",obj.inside),"file",obj)
 			for a,b in {file:file,filename:filename,dir:dir,nne:nne,github:(maindir=dir?filename:"lib\" filename),scan:1,lower:Format("{:L}",filename)}
 				new.SetAttribute(a,b)
 			qea:=XML.EA(new)
-		}
-		Goto,ExtractNext
+		}Goto,ExtractNext
 }}
 FEAdd(value,parent:=0,options:=""){
 	if(v.Options.Hide_File_Extensions){
@@ -6262,13 +6256,11 @@ Notifications(a*){
 		if(node.xml)
 			check:=TV_Get(SSN(node,"@tv").text,"Check"),(check?node.SetAttribute("check",1):node.RemoveAttribute("check"))
 		return
-	}
-	if(A_GuiControl="ComboBox"){
+	}if(A_GuiControl="ComboBox"){
 		ControlGetText,item,,% "ahk_id" SettingsClass.Controls.ComboBox
 		this.Default("MenuTV"),TV_Modify(SettingsClass.MenuSearch[item],"Select Vis Focus")
 		return 
-	}
-	if(A_GuiControl="Icon"){
+	}if(A_GuiControl="Icon"){
 		SettingsClass.Default("MenuTV"),node:=menus.SSN("//*[@tv='" TV_GetSelection() "']")
 		if(node.NodeName="separator")
 			return m("Separators can not have icons")
@@ -6278,8 +6270,7 @@ Notifications(a*){
 		TV_Modify(SSN(node,"@tv").text,opt)
 		GuiControl,Settings:+Redraw,% SettingsClass.Controls.MenuTV
 		return
-	}
-	if(A_GuiControl="FTAdd"){
+	}if(A_GuiControl="FTAdd"){
 		ControlGetText,text,,% "ahk_id" SettingsClass.Controls.FTEdit
 		if(settings.SSN("//filetypes/type[text()='" text "']"))
 			return m("File Type already exists")
@@ -6296,8 +6287,7 @@ Notifications(a*){
 			for a,b in list
 				b.ParentNode.RemoveChild(b)
 		return this.PopulateMFT()
-	}
-	if(A_GuiControl="ER"){
+	}if(A_GuiControl="ER"){
 		this.Default("ERLV"),LV_GetText(item,LV_GetNext()),node:=settings.SSN("//replacements/replacement[@replace='" item "']")
 		for a,b in {ERReplace:RegExReplace(node.text,"\R","`r`n"),ERInsert:SSN(node,"@replace").text}
 			GuiControl,Settings:,% SettingsClass.Controls[a],%b%
@@ -6316,8 +6306,7 @@ Notifications(a*){
 		}
 		GuiControl,Settings:+gNotifications,% SettingsClass.Controls.ERLV
 		return
-	}
-	if(A_GuiControl="ERReplace"){
+	}if(A_GuiControl="ERReplace"){
 		info:=[],this.Default("ERLV"),LV_GetText(item,LV_GetNext()),node:=settings.SSN("//replacements/replacement[@replace='" item "']")
 		for a,b in ["ERInsert","ERReplace"]{
 			ControlGetText,text,,% "ahk_id" SettingsClass.Controls[b]
@@ -6325,8 +6314,7 @@ Notifications(a*){
 		}if(item=info.ERInsert)
 			LV_Modify(LV_GetNext(),"Col2",RegExReplace(info.ERReplace,"\R",Chr(127))),node.text:=RegExReplace(info.ERReplace,"\R",Chr(127))
 		return
-	}
-	if(A_GuiControl="ERAdd"){
+	}if(A_GuiControl="ERAdd"){
 		info:=[]
 		for a,b in ["ERInsert","ERReplace"]{
 			ControlGetText,text,,% "ahk_id" SettingsClass.Controls[b]
@@ -6347,8 +6335,7 @@ Notifications(a*){
 		if(m("Are you sure?","Can NOT be undone","btn:ync","def:2","ico:!")="Yes")
 			node.ParentNode.RemoveChild(node),this.PopulateER()
 		return
-	}
-	if(A_GuiControl="AddButton"){
+	}if(A_GuiControl="AddButton"){
 		key:=[]
 		for a,b in ["trigger","add"]{
 			ControlGetText,text,,% "ahk_id" SettingsClass.Controls[b]
@@ -6363,39 +6350,59 @@ Notifications(a*){
 		for a,b in ["trigger","add"]
 			GuiControl,Settings:,% SettingsClass.Controls[b]
 		return this.PopulateAI(),BraceSetup()
-	}
-	if(A_GuiControl="RemoveButton"){
+	}if(A_GuiControl="RemoveButton"){
 		this.Default("AutoInsert"),LV_GetText(item,LV_GetNext())
 		ea:=xml.EA(node:=settings.Find("//autoadd/key/@trigger",item))
 		node.ParentNode.RemoveChild(node),this.PopulateAI()
 		return BraceSetup()
-	}
-	if(A_GuiControl="AI"&&A_GuiEvent="I"){
+	}if(A_GuiControl="AI"&&A_GuiEvent="I"){
 		this.Default("AutoInsert"),LV_GetText(item,LV_GetNext())
 		ea:=xml.EA(node:=settings.Find("//autoadd/key/@trigger",item))
 		for a,b in {trigger:ea.trigger,add:ea.add}
 			GuiControl,Settings:,% SettingsClass.Controls[a],%b%
 		return
-	}
-	if(A_GuiControl="Options"&&A_GuiEvent="I"){
+	}if(A_GuiControl="Options"&&A_GuiEvent="I"){
 		Gui,Settings:ListView,SysListView321
 		next:=LV_GetNext(A_EventInfo-1,"C"),LV_GetText(text,A_EventInfo),text:=RegExReplace(text," ","_")
 		if((v.Options[text]&&next!=A_EventInfo)||(!v.Options[text]&&next=A_EventInfo))
 			Options(text)
 		return
-	}
-	code:=NumGet(A_EventInfo,8)
+	}code:=NumGet(A_EventInfo,8),Alt:=GetKeyState("Alt","P"),Ctrl:=GetKeyState("Ctrl","P"),Shift:=GetKeyState("Shift","P")
 	if(Code=2010){
-		return m("Duh")
-	}
-	if(code=2007){
+		Margin:=NumGet(A_EventInfo,64),Node:=(Node:=Settings.SSN("//fonts/font[@style='33']"))?Node:Settings.Add("fonts/font",{style:33},,1)
+		if(Margin=1)
+			return SettingsClass.SetColor("//fonts/font[@style='" (style:=this.2166(NumGet(A_EventInfo,12))=39?31:30) "']","style",style,"background"),SettingsClass.keep.Color(),RefreshThemes()
+		if(Margin=3){
+			node:=(node:=settings.SSN("//fonts/fold"))?node:settings.Add("fonts/fold")
+			Marker:=this.2046(this.2166(NumGet(A_EventInfo,12)))
+			if(Marker&(1<<29)||Marker&(1<<28))
+				att:="background"
+			else if(Marker&(1<<32))
+				att:="color"
+			color:=Dlg_Color(SSN(node,"@" att).text,SettingsClass.hwnd)
+			node.SetAttribute(att,color)
+			SettingsClass.keep.Color()
+			RefreshThemes()
+			return
+		}if(Ctrl){
+			ea:=xml.EA(node),def:=xml.EA(settings.SSN("//fonts/font[@style=5]")),Style:=33
+			for a,b in def
+				if(ea[a]="")
+					ea[a]:=def[a]
+			Dlg_Font(ea,,SettingsClass.keep.hwnd)
+			for a,b in ea
+				node.SetAttribute(a,b)
+			return node.SetAttribute("style",style),SettingsClass.keep.Color(),RefreshThemes()
+		}type:=Alt?"background":"color",color:=SSN(node,"@" type).text,color:=color!=""?color:settings.SSN("//fonts/font[@style=5]/@" type).text,color:=Dlg_Color(color,SettingsClass.keep.hwnd)
+		return node.SetAttribute(type,color),SettingsClass.keep.Color(),RefreshThemes()
+	}if(code=2007){
 		style:=SettingsClass.keep.2010(SettingsClass.keep.2008())
 		SB_SetText("Style at Caret: " (style~="\b(101|70|71|0)\b"?"N/A":style))
 	}if(A_GuiControl="Testing"){
 		if(A_GuiEvent~="S|Normal")
 			SettingsClass.keep.SwitchTab(A_EventInfo)
 	}else if(code=2027){
-		pos:=NumGet(A_EventInfo,12),style:=SettingsClass.keep.2010(pos),Alt:=GetKeyState("Alt","P"),Ctrl:=GetKeyState("Ctrl","P"),Shift:=GetKeyState("Shift","P")
+		pos:=NumGet(A_EventInfo,12),style:=SettingsClass.keep.2010(pos)
 		if(Shift){
 			m("remove style")
 			return
@@ -6437,9 +6444,7 @@ Notifications(a*){
 		color:=Dlg_Color(color,SettingsClass.keep.hwnd)
 		if(cc)
 			SettingsClass.keep.2052(style,color)
-		node.SetAttribute(type,color)
-		SettingsClass.keep.Color()
-		RefreshThemes()
+		node.SetAttribute(type,color),SettingsClass.keep.Color(),RefreshThemes()
 	}
 }
 Notify(csc*){
@@ -8840,6 +8845,8 @@ Class SettingsClass{
 		Gui,Settings:Add,Button,Hidden,Testing
 		xx:=this.tvxml:=new XML("treeview"),this.Tabs:=[],this.Controls:=[],this.pos:=[],SettingsClass.ID:=this.ID:="ahk_id" hwnd,this.hwnd:=hwnd,SettingsClass.hwnd:=hwnd
 		ControlGetPos,,,,h,Button1,% this.ID
+		Hotkey,IfWinActive,ahk_id%hwnd%
+		Hotkey,Escape,SettingsClose,On
 		SettingsClass.Sizes.Button:=h,SettingsClass.Tabs:=[]
 		for a,b in this.WindowList:=["Auto Insert","Edit Replacements","Manage File Types","Menus","Options","Theme"]
 			tabs.=A_Index "|",SettingsClass.Tabs[RegExReplace(b," ","_")]:=A_Index
@@ -8855,8 +8862,7 @@ Class SettingsClass{
 		this.SetTab(SettingsClass.Tabs.Edit_Replacements),this.Add("ListView,x300 h240 ym vER gNotifications AltSubmit,Input|Replacement,ERLV,w-300","Text,x302 yp+240,Input:,ERI","Edit,x300 yp+15 vERInsert gNotifications,,ERInsert","Text,x302 yp+23,Replacement:,ERR","Edit,x300 yp+15 Multi +WantReturn vERReplace gNotifications,,ERReplace,w-300|h-350","Button,x300 vERAdd gNotifications,&Add,ERAdd,y-" sbh+30,"Button,x+M vERRemove gNotifications,&Remove,ERRemove,y-" sbh+30)
 		this.SetTab(SettingsClass.Tabs.Manage_File_Types),this.Add("ListView,x300 ym,Extension,FileType,w-300|h-100","Text,,FileType:,FTT,y-" sbh+75,"Edit,w200,,FTEdit,y-" sbh+60,"Button,vFTAdd gNotifications,&Add,FTAdd,y-" sbh+35,"Button,x+M vFTRemove gNotifications,&Remove,FTRemoe,y-" sbh+35)
 		this.SetTab(SettingsClass.Tabs.Menus),this.Add("ComboBox,x300 ym gNotifications vComboBox,,ComboBox,w-600","TreeView,x300 y+M Checked vMenuTV gNotifications AltSubmit,,MenuTV,w-600|h-323","ListView,h277 Icon vIcon gSelectIcon AltSubmit,Icon,Icon,w-300|y-" sbh+277,"Button,w110 gLoadDefault,&Default Icons,FButton,x-200|y-328","Button,w90 gLoadFile,&Load Icons,SButton,x-90|y-328","Listview,ym w300,Description|Hotkey,Hotkeys,x-300|h-328"),TV_Add("Please Wait...")
-		this.ILAdd("init")
-		ib:=new Icon_Browser("",SettingsClass.Controls.Icon,"Settings",,,"Notifications"),SettingsClass.IconID:="ahk_id" SettingsClass.Controls.Icon,this.SetTab(SettingsClass.Tabs.Theme)
+		this.ILAdd("init"),ib:=new Icon_Browser("",SettingsClass.Controls.Icon,"Settings",,,"Notifications"),SettingsClass.IconID:="ahk_id" SettingsClass.Controls.Icon,this.SetTab(SettingsClass.Tabs.Theme)
 		Gui,Settings:Add,custom,x300 ym classScintilla hwndsc gNotifications
 		this.SC({register:sc}),obj:=SettingsClass,obj.Controls.Scintilla:=sc,obj.pos["Scintilla"]:={h:-sbh,w:-300}
 		if(!node:=settings.SSN("//gui/position[@window='Settings']"))
@@ -8867,7 +8873,7 @@ Class SettingsClass{
 		for a,b in this.WindowList
 			xx.Add("item",{name:b},,1)
 		parent:=xx.Under((theme:=xx.SSN("//*[@name='Theme']")),"top",{name:"Color"}),this.Default()
-		for a,b in [{"Brace Match":"Indicator Reset,Style"},{"Caret":"Caret,Caret Line Background,Multiple Indicator Color,Debug Caret Color"},{"Code Explorer":"Background,Default Background,Text Style,Default Style"},{Default:"Background Color,Font Style,Reset To Default"},{"Fold Indicators":"Fold Box,Fold Lines"},{"":"Indent Guide"},{"Main Selection":"Foreground,Remove Forground"},{"Markers":"Edited Marker,Saved Marker"},{"Multiple Selection":"Foreground,Remove Forground"},{"Project Explorer":"Background,Default Background,Text Style,Default Style"},{"Quick Find":"Bottom Background,Bottom Forground,Quick Find Clear,Quick Find Edit Background,Top Background,Top Forground"},{"":"StatusBar Text Style"}]{
+		for a,b in [{"Brace Match":"Indicator Reset,Style"},{"Caret":"Caret,Caret Line Background,Multiple Indicator Color,Debug Caret Color"},{"Code Explorer":"Background,Default Background,Text Style,Default Style"},{Default:"Background Color,Font Style,Reset To Default"},{"":"Indent Guide"},{"Main Selection":"Foreground,Remove Forground"},{"Multiple Selection":"Foreground,Remove Forground"},{"Project Explorer":"Background,Default Background,Text Style,Default Style"},{"Quick Find":"Bottom Background,Bottom Forground,Quick Find Clear,Quick Find Edit Background,Top Background,Top Forground"},{"":"StatusBar Text Style"}]{
 			for c,d in b{
 				node:=c?xx.Under(parent,"parent",{name:c}):parent
 				for e,f in StrSplit(d,",")
@@ -8880,21 +8886,19 @@ Class SettingsClass{
 		all:=xx.SN("//treeview/descendant::*")
 		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
 			aa.SetAttribute("tv",TV_Add(ea.name,SSN(aa.ParentNode,"@tv").text))
-		TV_Modify(xx.SSN("//top/@tv").text,"Expand Vis")
-		this.ThemeText()
-		SettingsClass.keep:=this,this.Color(),this.UpdateSavedThemes(),this.PopulateER(),this.PopulateAI(),this.PopulateMFT(),this.Default("Hotkeys")
+		TV_Modify(xx.SSN("//top/@tv").text,"Expand Vis"),this.ThemeText(),SettingsClass.keep:=this,this.Color(),this.UpdateSavedThemes(),this.PopulateER(),this.PopulateAI(),this.PopulateMFT(),this.Default("Hotkeys")
 		for a,b in SettingsClass.Hotkeys
 			LV_Add("",b.1,Convert_Hotkey(b.2))
-		LV_ModifyCol()
-		this.Show()
-		this.2188(1)
-		TV_Modify(this.tvxml.SSN("//*[@name='" Tab "']/@tv").text,"Select Vis Focus")
-		ib.Populate()
+		LV_ModifyCol(),this.Show(),this.2188(1),TV_Modify(this.tvxml.SSN("//*[@name='" Tab "']/@tv").text,"Select Vis Focus"),ib.Populate()
 		Hotkey,IfWinActive,% this.ID
 		for a,b in SettingsClass.Hotkeys{
 			Hotkey,% b.2,SettingsHotkeys,On
 			SettingsClass.HotkeyXML.Add("Hotkey",{d:b.1,k:b.2,a:b.3},,1)
 		}
+		return
+		SettingsClose:
+		Gui,Settings:Destroy
+		return
 	}__Call(info*){
 		if(info.1+0){
 			(info.2?((a:=info.2+0?"int":"str")(b:=info.2)):(a:="int",b:=0))
@@ -8902,8 +8906,7 @@ Class SettingsClass{
 			if(c="str"){
 				VarSetCapacity(var,(len:=StrPut(info.3,"UTF-8"))),StrPut(info.3,&var,len,"UTF-8"),d:=&var
 				c:="int"
-			}
-			resp:=DllCall(scc.fn,"Ptr",scc.ptr,"UInt",info.1,a,b,c,d,"Cdecl")
+			}resp:=DllCall(scc.fn,"Ptr",scc.ptr,"UInt",info.1,a,b,c,d,"Cdecl")
 			if(info.4)
 				m(scc.fn,scc.ptr,a,b,c,d,info.1,resp)
 			return resp
@@ -8929,36 +8932,8 @@ Class SettingsClass{
 	}Close(){
 		SettingsClass.keep.Escape()
 	}Color(){
-		static init
 		GuiControl,Settings:-Redraw,Scintilla1
-		font:=settings.SN("//fonts/*")
-		list:={Font:2056,Size:2055,Color:2051,Background:2052,Bold:2053,Italic:2054,Underline:2059},nodes:=settings.SN("//fonts/font")
-		while(ff:=font.item[A_Index-1],ea:=xml.EA(ff)){
-			if(ea.code=2082){
-				this.2082(7,ea.color)
-				Continue
-			}
-			if(ea.style=33)
-				for a,b in [2290,2291]
-					this[b](1,ea.Background)
-			ea.style:=ea.style=5?32:ea.style
-			for a,b in ea{
-				if(list[a]&&ea.style!="")
-					this[list[a]](ea.style,b)
-				if(ea.code&&ea.value)
-					this[ea.code](rea.value)
-				else if(ea.code&&ea.bool!=1)
-					this[ea.code](ea.color,0)
-				else if(ea.code&&ea.bool)
-					this[ea.code](ea.bool,ea.color)
-			}if(ea.style=32)
-				this.2409(32,1),this.2050()
-		}
-		if(!(settings.SSN("//fonts/font[@style='34']"))){
-			this.2498(1,7)
-			if(!settings.SSN("//fonts/font[@code='2082']"))
-				this.2082(7,0xff00ff)
-		}
+		this.2409(32,1),this.2050()
 		if(!settings.SSN("//fonts/font[@style='96']"))
 			this.2051(96,0xff00ff)
 		if(!settings.SSN("//fonts/font[@style='100']"))
@@ -8969,27 +8944,22 @@ Class SettingsClass{
 		for a,b in {70:2068,71:2601}
 			this.2052(a,settings.SSN("//fonts/font[@code='" b "']/@color").text)
 		for a,b in {20:settings.Get("//fonts/font[@style='30']/@background",0x0000ff),21:settings.Get("//fonts/font[@style='31']/@background",0x00ff00)}
-			this.2040(a,27),this.2042(a,b)
+			this.2040(a,26),this.2042(a,b)
 		for a,b in {"<----Edited":20,"<----Saved":21}
 			RegExReplace(SubStr(this.ThemeTextText,1,InStr(this.ThemeTextText,a)),"\R",,count),this.2043(count,b)
 		if(node:=settings.SSN("//fonts/fold")){
 			ea:=XML.EA(node)
 			Loop,7
 				this.2041(24+A_Index,ea.color!=""?ea.color:"0"),this.2042(24+A_Index,ea.background!=""?ea.Background:"0xaaaaaa")
-		}
-		ea:=settings.EA("//fonts/font[@style=5]"),this.2051(101,ea.color),this.2052(101,ea.background)
+		}ea:=settings.EA("//fonts/font[@style=5]"),this.2051(101,ea.color),this.2052(101,ea.background)
 		WinGet,cl,ControlList,% this.ID
 		for a,b in StrSplit(cl,"`n"){
 			Gui,Settings:Font,% "c" RGB(ea.color),% ea.font
 			GuiControl,% "Settings:+background" RGB(ea.Background) " c" RGB(ea.color),%b%
 			GuiControl,Settings:Font,%b%
 		}
-		;remove unused markers below
-		for a,b in [[2040,25,13],[2244,3,0xFE000000],[2040,26,15],[2040,27,17],[2040,28,16],[2040,29,9],[2040,30,12],[2040,31,14],[2242,0,20],[2242,1,13],[2134,1],[2260,1],[2246,1,1],[2246,2,1],[2115,1],[2029,2],[2031,2],[2240,3,0],[2242,3,15],[2246,1,1],[2246,3,1],[2244,2,3],[2040,0,0],[2041,0,0],[2042,0,0xff],[2115,1],[2056,38,"Tahoma"],[2041,1,0],[2042,1,0xff0000],[2040,2,22],[2040,3,22],[2040,4,31],[2042,4,0xff0000],[2037,65001],[2132,v.Options.Hide_Indentation_Guides=1?0:1],[2280,v.Options.Hide_Vertical_Scrollbars=1?0:1],[2130,v.Options.Hide_Horizontal_Scrollbars=1?0:1],[2040,1,0],[2042,1,0x0000ff]]
-			this[b.1](b.2,b.3)
-		;remove unused markers above
-		for a,b in [[2043,13,28],[2043,11,29],[2043,12,29],[2043,10,31]]
-			this[b.1](b.2,b.3)
+		Loop,5
+			this.2043(A_Index+9,(A_Index=1?31:A_Index=5?28:29))
 		this.2246(0,1)
 		/*
 			Make an RCM that you can edit the font, color, etc.
@@ -8997,7 +8967,9 @@ Class SettingsClass{
 		this.2409(101,0)
 		this.2371(0),this.2188(1)
 		Gui,Settings:Color,% RGB(ea.Background),% RGB(ea.background)
+		Color(this)
 		GuiControl,Settings:+Redraw,Scintilla1
+		return
 	}ContextMenu(a*){
 		m(a.1,a.2,a.3,SettingsClass.keep.2010(SettingsClass.keep.2008()))
 	}Default(name:="MainTV"){
@@ -9318,11 +9290,7 @@ Class SettingsClass{
 					node:=settings.SSN("//fonts"),node.ParentNode.RemoveChild(node),DefaultFont(),this.ThemeText()
 			}else
 				m(item " is coming soon")
-		}else if(parent="Markers")
-			SettingsClass.SetColor("//fonts/font[@style='" (style:=item="Edited Marker"?30:31) "']","style",style,"background")
-		else if(RegExMatch(item,"Fold (Box|Lines)",found))
-			node:=(node:=settings.SSN("//fonts/fold"))?node:settings.Add("fonts/fold"),color:=Dlg_Color(SSN(node,"@" (att:=found1="Box"?"color":"background")).text,SettingsClass.hwnd),node.SetAttribute(att,color)
-		else if(item="StatusBar Text Style"){
+		}else if(item="StatusBar Text Style"){
 			node:=(node:=settings.SSN("//fonts/custom[@control='msctls_statusbar321']"))?node:settings.Add("fonts/custom",{control:"msctls_statusbar321"},,1)
 			ea:=xml.EA(node)
 			Dlg_Font(ea,,SettingsClass.hwnd)
@@ -9438,14 +9406,14 @@ Class SettingsClass{
 			header.="Theme by " author "`n`n"
 		header.="Instructions at the bottom:`n`n"
 		this.AddText([header,0],["Matching Brace Highlight Sample ",0],["()",34],[" <----Additional Options in the TreeView to the Left with Brace Match *`n`nSelect the text to change the colors:`n`n",0]
-			   ,["/*`n`tMulti-Line`n`tcomments`n*/",11],["`n`n",0]
+			   ,["/*`n`tMulti-Line`n`tcomments`n`t<----Click on the fold box or lines to change the color`n*/",11],["`n`n",0]
 			   ,["Main Selection",70],[" - ",0],["Multiple Selection",71],[" <---- Additional Options in the TreeView to the Left with Main Selection * and Multiple Selection *`n`n",""]
 			   ,["This is a sample of normal text`n",5]
 			   ,[Chr(34) "incomplete quote`n",13],[Chr(34) "complete quote" Chr(34) "`n",3],[";comment`n",1],["(",5],["`n`tContinuation Section`n",96],[")`n",5],["(Error))",100]
 			   ,["`n0123456789`n",2],["{}[]^&*()+~#\/!`,",4],["``b``a``c``k``t``i``c``k`n",15]
 			   ,["( ",4],[",,,,",97],[" )`n",4],["{[ ",4],[",,,,",99],[" ]}`n",4],["Variable:=`n",59]
 			   ,["Label:",55],["`nHotkey::`n",56],["Function()`n",57],["Abs()`n`n",58]
-			   ,["%",40],["Variable",41],["% ",40],["`%variable error`n",42],["0xff00ff ",60],["0xff00ffx",61],["`n`n<----Edited Marker can be changed in the TreeView to the left with Markers *`n<----Saved Line`n`n",0])
+			   ,["%",40],["Variable",41],["% ",40],["`%variable error`n",42],["0xff00ff ",60],["0xff00ffx",61],["`n`n<----Edited Marker (Click to change)`n<----Saved Line`n`n",0])
 		colors:=commands.SN("//Color/*"),kwind:={Personal:0,indent:1,Directives:2,Commands:3,builtin:4,keywords:5,functions:6,flow:7,KeyNames:8}
 		while(color:=colors.item[A_Index-1])
 			this.AddText([color.NodeName " = " color.text "`n",16+kwind[color.NodeName]])

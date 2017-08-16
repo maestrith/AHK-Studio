@@ -5,6 +5,7 @@ Fixed:
 -Dumb bug I had that was really messing with UTF-8 characters and a lot of other things
 Fixed: Reported by Joe Glines
 -Check For Edited Files On Focus: Wasn't working
+-Themes: Line numbers were not editable
 1.003.23
 Fixed: Reported by ali80
 -Continuation Sections: Formatting was getting all messed up and caused errors further down the code if you use /* */
