@@ -19,7 +19,7 @@ return
 	maybe make options a class
 */
 /*
-	Add in #Include brings up a list of items in your library
+ 	Add in #Include brings up a list of items in your library
 	Debugging Joe Glines{
 		have the option to have the Variable browser dockable to the side of debug window.
 	}
@@ -133,7 +133,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.24"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.25"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -541,21 +541,15 @@ BraceSetup(Win:=1){
 	while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa){
 		Try
 			Hotkey,% ea.trigger,Brace,On
-		Catch,e
-			m(e.message,aa.xml)
-		v.AutoAdd[SubStr(ea.trigger,0)]:=ea.add ;,v.AutoAdd[ea.add]:=SubStr(ea.trigger,0)
-		;list.=ea.trigger "  completes to " ea.add "`n" 
-	}
-	if(!(nodes:=settings.SN("//autodelete/*")).length){
+		v.AutoAdd[SubStr(ea.trigger,0)]:=ea.add
+	}if(!(nodes:=settings.SN("//autodelete/*")).length){
 		node:=settings.Add("autodelete")
 		for a,b in setup
 			settings.Under(node,"key",{open:a,close:b})
 		nodes:=settings.SN("//autodelete/*")
 	}
-	;m(list)
 	return
 	Brace:
-	;t(A_ThisHotkey)
 	ControlGetFocus,focus,A
 	if(!InStr(focus,"Scintilla")){
 		Send,{%A_ThisHotkey%}
@@ -585,8 +579,7 @@ BraceSetup(Win:=1){
 			BSFix:
 			FixLines(keep.parent,keep.end-(keep.parent-1),0),sc.Enable(1)
 			return
-		}
-	}
+	}}
 	if(Hotkey=Chr(34)){
 		sc.2078
 		loop,% sc.2570{
@@ -595,8 +588,7 @@ BraceSetup(Win:=1){
 				sc.2584(A_Index-1,cpos+1),sc.2586(A_Index-1,cpos+1)
 			else
 				bad:=sc.2010(cpos)=13,sc.2686(cpos,cpos),sc.2194(bad?1:2,(bad?Chr(34):Chr(34) Chr(34))),sc.2584(A_Index-1,cpos+1),sc.2586(A_Index-1,cpos+1)
-		}
-		return sc.2079
+		}return sc.2079
 	}else if(Hotkey="'"){
 		sc.2078
 		loop,% sc.2570{
@@ -605,10 +597,8 @@ BraceSetup(Win:=1){
 				sc.2584(A_Index-1,cpos+1),sc.2586(A_Index-1,cpos+1)
 			else
 				one:=sc.2267(cpos-1,1)=cpos,sc.2686(cpos,cpos),sc.2194(one?1:2,(one?"'":"''")),sc.2584(A_Index-1,cpos+1),sc.2586(A_Index-1,cpos+1)
-		}
-		return sc.2079
-	}
-	if(sc.2102&&v.Options.Disable_Auto_Insert_Complete!=1&&(Hotkey~="\(|\{")){
+		}return sc.2079
+	}if(sc.2102&&v.Options.Disable_Auto_Insert_Complete!=1&&(Hotkey~="\(|\{")){
 		word:=sc.GetWord()
 		VarSetCapacity(text,sc.2610),sc.2610(0,&text),word:=StrGet(&text,"UTF-8") Hotkey v.BraceMatch[Hotkey]
 		loop,% sc.2570
@@ -744,7 +734,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.003.24"
+	Version:="1.003.25"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -1968,11 +1958,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.003.24"
+		Version:="1.003.25"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Version(){
-		Version:="1.003.24"
+		Version:="1.003.25"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -2526,7 +2516,7 @@ CloseSingleUntitled(){
 	return CloseID
 }
 Color(con:=""){
-	static options:={show_eol:2356,Show_Caret_Line:2096},list:={Font:2056,Size:2055,Color:2051,Background:2052,Bold:2053,Italic:2054,Underline:2059}
+	static options:={show_eol:2356,Show_Caret_Line:2096},list:={Font:2056,Size:2055,Color:2051,Background:2052,Bold:2053,Italic:2054,Underline:2059},kwind:={Personal:0,indent:1,Directives:2,Commands:3,builtin:4,keywords:5,functions:6,flow:7,KeyNames:8}
 	con:=con?con:v.con
 	if(!con.sc)
 		return v.con:=""
@@ -2556,11 +2546,8 @@ Color(con:=""){
 		con.2051(96,0xff00ff)
 	if(!settings.SSN("//fonts/font[@style='100']"))
 		con.2051(100,0x0000ff)
-	VarSetCapacity(lang,4)
-	ext:=SplitPath(Current(2).file).ext
-	ext:=ext="ahk"?"ahk":ext="xml"?"xml":"ahk"
-	con.4006(0,ext)
-	for a,b in [[2040,25,13],[2244,3,0xFE000000],[2040,26,15],[2040,27,17],[2040,28,16],[2040,29,9],[2040,30,12],[2040,31,14],[2242,0,20],[2242,1,13],[2134,1],[2260,1],[2246,1,1],[2246,2,1],[2115,1],[2029,2],[2031,2],[2240,3,0],[2242,3,15],[2246,1,1],[2246,3,1],[2244,2,3],[2040,0,0],[2041,0,0],[2042,0,0xff],[2115,1],[2056,38,"Tahoma"],[2041,1,0],[2042,1,0xff0000],[2040,2,22],[2040,3,22],[2040,4,31],[2042,4,0xff0000],[2132,v.Options.Hide_Indentation_Guides=1?0:1],[2280,v.Options.Hide_Vertical_Scrollbars=1?0:1],[2130,v.Options.Hide_Horizontal_Scrollbars=1?0:1],[2040,1,0],[2042,1,0x0000ff],[2037,65001]]
+	VarSetCapacity(lang,4),ext:=SplitPath(Current(2).file).ext,ext:=ext="ahk"?"ahk":ext="xml"?"xml":"ahk",con.4006(0,ext)
+	for a,b in [[2040,25,13],[2244,3,0xFE000000],[2040,26,15],[2040,27,17],[2040,28,16],[2040,29,9],[2040,30,12],[2040,31,14],[2242,0,20],[2242,1,13],[2134,1],[2260,1],[2246,1,1],[2246,2,1],[2115,1],[2029,2],[2031,2],[2240,3,0],[2242,3,15],[2246,1,1],[2246,3,1],[2244,2,3],[2040,0,0],[2041,0,0],[2042,0,0xff],[2115,1],[2056,38,"Tahoma"],[2041,1,0],[2042,1,0xff0000],[2040,2,22],[2040,3,22],[2040,4,31],[2042,4,0xff0000],[2132,v.Options.Hide_Indentation_Guides=1?0:1],[2280,v.Options.Hide_Vertical_Scrollbars=1?0:1],[2130,v.Options.Hide_Horizontal_Scrollbars=1?0:1],[2040,1,0],[2042,1,0x0000ff],[2037,65001],[2611,3]]
 		con[b.1](b.2,b.3)
 	for a,b in [[2042,2,settings.Get("//fonts/font/@mca",0x444444)],[2042,3,settings.Get("//fonts/font/@sca",0x666666)]]
 		con[b.1](b.2,b.3)
@@ -2568,12 +2555,7 @@ Color(con:=""){
 		con.2460(4)
 	if(v.Options.Word_Wrap)
 		con.2268(1)
-	/*
-		Loop,200
-			con.2066(A_Index,178)
-	*/
-	con.2472(2),con.2036(width:=settings.SSN("//tab").text?settings.SSN("//tab").text:5)
-	con.2082(3,0xFFFFFF)
+	con.2472(2),con.2036(width:=settings.SSN("//tab").text?settings.SSN("//tab").text:5),con.2082(3,0xFFFFFF)
 	if(!settings.SSN("//fonts/font[@code='2082']"))
 		con.2082(7,0xff00ff)
 	if(!(settings.SSN("//fonts/font[@style='34']")))
@@ -2587,7 +2569,6 @@ Color(con:=""){
 	for a,b in options
 		if(v.Options[a])
 			con[b](b)
-	kwind:={Personal:0,indent:1,Directives:2,Commands:3,builtin:4,keywords:5,functions:6,flow:7,KeyNames:8}
 	for a,b in v.color
 		con.4005(kwind[a],RegExReplace(b,"#"))
 	if(node:=settings.SSN("//fonts/fold")){
@@ -2595,10 +2576,6 @@ Color(con:=""){
 		Loop,7
 			con.2041(24+A_Index,ea.color!=""?ea.color:"0"),con.2042(24+A_Index,ea.background!=""?ea.Background:"0xaaaaaa")
 	}con.4004("fold",[1]),con.2680(3,6),con.2242(4,1),con.2240(4,5),con.2110(1)
-	/*
-		split out the indicators and have their own area in here
-	*/
-	;indicators
 	for a,b in [[2080,7,6],[2082,8,0xff00ff],[2080,8,1],[2080,6,14],[2080,2,8],[2082,2,0xff00ff],[2082,6,0xC08080],[2080,3,14],[2680,3,6]]
 		con[b.1](b.2,b.3)
 	if(!v.Options.Match_Any_Word)
@@ -3263,9 +3240,7 @@ Default(Control:="SysTreeView321",win:=1){
 	Gui,%win%:%type%,%control%
 }
 DefaultFont(){
-	temp:=new xml("temp")
-	info=<fonts><name>Zenburn_dark_with_maestrith</name><author>Run1e and maestrith</author><font background="3158064" bold="0" color="16777215" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font><font background="3158064" style="33" color="16777215" font="Consolas" bold="0" italic="0"></font><font style="0" color="12632256"></font><font style="1" color="8363903" bold="0" italic="1" size="10" strikeout="0" underline="0"></font><font style="2" color="8421616"></font><font style="3" color="8816334"></font><font style="4" color="16777215"></font><font style="11" color="16744576" bold="0" italic="0" size="10" strikeout="0" underline="0"></font><font style="13" color="255" background="0"></font><font style="15" color="12110995"></font><font style="17" color="7843024"></font><font style="18" color="13617276"></font><font style="19" color="16758590"></font><font style="21" color="9749720"></font><font style="22" color="14732901"></font><font style="37" color="4227327"></font><font bool="1" code="2068" color="32896"></font><font code="2069" color="16777215"></font><font code="2098" color="4473924"></font><font code="2601" color="8421504"></font><font style="20" color="16759366"></font><font style="24" color="15458669"></font><font style="23" color="8241367"></font><font style="9" color="11184810"></font><font style="8" color="9737364"></font><font style="10" color="255" background="0"></font><font style="16" color="5741559"></font><font style="55" color="4227327"></font><font style="56" color="8421440"></font><font style="57" color="16744576"></font><font style="58" color="8388863"></font><font style="41" color="16776960"></font><font style="40" color="65408"></font><font style="42" color="0" background="255"></font><font background="8388863" style="30"></font><font background="4227072" style="31"></font><font code="2188" value="1"></font><font background="65535" style="48"></font><custom control="msctls_statusbar321" gui="1" bold="0" color="0" font="Comic Sans MS" italic="0" size="10" strikeout="0" underline="0"></custom><font style="34" bold="0" color="8388863" font="Consolas" italic="0" size="10" strikeout="0" underline="0"></font><font style="97" color="8421504"></font><font style="99" color="16744576"></font></fonts>
-	top:=settings.SSN("//*"),temp.XML.LoadXML(info),temp.Transform(2),tt:=temp.SSN("//*"),top.AppendChild(tt)
+	temp:=new xml("temp"),top:=settings.SSN("//*"),temp.xml.LoadXML("<fonts><name>Zenburn_dark_with_maestrith</name><author>Run1e and maestrith</author><font background='3158064' bold='0' color='16777215' font='Consolas' size='10' style='5' italic='0' strikeout='0' underline='0'></font><font background='3158064' style='33' color='16777215' font='Consolas' bold='0' italic='0'></font><font style='0' color='12632256'></font><font style='1' color='8363903' bold='0' italic='1' size='10' strikeout='0' underline='0'></font><font style='2' color='8421616'></font><font style='3' color='8816334'></font><font style='4' color='16777215'></font><font style='11' color='16744576' bold='0' italic='0' size='10' strikeout='0' underline='0'></font><font style='13' color='255' background='0'></font><font style='15' color='12110995'></font><font style='17' color='7843024'></font><font style='18' color='13617276'></font><font style='19' color='16758590'></font><font style='21' color='9749720'></font><font style='22' color='14732901'></font><font style='37' color='4227327'></font><font bool='1' code='2068' color='32896'></font><font code='2069' color='16777215'></font><font code='2098' color='4473924'></font><font code='2601' color='8421504'></font><font style='20' color='16759366'></font><font style='24' color='15458669'></font><font style='23' color='8241367'></font><font style='9' color='11184810'></font><font style='8' color='9737364'></font><font style='10' color='255' background='0'></font><font style='16' color='5741559'></font><font style='55' color='4227327'></font><font style='56' color='8421440'></font><font style='57' color='16744576'></font><font style='58' color='8388863'></font><font style='41' color='16776960'></font><font style='40' color='65408'></font><font style='42' color='0' background='255'></font><font background='8388863' style='30'></font><font background='4227072' style='31'></font><font code='2188' value='1'></font><font background='65535' style='48'></font><custom control='msctls_statusbar321' gui='1' bold='0' color='0' font='Consolas' italic='0' size='10' strikeout='0' underline='0'></custom><font style='34' bold='0' color='8388863' font='Consolas' italic='0' size='10' strikeout='0' underline='0'></font><font style='97' color='8421504'></font><font style='99' color='16744576'></font></fonts>"),temp.Transform(2),tt:=temp.SSN("//*"),top.AppendChild(tt)
 }
 DefaultRCM(){
 	static all:={Scintilla:"Undo,Redo,Copy,Cut,Paste,Select All,Close,Delete,Open,Open Folder,Omni Search"
@@ -3527,7 +3502,7 @@ Dlg_Color(Color,hwnd){
 	return Color
 }
 Dlg_Font(ByRef Style,Effects=1,window=""){
-	VarSetCapacity(LOGFONT,60),StrPut(style.font,&logfont+28,32,"CP0"),LogPixels:=DllCall("GetDeviceCaps","uint",DllCall("GetDC","uint",0),"uint",90),Effects:=0x041+(Effects?0x100:0)
+	VarSetCapacity(LOGFONT,60,0),StrPut(style.font,&logfont+28,32,"CP0"),LogPixels:=DllCall("GetDeviceCaps","uint",DllCall("GetDC","uint",0),"uint",90),Effects:=0x041+(Effects?0x100:0)
 	for a,b in font:={16:"bold",20:"italic",21:"underline",22:"strikeout"}
 		if(style[b])
 			NumPut(b="bold"?700:1,logfont,a)
@@ -4131,7 +4106,7 @@ FEUpdate(Redraw:=0){
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	,scidate:=20161107223002,XMLFiles:={menus:[20170814205757,"lib/menus.xml","lib\Menus.xml"],commands:[20160508000000,"lib/Commands.xml","lib\Commands.xml"]}
-	,OtherFiles:={scilexer:{date:20170815152823,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170709122638,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
+	,OtherFiles:={scilexer:{date:20170817162725,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170709122638,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!FileExist(A_MyDocuments "\Autohotkey\Lib")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
@@ -5038,8 +5013,7 @@ class GUIKeep{
 	static table:=[],showlist:=[],Displays:=new XML("displays")
 	__Get(){
 		return this.Add()
-	}
-	__New(win,parent:=""){
+	}__New(win,parent:=""){
 		info:=PluginClass.Style(),owner:=WinExist("ahk_id" parent)?parent:"" ;hwnd(1)
 		if(FileExist(A_ScriptFullPath "\AHKStudio.ico"))
 			Menu,Tray,Icon,%A_ScriptFullPath%\AHKStudio.ico
@@ -5285,22 +5259,23 @@ Hotkeys(win:=1,keys:=""){
 					LastHotkeys[win,hh.text]:=1
 				}
 		}
-		for a,b in {Delete:"Delete",Backspace:"Backspace","~Escape":"Escape","^a":"SelectAll","^v":"Paste",WheelLeft:"ScrollWheel",WheelRight:"ScrollWheel","~Ctrl":"ToggleDuplicate"} ;,Hotkeys(1,Enter)
-			Hotkey,%a%,%b%,On
-	}else{
+		for a,b in {Delete:"Delete",Backspace:"Backspace","~Escape":"Escape","^a":"SelectAll","^v":"Paste",WheelLeft:"ScrollWheel",WheelRight:"ScrollWheel","~Ctrl":"ToggleDuplicate"}{ ;,Hotkeys(1,Enter)
+			Try
+				Hotkey,%a%,%b%,On
+	}}else{
 		for a,b in keys{
 			Try{
 				if(!a)
 					Continue
 				Hotkey,%a%,Associate,On
 				LastHotkeys[win,a]:=1,Associate[hwnd(win),a]:=b
-			}catch e
-				m(e.message)
+			}
 		}
 	}
 	for a,b in ["^R","^E"]{
 		if(!menus.SSN("//*[@hotkey='" b "']"))
-			Hotkey,%b%,DeadEnd,On
+			Try
+				Hotkey,%b%,DeadEnd,On
 	}
 	Hotkey,RButton,RButton,On
 	Hotkey,IfWinActive
@@ -6373,8 +6348,7 @@ Notifications(a*){
 		if(Margin=1)
 			return SettingsClass.SetColor("//fonts/font[@style='" (style:=this.2166(NumGet(A_EventInfo,12))=39?31:30) "']","style",style,"background"),SettingsClass.keep.Color(),RefreshThemes()
 		if(Margin=3){
-			node:=(node:=settings.SSN("//fonts/fold"))?node:settings.Add("fonts/fold")
-			Marker:=this.2046(this.2166(NumGet(A_EventInfo,12)))
+			node:=(node:=settings.SSN("//fonts/fold"))?node:settings.Add("fonts/fold"),Marker:=this.2046(this.2166(NumGet(A_EventInfo,12)))
 			if(Marker&(1<<29)||Marker&(1<<28))
 				att:="background"
 			else if(Marker&(1<<32))
@@ -6385,7 +6359,7 @@ Notifications(a*){
 			RefreshThemes()
 			return
 		}if(Ctrl){
-			ea:=xml.EA(node),def:=xml.EA(settings.SSN("//fonts/font[@style=5]")),Style:=33
+			ea:=xml.EA(node),def:=Settings.EA("//fonts/font[@style=5]"),Style:=33
 			for a,b in def
 				if(ea[a]="")
 					ea[a]:=def[a]
@@ -6427,9 +6401,6 @@ Notifications(a*){
 			for a,b in def
 				if(ea[a]="")
 					ea[a]:=def[a]
-			/*
-				Still not right, but closer...the font doesn't change properly in the gui...
-			*/
 			Dlg_Font(ea,,SettingsClass.keep.hwnd)
 			for a,b in ea
 				node.SetAttribute(a,b)
@@ -8230,6 +8201,8 @@ Run(){
 	if(Current(2).untitled)
 		return DynaRun(Update({encoded:Current(3).file}),1,Current(2).file)
 	SplitPath,file,,dir,ext
+	if(ext!="ahk")
+		return Save()
 	if(!Current(1).xml)
 		return
 	main:=SSN(Current(1),"@file").text
@@ -8830,15 +8803,14 @@ Class SettingsClass{
 	__New(Tab:=""){
 		for a,b in {HotkeyXML:new XML("hotkeys"),TempXML:new XML("temp"),SavedThemes:new XML("SavedThemes","Themes\SavedThemes.xml")}
 			SettingsClass[a]:=b
-		SettingsClass.Hotkeys:=[["Move Selected Item Up","^Up","MSIU"],["Move Selected Item Down","^Down","MSID"],["Move Checked Selected Menu","!M","MCTSM"],["Move Checked Items Up","!Up","MCIU"],["Move Checked Items Down","!Down","MCID"],["Insert Menu","!I","IM"],["Change Hotkey","Enter","CH"],["Insert Separator","!S","IS"],["Remove/Hide Menu Item","Delete","Delete"],["Clear Checks","!C","CC"],["Removed Checked Icons","^!I","RCI"],["Check All Child Menu Items","^A","CACMI"],["Random Icons","^!R","Random"]]
+		SettingsClass.Hotkeys:=[["Move Selected Item Up","^Up","MSIU"],["Move Selected Item Down","^Down","MSID"],["Move Checked Selected Menu","!M","MCTSM"],["Move Checked Items Up","!Up","MCIU"],["Move Checked Items Down","!Down","MCID"],["Insert Menu","!I","IM"],["Change Hotkey","Enter","CH"],["Insert Separator","!S","IS"],["Remove/Hide Menu Item","Delete","Delete"],["Clear Checks","!C","CC"],["Removed Checked Icons","^!I","RCI"],["Check All Child Menu Items","^A","CACMI"],["Random Icons","^!R","Random"]],Parent:=hwnd(1)
 		if(!FileExist("Themes"))
 			FileCreateDir,Themes
 		if(!settings.SSN("//autoadd"))
 			settings.Add("//autoadd")
 		DetectHiddenWindows,On
 		Gui,Settings:Destroy
-		hwnd:=x.hwnd
-		Gui,Settings:+Resize -DPIScale +LabelSettingsClass. hwndhwnd +ToolWindow +Owner%hwnd% +MinSize700x500
+		Gui,Settings:+Resize -DPIScale +LabelSettingsClass. hwndhwnd +ToolWindow +Owner%Parent% +MinSize700x500
 		Gui,Settings:Color,0,0
 		Gui,Settings:Font,c0xFFFFFF s10,Consolas
 		Gui,Settings:Margin,0,0

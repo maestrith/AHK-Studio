@@ -1,3 +1,7 @@
+1.003.25
+Fixed: Reported by ali80 #126
+-Settings window with Alt+Tab and Minimize was causing it to get lost
+-Non-English keyboard setups #127 throwing errors and not starting
 1.003.24
 Added: Reported by clu-- (and I'm sure many others) #125
 -Options/Force UTF-8: This will force Studio to open and write all files to UTF-8
@@ -6,6 +10,12 @@ Fixed:
 Fixed: Reported by Joe Glines
 -Check For Edited Files On Focus: Wasn't working
 -Themes: Line numbers were not editable
+Changed:
+-Themes:
+--Fold Indicators: You can click on the box or lines to change the colors and removed the treeview options
+--Edited Markers: Can also be clicked on and removed the treeview options
+--Cleaned up some errors
+-Changed the default font for the StatusBar to Consolas
 1.003.23
 Fixed: Reported by ali80
 -Continuation Sections: Formatting was getting all messed up and caused errors further down the code if you use /* */
