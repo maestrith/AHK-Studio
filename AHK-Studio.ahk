@@ -137,7 +137,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.26"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.27"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -741,7 +741,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.003.26"
+	Version:="1.003.27"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -1975,11 +1975,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.003.26"
+		Version:="1.003.27"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Version(){
-		Version:="1.003.26"
+		Version:="1.003.27"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -4127,7 +4127,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20161107223002,XMLFiles:={menus:[20170814205757,"lib/menus.xml","lib\Menus.xml"],commands:[20160508000000,"lib/Commands.xml","lib\Commands.xml"]}
+	,scidate:=20161107223002,XMLFiles:={menus:[20170814205757,"lib/menus.xml","lib\Menus.xml"],commands:[20170820110351,"lib/Commands.xml","lib\Commands.xml"]}
 	,OtherFiles:={scilexer:{date:20170820094041,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170709122638,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!FileExist(A_MyDocuments "\Autohotkey\Lib")){
@@ -5548,8 +5548,10 @@ Keywords(){
 	while(color:=colors.item[A_Index-1]){
 		text:=color.text,all.=text " "
 		StringLower,text,text
-		if(color.NodeName="Commands")
+		if(color.NodeName="Commands"){
+			CommandsAdd:=text
 			Continue
+		}
 		v.color[color.nodename]:=text
 		RepText:=RegExReplace(text," ","\b|\b")
 		CommandsText:=RegExReplace(CommandsText,"(\b" RepText "\b)")
@@ -5575,8 +5577,7 @@ Keywords(){
 		b:=SubStr(b,2),v.Directives[b]:=b
 	while(RegExMatch(CommandsText,"\s#\s"))
 		CommandsText:=RegExReplace(CommandsText,"\s#\s"," ")
-	CommandsText:=RegExReplace(CommandsText,"(\s{2,})"," ")
-	v.Color.Commands:=CommandsText
+	CommandsText:=RegExReplace(CommandsText,"(\s{2,})"," "),v.Color.Commands:=CommandsText " " CommandsAdd
 	return
 }
 Kill_Process(){
@@ -7378,7 +7379,7 @@ Previous_Project(){
 }
 Previous_Scripts(filename=""){
 	static nw
-	nw:=new GUIKeep("Previous_Scripts"),nw.Add("Edit,w400 gPSSort vSort,,w","ListView,w400 h400,File,wh","Button,xm gPSOpen Default,&Open Selected,y","Button,x+M gPSRemove,&Remove Selected,y","Button,x+M gPSClean,&Clean UpProjects,y"),nw.show("Previous Scripts"),Hotkeys("Previous_Scripts",{up:"pskey",down:"pskey",PgUp:"pskey",PgDn:"pskey","+up":"pskey","+down":"pskey"})
+	nw:=new GUIKeep("Previous_Scripts"),nw.Add("Edit,w430 gPSSort vSort,,w","ListView,w430 h400,File,wh","Button,xm gPSOpen Default,&Open Selected,y","Button,x+M gPSRemove,&Remove Selected,y","Button,x+M gPSClean,&Clean Up Deleted Projects,y"),nw.show("Previous Scripts"),Hotkeys("Previous_Scripts",{up:"pskey",down:"pskey",PgUp:"pskey",PgDn:"pskey","+up":"pskey","+down":"pskey"})
 	gosub,populateps
 	return
 	PSSort:
@@ -7433,8 +7434,7 @@ Previous_Scripts(filename=""){
 		SplitPath,info,filename
 		if(InStr(filename,sort))
 			LV_Add("",info)
-	}PSBreak:=0
-	LV_ModifyCol(1,"AutoHDR"),LV_Modify(1,"Select Vis Focus")
+	}PSBreak:=0,LV_ModifyCol(1,"AutoHDR"),LV_Modify(1,"Select Vis Focus")
 	return
 }
 ProcessDebugXML(){

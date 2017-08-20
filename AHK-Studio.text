@@ -1,6 +1,10 @@
+1.003.27
+Fixed:
+-Previous Scripts: Fixed Clean Up Deleted Projects button
+-DOWNLOAD! Commands.xml
 1.003.26
 Fixed:
--Download New SciLexer.dll!
+-This Will Download New SciLexer.dll!
 -*/ in the middle of a line would break the /*
 -Hex numbers would break if you had a partial partial or full hex number and then a non-word character without a space
 1.003.25
