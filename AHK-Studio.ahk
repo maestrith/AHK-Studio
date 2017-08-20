@@ -137,7 +137,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.25"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.26"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -741,7 +741,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.003.25"
+	Version:="1.003.26"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -1975,11 +1975,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.003.25"
+		Version:="1.003.26"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Version(){
-		Version:="1.003.25"
+		Version:="1.003.26"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
@@ -8351,12 +8351,7 @@ Save_Untitled(node,ask:=1){
 		all:=SN(SSN(node,"ancestor-or-self::main"),"descendant-or-self::*[@untitled]")
 		while(aa:=all.item[A_Index-1])
 			aa.RemoveAttribute("untitled")
-		Close(files.SN("//main[@id='" SSN(node,"@id").text "']"))
-		Open(filename)
-		tv(SSN((damn:=files.Find("//main/@file",filename)),"descendant::*/@tv").text)
-		/*
-			m("Save this untitled file containing: " text,"As: " filename)
-		*/
+		Close(files.SN("//main[@id='" SSN(node,"@id").text "']")),Open(filename),tv(SSN(files.Find("//main/@file",filename),"descendant::*/@tv").text)
 	}
 }
 Save(option=""){
