@@ -3,6 +3,7 @@ SetBatchLines,-1
 SetWorkingDir,%A_ScriptDir%
 SetControlDelay,-1
 #MaxHotkeysPerInterval,2000
+#NoEnv
 DetectHiddenWindows,On
 CoordMode,ToolTip,Screen
 global v:=[],MainWin,settings:=new XML("settings","lib\Settings.xml"),files:=new XML("files"),Positions:=new XML("positions","lib\Positions.xml"),cexml:=new XML("cexml"),History:=new XML("HistoryXML"),vversion,commands,menus,scintilla,TVC:=new EasyView(),RCMXML:=new XML("RCM","lib\RCM.xml"),TNotes,debugwin,Selection:=new SelectionClass(),Menus,scc:=[],vault:=new XML("vault","lib\Vault.xml")
@@ -15,6 +16,9 @@ v.LineEdited:=[],v.LinesEdited:=[],v.RunObject,v.OmniFind:={Function:"OUm`n)^[\s
 ComObjError(0),FileCheck(%true%),Options("startup"),menus:=new XML("menus","Lib\Menus.xml"),Keywords(),new Omni_Search_Class(),Gui(),DefaultRCM()
 return
 ;,Variable:"Osm`n)(\w+)\s*:=""
+/*
+	More things
+*/
 /*
 	maybe make options a class
 */
@@ -76,7 +80,7 @@ return
 	When you undo something with more than 1 class it doesn't undo properly
 	Joe_Glines{
 		Check Edited Files On Focus:
-		have it so that it asks first to replace the text rather than automaticxally
+		have it so that it asks first to replace the text rather than automatically
 		More languages (programming)
 	}
 	Misc Ideas:
@@ -457,7 +461,10 @@ Backspace(sub:=1){
 		return
 	}if(!v.Options.Smart_Delete){
 		Send,{%send%}
-		return Edited()
+		LineStatus.DelayAdd(sc.2166(sc.2008),1)
+		if(!Current(3).Edited)
+			return Edited()
+		return
 	}if(sc.2570=1){
 		cpos:=(opos:=sc.2585(0))-sub,chr:=Chr(sc.2007(cpos))
 		if(chr~="\(|\)|\[|\]|\x22|<|>|'|\{|\}"=0){
@@ -780,6 +787,15 @@ Check_For_Update(startup:=""){
 	cfuguiescape:
 	newwin.Destroy()
 	return
+}
+CheckLayout(){
+	static LastLayout
+	Layout:=DllCall("GetKeyboardLayout",int,0)
+	if(Layout!=LastLayout&&LastLayout!=""){
+		LastLayout:=Layout
+		return 1
+	}LastLayout:=Layout
+	return 0
 }
 class Code_Explorer{
 	static explore:=[]
@@ -1354,6 +1370,7 @@ Class MainWindowClass{
 		if(v.Options.Hide_Tray_Icon)
 			Menu,Tray,NoIcon
 		Gui,+Resize +LabelMainWindowClass. +hwndmain +MinSize400x200 -DPIScale
+		;Gui,+Resize +hwndmain +MinSize400x200 -DPIScale
 		Gui,Add,TreeView,x0 y0 w0 h0 hwndpe +0x400000
 		Gui,Add,TreeView,x0 y0 w0 h0 hwndce +0x400000 AltSubmit
 		TV_Add("Right Click to Refresh")
@@ -2067,6 +2084,7 @@ class s{
 		if(info.temp)
 			s.temp.push(this)
 		this.2246(2,1),this.2052(32,0),this.2051(32,0xaaaaaa),this.2050,this.2052(33,0x222222),this.2069(0xAAAAAA),this.2601(0xaa88aa),this.2563(1),this.2614(1),this.2565(1),this.2660(1),this.2036(width:=settings.SSN("//tab").text?settings.SSN("//tab").text:5),this.2124(1),this.2260(1),this.2122(5),this.2056(38,"Consolas"),this.2516(1),this.2663(5),this.2277(v.Options.End_Document_At_Last_Line),Color(this),this.2402(0x04|0x01,140),this.2359(0x1|0x2|0x800|0x400),Color(this)
+		this.2359(0x400|0x20|0x40|0x800|0x02|0x01)
 		return this
 	}__Get(x*){
 		return DllCall(this.fn,"Ptr",this.ptr,"UInt",x.1,int,0,int,0,"Cdecl")
@@ -3970,7 +3988,11 @@ Extract(mainfile){
 	if(!node:=files.Find(main,"descendant::file/@file",file))
 		node:=files.Under(main,"file",{file:file,dir:maindir,filename:mfn,id:id,nne:mnne,scan:1,lower:Format("{:L}",file)})
 	ExtractNext:
-	id:=GetID(),fff:=FileOpen(file,"R",(v.Options["Force_UTF-8"]?"UTF-8":"")),encoding:=fff.encoding,text:=fff.Read(fff.length),fff.Close(),dir:=Trim(dir,"\")
+	id:=GetID()
+	if(!v.Options["Force_UTF-8"])
+		q:=FileOpen(file,"R"),len:=StrPut((Text1:=q.Read()),"UTF-8")-1,enc1:=q.encoding,q.Close(),q:=FileOpen(file,"R","UTF-8"),len1:=StrPut((Text2:=q.Read()),"UTF-8")-1,enc2:=q.encoding,q.Close(),(len=len1)?(encoding:=enc1,text:=Text1):(encoding:=enc2,text:=Text2)
+	else
+		fff:=FileOpen(file,"R",(v.Options["Force_UTF-8"]?"UTF-8":"")),encoding:=fff.encoding,text:=fff.Read(fff.length),fff.Close(),dir:=Trim(dir,"\")
 	if(nnnn:=files.Find("//*/@file",file)){
 		if(SSN(nnnn,"@time"))
 			id:=SSN(nnnn,"@id").text
@@ -4106,7 +4128,7 @@ FEUpdate(Redraw:=0){
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	,scidate:=20161107223002,XMLFiles:={menus:[20170814205757,"lib/menus.xml","lib\Menus.xml"],commands:[20160508000000,"lib/Commands.xml","lib\Commands.xml"]}
-	,OtherFiles:={scilexer:{date:20170817162725,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170709122638,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
+	,OtherFiles:={scilexer:{date:20170820094041,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170709122638,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!FileExist(A_MyDocuments "\Autohotkey\Lib")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
@@ -6421,12 +6443,14 @@ Notifications(a*){
 Notify(csc*){
 	static values:={0:"Obj",2:"Code",3:"position",4:"ch",5:"mod",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",15:"prevfold",17:"listType",22:"updated",23:"Method"}
 	static codeget:={2001:{ch:4},2005:{ch:4,mod:5},2006:{position:3,mod:5},2007:{updated:22},2008:{position:3,modType:6,text:7,length:8,linesadded:9,line:13,fold:14,prevfold:15},2010:{position:3},2011:{position:3},2014:{position:3,ch:4,text:7,listtype:17,Method:23},2016:{x:18,y:19},2019:{position:3,mod:5},2021:{position:3},2022:{position:3,ch:4,text:7,method:23},2027:{position:3,mod:5}},PreType:=[]
-	static poskeep,savedel,stuff:=[],LastFocus
+	static poskeep,savedel,stuff:=[],LastFocus,LastTick
 	notify:
 	static last,lastline,lastpos:=[],focus:=[],dwellfold:="",text
 	if(csc.1=0)
 		return lastpos:=[]
 	fn:=[],info:=A_EventInfo,code:=NumGet(info+8)
+	if(A_EventInfo=0x51)
+		m("HERE!")
 	if(code="")
 		return
 	if(code=2007){
@@ -6453,6 +6477,8 @@ Notify(csc*){
 		if(ea.tv)
 			TV_Modify(ea.tv,"Select Vis Focus")
 		TVC.Enable(1)
+		if(CheckLayout())
+			Hotkeys()
 		return 0
 	}
 	if((ctrl:=NumGet(info+0))=v.debug.sc&&v.debug.sc){
@@ -6479,6 +6505,36 @@ Notify(csc*){
 		return 0
 	for a,b in codeget[code]
 		fn[a]:=NumGet(Info+(A_PtrSize*b))
+	
+	/*
+		
+	*/
+	/*
+		gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+		ggggggggggggggggggggggggggggggggggggggggggggggggg
+		gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+		gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
+		ggggggggggggggggggggggg
+	*/
+	
+	/*
+		DllCall("QueryPerformanceCounter","Int64*",ID),Tick:=ID
+		if(Tick<LastTick+25&&LastTick)
+			return LastTick:=Tick,t("HERE!!!!!","time:1",A_TickCount,LastTick+1)
+		LastTick:=Tick
+	*/
+	/*
+		Tick:=A_TickCount A_MSec
+		if(Tick<LastTick+40)
+			return LastTick:=Tick ;m(Tick,LastTick) ;LastTick:=Tick ;,m("HERE!!!!!","time:1",A_TickCount,LastTick+1)
+		LastTick:=Tick
+	*/
+	/*
+		
+	*/
+	
+	
+	
 	if(code=2016){
 		pos:=sc.2023(fn.x,fn.y)
 		word:=sc.TextRange(sc.2266(pos,1),sc.2267(pos,1))
@@ -7540,7 +7596,7 @@ Publish(return=""){
 	if(return)
 		return publish
 	Clipboard:=v.Options.Full_Auto_Indentation?PublishIndent(publish):publish
-	TrayTip,AHK Studio,Code coppied to your clipboard
+	TrayTip,AHK Studio,Code copied to your clipboard
 }
 PublishIndent(Code,Indent:="`t",Newline:="`r`n"){
 	indentregex:=v.indentregex,Lock:=[],Block:=[],ParentIndent:=Braces:=0,ParentIndentObj:=[]
@@ -10347,70 +10403,6 @@ VarBrowser(){
 	}
 	return
 }
-
-/*
-	VarBrowser(){
-		static newwin,treeview
-		;if(!debug.VarBrowser)
-		debugwin:=newwin:=new GUIKeep(98),newwin.Add("TreeView,w400 h200 gvalue vtreeview AltSubmit hwndtreeview,,wh","ListView,w400 r4 AltSubmit gVBGoto,Stack|File|Line,wy","Text,w200 Section,Debug Controls:,y","Button,gRun_Program,&Run,y","Button,x+M gStep_Into,Step &Into,y","Button,x+M gStep_Out,Step &Out,y","Button,x+M gStep_Over,Step O&ver,y","Button,x+M gStop_Debugger,&Stop,y"),newwin.show("Variable Browser"),hwnd:=newwin.XML.SSN("//*/@hwnd").text,debug.VarBrowser:=1
-		return
-		98Close:
-		98Escape:
-		debug.Disconnect(),debug.xml:=new XML("debug"),debug.XML.Add("local"),debug.XML.Add("global"),debug.VarBrowser:=0,newwin.Exit()
-		return
-		VBGoto:
-		if(A_GuiEvent~="Normal|I"){
-			Default("SysListView321",98),LV_GetText(file,LV_GetNext(),2),LV_GetText(line,LV_GetNext(),3)
-			if(tv:=SSN(files.Find("//file/@file",file),"@tv").text){
-				tv(tv),sc:=csc()
-				Sleep,40
-				SelectDebugLine(line-1)
-		}}
-		return
-		value:
-		if(debug.socket<1)
-			return
-		if(A_GuiEvent="+"&&(node:=debug.XML.SSN("//*[@tv='" A_EventInfo "']"))){
-			if(SSN(node,"descendant::wait")){
-				;here
-				ea:=xml.EA(node)
-				scope:=SSN(ss,"ancestor::scope/@name").text
-				debug.Send("feature_set -n max_depth -v " ea.children)
-				debug.Send("feature_set -n max_children -v " ea.numchildren)
-				debug.Send("property_get -n " ea.fullname " -i " ea.tv " -c " (SSN(node,"ancestor::Global"?1:0)))
-				;m("THIS NEEDS UPDATED!!! REMOVE THE TV ITEM AND REFRESH THE CHILDREN BELOW.")
-			}
-		}
-		if(A_GuiEvent="Normal"){
-			ea:=xml.EA(node:=debug.XML.SSN("//*[@tv='" A_EventInfo "']"))
-			if(SSN(node,"*")&&node.NodeName)
-				return
-			if(v.CurrentScope="Global"&&!SSN(node,"ancestor::Global"))
-				return m("Not in Current Scope.","Current Scope: " v.CurrentScope,"You can only change values in the current scope")
-			else if(v.CurrentScope!="Global"&&!SSN(node,"ancestor::Scope[@scope='" v.CurrentScope "']"))
-				return m("Not in Current Scope.","Current Scope: " v.CurrentScope,"You can only change values in the current scope")
-			InputBox,value,New Value,% "Enter a new value for " ea.FullName
-			if(ErrorLevel)
-				return
-			debug.Send("property_set -n " ea.FullName " -- " debug.Encode(value)),debug.Send("context_get -c " (v.CurrentScope="Global"?1:0) " -i " v.CurrentScope)
-		}
-		if(A_GuiEvent="-"&&(node:=debug.XML.SSN("//*[@tv='" A_EventInfo "']")))
-			if(node.NodeName="property")
-				node.SetAttribute("expanded",0)
-		if(scan){
-			scan:=0
-			SetTimer,ScanChildren,-1
-		}
-		return
-		VarBrowserStop:
-		if(WinExist(newwin.id)){
-			wait:=debug.XML.SN("//wait")
-			while(ww:=wait.item[A_Index-1]),ea:=XML.EA(ww)
-				Default("SysTreeView321",98),TV_Modify(ea.tv,,"Information Unavailable, Debugging has stopped")
-		}
-		return
-	}
-*/
 WalkDownClasses(text,find){
 	pos:=1
 	while(RegExMatch(text,v.OmniFind.Class,ff,pos)),pos:=ff.Pos(1)+ff.Len(1){

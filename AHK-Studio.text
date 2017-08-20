@@ -1,7 +1,15 @@
+1.003.26
+Fixed:
+-Download New SciLexer.dll!
+-*/ in the middle of a line would break the /*
+-Hex numbers would break if you had a partial partial or full hex number and then a non-word character without a space
 1.003.25
 Fixed: Reported by ali80 #126
 -Settings window with Alt+Tab and Minimize was causing it to get lost
 -Non-English keyboard setups #127 throwing errors and not starting
+-Partial Fix: Switching keyboard layouts needs to have the main window re-focused to get the hotkeys to reset
+Fixed: Reported by GeekDude
+-Spelling error in Publish
 1.003.24
 Added: Reported by clu-- (and I'm sure many others) #125
 -Options/Force UTF-8: This will force Studio to open and write all files to UTF-8
