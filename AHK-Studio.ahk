@@ -6505,36 +6505,6 @@ Notify(csc*){
 		return 0
 	for a,b in codeget[code]
 		fn[a]:=NumGet(Info+(A_PtrSize*b))
-	
-	/*
-		
-	*/
-	/*
-		gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-		ggggggggggggggggggggggggggggggggggggggggggggggggg
-		gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-		gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg
-		ggggggggggggggggggggggg
-	*/
-	
-	/*
-		DllCall("QueryPerformanceCounter","Int64*",ID),Tick:=ID
-		if(Tick<LastTick+25&&LastTick)
-			return LastTick:=Tick,t("HERE!!!!!","time:1",A_TickCount,LastTick+1)
-		LastTick:=Tick
-	*/
-	/*
-		Tick:=A_TickCount A_MSec
-		if(Tick<LastTick+40)
-			return LastTick:=Tick ;m(Tick,LastTick) ;LastTick:=Tick ;,m("HERE!!!!!","time:1",A_TickCount,LastTick+1)
-		LastTick:=Tick
-	*/
-	/*
-		
-	*/
-	
-	
-	
 	if(code=2016){
 		pos:=sc.2023(fn.x,fn.y)
 		word:=sc.TextRange(sc.2266(pos,1),sc.2267(pos,1))
@@ -6560,24 +6530,21 @@ Notify(csc*){
 			Edited()
 		if(!v.LineEdited[line]){
 			if(fn.modType&0x20||fn.modType&0x40){
-				if(text){
-					RegExReplace(text,"\R",,count)
-					AddNewLines(text,Current(5))
-					LineStatus.DelayAdd(line,count)
-			}}else{
+				if(text)
+					RegExReplace(text,"\R",,count),AddNewLines(text,Current(5)),LineStatus.DelayAdd(line,count)
+			}else{
 				SetScan(line)
 				if(v.Options.Disable_Line_Status!=1){
 					LineStatus.Add(line,2)
 	}}}}else if(fn.modType&0x800&&!tn){
 		if(!Current(3).edited)
 			Edited()
-		if(sc.2008=sc.2009&&fn.modType&0x20=0&&fn.modType&0x40=0){
+		if(sc.2008=sc.2009&&fn.modType&0x20=0&&fn.modType&0x40=0)
 			epos:=fn.position,del:=sc.2007(epos),poskeep:=""
-		}
 		start:=sc.2166(fn.position),end:=sc.2166(fn.position+fn.length)
-		if(start!=end){
+		if(start!=end)
 			RemoveLines(start,sc.2166(fn.position+fn.length-1))
-		}else if(!v.LineEdited[start]){
+		else if(!v.LineEdited[start]){
 			SetScan(start)
 			if(v.Options.Disable_Line_Status!=1)
 				LineStatus.Add(start,2)
@@ -8342,13 +8309,10 @@ Save_Untitled(node,ask:=1){
 				Exit
 			if(option!="Yes")
 				return
-		}
-		FileSelectFile,filename,S16,,Save File,*.ahk
+		}FileSelectFile,filename,S16,,Save File,*.ahk
 		if(ErrorLevel)
 			return
-		filename:=Filename(filename)
-		file:=FileOpen(filename,"W","UTF-8"),file.Write(RegExReplace(text,"\R","`r`n")),file.Length(file.Position)
-		all:=SN(SSN(node,"ancestor-or-self::main"),"descendant-or-self::*[@untitled]")
+		filename:=Filename(filename),file:=FileOpen(filename,"W","UTF-8"),file.Write(RegExReplace(text,"\R","`r`n")),file.Length(file.Position),all:=SN(SSN(node,"ancestor-or-self::main"),"descendant-or-self::*[@untitled]")
 		while(aa:=all.item[A_Index-1])
 			aa.RemoveAttribute("untitled")
 		Close(files.SN("//main[@id='" SSN(node,"@id").text "']")),Open(filename),tv(SSN(files.Find("//main/@file",filename),"descendant::*/@tv").text)
