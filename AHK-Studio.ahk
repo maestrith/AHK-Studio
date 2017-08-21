@@ -20,9 +20,6 @@ return
 	More things
 */
 /*
-	maybe make options a class
-*/
-/*
  	Add in #Include brings up a list of items in your library
 	Debugging Joe Glines{
 		have the option to have the Variable browser dockable to the side of debug window.
@@ -327,7 +324,33 @@ AddInclude(Filename:="",text:="",pos:="",Show:=1){
 			Update({file:Current(2).file,text:Update({get:Current(2).file}) "`n#Include " rel}),current.RemoveAttribute("sc")
 	}
 	;#[Needs to check to see if it is in a folder first]
-	new:=files.Under(current,"file",{id:GetID(),encoding:"UTF-8",file:filename,include:"#Include " rel,inside:SSN(current,"@file").text,dir:dir,filename:fn,github:fn,nne:nne,time:time,encoding:"UTF-8",scan:1,tv:TVC.Add(1,fn,SSN(current,"@tv").text,"Sort")}),add:=Current(7).AppendChild(new.CloneNode(1)),add.SetAttribute("type","File"),Update({file:filename,text:text,encoding:"UTF-8",node:current}),ScanFiles(),Code_Explorer.Scan(new),Default("SysTreeView321")
+	Relative:=StrSplit(rel,"\"),Parent:=Current(1),TV:=SSN(Parent,"descendant::*/@tv").text
+	/*
+		m(SSN(Parent,"descendant::"))
+		ExitApp
+	*/
+	if(Relative.MaxIndex()>1){
+		for a,b in Relative{
+			if(a=Relative.MaxIndex())
+				Break
+			build.=b "\"
+			if(!Node:=files.Find(Parent,"folder/@path",build))
+				Node:=files.Under(Parent,"folder",{path:build,tv:(TV:=TVC.Add(1,b,TV,"Sort"))})
+			else
+				TV:=SSN(Node,"@tv").text
+	}}else
+		TV:=SSN(current,"@tv").text
+	new:=files.Under(current,"file",{id:GetID(),encoding:"UTF-8",file:filename,include:"#Include " rel,inside:SSN(current,"@file").text,dir:dir,filename:fn,github:fn,nne:nne,time:time,encoding:"UTF-8",scan:1
+			,tv:TVC.Add(1,fn,TV,"Sort")})
+	add:=Current(7).AppendChild(new.CloneNode(1))
+	add.SetAttribute("type","File")
+	Update({file:filename,text:text,encoding:"UTF-8",node:current})
+	ScanFiles()
+	Code_Explorer.Scan(new)
+	Default("SysTreeView321")
+	
+	
+	
 	if(Show)
 		tv(SSN(new,"@tv").text,pos)
 }
@@ -3181,8 +3204,7 @@ csc(set:=0){
 	return current
 }
 Current(parent=""){
-	node:=files.SSN("//*[@tv='" TVC.Selection(1) "']"),id:=SSN(node,"@id").text
-	ParentNode:=SSN(node,"ancestor-or-self::main"),pid:=SSN(ParentNode,"@id").text
+	node:=files.SSN("//*[@tv='" TVC.Selection(1) "']"),id:=SSN(node,"@id").text,ParentNode:=SSN(node,"ancestor-or-self::main"),pid:=SSN(ParentNode,"@id").text
 	if(parent=1)
 		return ParentNode
 	else if(parent=2)
@@ -4827,8 +4849,8 @@ GetCurrentClass(line){
 		}return
 }			
 GetID(){
-	DllCall("QueryPerformanceCounter","Int64*",ID),id:=A_TickCount ID
-	return id
+	static ID:=0
+	return ++ID
 }
 GetInclude(){
 	main:=Current(2).file,sc:=csc()
@@ -8808,7 +8830,6 @@ SetStatus(text,part=""){
 }
 SetTimer(timer,duration){
 	SetTimer,%timer%,%duration%
-	;here *sigh*
 }
 Settings(){
 	new SettingsClass("Auto Insert")
