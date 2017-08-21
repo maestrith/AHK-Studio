@@ -1,5 +1,5 @@
 1.003.28
-Fixed: Reported by Run1e
+Fixed: Reported by Run1e #118
 -When adding a new Include with Options/Full Tree on it wouldn't add it into the proper folder
 1.003.27
 Fixed:

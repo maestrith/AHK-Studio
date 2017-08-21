@@ -38,7 +38,6 @@ return
 	CUSTOM COMMANDS{
 		needs fixed, when changing things from auto-indent to another area it didn't save
 	}
-	#SingleInstance,Force
 	SysGet,Count,MonitorCount
 	Loop,%count%
 	{
@@ -55,11 +54,8 @@ return
 	if it isn't
 		update the positions.
 	Monitor 1
-	
 	Left: 0 Top: 0 Right: 1920 Bottom: 1200
-	
 	Monitor 2
-	
 	Left: 1920 Top: -454 Right: 3000 Bottom: 1466
 	Ok, I found it. For some reason, with the previous update,
 	auto complete was disabled in all its various incarnations (you have a lot of auto-complete options lol) and
@@ -134,7 +130,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.27"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.28"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -764,7 +760,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.003.27"
+	Version:="1.003.28"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -1998,11 +1994,11 @@ Class PluginClass{
 	}csc(obj,hwnd){
 		csc({plugin:obj,hwnd:hwnd})
 	}MoveStudio(){
-		Version:="1.003.27"
+		Version:="1.003.28"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Version(){
-		Version:="1.003.27"
+		Version:="1.003.28"
 		return version
 	}EnableSC(x:=0){
 		sc:=csc()
