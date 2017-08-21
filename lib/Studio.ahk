@@ -84,8 +84,6 @@ class GUIKeep{
 	Exit(){
 		global x
 		this.savepos(),x.activate()
-		WinGet,pid,pid,ahk_id%A_ScriptHwnd%
-		Process,Close,%pid%
 		ExitApp
 	}
 	Close(a:=""){
