@@ -1,3 +1,6 @@
+1.003.29
+Changed:
+-Syntax highlighter works now with spaces after the command so (Gui Add, Button) now works too.
 1.003.28
 Fixed: Reported by Run1e #118
 -When adding a new Include with Options/Full Tree on it wouldn't add it into the proper folder

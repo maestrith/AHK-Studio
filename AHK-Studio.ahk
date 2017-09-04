@@ -4,6 +4,7 @@ SetWorkingDir,%A_ScriptDir%
 SetControlDelay,-1
 #MaxHotkeysPerInterval,2000
 #NoEnv
+SetWinDelay,-1
 DetectHiddenWindows,On
 CoordMode,ToolTip,Screen
 global v:=[],MainWin,settings:=new XML("settings","lib\Settings.xml"),files:=new XML("files"),Positions:=new XML("positions","lib\Positions.xml"),cexml:=new XML("cexml"),History:=new XML("HistoryXML"),vversion,commands,menus,scintilla,TVC:=new EasyView(),RCMXML:=new XML("RCM","lib\RCM.xml"),TNotes,debugwin,Selection:=new SelectionClass(),Menus,scc:=[],vault:=new XML("vault","lib\Vault.xml")
@@ -13,7 +14,7 @@ if(!settings[]){
 	m("Oh boy...check the settings file to see what's up.")
 }
 v.LineEdited:=[],v.LinesEdited:=[],v.RunObject,v.OmniFind:={Function:"OUm`n)^[\s|}]*((\w|[^\x00-\x7F])+)\((.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,}",Class:"Oim`n)^[\s|}]*(class\s+((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)",Property:"Om`n)^[\s|}]*((\w|[^\x00-\x7F])+)\[(.*)\](\s*;.*\R){0,}\s*(\{)",Label:"UOm`n)^\s*((\w|[^\x00-\x7F])+):[\s|\R][\s+;]?",Hotkey:"OUi`nm)^\s*(((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*)+\s+&\s+)*(\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::",Bookmark:"OU);#\[(.*)\]",Breakpoint:"OU);\*\[(.*)\]",Instance:"OUi)(\w+)\s*:=\s*new\s*(\w+)\("},v.OmniFindText:={Function:["OUm`n)^[\s|}]*(",")\((.*)\)(\s*;.*\R){0,}\s*(\{)"],Class:["Oim`n)^[\s|}]*(class\s+(","))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)"],Method:["OUm`n)^[\s|}]*(",")\((.*)\)(\s*;.*\R){0,}\s*(\{)"],Property:["Om`n)^[\s|}]*(",")\[(.*)\](\s*;.*\R){0,}\s*(\{)"],Label:["UOm`n)^\s*(","):[\s|\R][\s+;]?"],Bookmark:["OU);#\[(",")\]"],Breakpoint:["OU);\*\[(",")\]"],Hotkey:["OUi`nm)^\s*(\Q","\E)::"],Instance:["OUi).*(",")\s*:=\s*new\s*(\w+)\("]},v.OmniFindMinimum:={Function:"OUm`n)^[\s|}]*((\w|[^\x00-\x7F])+)\(.*\)",Class:"Oim`n)^[\s|}]*(class\s+((\w|[^\x00-\x7F])+))",Property:"Om`n)^[\s|}]*((\w|[^\x00-\x7F])+)\[(.*)?\]"},v.OmniFindString:="OUm`n)(?<Function>^[\s|}]*((\w|[^\x00-\x7F])+)\((.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,})|(?<Class>^[\s|}]*(class\s+((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{))|(?<Property>^[\s|}]*((\w|[^\x00-\x7F])+)\[(.*)\](\s*;.*\R){0,}\s*(\{))|(?<Label>^\s*((\w|[^\x00-\x7F])+):[\s|\R][\s+;]?)|(?<Hotkey>^\s*(((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*)+\s+&\s+)*(\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::)|(?<Bookmark>;#\[(.*)\])|(?<Breakpoint>;\*\[(.*)\])|(?<Instance>(\w+)\s*:=\s*new\s*(\w+)\()"
-ComObjError(0),FileCheck(%true%),Options("startup"),menus:=new XML("menus","Lib\Menus.xml"),Keywords(),new Omni_Search_Class(),Gui(),DefaultRCM()
+ComObjError(0),FileCheck(%true%),Options("startup"),menus:=new XML("menus","Lib\Menus.xml"),Keywords(),new Omni_Search_Class(),Gui(),DefaultRCM(),CheckLayout()
 return
 ;,Variable:"Osm`n)(\w+)\s*:=""
 /*
@@ -1955,122 +1956,121 @@ Class Omni_Search_Class{
 			cexml.Under(top,"item",{launch:launch?launch:ea.plugin,text:clean,type:"Menu",sort:clean,additional1:hotkey,order:"text,type,additional1",clean:ea.clean})
 }}}
 Class PluginClass{
-	__New(){
+	__Call(x*){
+		m(x)
+	}__New(){
 		return this
-	}File(){
-		return A_ScriptFullPath
-	}Path(){
-		return A_ScriptDir
-	}SetTimer(timer,period:=-10){
-		if(!IsFunc(timer)&&!IsLabel(timer))
-			return
-		period:=period>0?-period:period
-		SetTimer,%timer%,%period%
+	}Activate(){
+		WinActivate(hwnd([1]))
+	}AllCtrl(code,lp,wp){
+		for a,b in s.ctrl
+			b[code](lp,wp)
 	}AutoClose(script){
 		if(!this.Close[script])
 			this.Close[script]:=1
+	}Call(info*){
+		;this can cause major errors
+		if(IsFunc(info.1)&&info.1~="i)(Fix_Indent|newindent)"=0){
+			func:=info.1,info.Remove(1)
+			return %func%(info*)
+		}	SetTimer,% info.1,-100
+	}CallTip(text){
+		sc:=csc(),sc.2200(sc.2128(sc.2166(sc.2008)),text)
 	}Color(con){
 		v.con:=con
 		SetTimer,Color,-1
 		Sleep,10
 		v.con:=""
+	}csc(obj,hwnd){
+		csc({plugin:obj,hwnd:hwnd})
+	}Current(x:=""){
+		return Current(x)
+	}DynaRun(script){
+		return DynaRun(script)
+	}EnableSC(x:=0){
+		sc:=csc()
+		if(x){
+			GuiControl,1:+Redraw,% sc.sc
+			GuiControl,1:+gnotify,% sc.sc
+		}	else{
+			GuiControl,1:-Redraw,% sc.sc
+			GuiControl,1:+g,% sc.sc
+	}}File(){
+		return A_ScriptFullPath
+	}Files(){
+		return Update("get").1
 	}Focus(){
 		ControlFocus,Scintilla1,% hwnd([1])
 		GuiControl,+Redraw,Scintilla1
 		Gui,1:Default
 		Gui,1:TreeView,SysTreeView321
 		SetPos(TV_GetSelection()),csc(1)
-	}Update(filename,text){
-		Update({file:filename,text:text})
-	}Show(){
-		sc:=csc()
-		WinActivate(hwnd([1]))
-		GuiControl,+Redraw,% sc.sc
-		SetPos(sc.2357),sc.2400
-	}Style(){
-		return ea:=settings.EA(settings.SSN("//fonts/font[@style='5']")),ea.color:=RGB(ea.color),ea.Background:=RGB(ea.Background)
-	}TrayTip(info){
-		TrayTip,AHK Studio,%info%,2
-	}csc(obj,hwnd){
-		csc({plugin:obj,hwnd:hwnd})
-	}MoveStudio(){
-		Version:="1.003.28"
-		SplitPath,A_ScriptFullPath,,,,name
-		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
-	}Version(){
-		Version:="1.003.28"
-		return version
-	}EnableSC(x:=0){
-		sc:=csc()
-		if(x){
-			GuiControl,1:+Redraw,% sc.sc
-			GuiControl,1:+gnotify,% sc.sc
-		}else{
-			GuiControl,1:-Redraw,% sc.sc
-			GuiControl,1:+g,% sc.sc
-	}}Publish(info:=0){
-		return,Publish(info)
+	}Get(name){
+		return _:=%name%
+	}GuiControl(info*){
+		GuiControl,% info.1,% info.2,% info.3
 	}Hotkey(win:=1,key:="",label:="",on:=1){
 		if(!(win,key,label))
 			return m("Unable to set hotkey")
 		Hotkey,IfWinActive,% hwnd([win])
 		Hotkey,%key%,%label%,% _:=on?"On":"Off"
-	}Save(){
-		Save()
-	}sc(){
-		return csc()
+	}HotStrings(Text,String,end:=""){
+		sc:=csc(),cpos:=sc.2008,TextLength:=StrPut(Text,"UTF-8")-1,StringLength:=StrPut(String,"UTF-8")-1,sc.2686(cpos-TextLength,cpos),sc.2194(StringLength,[String]),sc.2025((!end?cpos+StringLength-TextLength:cpos+end))
 	}hwnd(win:=1){
 		return hwnd(win)
-	}Get(name){
-		return _:=%name%
-	}tv(tv){
-		return tv(tv)
-	}Current(x:=""){
-		return Current(x)
-	}m(info*){
-		m(info*)
-	}AllCtrl(code,lp,wp){
-		for a,b in s.ctrl
-			b[code](lp,wp)
-	}DynaRun(script){
-		return DynaRun(script)
-	}Activate(){
-		WinActivate(hwnd([1]))
-	}Call(info*){
-		;this can cause major errors
-		if(IsFunc(info.1)&&info.1~="i)(Fix_Indent|newindent)"=0){
-			func:=info.1,info.Remove(1)
-			return %func%(info*)
-		}
-		SetTimer,% info.1,-100
-	}Plugin(action,hwnd){
-		SetTimer,%action%,-10
-	}Open(info){
-		tv:=Open(info),tv(tv),WinActivate(hwnd([1]))
-	}GuiControl(info*){
-		GuiControl,% info.1,% info.2,% info.3
-	}SSN(node,path){
-		return node.SelectSingleNode(path)
-	}__Call(x*){
-		m(x)
-	}StudioPath(){
-		return A_ScriptFullPath
-	}Files(){
-		return Update("get").1
-	}SetText(contents){
-		length:=VarSetCapacity(text,strput(contents,"utf-8")),StrPut(contents,&text,length,"utf-8"),csc().2181(0,&text)
-	}ReplaceSelected(text){
-		Encode(text,return),csc().2170(0,&return)
-	}CallTip(text){
-		sc:=csc(),sc.2200(sc.2128(sc.2166(sc.2008)),text)
 	}InsertText(text){
 		Encode(text,return),sc:=csc(),sc.2003(sc.2008,&return)
 		if(end=0)
 			sc.2025(sc.2008+StrPut(text,"UTF-8")-1)
 		else if(end)
 			sc.2025(sc.2008+end)
-	}HotStrings(Text,String,end:=""){
-		sc:=csc(),cpos:=sc.2008,TextLength:=StrPut(Text,"UTF-8")-1,StringLength:=StrPut(String,"UTF-8")-1,sc.2686(cpos-TextLength,cpos),sc.2194(StringLength,[String]),sc.2025((!end?cpos+StringLength-TextLength:cpos+end))
+	}m(info*){
+		m(info*)
+	}MoveStudio(){
+		Version:="1.003.28"
+		SplitPath,A_ScriptFullPath,,,,name
+		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
+	}Open(info){
+		tv:=Open(info),tv(tv),WinActivate(hwnd([1]))
+	}Path(){
+		return A_ScriptDir
+	}Plugin(action,hwnd){
+		SetTimer,%action%,-10
+	}Publish(info:=0){
+		return,Publish(info)
+	}ReplaceSelected(text){
+		Encode(text,return),csc().2170(0,&return)
+	}Save(){
+		Save()
+	}sc(){
+		return csc()
+	}SetText(contents){
+		length:=VarSetCapacity(text,strput(contents,"utf-8")),StrPut(contents,&text,length,"utf-8"),csc().2181(0,&text)
+	}SetTimer(timer,period:=-10){
+		if(!IsFunc(timer)&&!IsLabel(timer))
+			return
+		period:=period>0?-period:period
+		SetTimer,%timer%,%period%
+	}Show(){
+		sc:=csc()
+		WinActivate(hwnd([1]))
+		GuiControl,+Redraw,% sc.sc
+		SetPos(sc.2357),sc.2400
+	}SSN(node,path){
+		return node.SelectSingleNode(path)
+	}StudioPath(){
+		return A_ScriptFullPath
+	}Style(){
+		return ea:=settings.EA(settings.SSN("//fonts/font[@style='5']")),ea.color:=RGB(ea.color),ea.Background:=RGB(ea.Background)
+	}TrayTip(info){
+		TrayTip,AHK Studio,%info%,2
+	}tv(tv){
+		return tv(tv)
+	}Update(filename,text){
+		Update({file:filename,text:text})
+	}Version(){
+		Version:="1.003.28"
+		return version
 	}
 }
 class s{
@@ -2912,6 +2912,8 @@ Context(return=""){
 				for a,b in syn
 					if(A_Index>1)
 						extra.="`n" b
+				if(RegExMatch(string,word "\s+[^,]"))
+					comma++
 				sc.2200(sc.2128(line),syntax extra),end:=StrPut(syntax,"UTF-8")-2,pos:=InStr(syntax,",",0,1,comma),pos1:=InStr(syntax,",",0,1,comma+1),cma:=StrSplit(syntax,",")
 				if(pos&&pos1)
 					sc.2204(pos,pos1)
@@ -4146,7 +4148,7 @@ FEUpdate(Redraw:=0){
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	,scidate:=20161107223002,XMLFiles:={menus:[20170814205757,"lib/menus.xml","lib\Menus.xml"],commands:[20170820110351,"lib/Commands.xml","lib\Commands.xml"]}
-	,OtherFiles:={scilexer:{date:20170820094041,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170709122638,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
+	,OtherFiles:={scilexer:{date:20170820094041,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170821103106,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!FileExist(A_MyDocuments "\Autohotkey\Lib")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
