@@ -30,7 +30,7 @@ class GUIKeep{
 		Gui,%win%:Font,% "c" info.color " s" info.size,% info.font
 		Gui,%win%:Color,% info.Background,% info.Background
 		this.x:=studio,this.gui:=[],this.sc:=[],this.hwnd:=hwnd,this.con:=[],this.ahkid:=this.id:="ahk_id" hwnd,this.win:=win,this.Table[win]:=this,this.var:=[]
-		for a,b in {border:A_OSVersion~="^10"?3:0,caption:DllCall("GetSystemMetrics",int,4,"int")}
+		for a,b in {border:A_OSVersion~="^10"?3:0,caption:DllCall("GetSystemMetrics",int,4)}
 			this[a]:=b
 		Gui,%win%:+LabelGUIKeep.
 		Gui,%win%:Default
@@ -136,7 +136,7 @@ class GUIKeep{
 	WinPos(){
 		VarSetCapacity(rect,16),DllCall("GetClientRect",ptr,this.hwnd,ptr,&rect)
 		WinGetPos,x,y,,,% this.ahkid
-		w:=NumGet(rect,8,"int"),h:=NumGet(rect,12,"int"),text:=(x!=""&&y!=""&&w!=""&&h!="")?"x" x " y" y " w" w " h" h:""
+		w:=NumGet(rect,8),h:=NumGet(rect,12),text:=(x!=""&&y!=""&&w!=""&&h!="")?"x" x " y" y " w" w " h" h:""
 		return {x:x,y:y,w:w,h:h,text:text}
 	}
 }

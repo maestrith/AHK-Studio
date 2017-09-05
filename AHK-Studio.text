@@ -1,3 +1,13 @@
+1.003.30
+Fixed: Reported by derz
+-Opening scripts from Explorer with Studio closed would not bring up that script but the previously edited script
+Fixed:
+-Issue with plugin GUIs looking broken
+-MinSize800x600 would color 0x600 as a hex
+--Will Download A New Studio.ahk
+--Will Download A New SciLexer.dll
+Fixed: Reported by Run1e #130
+-Words starting with a number (42word) was being colored completely as a number
 1.003.29
 Changed:
 -Syntax highlighter works now with spaces after the command so (Gui Add, Button) now works too.

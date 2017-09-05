@@ -12,8 +12,7 @@ vversion:=new XML("versions",(FileExist("lib\Github.xml")?"lib\Github.xml":"lib\
 if(!settings[]){
 	Run,lib\settings.xml
 	m("Oh boy...check the settings file to see what's up.")
-}
-v.LineEdited:=[],v.LinesEdited:=[],v.RunObject,v.OmniFind:={Function:"OUm`n)^[\s|}]*((\w|[^\x00-\x7F])+)\((.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,}",Class:"Oim`n)^[\s|}]*(class\s+((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)",Property:"Om`n)^[\s|}]*((\w|[^\x00-\x7F])+)\[(.*)\](\s*;.*\R){0,}\s*(\{)",Label:"UOm`n)^\s*((\w|[^\x00-\x7F])+):[\s|\R][\s+;]?",Hotkey:"OUi`nm)^\s*(((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*)+\s+&\s+)*(\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::",Bookmark:"OU);#\[(.*)\]",Breakpoint:"OU);\*\[(.*)\]",Instance:"OUi)(\w+)\s*:=\s*new\s*(\w+)\("},v.OmniFindText:={Function:["OUm`n)^[\s|}]*(",")\((.*)\)(\s*;.*\R){0,}\s*(\{)"],Class:["Oim`n)^[\s|}]*(class\s+(","))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)"],Method:["OUm`n)^[\s|}]*(",")\((.*)\)(\s*;.*\R){0,}\s*(\{)"],Property:["Om`n)^[\s|}]*(",")\[(.*)\](\s*;.*\R){0,}\s*(\{)"],Label:["UOm`n)^\s*(","):[\s|\R][\s+;]?"],Bookmark:["OU);#\[(",")\]"],Breakpoint:["OU);\*\[(",")\]"],Hotkey:["OUi`nm)^\s*(\Q","\E)::"],Instance:["OUi).*(",")\s*:=\s*new\s*(\w+)\("]},v.OmniFindMinimum:={Function:"OUm`n)^[\s|}]*((\w|[^\x00-\x7F])+)\(.*\)",Class:"Oim`n)^[\s|}]*(class\s+((\w|[^\x00-\x7F])+))",Property:"Om`n)^[\s|}]*((\w|[^\x00-\x7F])+)\[(.*)?\]"},v.OmniFindString:="OUm`n)(?<Function>^[\s|}]*((\w|[^\x00-\x7F])+)\((.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,})|(?<Class>^[\s|}]*(class\s+((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{))|(?<Property>^[\s|}]*((\w|[^\x00-\x7F])+)\[(.*)\](\s*;.*\R){0,}\s*(\{))|(?<Label>^\s*((\w|[^\x00-\x7F])+):[\s|\R][\s+;]?)|(?<Hotkey>^\s*(((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*)+\s+&\s+)*(\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::)|(?<Bookmark>;#\[(.*)\])|(?<Breakpoint>;\*\[(.*)\])|(?<Instance>(\w+)\s*:=\s*new\s*(\w+)\()"
+}v.LineEdited:=[],v.LinesEdited:=[],v.RunObject,v.OmniFind:={Function:"OUm`n)^[\s|}]*((\w|[^\x00-\x7F])+)\((.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,}",Class:"Oim`n)^[\s|}]*(class\s+((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)",Property:"Om`n)^[\s|}]*((\w|[^\x00-\x7F])+)\[(.*)\](\s*;.*\R){0,}\s*(\{)",Label:"UOm`n)^\s*((\w|[^\x00-\x7F])+):[\s|\R][\s+;]?",Hotkey:"OUi`nm)^\s*(((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*)+\s+&\s+)*(\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::",Bookmark:"OU);#\[(.*)\]",Breakpoint:"OU);\*\[(.*)\]",Instance:"OUi)(\w+)\s*:=\s*new\s*(\w+)\("},v.OmniFindText:={Function:["OUm`n)^[\s|}]*(",")\((.*)\)(\s*;.*\R){0,}\s*(\{)"],Class:["Oim`n)^[\s|}]*(class\s+(","))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)"],Method:["OUm`n)^[\s|}]*(",")\((.*)\)(\s*;.*\R){0,}\s*(\{)"],Property:["Om`n)^[\s|}]*(",")\[(.*)\](\s*;.*\R){0,}\s*(\{)"],Label:["UOm`n)^\s*(","):[\s|\R][\s+;]?"],Bookmark:["OU);#\[(",")\]"],Breakpoint:["OU);\*\[(",")\]"],Hotkey:["OUi`nm)^\s*(\Q","\E)::"],Instance:["OUi).*(",")\s*:=\s*new\s*(\w+)\("]},v.OmniFindMinimum:={Function:"OUm`n)^[\s|}]*((\w|[^\x00-\x7F])+)\(.*\)",Class:"Oim`n)^[\s|}]*(class\s+((\w|[^\x00-\x7F])+))",Property:"Om`n)^[\s|}]*((\w|[^\x00-\x7F])+)\[(.*)?\]"},v.OmniFindString:="OUm`n)(?<Function>^[\s|}]*((\w|[^\x00-\x7F])+)\((.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,})|(?<Class>^[\s|}]*(class\s+((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{))|(?<Property>^[\s|}]*((\w|[^\x00-\x7F])+)\[(.*)\](\s*;.*\R){0,}\s*(\{))|(?<Label>^\s*((\w|[^\x00-\x7F])+):[\s|\R][\s+;]?)|(?<Hotkey>^\s*(((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*)+\s+&\s+)*(\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&|<|>|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::)|(?<Bookmark>;#\[(.*)\])|(?<Breakpoint>;\*\[(.*)\])|(?<Instance>(\w+)\s*:=\s*new\s*(\w+)\()"
 ComObjError(0),FileCheck(%true%),Options("startup"),menus:=new XML("menus","Lib\Menus.xml"),Keywords(),new Omni_Search_Class(),Gui(),DefaultRCM(),CheckLayout()
 return
 ;,Variable:"Osm`n)(\w+)\s*:=""
@@ -131,7 +130,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.28"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.30"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -761,7 +760,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.003.28"
+	Version:="1.003.30"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -2027,7 +2026,7 @@ Class PluginClass{
 	}m(info*){
 		m(info*)
 	}MoveStudio(){
-		Version:="1.003.28"
+		Version:="1.003.30"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(info){
@@ -2069,7 +2068,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.003.28"
+		Version:="1.003.30"
 		return version
 	}
 }
@@ -2839,8 +2838,7 @@ Context(return=""){
 			}}if(return)
 				return {word:word,last:last}
 			return {word:word,last:last}
-		}
-		return
+		}return
 	}else{
 		RegExMatch(string,"O)^[\s|\W]*(\w+)",word)
 		if(RegExMatch(string,"O)^[\s|\W]*\w+::\s*(\w+)",ww))
@@ -2854,10 +2852,8 @@ Context(return=""){
 				{
 					SplitPath,A_LoopFileName,,,,NNE
 					list.=A_LoopFileName "   |  " A_LoopFileLongPath "`n" A_LoopFileName "   |  <" NNE ">`n" 
-				}
-			sc.2106(10),sc.2117(10,Trim(list,"`n")),sc.2106(32)
-		}
-		if(Trim(string,";")~="^\s*#"){
+				}sc.2106(10),sc.2117(10,Trim(list,"`n")),sc.2106(32)
+		}if(Trim(string,";")~="^\s*#"){
 			if(RegExMatch(v.Keywords["#"],"i)#\b(" word ")\b",found))
 				if(node:=commands.SSN("//Commands/commands[text()='#" found1 "']"))
 					start:="#" word,syn:=SSN(node,"@syntax").text
@@ -3906,7 +3902,8 @@ ExecScript(){
 	v.RunObject[Current(2).file].exec.Terminate()
 	SplitPath,file,,dir
 	SetWorkingDir,%dir%
-	exec:=shell.Exec(A_AhkPath " /ErrorStdOut " Chr(34) Current(2).file Chr(34))
+	SplitPath,A_AhkPath,,AHKDir
+	exec:=shell.Exec(AHKDir "\AutoHotkey.exe /ErrorStdOut " Chr(34) Current(2).file Chr(34))
 	SetWorkingDir,%A_ScriptDir%
 	v.exec:=exec,v.RunObject[Current(2).file]:={exec:exec,time:A_Now}
 	Sleep,100
@@ -4148,7 +4145,7 @@ FEUpdate(Redraw:=0){
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	,scidate:=20161107223002,XMLFiles:={menus:[20170814205757,"lib/menus.xml","lib\Menus.xml"],commands:[20170820110351,"lib/Commands.xml","lib\Commands.xml"]}
-	,OtherFiles:={scilexer:{date:20170820094041,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170821103106,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
+	,OtherFiles:={scilexer:{date:20170905073401,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170905070447,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!FileExist(A_MyDocuments "\Autohotkey\Lib")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"
@@ -4159,6 +4156,7 @@ FileCheck(file:=""){
 		x.Activate()
 		ExitApp
 	}if(file){
+		v.OpenFile:=file
 		if(file){
 			if(!settings.SSN("//open/file[text()='" file "']"))
 				settings.Add("open/file",{select:1},file,1)
@@ -5017,8 +5015,11 @@ Gui(){
 		SetTimer,SetTN,-600
 		if(FocusNew)
 			SetTimer,FocusNew,-100
+		if(Node:=files.Find("//file/@file",v.OpenFile))
+			tv(SSN(Node,"@tv").text)
 		return this
-	}
+	}if(Node:=files.Find("//file/@file",v.OpenFile))
+		tv(SSN(Node,"@tv").text,m(Node.xml))
 	this.qfhwnd:=this.QuickFind(),sc:=new s(1,{pos:"x0 y0 w100 h100"}),this.Add(sc.sc,"Scintilla"),sc.2277(v.Options.End_Document_At_Last_Line),this.test:=sc.sc,this.Pos(),Redraw(),ObjRegisterActive(PluginClass)
 	Gui,Show,w800 h400 Center,Testing
 	/*
@@ -8237,8 +8238,7 @@ Run(){
 	if(file=A_ScriptFullPath){
 		Run,%A_ScriptFullPath%
 		Exit(1)
-	}
-	SetStatus("Run Script: " SplitPath(Current(2).file).Filename " @ " FormatTime("hh:mm:ss",A_Now),3)
+	}SetStatus("Run Script: " SplitPath(Current(2).file).Filename " @ " FormatTime("hh:mm:ss",A_Now),3)
 	if(v.options.Virtual_Scratch_Pad&&InStr(Current(2).file,"Scratch Pad.ahk"))
 		return DynaRun(Update({encoded:Current(3).file}))
 	if(Current(2).untitled)
