@@ -65,6 +65,9 @@ class GUIKeep{
 			if(i.4!="")
 				this.con[hwnd,"pos"]:=i.4,this.resize:=1
 		}
+	}ContextMenu(){
+		if(IsFunc(Function:=A_Gui "GuiContextMenu"))
+			%Function%()
 	}
 	Escape(){
 		this:=GUIKeep.table[A_Gui]
