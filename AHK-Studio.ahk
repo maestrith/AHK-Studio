@@ -131,7 +131,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.30"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.003.31"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -761,7 +761,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.003.30"
+	Version:="1.003.31"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -2027,7 +2027,7 @@ Class PluginClass{
 	}m(info*){
 		m(info*)
 	}MoveStudio(){
-		Version:="1.003.30"
+		Version:="1.003.31"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(info){
@@ -2069,7 +2069,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.003.30"
+		Version:="1.003.31"
 		return version
 	}
 }
@@ -4147,7 +4147,7 @@ FEUpdate(Redraw:=0){
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	,scidate:=20161107223002,XMLFiles:={menus:[20170814205757,"lib/menus.xml","lib\Menus.xml"],commands:[20170820110351,"lib/Commands.xml","lib\Commands.xml"]}
-	,OtherFiles:={scilexer:{date:20170905073401,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
+	,OtherFiles:={scilexer:{date:20170907085350,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!FileExist(A_MyDocuments "\Autohotkey\Lib")){
 		FileCreateDir,% A_MyDocuments "\Autohotkey"

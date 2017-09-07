@@ -1,3 +1,7 @@
+1.003.31
+Changed: Requested by niczoom
+--WILL download a new version of SciLexer.dll
+-;{ and ;} create fold points
 1.003.30
 Fixed: Reported by derz
 -Opening scripts from Explorer with Studio closed would not bring up that script but the previously edited script
