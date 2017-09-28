@@ -1,0 +1,509 @@
+<?xml version="1.0"?>
+<ahk>
+	<FileTypes lexer="ahk" language="ahk">ahk</FileTypes>
+	<Comments Open="^\s*\/\*" Close="^\s*\*\/" Line="^\s*\;.*($|\R)"/>
+	<Code>
+		<Breakpoint find="OU);\*\[($1)\]" regex="OU);\*\[(?&lt;Name&gt;.*)\]"/>
+		<Bookmark find="OU);#\[($1)\]" regex="OU);#\[(?&lt;Name&gt;.*)\]"/>
+		<Hotkey regex="OUi`nm)^\s*(?&lt;Name&gt;((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*)+\s+&amp;\s+)*((?&lt;Name2&gt;\w|[^\x00-\x7F]+)|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::"/>
+		<Instance regex="OUi)(?&lt;Name&gt;(\w|[^\x00-\x7F])+)\s*:=\s*new\s*(?&lt;Class&gt;(\w|[^\x00-\x7F])+)\("/>
+		<Label regex="OUm`n)^\s*(?&lt;Name&gt;(\w|[^\x00-\x7F])+):[\s|\R][\s+;]?"/>
+		<Property regex="Om`n)^[\s|}]*(?&lt;Name&gt;(\w|[^\x00-\x7F])+)\[(?&lt;Attributes&gt;.*)\](\s*;.*\R){0,}\s*(\{)"/>
+		<Class find="Oim`n)class\s+($1)[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" regex="Oim`n)^[\s|}]*class\s+(?&lt;Name&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" multiple="{|}" open="Om`n)(?&lt;Close&gt;^\s*[\s*|}]+)|(?&lt;Open&gt;\{(\s+;|\R))">
+			<Method find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R){0,}\s*(\{)" exclude="if|while" regex="OUm`n)^[\s|}]*(?&lt;Name&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,}"/>
+		</Class>
+		<Function exclude="if|while" find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R){0,}\s*(\{)" regex="OUm`n)^[\s|}]*(?&lt;Name&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(?&lt;Comments&gt;\s*;.*\R){0,}\s*(\{)(?&lt;Comments2&gt;\s*;\R){0,}"/>
+	</Code>
+	<Command>
+		<syntax syntax=", On|Off">AutoTrim</syntax>
+		<syntax syntax=", On|Off|Send|Mouse|SendAndMouse|Default|MouseMove|MouseMoveOff">BlockInput</syntax>
+		<syntax syntax="[, OutputVar]">Catch</syntax>
+		<syntax syntax="Click (by itself)`nClicks the left mouse button once">Click</syntax>
+		<syntax syntax="[, SecondsToWait, 1]">ClipWait</syntax>
+		<syntax syntax=", Cmd [, Value, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]">Control</syntax>
+		<syntax syntax="[, Control-or-Pos, WinTitle, WinText, WhichButton, ClickCount, Options, ExcludeTitle, ExcludeText]">ControlClick</syntax>
+		<syntax syntax="[, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]">ControlFocus</syntax>
+		<syntax syntax=", OutputVar, Cmd [, Value, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]">ControlGet</syntax>
+		<syntax syntax=", OutputVar [, WinTitle, WinText, ExcludeTitle, ExcludeText]">ControlGetFocus</syntax>
+		<syntax syntax="[, X, Y, Width, Height, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]">ControlGetPos</syntax>
+		<syntax syntax=", OutputVar [, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]">ControlGetText</syntax>
+		<syntax syntax=", Control, X, Y, Width, Height [, WinTitle, WinText, ExcludeTitle, ExcludeText]">ControlMove</syntax>
+		<syntax syntax="[, Control, Keys, WinTitle, WinText, ExcludeTitle, ExcludeText]">ControlSend</syntax>
+		<syntax syntax="[, Control, Keys, WinTitle, WinText, ExcludeTitle, ExcludeText]">ControlSendRaw</syntax>
+		<syntax syntax=", Control, NewText [, WinTitle, WinText, ExcludeTitle, ExcludeText]">ControlSetText</syntax>
+		<syntax syntax=", ToolTip|Pixel|Mouse [, Screen|Relative]">CoordMode</syntax>
+		<syntax syntax="[, Off]">Critical</syntax>
+		<syntax syntax=", On|Off">DetectHiddenText</syntax>
+		<syntax syntax=", On|Off">DetectHiddenWindows</syntax>
+		<syntax syntax=", Sub-command [, Drive , Value]">Drive</syntax>
+		<syntax syntax=", OutputVar, Cmd [, Value]">DriveGet</syntax>
+		<syntax syntax=", OutputVar, C:\\">DriveSpaceFree</syntax>
+		<syntax syntax="Opens the current script for editing in the associated editor.">Edit</syntax>
+		<syntax syntax=", Var, Value [, TimeUnits]">EnvAdd</syntax>
+		<syntax syntax=", Var, Value">EnvDiv</syntax>
+		<syntax syntax=", OutputVar, EnvVarName">EnvGet</syntax>
+		<syntax syntax=", Var, Value">EnvMult</syntax>
+		<syntax syntax=", EnvVar, Value">EnvSet</syntax>
+		<syntax syntax=", Var, Value [, TimeUnits]">EnvSub</syntax>
+		<syntax syntax="Notifies the OS and all running applications that environment variable(s) have changed.">EnvUpdate</syntax>
+		<syntax syntax="[, ExitCode]">Exit</syntax>
+		<syntax syntax="[, ExitCode]">ExitApp</syntax>
+		<syntax syntax="[, Text, Filename, Encoding]">FileAppend</syntax>
+		<syntax syntax=", Source, Dest [, Flag 1 = overwrite]">FileCopy</syntax>
+		<syntax syntax=", Source, Dest [, Flag]">FileCopyDir</syntax>
+		<syntax syntax=", Path">FileCreateDir</syntax>
+		<syntax syntax=", Target, C:\\My Shortcut.lnk [, WorkingDir, Args, Description, IconFile, ShortcutKey, IconNumber, RunState]">FileCreateShortcut</syntax>
+		<syntax syntax=", FilePattern">FileDelete</syntax>
+		<syntax syntax="[, CPnnn|UTF-8/16[-RAW] ] `n[AutoHotkey_L] Sets the default encoding for FileRead, FileReadLine, Loop Read, FileAppend, and FileOpen.">FileEncoding</syntax>
+		<syntax syntax=", OutputVar, [, Filename]">FileGetAttrib</syntax>
+		<syntax syntax=", LinkFile [, OutTarget, OutDir, OutArgs, OutDescription, OutIcon, OutIconNum, OutRunState]">FileGetShortcut</syntax>
+		<syntax syntax=", OutputVar [, Filename, Units]">FileGetSize</syntax>
+		<syntax syntax=", OutputVar [, Filename, WhichTime [M, C, or A -- default is M]]">FileGetTime</syntax>
+		<syntax syntax=", OutputVar [, Filename]">FileGetVersion</syntax>
+		<syntax syntax=", Source, Dest [, Flag [1 = overwrite]]">FileInstall</syntax>
+		<syntax syntax=", Source, Dest [, Flag [1 = overwrite]]">FileMove</syntax>
+		<syntax syntax=", Source, Dest [, Flag [2 = overwrite]]">FileMoveDir</syntax>
+		<syntax syntax=", OutputVar, Filename">FileRead</syntax>
+		<syntax syntax=", OutputVar, Filename, LineNum">FileReadLine</syntax>
+		<syntax syntax=", FilePattern">FileRecycle</syntax>
+		<syntax syntax="[, C:\\]">FileRecycleEmpty</syntax>
+		<syntax syntax=", Path [, Recurse? [1 = yes]]">FileRemoveDir</syntax>
+		<syntax syntax=", OutputVar [, Options, RootDir[\\DefaultFilename], Prompt, Filter]">FileSelectFile</syntax>
+		<syntax syntax=", OutputVar [, *StartingFolder, Options, Prompt]">FileSelectFolder</syntax>
+		<syntax syntax=", Attributes[+-^RASHNOT] [, FilePattern, OperateOnFolders?, Recurse?]">FileSetAttrib</syntax>
+		<syntax syntax="[, YYYYMMDDHH24MISS, FilePattern, WhichTime [M|C|A], OperateOnFolders?, Recurse?]">FileSetTime</syntax>
+		<syntax syntax="[Statement]`nEnsures that one or more statements (commands or expressions) are always executed after the execution of a try statement.">Finally</syntax>
+		<syntax syntax="key [,val] in obj `n[AutoHotkey_L]">for</syntax>
+		<syntax syntax=", OutputVar [, YYYYMMDDHH24MISS, Format]">FormatTime</syntax>
+		<syntax syntax=", OutputVar, WhichKey [, Mode [P|T]]">GetKeyState</syntax>
+		<syntax syntax=", Label`nJumps to the specified label and continues execution until Return is encountered.">gosub</syntax>
+		<syntax syntax=", Label`nJumps to the specified label and continues execution.">goto</syntax>
+		<syntax syntax=", GroupName [, R]">GroupActivate</syntax>
+		<syntax syntax=", GroupName, WinTitle [, WinText, Label, ExcludeTitle, ExcludeText]">GroupAdd</syntax>
+		<syntax syntax=", GroupName [, A|R]">GroupClose</syntax>
+		<syntax syntax=", GroupName [, R]">GroupDeactivate</syntax>
+		<syntax syntax=", Sub-command, ControlID [, Param3]">GuiControl</syntax>
+		<syntax syntax=", OutputVar [, Sub-command, ControlID, Param4]">GuiControlGet</syntax>
+		<syntax syntax=", KeyName [, Label, Options]">Hotkey</syntax>
+		<syntax syntax=", var, value">IfEqual</syntax>
+		<syntax syntax=", File|Dir|Pattern">IfExist</syntax>
+		<syntax syntax=", var, value">IfGreater</syntax>
+		<syntax syntax=", var, value">IfGreaterOrEqual</syntax>
+		<syntax syntax=", Var, SearchString">IfInString</syntax>
+		<syntax syntax=", var, value">IfLess</syntax>
+		<syntax syntax=", var, value">IfLessOrEqual</syntax>
+		<syntax syntax=", Yes|No|OK|Cancel|Abort|Ignore|Retry|Timeout">IfMsgBox</syntax>
+		<syntax syntax=", var, value">IfNotEqual</syntax>
+		<syntax syntax=", File|Dir|Pattern">IfNotExist</syntax>
+		<syntax syntax=", Var, SearchString">IfNotInString</syntax>
+		<syntax syntax="[, WinTitle, WinText, ExcludeTitle, ExcludeText]">IfWinActive</syntax>
+		<syntax syntax="[, WinTitle, WinText, ExcludeTitle, ExcludeText]">IfWinExist</syntax>
+		<syntax syntax="[, WinTitle, WinText, ExcludeTitle, ExcludeText]">IfWinNotActive</syntax>
+		<syntax syntax="[, WinTitle, WinText, ExcludeTitle, ExcludeText]">IfWinNotExist</syntax>
+		<syntax syntax=", OutputVarX, OutputVarY, X1, Y1, X2, Y2, ImageFile">ImageSearch</syntax>
+		<syntax syntax=", Filename, Section [, Key]">IniDelete</syntax>
+		<syntax syntax=", OutputVar, Filename [, Section, Key, Default]`n[The Section and Key parameters are only optional on AutoHotkey_L]">IniRead</syntax>
+		<syntax syntax=", Value, Filename, Section [, Key]`n[The Key parameter is only optional on AutoHotkey_L]">IniWrite</syntax>
+		<syntax syntax="[, OutputVar, Options, EndKeys, MatchList]">Input</syntax>
+		<syntax syntax=", OutputVar [, Title, Prompt, HIDE, Width, Height, X, Y, Font, Timeout, Default]">InputBox</syntax>
+		<syntax syntax="Displays script info and a history of the most recent keystrokes and mouse clicks.">KeyHistory</syntax>
+		<syntax syntax=", KeyName [, Options]">KeyWait</syntax>
+		<syntax syntax="Displays the hotkeys in use by the current script, whether their subroutines are currently running, and whether or not they use the keyboard or mouse hook.">ListHotkeys</syntax>
+		<syntax syntax="[, On|Off]`nDisplays the script lines most recently executed.">ListLines</syntax>
+		<syntax syntax="Displays the script's variables: their names and current contents.">ListVars</syntax>
+		<syntax syntax=", MenuName, Cmd [, P3, P4, P5]">Menu</syntax>
+		<syntax syntax=", WhichButton [, X, Y, ClickCount, Speed, D|U, R]">MouseClick</syntax>
+		<syntax syntax=", WhichButton, X1, Y1, X2, Y2 [, Speed, R]">MouseClickDrag</syntax>
+		<syntax syntax="[, OutputVarX, OutputVarY, OutputVarWin, OutputVarControl, 1|2|3]">MouseGetPos</syntax>
+		<syntax syntax=", X, Y [, Speed, R]">MouseMove</syntax>
+		<syntax syntax="[, Options, Title, Text, Timeout]`nDisplays the specified text in a small window containing one or more buttons  [such as Yes and No].">MsgBox</syntax>
+		<syntax syntax="[, Label flan]">OnExit</syntax>
+		<syntax syntax=", Text">OutputDebug</syntax>
+		<syntax syntax="[, On|Off|Toggle, OperateOnUnderlyingThread?]">Pause</syntax>
+		<syntax syntax=", OutputVar, X, Y [, Alt|Slow|RGB]">PixelGetColor</syntax>
+		<syntax syntax=", OutputVarX, OutputVarY, X1, Y1, X2, Y2, ColorID [, Variation, Fast|RGB]">PixelSearch</syntax>
+		<syntax syntax=", Msg [, wParam, lParam, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]">PostMessage</syntax>
+		<syntax syntax=", Cmd, PID-or-Name [, Param3]">Process</syntax>
+		<syntax syntax=", Param1 [, SubText, MainText, WinTitle, FontName]">Progress</syntax>
+		<syntax syntax=", OutputVar [, Min, Max]">Random</syntax>
+		<syntax syntax=", HKLM|HKU|HKCU|HKCR|HKCC, SubKey [, ValueName]">RegDelete</syntax>
+		<syntax syntax=", OutputVar, HKLM|HKU|HKCU|HKCR|HKCC, SubKey [, ValueName]">RegRead</syntax>
+		<syntax syntax=", REG_SZ|REG_EXPAND_SZ|REG_MULTI_SZ|REG_DWORD|REG_BINARY, HKLM|HKU|HKCU|HKCR|HKCC, SubKey [, ValueName, Value]">RegWrite</syntax>
+		<syntax syntax="Replaces the currently running instance of the script with a new one.">Reload</syntax>
+		<syntax syntax="[, Expression]">return</syntax>
+		<syntax syntax=", Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]">Run</syntax>
+		<syntax syntax="[, User, Password, Domain] ">RunAs</syntax>
+		<syntax syntax=", Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]">RunWait</syntax>
+		<syntax syntax=", Keys">Send</syntax>
+		<syntax syntax=", Keys">SendEvent</syntax>
+		<syntax syntax=", Keys">SendInput</syntax>
+		<syntax syntax=", level (An integer between 0 and 100)">SendLevel</syntax>
+		<syntax syntax=", Msg [, wParam, lParam, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]">SendMessage</syntax>
+		<syntax syntax=", Event|Play|Input|InputThenPlay">SendMode</syntax>
+		<syntax syntax=", Keys">SendPlay</syntax>
+		<syntax syntax=", Keys">SendRaw</syntax>
+		<syntax syntax=", -1 | 20ms | LineCount">SetBatchLines</syntax>
+		<syntax syntax=", [On|Off|AlwaysOn|AlwaysOff]">SetCapsLockState</syntax>
+		<syntax syntax=", Delay">SetControlDelay</syntax>
+		<syntax syntax=", Speed">SetDefaultMouseSpeed</syntax>
+		<syntax syntax=", Var, Value">SetEnv</syntax>
+		<syntax syntax=", float|integer, TotalWidth.DecimalPlaces|hex|d">SetFormat</syntax>
+		<syntax syntax="[, Delay, PressDuration]">SetKeyDelay</syntax>
+		<syntax syntax=", Delay">SetMouseDelay</syntax>
+		<syntax syntax=", [On|Off|AlwaysOn|AlwaysOff]">SetNumlockState</syntax>
+		<syntax syntax=", RegView">SetRegView</syntax>
+		<syntax syntax=", [On|Off|AlwaysOn|AlwaysOff]">SetScrollLockState</syntax>
+		<syntax syntax=", On|Off">SetStoreCapslockMode</syntax>
+		<syntax syntax=", Label [, Period|On|Off]">SetTimer</syntax>
+		<syntax syntax=", Fast|Slow|RegEx|1|2|3">SetTitleMatchMode</syntax>
+		<syntax syntax=", Delay">SetWinDelay</syntax>
+		<syntax syntax=", DirName">SetWorkingDir</syntax>
+		<syntax syntax=", Code">Shutdown</syntax>
+		<syntax syntax=", Delay">Sleep</syntax>
+		<syntax syntax=", VarName [, Options]">Sort</syntax>
+		<syntax syntax="[, Frequency, Duration]">SoundBeep</syntax>
+		<syntax syntax=", OutputVar [, ComponentType, ControlType, DeviceNumber]">SoundGet</syntax>
+		<syntax syntax=", OutputVar [, DeviceNumber]">SoundGetWaveVolume</syntax>
+		<syntax syntax=", Filename [, wait]">SoundPlay</syntax>
+		<syntax syntax=", NewSetting [, ComponentType, ControlType, DeviceNumber]">SoundSet</syntax>
+		<syntax syntax=", Percent [, DeviceNumber]">SoundSetWaveVolume</syntax>
+		<syntax syntax="[, ImageFile, Options, SubText, MainText, WinTitle, FontName]">SplashImage</syntax>
+		<syntax syntax="Destroys the SplashText window">SplashTextOff</syntax>
+		<syntax syntax="[, Width, Height, Title, Text]">SplashTextOn</syntax>
+		<syntax syntax=", InputVar [, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive]">SplitPath</syntax>
+		<syntax syntax=", OutputVar [, Part#, WinTitle, WinText, ExcludeTitle, ExcludeText]">StatusBarGetText</syntax>
+		<syntax syntax="[, BarText, Seconds, Part#, WinTitle, WinText, Interval, ExcludeTitle, ExcludeText]">StatusBarWait</syntax>
+		<syntax syntax=", On|Off|Locale">StringCaseSense</syntax>
+		<syntax syntax=", OutputVar, InputVar, SearchText [, L#|R#, Offset]">StringGetPos</syntax>
+		<syntax syntax=", OutputVar, InputVar, Count">StringLeft</syntax>
+		<syntax syntax=", OutputVar, InputVar">StringLen</syntax>
+		<syntax syntax=", OutputVar, InputVar [, T]">StringLower</syntax>
+		<syntax syntax=", OutputVar, InputVar, StartChar [, Count, L]">StringMid</syntax>
+		<syntax syntax=", OutputVar, InputVar, SearchText [, ReplaceText, All]">StringReplace</syntax>
+		<syntax syntax=", OutputVar, InputVar, Count">StringRight</syntax>
+		<syntax syntax=", OutputArray, InputVar [, Delimiters, OmitChars]">StringSplit</syntax>
+		<syntax syntax=", OutputVar, InputVar, Count">StringTrimLeft</syntax>
+		<syntax syntax=", OutputVar, InputVar, Count">StringTrimRight</syntax>
+		<syntax syntax=", OutputVar, InputVar [, T]">StringUpper</syntax>
+		<syntax syntax="[, On|Off|Toggle|Permit]">Suspend</syntax>
+		<syntax syntax=", OutputVar, Sub-command [, Param3]">SysGet</syntax>
+		<syntax syntax=", Setting, P2 [, P3]">Thread</syntax>
+		<syntax syntax="[, Expression]">Throw</syntax>
+		<syntax syntax="[, Text, X, Y, WhichToolTip]">ToolTip</syntax>
+		<syntax syntax=", OutputVar, Cmd, Value1 [, Value2]">Transform</syntax>
+		<syntax syntax="[, Title, Text, Seconds, Options]">TrayTip</syntax>
+		<syntax syntax="[, Expression]">Try</syntax>
+		<syntax syntax="Expression `n[AutoHotkey_L]">until</syntax>
+		<syntax syntax=", URL, Filename">URLDownloadToFile</syntax>
+		<syntax syntax="Expression">while</syntax>
+		<syntax syntax="[, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinActivate</syntax>
+		<syntax syntax="[, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinActivateBottom</syntax>
+		<syntax syntax="[, WinTitle, WinText, SecondsToWait, ExcludeTitle, ExcludeText]">WinClose</syntax>
+		<syntax syntax=", OutputVar [, Cmd, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinGet</syntax>
+		<syntax syntax=", Title, Width, Height, X, Y">WinGetActiveStats</syntax>
+		<syntax syntax=", OutputVar">WinGetActiveTitle</syntax>
+		<syntax syntax=", OutputVar [, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinGetClass</syntax>
+		<syntax syntax="[, X, Y, Width, Height, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinGetPos</syntax>
+		<syntax syntax=", OutputVar [, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinGetText</syntax>
+		<syntax syntax=", OutputVar [, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinGetTitle</syntax>
+		<syntax syntax="[, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinHide</syntax>
+		<syntax syntax="[, WinTitle, WinText, SecondsToWait, ExcludeTitle, ExcludeText]">WinKill</syntax>
+		<syntax syntax="[, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinMaximize</syntax>
+		<syntax syntax=", WinTitle, WinText, Menu [, SubMenu1, SubMenu2, SubMenu3, SubMenu4, SubMenu5, SubMenu6, ExcludeTitle, ExcludeText]">WinMenuSelectItem</syntax>
+		<syntax syntax="[, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinMinimize</syntax>
+		<syntax syntax="Minimizes or unminimizes all windows.">WinMinimizeAll</syntax>
+		<syntax syntax="Minimizes or unminimizes all windows.">WinMinimizeAllUndo</syntax>
+		<syntax syntax=", WinTitle, WinText, X, Y [, Width, Height, ExcludeTitle, ExcludeText]">WinMove</syntax>
+		<syntax syntax="[, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinRestore</syntax>
+		<syntax syntax=", AlwaysOnTop|Trans, On|Off|Toggle|Value[0-255] [, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinSet</syntax>
+		<syntax syntax=", WinTitle, WinText, NewTitle [, ExcludeTitle, ExcludeText]">WinSetTitle</syntax>
+		<syntax syntax="[, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinShow</syntax>
+		<syntax syntax=", WinTitle, WinText, Seconds [, ExcludeTitle, ExcludeText]">WinWait</syntax>
+		<syntax syntax="[, WinTitle, WinText, Seconds, ExcludeTitle, ExcludeText]">WinWaitActive</syntax>
+		<syntax syntax=", WinTitle, WinText, Seconds [, ExcludeTitle, ExcludeText]">WinWaitClose</syntax>
+		<syntax syntax="[, WinTitle, WinText, Seconds, ExcludeTitle, ExcludeText]">WinWaitNotActive</syntax>
+	</Command>
+	<Directive>
+		<syntax syntax="Changes how long the script keeps trying to access the clipboard when the first attempt fails.">#ClipboardTimeout</syntax>
+		<syntax syntax="[NewString : default is (;)]">#CommentFlag</syntax>
+		<syntax syntax="Sends any syntax error that prevents a script from launching to stderr rather than displaying a dialog.">#ErrorStdOut</syntax>
+		<syntax syntax="[NewChar]">#EscapeChar</syntax>
+		<syntax syntax="Value">#HotkeyInterval</syntax>
+		<syntax syntax="milliseconds">#HotkeyModifierTimeout</syntax>
+		<syntax syntax="NewOptions">#Hotstring</syntax>
+		<syntax syntax="[expression] `n[AutoHotkey_L] Makes subsequent hotkeys and hotstrings only function when the specified expression is true.">#if</syntax>
+		<syntax syntax="timeout `n[AutoHotkey_L] Sets the maximum time that may be spent evaluating a single #If expression.">#IfTimeout</syntax>
+		<syntax syntax="[, WinTitle, WinText] `nMakes subsequent hotkeys and hotstrings only function when the specified window is active.">#IfWinActive</syntax>
+		<syntax syntax="[, WinTitle, WinText] `nMakes subsequent hotkeys and hotstrings only function when the specified window exists.">#IfWinExist</syntax>
+		<syntax syntax="[, WinTitle, WinText] `nMakes subsequent hotkeys and hotstrings only function when the specified window is not active.">#IfWinNotActive</syntax>
+		<syntax syntax="[, WinTitle, WinText] `nMakes subsequent hotkeys and hotstrings only function when the specified window doesn't exist.">#IfWinNotExist</syntax>
+		<syntax syntax="FileName `nCauses the script to behave as though the specified file's contents are present at this exact position.">#Include</syntax>
+		<syntax syntax="FileName `nCauses the script to behave as though the specified file's contents are present at this exact position.">#IncludeAgain</syntax>
+		<syntax syntax="[, Level (0-100)]">#InputLevel</syntax>
+		<syntax syntax="Forces the unconditional installation of the keyboard hook.">#InstallKeybdHook</syntax>
+		<syntax syntax="Forces the unconditional installation of the mouse hook.">#InstallMouseHook</syntax>
+		<syntax syntax="MaxEvents">#KeyHistory</syntax>
+		<syntax syntax="On|Off">#LTrim</syntax>
+		<syntax syntax="Value">#MaxHotkeysPerInterval</syntax>
+		<syntax syntax="ValueInMegabytes">#MaxMem</syntax>
+		<syntax syntax="Value">#MaxThreads</syntax>
+		<syntax syntax="On|Off">#MaxThreadsBuffer</syntax>
+		<syntax syntax="Value">#MaxThreadsPerHotkey</syntax>
+		<syntax syntax="keyname `n[AutoHotkey_L] Changes which key is used to mask Win or Alt keyup events.">#MenuMaskKey</syntax>
+		<syntax syntax="Avoids checking empty variables to see if they are environment variables (recommended for all new scripts).">#NoEnv</syntax>
+		<syntax syntax="Disables the showing of a tray icon.">#NoTrayIcon</syntax>
+		<syntax syntax="Keeps a script permanently running (that is, until the user closes it or ExitApp is encountered).">#Persistent</syntax>
+		<syntax syntax="[, force|ignore|off]">#SingleInstance</syntax>
+		<syntax syntax="[, On|Off]">#UseHook</syntax>
+		<syntax syntax="[, WarningType, WarningMode] `n[AutoHotkey_L] Enables or disables warnings for selected load-time or run-time conditions that may be indicative of developer errors.">#Warn</syntax>
+		<syntax syntax="Skips the gentle method of activating a window and goes straight to the forceful method.">#WinActivateForce</syntax>
+	</Directive>
+	<Function>
+		<!--regex="OUm`n)^[\s|}]*((\w|[^\x00-\x7F])+)\((.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,}"-->
+		<syntax syntax="(Number)">Abs</syntax>
+		<syntax syntax="(Number)">ACos</syntax>
+		<syntax syntax="([values...]) `n[AutoHotkey_L] Creates an array.">Array</syntax>
+		<syntax syntax="(String)">Asc</syntax>
+		<syntax syntax="(Number)">ASin</syntax>
+		<syntax syntax="(Number)">ATan</syntax>
+		<syntax syntax="(Number)">Ceil</syntax>
+		<syntax syntax="(Number)">Chr</syntax>
+		<syntax syntax="(ProgIdOrCLSID) `n[AutoHotkey_L] Retrieves a running object that has been registered with OLE.">ComObjActive</syntax>
+		<syntax syntax="(VarType, Count1 [, Count2, ... Count8]) `n[AutoHotkey_L] Creates a SAFEARRAY for use with COM.">ComObjArray</syntax>
+		<syntax syntax="(obj [, prefix])  `n[AutoHotkey_L] Listens to events from a ComObject (omit prefix to stop listening).">ComObjConnect</syntax>
+		<syntax syntax="(ProgIdOrCLSID [, IID]) `n[AutoHotkey_L] Creates a COM object.">ComObjCreate</syntax>
+		<syntax syntax="(pdisp) `n[AutoHotkey_L] Wraps a raw IDispatch pointer in a usable object.">ComObjEnwrap</syntax>
+		<syntax syntax="([Enable])`nEnables or disables notification of COM errors. If Enable is omitted, the current setting is returned.">ComObjError</syntax>
+		<syntax syntax="(ComObject [, NewFlags, Mask]) `n[AutoHotkey_L] Retrieves or changes flags which control a COM wrapper object's behaviour.">ComObjFlags</syntax>
+		<syntax syntax="(name) `n[AutoHotkey_L] Returns a reference to an object provided by a COM component.">ComObjGet</syntax>
+		<syntax syntax="() `n[AutoHotkey_L] Creates an object for use in place of an optional parameter's default value when calling a COM object.">ComObjMissing</syntax>
+		<syntax syntax="(vt, val [, flags]) `n[AutoHotkey_L] Packs type and value information in a single parameter.">ComObjParameter</syntax>
+		<syntax syntax="(ComObject [, SID], IID) `n[AutoHotkey_L] Queries a COM object for an interface or service.">ComObjQuery</syntax>
+		<syntax syntax="(obj [, &quot;Name&quot;/&quot;IID&quot;]) `n[AutoHotkey_L] Retrieves type information for a COM object.">ComObjType</syntax>
+		<syntax syntax="(obj) `n[AutoHotkey_L] Unwraps a raw IDispatch pointer in a usable object.">ComObjUnwrap</syntax>
+		<syntax syntax="(obj) `n[AutoHotkey_L] Retrieves the raw 64-bit signed integer stored in a ComObject wrapper.">ComObjValue</syntax>
+		<syntax syntax="(Number)">Cos</syntax>
+		<syntax syntax="(&quot;[DllFile\\]Function&quot; [, Type1, Arg1, Type2, Arg2, ..., &quot;Cdecl ReturnType&quot;])">DllCall</syntax>
+		<syntax syntax="(Message [, What, Extra])">Exception</syntax>
+		<syntax syntax="(Number)">Exp</syntax>
+		<syntax syntax="(&quot;FilePattern&quot;)">FileExist</syntax>
+		<syntax syntax="(file, mode[, encoding]) `n[AutoHotkey_L] Opens a file and returns a new file object.">FileOpen</syntax>
+		<syntax syntax="(Number)">Floor</syntax>
+		<syntax syntax="(FormatStr [, Values...])">Format</syntax>
+		<syntax syntax="(key)">GetKeyName</syntax>
+		<syntax syntax="(key)">GetKeySC</syntax>
+		<syntax syntax="(KeyName [, &quot;P&quot; or &quot;T&quot;])">GetKeyState</syntax>
+		<syntax syntax="(key)">GetKeyVK</syntax>
+		<syntax syntax="([GuiHwnd])`nCalled when the GUI is closed. Return a non-zero value to prevent closing.">GuiClose</syntax>
+		<syntax syntax="([GuiHwnd, CtrlHwnd, EventInfo, IsRightClick, X, Y])">GuiContextMenu</syntax>
+		<syntax syntax="([GuiHwnd, FileArray, CtrlHwnd, X, Y])">GuiDropFiles</syntax>
+		<syntax syntax="([GuiHwnd])`nCalled when the GUI is closed via Escape key. Return a non-zero value to prevent closing.">GuiEscape</syntax>
+		<syntax syntax="([GuiHwnd, EventInfo, Width, Height])">GuiSize</syntax>
+		<syntax syntax="(ImageListID, Filename [, IconNumber, ResizeNonIcon?])">IL_Add</syntax>
+		<syntax syntax="([, InitialCount, GrowCount, LargeIcons?])">IL_Create</syntax>
+		<syntax syntax="(ImageListID)">IL_Destroy</syntax>
+		<syntax syntax="(Haystack, Needle [, CaseSensitive?, StartingPos, Occurrence])`n(The Occurrence parameter only exists in AutoHotkey_L)">InStr</syntax>
+		<syntax syntax="(Var)">IsByRef</syntax>
+		<syntax syntax="(FunctionName)">IsFunc</syntax>
+		<syntax syntax="(LabelName)">IsLabel</syntax>
+		<syntax syntax="(param) `n[AutoHotkey_L] Tests if the parameter is an object.">IsObject</syntax>
+		<syntax syntax="(Number)">Ln</syntax>
+		<syntax syntax="(Number)">Log</syntax>
+		<syntax syntax="(string [, omitchars = &quot; `t&quot;]) `n[AutoHotkey_L] Trims characters from the beginning of a string.">LTrim</syntax>
+		<syntax syntax="([Options, Col1, Col2, ...])">LV_Add</syntax>
+		<syntax syntax="([RowNumber])">LV_Delete</syntax>
+		<syntax syntax="(ColumnNumber)">LV_DeleteCol</syntax>
+		<syntax syntax="([&quot;S&quot;])">LV_GetCount</syntax>
+		<syntax syntax="([StartingRowNumber, &quot;C|F&quot;])">LV_GetNext</syntax>
+		<syntax syntax="(OutputVar, RowNumber [, ColumnNumber])">LV_GetText</syntax>
+		<syntax syntax="(RowNumber [, Options, Col1, Col2, ...])">LV_Insert</syntax>
+		<syntax syntax="(ColumnNumber [, Options, ColumnTitle])">LV_InsertCol</syntax>
+		<syntax syntax="(RowNumber, Options [, NewCol1, NewCol2, ...])">LV_Modify</syntax>
+		<syntax syntax="([ColumnNumber, Options, ColumnTitle])">LV_ModifyCol</syntax>
+		<syntax syntax="(ImageListID [, 0|1|2])">LV_SetImageList</syntax>
+		<syntax syntax="(Dividend, Divisor)">Mod</syntax>
+		<syntax syntax="(VarOrAddress [, Offset = 0] [, Type = &quot;UPtr&quot;])`n(When Type is specified the Offset parameter is only optional in AutoHotkey_L)">NumGet</syntax>
+		<syntax syntax="(Number, VarOrAddress [, Offset = 0] [, Type = &quot;UPtr&quot;])`n(When Type is specified the Offset parameter is only optional in AutoHotkey_L)">NumPut</syntax>
+		<syntax syntax="(obj) `n[AutoHotkey_L] Retrieves an interface pointer from an object reference or vice versa.">Object</syntax>
+		<syntax syntax="(Func [, AddRemove])`nFunc is the function name or function object to call on exit.`nThe function optionally receives the parameters ExitFunc(ExitReason, ExitCode)">OnExit</syntax>
+		<syntax syntax="(MsgNumber [, &quot;FunctionName&quot;])">OnMessage</syntax>
+		<syntax syntax="(Haystack, NeedleRegEx [, UnquotedOutputVar = &quot;&quot;, StartingPos = 1])">RegExMatch</syntax>
+		<syntax syntax="(Haystack, NeedleRegEx [, Replacement = &quot;&quot;, OutputVarCount = &quot;&quot;, Limit = -1, StartingPos = 1])">RegExReplace</syntax>
+		<syntax syntax="(&quot;FunctionName&quot; [, Options = &quot;&quot;, ParamCount = FormalCount, EventInfo = Address])">RegisterCallback</syntax>
+		<syntax syntax="(Number [, Places])">Round</syntax>
+		<syntax syntax="(string [, omitchars = &quot; `t&quot;]) `n[AutoHotkey_L] Trims characters from the end of a string.">RTrim</syntax>
+		<syntax syntax="(Filename [, IconNumber, PartNumber])">SB_SetIcon</syntax>
+		<syntax syntax="([Width1, Width2, ... Width255])">SB_SetParts</syntax>
+		<syntax syntax="(NewText [, PartNumber, Style])">SB_SetText</syntax>
+		<syntax syntax="(Number)">Sin</syntax>
+		<syntax syntax="(Number)">Sqrt</syntax>
+		<syntax syntax="(address [, max][, encoding]) `n[AutoHotkey_L] Retrieves the null-terminated string at the specified address.">StrGet</syntax>
+		<syntax syntax="(String)">StrLen</syntax>
+		<syntax syntax="(string, address [, max][, encoding]) `n[AutoHotkey_L] Copies a string to the specified location.">StrPut</syntax>
+		<syntax syntax="(Haystack, SearchText [, ReplaceText, OutputVarCount, Limit:=-1])">StrReplace</syntax>
+		<syntax syntax="(String [, Delimiters, OmitChars])">StrSplit</syntax>
+		<syntax syntax="(String, StartingPos [, Length])">SubStr</syntax>
+		<syntax syntax="(Number)">Tan</syntax>
+		<syntax syntax="(string [, omitchars = &quot; `t&quot;]) `n[AutoHotkey_L] Trims characters from the beginning and end of a string.">Trim</syntax>
+		<syntax syntax="(Name, [ParentItemID, Options])">TV_Add</syntax>
+		<syntax syntax="([ItemID])">TV_Delete</syntax>
+		<syntax syntax="(ItemID, &quot;Expand | Check | Bold&quot;)">TV_Get</syntax>
+		<syntax syntax="(ParentItemID)">TV_GetChild</syntax>
+		<syntax syntax="()">TV_GetCount</syntax>
+		<syntax syntax="([ItemID, &quot;Checked | Full&quot;])">TV_GetNext</syntax>
+		<syntax syntax="(ItemID)">TV_GetParent</syntax>
+		<syntax syntax="(ItemID)">TV_GetPrev</syntax>
+		<syntax syntax="()">TV_GetSelection</syntax>
+		<syntax syntax="(OutputVar, ItemID)">TV_GetText</syntax>
+		<syntax syntax="(ItemID [, Options, NewName])">TV_Modify</syntax>
+		<syntax syntax="(Var [, RequestedCapacity, FillByte])">VarSetCapacity</syntax>
+		<syntax syntax="(&quot;WinTitle&quot; [, &quot;WinText&quot;, &quot;ExcludeTitle&quot;, &quot;ExcludeText&quot;])">WinActive</syntax>
+		<syntax syntax="(&quot;WinTitle&quot; [, &quot;WinText&quot;, &quot;ExcludeTitle&quot;, &quot;ExcludeText&quot;])">WinExist</syntax></Function>
+	<Indent>Catch else Finally for if IfMsgBox IfNotExist IfNotInString IfWinActive IfWinExist IfWinNotActive IfWinNotExist Loop Try while</Indent>
+	<OptionalIndent>IfEqual IfExist IfGreater IfGreaterOrEqual IfInString IfLess IfLessOrEqual IfNotEqual</OptionalIndent>
+	<Label>
+		<syntax syntax="A label named OnClipboardChange (if it exists) is launched automatically whenever any application (even the script itself) has changed the contents of the clipboard. The label also runs once when the script first starts">OnClipboardChange</syntax>
+		<!--
+		<syntax syntax=""></syntax>
+		--></Label>
+	<Method>
+		<syntax syntax="__New()">__New</syntax>
+		<syntax syntax="__Call()">__Call</syntax>
+		<syntax syntax="__Get()">__Get</syntax>
+		<syntax syntax="__Set()">__Set</syntax></Method>
+	<Object>
+		<syntax syntax="()`nReturns a new enumerator to enumerate this object's key-value pairs. This method is usually not called directly, but by the for-loop.">_NewEnum</syntax>
+		<syntax syntax="(Key),(FirstKey, LastKey)`nRemoves key-value pairs from an object.">Delete</syntax>
+		<syntax syntax="(Key)`nReturns the current address of the field's string buffer, if it has one.">GetAddress</syntax>
+		<syntax syntax="(),(Key)`nReturns the current capacity of an object or one of its fields.">GetCapacity</syntax>
+		<syntax syntax="()`nReturns a shallow copy of the object.">Clone</syntax>
+		<syntax syntax="(Key)`nReturns true if Key is associated with a value (even &quot;&quot;) within Object, otherwise false.">HasKey</syntax>
+		<syntax syntax="(Pos, Value1 [, Value2, ... ValueN])`nInserts one or more values at a given position within a linear array.">InsertAt</syntax>
+		<syntax syntax="()`nReturns the length of a linear array beginning at position 1; that is, the highest positive integer key contained by the object, or 0 if there aren't any.">Length</syntax>
+		<syntax syntax="()`nIf any integer keys are present, MaxIndex returns the highest integer">MaxIndex</syntax>
+		<syntax syntax="()`nIf any integer keys are present, MinIndex returns the lowest integer">MinIndex</syntax>
+		<syntax syntax="(Object, Key, Value)`nThis function is provided to allow scripts to bypass the __Set meta-function. If that isn't required, a normal assignment should be used instead. For example: Object[Key] := Value">ObjRawSet</syntax>
+		<syntax syntax="()`nRemoves and returns the last array element.">Pop</syntax>
+		<syntax syntax="([ Value, Value2, ..., ValueN ])`nAppends values to the end of an array.">Push</syntax>
+		<syntax syntax="(Start Position[,Length])`nRemoves items from the given position in a linear array.">RemoveAt</syntax>
+		<syntax syntax="(MaxItems),(Key, ByteSize)`nAdjusts the capacity of an object or one of its fields.">SetCapacity</syntax>
+	</Object>
+	<Styles>
+		<inlinecomment style="1" ex=";InLine Comment\n"></inlinecomment>
+		<numbers style="2" ex="0123456789\n"></numbers>
+		<completequote style="3" ex="&quot;Complete Quote&quot;\n"></completequote>
+		<punctuation style="4" ex="{}[]^*()+~#\/!&amp;,'\n"></punctuation>
+		<normaltext style="5" ex="This is a sample of normal text\n"></normaltext>
+		<multilinecomment style="11" fold="1" ex="/*\n\tMulti-Line\n\tcomments\n\t&lt;----Click on the fold box or lines to change the color\n*/\n"></multilinecomment>
+		<incompletequote style="13" ex="&quot;InComplete Quote\n"></incompletequote>
+		<backtick style="15" ex="`b`a`c`k`t`i`c\n"></backtick>
+		<bracematch style="34"></bracematch>
+		<font style="40" ex="[40]%[41]Variable[40]%"></font>
+		<font style="41"></font>
+		<font style="42" ex="[0] [42]%Variable Error\n"></font>
+		<font style="55" ex="Label:\n"></font>
+		<font style="56" ex="Hotkey::\n"></font>
+		<font style="57" ex="[57]Function[0]()\n"></font>
+		<font style="58" ex="[58]Abs[0]()\n\n"></font>
+		<font style="59" ex="Variable:=\n"></font>
+		<font style="60" ex="[60]0xFF00FF[0] Hex Numbers\n" color="0x00FF00"></font>
+		<font style="61" ex="[61]0xFF00FFx[0] Hex Errors\n" color="255"></font>
+		<font style="96" ex="[0](\n\t[96]Continuation Section\n[0])\n"></font>
+		<font style="97" ex="[0]( [97],,,,[0] ) &lt;----Commas in Parentheses\n"></font>
+		<font style="99" ex="[0]{[ [99],,,,[0] ]}) &lt;----Commas in Braces and Brackets\n"></font>
+		<font style="100" ex="(Error))\n"></font>
+		<keyword add="//Object"></keyword>
+		<keyword set="0" style="16" ex="Personal Variables"></keyword>
+		<keyword set="1" style="17" ex="Indent" add="//Indent"></keyword>
+		<keyword set="2" style="18" ex="Directive" add="//Directive"></keyword>
+		<keyword set="3" style="19" ex="Command" add="//Command">Gui</keyword>
+		<keyword set="4" style="20" ex="BuiltIn">A_AhkPath A_AhkVersion A_AppData A_AppDataCommon A_AutoTrim A_BatchLines A_CaretX A_CaretY A_ComputerName A_ControlDelay A_Cursor A_DD A_DDD A_DDDD A_DefaultGui A_DefaultMouseSpeed A_Desktop A_DesktopCommon A_DetectHiddenText A_DetectHiddenWindows A_EndChar A_EventInfo A_ExitReason A_FormatFloat A_FormatInteger A_Gui A_GuiControl A_GuiControlEvent A_GuiEvent A_GuiHeight A_GuiWidth A_GuiX A_GuiY A_Hour A_IconFile A_IconHidden A_IconNumber A_IconTip A_Index A_IPAddress1 A_IPAddress2 A_IPAddress3 A_IPAddress4 A_IsAdmin A_IsCompiled A_IsCritical A_IsPaused A_IsSuspended A_IsUnicode A_KeyDelay A_Language A_LastError A_LineFile A_LineNumber A_LoopField A_LoopFileAttrib A_LoopFileDir A_LoopFileExt A_LoopFileFullPath A_LoopFileLongPath A_LoopFileName A_LoopFileShortName A_LoopFileShortPath A_LoopFileSize A_LoopFileSizeKB A_LoopFileSizeMB A_LoopFileTimeAccessed A_LoopFileTimeCreated A_LoopFileTimeModified A_LoopReadLine A_LoopRegKey A_LoopRegName A_LoopRegSubkey A_LoopRegTimeModified A_LoopRegType A_MDAY A_Min A_MM A_MMM A_MMMM A_Mon A_MouseDelay A_MSec A_MyDocuments A_Now A_NowUTC A_NumBatchLines A_OSType A_OSVersion A_PriorHotkey A_PriorKey A_ProgramFiles A_Programs A_ProgramsCommon A_PtrSize A_ScreenHeight A_ScreenWidth A_ScriptDir A_ScriptFullPath A_ScriptHwnd A_ScriptName A_Sec A_Space A_StartMenu A_StartMenuCommon A_Startup A_StartupCommon A_StringCaseSense A_Tab A_Temp A_ThisFunc A_ThisHotkey A_ThisLabel A_ThisMenu A_ThisMenuItem A_ThisMenuItemPos A_TickCount A_TimeIdle A_TimeIdlePhysical A_TimeSincePriorHotkey A_TimeSinceThisHotkey A_TitleMatchMode A_TitleMatchModeSpeed A_UserName A_WDay A_WinDelay A_WinDir A_WorkingDir A_YDay A_YEAR A_YWeek A_YYYY false true</keyword>
+		<keyword set="5" style="21" ex="Keywords">Abort AboveNormal Add ahk_class ahk_group ahk_id ahk_pid All alnum alpha AltDown AltSubmit AltTab AltTabAndMenu AltTabMenu AltTabMenuDismiss AltUp AlwaysOnTop and AutoHDR AutoSize Background BackgroundTrans BelowNormal between BitAnd BitNot BitOr BitShiftLeft BitShiftRight BitXOr Blind bold Border Bottom Button Buttons ByRef Cancel Capacity Caption Center Check Check3 Checkbox Checked CheckedGray Choose ChooseString Clipboard ClipboardAll Close Color ComboBox ComSpec contains ControlList Count CtrlDown CtrlUp date DateTime Days DDL Default DeleteAll Delimiter Deref Destroy digit Disable Disabled DropDownList Eject Enable Enabled Error ErrorLevel Exist Expand ExStyle FileSystem First Flash Float FloatFast Focus Font FromCodePage global Grid Group GroupBox GuiClose GuiContextMenu GuiDropFiles GuiEscape GuiSize Hdr Hidden Hide High HKCC HKCR HKCU HKEY_CLASSES_ROOT HKEY_CURRENT_CONFIG HKEY_CURRENT_USER HKEY_LOCAL_MACHINE HKEY_USERS HKLM HKU Hours HScroll Icon IconSmall ID IDLast Ignore ImageList in Integer IntegerFast Interrupt italic Join Label LastFound LastFoundExist Limit Lines List ListBox ListView local LocalSameAsGlobal Lock Logoff Low lower Lowercase MainWindow Margin Maximize MaximizeBox MaxSize Minimize MinimizeBox MinMax MinSize Minutes MonthCal Mouse Move Multi NA No NoActivate NoDefault NoHide NoIcon NoMainWindow norm Normal NoSort NoSortHdr NoStandard not NoTab NoTimers number Off Ok On or OwnDialogs Owner Parse Password Pic Picture Pixel Pos Pow Priority ProcessName ProgramFiles Radio Range Raw Read ReadOnly Realtime Redraw REG_BINARY REG_DWORD REG_EXPAND_SZ REG_MULTI_SZ REG_SZ Region Relative Remove Rename Report Resize Restore Retry RGB RWinDown RWinUp Screen Seconds Section Select Serial SetLabel ShiftAltTab ShiftDown ShiftUp Show Single Slider SortDesc ss Standard static Status StatusBar StatusCD strike Style Submit SysMenu Tab2 TabStop Text Theme Tile time Tip ToCodePage ToggleCheck ToggleEnable ToolWindow Top Topmost TransColor Transparent Tray TreeView TryAgain Type UnCheck underline Unicode Unlock UpDown upper Uppercase UseEnv UseErrorLevel UseUnsetGlobal UseUnsetLocal Vis VisFirst Visible VScroll Wait WaitClose WantCtrlA WantF2 WantReturn WinMinimizeAllUndo Wrap xdigit xm xp xs Yes ym yp ys</keyword>
+		<keyword set="6" style="22" ex="Function" add="//Function"></keyword>
+		<keyword set="7" style="23" ex="Flow">Break Continue Critical Exit ExitApp Gosub Goto New OnExit Pause return SetBatchLines SetTimer Suspend Thread Throw Until</keyword>
+		<keyword set="8" style="24" ex="Key Names">Alt AppsKey Backspace Break Browser_Back Browser_Favorites Browser_Forward Browser_Home Browser_Refresh Browser_Search Browser_Stop CapsLock Control CtrlBreak Delete Down End Enter Escape F1 F10 F11 F12 F13 F14 F15 F16 F17 F18 F19 F2 F20 F21 F22 F23 F24 F3 F4 F5 F6 F7 F8 F9 Help Home Insert LAlt Launch_App1 Launch_App2 Launch_Mail Launch_Media LButton LControl Left LShift LWin MButton Media_Next Media_Play_Pause Media_Prev Media_Stop NumLock Numpad Numpad0 Numpad1 Numpad2 Numpad3 Numpad4 Numpad5 Numpad6 Numpad7 Numpad8 Numpad9 NumpadAdd NumpadAdd NumpadClear NumpadDel NumpadDiv NumpadDiv NumpadDot NumpadDown NumpadEnd NumpadEnter NumpadEnter NumpadHome NumpadIns NumpadLeft NumpadMult NumpadMult NumpadPgDn NumpadPgUp NumpadRight NumpadSub NumpadSub NumpadUp Pause PgDn PgUp PrintScreen RAlt RButton RControl Right RShift RWin ScrollLock Shift Space Tab Up Volume_Down Volume_Mute Volume_Up WheelDown WheelLeft WheelRight WheelUp XButton1 XButton2</keyword>
+	</Styles>
+	<Context>
+		<Loop>
+			<list list="HKEY_CURRENT_CONFIG HKEY_CLASSES_ROOT HKEY_CURRENT_USER HKEY_USERS HKEY_LOCAL_MACHINE Parse Read Files">Loop</list>
+			<syntax syntax=" [, Key, IncludeSubkeys?, Recurse?]">HKEY_CURRENT_CONFIG HKEY_CLASSES_ROOT HKEY_CURRENT_USER HKEY_USERS HKEY_LOCAL_MACHINE</syntax>
+			<syntax syntax=" [, Variable, Delimiters, OmitChars]">Parse</syntax>
+			<syntax syntax=" [, InputFile, OutputFile]">Read</syntax>
+			<syntax syntax=" , FilePattern [, Mode DFR]]">Files</syntax>
+		</Loop>
+		<Gui>
+			<list list="Add Color Default Destroy Flash Font Hide Margin Maximize Menu Minimize New Restore Show Submit">Gui</list>
+			<list list="ActiveX Button Checkbox ComboBox DateTime DropDownList Edit GroupBox Hotkey ListBox ListView MonthCal Picture Progress Radio Slider StatusBar Tab Text TreeView UpDown">Add</list>
+			<list list="Nohide">Submit</list>
+			<syntax syntax=", sub-command">Gui</syntax>
+			<syntax syntax="[, Options, Title]">New Show</syntax>
+			<syntax syntax=", Control [, Options, Text]">Add</syntax>
+			<syntax syntax="[, NoHide]">Submit</syntax>
+			<syntax syntax="[, Options, FontName]">Font</syntax>
+			<syntax syntax="[, WindowColor, ControlColor]">Color</syntax>
+			<syntax syntax="[, X, Y]">Margin</syntax>
+			<syntax syntax="[, Menuname]">Menu</syntax>
+			<syntax syntax="[, Off]">Flash</syntax>
+			<syntax syntax="[, Options, Text]">Text Edit UpDown Picture Button Checkbox Radio DropDownList ComboBox ListBox ListView TreeView Hotkey DateTime MonthCal Slider Progress GroupBox Tab StatusBar ActiveX</syntax>
+		</Gui>
+		<SingleInstance>
+			<list list="Force Ignore Off" add="#">SingleInstance</list>
+		</SingleInstance>
+		<if>
+			<list list="in contains between is">if</list>
+			<syntax syntax="Variable in [MatchList eg.(item1,item2,item3...*)]">in</syntax>
+			<syntax syntax="Variable contains [MatchList eg.(item1,item2,item3...*)]">contains</syntax>
+			<syntax syntax="Variable Between [LowerBound and UpperBound] must be integers">between</syntax>
+			<syntax syntax="Variable is [Can be one of: integer float number digit xdigit alpha upper lower alnum space time]">is</syntax>
+			<syntax syntax="(expression)">if</syntax>
+		</if>
+		<UseHook>
+			<list list="On Off" add="#">UseHook</list>
+		</UseHook>
+		<SetCapsLockState>
+			<list list="On Off AlwaysOn AlwaysOff">SetCapsLockState</list>
+		</SetCapsLockState>
+		<SetNumLockState>
+			<list list="On Off AlwaysOn AlwaysOff">SetNumLockState</list>
+		</SetNumLockState>
+		<SetScrollLockState>
+			<list list="On Off AlwaysOn AlwaysOff">SetScrollLockState</list>
+		</SetScrollLockState>
+		<LTrim>
+			<list list="On Off">LTrim</list>
+		</LTrim>
+		<MaxThreadsBuffer>
+			<list list="On Off">MaxThreadsBuffer</list>
+		</MaxThreadsBuffer>
+		<AutoTrim>
+			<list list="On Off">AutoTrim</list>
+		</AutoTrim>
+		<BlockInput>
+			<list list=", On Off Send Mouse SendAndMouse Default MouseMove MouseMoveOff">BlockInput</list>
+		</BlockInput>
+		<DetectHiddenText>
+			<list list="On Off">DetectHiddenText</list>
+		</DetectHiddenText>
+		<IfMsgBox>
+			<list list="Yes No OK Cancel Abort Ignore Retry Timeout">IfMsgBox</list>
+		</IfMsgBox>
+		<Pause>
+			<list list="On Off Toggle">Pause</list>
+		</Pause>
+		<RegWrite>
+			<list list="REG_SZ REG_EXPAND_SZ REG_MULTI_SZ REG_DWORD REG_BINARY">RegWrite</list>
+		</RegWrite>
+		<SendMode>
+			<list list="Event Input InputThenPlay Play">SendMode</list>
+		</SendMode>
+		<SetFormat>
+			<list list="float hex integer">SetFormat</list>
+		</SetFormat>
+		<SetStoreCapslockMode>
+			<list list="Off On">SetStoreCapslockMode</list>
+		</SetStoreCapslockMode>
+		<Suspend>
+			<list list="Off On Permit Toggle">Suspend</list>
+		</Suspend>
+	</Context>
+</ahk>
