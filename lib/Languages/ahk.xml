@@ -1,19 +1,7 @@
 <?xml version="1.0"?>
 <ahk>
 	<FileTypes lexer="ahk" language="ahk">ahk</FileTypes>
-	<Comments Open="^\s*\/\*" Close="^\s*\*\/" Line="^\s*\;.*($|\R)"/>
-	<Code>
-		<Breakpoint find="OU);\*\[($1)\]" regex="OU);\*\[(?&lt;Name&gt;.*)\]"/>
-		<Bookmark find="OU);#\[($1)\]" regex="OU);#\[(?&lt;Name&gt;.*)\]"/>
-		<Hotkey regex="OUi`nm)^\s*(?&lt;Name&gt;((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*)+\s+&amp;\s+)*((?&lt;Name2&gt;\w|[^\x00-\x7F]+)|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::"/>
-		<Instance regex="OUi)(?&lt;Name&gt;(\w|[^\x00-\x7F])+)\s*:=\s*new\s*(?&lt;Class&gt;(\w|[^\x00-\x7F])+)\("/>
-		<Label regex="OUm`n)^\s*(?&lt;Name&gt;(\w|[^\x00-\x7F])+):[\s|\R][\s+;]?"/>
-		<Property regex="Om`n)^[\s|}]*(?&lt;Name&gt;(\w|[^\x00-\x7F])+)\[(?&lt;Attributes&gt;.*)\](\s*;.*\R){0,}\s*(\{)"/>
-		<Class find="Oim`n)class\s+($1)[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" regex="Oim`n)^[\s|}]*class\s+(?&lt;Name&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" multiple="{|}" open="Om`n)(?&lt;Close&gt;^\s*[\s*|}]+)|(?&lt;Open&gt;\{(\s+;|\R))">
-			<Method find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R){0,}\s*(\{)" exclude="if|while" regex="OUm`n)^[\s|}]*(?&lt;Name&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,}"/>
-		</Class>
-		<Function exclude="if|while" find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R){0,}\s*(\{)" regex="OUm`n)^[\s|}]*(?&lt;Name&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(?&lt;Comments&gt;\s*;.*\R){0,}\s*(\{)(?&lt;Comments2&gt;\s*;\R){0,}"/>
-	</Code>
+	<Comments Open="^\s*\/\*" Close="^\s*\*\/" Line="^\s*\;.*($|\R)">SOUm`n)((\s+;|\R\s*;).*($|\R)+|(\s*\Q/*\E(\R|.*)+\R\s*\Q*/\E))</Comments>
 	<Command>
 		<syntax syntax=", On|Off">AutoTrim</syntax>
 		<syntax syntax=", On|Off|Send|Mouse|SendAndMouse|Default|MouseMove|MouseMoveOff">BlockInput</syntax>
@@ -73,7 +61,7 @@
 		<syntax syntax=", Attributes[+-^RASHNOT] [, FilePattern, OperateOnFolders?, Recurse?]">FileSetAttrib</syntax>
 		<syntax syntax="[, YYYYMMDDHH24MISS, FilePattern, WhichTime [M|C|A], OperateOnFolders?, Recurse?]">FileSetTime</syntax>
 		<syntax syntax="[Statement]`nEnsures that one or more statements (commands or expressions) are always executed after the execution of a try statement.">Finally</syntax>
-		<syntax syntax="key [,val] in obj `n[AutoHotkey_L]">for</syntax>
+		<syntax syntax=" key [,val] in obj `n[AutoHotkey_L]">for</syntax>
 		<syntax syntax=", OutputVar [, YYYYMMDDHH24MISS, Format]">FormatTime</syntax>
 		<syntax syntax=", OutputVar, WhichKey [, Mode [P|T]]">GetKeyState</syntax>
 		<syntax syntax=", Label`nJumps to the specified label and continues execution until Return is encountered.">gosub</syntax>
@@ -195,7 +183,7 @@
 		<syntax syntax="[, Expression]">Try</syntax>
 		<syntax syntax="Expression `n[AutoHotkey_L]">until</syntax>
 		<syntax syntax=", URL, Filename">URLDownloadToFile</syntax>
-		<syntax syntax="Expression">while</syntax>
+		<syntax syntax="(Expression*)">while</syntax>
 		<syntax syntax="[, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinActivate</syntax>
 		<syntax syntax="[, WinTitle, WinText, ExcludeTitle, ExcludeText]">WinActivateBottom</syntax>
 		<syntax syntax="[, WinTitle, WinText, SecondsToWait, ExcludeTitle, ExcludeText]">WinClose</syntax>
@@ -388,6 +376,18 @@
 		<syntax syntax="(Start Position[,Length])`nRemoves items from the given position in a linear array.">RemoveAt</syntax>
 		<syntax syntax="(MaxItems),(Key, ByteSize)`nAdjusts the capacity of an object or one of its fields.">SetCapacity</syntax>
 	</Object>
+	<Code>
+		<Hotkey find="OUi)($1)::" regex="OU`nm)^\s*(?&lt;Text&gt;((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*)+\s+&amp;\s+)*((\w|[^\x00-\x7F]+)|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::"/>
+		<Instance delimiter="." add="Method" associate="Class" regex="OUi`nm)(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\s*:=\s*new\s*(?&lt;Class&gt;(\w|[^\x00-\x7F])+)\("/>
+		<Label regex="OUm`n)^\s*(?&lt;Text&gt;(\w|[^\x00-\x7F])+):[\s|\R][\s+;]?"/>
+		<Property regex="Om`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\[(?&lt;Attributes&gt;.*)\](\s*;.*\R){0,}\s*(\{)"/>
+		<Class find="Oim`n)class\s+($1)[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" regex="Oim`n)^[\s|}]*class\s+(?&lt;Text&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" multiple="\{|\}" open="Om`n)(?&lt;Close&gt;^\s*[\s*|}]+)|(?&lt;Open&gt;\{(\s+;|\R))">
+			<Method find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R){0,}\s*(\{)" exclude="if|while" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,}"/>
+		</Class>
+		<!--(((\R)(\s)*\/\*(\R|.*)+\R\s*\*\/)|([\R\s*|\s+];.*$)+)-->
+		<!--\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}-->
+		<Function exclude="if|while" vis="Text" find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}\s*(\{)" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(?&lt;Comments&gt;(\R\s*\/\*(\R|.*)+\R\s*\*\/|[\R\s*|\s+];.*$)){0,}\s*(\{)"/>
+	</Code>
 	<Styles>
 		<inlinecomment style="1" ex=";InLine Comment\n"></inlinecomment>
 		<numbers style="2" ex="0123456789\n"></numbers>
