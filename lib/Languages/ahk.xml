@@ -346,19 +346,22 @@
 		<syntax syntax="(ItemID [, Options, NewName])">TV_Modify</syntax>
 		<syntax syntax="(Var [, RequestedCapacity, FillByte])">VarSetCapacity</syntax>
 		<syntax syntax="(&quot;WinTitle&quot; [, &quot;WinText&quot;, &quot;ExcludeTitle&quot;, &quot;ExcludeText&quot;])">WinActive</syntax>
-		<syntax syntax="(&quot;WinTitle&quot; [, &quot;WinText&quot;, &quot;ExcludeTitle&quot;, &quot;ExcludeText&quot;])">WinExist</syntax></Function>
+		<syntax syntax="(&quot;WinTitle&quot; [, &quot;WinText&quot;, &quot;ExcludeTitle&quot;, &quot;ExcludeText&quot;])">WinExist</syntax>
+	</Function>
 	<Indent>Catch else Finally for if IfMsgBox IfNotExist IfNotInString IfWinActive IfWinExist IfWinNotActive IfWinNotExist Loop Try while</Indent>
 	<OptionalIndent>IfEqual IfExist IfGreater IfGreaterOrEqual IfInString IfLess IfLessOrEqual IfNotEqual</OptionalIndent>
 	<Label>
 		<syntax syntax="A label named OnClipboardChange (if it exists) is launched automatically whenever any application (even the script itself) has changed the contents of the clipboard. The label also runs once when the script first starts">OnClipboardChange</syntax>
 		<!--
 		<syntax syntax=""></syntax>
-		--></Label>
+		-->
+	</Label>
 	<Method>
 		<syntax syntax="__New()">__New</syntax>
 		<syntax syntax="__Call()">__Call</syntax>
 		<syntax syntax="__Get()">__Get</syntax>
-		<syntax syntax="__Set()">__Set</syntax></Method>
+		<syntax syntax="__Set()">__Set</syntax>
+	</Method>
 	<Object wordsplit=".">
 		<syntax syntax="()`nReturns a new enumerator to enumerate this object's key-value pairs. This method is usually not called directly, but by the for-loop.">_NewEnum</syntax>
 		<syntax syntax="(FirstKey[, LastKey])`nRemoves key-value pairs from an object.">Delete</syntax>
@@ -374,22 +377,20 @@
 		<syntax syntax="()`nRemoves and returns the last array element.">Pop</syntax>
 		<syntax syntax="([ Value, Value2, ... ValueN*])`nAppends values to the end of an array.">Push</syntax>
 		<syntax syntax="(Start Position[,Length])`nRemoves items from the given position in a linear array.">RemoveAt</syntax>
-		<syntax syntax="(Key[, ByteSize])`nAdjusts the capacity of an object (MaxItems) or one of its fields (Key,ByteSize).">SetCapacity</syntax>
-	</Object>
+		<syntax syntax="(Key[, ByteSize])`nAdjusts the capacity of an object (MaxItems) or one of its fields (Key,ByteSize).">SetCapacity</syntax></Object>
 	<Code>
-		<Hotkey find="OUi)($1)::" regex="OU`nm)^\s*(?&lt;Text&gt;((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*)+\s+&amp;\s+)*((\w|[^\x00-\x7F]+)|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::"/>
-		<Instance delimiter="." add="Method" associate="Class" regex="OUi`nm)(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\s*:=\s*new\s*(?&lt;Class&gt;(\w|[^\x00-\x7F])+)\("/>
-		<Label regex="OUm`n)^\s*(?&lt;Text&gt;(\w|[^\x00-\x7F])+):[\s|\R][\s+;]?"/>
+		<Hotkey find="OUi)($1)::" regex="OU`nm)^\s*(?&lt;Text&gt;((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*)+\s+&amp;\s+)*((\w|[^\x00-\x7F]+)|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::"></Hotkey>
+		<Instance delimiter="." add="Method" associate="Class" regex="OUi`nm)(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\s*:=\s*new\s*(?&lt;Class&gt;(\w|[^\x00-\x7F])+)\("></Instance>
+		<Label regex="OUm`n)^\s*(?&lt;Text&gt;(\w|[^\x00-\x7F])+):[\s|\R][\s+;]?"></Label>
 		<Class find="Oim`n)class\s+($1)[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" regex="Oim`n)^[\s|}]*class\s+(?&lt;Text&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" multiple="\{|\}" open="Om`n)(?&lt;Close&gt;^\s*[\s*|}]+)|(?&lt;Open&gt;\{(\s+;|\R))">
-			<Method wordsplit="." find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R){0,}\s*(\{)" firstchar="(" exclude="if|while" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,}"/>
-			<Property regex="Om`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\[(?&lt;Attributes&gt;.*)\](\s*;.*\R){0,}\s*(\{)"/>
-		</Class>
+			<Method wordsplit="." find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R){0,}\s*(\{)" firstchar="(" exclude="if|while" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,}"></Method>
+			<Property regex="Om`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\[(?&lt;Attributes&gt;.*)\](\s*;.*\R){0,}\s*(\{)"></Property></Class>
 		<!--(((\R)(\s)*\/\*(\R|.*)+\R\s*\*\/)|([\R\s*|\s+];.*$)+)-->
 		<!--\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}-->
-		<Function exclude="if|while" firstchar="(" vis="Text" find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}\s*(\{)" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(?&lt;Comments&gt;(\R\s*\/\*(\R|.*)+\R\s*\*\/|[\R\s*|\s+];.*$)){0,}\s*(\{)"/>
+		<Function exclude="if|while" firstchar="(" vis="Text" find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}\s*(\{)" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(?&lt;Comments&gt;(\R\s*\/\*(\R|.*)+\R\s*\*\/|[\R\s*|\s+];.*$)){0,}\s*(\{)"></Function>
 	</Code>
-	<Delimiter delimiter="," replace="(" invalid="(\x22.*\x22|\[.*\]|\{.*\})" invalidreplace="(,)" replaceinvalid="."/>
-	<ReplaceFirst replace="," first="( )" />
+	<Delimiter delimiter="," replace="(" invalid="(\x22.*\x22|\[.*\]|\{.*\})" invalidreplace="(,)" replaceinvalid="."></Delimiter>
+	<ReplaceFirst replace="," first="( )"></ReplaceFirst>
 	<Styles>
 		<inlinecomment style="1" ex=";InLine Comment\n"></inlinecomment>
 		<numbers style="2" ex="0123456789\n"></numbers>
@@ -457,8 +458,7 @@
 			<syntax replace="1" syntax="if Variable contains [MatchList eg.(item1,item2,item3...*)]">contains</syntax>
 			<syntax replace="1" syntax="if Variable Between [LowerBound and UpperBound] must be integers">between</syntax>
 			<syntax replace="1" syntax="if Variable is [Can be one of: integer float number digit xdigit alpha upper lower alnum space time]">is</syntax>
-			<syntax syntax="(expression)">if</syntax>
-		</if>
+			<syntax syntax="(expression)">if</syntax></if>
 		<UseHook>
 			<list list="On Off" add="#">UseHook</list>
 		</UseHook>
@@ -508,4 +508,5 @@
 			<list list="Off On Permit Toggle">Suspend</list>
 		</Suspend>
 	</Context>
+	<date>20171011091032</date>
 </ahk>

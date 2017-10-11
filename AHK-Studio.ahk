@@ -9,13 +9,13 @@ SetWinDelay,-1
 DetectHiddenWindows,On
 CoordMode,ToolTip,Screen
 global v:=[],MainWin,Settings:=new XML("settings","lib\Settings.xml"),files:=new XML("files"),Positions:=new XML("positions","lib\Positions.xml"),cexml:=new XML("cexml","Lib\FileCache.xml"),History:=new XML("HistoryXML"),vversion,commands,menus,scintilla,TVC:=new EasyView(),RCMXML:=new XML("RCM","lib\RCM.xml"),TNotes,debugwin,Selection:=new SelectionClass(),Menus,Vault:=new XML("vault","lib\Vault.xml")
-new Keywords(),new ScanFile()
+new ScanFile()
 vversion:=new XML("versions",(FileExist("lib\Github.xml")?"lib\Github.xml":"lib\Versions.xml")),History("Startup")
 if(!settings[]){
 	Run,lib\Settings.xml
 	m("Oh boy...check the settings file to see what's up.")
 }v.LineEdited:=[],v.LinesEdited:=[],v.RunObject
-ComObjError(0),FileCheck(%true%),Options("startup"),menus:=new XML("menus","Lib\Menus.xml"),new Omni_Search_Class(),Gui(),DefaultRCM(),CheckLayout()
+ComObjError(0),FileCheck(%true%),new Keywords(),Options("startup"),menus:=new XML("menus","Lib\Menus.xml"),new Omni_Search_Class(),Gui(),DefaultRCM(),CheckLayout()
 /*
 	Keywords()
 */
@@ -4327,10 +4327,18 @@ FileCheck(file:=""){
 	if(FileExist("lib\Scintilla.xml"))
 		Scintilla()
 	FileGetTime,time,SciLexer.dll
-	if(!FileExist("lib\Languages\ahk.xml")){
+	/*
+		make it so that it checks lib\Languages\ahk.xml for <Date>thedate</Date>
+	*/
+	Language:=new XML("ahk","lib\Languages\ahk.xml")
+	LangDate:="20171011091032"
+	if(Language.SSN("//*")&&!Language.SSN("//date"))
+		Language.Add("date",,LangDate),Language.Save(1),m("First time run")
+	else if(Language.SSN("//date").text!=LangDate){
 		FileCreateDir,Lib\Languages
 		SplashTextOn,200,100,Downloading AHK.XML,Please Wait
-		UrlDownloadToFile,https://raw.githubusercontent.com/maestrith/AHK-Studio/master/lib/Languages/ahk.xml,Lib\Languages\ahk.xml
+		UrlDownloadToFile,https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/lib/Languages/ahk.xml,Lib\Languages\ahk.xml
+		Language:=new XML("ahk","lib\Languages\ahk.xml"),Language.Add("date",,LangDate),Language.Save(1)
 	}if(!FileExist("SciLexer.dll")||time<scidate){
 		SplashTextOn,200,100,Downloading SciLexer.dll,Please Wait....
 		UrlDownloadToFile,%base%/SciLexer.dll,SciLexer.dll
