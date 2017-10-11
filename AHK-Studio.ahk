@@ -4333,7 +4333,7 @@ FileCheck(file:=""){
 	Language:=new XML("ahk","lib\Languages\ahk.xml")
 	LangDate:="20171011091032"
 	if(Language.SSN("//*")&&!Language.SSN("//date"))
-		Language.Add("date",,LangDate),Language.Save(1),m("First time run")
+		Language.Add("date",,LangDate),Language.Save(1)
 	else if(Language.SSN("//date").text!=LangDate){
 		FileCreateDir,Lib\Languages
 		SplashTextOn,200,100,Downloading AHK.XML,Please Wait
