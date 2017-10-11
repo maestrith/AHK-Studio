@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <ahk>
 	<FileTypes lexer="ahk" language="ahk">ahk</FileTypes>
 	<Comments Open="^\s*\/\*" Close="^\s*\*\/" Line="^\s*\;.*($|\R)">SOUm`n)((\s+;|\R\s*;).*($|\R)+|(\s*\Q/*\E(\R|.*)+\R\s*\Q*/\E))</Comments>
@@ -61,7 +61,7 @@
 		<syntax syntax=", Attributes[+-^RASHNOT] [, FilePattern, OperateOnFolders?, Recurse?]">FileSetAttrib</syntax>
 		<syntax syntax="[, YYYYMMDDHH24MISS, FilePattern, WhichTime [M|C|A], OperateOnFolders?, Recurse?]">FileSetTime</syntax>
 		<syntax syntax="[Statement]`nEnsures that one or more statements (commands or expressions) are always executed after the execution of a try statement.">Finally</syntax>
-		<syntax syntax=" key [,val] in obj `n[AutoHotkey_L]">for</syntax>
+		<syntax first="( )" replace="," syntax="for key [,val] in obj `n[AutoHotkey_L]">for</syntax>
 		<syntax syntax=", OutputVar [, YYYYMMDDHH24MISS, Format]">FormatTime</syntax>
 		<syntax syntax=", OutputVar, WhichKey [, Mode [P|T]]">GetKeyState</syntax>
 		<syntax syntax=", Label`nJumps to the specified label and continues execution until Return is encountered.">gosub</syntax>
@@ -118,7 +118,7 @@
 		<syntax syntax=", OutputVar, HKLM|HKU|HKCU|HKCR|HKCC, SubKey [, ValueName]">RegRead</syntax>
 		<syntax syntax=", REG_SZ|REG_EXPAND_SZ|REG_MULTI_SZ|REG_DWORD|REG_BINARY, HKLM|HKU|HKCU|HKCR|HKCC, SubKey [, ValueName, Value]">RegWrite</syntax>
 		<syntax syntax="Replaces the currently running instance of the script with a new one.">Reload</syntax>
-		<syntax syntax="[, Expression]">return</syntax>
+		<syntax syntax="[, Expression*]">return</syntax>
 		<syntax syntax=", Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]">Run</syntax>
 		<syntax syntax="[, User, Password, Domain] ">RunAs</syntax>
 		<syntax syntax=", Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]">RunWait</syntax>
@@ -359,35 +359,37 @@
 		<syntax syntax="__Call()">__Call</syntax>
 		<syntax syntax="__Get()">__Get</syntax>
 		<syntax syntax="__Set()">__Set</syntax></Method>
-	<Object>
+	<Object wordsplit=".">
 		<syntax syntax="()`nReturns a new enumerator to enumerate this object's key-value pairs. This method is usually not called directly, but by the for-loop.">_NewEnum</syntax>
-		<syntax syntax="(Key),(FirstKey, LastKey)`nRemoves key-value pairs from an object.">Delete</syntax>
+		<syntax syntax="(FirstKey[, LastKey])`nRemoves key-value pairs from an object.">Delete</syntax>
 		<syntax syntax="(Key)`nReturns the current address of the field's string buffer, if it has one.">GetAddress</syntax>
-		<syntax syntax="(),(Key)`nReturns the current capacity of an object or one of its fields.">GetCapacity</syntax>
+		<syntax syntax="(Key)`nReturns the current capacity of an object () or one of its fields (Key).">GetCapacity</syntax>
 		<syntax syntax="()`nReturns a shallow copy of the object.">Clone</syntax>
 		<syntax syntax="(Key)`nReturns true if Key is associated with a value (even &quot;&quot;) within Object, otherwise false.">HasKey</syntax>
-		<syntax syntax="(Pos, Value1 [, Value2, ... ValueN])`nInserts one or more values at a given position within a linear array.">InsertAt</syntax>
+		<syntax syntax="(Pos, Value1 [, Value2, ... ValueN*])`nInserts one or more values at a given position within a linear array.">InsertAt</syntax>
 		<syntax syntax="()`nReturns the length of a linear array beginning at position 1; that is, the highest positive integer key contained by the object, or 0 if there aren't any.">Length</syntax>
 		<syntax syntax="()`nIf any integer keys are present, MaxIndex returns the highest integer">MaxIndex</syntax>
 		<syntax syntax="()`nIf any integer keys are present, MinIndex returns the lowest integer">MinIndex</syntax>
 		<syntax syntax="(Object, Key, Value)`nThis function is provided to allow scripts to bypass the __Set meta-function. If that isn't required, a normal assignment should be used instead. For example: Object[Key] := Value">ObjRawSet</syntax>
 		<syntax syntax="()`nRemoves and returns the last array element.">Pop</syntax>
-		<syntax syntax="([ Value, Value2, ..., ValueN ])`nAppends values to the end of an array.">Push</syntax>
+		<syntax syntax="([ Value, Value2, ... ValueN*])`nAppends values to the end of an array.">Push</syntax>
 		<syntax syntax="(Start Position[,Length])`nRemoves items from the given position in a linear array.">RemoveAt</syntax>
-		<syntax syntax="(MaxItems),(Key, ByteSize)`nAdjusts the capacity of an object or one of its fields.">SetCapacity</syntax>
+		<syntax syntax="(Key[, ByteSize])`nAdjusts the capacity of an object (MaxItems) or one of its fields (Key,ByteSize).">SetCapacity</syntax>
 	</Object>
 	<Code>
 		<Hotkey find="OUi)($1)::" regex="OU`nm)^\s*(?&lt;Text&gt;((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*)+\s+&amp;\s+)*((\w|[^\x00-\x7F]+)|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::"/>
 		<Instance delimiter="." add="Method" associate="Class" regex="OUi`nm)(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\s*:=\s*new\s*(?&lt;Class&gt;(\w|[^\x00-\x7F])+)\("/>
 		<Label regex="OUm`n)^\s*(?&lt;Text&gt;(\w|[^\x00-\x7F])+):[\s|\R][\s+;]?"/>
-		<Property regex="Om`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\[(?&lt;Attributes&gt;.*)\](\s*;.*\R){0,}\s*(\{)"/>
 		<Class find="Oim`n)class\s+($1)[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" regex="Oim`n)^[\s|}]*class\s+(?&lt;Text&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" multiple="\{|\}" open="Om`n)(?&lt;Close&gt;^\s*[\s*|}]+)|(?&lt;Open&gt;\{(\s+;|\R))">
-			<Method find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R){0,}\s*(\{)" exclude="if|while" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,}"/>
+			<Method wordsplit="." find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R){0,}\s*(\{)" firstchar="(" exclude="if|while" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,}"/>
+			<Property regex="Om`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\[(?&lt;Attributes&gt;.*)\](\s*;.*\R){0,}\s*(\{)"/>
 		</Class>
 		<!--(((\R)(\s)*\/\*(\R|.*)+\R\s*\*\/)|([\R\s*|\s+];.*$)+)-->
 		<!--\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}-->
-		<Function exclude="if|while" vis="Text" find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}\s*(\{)" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(?&lt;Comments&gt;(\R\s*\/\*(\R|.*)+\R\s*\*\/|[\R\s*|\s+];.*$)){0,}\s*(\{)"/>
+		<Function exclude="if|while" firstchar="(" vis="Text" find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}\s*(\{)" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(?&lt;Comments&gt;(\R\s*\/\*(\R|.*)+\R\s*\*\/|[\R\s*|\s+];.*$)){0,}\s*(\{)"/>
 	</Code>
+	<Delimiter delimiter="," replace="(" invalid="(\x22.*\x22|\[.*\]|\{.*\})" invalidreplace="(,)" replaceinvalid="."/>
+	<ReplaceFirst replace="," first="( )" />
 	<Styles>
 		<inlinecomment style="1" ex=";InLine Comment\n"></inlinecomment>
 		<numbers style="2" ex="0123456789\n"></numbers>
@@ -449,12 +451,12 @@
 		<SingleInstance>
 			<list list="Force Ignore Off" add="#">SingleInstance</list>
 		</SingleInstance>
-		<if>
+		<if delimiter=" ">
 			<list list="in contains between is">if</list>
-			<syntax syntax="Variable in [MatchList eg.(item1,item2,item3...*)]">in</syntax>
-			<syntax syntax="Variable contains [MatchList eg.(item1,item2,item3...*)]">contains</syntax>
-			<syntax syntax="Variable Between [LowerBound and UpperBound] must be integers">between</syntax>
-			<syntax syntax="Variable is [Can be one of: integer float number digit xdigit alpha upper lower alnum space time]">is</syntax>
+			<syntax replace="1" syntax="if Variable in [MatchList eg.(item1,item2,item3...*)]">in</syntax>
+			<syntax replace="1" syntax="if Variable contains [MatchList eg.(item1,item2,item3...*)]">contains</syntax>
+			<syntax replace="1" syntax="if Variable Between [LowerBound and UpperBound] must be integers">between</syntax>
+			<syntax replace="1" syntax="if Variable is [Can be one of: integer float number digit xdigit alpha upper lower alnum space time]">is</syntax>
 			<syntax syntax="(expression)">if</syntax>
 		</if>
 		<UseHook>

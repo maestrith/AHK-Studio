@@ -1,0 +1,11 @@
+﻿<?xml version="1.0"?>
+<html>
+	<!--flan-->
+	<FileTypes lexer="hypertext" language="hypertext">html htm</FileTypes>
+	<Styles>
+		<completequote style="4"/> <!--Key-->
+		<punctuation style="8"/>
+		<font style="2" color="7843024"/><!--Quoted Value-->
+		<font style="1" ex="[8]{\n\t[4]&quot;Key&quot;[8]:[0] [2]&quot;Value&quot;[0]\n\t[4]&quot;Key&quot;[8]:[0] [1]44\n[8]}\n" color="13617276" fold="1"/><!--Int Value-->
+	</Styles>
+</html>

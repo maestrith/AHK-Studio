@@ -1,0 +1,18 @@
+﻿<?xml version="1.0"?>
+<xml>
+	<FileTypes lexer="xml" language="xml">xml</FileTypes>
+	<Styles>
+		<!-- This is a comment -->
+		<completequote style="6" ex="&quot;Complete Quote&quot;\n"/>
+		<!--
+			FLAN!
+		-->
+		<font style="1" ex="&lt;NodeName&gt;\n" color="16758590"/>
+		<font style="3" color="14732901"/>
+		<font style="3" color="14732901"/>
+		<font style="11" ex="[1]&lt;NodeName[11]/&gt;\n" color="0x00FF00"/>
+		<font style="12" ex="[12]&lt;?[1]xml [3]version=[6]&quot;1.0&quot;[13]?&gt;" color="0x00FF00"/>
+		<font style="13" ex="[1]&lt;NodeName[13]/&gt;\n" color="0x00FF00"/>
+		<multilinecomment style="9" fold="1" ex="&lt;!--\n\tMulti-Line Comment\n\t&lt;----Click on the fold box or lines to change the color\n \n--&gt;\n"></multilinecomment>
+	</Styles>
+</xml>
