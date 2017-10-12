@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <ahk>
 	<FileTypes lexer="ahk" language="ahk">ahk</FileTypes>
 	<Comments Open="^\s*\/\*" Close="^\s*\*\/" Line="^\s*\;.*($|\R)">SOUm`n)((\s+;|\R\s*;).*($|\R)+|(\s*\Q/*\E(\R|.*)+\R\s*\Q*/\E))</Comments>
@@ -380,7 +380,7 @@
 		<syntax syntax="(Key[, ByteSize])`nAdjusts the capacity of an object (MaxItems) or one of its fields (Key,ByteSize).">SetCapacity</syntax></Object>
 	<Code>
 		<Hotkey find="OUi)($1)::" regex="OU`nm)^\s*(?&lt;Text&gt;((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*)+\s+&amp;\s+)*((\w|[^\x00-\x7F]+)|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::"></Hotkey>
-		<Instance delimiter="." add="Method" associate="Class" regex="OUi`nm)(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\s*:=\s*new\s*(?&lt;Class&gt;(\w|[^\x00-\x7F])+)\("></Instance>
+		<Instance wordsplit="." delimiter="." add="Method" associate="Class" regex="OUi`nm)(?&lt;Text&gt;(\w|[^\x00-\x7F]|\.)+)\s*:=\s*new\s*(?&lt;Class&gt;(\w|[^\x00-\x7F])+)\("></Instance>
 		<Label regex="OUm`n)^\s*(?&lt;Text&gt;(\w|[^\x00-\x7F])+):[\s|\R][\s+;]?"></Label>
 		<Class find="Oim`n)class\s+($1)[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" regex="Oim`n)^[\s|}]*class\s+(?&lt;Text&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" multiple="\{|\}" open="Om`n)(?&lt;Close&gt;^\s*[\s*|}]+)|(?&lt;Open&gt;\{(\s+;|\R))">
 			<Method wordsplit="." find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R){0,}\s*(\{)" firstchar="(" exclude="if|while" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,}"></Method>
@@ -389,8 +389,9 @@
 		<!--\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}-->
 		<Function exclude="if|while" firstchar="(" vis="Text" find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}\s*(\{)" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(?&lt;Comments&gt;(\R\s*\/\*(\R|.*)+\R\s*\*\/|[\R\s*|\s+];.*$)){0,}\s*(\{)"></Function>
 	</Code>
-	<Delimiter delimiter="," replace="(" invalid="(\x22.*\x22|\[.*\]|\{.*\})" invalidreplace="(,)" replaceinvalid="."></Delimiter>
+	<Delimiter delimiter="," search="(\(|,)" replace="(" invalid="(\x22.*\x22|\[.*\]|\{.*\})" invalidreplace="(,)" replaceinvalid="."></Delimiter>
 	<ReplaceFirst replace="," first="( )"></ReplaceFirst>
+	<NoReplace>if</NoReplace>
 	<Styles>
 		<inlinecomment style="1" ex=";InLine Comment\n"></inlinecomment>
 		<numbers style="2" ex="0123456789\n"></numbers>
@@ -438,7 +439,7 @@
 			<list list="Add Color Default Destroy Flash Font Hide Margin Maximize Menu Minimize New Restore Show Submit">Gui</list>
 			<list list="ActiveX Button Checkbox ComboBox DateTime DropDownList Edit GroupBox Hotkey ListBox ListView MonthCal Picture Progress Radio Slider StatusBar Tab Text TreeView UpDown">Add</list>
 			<list list="Nohide">Submit</list>
-			<syntax syntax=", sub-command">Gui</syntax>
+			<syntax syntax=", Sub-Command">Gui</syntax>
 			<syntax syntax="[, Options, Title]">New Show</syntax>
 			<syntax syntax=", Control [, Options, Text]">Add</syntax>
 			<syntax syntax="[, NoHide]">Submit</syntax>
@@ -508,5 +509,4 @@
 			<list list="Off On Permit Toggle">Suspend</list>
 		</Suspend>
 	</Context>
-	<date>20171011091032</date>
 </ahk>
