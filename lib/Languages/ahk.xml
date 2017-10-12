@@ -389,7 +389,7 @@
 		<!--\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}-->
 		<Function exclude="if|while" firstchar="(" vis="Text" find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}\s*(\{)" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(?&lt;Comments&gt;(\R\s*\/\*(\R|.*)+\R\s*\*\/|[\R\s*|\s+];.*$)){0,}\s*(\{)"></Function>
 	</Code>
-	<Delimiter delimiter="," search="(\(|,[^[])" replace="(" invalid="(\x22.*\x22|\[.*\]|\{.*\})" invalidreplace="(,)" replaceinvalid="."></Delimiter>
+	<Delimiter delimiter="," search="(\(|,[^\[)" replace="(" invalid="(\x22.*\x22|\[.*\]|\{.*\})" invalidreplace="(,)" replaceinvalid="."></Delimiter>
 	<ReplaceFirst replace="," first="( )"></ReplaceFirst>
 	<NoReplace>if</NoReplace>
 	<Styles>
