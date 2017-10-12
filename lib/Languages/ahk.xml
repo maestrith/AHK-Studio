@@ -250,14 +250,14 @@
 		<!--regex="OUm`n)^[\s|}]*((\w|[^\x00-\x7F])+)\((.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,}"-->
 		<syntax syntax="(Number)">Abs</syntax>
 		<syntax syntax="(Number)">ACos</syntax>
-		<syntax syntax="([values...]) `n[AutoHotkey_L] Creates an array.">Array</syntax>
+		<syntax syntax="([values*]) `n[AutoHotkey_L] Creates an array.">Array</syntax>
 		<syntax syntax="(String)">Asc</syntax>
 		<syntax syntax="(Number)">ASin</syntax>
 		<syntax syntax="(Number)">ATan</syntax>
 		<syntax syntax="(Number)">Ceil</syntax>
 		<syntax syntax="(Number)">Chr</syntax>
 		<syntax syntax="(ProgIdOrCLSID) `n[AutoHotkey_L] Retrieves a running object that has been registered with OLE.">ComObjActive</syntax>
-		<syntax syntax="(VarType, Count1 [, Count2, ... Count8]) `n[AutoHotkey_L] Creates a SAFEARRAY for use with COM.">ComObjArray</syntax>
+		<syntax syntax="(VarType, Count1 [, Count2*]) `n[AutoHotkey_L] Creates a SAFEARRAY for use with COM.">ComObjArray</syntax>
 		<syntax syntax="(obj [, prefix])  `n[AutoHotkey_L] Listens to events from a ComObject (omit prefix to stop listening).">ComObjConnect</syntax>
 		<syntax syntax="(ProgIdOrCLSID [, IID]) `n[AutoHotkey_L] Creates a COM object.">ComObjCreate</syntax>
 		<syntax syntax="(pdisp) `n[AutoHotkey_L] Wraps a raw IDispatch pointer in a usable object.">ComObjEnwrap</syntax>
@@ -271,13 +271,13 @@
 		<syntax syntax="(obj) `n[AutoHotkey_L] Unwraps a raw IDispatch pointer in a usable object.">ComObjUnwrap</syntax>
 		<syntax syntax="(obj) `n[AutoHotkey_L] Retrieves the raw 64-bit signed integer stored in a ComObject wrapper.">ComObjValue</syntax>
 		<syntax syntax="(Number)">Cos</syntax>
-		<syntax syntax="(&quot;[DllFile\\]Function&quot; [, Type1, Arg1, Type2, Arg2, ..., &quot;Cdecl ReturnType&quot;])">DllCall</syntax>
+		<syntax syntax="(&quot;[DllFile\\]Function&quot; [, Type1, Arg1, Type2, Arg2,*, &quot;Cdecl ReturnType&quot;])">DllCall</syntax>
 		<syntax syntax="(Message [, What, Extra])">Exception</syntax>
 		<syntax syntax="(Number)">Exp</syntax>
 		<syntax syntax="(&quot;FilePattern&quot;)">FileExist</syntax>
 		<syntax syntax="(file, mode[, encoding]) `n[AutoHotkey_L] Opens a file and returns a new file object.">FileOpen</syntax>
 		<syntax syntax="(Number)">Floor</syntax>
-		<syntax syntax="(FormatStr [, Values...])">Format</syntax>
+		<syntax syntax="(FormatStr [, Values*])">Format</syntax>
 		<syntax syntax="(key)">GetKeyName</syntax>
 		<syntax syntax="(key)">GetKeySC</syntax>
 		<syntax syntax="(KeyName [, &quot;P&quot; or &quot;T&quot;])">GetKeyState</syntax>
@@ -298,15 +298,15 @@
 		<syntax syntax="(Number)">Ln</syntax>
 		<syntax syntax="(Number)">Log</syntax>
 		<syntax syntax="(string [, omitchars = &quot; `t&quot;]) `n[AutoHotkey_L] Trims characters from the beginning of a string.">LTrim</syntax>
-		<syntax syntax="([Options, Col1, Col2, ...])">LV_Add</syntax>
+		<syntax syntax="([Options, Col1, Col2*])">LV_Add</syntax>
 		<syntax syntax="([RowNumber])">LV_Delete</syntax>
 		<syntax syntax="(ColumnNumber)">LV_DeleteCol</syntax>
 		<syntax syntax="([&quot;S&quot;])">LV_GetCount</syntax>
 		<syntax syntax="([StartingRowNumber, &quot;C|F&quot;])">LV_GetNext</syntax>
 		<syntax syntax="(OutputVar, RowNumber [, ColumnNumber])">LV_GetText</syntax>
-		<syntax syntax="(RowNumber [, Options, Col1, Col2, ...])">LV_Insert</syntax>
+		<syntax syntax="(RowNumber [, Options, Col1, Col2*])">LV_Insert</syntax>
 		<syntax syntax="(ColumnNumber [, Options, ColumnTitle])">LV_InsertCol</syntax>
-		<syntax syntax="(RowNumber, Options [, NewCol1, NewCol2, ...])">LV_Modify</syntax>
+		<syntax syntax="(RowNumber, Options [, NewCol1, NewCol2*])">LV_Modify</syntax>
 		<syntax syntax="([ColumnNumber, Options, ColumnTitle])">LV_ModifyCol</syntax>
 		<syntax syntax="(ImageListID [, 0|1|2])">LV_SetImageList</syntax>
 		<syntax syntax="(Dividend, Divisor)">Mod</syntax>
@@ -321,7 +321,7 @@
 		<syntax syntax="(Number [, Places])">Round</syntax>
 		<syntax syntax="(string [, omitchars = &quot; `t&quot;]) `n[AutoHotkey_L] Trims characters from the end of a string.">RTrim</syntax>
 		<syntax syntax="(Filename [, IconNumber, PartNumber])">SB_SetIcon</syntax>
-		<syntax syntax="([Width1, Width2, ... Width255])">SB_SetParts</syntax>
+		<syntax syntax="([Width1, Width2*])">SB_SetParts</syntax>
 		<syntax syntax="(NewText [, PartNumber, Style])">SB_SetText</syntax>
 		<syntax syntax="(Number)">Sin</syntax>
 		<syntax syntax="(Number)">Sqrt</syntax>
@@ -369,13 +369,13 @@
 		<syntax syntax="(Key)`nReturns the current capacity of an object () or one of its fields (Key).">GetCapacity</syntax>
 		<syntax syntax="()`nReturns a shallow copy of the object.">Clone</syntax>
 		<syntax syntax="(Key)`nReturns true if Key is associated with a value (even &quot;&quot;) within Object, otherwise false.">HasKey</syntax>
-		<syntax syntax="(Pos, Value1 [, Value2, ... ValueN*])`nInserts one or more values at a given position within a linear array.">InsertAt</syntax>
+		<syntax syntax="(Pos, Value1 [, Value2*])`nInserts one or more values at a given position within a linear array.">InsertAt</syntax>
 		<syntax syntax="()`nReturns the length of a linear array beginning at position 1; that is, the highest positive integer key contained by the object, or 0 if there aren't any.">Length</syntax>
 		<syntax syntax="()`nIf any integer keys are present, MaxIndex returns the highest integer">MaxIndex</syntax>
 		<syntax syntax="()`nIf any integer keys are present, MinIndex returns the lowest integer">MinIndex</syntax>
 		<syntax syntax="(Object, Key, Value)`nThis function is provided to allow scripts to bypass the __Set meta-function. If that isn't required, a normal assignment should be used instead. For example: Object[Key] := Value">ObjRawSet</syntax>
 		<syntax syntax="()`nRemoves and returns the last array element.">Pop</syntax>
-		<syntax syntax="([ Value, Value2, ... ValueN*])`nAppends values to the end of an array.">Push</syntax>
+		<syntax syntax="([ Value, Value2*])`nAppends values to the end of an array.">Push</syntax>
 		<syntax syntax="(Start Position[,Length])`nRemoves items from the given position in a linear array.">RemoveAt</syntax>
 		<syntax syntax="(Key[, ByteSize])`nAdjusts the capacity of an object (MaxItems) or one of its fields (Key,ByteSize).">SetCapacity</syntax></Object>
 	<Code>
@@ -455,8 +455,8 @@
 		</SingleInstance>
 		<if delimiter=" ">
 			<list list="in contains between is">if</list>
-			<syntax replace="1" syntax="if Variable in [MatchList eg.(item1,item2,item3...*)]">in</syntax>
-			<syntax replace="1" syntax="if Variable contains [MatchList eg.(item1,item2,item3...*)]">contains</syntax>
+			<syntax replace="1" syntax="if Variable in [MatchList eg.(item1,item2,item3*)]">in</syntax>
+			<syntax replace="1" syntax="if Variable contains [MatchList eg.(item1,item2,item3*)]">contains</syntax>
 			<syntax replace="1" syntax="if Variable Between [LowerBound and UpperBound] must be integers">between</syntax>
 			<syntax replace="1" syntax="if Variable is [Can be one of: integer float number digit xdigit alpha upper lower alnum space time]">is</syntax>
 			<syntax syntax="(expression)">if</syntax></if>
