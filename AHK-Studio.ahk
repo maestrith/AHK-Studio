@@ -649,8 +649,8 @@ Check_For_Edited(){
 }
 Check_For_Update(startup:=""){
 	static newwin
-	static DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk",VersionTextURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"
-	;static DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/flan/AHK-Studio.ahk",VersionTextURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/flan/AHK-Studio.text"
+	;static DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk",VersionTextURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"
+	static DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/AHK-Studio.ahk",VersionTextURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/flan/AHK-Studio.text"
 	Run,RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
 	auto:=Settings.EA("//autoupdate"),sub:=A_NowUTC
 	if(startup=1){
@@ -5741,8 +5741,9 @@ Class Keywords{
 					Run,RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
 					URLDownloadToFile,% BaseURL Format("{:L}",NNE) ".xml",%a%
 					xx:=new XML(Language,a)
-				}if(!xx.SSN("//date"))
-					xx.Add("date",,Date),xx.Save(1)
+				}if(!Node:=xx.SSN("//date"))
+					Node:=xx.Add("date")
+				Node.text:=Date,xx.Save(1)
 				SplashTextOff
 			}Lexer:=xx.SSN("//FileTypes")
 			Keywords.Languages[(Language:=Format("{:L}",SSN(Lexer,"@language").text))]:=xx
