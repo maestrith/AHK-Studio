@@ -16,13 +16,6 @@ if(!settings[]){
 	m("Oh boy...check the settings file to see what's up.")
 }v.LineEdited:=[],v.LinesEdited:=[],v.RunObject
 ComObjError(0),FileCheck(%true%),new Keywords(),Options("startup"),menus:=new XML("menus","Lib\Menus.xml"),new Omni_Search_Class(),Gui(),DefaultRCM(),CheckLayout()
-/*
-	Keywords()
-*/
-
-
-
-
 return
 /*
 	More things
@@ -152,15 +145,19 @@ OR PERFORMANCE OF THIS SOFTWARE.
 	return
 }
 Testing(){
-	sc:=csc()
-	RegExMatch(Clipboard,"O)start=\x22(\d+)\x22",Start)
-	RegExMatch(Clipboard,"O)end=\x22(\d+)\x22",End)
-	return sc.2160(Start.1,End.1)
-	return m((Lang:=GetLanguage(sc)),sc.2010(sc.2008),Keywords.GetXML(Lang)[])
+	/*
+		sc:=csc()
+		RegExMatch(Clipboard,"O)start=\x22(\d+)\x22",Start)
+		RegExMatch(Clipboard,"O)end=\x22(\d+)\x22",End)
+		return sc.2160(Start.1,End.1)
+		return m((Lang:=GetLanguage(sc)),sc.2010(sc.2008),Keywords.GetXML(Lang)[])
+	*/
 	if(A_UserName!="maestrith")
 		return m("Testing")
-	return m(TVC.Controls.1.hwnd) ;the hwnd for Project Explorer
-	return Dlg_Font("","","",0)
+	/*
+		return m(TVC.Controls.1.hwnd) ;the hwnd for Project Explorer
+	*/
+	return m("I'm sleepy.")
 }
 Activate(a,b,c,d){
 	if(a&&v.Options.Check_For_Edited_Files_On_Focus=1)
@@ -971,12 +968,6 @@ class Code_Explorer{
 		}}}}
 	*/
 }
-
-Class SPAM{
-	Yum(){
-		
-	}
-}
 class debug{
 	static socket
 	__New(){
@@ -1326,7 +1317,6 @@ Class LineStatus{
 Class MainWindowClass{
 	static keep:=[]
 	__New(){
-		;xx:=new XML() obj:=new MainWindowClass()
 		if(FileExist(A_ScriptDir "\AHKStudio.ico"))
 			Menu,Tray,Icon,AHKStudio.ico
 		if(v.Options.Hide_Tray_Icon)
@@ -1420,7 +1410,7 @@ Class MainWindowClass{
 			sc:=csc(2)
 		ControlGetPos,x,y,w,h,,% "ahk_id" sc.sc
 		this.NewCtrlPos:=[],this.NewCtrlPos.y:=Round((y+h)*.75),this.NewCtrlPos.ctrl:=sc.sc,this.Split("Below","Debug")
-	}Delete(){ ;xx:=new XML() here for Studio
+	}Delete(){
 		np:=this.NewCtrlPos,hwnd:=np.ctrl,win:=np.win
 		if(win!=this.hwnd)
 			return
@@ -2722,15 +2712,44 @@ CompileFont(XMLObject,RGB:=1){
 Context(return=""){
 	Static FindFirst:="O)^[\s|}]*((\w|[^\x00-\x7F])+)"
 	Tick:=A_TickCount
-	sc:=csc(),cp:=sc.2008,Line:=sc.2166(cp),Start:=sc.2128(Line),PFL:=sc.2167(Line),OLineText:=LineText:=sc.GetLine(Line),NewString:=Trim(SubStr(LineText,1,cp-PFL) Chr(127) SubStr(LineText,cp-PFL+1)),Language:=Current(3).Lang,Delimiter:=Keywords.Delimiter[Language]
-	if(Delimiter.Invalid){
-		Pos:=1
-		while(RegExMatch(NewString,"OU)" Delimiter.Invalid,Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
-			if(!Found.Len(0))
-				Break
-			NewString:=SubStr(NewString,1,Found.Pos(1)-1) RegExReplace(Found.1,Delimiter.InvalidReplace,Delimiter.ReplaceInvalid) SubStr(NewString,Found.Pos(1)+Found.Len(1))
-	}}
-	String:=SubStr(NewString,1,InStr(NewString,Chr(127))-1),OPos:=Pos:=StrLen(String),Remove:=[]
+	sc:=csc()
+	cp:=sc.2008
+	Line:=sc.2166(cp)
+	LineIndent:=Start:=sc.2128(Line)
+	PFL:=sc.2167(Line)
+	OLineText:=LineText:=sc.GetLine(Line)
+	NewString:=Trim(SubStr(LineText,1,cp-PFL) Chr(127) SubStr(LineText,cp-PFL+1))
+	Language:=Current(3).Lang
+	Delimiter:=Keywords.Delimiter[Language]
+	if(Delimiter.Delimiter){
+		if(Regex:=Delimiter.RemoveAll){
+			Pos:=LastPos:=1
+			while(RegExMatch(NewString,Regex,Found))
+				StringReplace,NewString,NewString,% Found.0,% (InStr(Found.0,Chr(127))?Chr(127):"")
+		}if(Regex:=Delimiter.Preserve){
+			Pos:=LastPos:=1,Place:={1:"Preserve"},LastCondition:="Preserve",Total:=""
+			while(RegExMatch(NewString,Regex,Found,Pos)){
+				for a,b in ["Open","Close","PreserveOpen","PreserveClose"]{
+					Condition:=b
+					if(Found[b])
+						Break
+				}if(Condition="Open")
+					Place.Push("Open")
+				else if(Condition="Close"&&Place.2)
+					Place.Pop()
+				else if(Condition="PreserveOpen")
+					Place.Push("Preserve")
+				else if(Condition="PreserveClose"&&Place.2)
+					Place.Pop()
+				Pos:=Found.Pos(Condition)+Found.Len(Condition),Process:=SubStr(NewString,LastPos,Pos-LastPos),Total.=LastCondition="Preserve"?Process:RegExReplace(Process,Delimiter.Delimiter,Chr(128)),LastCondition:=Place[Place.MaxIndex()]
+				if(Pos=LastPos)
+					Break
+				LastPos:=Pos
+			}Process:=SubStr(NewString,Pos)
+			Total.=LastCondition="Preserve"?Process:RegExReplace(Process,Delimiter.Delimiter)
+			NewString:=Total
+		}
+	}String:=SubStr(NewString,1,InStr(NewString,Chr(127))-1),OPos:=Pos:=StrLen(String),Remove:=[]
 	Loop
 	{
 		if(Pos<=0)
@@ -2743,13 +2762,19 @@ Context(return=""){
 		else if(Chr="("&&Remove.1)
 			String:=SubStr(String,1,Pos-1) SubStr(String,Remove.Pop()+1),Removed:=1
 		else if(Chr="("&&!Remove.1){
+			BracePos:=Pos
 			Word:="",StartPos:=Pos
 			while(Pos>1){
 				Pos--,Chr:=SubStr(String,Pos,1)
 				if(Chr~="(\w|\.)"=0)
 					Break
 				Word:=(Chr) Word
-			}String:=SubStr(String,(Pos=1?1:Pos+1))
+			}
+			if(!Word&&Pos>0){
+				Continue
+			}
+			String:=SubStr(String,(Pos=1?1:Pos+1))
+			PositionInString:=Pos
 			Break
 		}Pos--
 	}
@@ -2762,7 +2787,7 @@ Context(return=""){
 		return {word:word,last:last}
 	Matches:=[],Split:=[]
 	if((ea:=scintilla.EA("//scintilla/commands/item[@code='" StrSplit(word,".").Pop() "']")).syntax){
-		Syntax:=ea.Syntax,Matches.Push({att:Syntax,ea:ea,search:Syntax,Syntax:Word Syntax,Type:"Scintilla"}),Split["."]:=1
+		Syntax:=ea.Syntax "`n" ea.Name,Matches.Push({att:Syntax,ea:ea,search:Syntax,Syntax:Word Syntax,Type:"Scintilla"}),Split["."]:=1
 	}else{
 		Omni:=GetOmni(Language)
 		for a,b in Omni{
@@ -2772,11 +2797,17 @@ Context(return=""){
 					FoundThings:=1,Matches.Push({att:Syntax,ea:XML.EA(Node),search:Syntax,syntax:Word Syntax,type:a,file:SSN(Node,"ancestor::file/@filename").text}),Split[b.Delimiter]:=1
 		}}if(!FoundThings){
 			all:=SN(Current(7),"descendant::*[@upper='" Upper(Word) "']"),Index:=1,Syntax:="",List:=[],Reverse:=[]
+			if(!all.Length)
+				LastWord:=SubStr(Word,InStr(Word,".",0,0)+1),all:=SN(Current(7),"descendant::*[@upper='" Upper(LastWord) "']")
 			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
 				if(WordSplit:=Omni[ea.Type].WordSplit)
 					if(!InStr(Word,WordSplit))
 						Continue
 				Matches.Push({att:ea.att,ea:ea,syntax:Word "(" ea.att ")",type:ea.type,file:SSN(aa,"ancestor::file/@filename").text})
+				/*
+					Send,
+					debug.Send("stack_get")
+				*/
 			}RegExMatch(Word,"O)(\W)",Delim)
 			/*
 				t(Word,String)
@@ -2810,30 +2841,24 @@ Context(return=""){
 					NoHighlight:=1,ea:=XML.EA(Node)
 					Syntax:=ea.Replace?ea.Syntax:Trim(Build,Del) ea.Syntax
 					Matches.Push({att:Syntax,ea:ea,syntax:Syntax,NoHighlight:(InStr(Syntax,Delimiter.Delimiter)?0:1),First:Syntax})
-				}
-			}
-		}
-	}
-	if(Matches.1){
+	}}}}if(Matches.1){
 		MatchList:=[]
-		for a in Split
-			if(Pos:=InStr(String,a))
-				String:=RegExReplace(String,"\Q" a "\E")
-		RegExMatch(String,"AO)\w+(\W)",FirstAfter)
+		/*
+			for a in Split
+				if(Pos:=InStr(String,a))
+					String:=RegExReplace(String,"\Q" a "\E")
+		*/
+		if(Rep:=Keywords.ReplaceFirst[Language])
+			if(RegExMatch(String,FindFirst Rep.First,Found))
+				String:=RegExReplace(String,"A)" Found.1 RegExReplace(Rep.First,"\(\)"),Found.1 Rep.Replace,,1)
+		RegExMatch(String,"OA)((\w|[^\x00-\x7F]|\.)+){0,}" Delimiter.Search,FirstAfter)
 		for a,b in Matches{
-			RegExMatch(b.Search?b.Search:b.Syntax,"UO).*(\W)",Replace)
-			if(FirstAfter.1=Delimiter.Replace&&Replace.1!=Delimiter.Replace){
-				/*
-					t("Stops here!",FirstAfter.1,Delimiter.Replace,Replace.1,Delimiter.Replace)
-				*/
+			FindSyntax:=b.Syntax
+			if(RegExMatch(FindSyntax,FindFirst Rep.First,Found))
+				FindSyntax:=RegExReplace(FindSyntax,"A)" Found.1 RegExReplace(Rep.First,"\(\)"),Found.1 Rep.Replace,,1)
+			if(SubStr(String,StrLen(Word)+1,1)!=SubStr(FindSyntax,StrLen(Word)+1,1))
 				Continue
-			}else if(FirstAfter.1!=Delimiter.Replace&&Replace.1=Delimiter.Replace){
-				/*
-					t("Stops Here2",FirstAfter.1,Delimiter.Replace,Replace.1,Delimiter.Replace,String,b.Syntax)
-				*/
-				Continue
-			}RegExReplace(b.Syntax,"\Q" Delimiter.Delimiter "\E",,Count)
-			MatchList[Count,b.Syntax]:=b
+			RegExReplace(b.Syntax,"\Q" Delimiter.Delimiter "\E",,Count),MatchList[Count,b.Syntax]:=b
 		}Reverse:=[],Index:=0
 		for a,b in MatchList
 			for c,d in b
@@ -2843,12 +2868,6 @@ Context(return=""){
 			AddSpace:=InStr(Found.0,Delimiter.Delimiter)=0&&(Replace:=SubStr(b.syntax,1,1))!=Delimiter.Replace
 			if(!b.Syntax)
 				Continue
-			/*
-				Syntax:=Word (AddSpace?" ":"") b.Syntax
-				Gui,2:Add,Button
-				if flan between 2 and 4
-					Add() <----Only triggers in odd spots
-			*/
 			Syntax:=b.Syntax
 			List.=Syntax (b.Type?" - " b.Type:"") (b.File?" - " b.File:"") "`n"
 			if(!Index){
@@ -2856,27 +2875,18 @@ Context(return=""){
 				FirstEA:=b.EA
 				NoHighlight:=b.NoHighlight
 				Index++
-			}if(Pos:=InStr(First,"`n"))
-				First:=SubStr(First,1,Pos-1)
+			}
 		}
+		if(Pos:=InStr(First,"`n"))
+			First:=SubStr(First,1,Pos-1)
 		if(!First)
 			return sc.2201()
 		String:=RegExReplace(String,Delimiter.ReplaceRegex,Delimiter.Delimiter,,1),String:=RegExReplace(String,"A)(\W+)")
-		/*
-			if(ReplaceFirst:=)
-				RepFirst:=XML.EA(ReplaceFirst)
-		*/
-		if(Rep:=Keywords.ReplaceFirst[Language]){
-			if(RegExMatch(String,FindFirst Rep.First,Found)){
-				String:=RegExReplace(String,"A)" Found.1 RegExReplace(Rep.First,"\(\)"),Found.1 Rep.Replace,,1)
-			}
-		}if(FirstEA.First){
+		if(FirstEA.First){
 			if(RegExMatch(First,FindFirst FirstEA.First,Found))
 				First:=RegExReplace(First,"A)" Found.1 RegExReplace(FirstEA.First,"\(\)"),Found.1 FirstEA.Replace,,1)
 		}
-		if(!sc.2102)
-			sc.2200(PFL+InStr(OLineText,Word)-1,Trim(List,"`n"))
-		if(sc.2202){
+		if(sc.2202||!sc.2102){
 			RegExReplace(String,Delimiter.Delimiter,,Comma),Comma++,sc.2207(0xFF0000),Total:=0,Info:="",Obj:=StrSplit(First,Delimiter.Delimiter)
 			for a,b in Obj{
 				Start:=StrLen(Info),Info.=b (a=Obj.MaxIndex()?"":Delimiter.Delimiter),End:=StrLen(Info)-1
@@ -2889,55 +2899,26 @@ Context(return=""){
 					Break
 				}
 			}if(NoHighlight)
-				sc.2207(0xFF0000),sc.2204(0,StrPut(First,"UTF-8")-1)
+				sc.2207(0xFF0000),(Start:=0),(End:=StrPut(First,"UTF-8")-1)
 			else if(Error)
-				sc.2207(0x0000FF),sc.2204(0,StrPut(List,"UTF-8")-1)
+				sc.2207(0x0000FF),(Start:=0),(End:=StrPut(List,"UTF-8")-1)
 			else if(Start!=End)
-				sc.2207(0xFF0000),sc.2204(Start,(SubStr(First,0)~="(\]|\))"?End:End+1))
+				sc.2207(0xFF0000),Start,End:=(SubStr(First,0)~="(\]|\))"?End:End+1)
 			else
-				sc.2207(0xFF0000),sc.2204(0,StrPut(First,"UTF-8")-1)
-			/*
-				if()
-					if flan in farts,,,,
-						TVC.Add(,,,)
-				if flan between 
-					if flan is 
-						if flan contains flan,flan,flan,
-							Flan!
-				Upper()
-				Settings.Add()
-				TVC.Delete()
-				SplitPath()
-				Flan:=SplitPath()
-				RegExMatch(SplitPath())
-				RegExMatch()
-				Selection.Clear()
-				SplitPath,Input,FileName,Dir,Ext,NNE,Drive
-				for a,b in c
-					Gui,Add,Button
-				sc.2181()
-				obj.Pop() <-----Needs to check for WordSplit which is <syntax wordsplit="."/>
-				Flan._NewEnum()
-				Flan.Delete()
-				Flan.GetAddress()
-				Flan.GetCapacity()
-				Flan.Clone()
-				Flan.HasKey()
-				Flan.InsertAt(,,,)
-				Flan.Length()
-				Flan.MaxIndex()
-				Flan.MinIndex()
-				Flan.ObjRawSet(,,)
-				Flan.Pop()
-				Flan.Push(,,,)
-				Flan.RemoveAt(,)
-				Flan.SetCapacity()
-				this is a built in thing....so it'll be in a different spot
-				NOT WORKING!!!!
-				/NOT WORKING!!!!
-			*/
-		}return SetStatus("Intellisense Complete In " A_TickCount-Tick "ms",3)
-		;t(Matches.MaxIndex(),List,String,FirstAfter.1)
+				sc.2207(0xFF0000),(Start:=0),(End:=StrPut(First,"UTF-8")-1)
+			NewStart:=sc.2008-Start,Sub:=Floor((End-Start)/2)
+			if(BracePos){
+				BracePos-=StrLen(Word)+1
+				if(OPos-BracePos>Sub)
+					NewStart-=Sub
+				else
+					NewStart-=Opos-BracePos
+			}else
+				NewStart:=NewStart-Sub
+			if(NewStart<LineIndent)
+				NewStart:=LineIndent
+			sc.2200(NewStart,Trim(List,"`n")),sc.2204(Start,End)
+		}return
 	}else if(sc.2202)
 		sc.2201()
 	return
@@ -3214,27 +3195,27 @@ csc(set:=0){
 	*/
 	return Current
 }
-Current(parent=""){
-	node:=files.SSN("//*[@tv='" TVC.Selection(1) "']"),id:=SSN(node,"@id").text,ParentNode:=SSN(node,"ancestor-or-self::main"),pid:=SSN(ParentNode,"@id").text
-	if(parent=1)
+Current(Parent=""){
+	Node:=files.SSN("//*[@tv='" TVC.Selection(1) "']"),id:=SSN(Node,"@id").text,ParentNode:=SSN(Node,"ancestor-or-self::main"),pid:=SSN(ParentNode,"@id").text
+	if(Parent=1)
 		return ParentNode
-	else if(parent=2)
+	else if(Parent=2)
 		return XML.EA(ParentNode)
-	else if(parent=3)
-		return XML.EA(node)
-	else if(parent=4)
-		return SSN(node,"ancestor-or-self::main/file")
-	else if(parent=5)
+	else if(Parent=3)
+		return XML.EA(Node)
+	else if(Parent=4)
+		return SSN(Node,"ancestor-or-self::main/file")
+	else if(Parent=5)
 		return cexml.SSN("//main[@id='" pid "']/descendant::file[@id='" id "']")
-	else if(parent=6)
+	else if(Parent=6)
 		return cexml.EA("//main[@id='" pid "']/descendant::file[@id='" id "']")
-	else if(parent=7)
+	else if(Parent=7)
 		return SSN(cexml.SSN("//main[@id='" pid "']/descendant::file[@id='" id "']"),"ancestor-or-self::main")
-	else if(parent=8)
+	else if(Parent=8)
 		return id
-	else if(parent=9)
+	else if(Parent=9)
 		return SSN(cexml.SSN("//main[@id='" pid "']/descendant::file[@id='" id "']"),"ancestor::main/@id").text
-	return node
+	return Node
 }
 Custom_Version(){
 	change:=Settings.SSN("//auto_version").text?Settings.SSN("//auto_version").text:"Version:=" Chr(34) "$v" Chr(34),cc:=InputBox(csc().sc,"Custom auto_version","Enter your custom" Chr(59) "auto_version in the form of Version:=$v",change)
@@ -3465,7 +3446,7 @@ Display(PopulateVarBrowser:=0){
 		}
 	*/
 	static receive:=new XML("receive"),total,width,addhotkey,lastid,StoreXML:=[],c:=[],ProcessProperties:=[],scope
-	store:="",sc:=v.debug,xx:=debug.xml ;xx:=new XML() ;for Studio
+	store:="",sc:=v.debug,xx:=debug.xml
 	while(store:=v.displaymsg.Pop()){
 		receive.XML.LoadXML(store),rea:=XML.EA(info:=receive.SSN("//*"))
 		if(v.Options.Verbose_Debug_Window)
@@ -3646,6 +3627,7 @@ Dlg_Font(Node,DefaultNode:="",window="",Effects=1){
 	}for a,b in Style
 		if(DefaultClone[a]!=b)
 			Node.SetAttribute(a,b)
+	return Node
 }
 Donate(){
 	donate:
@@ -4327,19 +4309,7 @@ FileCheck(file:=""){
 	if(FileExist("lib\Scintilla.xml"))
 		Scintilla()
 	FileGetTime,time,SciLexer.dll
-	/*
-		make it so that it checks lib\Languages\ahk.xml for <Date>thedate</Date>
-	*/
-	Language:=new XML("ahk","lib\Languages\ahk.xml")
-	LangDate:="20171011091032"
-	if(Language.SSN("//*")&&!Language.SSN("//date"))
-		Language.Add("date",,LangDate),Language.Save(1)
-	else if(Language.SSN("//date").text!=LangDate){
-		FileCreateDir,Lib\Languages
-		SplashTextOn,200,100,Downloading AHK.XML,Please Wait
-		UrlDownloadToFile,https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/lib/Languages/ahk.xml,Lib\Languages\ahk.xml
-		Language:=new XML("ahk","lib\Languages\ahk.xml"),Language.Add("date",,LangDate),Language.Save(1)
-	}if(!FileExist("SciLexer.dll")||time<scidate){
+	if(!FileExist("SciLexer.dll")||time<scidate){
 		SplashTextOn,200,100,Downloading SciLexer.dll,Please Wait....
 		UrlDownloadToFile,%base%/SciLexer.dll,SciLexer.dll
 	}SplashTextOff
@@ -4963,13 +4933,24 @@ GetControl(ctrl){
 		node:=MainWin.gui.SSN("//*[@hwnd='" ctrl+0 "']")
 	return node
 }
-GetCurrentClass(line){
-	sc:=csc(),find:=oline:=line
-	if(sc.2225(line)<0)
+
+
+
+
+GetCurrentClass(Line){
+	sc:=csc(),find:=oline:=Line
+	if(sc.2225(Line)<0)
 		return
 	while((find:=sc.2225(find))>=0)
-		line:=find
-	text:=sc.TextRange(sc.2167(line),sc.2136(sc.2224(line,-1))),classes:=GetAllTopClasses(text,line,1,(Omni:=GetOmni(Current(3).ext)))
+		Line:=find
+	
+	t("Original Line: " oline,"Start Line: " Line,"End Line: " sc.2224(Line,-1),sc.2136(sc.2224(Line,-1)))
+	return
+	/*
+		
+	*/
+	
+	text:=sc.TextRange(sc.2167(Line),sc.2136(sc.2224(Line,-1))),classes:=GetAllTopClasses(text,Line,1,(Omni:=GetOmni(Current(3).ext)))
 	for a,b in classes
 		if(b.linestart<=oline&&b.lineend>=oline){
 			pos:=1,SearchClass:=GetClassText(text,a,,Omni),max:=[],findline:=oline-b.linestart
@@ -5584,7 +5565,7 @@ Index_Lib_Files(){
 			if(filename="Studio.ahk")
 				Continue
 			FileGetTime,time,%file%
-			new:=files.Under(main,"file",{file:file,dir:dir,ext:Ext,filename:filename,nne:nne,inside:"Libraries",scan:1,id:GetID()}),fff:=FileOpen(file,"R"),encoding:=fff.encoding,text:=fff.read(fff.length),fff.Close(),dir:=Trim(dir,"\"),new.SetAttribute("time",time),new.SetAttribute("encoding",encoding)
+			new:=files.Under(main,"file",{file:file,dir:dir,ext:Ext,filename:filename,lang:LanguageFromFileExt(Ext),nne:nne,inside:"Libraries",scan:1,id:GetID()}),fff:=FileOpen(file,"R"),encoding:=fff.encoding,text:=fff.read(fff.length),fff.Close(),dir:=Trim(dir,"\"),new.SetAttribute("time",time),new.SetAttribute("encoding",encoding)
 			StringReplace,text,text,`r`n,`n,All
 			if(!Update({get:file}))
 				Update({file:file,text:text,load:1,encoding:encoding})
@@ -5709,22 +5690,61 @@ Jump_To_First_Available(){
 }
 Class Keywords{
 	__New(){
-		for a,b in StrSplit("IndentRegex,KeywordList,Suggestions,Languages,Comments,OmniOrder,CodeExplorerExempt,Words,FirstChar,Delimiter,ReplaceFirst",",")
+		Static Dates:={ahk:"20171011091036"},BaseURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/lib/Languages/",BaseDir:="Lib\Languages\"
+		for a,b in StrSplit("IndentRegex,KeywordList,Suggestions,Languages,Comments,OmniOrder,CodeExplorerExempt,Words,FirstChar,Delimiter,ReplaceFirst,NoReplace,SearchTrigger",",")
 			Keywords[b]:=[]
 		if(!IsObject(v.OmniFind))
 			v.OmniFind:=[],v.OmniFindText2:=[]
 		if(!FileExist("Lib\Languages"))
 			FileCreateDir,Lib\Languages
 		/*
-			<Breakpoint find="OUi)\s+;\*\[($1)\]" regex="OU);\*\[(?&lt;Name&gt;.*)\]"/>
-			<Bookmark find="OUi)\s+;#\[($1)\]" regex="OU);#\[(?&lt;Name&gt;.*)\]"/>
-			RegExMatch()
+			IMPORTANT!!!!!!!!!!!!!!!!!
+			Language:=new XML("ahk","lib\Languages\ahk.xml")
+			LangDate:="20171011091032"
+			if(Language.SSN("//*")&&!Language.SSN("//date"))
+				Language.Add("date",,LangDate),Language.Save(1)
+			else if(Language.SSN("//date").text!=LangDate){
+				FileCreateDir,Lib\Languages
+				SplashTextOn,200,100,Downloading AHK.XML,Please Wait
+				UrlDownloadToFile,https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/lib/Languages/ahk.xml,Lib\Languages\ahk.xml
+				Language:=new XML("ahk","lib\Languages\ahk.xml"),Language.Add("date",,LangDate),Language.Save(1)
+			}
 		*/
-		Keywords.BreakBook:={Breakpoint:"OU);\*\[(?<Name>.*)\]",Bookmark:"OU);#\[(?<Name>.*)\]"}
-		Keywords.BreakBookFind:={Breakpoint:";\*\[$1\]",Bookmark:";#\[$1\]"}
+		
+		/*
+			download the xml files using URLDownloadToVar()
+			check to see if they are valid files First
+			if they are
+				update the current file
+			if not
+				continue with the old file unless it is blank then create a new one.
+		*/
+		
+		FileList:={BaseDir "ahk.xml":1}
 		Loop,Files,Lib\Languages\*.xml
+			FileList[A_LoopFileFullPath]:=1
+		Keywords.BreakBook:={Breakpoint:"OU)(\s+|^);\*\[(?<Text>.*)\]",Bookmark:"OU)(\s+|^);#\[(?<Text>.*)\]",multiple:1}
+		Keywords.BreakBookFind:={Breakpoint:";\*\[$1\]",Bookmark:";#\[$1\]"}
+		BreakBook:={Breakpoint:{Regex:Keywords.BreakBook.Breakpoint,Multiple:1},Bookmark:{Regex:Keywords.BreakBook.Bookmark,Multiple:1}}
+		for a in FileList
 		{
-			xx:=new XML(Language,A_LoopFileLongPath),Lexer:=xx.SSN("//FileTypes")
+			xx:=new XML(Language,a)
+			SplitPath,a,,,,NNE
+			if(Date:=Dates[NNE]){
+				if(!FileExist(BaseDir NNE ".xml")){
+					Run,RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
+					SplashTextOn,200,100,Downloading %NNE%.xml,Please Wait...
+					URLDownloadToFile,% BaseURL Format("{:L}",NNE) ".xml",%a%
+					xx:=new XML(Language,a)
+				}if(xx.SSN("//date").text!=Date){
+					SplashTextOn,200,100,Downloading %NNE%.xml,Please Wait...
+					Run,RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
+					URLDownloadToFile,% BaseURL Format("{:L}",NNE) ".xml",%a%
+					xx:=new XML(Language,a)
+				}if(!xx.SSN("//date"))
+					xx.Add("date",,Date),xx.Save(1)
+				SplashTextOff
+			}Lexer:=xx.SSN("//FileTypes")
 			Keywords.Languages[(Language:=Format("{:L}",SSN(Lexer,"@language").text))]:=xx
 			for i,Ext in StrSplit(Lexer.text," ")
 				if(!Settings.SSN("//Extensions/Extension[text()='" Ext "']"))
@@ -5751,9 +5771,24 @@ Class Keywords{
 				Keywords.FirstChar[Language,a]:=Trim(b,"|")
 			for a,b in Keywords.BreakBook
 				Order[++Index,a,"Regex"]:=b,Order[Index,a,"Find"]:=Keywords.BreakBookFind[a]
+			
+			
+			
+			
+			for a,b in BreakBook
+				for c,d in b
+					Find[a,c]:=d
+			
+			
+			
+			Search:=""
 			for a,b in xx.EA("//Comments")
+				KeyWords.Comments[Language,a]:=b
+			
+			/*
 				Search.="(?<" a ">" b ")|"
-			KeyWords.Comments[Language]:=Trim(Search,"|")
+				m(Search)
+			*/
 			/*
 				KeyWords.Comments[Language]:=RegExReplace(xx.SSN("//Comments").text,"\x60n","`n")
 			*/
@@ -5768,6 +5803,9 @@ Class Keywords{
 			}
 			if(Node:=xx.SSN("//ReplaceFirst"))
 				Keywords.ReplaceFirst[Language]:=XML.EA(Node)
+			if(NoReplace:=xx.SSN("//NoReplace").text)
+				Keywords.NoReplace:=RegExReplace(NoReplace," ","|")
+			Keywords.SearchTrigger[Language]:=xx.SSN("//SearchTrigger").text
 		}KeyWords.RefreshPersonal()
 		/*
 			for a,b in Keywords.CodeExplorerExempt
@@ -6846,8 +6884,6 @@ Notify(csc*){
 		TNotes.Write(),tn:=1
 	
 	
-	
-	
 	if(fn.modType&0x400&&!tn){
 		text:=StrGet(fn.text,fn.length,"UTF-8")
 		line:=sc.2166(fn.position)
@@ -6888,7 +6924,8 @@ Notify(csc*){
 				if(text)
 					RegExReplace(text,"\R",,count),AddNewLines(text,Current(5)),LineStatus.DelayAdd(line,count)
 			}else{
-				SetScan(line)
+				if(MainWin.tnsc.sc!=ctrl)
+					SetScan(line)
 				if(v.Options.Disable_Line_Status!=1){
 					LineStatus.Add(line,2)
 	}}}}else if(fn.modType&0x800&&!tn){
@@ -6904,10 +6941,16 @@ Notify(csc*){
 		if(sc.2008=sc.2009&&fn.modType&0x20=0&&fn.modType&0x40=0)
 			epos:=fn.position,del:=sc.2007(epos),poskeep:=""
 		start:=sc.2166(fn.position),end:=sc.2166(fn.position+fn.length)
-		if(start!=end)
-			RemoveLines(start,sc.2166(fn.position+fn.length-1))
-		else if(!v.LineEdited[start]){
-			SetScan(start)
+		/*
+			if(start!=end){
+				RemoveLines(start,sc.2166(fn.position+fn.length-1))
+				SetScan()
+			}else
+				
+		*/
+		if(!v.LineEdited[start]){
+			if(MainWin.tnsc.sc!=ctrl)
+				SetScan(start)
 			if(v.Options.Disable_Line_Status!=1)
 				LineStatus.Add(start,2)
 		}
@@ -7531,7 +7574,7 @@ OpenHelpFile(url){
 	help.Navigate(url),WinActivate("AutoHotkey Help ahk_class HH Parent")
 	while(help.busy)
 		Sleep,10
-	if(InStr(help.document.body.OuterHtml,"This page can’t be displayed"))
+	if(InStr(help.document.body.OuterHtml,"This page can't be displayed"))
 		help.Navigate("mk:@MSITStore:C:\Program%20Files%20(x86)\AutoHotkey\AutoHotkey.chm::/docs/AutoHotkey.htm")
 }
 Options(x:=0){
@@ -7832,7 +7875,7 @@ Previous_Scripts(filename=""){
 ProcessDebugXML(){
 	if(!debug.VarBrowser)
 		return v.ready:=1
-	xx:=debug.xml ;xx:=new XML()
+	xx:=debug.xml
 	scope:=xx.SN("//scope[not(@tv)]"),new:=xx.SN("//*[not(@tv) and @name]") ;new:=xx.SN("//*[@new]")
 	while(ss:=scope.item[A_Index-1]),ea:=XML.EA(ss){
 		if(SN(ss,"descendant::property").length)
@@ -8310,6 +8353,7 @@ RemoveHistory(ea){
 		hh.ParentNode.RemoveChild(hh)
 }
 RemoveLines(start,end){
+	return
 	static current,Classes,AllText,OText,node
 	current:=Current(5),sc:=csc(),StartScan:=sc.2167(start),AllText:=sc.GetUNI(),EndScan:=sc.2136(end),LineStatus.Delete(start,end),Classes:=[]
 	if(StartScan>EndScan)
@@ -8478,10 +8522,7 @@ Reset_Zoom(){
 	csc().2373(0),Settings.SSN("//gui/zoom").text:=0,CenterSel(),MarginWidth()
 }
 RGB(c){
-	setformat,IntegerFast,H
-	c:=(c&255)<<16|c&65280|c>>16 ""
-	SetFormat,integerfast,D
-	return c
+	return Format("0x{:06X}",(c&255)<<16|c&65280|c>>16)
 }
 Right_Click_Menu_Editor(menu){
 	static TVRCM:=new EasyView(),nw,node,lastevent,find:=[]
@@ -8767,169 +8808,112 @@ SaveGUI(win:=1){
 	else
 		top.RemoveAttribute("lastw"),top.RemoveAttribute("lastah")
 }
-Class Butts{
-	aaFarts5(a,b,c,d)
-	;I think this is still legal...
-	{
-		
-	}
-}
-/*
-	Poops
-*/
-;poops
-aaFarts5(a,b,c){
-	m("Farts")
-}
 Scan_Line(text:=""){
-	/*
-		Do the Breakpoint and Bookmark stuff like below but better.
-	*/
-	Tick:=A_TickCount
-	sc:=csc(),Omni:=Keywords.OmniOrder[(Current:=Current(3)).Lang],Text:=Update({get:Current.File}),xx:=cexml.SSN("//*[@id='" Current.ID "']"),Comments:=ScanFile.MarkComments(Current,1)
-	Doc:=StrSplit(Text,"`n")
 	while(b:=v.LineEdited.Pop()){
-		Line:=b.Text,LineText:=sc.GetLine(b.Line),Orig:=b,Words:=v.words[sc.2357],RepLine:=Trim(RegExReplace(b.Text,"(\b\w{1}\b|\W)"," ")),Words:=RegExReplace(Words,"\b(" RegExReplace(RepLine,"\s","|") ")\b"),StartPos:=sc.2128(b.Line),NewWords:=Trim(RegExReplace(LineText,"(\b\w{1}\b|\W)"," ")),LineWords:=RegExReplace(NewWords,"(\b\w{1}\b|\W)"," ") " " Words
-		Sort,LineWords,CUD%A_Space%
-		words:=Trim(LineWords),v.words[sc.2357]:=LineWords,Start:=sc.2128(b.line),MaxMatch:=StrLen(LineText)
-		LineText:=""
-		while((LineToGet:=A_Index+b.Line)<=Doc.MaxIndex())
-			LineText.=Doc[LineToGet] "`n"
+		Current:=Current(3),Orig:=b,Tick:=A_TickCount,Text:=ScanFile.RemoveComments(b.Text,Current.Lang),Obj:=StrSplit(Text,Chr(127))
+		if(!Obj.2)
+			return SetStatus("Scan_Line() " A_TickCount-Tick "ms No Results",3)
+		RegExReplace(Obj.1,"\R",,Count)
+		StartLine:=Count+1,StartPosition:=StrLen(Obj.1)
+		AfterText:=SubStr(Obj.2,1,InStr(Obj.2,"`n",0,1,2)-1)
+		if(RegExMatch(AfterText,"^\s*\{"))
+			RegExMatch(Text,"OUm`n)\R?(.*\R" Chr(127) ".*\R)",Found),AfterText:=RegExReplace(Found.1,Chr(127) " ")
+		Text:=Update({get:Current.File}),Pos1:=InStr(Text,"`n",0,1,b.Line)
+		NewText:=(SubStr(Text,1,Pos1) Chr(127) " " SubStr(Text,Pos1+1))
+		NewText:=ScanFile.RemoveComments(NewText,Current.Lang)
+		Obj:=StrSplit(NewText,Chr(127))
+		AfterText1:=SubStr(Obj.2,1,InStr(Obj.2,"`n",0,1,2)-1)
+		FoundStartPos:=StrLen(Obj.1)
+		if(RegExMatch(AfterText1,"^\s*\{"))
+			RegExMatch(NewText,"OUm`n)\R?(.*\R" Chr(127) ".*\R)",Found),AfterText1:=RegExReplace(Found.1,Chr(127) " ")
+		OverallFind:=RegExReplace(NewText,Chr(127) " ")
+		TextObj:=StrSplit(OverallFind,"`n")
 		/*
-			ONLY DO THIS IF THERE IS AN INSIDE TYPE LIKE METHOD
-			AND ONLY DO IT UNTIL YOU GET TO THE MATCH OF THE OUTER
+			This could be put into a timer and lowered priority
 		*/
+		Omni:=GetOmni(Current.Lang)
+		OmniOrder:=Keywords.OmniOrder[Current.Lang]
 		/*
-			return m("MaxMatch: " MatchMax,"DocLine: " Doc[b.Line+1],"Foo: " Foo)
+			Do the Breakpoint and Bookmark stuff like below but better.
 		*/
-		
-		
-		
-		if(Node:=SSN(Comments,"comment[@start<'" Start "' and @end>'" Start "']"))
-			Continue
-		for a,b in Omni{
+		AfterText1:=AfterText1
+		AddItems:=[]
+		for a,b in OmniOrder{
 			for c,d in b{
 				Pos:=1,LastPos:=0
 				if(InStr(c,Chr(127))){
 					Obj:=StrSplit(c,Chr(127)),Pos:=1
-					/*
-						THIS STUFF DOES NOT WORK IF YOU DON'T PROGRAM LIKE I DO :(
-						This all needs re-worked by trimming the text to start at that line
-						and then do another search for the word that was found to see if it
-						is in the line that is edited....or some shit.
-						See if the match starts before the first `n so that it's a match anchored
-						in that line.
-					*/
-					/*
-						when you delete something and it is no longer in the text of "LineText"{
-							it can't find anything to remove it...
-						}
-						I think I need to do a sweep of the line to see where the max whatever in the text is from
-						that line forward when changing the things. and even a few lines back as well.
-						just to know what was, and is say someone
-						Function()
-						;Comments and stuff
-						/-*
-							More Comments without the - in them
-						*-/ 
-						{ <------Deletes this and invalidates a function
-						
-						}
-						you need to also know that it killed it and remove it from cexml.
-						
-						make a timer that processes the old text from the line that the user edits it
-						
-						v.LineEdited[LineEdited]:={Line:Line,OrigText:Text,Action:[Add|Delete]} <---Add the original text to here
-						
-						do the processing on that line AS SOON as that line gets added to v.LineEdited[]
-						take a leaf from the look back here
-						1. split the document into its lines
-						2. start from the line number and work your way back until you find something of interest
-						2-A Scan the document for comments and use those to just not scan those lines
-						2-B Only go back 1 line that isn't comments
-						2-C If there isn't anything after that 1 non-commented line then I'm going to guess that
-						    <there isn't anything of interest concerning the line that they are editing
-						3. Once something is found add it to v.LineEdited[LineEdited,FoundThing]:=ThingFound
-						
-						so scan back at least 2-3 lines checking for matches each time
-						pita I know...but it'll be worth it.
-						
-					*/
-					while(RegExMatch(LineText,d.Regex,FUnder,Pos),Pos:=FUnder.Pos(1)+FUnder.Len(1)){
-						/*
-							m("Pos: " FUnder.Pos(0),"MaxMatch: " MaxMatch)
-						*/
-						if(FUnder.Pos(0)>MaxMatch)
-							Continue,2
-						StartLine:=Orig.Line+1,Regex:=(FindObj:=v.OmniFind[Current.Lang,Obj.1]).Regex
-						if(RegExMatch(FUnder.1,"\b(" v.OmniFind[Current.Lang,Obj.2].Exclude ")\b"))
-							Continue
-						while(StartLine>0){
-							SearchText:=Doc[StartLine] "`n" SearchText
-							if(RegExMatch(SearchText,Regex,FoundParent))
-								Break
-							StartLine--
-						}if(FoundParent.1){
-							Search:=FindObj.Open,Pos1:=RegExMatch(Text,"\Q" SearchText "\E"),StartPos:=Pos1,Open:=0,LastPos1:=0,Multiple:=FindObj.Multiple
-							while(RegExMatch(Text,Search,FF,Pos1),Pos1:=FF.Open?FF.Pos("Open")+FF.Len("Open"):FF.Pos("Close")+FF.Len("Close")){
-								if(RegExReplace(FF.0,"(" Multiple ")",,Count)){
-									Open+=FF.Open?+Count:-Count
-									SavedPos:=Pos1
-									if(Open<=0&&FF.Close&&Count)
-										break
-							}}Start:=StrPut(SubStr(Text,1,StartPos),"UTF-8")-2,Start:=Start<0?0:Start
-							if(!Parent:=SSN(Current(5),"descendant::info[@type='" Obj.1 "' and @text='" FoundParent.1 "']"))
+					Regex:=((FindObj:=v.OmniFind[Current.Lang,Obj.1]).Regex),Count:=StartLine,LastPos2:=Pos2:=1
+					if(!Parents)
+						Parents:=ScanParent(OverallFind,FindObj)
+					while(RegExMatch(AfterText1,d.Regex,FindIt,Pos2)){
+						if(FindIt.Pos(1)=LastPos2)
+							Break
+						LastPos2:=FindIt.Pos(1)
+						if(FindIt.Text){
+							if(RegExMatch(FindIt.Text,"(" d.Exclude ")"))
 								Continue
-							End:=StrPut(SubStr(Text,1,SavedPos),"UTF-8")-2,LinePos:=sc.2128(Orig.Line)
-							
-							
-							/*
-								m("HERE!",Start,End,LinePos)
-							*/
-							Line:=RegExReplace(Line,"\b(" Found.Text ")\b",Spaces,,1)
-							
-							
-							
-							if(Start<LinePos&&End>LinePos){
-								Obj:=StrSplit(c,Chr(127)),Pos:=1
-								while(RegExMatch(Orig.Text,d.Regex,Found,Pos),Pos:=Found.Pos(1)+Found.Len(0)){
-									if(Founds:=SSN(Parent,"descendant::info[@type='" Obj.2 "' and @text='" Found.Text "']")){
-										FoundsText:=Founds.xml,Parent:=Founds.ParentNode,TVC.Delete(2,SSN(Founds,"@cetv").text),Founds.ParentNode.RemoveChild(Founds)
-									}if(Pos=LastPos)
-										break
-									LastPos:=Pos
-								}New:=cexml.Under(Parent,"info",{att:FUnder.Attributes,text:FUnder.1,type:Obj.2,upper:Upper(FUnder.1),cetv:TVC.Add(2,FUnder.1,SSN(Parent,"@cetv").text,"Sort Vis")})
-								Spaces:=""
-								Loop,% StrLen(FUnder.1)
-									Spaces.=" "
-								LineText:=RegExReplace(LineText,"\b(" FUnder.1 ")\b",Spaces,,1)
-							}else
-								Continue,2
-						}
-					}Continue
-				}if(RegExMatch(Line,d.Regex,Found)){
-					if(d.Exclude&&!RegExMatch(Found.Text,"\b(" d.Exclude ")\b")){
-						Node:=SSN(xx,"descendant::*[@type='" c "' and @text='" Found.text "']")
-						if(tv:=SSN(Node,"@cetv").text)
-							TVC.Delete(2,tv)
-						Node.ParentNode.RemoveChild(Node)
-				}}while(RegExMatch(LineText,d.regex,Found,Pos),Pos:=Found.Pos(1)+Found.Len(0)){
-					if(Found.Pos(0)>MaxMatch)
-						Continue,2
-					if(d.Exclude&&RegExMatch(Found.Text,"\b(" d.Exclude ")\b")){
-						LastPos:=Pos
-						Continue
-					}New:=cexml.Under(xx,"info",{att:Found.Attributes,text:Found.Text,type:c,upper:Upper(Found.Text),cetv:TVC.Add(2,Found.Text,Header(c),"Sort Vis")})
-					if(Pos=LastPos)
+						}else
+							Continue
+						CurrentPos:=FindIt.Pos("Text")+StartPosition
+						if(!CurrentPos)
+							Continue
+						PP:=Parents.SN("//*[@start<'" CurrentPos "' and @end>'" CurrentPos "']")
+						if(ParentNode:=PP.Item[PP.Length-1]){
+							IPos:=LastIPos:=1,Parent:=SSN(Current(5),"descendant::*[@type='" Obj.1 "' and @text='" SSN(ParentNode,"@text").text "']")
+							Total:=Combine({type:Obj.2,upper:Upper(FindIt.Text),cetv:TVC.Add(2,FindIt.Text,SSN(Parent,"@cetv").text,"Vis Sort")},FindIt)
+							AddItems.Push({obj:Total,parent:Parent})
+							StringReplace,AfterText1,AfterText1,% FindIt.0
+						}else
+							Pos2:=FindIt.Pos(1)+FindIt.Len(1)
+					}if(ParentItem:=AddItems.1){
+						while(RegExMatch(AfterText,d.Regex,Old,IPos),IPos:=Old.Pos(1)+Old.Len(1)){
+							StringReplace,AfterText,AfterText,% Old.Text
+							if(IPos=LastIPos)
+								Break
+							LastIPos:=IPos
+							RemoveNode:=SSN(ParentItem.Parent,"descendant::*[@type='" Obj.2 "' and @text='" Old.Text "']")
+							if(tv:=SSN(RemoveNode,"@cetv").text)
+								TVC.Delete(2,tv)
+							RemoveNode.ParentNode.RemoveChild(RemoveNode)
+					}}while(Item:=AddItems.Pop())
+						cexml.Under(Item.Parent,"item",Item.Obj)
+					Continue
+				}
+				Parent:=Current(5)
+				while(RegExMatch(AfterText,d.Regex,Found)){
+					StringReplace,AfterText,AfterText,% Found.Text
+					if(A_Index>20){
+						t("This may cause problems First!: " A_TickCount,"time:1",AfterText,LastAfterText)
+						Sleep,300
+					}if(AfterText=LastAfterText)
 						Break
-					LastPos:=Pos
+					LastAfterText:=AfterText
+					if(RegExMatch(Found.Text,"(" d.Exclude ")"))
+						Continue
+					if(tv:=(SSN(Node:=SSN(Parent,"descendant::*[@type='" c "' and @text='" Found.Text "']"),"@cetv").text))
+						TVC.Delete(2,tv)
+					Node.ParentNode.RemoveChild(Node)
+				}LastAfterText:=""
+				while(RegExMatch(AfterText1,d.Regex,Found)){
+					StringReplace,AfterText1,AfterText1,% Found.Text
+					if(A_Index>20){
+						t("This may cause problems Second!: " A_TickCount,"time:1")
+						Sleep,300
+					}if(AfterText1=LastAfterText)
+						Break
+					LastAfterText:=AfterText1
+					if(RegExMatch(Found.Text,"(" d.Exclude ")"))
+						Continue
+					Total:=Combine({upper:Upper(Found.text),type:c,cetv:TVC.Add(2,Found.Text,Header(c),"Vis Sort")},Found)
+					New:=cexml.Under(Parent,"item",Total)
 				}
 			}
 		}
-	}SetStatus("Scan_Line() " A_TickCount-Tick "ms",3)
+	}SetStatus("Scan_Line() " A_TickCount-Tick "ms Tick: " A_TickCount,3)
 }
 ScanChildren(){
-	xx:=debug.XML,exp:=xx.SN("//descendant::*[@expanded=1]") ;xx:=new XML()
+	xx:=debug.XML,exp:=xx.SN("//descendant::*[@expanded=1]")
 	while(ee:=exp.item[A_Index-1]),ea:=XML.EA(ee){
 		if(!ea.transaction)
 			ee.SetAttribute("transaction",(ea.transaction:=xx.SN("//*[@transaction]").length+1))
@@ -9130,7 +9114,7 @@ SelectText(Item,Node:=0){
 		}Item.ID:=FEA.ID
 	}text:=Update({get:Current(3).File}),Omni:=GetOmni(Files.SSN("//*[@id='" Item.ID "']/@ext").text)
 	if(!Omni[Item.Type].Inside){
-		Search:=RegExReplace(Omni[Item.Type].Find,"\$1",Item.Text)
+		Search:=GetSearchRegex(Omni[Item.Type].Regex,Item.Text)
 		Pos:=1,Total:=[]
 		while(RegExMatch(Text,Search,Found,Pos),Pos:=Found.Pos(1)+Found.Len(1))
 			Total.Push(Found.Pos(1))
@@ -9192,6 +9176,8 @@ SelectText(Item,Node:=0){
 	for a,b in Item
 		List.=a " - " b "`n"
 	Regex:=RegExReplace(Omni[Item.Type].Find,"\$1",Item.Text)
+	FindSearch:=Omni[Item.Type].Regex
+	Regex:=GetSearchRegex(FindSearch,Item.Text)
 	Node:=(xx:=Keywords.Languages[GetLanguage()]).SSN("//Code/descendant::" Item.Type)
 	if(!Regex.Multi){
 		Count:=0
@@ -9203,9 +9189,11 @@ SelectText(Item,Node:=0){
 				if(RegExMatch(Text,Regex,Found,Pos)){
 					Start:=StrPut(SubStr(Text,1,Found.Pos(1)-1),"UTF-8")-1
 					sc.2160(Start,Start+StrPut(Item.Text,"UTF-8")-1)
+				}else{
+					m("Unable to find: " Regex)
 				}
 			}else{
-				m("Can't Find:",Search,Text)
+				m("Can't Find:",Search)
 			}
 		}else if(RegExMatch(Text,Regex,Found)){
 			Tick:=A_TickCount
@@ -9220,6 +9208,25 @@ SelectText(Item,Node:=0){
 	}else{
 		m("Most Likely Class")
 	}
+}
+GetSearchRegex(FindSearch,Text,Replace:="Text"){
+	if(RegExMatch(FindSearch,"OU)(\(\?\<" Replace "\>)",FF)){
+		Start:=FF.Pos(1),Open:=0
+		for a,b in StrSplit(FindSearch){
+			if(A_Index<Start)
+				Continue
+			if(b="(")
+				Open++
+			if(b=")")
+				Open--
+			if(Open=0){
+				End:=A_Index
+				Regex:=SubStr(FindSearch,1,Start) Text SubStr(FindSearch,End)
+				Break
+	}}}if(!Regex){
+		m("No Text found in the regex")
+		Exit
+	}Return Regex
 }
 Set_As_Default_Editor(){
 	RegRead,current,HKCU,SOFTWARE\Classes\AutoHotkeyScript\Shell\Edit\Command
@@ -9292,16 +9299,8 @@ SetPos(oea:=""){
 	}
 	return
 }
-SetScan(line){
-	obj:=ScanLines(line),class:=GetCurrentClass(line)
-	if(Trim(obj.text)){
-		for a,b in GetOmni(Current(3).Ext){
-			if(RegExMatch(obj.text,b)){
-				v.LineEdited[line]:={text:obj.text,line:line,class:class,classtext:class.text}
-				return
-			}
-		}
-	}v.LineEdited[line]:={text:obj.text,line:line,class:class}
+SetScan(Line,Delete:=0){
+	sc:=csc(),Text:=Update({get:Current(3).File}),Pos1:=InStr(Text,"`n",0,1,Line),NewText:=(SubStr(Text,1,Pos1) Chr(127) " " SubStr(Text,Pos1+1)),v.LineEdited[Line]:={text:NewText,Line:Line}
 }
 SetStatus(text,part=""){
 	static widths:=[],width
@@ -9321,7 +9320,7 @@ Settings(){
 	new SettingsClass("Auto Insert")
 }
 Class SettingsClass{
-	static pos:=[],Controls:=[],Sizes:=[],Node:=[],Types:=[],scc:=[],Current:=[],DefaultStyle:={"default":1,"inlinecomment":1,"numbers":1,"punctuation":1,"multilinecomment":1,"completequote":1,"incompletequote":1,"backtick":1,"linenumbers":1,"indentguide":1,"hex":1,"hexerror":1} ;xx:=new XML() here for Studio
+	static pos:=[],Controls:=[],Sizes:=[],Node:=[],Types:=[],scc:=[],Current:=[],DefaultStyle:={"default":1,"inlinecomment":1,"numbers":1,"punctuation":1,"multilinecomment":1,"completequote":1,"incompletequote":1,"backtick":1,"linenumbers":1,"indentguide":1,"hex":1,"hexerror":1}
 	__New(Tab:=""){
 		for a,b in {HotkeyXML:new XML("hotkeys"),TempXML:new XML("temp"),SavedThemes:new XML("SavedThemes","Themes\SavedThemes.xml")}
 			SettingsClass[a]:=b
@@ -11093,19 +11092,13 @@ class ScanFile{
 	__New(Refresh:=0){
 		(IsObject(ScanFile.XML&&Refresh)?ScanFile.XML.XML.LoadXML("<ScanFile/>"):ScanFile.XML:=new XML("ScanFile","Lib\ScanFile.xml"))
 		if(Refresh)
-			m(ScanFile.xml[]),Scanfile.XML.XML.LoadXML("<ScanFile/>"),m(ScanFile.XML[])
+			ScanFile.__New(),Scanfile.XML.XML.LoadXML("<ScanFile/>")
 		ScanFile.FileList:=[],all:=ScanFile.XML.SN("//file")
 		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
 			ScanFile.FileList[ea.file]:=aa
 		ScanFile.MainList:=[],all:=ScanFile.XML.SN("//main")
 		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
 			ScanFile.MainList[ea.file]:=aa
-	}AddText(Text,Line,Column,ea:=""){
-		All:=ScanFile.All[ea?ea.ID:(ea:=Current(3)).ID],Line++
-		if(!TextLine:=All.Text[Line])
-			All.Text:=StrSplit(Update({get:ea.file}),"`n"),TextLine:=(All.Text)[Line]
-		for a,b in All
-			List.=a " - " b "`n"
 	}GetAll(ea){
 		if(!ea.ID)
 			return
@@ -11119,61 +11112,51 @@ class ScanFile{
 			Node:=obj[ea.File]
 		}
 		return Node
-	}MarkComments(ea,OnlyComments:=0){
-		static TotalTick:=0,Max:=0
-		All:=ScanFile.GetAll(ea),Pos:=1,Search:=Keywords.Comments[ea.lang],Remove:=[],Text:=Update({get:ea.file}),xx:=ScanFile.XML
+	}RemoveComments(ea,Language:=0){
+		xx:=Scanfile.XML,Text:=ea.File?Update({get:ea.file}):ea,Tick:=A_TickCount,Search:=[]
+		for a,b in Keywords.Comments[Language?Language:(ea.Lang?ea.Lang:Language)]{
+			String:=b
+			Add:="(\x7F\s)?"
+			String:=(Pos:=InStr(String,"^"))?SubStr(String,1,Pos) Add SubStr(String,Pos+1):Add String
+			Search[a]:=RegExReplace(String,"\x60n","`n")
+		}
+		if(Search.Open){
+			while(RegExMatch(Text,Search.Open,Start)){
+				if(!RegExMatch(Text,Search.Close,End))
+					Break
+				While((RegExMatch(Text,Search.Close,End))<Start.Pos(0)){
+					if(!End)
+						Break,2
+					Text:=SubStr(Text,1,End.Pos(0)-1) SubStr(Text,End.Pos(0)+End.Len(0))
+					RegExMatch(Text,Search.Open,Start)
+				}
+				Text:=SubStr(Text,1,Start.Pos(0)-1) SubStr(Text,End.Pos(0)+End.Len(0))
+			}if(Search.Line)
+				Text:=RegExReplace(Text,Search.Line)
+			Text:=RegExReplace(Text,"(\R\s*)","`n")
+			Text:=RegExReplace(Text,"\R\R")
+			ScanFile.CurrentText:=Text
+		}
+		/*
+			if(ea.FileName="AHK-Studio.ahk")
+				m(Clipboard:=RegExReplace(Text,"\R","`r`n"))
+		*/
+		/*
+			if(!Scanfile.Once)
+				m(Search.Open,"","",Text),Scanfile.Once:=1
+		*/
+		if(Language)
+			return Text
+		if(!ea.ID)
+			return
 		rem:=xx.SSN("//file[@id='" ea.ID "']")
-		if(!OnlyComments){
+		if(!Language){
 			rem.ParentNode.RemoveChild(rem),Top:=xx.Add("file",{id:ea.ID,filename:ea.FileName},,1)
 		}else{
 			Top:=Rem,all:=SN(Top,"comment")
 			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
 				aa.ParentNode.RemoveChild(aa)
 		}LastPos:=0
-		;"OUm`n)((\s+;|\R\s*;).*($|\R)+|(\s*\Q/*\E(\R|.*)+\R\s*\Q*/\E))"
-		/*
-			
-		*/
-		/*
-			t((TotalTick+=Add) "ms")
-		*/
-		/*
-			m(New.ParentNode.xml)
-		*/
-		/*
-			while(RegExMatch(Text,Search,Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
-				m(Found.Pos(1),Found.Len(1),Found.Len(0),Pos,"LastPos: " LastPos,"Search: " Search)
-				if(Pos:=LastPos){
-					m("here?")
-					Breakx
-				}
-				LastPos:=Pos
-			}
-		*/
-		/*
-			Tick:=A_TickCount
-		*/
-		Pos:=1,LastPos:=0
-		while(RegExMatch(Text,"OUm`n)(((\R)(\s)*\/\*(\R|.*)+\R\s*\*\/)|((\R\s*|\s+);.*($|\R))+)",Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
-			xx.Under(Top,"comment",{start:(Start:=StrPut(SubStr(Text,1,Found.Pos(1)),"UTF-8")-2),end:(StrPut(SubStr(Text,(Start:=Start>0?Start:1),Pos-Start),"UTF-8")-1)+Start})
-			if(Pos=LastPos)
-				Break
-			LastPos:=Pos
-		}
-		/*
-			Pos:=1
-			while(RegExMatch(Text,"OUm`n)(" Search ")",Found,Pos),Pos:=Found.Pos(1)+Found.Len(0)){
-				if(Found.Open)
-					Open:=Remove.Push({Start:Found.Pos(1)})
-				if(Found.Close&&Open)
-					Remove[Open].End:=Pos,Start:=Remove[Open].Start,Open:="",xx.Under(Top,"comment",{start:(Start:=StrPut(SubStr(Text,1,Start),"UTF-8")-2),end:(StrPut(SubStr(Text,(Start=0?1:Start),Pos-Start),"UTF-8")-1)+Start})
-				if(Found.Line&&!Open)
-					xx.Under(Top,"comment",{start:(Start:=StrPut(SubStr(Text,1,Found.Pos(1)),"UTF-8")-2),end:(StrPut(SubStr(Text,(Start:=Start>0?Start:1),Pos-Start),"UTF-8")-1)+Start})
-				if(Pos=LastPos)
-					Break
-				LastPos:=Pos
-			}
-		*/
 		return Top
 	}Scan(Node,Refresh:=0){
 		static ceobj,Count:=0
@@ -11183,7 +11166,7 @@ class ScanFile{
 		ea:=XML.EA(Node),Time:=ea.Time,Omni:=GetOmniOrder(ea.Ext),All:=ScanFile.All[ea.ID]:={Omni:Omni,Language:LanguageFromFileExt(ea.Ext)},Main:=ScanFile.FileList[ea.File]
 		xx:=ScanFile.XML
 		if(SSN(Main,"@time").text!=Time||Refresh){
-			Main.ParentNode.RemoveChild(Main),this.ScanText(ea,(Node:=this.MarkComments(ea)))
+			Main.ParentNode.RemoveChild(Main),this.ScanText(ea,(Node:=this.RemoveComments(ea)))
 		}else{
 			if(Node:=ScanFile.FileList[ea.File]){
 				Node.SetAttribute("id",ea.ID),Obj:=ScanFile.GetCEXML(ea)
@@ -11198,48 +11181,61 @@ class ScanFile{
 			Top.AppendChild(Node)
 		return Node
 	}ScanText(ea,No:=""){
-		/*
-			Tick:=A_TickCount
-		*/
-		Oea:=ea,Text:=Update({get:ea.file}),All:=ScanFile.GetAll(ea),Nea:=XML.EA(Node:=cexml.SSN("//file[@id='" ea.ID "']")),Parent:=Node.ParentNode,Node.ParentNode.RemoveChild(Node),Node:=cexml.Under(Parent,"file",NEA),xx:=ScanFile.XML,Omni:=All.Omni,No:=No?No:xx.SSN("//file[@id='" ea.ID "']")
+		Oea:=ea,Text:=ScanFile.CurrentText,All:=ScanFile.GetAll(ea),Nea:=XML.EA(Node:=cexml.SSN("//file[@id='" ea.ID "']")),Parent:=Node.ParentNode,Node.ParentNode.RemoveChild(Node),Node:=cexml.Under(Parent,"file",NEA),xx:=ScanFile.XML,Omni:=All.Omni,No:=No?No:xx.SSN("//file[@id='" ea.ID "']")
 		for c,d in Omni{
 			for a,b in d{
-				/*
-					if(!ScanFile.Once)
-						m(c,a,b.regex)
-				*/
 				LastPos:=""
 				if(InStr(a,Chr(127))){
 					Obj:=StrSplit(a,Chr(127)),Pos:=1
 					while(RegExMatch(Text,b.Regex,FUnder,Pos),Pos:=FUnder.Pos(1)+FUnder.Len(1)){
 						if(FUnder.Text~="i)\b(" b.exclude ")\b"!=0&&FUnder.Text)
 							Continue
-						Start:=StrPut(SubStr(Text,1,FUnder.Pos(1)),"UTF-8")-2,NNList:=SN(No,"descendant::*[@start<'" Start "' and @end>'" Start "']")
+						Start:=FUnder.Pos(1) ;StrPut(SubStr(Text,1,FUnder.Pos(1)),"UTF-8")-2
+						NNList:=SN(No,"descendant::*[@start<'" Start "' and @end>'" Start "']")
 						if(NNList.Length){
 							NN:=NNList.item[NNList.Length-1]
-							if(NN.NodeName="comment")
-								Continue
-							UnderHere:=SSN(Node,"descendant::*[@text='" SSN(NN,"@text").text "']"),Spam:=cexml.Under(UnderHere,"info",{type:Obj.2,att:FUnder.Attributes,pos:Start,text:FUnder.Text,upper:Upper(FUnder.Text)}),NN.AppendChild(Spam.CloneNode(0))
+							UnderHere:=SSN(Node,"descendant::*[@text='" SSN(NN,"@text").text "' and @type='" Obj.1 "']")
+							Spam:=cexml.Under(UnderHere,"info",{type:Obj.2,att:FUnder.Att,pos:Start,text:FUnder.Text,upper:Upper(FUnder.Text)})
+							NN.AppendChild(Spam.CloneNode(0))
 						}
 					}
 				}else{
 					Pos:=1
 					/*
-						if(ea.FileName="ScanLines.ahk"&&a="BookMark")
+						if(ea.FileName="ScanLines.ahk"&&a="BookMark") I have a list of multiples within Keywords. Omni NOT ORDER
 							m(a,b.regex,Found.Text)
 					*/
 					while(RegExMatch(Text,b.regex,Found,Pos),Pos:=Found.Pos(0)+Found.Len(0)){
 						if(Pos=LastPos)
 							Break
 						if(b.Open){
-							Search:=b.Open,Pos1:=Found.Pos(1),Open:=0,LastPos1:=0,Multiple:=b.Multiple
-							while(RegExMatch(Text,Search,FF,Pos1),Pos1:=FF.Open?FF.Pos("Open")+FF.Len("Open"):FF.Pos("Close")+FF.Len("Close")){
-								if(RegExReplace(FF.0,Multiple,,Count)){
-									Open+=FF.Open?+Count:-Count
+							Search:=b.Open,Pos1:=Found.Pos(1),Open:=0,LastPos1:=0,Bounds:=b.Bounds
+							Start:=Found.Pos(1)
+							Loop
+							{
+								RegExMatch(Text,b.Open,OpenObj,Pos1)
+								RegExMatch(Text,b.Close,Close,Pos1)
+								OP:=OpenObj.Pos(1),CP:=Close.Pos(1)
+								if(!OP||!CP)
+									Break
+								if(CP<OP)
+									Pos1:=CP+Close.Len(1),FoundSearch:=Close.0,FIS:="Close"
+								else
+									Pos1:=OP+OpenObj.Len(1),FoundSearch:=OpenObj.0,FIS:="Open"
+								RegExReplace(FoundSearch,"(" Bounds ")",,Count)
+								if(Count){
+									Open+=FIS="Open"?+Count:-Count
 									SavedPos:=Pos1
-									if(Open<=0&&FF.Close&&Count)
-										break
-							}}Start:=StrPut(SubStr(Text,1,Found.Pos(1)),"UTF-8")-2,End:=StrPut(SubStr(Text,1,SavedPos),"UTF-8")-2,Spam:=((Deepest:=SN(Node,"descendant::*[@start<'" Start "' and @end>'" Start "']")).length)?cexml.Under(Deepest.item[Deepest.Length-1],"info",{type:a,att:Found.Attributes,pos:Start,start:Start,end:End,text:Found.Text,upper:Upper(Found.Text)}):cexml.Under(Node,"info",{type:a,att:Found.Attributes,pos:Start,start:Start,end:End,text:Found.Text,upper:Upper(Found.Text)}),New:=No.AppendChild(Spam.CloneNode(0))
+									if(Open<=0)
+										Break
+								}if(Pos1=LastPos1)
+									Break
+								LastPos1:=Pos1
+							}
+							Atts:=Combine({start:Found.Pos(1),end:SavedPos,type:a,Upper:Upper(Found.Text)},Found)
+							Start:=Found.Pos(1)
+							Spam:=((Deepest:=SN(Node,"descendant::*[@start<'" Start "' and @end>'" Start "']")).length)?cexml.Under(Deepest.item[Deepest.Length-1],"info",Atts):cexml.Under(Node,"info",Atts)
+							New:=No.AppendChild(Spam.CloneNode(0))
 							if((GoUnder:=SN(No,"descendant::*[@start<'" Start "' and @end>'" End "']")).Length)
 								GoUnder.item[GoUnder.Length-1].AppendChild(New)
 							else
@@ -11247,12 +11243,12 @@ class ScanFile{
 						}else{
 							if(b.Exclude){
 								if(Found.Text~="\b(" b.exclude ")\b"=0&&Found.Text){
-									Start:=StrPut(SubStr(Text,1,Found.Pos(1)),"UTF-8")-2
+									Start:=Found.Pos(1) ;StrPut(SubStr(Text,1,Found.Pos(1)),"UTF-8")-2
 									if(!SSN(No,"descendant::*[@start<'" Start "' and @end>'" Start "']"))
-										Spam:=cexml.Under(Node,"info",{type:a,att:Found.Attributes,pos:Start,text:Found.Text,upper:Upper(Found.Text)}),No.AppendChild(Spam.CloneNode(0))
+										Spam:=cexml.Under(Node,"info",{type:a,att:Found.Att,pos:Start,text:Found.Text,upper:Upper(Found.Text)}),No.AppendChild(Spam.CloneNode(0))
 								}
 							}else if(Found.Text){
-								Start:=StrPut(SubStr(Text,1,Found.Pos(1)),"UTF-8")-2
+								Start:=Found.Pos(1) ;StrPut(SubStr(Text,1,Found.Pos(1)),"UTF-8")-2
 								if(!SSN(No,"descendant::*[@start<'" Start "' and @end>'" Start "']")){
 									Atts:=[]
 									Loop,% Found.Count(){
@@ -11264,55 +11260,10 @@ class ScanFile{
 									for q,r in {type:a,upper:Upper(Found.Text)}{
 										Atts[q]:=r
 									}
-									/*
-										if(!ScanFile.Once){
-											Spoop:=""
-											for a,b in Atts
-												Spoop.=a " = " b "`n"
-											m(Spoop)
-											ScanFile.Once:=1
-										}
-									*/
-									/*
-										Atts.type:=a,Atts.upper:=Upper(Found.Text)
-									*/
-									/*
-									*/
-									/*
-										Spam:=cexml.Under(Node,"info",{type:a,att:Fond.Attributes,pos:Start,text:Found.Text,upper:Upper(Found.Text)})
-									*/
 									Spam:=cexml.Under(Node,"info",Atts)
 									No.AppendChild(Spam.CloneNode(0))
 								}
 							}
-							
-							/*
-								if(b.Exclude){
-									if(Found.Text~="\b(" b.exclude ")\b"=0&&Found.Text){
-										Start:=StrPut(SubStr(Text,1,Found.Pos(1)),"UTF-8")-2
-										if(!SSN(No,"descendant::*[@start<'" Start "' and @end>'" Start "']")){
-											
-											
-											;Same Done HERE!
-											Spam:=cexml.Under(Node,"info",{type:a,att:Found.Attributes,pos:Start,text:Found.Text,upper:Upper(Found.Text)}),No.AppendChild(Spam.CloneNode(0))
-										}
-									}
-								}else if(Found.Text){
-									Start:=StrPut(SubStr(Text,1,Found.Pos(1)),"UTF-8")-2
-									if(!SSN(No,"descendant::*[@start<'" Start "' and @end>'" Start "']")){
-										Atts:=[]
-										Loop,% Found.Count(){
-											if(NNN:=Found.Name(A_Index))
-												if(VVV:=Found[Name]){
-													Atts[Format("{:L}",NNN)]:=VVV
-												}
-										}Atts.type:=a,Atts.upper:=Upper(Found.Text)
-										Sleep,500
-										;{type:a,att:Found.Attributes,pos:Start,text:Found.Text,upper:Upper(Found.Text)}
-										Spam:=cexml.Under(Node,"info",Atts),No.AppendChild(Spam.CloneNode(0))
-									}
-								}
-							*/
 						}
 						LastPos:=Pos
 					}
@@ -11324,4 +11275,42 @@ class ScanFile{
 LanguageFromFileExt(Ext){
 	static Languages:=[]
 	return (Languages[Ext]:=Languages[Ext]?Languages[Ext]:Settings.SSN("//Extensions/Extension[text()='" Format("{:L}",Ext) "']/@language").text)
+}
+Combine(Atts,Found){
+	Loop,% Found.Count(){
+		if(Name:=Found.Name(A_Index))
+			if(Value:=Found[Name])
+				Atts[Format("{:L}",Name)]:=Value
+	}return Atts
+}
+ScanParent(Text,b){
+	static SP:=new XML("SP")
+	SP.XML.LoadXML("<SP/>"),Bounds:=b.Bounds,LastOuterPos:=OuterPos:=1,Parents:=[]
+	while(RegExMatch(Text,b.Regex,OuterFound,OuterPos),OuterPos:=OuterFound.Pos(1)+OuterFound.Len(1)){
+		if(OuterPos=LastOuterPos)
+			Break
+		LastOuterPos:=OuterPos,StartPos:=Pos1:=OuterFound.Pos(1)
+		Loop
+		{
+			RegExMatch(Text,b.Open,OpenObj,Pos1),RegExMatch(Text,b.Close,Close,Pos1)
+			OP:=OpenObj.Pos(1),CP:=Close.Pos(1)
+			if(!OP||!CP)
+				Break
+			if(CP<OP)
+				Pos1:=CP+Close.Len(1),FoundSearch:=Close.0,FIS:="Close"
+			else
+				Pos1:=OP+OpenObj.Len(1),FoundSearch:=OpenObj.0,FIS:="Open"
+			RegExReplace(FoundSearch,"(" Bounds ")",,Count)
+			if(Count){
+				Open+=FIS="Open"?+Count:-Count
+				SavedPos:=Pos1
+				if(Open<=0)
+					Break
+			}if(Pos1=LastPos1)
+				Break
+			LastPos1:=Pos1
+		}Parent:=SP.SN("//*[@start<'" StartPos "' and @end>'" SavedPos "']")
+		SP.Under((Parent.Length?Parent.Item[Parent.Length-1]:SP.SSN("//*")),"info",{start:StartPos,end:SavedPos,text:OuterFound.Text})
+	}
+	return SP
 }

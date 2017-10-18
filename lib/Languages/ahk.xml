@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <ahk>
 	<FileTypes lexer="ahk" language="ahk">ahk</FileTypes>
-	<Comments Open="^\s*\/\*" Close="^\s*\*\/" Line="^\s*\;.*($|\R)">SOUm`n)((\s+;|\R\s*;).*($|\R)+|(\s*\Q/*\E(\R|.*)+\R\s*\Q*/\E))</Comments>
+	<Comments Open="OUm`n)^\s*\/\*" Close="OUm`n)^\s*\*\/" Line="OUm`n)^\s*\;.*($|\R)"></Comments>
 	<Command>
 		<syntax syntax=", On|Off">AutoTrim</syntax>
 		<syntax syntax=", On|Off|Send|Mouse|SendAndMouse|Default|MouseMove|MouseMoveOff">BlockInput</syntax>
@@ -380,18 +380,19 @@
 		<syntax syntax="(Key[, ByteSize])`nAdjusts the capacity of an object (MaxItems) or one of its fields (Key,ByteSize).">SetCapacity</syntax></Object>
 	<Code>
 		<Hotkey find="OUi)($1)::" regex="OU`nm)^\s*(?&lt;Text&gt;((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*)+\s+&amp;\s+)*((\w|[^\x00-\x7F]+)|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::"></Hotkey>
-		<Instance wordsplit="." delimiter="." add="Method" associate="Class" regex="OUi`nm)(?&lt;Text&gt;(\w|[^\x00-\x7F]|\.)+)\s*:=\s*new\s*(?&lt;Class&gt;(\w|[^\x00-\x7F])+)\("></Instance>
-		<Label regex="OUm`n)^\s*(?&lt;Text&gt;(\w|[^\x00-\x7F])+):[\s|\R][\s+;]?"></Label>
-		<Class find="Oim`n)class\s+($1)[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" regex="Oim`n)^[\s|}]*class\s+(?&lt;Text&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" multiple="\{|\}" open="Om`n)(?&lt;Close&gt;^\s*[\s*|}]+)|(?&lt;Open&gt;\{(\s+;|\R))">
-			<Method wordsplit="." find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R){0,}\s*(\{)" firstchar="(" exclude="if|while" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(\s*;.*\R){0,}\s*(\{)(\s*;\R){0,}"></Method>
-			<Property regex="Om`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\[(?&lt;Attributes&gt;.*)\](\s*;.*\R){0,}\s*(\{)"></Property></Class>
+		<Instance multiple="1" wordsplit="." delimiter="." add="Method" associate="Class" regex="OUi`nm)(?&lt;Text&gt;(\w|[^\x00-\x7F]|\.)+)\s*:=\s*new\s*(?&lt;Class&gt;(\w|[^\x00-\x7F])+)\("></Instance>
+		<Label regex="OUm`n)^\s*(?&lt;Text&gt;(\w|[^\x00-\x7F])+):(\s|\R)?(\s+;)?"></Label>
+		<Class bounds="\{|\}" regex="Oim`n)^[\s|}]*class\s+(?&lt;Text&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" close="Om`n)^([\s*|}])+" open="Om`n)(\{)(\s+;|\R)">
+			<Method wordsplit="." firstchar="(" exclude="if|while" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Att&gt;.*)\)((\s*;.*\R)|(\s*\/\*\s+.*\s*\*\/)){0,}\s*(\{)"></Method>
+			<Property regex="Om`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\[(?&lt;Att&gt;.*)\](\s*;.*\R){0,}\s*(\{)"></Property></Class>
 		<!--(((\R)(\s)*\/\*(\R|.*)+\R\s*\*\/)|([\R\s*|\s+];.*$)+)-->
 		<!--\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}-->
-		<Function exclude="if|while" firstchar="(" vis="Text" find="OUm`n)^[\s|}]*($1)\(.*\)(\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}\s*(\{)" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Attributes&gt;.*)\)(?&lt;Comments&gt;(\R\s*\/\*(\R|.*)+\R\s*\*\/|[\R\s*|\s+];.*$)){0,}\s*(\{)"></Function>
+		<Function exclude="if|while" firstchar="(" vis="Text" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Att&gt;.*)\)((\s*;.*\R)|(\s*\/\*\s+.*\s*\*\/)){0,}\s*(\{)"></Function>
 	</Code>
-	<Delimiter delimiter="," search="(\(|,[^\[)" replace="(" invalid="(\x22.*\x22|\[.*\]|\{.*\})" invalidreplace="(,)" replaceinvalid="."></Delimiter>
+	<Delimiter delimiter="," preserve="OU)((?&lt;Open&gt;\{|\[)|(?&lt;Close&gt;\}|\])|(?&lt;PreserveOpen&gt;\()|(?&lt;PreserveClose&gt;\)))" removeall="OU)(\x22.*\x22)" search="(\(|,[^\[)" replace="(" replaceinvalid="."></Delimiter>
 	<ReplaceFirst replace="," first="( )"></ReplaceFirst>
 	<NoReplace>if</NoReplace>
+	<SearchTrigger>{</SearchTrigger>
 	<Styles>
 		<inlinecomment style="1" ex=";InLine Comment\n"></inlinecomment>
 		<numbers style="2" ex="0123456789\n"></numbers>
@@ -509,4 +510,5 @@
 			<list list="Off On Permit Toggle">Suspend</list>
 		</Suspend>
 	</Context>
+	<date>20171011091036</date>
 </ahk>
