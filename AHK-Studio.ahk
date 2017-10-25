@@ -159,6 +159,26 @@ Testing(){
 	*/
 	return m("I'm sleepy.")
 }
+/*
+	put this in there and use it for A_TickCount stuffs.
+*/
+Class TimerClass{ ;Thanks Run1e
+	static Timers:=[]
+	Init(){
+		DllCall("QueryPerformanceFrequency", "Int64P", F)
+		this.Freq := F
+	}
+	Current(){
+		DllCall("QueryPerformanceCounter","Int64P",Timer)
+		return Timer
+	}
+	Start(ID){
+		this.Timers[ID]:=this.Current()
+	}
+	Stop(ID){
+		return ((this.Current()-this.Timers[ID])/this.Freq),this.Timers.Delete(ID)
+	}
+}
 Activate(a,b,c,d){
 	if(a&&v.Options.Check_For_Edited_Files_On_Focus=1)
 		Check_For_Edited()
@@ -360,9 +380,7 @@ AutoMenu(){
 			if(sc.2007(sc.2008-StrLen(Insert))!=44)
 				sc.2003(sc.2008,Insert),sc.2025(sc.2008+StrLen(Insert))
 			sc.2100(0,list.text,v.word:="")
-	}}
-	return
-	
+	}}return
 }
 Backspace(sub:=1){
 	ControlGetFocus,focus,A
@@ -2712,16 +2730,16 @@ CompileFont(XMLObject,RGB:=1){
 Context(return=""){
 	Static FindFirst:="O)^[\s|}]*((\w|[^\x00-\x7F])+)"
 	Tick:=A_TickCount
-	sc:=csc()
-	cp:=sc.2008
-	Line:=sc.2166(cp)
-	LineIndent:=Start:=sc.2128(Line)
-	PFL:=sc.2167(Line)
-	OLineText:=LineText:=sc.GetLine(Line)
-	NewString:=Trim(SubStr(LineText,1,cp-PFL) Chr(127) SubStr(LineText,cp-PFL+1))
-	Language:=Current(3).Lang
-	Delimiter:=Keywords.Delimiter[Language]
-	if(Delimiter.Delimiter){
+	sc:=csc(),cp:=sc.2008,Line:=sc.2166(cp),LineIndent:=Start:=sc.2128(Line),PFL:=sc.2167(Line),OLineText:=LineText:=sc.GetLine(Line),NewString:=Trim(SubStr(LineText,1,cp-PFL) Chr(127) SubStr(LineText,cp-PFL+1)),Language:=Current(3).Lang,Delimiter:=Keywords.Delimiter[Language]
+	if(Line<(FirstVis:=sc.2152)){
+		if(sc.2202)
+			return sc.2201
+		return
+	}else if(FirstVis+sc.2370<Line){
+		if(sc.2202)
+			return sc.2201
+		return
+	}if(Delimiter.Delimiter){
 		if(Regex:=Delimiter.RemoveAll){
 			Pos:=LastPos:=1
 			while(RegExMatch(NewString,Regex,Found))
@@ -2746,14 +2764,9 @@ Context(return=""){
 					Break
 				LastPos:=Pos
 			}Process:=SubStr(NewString,Pos)
-			Total.=LastCondition="Preserve"?Process:RegExReplace(Process,Delimiter.Delimiter)
-			NewString:=Total
-		}
-	}String:=SubStr(NewString,1,InStr(NewString,Chr(127))-1),OPos:=Pos:=StrLen(String),Remove:=[]
-	Loop
-	{
-		if(Pos<=0)
-			Break
+			Total.=LastCondition="Preserve"?Process:RegExReplace(Process,Delimiter.Delimiter),NewString:=Total
+	}}String:=SubStr(NewString,1,InStr(NewString,Chr(127))-1),OPos:=Pos:=StrLen(String),Remove:=[]
+	while(Pos>=0){
 		Chr:=SubStr(String,Pos,1)
 		if(Chr=")")
 			Remove.Push(Pos)
@@ -2762,27 +2775,22 @@ Context(return=""){
 		else if(Chr="("&&Remove.1)
 			String:=SubStr(String,1,Pos-1) SubStr(String,Remove.Pop()+1),Removed:=1
 		else if(Chr="("&&!Remove.1){
-			BracePos:=Pos
-			Word:="",StartPos:=Pos
+			BracePos:=Pos,Word:="",StartPos:=Pos
 			while(Pos>1){
 				Pos--,Chr:=SubStr(String,Pos,1)
 				if(Chr~="(\w|\.)"=0)
 					Break
 				Word:=(Chr) Word
-			}
-			if(!Word&&Pos>0){
+			}if(!Word&&Pos>0)
 				Continue
-			}
-			String:=SubStr(String,(Pos=1?1:Pos+1))
-			PositionInString:=Pos
+			String:=SubStr(String,(Pos=1?1:Pos+1)),PositionInString:=Pos
 			Break
 		}Pos--
-	}
-	if(!Word)
+	}if(!Word)
 		if(RegExMatch(String,FindFirst,Found))
 			Word:=Found.1
 	if(!Word)
-		return ;t()
+		return SetStatus("Context Stopped @ " A_Now A_MSec)
 	if(Return)
 		return {word:word,last:last}
 	Matches:=[],Split:=[]
@@ -2804,14 +2812,7 @@ Context(return=""){
 					if(!InStr(Word,WordSplit))
 						Continue
 				Matches.Push({att:ea.att,ea:ea,syntax:Word "(" ea.att ")",type:ea.type,file:SSN(aa,"ancestor::file/@filename").text})
-				/*
-					Send,
-					debug.Send("stack_get")
-				*/
 			}RegExMatch(Word,"O)(\W)",Delim)
-			/*
-				t(Word,String)
-			*/
 			if(Delim.1)
 				WordObj:=StrSplit(Word,Delim.1)
 			if(WW:=Keywords.Words[Language,(Delim.1?WordObj[WordObj.MaxIndex()]:Word)]){
@@ -2826,8 +2827,7 @@ Context(return=""){
 				}else if(Syntax)
 					Matches.Push({att:Att.1,ea:XML.EA(Node),syntax:(Syntax:=SSN(Node,"@replace")?Syntax:Word Syntax),type:SSN(Node,"@type").text})
 			}if(Top:=Keywords.Languages[Language].SSN("//Context/" WW)){
-				Del:=(DD:=SSN(Top,"@delimiter").text)?DD:Delimiter.Delimiter
-				list:=SN(top,"list"),Build:=WW Del,Pos:=1,SearchWord:=WW
+				Del:=(DD:=SSN(Top,"@delimiter").text)?DD:Delimiter.Delimiter,list:=SN(top,"list"),Build:=WW Del,Pos:=1,SearchWord:=WW
 				while(RegExMatch(String,"OUi)\b(" RegExReplace(SSN(Top,"*[text()='" SearchWord "']/@list").text," ","|") ")\b",Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
 					if(Pos=LastPos)
 						Break
@@ -2837,26 +2837,19 @@ Context(return=""){
 					LastWord:=Found.1
 					if(Pos=LastPos)
 						Break
-				}if((Node:=SSN(Top,"descendant::syntax[contains(.,'" LastWord "')]"))){
-					NoHighlight:=1,ea:=XML.EA(Node)
-					Syntax:=ea.Replace?ea.Syntax:Trim(Build,Del) ea.Syntax
-					Matches.Push({att:Syntax,ea:ea,syntax:Syntax,NoHighlight:(InStr(Syntax,Delimiter.Delimiter)?0:1),First:Syntax})
-	}}}}if(Matches.1){
+				}if((Node:=SSN(Top,"descendant::syntax[contains(.,'" LastWord "')]")))
+					NoHighlight:=1,ea:=XML.EA(Node),Syntax:=ea.Replace?ea.Syntax:Trim(Build,Del) ea.Syntax,Matches.Push({att:Syntax,ea:ea,syntax:Syntax,NoHighlight:(InStr(Syntax,Delimiter.Delimiter)?0:1),First:Syntax})
+	}}}if(Matches.1){
 		MatchList:=[]
-		/*
-			for a in Split
-				if(Pos:=InStr(String,a))
-					String:=RegExReplace(String,"\Q" a "\E")
-		*/
 		if(Rep:=Keywords.ReplaceFirst[Language])
 			if(RegExMatch(String,FindFirst Rep.First,Found))
 				String:=RegExReplace(String,"A)" Found.1 RegExReplace(Rep.First,"\(\)"),Found.1 Rep.Replace,,1)
 		RegExMatch(String,"OA)((\w|[^\x00-\x7F]|\.)+){0,}" Delimiter.Search,FirstAfter)
 		for a,b in Matches{
-			FindSyntax:=b.Syntax
+			FirstChar:=SubStr(String,StrLen(Word)+1,1),FindSyntax:=RegExReplace(b.Syntax,"[^" Delimiter.Delimiter "|\w|\s|\Q" FirstChar "\E]",,,,StrLen(Word)+1)
 			if(RegExMatch(FindSyntax,FindFirst Rep.First,Found))
 				FindSyntax:=RegExReplace(FindSyntax,"A)" Found.1 RegExReplace(Rep.First,"\(\)"),Found.1 Rep.Replace,,1)
-			if(SubStr(String,StrLen(Word)+1,1)!=SubStr(FindSyntax,StrLen(Word)+1,1))
+			if(FirstChar!=SubStr(FindSyntax,StrLen(Word)+1,1)&&FirstChar)
 				Continue
 			RegExReplace(b.Syntax,"\Q" Delimiter.Delimiter "\E",,Count),MatchList[Count,b.Syntax]:=b
 		}Reverse:=[],Index:=0
@@ -2864,29 +2857,21 @@ Context(return=""){
 			for c,d in b
 				Reverse.InsertAt(1,d),Total:=A_Index
 		for a,b in Reverse{
-			RegExMatch(b.Syntax,"AO)(\W|\s)+",Found)
-			AddSpace:=InStr(Found.0,Delimiter.Delimiter)=0&&(Replace:=SubStr(b.syntax,1,1))!=Delimiter.Replace
+			RegExMatch(b.Syntax,"AO)(\W|\s)+",Found),AddSpace:=InStr(Found.0,Delimiter.Delimiter)=0&&(Replace:=SubStr(b.syntax,1,1))!=Delimiter.Replace
 			if(!b.Syntax)
 				Continue
-			Syntax:=b.Syntax
-			List.=Syntax (b.Type?" - " b.Type:"") (b.File?" - " b.File:"") "`n"
-			if(!Index){
-				First:=RegExReplace(Syntax,Delimiter.ReplaceRegex,Delimiter.Delimiter,,1)
-				FirstEA:=b.EA
-				NoHighlight:=b.NoHighlight
-				Index++
-			}
-		}
-		if(Pos:=InStr(First,"`n"))
+			Syntax:=b.Syntax,List.=Syntax (b.Type?" - " b.Type:"") (b.File?" - " b.File:"") "`n"
+			if(!Index)
+				First:=RegExReplace(Syntax,Delimiter.ReplaceRegex,Delimiter.Delimiter,,1),FirstEA:=b.EA,NoHighlight:=b.NoHighlight,Index++
+		}if(Pos:=InStr(First,"`n"))
 			First:=SubStr(First,1,Pos-1)
 		if(!First)
-			return sc.2201()
+			return sc.2201(),SetStatus("Context Stopped @ " A_Now A_MSec)
 		String:=RegExReplace(String,Delimiter.ReplaceRegex,Delimiter.Delimiter,,1),String:=RegExReplace(String,"A)(\W+)")
 		if(FirstEA.First){
 			if(RegExMatch(First,FindFirst FirstEA.First,Found))
 				First:=RegExReplace(First,"A)" Found.1 RegExReplace(FirstEA.First,"\(\)"),Found.1 FirstEA.Replace,,1)
-		}
-		if(sc.2202||!sc.2102){
+		}if(sc.2202||!sc.2102){
 			RegExReplace(String,Delimiter.Delimiter,,Comma),Comma++,sc.2207(0xFF0000),Total:=0,Info:="",Obj:=StrSplit(First,Delimiter.Delimiter)
 			for a,b in Obj{
 				Start:=StrLen(Info),Info.=b (a=Obj.MaxIndex()?"":Delimiter.Delimiter),End:=StrLen(Info)-1
@@ -2918,10 +2903,10 @@ Context(return=""){
 			if(NewStart<LineIndent)
 				NewStart:=LineIndent
 			sc.2200(NewStart,Trim(List,"`n")),sc.2204(Start,End)
-		}return
+		}return SetStatus("Context Completed @ " A_Now A_MSec)
 	}else if(sc.2202)
 		sc.2201()
-	return
+	return SetStatus("Context Stopped @ " A_Now A_MSec)
 }
 ContextMenu(){
 	static ONode,Kill,UnRedo:={Undo:2174,Redo:2016}
@@ -3870,9 +3855,7 @@ Enter(){
 	checkqf:
 	sc:=csc(),fixlines:=[],ind:=Settings.Get("//tab",5),ShowOSD(GetKeyState("Shift","P")?"Shift+Enter":"Enter")
 	if(InStr(focus,"scintilla")){
-		/*
-			SetTimer,Scan_Line,-100
-		*/
+		SetTimer,Scan_Line,-100
 		if(sc.2202)
 			sc.2201
 		if(sc.2102)
@@ -3976,7 +3959,7 @@ Escape(a*){
 	}v.DisableContext:=sc.2166(sc.2008),sc.2201
 	if(InStr(Focus,"Scintilla"))
 		Send,{Escape}
-	DllCall("EndMenu")
+	DllCall("EndMenu"),UpPos()
 }
 ExecScript(){
 	static exec,time,script
@@ -4933,10 +4916,6 @@ GetControl(ctrl){
 		node:=MainWin.gui.SSN("//*[@hwnd='" ctrl+0 "']")
 	return node
 }
-
-
-
-
 GetCurrentClass(Line){
 	sc:=csc(),find:=oline:=Line
 	if(sc.2225(Line)<0)
@@ -4944,7 +4923,12 @@ GetCurrentClass(Line){
 	while((find:=sc.2225(find))>=0)
 		Line:=find
 	
-	t("Original Line: " oline,"Start Line: " Line,"End Line: " sc.2224(Line,-1),sc.2136(sc.2224(Line,-1)))
+	
+	
+	
+	
+	
+	t("Original Line: " oline,"Start Line: " Line,"End Line: " sc.2224(Line,-1),sc.2136(sc.2224(Line,-1)),"time:2")
 	return
 	/*
 		
@@ -5628,7 +5612,7 @@ Jump_To_First_Available(){
 		else{
 			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
 				total.=(info:=ea.type " " StrSplit(SSN(aa,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=aa
-			sc.2106(124),sc.2117(6,Trim(total,"|")),sc.2660(1),sc.2106(32)
+			sc.2106(124),sc.2117(6,Trim(total,"|")),sc.2106(32)
 			if(!InStr(total,"|"))
 				sc.2104
 		}
@@ -5655,7 +5639,7 @@ Jump_To_First_Available(){
 				while(ll:=list.item[A_Index-1]),ea:=XML.EA(ll)
 					total.=(info:=ea.type " " StrSplit(SSN(ll,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=ll
 			if(total:=Trim(total,"|")){
-				sc.2106(124),sc.2117(6,total),sc.2660(1),sc.2106(32)
+				sc.2106(124),sc.2117(6,total),sc.2106(32)
 				if(!InStr(total,"|"))
 					sc.2104
 			}
@@ -6305,11 +6289,24 @@ Move_Selected_Lines_Down(){
 		return
 	if(line+1>=sc.2154&&Trim(sc.GetLine(line))="")
 		return
-	sc.Enable(),sc.2078,start:=sc.2166(sc.2143),end:=sc.2166(sc.2145-1),LineStatus.StoreEdited(start,end,1),Edited()
-	sc.2621
+	
+	sc.Enable()
+	/*
+		in here the only thing that will change is going to be the current
+		area and it will move it down.
+		unless it happens to go into another area....
+		damn...
+		and if the start is a part of it then the top area as well...
+		
+	*/
+	sc.2078(),start:=sc.2166(sc.2143),end:=sc.2166(sc.2145-1),LineStatus.StoreEdited(start,end,1),Edited()
+	sc.2621()
 	if(v.Options.Full_Auto_Indentation)
 		FixIndentArea()
-	sc.Enable(1),LineStatus.UpdateRange(),sc.2079
+	
+	sc.Enable(1)
+	
+	LineStatus.UpdateRange(),sc.2079
 	return
 }
 Move_Selected_Lines_Up(){
@@ -6347,24 +6344,16 @@ MoveSelectedWord(add){
 	sc.2079
 }
 m(x*){
-	active:=WinActive("A")
-	ControlGetFocus,Focus,A
-	ControlGet,hwnd,hwnd,,%Focus%,ahk_id%active%
-	static list:={btn:{oc:1,ari:2,ync:3,yn:4,rc:5,ctc:6},ico:{"x":16,"?":32,"!":48,"i":64}},msg:=[],msgbox
-	list.title:="AHK Studio",list.def:=0,list.time:=0,value:=0,msgbox:=1,txt:=""
+	static list:={btn:{oc:1,ari:2,ync:3,yn:4,rc:5,ctc:6},ico:{"x":16,"?":32,"!":48,"i":64}},msg:=[]
+	list.title:="AHK Studio",list.def:=0,list.time:=0,value:=0,txt:=""
 	for a,b in x
 		obj:=StrSplit(b,":"),(vv:=List[obj.1,obj.2])?(value+=vv):(list[obj.1]!="")?(List[obj.1]:=obj.2):txt.=b "`n"
 	msg:={option:value+262144+(list.def?(list.def-1)*256:0),title:list.title,time:list.time,txt:txt}
 	Sleep,120
 	MsgBox,% msg.option,% msg.title,% msg.txt,% msg.time
-	msgbox:=0
 	for a,b in {OK:value?"OK":"",Yes:"YES",No:"NO",Cancel:"CANCEL",Retry:"RETRY"}
 		IfMsgBox,%a%
-		{
-			WinActivate,ahk_id%active%
-			ControlFocus,%Focus%,ahk_id%active%
 			return b
-		}
 }
 t(x*){
 	for a,b in x{
@@ -6794,28 +6783,42 @@ Notifications(a*){
 }
 Notify(csc*){
 	static values:={0:"Obj",2:"Code",3:"position",4:"ch",5:"mod",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",15:"prevfold",17:"listType",22:"updated",23:"Method"}
-	static codeget:={2001:{ch:4},2005:{ch:4,mod:5},2006:{position:3,mod:5},2007:{updated:22},2008:{position:3,modType:6,text:7,length:8,linesadded:9,line:13,fold:14,prevfold:15},2010:{position:3},2011:{position:3},2014:{position:3,ch:4,text:7,listtype:17,Method:23},2016:{x:18,y:19},2019:{position:3,mod:5},2021:{position:3},2022:{position:3,ch:4,text:7,method:23},2027:{position:3,mod:5}},PreType:=[]
-	static poskeep,savedel,stuff:=[],LastFocus,LastTick
-	notify:
+	static codeget:={2001:{ch:4},2005:{ch:4,mod:5},2006:{position:3,mod:5},2007:{updated:22},2008:{position:3,modType:6,text:7,length:8,linesadded:9,line:13,fold:14,prevfold:15},2010:{position:3},2011:{position:3},2014:{position:3,ch:4,text:7,listtype:17,Method:23},2016:{x:18,y:19},2019:{position:3,mod:5},2021:{position:3},2022:{position:3,ch:4,text:7,method:23},2027:{position:3,mod:5}}
+	static poskeep,Mem:=[]
+	Notify:
 	static last,lastline,lastpos:=[],focus:=[],dwellfold:="",text
 	if(csc.1=0)
 		return lastpos:=[]
-	fn:=[],info:=A_EventInfo,code:=NumGet(info+8)
-	if(A_EventInfo=0x51)
-		m("HERE!")
-	if(code="")
-		return
-	if(code=2007){
-		SetTimer,BraceHighlight,-1
-		if(NumGet(Info+88)&2)
-			return UpPos()
-		return
-	}if(code=2029){
+	fn:=[],Info:=A_EventInfo,Code:=NumGet(Info+8)
+	if(!Code)
 		return 0
-	}if(code=2028){
-		if(s.ctrl[hwnd:=NumGet(info+0)])
+	sc:=csc({hwnd:(Ctrl:=NumGet(A_EventInfo+0))})
+	if(Code=2016){
+		pos:=sc.2023(fn.x,fn.y)
+		word:=sc.TextRange(sc.2266(pos,1),sc.2267(pos,1))
+		list:=debug.XML.SN("//property[@name='" word "']"),info:=""
+		/*
+			debug.XML.Transform()
+			CoordMode,ToolTip,Screen
+			ToolTip,% (debug.xml[]) "`n`n`n`n" word,0,0,4
+		*/
+		while(ll:=list.item[A_Index-1]),ea:=XML.EA(ll)
+			info:=ea.type="object"?"Object: Use List Variables (Alt+M LV) to see more info":info.=SSN(ll,"ancestor::*/@name").text " = " ll.text "`n"
+		if(info)
+			line:=sc.2166(pos),end:=sc.2136(line),ShowPos:=sc.2166(pos+3)=line?pos+3:pos,sc.2200(ShowPos,word ": " Trim(info,"`n"))
+		else
+			sc.2201
+		return
+	}if(Code=2017)
+		return sc.2201
+	if(Code=2007){
+		if(NumGet(Info+88)&2)
+			SetTimer("UpPos",-31)
+		return 0,SetTimers("BraceHighlight,-10")
+	}else if(Code=2028){
+		if(s.ctrl[Ctrl])
 			sc:=csc({hwnd:hwnd})
-		sc.2400
+		sc.2400()
 		if(sc.sc=MainWin.tnsc.sc)
 			WinSetTitle(1,"Tracked Notes")
 		else
@@ -6832,154 +6835,174 @@ Notify(csc*){
 		if(CheckLayout())
 			Hotkeys()
 		return 0
-	}
-	if((ctrl:=NumGet(info+0))=v.debug.sc&&v.debug.sc){
+	}else if(Code=2029){
+		return 0
+	}else if((ctrl:=NumGet(Info+0))=v.debug.sc&&v.debug.sc){
 		sc:=v.debug
-		if(code=2027){
+		if(Code=2027){
 			style:=sc.2010(sc.2008)
 			if(style=-106)
 				Run_Program()
 			else if(style=-105)
 				List_Variables()
-		}
-		return
-	}
-	if(info=256||info=512||info=768)
-		return
-	sc:=csc({hwnd:NumGet(A_EventInfo+0)})
-	if(sc.2570>1&&Code=2008&&(sc.2266(sc.2008)-sc.2267(sc.2008)>1)){
-		SetTimer,ShowAutoComplete,-15
-		return
-	}
+		}return
+	}if Code not in 2007,2001,2006,2008,2010,2014,2022,2016,2019
+		return 0
+	fn:=[],fn.Code:=Code,fn.Ctrl:=NumGet(A_EventInfo+0)
+	for a,b in CodeGet[Code]
+		fn[a]:=NumGet(Info+(A_PtrSize*b))
+	if(fn.Code)
+		Mem.Push(fn)
+	SetTimer,ReadLater,-50
+	return 0
+	ReadLater:
+	Edited:=[]
 	/*
-		if(code=2008&&(A_EventInfo+(4*6))&0x20) ;For Undo Stuff.
+		t("Total Things At Once: " Mem.MaxIndex() " @ " A_TickCount)
+	*/
+	while(fn:=Mem.RemoveAt(1)){
+		sc:=csc({hwnd:fn.Ctrl}),tn:=0
+		if(MainWin.tnsc.sc=fn.Ctrl)
+			TNotes.Write(),tn:=1
+		if(Code=2002)
+			return current:=Current(),ea:=XML.EA(current),current.RemoveAttribute("edited"),TVC.Modify(1,v.Options.Hide_File_Extensions?ea.nne:ea.filename,ea.tv),WinSetTitle(1,ea),LineStatus.Save(ea.id),LineStatus.tv()
+		if(sc.2570>1&&Code=2008&&(sc.2266(sc.2008)-sc.2267(sc.2008)>1))
+			return SetTimer("ShowAutoComplete",-15)
+		if(fn.Code=2008)
+			Edited.Push(sc)
+		if(Code=2018)
+			return MarginWidth(sc)
+		if(fn.Code=2001){
+			/*
+				if(fn.ch=46)
+					if(fn.ch=46)
+						Show_Class_Methods(sc.TextRange(sc.2266(sc.2008-1,1),sc.2267(sc.2008-1,1)))
+			*/
+			SetWords(1),cpos:=sc.2008,start:=sc.2266(cpos,1),end:=sc.2267(cpos,1),word:=sc.TextRange(start,cpos),SetWords()
+			if(sc.2007(start-1)=46){
+				if(Show_Class_Methods(pre:=sc.TextRange(sc.2266(start-2,1),sc.2267(start-2,1)),word))
+					return
+			}if((StrLen(word)>1&&sc.2102=0&&v.Options.Auto_Complete))
+				SetTimer,ShowAutoComplete,-15
+			style:=sc.2010(cpos-2)
+			if(v.Options.Context_Sensitive_Help)
+				SetTimer,Context,-150
+			c:=fn.ch
+			if(c~="44|32")
+				Replace()
+			if(fn.ch=44&&v.Options.Auto_Space_Before_Comma){
+				sc.2003(cpos-1," "),sc.2025(++cpos)
+				if(v.Options.Auto_Space_After_Comma)
+					sc.2003(cpos," ") ,sc.2025(cpos+1)
+			}if(fn.ch=44&&v.Options.Auto_Space_After_Comma)
+				sc.2003(cpos," "),sc.2025(cpos+1)
+			ch:=fn.ch?fn.ch:sc.2007(sc.2008),SetStatus("Last Entered Character: " Chr(ch) " Code:" ch,2)
+		}else if(fn.Code=2008){
+			if(fn.modType&0x400&&!tn){
+				text:=StrGet(fn.text,fn.length,"UTF-8")
+				line:=sc.2166(fn.position)
+				/*
+					oh this is going to get real tricky...
+					Maybe store the important bits that need waching by position and length
+					or at least a pos/end.  Then if anything in there gets edited it gets flagged?
+					;#[Working Here]
+					t(Text)
+					m(Text)
+					flan is good
+					t(Text)
+					m(Text)
+					I am Typing Text
+					Enter does not trigger
+					In here and the else below
+					Make sure to figure out how many lines are being added/deleted
+					see if you can figure out exactly the above
+					Text is the text being added
+					So{
+						you know where, both line and position, the entered text is being added
+						so lets just send that info to the ScanFile class and see what happens
+					}
+				*/
+				/*
+					t("Added",A_TickCount,"time:2")
+				*/
+				if(!Current(3).edited)
+					Edited()
+				if(!v.LineEdited[line]){
+					if(fn.modType&0x20||fn.modType&0x40){
+						if(text)
+							RegExReplace(text,"\R",,count),AddNewLines(text,Current(5)),LineStatus.DelayAdd(line,count)
+					}else{
+						if(MainWin.tnsc.sc!=ctrl)
+							SetScan(line)
+						if(v.Options.Disable_Line_Status!=1){
+							LineStatus.Add(line,2)
+			}}}}else if(fn.modType&0x800&&!tn){
+				/*
+					fn.Position and fn.Length will have values.
+					this will be helpful because you can figure out what was being deleted
+					Delete/Backspace Key DOES NOT TRIGGER THIS!
+					make sure that whatever you do here you do in Backspace() as well
+					m(fn.Position,fn.Length)
+				*/
+				if(!Current(3).edited)
+					Edited()
+				if(sc.2008=sc.2009&&fn.modType&0x20=0&&fn.modType&0x40=0)
+					epos:=fn.position,del:=sc.2007(epos),poskeep:=""
+				start:=sc.2166(fn.position),end:=sc.2166(fn.position+fn.length)
+				/*
+					if(start!=end){
+						RemoveLines(start,sc.2166(fn.position+fn.length-1))
+						SetScan()
+					}else
+						
+					Run,%A_StartMenu%
+				*/
+				/*
+					t("Deleted",A_TickCount,"time:2")
+				*/
+				if(!v.LineEdited[start]){
+					if(MainWin.tnsc.sc!=ctrl)
+						SetScan(start)
+					if(v.Options.Disable_Line_Status!=1)
+						LineStatus.Add(start,2)
+				}
+			}
+		}
+	}
+	for a,sc in Edited
+		Update({sc:sc.2357}),Edited() ;woot   ;,t("Edited",sc.sc,sc.GetUNI(),"time:1") ;,Edited()
+	/*
+		Working Here!
+	*/
+	return
+	/*
+		if(Code=2008&&(A_EventInfo+(4*6))&0x20) ;For Undo Stuff.
 			return
 	*/
-	if(code=2018)
-		return MarginWidth(sc)
-	if(code=2002)
-		return current:=Current(),ea:=XML.EA(current),current.RemoveAttribute("edited"),TVC.Modify(1,v.Options.Hide_File_Extensions?ea.nne:ea.filename,ea.tv),WinSetTitle(1,ea),LineStatus.Save(ea.id),LineStatus.tv()
-	if(code=2017)
-		sc.2201
-	if code not in 2001,2006,2008,2010,2014,2022,2016,2019
-		return 0
-	for a,b in codeget[code]
-		fn[a]:=NumGet(Info+(A_PtrSize*b))
-	if(code=2016){
-		pos:=sc.2023(fn.x,fn.y)
-		word:=sc.TextRange(sc.2266(pos,1),sc.2267(pos,1))
-		list:=debug.XML.SN("//property[@name='" word "']"),info:=""
-		/*
-			debug.XML.Transform()
-			CoordMode,ToolTip,Screen
-			ToolTip,% (debug.xml[]) "`n`n`n`n" word,0,0,4
-		*/
-		while(ll:=list.item[A_Index-1]),ea:=XML.EA(ll)
-			info:=ea.type="object"?"Object: Use List Variables (Alt+M LV) to see more info":info.=SSN(ll,"ancestor::*/@name").text " = " ll.text "`n"
-		if(info)
-			line:=sc.2166(pos),end:=sc.2136(line),ShowPos:=sc.2166(pos+3)=line?pos+3:pos,sc.2200(ShowPos,word ": " Trim(info,"`n"))
-		else
-			sc.2201
-		return
-	}if(MainWin.tnsc.sc=ctrl)
-		TNotes.Write(),tn:=1
-	
-	
-	if(fn.modType&0x400&&!tn){
-		text:=StrGet(fn.text,fn.length,"UTF-8")
-		line:=sc.2166(fn.position)
-		/*
-			ScanFile.AddText(Text,Line,sc.2129(sc.2008))
-		*/
-		/*
-			if(InStr(Text,"`n")){
-				RegExReplace(Text,"\R",,Count)
-				m("Multiple Lines Inserted",Line,Line+Count)
-			}
-		*/
-		/*
-			oh this is going to get real tricky...
-			Maybe store the important bits that need waching by position and length
-			or at least a pos/end.  Then if anything in there gets edited it gets flagged?
-			;#[Working Here]
-			t(Text)
-			m(Text)
-			flan is good
-			t(Text)
-			m(Text)
-			I am Typing Text
-			Enter does not trigger
-			In here and the else below
-			Make sure to figure out how many lines are being added/deleted
-			see if you can figure out exactly the above
-			Text is the text being added
-			So{
-				you know where, both line and position, the entered text is being added
-				so lets just send that info to the ScanFile class and see what happens
-			}
-		*/
-		if(!Current(3).edited)
-			Edited()
-		if(!v.LineEdited[line]){
-			if(fn.modType&0x20||fn.modType&0x40){
-				if(text)
-					RegExReplace(text,"\R",,count),AddNewLines(text,Current(5)),LineStatus.DelayAdd(line,count)
-			}else{
-				if(MainWin.tnsc.sc!=ctrl)
-					SetScan(line)
-				if(v.Options.Disable_Line_Status!=1){
-					LineStatus.Add(line,2)
-	}}}}else if(fn.modType&0x800&&!tn){
-		/*
-			fn.Position and fn.Length will have values.
-			this will be helpful because you can figure out what was being deleted
-			Delete/Backspace Key DOES NOT TRIGGER THIS!
-			make sure that whatever you do here you do in Backspace() as well
-			m(fn.Position,fn.Length)
-		*/
-		if(!Current(3).edited)
-			Edited()
-		if(sc.2008=sc.2009&&fn.modType&0x20=0&&fn.modType&0x40=0)
-			epos:=fn.position,del:=sc.2007(epos),poskeep:=""
-		start:=sc.2166(fn.position),end:=sc.2166(fn.position+fn.length)
-		/*
-			if(start!=end){
-				RemoveLines(start,sc.2166(fn.position+fn.length-1))
-				SetScan()
-			}else
-				
-		*/
-		if(!v.LineEdited[start]){
-			if(MainWin.tnsc.sc!=ctrl)
-				SetScan(start)
-			if(v.Options.Disable_Line_Status!=1)
-				LineStatus.Add(start,2)
-		}
-	}
 	
 	
 	
 	
 	
-	if(code=2008&&fn.modType&0x02&&(fn.modtype&0x20=0&&fn.modtype&0x40=0)){
+	
+	if(Code=2008&&fn.modType&0x02&&(fn.modtype&0x20=0&&fn.modtype&0x40=0)){
 		/*
 			del:=SubStr((DeletedText:=StrGet(fn.text,fn.length,"UTF-8")),1,1)
 		*/
 		if(fn.linesadded)
 			MarginWidth(sc)
-	}if(code=2008)
-		Update({sc:sc.2357}) ;,Edited()
-	fn.code:=code,tn:=0
+	}
+	fn.Code:=Code,tn:=0
 	if(fn.ch=125){
 		SetTimer,FixBrace,-10
 		return
 	}if(fn.ch=10)
 		return SetupEnter(1),line:=sc.2166(sc.2008),indent:=sc.2127(line-1),sc.2126(line,indent),sc.2025(sc.2128(line))
-	if(code=2008&&fn.modType&0x01&&(fn.modtype&0x20=0&&fn.modtype&0x40=0))
+	if(Code=2008&&fn.modType&0x01&&(fn.modtype&0x20=0&&fn.modtype&0x40=0))
 		if(sc.sc=MainWin.tnsc.sc)
 			v.TNGui.Write()
 	doc:=sc.2357
-	if(code=2006){
+	if(Code=2006){
 		if((match:=sc.2353(pos:=fn.position))>0){
 			if(pos>match)
 				match++
@@ -6995,7 +7018,7 @@ Notify(csc*){
 		}else{
 			if(sc.2007((npos:=sc.2266(pos)-1))=35)
 				sc.2160(npos,sc.2267(pos))
-	}}if(code=2008){
+	}}if(Code=2008){
 		SetTimer,UpPos,-10
 		if(sc.2423=3&&sc.2570>1){
 			list:=[]
@@ -7006,7 +7029,7 @@ Notify(csc*){
 					sc.2160(b.anchor,b.caret)
 				else
 					sc.2573(b.caret,b.anchor)
-	}}}if(fn.code=2010){
+	}}}if(fn.Code=2010){
 		margin:=NumGet(Info+(A_PtrSize*16)),line:=sc.2166(fn.position)
 		if(margin=3)
 			sc.2231(line)
@@ -7032,7 +7055,7 @@ Notify(csc*){
 				/*
 					Scan_Line()
 				*/
-	}}}if(fn.code=2022){
+	}}}if(fn.Code=2022){
 		if(v.Options.Autocomplete_Enter_Newline){
 			SetTimer,Enter,-1
 		}Else{
@@ -7084,39 +7107,13 @@ Notify(csc*){
 			}else
 				SetTimer,AutoMenu,-150
 	}}
-	if(fn.code=2001){
-		/*
-			if(fn.ch=46)
-				if(fn.ch=46)
-					Show_Class_Methods(sc.TextRange(sc.2266(sc.2008-1,1),sc.2267(sc.2008-1,1)))
-		*/
-		SetWords(1),cpos:=sc.2008,start:=sc.2266(cpos,1),end:=sc.2267(cpos,1),word:=sc.TextRange(start,cpos),SetWords()
-		if(sc.2007(start-1)=46){
-			if(Show_Class_Methods(pre:=sc.TextRange(sc.2266(start-2,1),sc.2267(start-2,1)),word))
-				return
-		}if((StrLen(word)>1&&sc.2102=0&&v.Options.Auto_Complete))
-			SetTimer,ShowAutoComplete,-15
-		style:=sc.2010(cpos-2)
-		if(v.Options.Context_Sensitive_Help)
-			SetTimer,Context,-150
-		c:=fn.ch
-		if(c~="44|32")
-			Replace()
-		if(fn.ch=44&&v.Options.Auto_Space_Before_Comma){
-			sc.2003(cpos-1," "),sc.2025(++cpos)
-			if(v.Options.Auto_Space_After_Comma)
-				sc.2003(cpos," ") ,sc.2025(cpos+1)
-		}if(fn.ch=44&&v.Options.Auto_Space_After_Comma)
-			sc.2003(cpos," "),sc.2025(cpos+1)
-		ch:=fn.ch?fn.ch:sc.2007(sc.2008),SetStatus("Last Entered Character: " Chr(ch) " Code:" ch,2)
-	}
-	if(fn.code=2014){
+	if(fn.Code=2014){
 		if(fn.listtype=1){
 			if(!IsObject(scintilla))
 				scintilla:=new xml("scintilla","lib\scintilla.xml")
-			command:=StrGet(fn.text,"UTF-8"),info:=scintilla.SSN("//commands/item[@name='" command "']"),ea:=XML.EA(info),start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),syn:=ea.syntax?ea.code "()":ea.code,sc.2160(start,end),sc.2170(0,[syn])
+			command:=StrGet(fn.text,"UTF-8"),info:=scintilla.SSN("//commands/item[@name='" command "']"),ea:=XML.EA(info),start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),syn:=ea.syntax?ea.Code "()":ea.Code,sc.2160(start,end),sc.2170(0,[syn])
 			if(ea.syntax)
-				sc.2025(sc.2008-1),sc.2200(start,ea.code ea.syntax)
+				sc.2025(sc.2008-1),sc.2200(start,ea.Code ea.syntax)
 		}else if(fn.listType=2){
 			/*
 				look up what sc.2117() uses 2 as the thing
@@ -8814,16 +8811,11 @@ Scan_Line(text:=""){
 		Current:=Current(3),Orig:=b,Tick:=A_TickCount,Text:=ScanFile.RemoveComments(b.Text,Current.Lang),Obj:=StrSplit(Text,Chr(127))
 		if(!Obj.2)
 			return SetStatus("Scan_Line() " A_TickCount-Tick "ms No Results",3)
-		RegExReplace(Obj.1,"\R",,Count)
-		StartLine:=Count+1,StartPosition:=StrLen(Obj.1)
-		AfterText:=SubStr(Obj.2,1,InStr(Obj.2,"`n",0,1,2)-1)
+		RegExReplace(Obj.1,"\R",,Count),StartLine:=Count+1,StartPosition:=StrLen(Obj.1),AfterText:=SubStr(Obj.2,1,InStr(Obj.2,"`n",0,1,2)-1)
 		if(RegExMatch(AfterText,"^\s*\{"))
 			RegExMatch(Text,"OUm`n)\R?(.*\R" Chr(127) ".*\R)",Found),AfterText:=RegExReplace(Found.1,Chr(127) " ")
-		Text:=Update({get:Current.File}),Pos1:=InStr(Text,"`n",0,1,b.Line)
-		NewText:=(SubStr(Text,1,Pos1) Chr(127) " " SubStr(Text,Pos1+1))
-		NewText:=ScanFile.RemoveComments(NewText,Current.Lang)
-		Obj:=StrSplit(NewText,Chr(127))
-		AfterText1:=SubStr(Obj.2,1,InStr(Obj.2,"`n",0,1,2)-1)
+		Text:=Update({get:Current.File}),Pos1:=InStr(Text,"`n",0,1,b.Line),NewText:=(SubStr(Text,1,Pos1) Chr(127) " " SubStr(Text,Pos1+1)),NewText:=ScanFile.RemoveComments(NewText,Current.Lang),Obj:=StrSplit(NewText,Chr(127)),AfterText1:=SubStr(Obj.2,1,InStr(Obj.2,"`n",0,1,2)-1)
+		Words:=v.words[(sc:=csc()).2357],OldWords:=RegExReplace(RegExReplace(RegExReplace(AfterText,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])","|"),"\|{2,}","|"),NewWords:=RegExReplace(RegExReplace(RegExReplace(AfterText1,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])"," "),"\s{2,}"," "),OWords:=Words,Words:=RegExReplace(Words,"\b(" Trim(OldWords,"|") ")\b\s*"),Words.=NewWords,v.words[sc.2357]:=Words
 		FoundStartPos:=StrLen(Obj.1)
 		if(RegExMatch(AfterText1,"^\s*\{"))
 			RegExMatch(NewText,"OUm`n)\R?(.*\R" Chr(127) ".*\R)",Found),AfterText1:=RegExReplace(Found.1,Chr(127) " ")
@@ -8832,13 +8824,11 @@ Scan_Line(text:=""){
 		/*
 			This could be put into a timer and lowered priority
 		*/
-		Omni:=GetOmni(Current.Lang)
-		OmniOrder:=Keywords.OmniOrder[Current.Lang]
+		Omni:=GetOmni(Current.Lang),OmniOrder:=Keywords.OmniOrder[Current.Lang]
 		/*
 			Do the Breakpoint and Bookmark stuff like below but better.
 		*/
-		AfterText1:=AfterText1
-		AddItems:=[]
+		AfterText1:=AfterText1,AddItems:=[]
 		for a,b in OmniOrder{
 			for c,d in b{
 				Pos:=1,LastPos:=0
@@ -8880,8 +8870,7 @@ Scan_Line(text:=""){
 					}}while(Item:=AddItems.Pop())
 						cexml.Under(Item.Parent,"item",Item.Obj)
 					Continue
-				}
-				Parent:=Current(5)
+				}Parent:=Current(5)
 				while(RegExMatch(AfterText,d.Regex,Found)){
 					StringReplace,AfterText,AfterText,% Found.Text
 					if(A_Index>20){
@@ -9301,7 +9290,7 @@ SetPos(oea:=""){
 	return
 }
 SetScan(Line,Delete:=0){
-	sc:=csc(),Text:=Update({get:Current(3).File}),Pos1:=InStr(Text,"`n",0,1,Line),NewText:=(SubStr(Text,1,Pos1) Chr(127) " " SubStr(Text,Pos1+1)),v.LineEdited[Line]:={text:NewText,Line:Line}
+	Text:=Update({get:Current(3).File}),Pos1:=InStr(Text,"`n",0,1,Line),NewText:=(SubStr(Text,1,Pos1) Chr(127) " " SubStr(Text,Pos1+1)),v.LineEdited[Line]:={text:NewText,Line:Line}
 }
 SetStatus(text,part=""){
 	static widths:=[],width
@@ -10010,6 +9999,7 @@ SetWords(hyphen:=0){
 Show_Class_Methods(object,search:=""){
 	static list
 	sc:=csc()
+	
 	if(object="this")
 		class:=GetCurrentClass(sc.2166(sc.2008)),list:=SN(class.node,"descendant::*[@type='Method']")
 	else if(class:=SSN((parent:=Current(7)),"descendant::*[@type='Instance' and @upper='" Upper(object) "']/@class").text)
@@ -10046,7 +10036,7 @@ ShowAutoComplete(){
 		if(node:=Settings.Find("//autocomplete/project/@file",Current(2).file))
 			List.=" " node.text
 		List.=" " Keywords.Personal " ",List.=" " Keywords.Suggestions[Language,FirstTwo] " ",List:=Trim(List)
-		Sort,List,UCD%A_Space%
+		Sort,List,CUD%A_Space%
 		if(List&&InStr(List,word)&&word)
 			sc.2100(StrLen(word),Trim(List))
 	}
@@ -11314,4 +11304,10 @@ ScanParent(Text,b){
 		SP.Under((Parent.Length?Parent.Item[Parent.Length-1]:SP.SSN("//*")),"info",{start:StartPos,end:SavedPos,text:OuterFound.Text})
 	}
 	return SP
+}
+SetTimers(Timers*){
+	for a,b in Timers{
+		Obj:=StrSplit(b,",")
+		SetTimer,% Obj.1,% Obj.2
+	}
 }

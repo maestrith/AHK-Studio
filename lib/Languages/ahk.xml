@@ -381,8 +381,9 @@
 	<Code>
 		<Hotkey find="OUi)($1)::" regex="OU`nm)^\s*(?&lt;Text&gt;((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*)+\s+&amp;\s+)*((\w|[^\x00-\x7F]+)|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+)::"></Hotkey>
 		<Instance multiple="1" wordsplit="." delimiter="." add="Method" associate="Class" regex="OUi`nm)(?&lt;Text&gt;(\w|[^\x00-\x7F]|\.)+)\s*:=\s*new\s*(?&lt;Class&gt;(\w|[^\x00-\x7F])+)\("></Instance>
-		<Label regex="OUm`n)^\s*(?&lt;Text&gt;(\w|[^\x00-\x7F])+):(\s|\R)?(\s+;)?"></Label>
-		<Class bounds="\{|\}" regex="Oim`n)^[\s|}]*class\s+(?&lt;Text&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" close="Om`n)^([\s*|}])+" open="Om`n)(\{)(\s+;|\R)">
+		<Label regex="OUm`n)^\s*(?&lt;Text&gt;(\w|[^\x00-\x7F])+):($|\R|\s+;.*$)"></Label>
+		<!--Class bounds="\{|\}" regex="Oim`n)^[\s|}]*class\s+(?&lt;Text&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" close="Om`n)^([\s*|}])+" open="Om`n)(\{)(\s+;|\R)"-->
+		<Class full="1" bounds="\{|\}" regex="Oim`n)^[\s|}]*class\s+(?&lt;Text&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*((\s*;.*\R)|(\s*\/\*\s+.*\s*\*\/)){0,}\s*(\{)" close="Om`n)^([\s*|}])+" open="Om`n)(\{)(\s+;|\R)">
 			<Method wordsplit="." firstchar="(" exclude="if|while" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Att&gt;.*)\)((\s*;.*\R)|(\s*\/\*\s+.*\s*\*\/)){0,}\s*(\{)"></Method>
 			<Property regex="Om`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\[(?&lt;Att&gt;.*)\](\s*;.*\R){0,}\s*(\{)"></Property></Class>
 		<!--(((\R)(\s)*\/\*(\R|.*)+\R\s*\*\/)|([\R\s*|\s+];.*$)+)-->
