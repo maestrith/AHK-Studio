@@ -1932,6 +1932,10 @@ Class PluginClass{
 		csc({plugin:obj,hwnd:hwnd})
 	}Current(x:=""){
 		return Current(x)
+	}DebugWindow(Text){
+		if(!v.debug.sc)
+			MainWin.DebugWindow()
+		sc:=v.debug,sc.2003(sc.2006,Text)
 	}DynaRun(script){
 		return DynaRun(script)
 	}EnableSC(x:=0){
@@ -6978,6 +6982,16 @@ Notify(csc*){
 	/*
 		if(Code=2008&&(A_EventInfo+(4*6))&0x20) ;For Undo Stuff.
 			return
+		::m.::MsgBox %  ;Msg box
+::ms.::MsgBox %  ;Msg box
+:o:tsk.::TaskDialog("Main: Words for buttons", "Extra: Showing all buttons possible"        ,"Title: Buttons-using text"    ,"Yes,No,Cancel,Retry,Close","Blue"   ,400,    ,Time_Out) ;msgbox alternative
+:o:mobj.::MsgBox ,, Object Content, % Disp() {left 2} ;display ojbect contents
+:r:cmb.::result:=m("d: " d,"e: " e,"ico:!","btn:ync","def:2")  ;Chad Message box
+:o:sow.::SciTE_Output() {;}Text,Clear=1,LineBreak=1,Exit=0{left 34} ;SciTE output function
+:o:sow2.::SciTE_Output(sXML_Pretty(response,"   ")) {;}Text,Clear=1,LineBreak=1,Exit=0
+		
+		TaskDialog("Main: Words for buttons", "Extra: Showing all buttons possible"        ,"Title: Buttons-using text"    ,"Yes,No,Cancel,Retry,Close","Blue"   ,400,    
+		 
 	*/
 	
 	
