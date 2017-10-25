@@ -1924,7 +1924,7 @@ Class PluginClass{
 		if(IsFunc(info.1)&&info.1~="i)(Fix_Indent|newindent)"=0){
 			func:=info.1,info.Remove(1)
 			return %func%(info*)
-		}	SetTimer,% info.1,-100
+		}SetTimer,% info.1,-100
 	}CallTip(text){
 		sc:=csc(),sc.2200(sc.2128(sc.2166(sc.2008)),text)
 	}Color(con){
@@ -1954,7 +1954,7 @@ Class PluginClass{
 		if(x){
 			GuiControl,1:+Redraw,% sc.sc
 			GuiControl,1:+gnotify,% sc.sc
-		}	else{
+		}else{
 			GuiControl,1:-Redraw,% sc.sc
 			GuiControl,1:+g,% sc.sc
 	}}File(){
@@ -8249,6 +8249,7 @@ RefreshThemes(RefreshColor:=0){
 				if(b="msctls_statusbar321")
 					Text:=CompileFont(Statusbar),ea:=XML.EA(Statusbar)
 				Gui,%win%:font,%text%,% ea.font
+				Gui,%win%:font,% "s" Default.Size,% ea.font
 				GuiControl,% "+background" RGB(ea.Background!=""?ea.Background:default.Background) " c" RGB(ea.color!=""?ea.color:default.color),%HWND%
 				GuiControl,% "font",%HWND%
 		}}ControlGetPos,,,,h,,% "ahk_id" v.statushwnd
