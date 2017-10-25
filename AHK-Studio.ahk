@@ -79,6 +79,9 @@ return
 		have it scan that line (add a thing in the Scan_Line() for it)
 	}
 */
+/*
+	
+*/
 #Include %A_ScriptDir%
 #IfWinActive
 #IfWinActive,AHK Studio
@@ -1933,10 +1936,17 @@ Class PluginClass{
 		csc({plugin:obj,hwnd:hwnd})
 	}Current(x:=""){
 		return Current(x)
-	}DebugWindow(Text){
+	}DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0){
+		sc:=v.debug
 		if(!v.debug.sc)
 			MainWin.DebugWindow()
-		sc:=v.debug,sc.2003(sc.2006,Text)
+		if(Clear)
+			sc.2004()
+		if(LineBreak)
+			sc.2003(sc.2006,"`n")
+		if(Sleep)
+			Sleep,%Sleep%
+		sc.2003(sc.2006,Text)
 	}DynaRun(script){
 		return DynaRun(script)
 	}EnableSC(x:=0){

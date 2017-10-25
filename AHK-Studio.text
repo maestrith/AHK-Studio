@@ -2,5 +2,6 @@
 Where to begin....
 -New Language Setup
 -New Theme Setup....
--DebugWindow(Text) Plugin method to display text in the debug window in Studio
 -Words In Document: Fixed
+Added: Suggested by Joe Glines
+-DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0) Plugin method to display text in the debug window in Studio
