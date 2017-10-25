@@ -3964,7 +3964,7 @@ Escape(a*){
 	}v.DisableContext:=sc.2166(sc.2008),sc.2201
 	if(InStr(Focus,"Scintilla"))
 		Send,{Escape}
-	DllCall("EndMenu"),UpPos()
+	DllCall("EndMenu"),UpPos(1)
 }
 ExecScript(){
 	static exec,time,script
@@ -6866,7 +6866,7 @@ Notify(csc*){
 		t("Total Things At Once: " Mem.MaxIndex() " @ " A_TickCount)
 	*/
 	while(fn:=Mem.RemoveAt(1)){
-		sc:=csc({hwnd:fn.Ctrl}),tn:=0
+		sc:=csc({hwnd:fn.Ctrl}),tn:=0,Code:=fn.Code
 		if(MainWin.tnsc.sc=fn.Ctrl)
 			TNotes.Write(),tn:=1
 		if(Code=2002)
@@ -6983,7 +6983,23 @@ Notify(csc*){
 				SetupEnter(1),line:=sc.2166(sc.2008),indent:=sc.2127(line-1),sc.2126(line,indent),sc.2025(sc.2128(line))
 				Continue
 			}
-		}
+		}else if(Code=2006){
+			if((match:=sc.2353(pos:=fn.position))>0){
+				if(pos>match)
+					match++
+				else
+					pos++
+				sc.2160(pos,match)
+			}else if((match:=sc.2353(pos:=fn.position-1))>0){
+				if(pos>match)
+					match++
+				else
+					pos++
+				sc.2160(pos,match)
+			}else{
+				if(sc.2007((npos:=sc.2266(pos)-1))=35)
+					sc.2160(npos,sc.2267(pos))
+		}}
 	}
 	for a,sc in Edited
 		Update({sc:sc.2357}),Edited() ;woot   ;,t("Edited",sc.sc,sc.GetUNI(),"time:1") ;,Edited()
@@ -6995,32 +7011,7 @@ Notify(csc*){
 	/*
 		fn.Code:=Code,tn:=0
 	*/
-	
-	
-	
-	
-	
-	if(Code=2008&&fn.ModType&0x01&&(fn.ModType&0x20=0&&fn.ModType&0x40=0))
-		if(sc.sc=MainWin.tnsc.sc)
-			v.TNGui.Write()
-	doc:=sc.2357
-	if(Code=2006){
-		if((match:=sc.2353(pos:=fn.position))>0){
-			if(pos>match)
-				match++
-			else
-				pos++
-			sc.2160(pos,match)
-		}else if((match:=sc.2353(pos:=fn.position-1))>0){
-			if(pos>match)
-				match++
-			else
-				pos++
-			sc.2160(pos,match)
-		}else{
-			if(sc.2007((npos:=sc.2266(pos)-1))=35)
-				sc.2160(npos,sc.2267(pos))
-	}}if(Code=2008){
+	if(Code=2008){
 		SetTimer,UpPos,-10
 		if(sc.2423=3&&sc.2570>1){
 			list:=[]
@@ -10742,7 +10733,7 @@ Upper(text){
 	StringUpper,text,text
 	return text
 }
-UpPos(){
+UpPos(NoContext:=0){
 	static lastline,lastpos,Multi
 	sc:=csc(),cpos:=sc.2008,epos:=sc.2009,line:=sc.2166(cpos),length:=sc.2006
 	if(v.track.line)
@@ -10779,7 +10770,8 @@ UpPos(){
 	else if(cpos!=epos)
 		sc.2500(6),sc.2505(0,length)
 	lastpos:=cpos
-	SetTimer,Context,-500
+	if(!NoContext)
+		SetTimer,Context,-500
 }
 URIDecode(str){
 	Loop{ ;by Titam
