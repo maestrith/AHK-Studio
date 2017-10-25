@@ -152,6 +152,7 @@ Testing(){
 		return sc.2160(Start.1,End.1)
 		return m((Lang:=GetLanguage(sc)),sc.2010(sc.2008),Keywords.GetXML(Lang)[])
 	*/
+	m(v.Words[csc().2357])
 	if(A_UserName!="maestrith")
 		return m("Testing")
 	/*
@@ -3859,11 +3860,11 @@ Enter(){
 	checkqf:
 	sc:=csc(),fixlines:=[],ind:=Settings.Get("//tab",5),ShowOSD(GetKeyState("Shift","P")?"Shift+Enter":"Enter")
 	if(InStr(focus,"scintilla")){
-		SetTimer,Scan_Line,-100
 		if(sc.2202)
 			sc.2201
 		if(sc.2102)
 			return sc.2104(),sc.Enable(1)
+		SetTimer,Scan_Line,-100
 		root:=map.SSN("//*")
 		if(sc.2570=1&&GetKeyState("Shift","P")){
 			if(v.Options.Full_Auto_Indentation)
@@ -6786,8 +6787,8 @@ Notifications(a*){
 	}
 }
 Notify(csc*){
-	static values:={0:"Obj",2:"Code",3:"position",4:"ch",5:"mod",6:"modType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",15:"prevfold",17:"listType",22:"updated",23:"Method"}
-	static codeget:={2001:{ch:4},2005:{ch:4,mod:5},2006:{position:3,mod:5},2007:{updated:22},2008:{position:3,modType:6,text:7,length:8,linesadded:9,line:13,fold:14,prevfold:15},2010:{position:3},2011:{position:3},2014:{position:3,ch:4,text:7,listtype:17,Method:23},2016:{x:18,y:19},2019:{position:3,mod:5},2021:{position:3},2022:{position:3,ch:4,text:7,method:23},2027:{position:3,mod:5}}
+	static values:={0:"Obj",2:"Code",3:"position",4:"ch",5:"mod",6:"ModType",7:"text",8:"length",9:"linesadded",10:"msg",11:"wparam",12:"lparam",13:"line",14:"fold",15:"prevfold",17:"listType",22:"updated",23:"Method"}
+	static codeget:={2001:{ch:4},2005:{ch:4,mod:5},2006:{position:3,mod:5},2007:{updated:22},2008:{position:3,ModType:6,text:7,length:8,linesadded:9,line:13,fold:14,prevfold:15},2010:{position:3},2011:{position:3},2014:{position:3,ch:4,text:7,listtype:17,Method:23},2016:{x:18,y:19},2019:{position:3,mod:5},2021:{position:3},2022:{position:3,ch:4,text:7,method:23},2027:{position:3,mod:5}}
 	static poskeep,Mem:=[]
 	Notify:
 	static last,lastline,lastpos:=[],focus:=[],dwellfold:="",text
@@ -6902,7 +6903,7 @@ Notify(csc*){
 				sc.2003(cpos," "),sc.2025(cpos+1)
 			ch:=fn.ch?fn.ch:sc.2007(sc.2008),SetStatus("Last Entered Character: " Chr(ch) " Code:" ch,2)
 		}else if(fn.Code=2008){
-			if(fn.modType&0x400&&!tn){
+			if(fn.ModType&0x400&&!tn){
 				text:=StrGet(fn.text,fn.length,"UTF-8")
 				line:=sc.2166(fn.position)
 				/*
@@ -6932,7 +6933,7 @@ Notify(csc*){
 				if(!Current(3).edited)
 					Edited()
 				if(!v.LineEdited[line]){
-					if(fn.modType&0x20||fn.modType&0x40){
+					if(fn.ModType&0x20||fn.ModType&0x40){
 						if(text)
 							RegExReplace(text,"\R",,count),AddNewLines(text,Current(5)),LineStatus.DelayAdd(line,count)
 					}else{
@@ -6940,7 +6941,7 @@ Notify(csc*){
 							SetScan(line)
 						if(v.Options.Disable_Line_Status!=1){
 							LineStatus.Add(line,2)
-			}}}}else if(fn.modType&0x800&&!tn){
+			}}}}else if(fn.ModType&0x800&&!tn){
 				/*
 					fn.Position and fn.Length will have values.
 					this will be helpful because you can figure out what was being deleted
@@ -6950,7 +6951,7 @@ Notify(csc*){
 				*/
 				if(!Current(3).edited)
 					Edited()
-				if(sc.2008=sc.2009&&fn.modType&0x20=0&&fn.modType&0x40=0)
+				if(sc.2008=sc.2009&&fn.ModType&0x20=0&&fn.ModType&0x40=0)
 					epos:=fn.position,del:=sc.2007(epos),poskeep:=""
 				start:=sc.2166(fn.position),end:=sc.2166(fn.position+fn.length)
 				/*
@@ -6970,6 +6971,17 @@ Notify(csc*){
 					if(v.Options.Disable_Line_Status!=1)
 						LineStatus.Add(start,2)
 				}
+			}if(fn.ModType&0x02&&(fn.ModType&0x20=0&&fn.ModType&0x40=0)){
+				if(fn.linesadded)
+					MarginWidth(sc)
+			}
+		}else if(fn.Code=2001){
+			if(fn.ch=125){
+				SetTimer,FixBrace,-10
+				Continue
+			}if(fn.ch=10){
+				SetupEnter(1),line:=sc.2166(sc.2008),indent:=sc.2127(line-1),sc.2126(line,indent),sc.2025(sc.2128(line))
+				Continue
 			}
 		}
 	}
@@ -6979,40 +6991,16 @@ Notify(csc*){
 		Working Here!
 	*/
 	return
+	
 	/*
-		if(Code=2008&&(A_EventInfo+(4*6))&0x20) ;For Undo Stuff.
-			return
-		::m.::MsgBox %  ;Msg box
-::ms.::MsgBox %  ;Msg box
-:o:tsk.::TaskDialog("Main: Words for buttons", "Extra: Showing all buttons possible"        ,"Title: Buttons-using text"    ,"Yes,No,Cancel,Retry,Close","Blue"   ,400,    ,Time_Out) ;msgbox alternative
-:o:mobj.::MsgBox ,, Object Content, % Disp() {left 2} ;display ojbect contents
-:r:cmb.::result:=m("d: " d,"e: " e,"ico:!","btn:ync","def:2")  ;Chad Message box
-:o:sow.::SciTE_Output() {;}Text,Clear=1,LineBreak=1,Exit=0{left 34} ;SciTE output function
-:o:sow2.::SciTE_Output(sXML_Pretty(response,"   ")) {;}Text,Clear=1,LineBreak=1,Exit=0
-		
-		TaskDialog("Main: Words for buttons", "Extra: Showing all buttons possible"        ,"Title: Buttons-using text"    ,"Yes,No,Cancel,Retry,Close","Blue"   ,400,    
-		 
+		fn.Code:=Code,tn:=0
 	*/
 	
 	
 	
 	
 	
-	
-	if(Code=2008&&fn.modType&0x02&&(fn.modtype&0x20=0&&fn.modtype&0x40=0)){
-		/*
-			del:=SubStr((DeletedText:=StrGet(fn.text,fn.length,"UTF-8")),1,1)
-		*/
-		if(fn.linesadded)
-			MarginWidth(sc)
-	}
-	fn.Code:=Code,tn:=0
-	if(fn.ch=125){
-		SetTimer,FixBrace,-10
-		return
-	}if(fn.ch=10)
-		return SetupEnter(1),line:=sc.2166(sc.2008),indent:=sc.2127(line-1),sc.2126(line,indent),sc.2025(sc.2128(line))
-	if(Code=2008&&fn.modType&0x01&&(fn.modtype&0x20=0&&fn.modtype&0x40=0))
+	if(Code=2008&&fn.ModType&0x01&&(fn.ModType&0x20=0&&fn.ModType&0x40=0))
 		if(sc.sc=MainWin.tnsc.sc)
 			v.TNGui.Write()
 	doc:=sc.2357
@@ -8412,40 +8400,6 @@ RemoveLines(start,end){
 	GuiControl,1:+Redraw,SysTreeView322
 	return
 }
-RemoveOldLines(text,current){
-	UpdateWordsInDocument(text,1)
-	for a,b in classes:=GetAllTopClasses(text,,,(Omni:=GetOmni(SSN(Current,"@ext").text))){
-		RegExMatch(b.text,Omni.Class,found)
-		if((nodes:=SN(current,"descendant::*[@type='Class' and @text='" found.2 "']")).length){
-			Code_Explorer.RemoveTV(SN(current,"descendant::*[@type='Class' and @text='" found.2 "']"))
-			for c,d in Omni{
-				if(c~="Class|Function|Property")
-					Continue
-				pos:=1
-				while(RegExMatch(text,d,found,pos),pos:=found.Pos(1)+found.Len(1)){
-					if(!found.Len(1))
-						Break
-					if(node:=SSN(current,"descendant::*[@type='" c "' and @text='" found.1 "']")){
-						if(tv:=SSN(node,"@cetv").text)
-							TVC.Delete(2,tv)
-						node.ParentNode.RemoveChild(node)
-			}}}
-			Code_Explorer.RemoveTV(nodes)
-		}
-		StringReplace,text,text,% b.text
-	}
-	for a,b in Omni{
-		if(a~="Class|Property")
-			Continue
-		pos:=1
-		while(RegExMatch(text,b,found,pos),pos:=found.Pos(1)+found.Len(1)){
-			if(!found.len(1))
-				Break
-			if((nodes:=SN(current,"descendant::*[@type='" a "' and @text='" found.1 "']")).length)
-				Code_Explorer.RemoveTV(nodes)
-		}
-	}
-}
 Rename_Current_Include(current:=""){
 	if(!current.xml)
 		current:=Current()
@@ -8829,7 +8783,9 @@ Scan_Line(text:=""){
 		if(RegExMatch(AfterText,"^\s*\{"))
 			RegExMatch(Text,"OUm`n)\R?(.*\R" Chr(127) ".*\R)",Found),AfterText:=RegExReplace(Found.1,Chr(127) " ")
 		Text:=Update({get:Current.File}),Pos1:=InStr(Text,"`n",0,1,b.Line),NewText:=(SubStr(Text,1,Pos1) Chr(127) " " SubStr(Text,Pos1+1)),NewText:=ScanFile.RemoveComments(NewText,Current.Lang),Obj:=StrSplit(NewText,Chr(127)),AfterText1:=SubStr(Obj.2,1,InStr(Obj.2,"`n",0,1,2)-1)
-		Words:=v.words[(sc:=csc()).2357],OldWords:=RegExReplace(RegExReplace(RegExReplace(AfterText,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])","|"),"\|{2,}","|"),NewWords:=RegExReplace(RegExReplace(RegExReplace(AfterText1,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])"," "),"\s{2,}"," "),OWords:=Words,Words:=RegExReplace(Words,"\b(" Trim(OldWords,"|") ")\b\s*"),Words.=NewWords,v.words[sc.2357]:=Words
+		Words:=v.words[(sc:=csc()).2357],OldWords:=RegExReplace(RegExReplace(RegExReplace(AfterText,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])","|"),"\|{2,}","|"),NewWords:=RegExReplace(RegExReplace(RegExReplace(AfterText1,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])"," "),"\s{2,}"," "),OWords:=Words,Words:=RegExReplace(Words,"\b(" Trim(OldWords,"|") ")\b"),Words.=NewWords,Words:=RegExReplace(Words,"\s{2,}"," ")
+		Sort,Words,CUD%A_Space%
+		v.words[sc.2357]:=Words
 		FoundStartPos:=StrLen(Obj.1)
 		if(RegExMatch(AfterText1,"^\s*\{"))
 			RegExMatch(NewText,"OUm`n)\R?(.*\R" Chr(127) ".*\R)",Found),AfterText1:=RegExReplace(Found.1,Chr(127) " ")
@@ -10782,27 +10738,6 @@ UpdateMethod(Add,node){
 	node.SetAttribute("args",add.3),TVC.Modify(2,Add.1,SSN(node,"@cetv").text)
 	TVC.Modify(2,,SSN(node.ParentNode,"@cetv").text,"Sort")
 }
-UpdateWordsInDocument(text,remove:=0){
-	sc:=csc()
-	if(remove){
-		words:=v.words[sc.2357],NewWords:=RegExReplace(RegExReplace(text,"(\b\d+\b|\b\w{1,2}\b)",""),"x)(\W)"," "),OText:=sc.GetUNI()
-		if(NewWords){
-			for a,b in StrSplit(NewWords," "){
-				if(OText~="i)\b" b "\b"=0)
-					StringReplace,words,words,%b%
-			}
-			v.words[sc.2357]:=Trim(RegExReplace(words,"\s+"," "))
-		}
-	}else{
-		words:=v.words[sc.2357]
-		NewWords:=RegExReplace(RegExReplace(text,"(\b\d+\b|\b\w{1,2}\b)",""),"x)(\W)"," ")
-		if(NewWords){
-			words.=" " NewWords
-			Sort,words,UCD%A_Space%
-			v.words[sc.2357]:=Trim(words)
-		}
-	}
-}
 Upper(text){
 	StringUpper,text,text
 	return text
@@ -10972,32 +10907,15 @@ WinSetTitle(win:=1,Title:="AHK Studio",Open:=0){
 	}
 }
 Words_In_Document(NoDisplay:=0,text:="",Remove:="",AllowLastWord:=0){
-	sc:=csc(),AllText:=sc.GetUNI(),word:=sc.GetWord(),doc:=text?text:AllText,pos:=1
-	while(RegExMatch(doc,"OU)(\w+-\w+)",found,pos),pos:=found.Pos(1)+found.Len(1)){
-		if(!found.len(1))
-			Break
-		doc:=RegExReplace(doc,found.1)
-	}Words:=RegExReplace(RegExReplace(doc,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])"," ")
-	if(word&&!AllowLastWord)
-		words:=RegExReplace(words,"\b" word "\b")
-	if(text){
-		OWords:=v.words[sc.2357]
-		if(Remove){
-			pos:=1
-			Sort,words,CUD%A_Space%
-			while(RegExMatch(words,"O)\b(\w+)\b",found,pos),pos:=found.Pos(1)+found.Len(1)){
-				if(!found.len(1))
-					Break
-				if(!RegExMatch(AllText,"i)\b" found.1 "\b"))
-					OWords:=RegExReplace(OWords,"\b" found.1 "\b")
-			}
-			words:=OWords
-		}else
-			words.=" " OWords
-	}Sort,words,CUD%A_Space%
-	words:=Trim(words),v.words[sc.2357]:=words
-	if(!NoDisplay)
-		sc.2100(StrLen(word),words)
+	Text:=Update({Get:Current(3).File})
+	Words:=RegExReplace(RegExReplace(RegExReplace(Text,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])"," "),"\s{2,}"," ")
+	sc:=csc()
+	v.Words[sc.2357]:=Trim(Words)
+	if(!NoDisplay){
+		Words:=Trim(Words)
+		Sort,Words,CUD%A_Space%
+		sc.2100(StrLen(sc.GetWord()),Words)
+	}
 }
 Wrap_Word_In_Quotes(){
 	sc:=csc(),sc.2078,cpos:=sc.2008,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2003(start,Chr(34)),sc.2003(end+1,Chr(34)),sc.2025(cpos+1),sc.2079
