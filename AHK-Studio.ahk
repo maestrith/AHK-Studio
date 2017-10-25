@@ -8249,7 +8249,6 @@ RefreshThemes(RefreshColor:=0){
 				if(b="msctls_statusbar321")
 					Text:=CompileFont(Statusbar),ea:=XML.EA(Statusbar)
 				Gui,%win%:font,%text%,% ea.font
-				Gui,%win%:font,% "s" Default.Size,% ea.font
 				GuiControl,% "+background" RGB(ea.Background!=""?ea.Background:default.Background) " c" RGB(ea.color!=""?ea.color:default.color),%HWND%
 				GuiControl,% "font",%HWND%
 		}}ControlGetPos,,,,h,,% "ahk_id" v.statushwnd
