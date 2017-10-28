@@ -147,7 +147,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.03"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.04"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -716,7 +716,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.005.03"
+	Version:="1.005.04"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.Write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -1965,7 +1965,7 @@ Class PluginClass{
 	}m(info*){
 		m(info*)
 	}MoveStudio(){
-		Version:="1.005.03"
+		Version:="1.005.04"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(info){
@@ -2010,7 +2010,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.005.03"
+		Version:="1.005.04"
 		return version
 	}
 }
@@ -10758,21 +10758,23 @@ URIDecode(str){
 	return, str
 }
 URLDownloadToVar(URL){
-	req:=ComObjCreate("Msxml2.XMLHTTP")
-	if(proxy:=Settings.SSN("//proxy").text)
-		req.SetProxy(2,proxy)
-	req.Open("GET",URL)
-	req.SetRequestHeader("Pragma","no-cache")
-	req.SetRequestHeader("Cache-Control","no-cache")
-	req.Send()
-	return req.ResponseText
 	/*
-		http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+		req:=ComObjCreate("Msxml2.XMLHTTP")
 		if(proxy:=Settings.SSN("//proxy").text)
-			http.SetProxy(2,proxy)
-		http.Open("GET",URL,1),http.Send(),http.WaitForResponse
-		return http.ResponseText
+			req.SetProxy(2,proxy)
+		req.Open("GET",URL)
+		req.Send()
+		m(req.ResponseText)
+		return req.ResponseText
 	*/
+	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	if(proxy:=Settings.SSN("//proxy").text)
+		http.SetProxy(2,proxy)
+	http.Open("GET",URL,1)
+	http.SetRequestHeader("Pragma","no-cache")
+	http.SetRequestHeader("Cache-Control","no-cache")
+	http.Send(),http.WaitForResponse
+	return http.ResponseText
 }
 VarBrowser(){
 	static newwin,treeview
