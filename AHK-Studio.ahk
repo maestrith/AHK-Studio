@@ -20,10 +20,8 @@ ComObjError(0),FileCheck(%true%),new Keywords(),Options("startup"),menus:=new XM
 	Hotkey,End,EndThing,On
 */
 return
-Word_Border:
-m("Border is here!")
-return
 /*
+	return and returnstuff
 	EndThing:
 	sc:=csc()
 	if(sc.2102)
@@ -1538,7 +1536,7 @@ Class MainWindowClass{
 			this.qfobj[b]:=a
 		for a,b in ["Regex","Case Sensitive","Greed","Multi-Line","Require Enter For Search","Word Border"]{
 			Gui,Add,Checkbox,% "x+3 c0xFFFFFF" (A_Index=1?"yp+4":"") " hwndhwnd g" this.qfobj[b] (Settings.SSN("//options/@" Clean(RegExReplace(b,"-","_"))).text?" Checked":""),%b%
-			this[this.qfobj[b]]:=hwnd
+			this.QFControls[this.qfobj[b]]:=hwnd
 		}this.qfheight:=h,this.qfedit:=qfedit,this.qftext:=qftext
 	}Rebuild(list){
 		while(ll:=list.item[A_Index-1]),ea:=XML.EA(ll){
@@ -1739,14 +1737,9 @@ Class MainWindowClass{
 			VarSetCapacity(rect,16,0),init:=1
 		for c,d in [[obj.qftext,(v.Options.Top_Find?4:win.h+4)],[obj.qfedit,(v.Options.Top_Find?0:win.h)]]
 			GuiControl,1:Move,% d.1,% "y" d.2
-		/*
-			Move all hwnd from this.hwnds to this.ControlsHWND.hwnd
-			or something like that.
-		*/
-		/*
-			GuiControl,1:Move,% obj.qftext,% "y" (v.Options.Top_Find?4:win.h+4)
-			GuiControl,1:Move,% obj.qfedit,% "y" (v.Options.Top_Find?0:win.h)
-		*/
+		List:=""
+		for a,b in Obj.QFControls
+			GuiControl,1:Move,%b%,% "y" (v.Options.Top_Find?4:win.h+4)
 		if(!v.Options.Top_Find)
 			NumPut(0,rect,0),NumPut(win.h,rect,4),NumPut(win.w,rect,8),NumPut(win.h+obj.qfheight,rect,12),DllCall("RedrawWindow",uptr,obj.main,uptr,&rect,int,0,uint,0x1|0x4) ;0x1|0x4|0x20|0x800|0x10
 		lastw:=win.w,lasth:=win.h
@@ -8121,6 +8114,7 @@ QF(x:=0){
 	Regex:
 	Multi_Line:
 	Greed:
+	Word_Border:
 	Options(A_ThisLabel),lastFind:=""
 	ControlGetText,text,,% "ahk_id" MainWin.QFEdit
 	if(text)
