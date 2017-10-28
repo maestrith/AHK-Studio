@@ -719,7 +719,7 @@ Check_For_Update(startup:=""){
 	Version:="1.005.02"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
-		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
+		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.Write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
 		ControlSetText,Edit1,%update%,% newwin.ahkid
 	}if(!found.1)
 		ControlSetText,Edit1,% http.ResponseText,% newwin.ahkid
@@ -732,7 +732,7 @@ Check_For_Update(startup:=""){
 	if(!FileExist("Older Versions"))
 		FileCreateDir,Older Versions
 	FileMove,%nne%.ahk,%A_ScriptDir%\Older Versions\%nne% - %version%.ahk,1
-	File:=FileOpen(nne ".ahk","rw"),File.seek(0),File.write(studio),File.length(File.position)
+	File:=FileOpen(nne ".ahk","rw"),File.Seek(0),File.Write(studio),File.Length(File.Position)
 	Loop,%A_ScriptDir%\*.ico
 		icon:=A_LoopFileFullPath
 	if(icon)
@@ -10752,12 +10752,25 @@ URIDecode(str){
 	}
 	return, str
 }
-URLDownloadToVar(url){
-	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+URLDownloadToVar(URL){
+	req:=ComObjCreate("Msxml2.XMLHTTP")
 	if(proxy:=Settings.SSN("//proxy").text)
-		http.SetProxy(2,proxy)
-	http.Open("GET",url,1),http.Send(),http.WaitForResponse
-	return http.ResponseText
+		req.SetProxy(2,proxy)
+	req.Open("GET",URL)
+	req.SetRequestHeader("Pragma","no-cache")
+	req.SetRequestHeader("Cache-Control","no-cache")
+	/*
+		req.SetRequestHeader("If-Modified-Since", "Sat, 1 Jan 2000 00:00:00 GMT")
+	*/
+	req.Send()
+	return req.ResponseText
+	/*
+		http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+		if(proxy:=Settings.SSN("//proxy").text)
+			http.SetProxy(2,proxy)
+		http.Open("GET",URL,1),http.Send(),http.WaitForResponse
+		return http.ResponseText
+	*/
 }
 VarBrowser(){
 	static newwin,treeview
