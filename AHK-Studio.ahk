@@ -147,7 +147,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.05"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.06"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -716,7 +716,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.005.05"
+	Version:="1.005.06"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.Write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -1737,16 +1737,16 @@ Class MainWindowClass{
 			}
 		}if(!init)
 			VarSetCapacity(rect,16,0),init:=1
-		/*
-			for c,d in [[obj.qftext,(v.Options.Top_Find?4:win.h+4)],[obj.qfedit,(v.Options.Top_Find?0:win.h)]]
-				GuiControl,1:Move,% d.1,% "y" d.2
-		*/
+		for c,d in [[obj.qftext,(v.Options.Top_Find?4:win.h+4)],[obj.qfedit,(v.Options.Top_Find?0:win.h)]]
+			GuiControl,1:Move,% d.1,% "y" d.2
 		/*
 			Move all hwnd from this.hwnds to this.ControlsHWND.hwnd
 			or something like that.
 		*/
-		GuiControl,1:Move,% obj.qftext,% "y" (v.Options.Top_Find?4:win.h+4)
-		GuiControl,1:Move,% obj.qfedit,% "y" (v.Options.Top_Find?0:win.h)
+		/*
+			GuiControl,1:Move,% obj.qftext,% "y" (v.Options.Top_Find?4:win.h+4)
+			GuiControl,1:Move,% obj.qfedit,% "y" (v.Options.Top_Find?0:win.h)
+		*/
 		if(!v.Options.Top_Find)
 			NumPut(0,rect,0),NumPut(win.h,rect,4),NumPut(win.w,rect,8),NumPut(win.h+obj.qfheight,rect,12),DllCall("RedrawWindow",uptr,obj.main,uptr,&rect,int,0,uint,0x1|0x4) ;0x1|0x4|0x20|0x800|0x10
 		lastw:=win.w,lasth:=win.h
@@ -1965,7 +1965,7 @@ Class PluginClass{
 	}m(info*){
 		m(info*)
 	}MoveStudio(){
-		Version:="1.005.05"
+		Version:="1.005.06"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(info){
@@ -2010,7 +2010,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.005.05"
+		Version:="1.005.06"
 		return version
 	}
 }
