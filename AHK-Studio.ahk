@@ -4230,7 +4230,9 @@ FileCheck(file:=""){
 		if(x:=ComObjActive("{DBD5A90A-A85C-11E4-B0C7-43449580656B}")){
 			x.Open(file),x.ScanFiles(),x.Show()
 			ExitApp
-		}if(file){
+		}
+		m("It should not be here!")
+		if(file){
 			if(!Settings.SSN("//open/file[text()='" file "']"))
 				Settings.Add("open/file",{select:1},file,1)
 		}
