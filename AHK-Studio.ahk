@@ -147,7 +147,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.01"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.02"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -716,7 +716,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.005.01"
+	Version:="1.005.02"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -1965,7 +1965,7 @@ Class PluginClass{
 	}m(info*){
 		m(info*)
 	}MoveStudio(){
-		Version:="1.005.01"
+		Version:="1.005.02"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(info){
@@ -2010,7 +2010,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.005.01"
+		Version:="1.005.02"
 		return version
 	}
 }
@@ -4230,8 +4230,7 @@ FileCheck(file:=""){
 		if(x:=ComObjActive("{DBD5A90A-A85C-11E4-B0C7-43449580656B}")){
 			x.Open(file),x.ScanFiles(),x.Show()
 			ExitApp
-		}
-		m("It should not be here!")
+		}m("It should not be here!")
 		if(file){
 			if(!Settings.SSN("//open/file[text()='" file "']"))
 				Settings.Add("open/file",{select:1},file,1)
