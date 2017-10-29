@@ -70,8 +70,10 @@
 		<syntax syntax=", GroupName, WinTitle [, WinText, Label, ExcludeTitle, ExcludeText]">GroupAdd</syntax>
 		<syntax syntax=", GroupName [, A|R]">GroupClose</syntax>
 		<syntax syntax=", GroupName [, R]">GroupDeactivate</syntax>
+		<syntax syntax=": Launched whenever the user right-clicks anywhere in the window except the title bar and menu bar">GuiContextMenu</syntax>
 		<syntax syntax=", Sub-command, ControlID [, Param3]">GuiControl</syntax>
 		<syntax syntax=", OutputVar [, Sub-command, ControlID, Param4]">GuiControlGet</syntax>
+		<syntax syntax=": Launched whenever files/folders are dropped onto the window as part of a drag-and-drop operation">GuiDropFiles</syntax>
 		<syntax syntax=", KeyName [, Label, Options]">Hotkey</syntax>
 		<syntax syntax=", var, value">IfEqual</syntax>
 		<syntax syntax=", File|Dir|Pattern">IfExist</syntax>
@@ -392,7 +394,6 @@
 	</Code>
 	<Delimiter delimiter="," preserve="OU)((?&lt;Open&gt;\{|\[)|(?&lt;Close&gt;\}|\])|(?&lt;PreserveOpen&gt;\()|(?&lt;PreserveClose&gt;\)))" removeall="OU)(\x22.*\x22)" search="(\(|,[^\[)" replace="(" replaceinvalid="."></Delimiter>
 	<ReplaceFirst replace="," first="( )"></ReplaceFirst>
-	<NoReplace>if</NoReplace>
 	<SearchTrigger>{</SearchTrigger>
 	<Styles>
 		<inlinecomment style="1" ex=";InLine Comment\n"></inlinecomment>
