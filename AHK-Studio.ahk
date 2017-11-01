@@ -99,7 +99,103 @@ return
 #IfWinActive
 #IfWinActive,AHK Studio
 #Include *i HotStrings.ahk
-#Include About.ahk ;NoIndex
+About(){
+	about=
+(
+If you wish to use this software, great.
+
+If you wish to use this as a part of your project I require payment.
+
+If you wish to donate to help me with my living expenses please click the donate button at the bottom
+
+I want to thank all of the people who helped this project become a reality.
+
+Chris Mallet - Creator of the original AutoHotkey
+	All of the people who helped him.
+Lexikos - For all of the amazing work on AHK 1.1
+	All of the people who helped him.
+
+Help from friends who have given me great ideas and bug reports
+	Uberi,Coco,Tidbit,GeekDude,joedf,budRich,tomoe_uehara,hoppfrosch,Run1e and everyone who I have not listed I am thankful.
+	
+All of the editors that I have used for giving me ideas for this project
+
+Special thanks to number1nub and Run1e for helping with the beta testing for the latest version
+
+License for Scintilla and SciTE
+
+Copyright 1998-2002 by Neil Hodgson <neilh@scintilla.org>
+
+All Rights Reserved 
+
+Permission to use, copy, modify, and distribute this software and its 
+documentation for any purpose and without fee is hereby granted, 
+provided that the above copyright notice appear in all copies and that 
+both that copyright notice and this permission notice appear in 
+supporting documentation. 
+
+NEIL HODGSON DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS 
+SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY 
+AND FITNESS, IN NO EVENT SHALL NEIL HODGSON BE LIABLE FOR ANY 
+SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES 
+WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, 
+WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER 
+TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
+OR PERFORMANCE OF THIS SOFTWARE. 
+)
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.07"
+	Gui,Margin,0,0
+	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
+	Gui,Add,Button,gdonate,Donate
+	Gui,Add,Button,x+M gsite,Website
+	Gui,Show,w700 h550,AHK Studio Help Version: %version%
+	sc.2181(0,about),sc.2025(0),sc.2268(1)
+	return
+	11Close:
+	11GuiClose:
+	11GuiEscape:
+	hwnd({rem:11})
+	return
+	site:
+	Run,https://github.com/maestrith/AHK-Studio
+	return
+}
+Testing(){
+	/*
+		sc:=csc()
+		RegExMatch(Clipboard,"O)start=\x22(\d+)\x22",Start)
+		RegExMatch(Clipboard,"O)end=\x22(\d+)\x22",End)
+		return sc.2160(Start.1,End.1)
+		return m((Lang:=GetLanguage(sc)),sc.2010(sc.2008),Keywords.GetXML(Lang)[])
+	*/
+	m(v.Words[csc().2357])
+	if(A_UserName!="maestrith")
+		return m("Testing")
+	/*
+		return m(TVC.Controls.1.hwnd) ;the hwnd for Project Explorer
+	*/
+	return m("I'm sleepy.")
+}
+/*
+	put this in there and use it for A_TickCount stuffs.
+*/
+Class TimerClass{ ;Thanks Run1e
+	static Timers:=[]
+	Init(){
+		DllCall("QueryPerformanceFrequency", "Int64P", F)
+		this.Freq := F
+	}
+	Current(){
+		DllCall("QueryPerformanceCounter","Int64P",Timer)
+		return Timer
+	}
+	Start(ID){
+		this.Timers[ID]:=this.Current()
+	}
+	Stop(ID){
+		return ((this.Current()-this.Timers[ID])/this.Freq),this.Timers.Delete(ID)
+	}
+}
 Activate(a,b,c,d){
 	if(a&&v.Options.Check_For_Edited_Files_On_Focus=1)
 		Check_For_Edited()
