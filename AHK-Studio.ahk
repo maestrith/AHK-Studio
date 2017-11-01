@@ -99,103 +99,7 @@ return
 #IfWinActive
 #IfWinActive,AHK Studio
 #Include *i HotStrings.ahk
-About(){
-	about=
-(
-If you wish to use this software, great.
-
-If you wish to use this as a part of your project I require payment.
-
-If you wish to donate to help me with my living expenses please click the donate button at the bottom
-
-I want to thank all of the people who helped this project become a reality.
-
-Chris Mallet - Creator of the original AutoHotkey
-	All of the people who helped him.
-Lexikos - For all of the amazing work on AHK 1.1
-	All of the people who helped him.
-
-Help from friends who have given me great ideas and bug reports
-	Uberi,Coco,Tidbit,GeekDude,joedf,budRich,tomoe_uehara,hoppfrosch,Run1e and everyone who I have not listed I am thankful.
-	
-All of the editors that I have used for giving me ideas for this project
-
-Special thanks to number1nub and Run1e for helping with the beta testing for the latest version
-
-License for Scintilla and SciTE
-
-Copyright 1998-2002 by Neil Hodgson <neilh@scintilla.org>
-
-All Rights Reserved 
-
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
-provided that the above copyright notice appear in all copies and that 
-both that copyright notice and this permission notice appear in 
-supporting documentation. 
-
-NEIL HODGSON DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS 
-SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY 
-AND FITNESS, IN NO EVENT SHALL NEIL HODGSON BE LIABLE FOR ANY 
-SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES 
-WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, 
-WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER 
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
-OR PERFORMANCE OF THIS SOFTWARE. 
-)
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.06"
-	Gui,Margin,0,0
-	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
-	Gui,Add,Button,gdonate,Donate
-	Gui,Add,Button,x+M gsite,Website
-	Gui,Show,w700 h550,AHK Studio Help Version: %version%
-	sc.2181(0,about),sc.2025(0),sc.2268(1)
-	return
-	11Close:
-	11GuiClose:
-	11GuiEscape:
-	hwnd({rem:11})
-	return
-	site:
-	Run,https://github.com/maestrith/AHK-Studio
-	return
-}
-Testing(){
-	/*
-		sc:=csc()
-		RegExMatch(Clipboard,"O)start=\x22(\d+)\x22",Start)
-		RegExMatch(Clipboard,"O)end=\x22(\d+)\x22",End)
-		return sc.2160(Start.1,End.1)
-		return m((Lang:=GetLanguage(sc)),sc.2010(sc.2008),Keywords.GetXML(Lang)[])
-	*/
-	m(v.Words[csc().2357])
-	if(A_UserName!="maestrith")
-		return m("Testing")
-	/*
-		return m(TVC.Controls.1.hwnd) ;the hwnd for Project Explorer
-	*/
-	return m("I'm sleepy.")
-}
-/*
-	put this in there and use it for A_TickCount stuffs.
-*/
-Class TimerClass{ ;Thanks Run1e
-	static Timers:=[]
-	Init(){
-		DllCall("QueryPerformanceFrequency", "Int64P", F)
-		this.Freq := F
-	}
-	Current(){
-		DllCall("QueryPerformanceCounter","Int64P",Timer)
-		return Timer
-	}
-	Start(ID){
-		this.Timers[ID]:=this.Current()
-	}
-	Stop(ID){
-		return ((this.Current()-this.Timers[ID])/this.Freq),this.Timers.Delete(ID)
-	}
-}
+#Include About.ahk ;NoIndex
 Activate(a,b,c,d){
 	if(a&&v.Options.Check_For_Edited_Files_On_Focus=1)
 		Check_For_Edited()
@@ -712,7 +616,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.005.06"
+	Version:="1.005.07"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.Write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -811,6 +715,8 @@ class Code_Explorer{
 		static last
 		CEGO:
 		if((Node:=cexml.SSN("//*[@cetv='" A_EventInfo "']"))&&(A_GuiEvent="S"||A_GuiEvent="Normal")){
+			
+			return m(Node.xml)
 			SelectText(Node,1),CenterSel()
 		}
 		return
@@ -1959,7 +1865,7 @@ Class PluginClass{
 	}m(info*){
 		m(info*)
 	}MoveStudio(){
-		Version:="1.005.06"
+		Version:="1.005.07"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(info){
@@ -2004,7 +1910,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.005.06"
+		Version:="1.005.07"
 		return version
 	}
 }
@@ -3944,7 +3850,7 @@ Escape(a*){
 		;m(hwnd " - " MainWin.FindEdit,"OR!",hwnd " - " MainWin.FindTV,Focus,"Won't have values just yet")
 		if(hwnd=MainWin.FindCheck||hwnd=MainWin.FindTV)
 			return
-		selections:=[],main:=sc.2575,sel:=sc.2570()
+		selections:=[],main:=sc.2575
 		Loop,% sc.2570()
 			selections.Push([sc.2577(A_Index-1),sc.2579(A_Index-1)])
 		sc.2400(),sc.2571()
@@ -4092,6 +3998,8 @@ Extract(mainfile){
 	if(!Update({get:file}))
 		Update({file:file,text:text,load:1,encoding:encoding})
 	while(RegExMatch(text,"iOm`nU)^\s*\x23Include\s*,?\s*(.*)(\s+;.*)?$",found,pos)),pos:=found.pos(1)+found.len(1){
+		if(InStr(Found.2,";NoIndex"))
+			Continue
 		info:=found.1,info:=RegExReplace(Trim(found.1,", `t`r`n"),"i)\Q*i\E\s*"),added:=0,orig:=info
 		if(FileExist(info)="D")
 			pool[Trim(info,"\")]:=1
@@ -5729,9 +5637,23 @@ Jump_To_First_Available(){
 	else if((pos:=sc.2353(cpos-1))>=0)
 		sc.2025(pos+1)
 }
+GetFind(Text){
+	Start:=InStr(Text,"(?<Text"),Open:=0,Overall:=[]
+	for a,b in ["(",")"]{
+		Pos:=Start
+		while(Pos:=InStr(Text,b,0,Pos))
+			Overall[Pos]:=b,Pos++
+	}for a,b in Overall{
+		(b="(")?(Open++):(Open--)
+		if(!Open){
+			End:=a
+			Break
+		}
+	}return SubStr(Text,1,Start) "$1" SubStr(Text,End)
+}
 Class Keywords{
 	__New(){
-		Static Dates:={ahk:"20171018092300"},BaseURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/lib/Languages/",BaseDir:="Lib\Languages\"
+		Static Dates:={ahk:"20171029061149"},BaseURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/lib/Languages/",BaseDir:="Lib\Languages\"
 		for a,b in StrSplit("IndentRegex,KeywordList,Suggestions,Languages,Comments,OmniOrder,CodeExplorerExempt,Words,FirstChar,Delimiter,ReplaceFirst,SearchTrigger",",")
 			Keywords[b]:=[]
 		if(!IsObject(v.OmniFind))
@@ -5798,16 +5720,22 @@ Class Keywords{
 			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
 				Index++
 				Keywords.FirstChar[Language,ea.FirstChar].=aa.NodeName "|"
-				for a,b in ea
+				for a,b in ea{
 					Find[aa.NodeName,a]:=(Value:=RegExReplace(b,"\x60n","`n")),Order[Index,aa.NodeName,a]:=Value
+					if(a="Regex")
+						Find[aa.NodeName,"Find"]:=GetFind(Value)
+				}
 				Under:=SN(aa,"*")
 				if(Under.Length)
 					Index++
 				while(UU:=Under.item[A_Index-1],ea:=XML.EA(UU)){
 					ExemptList.=UU.NodeName "|"
 					Keywords.FirstChar[Language,ea.FirstChar].=UU.NodeName "|"
-					for a,b in ea
+					for a,b in ea{
 						Find[UU.NodeName,"Inside"]:=aa.NodeName,Find[UU.NodeName,a]:=(Value:=RegExReplace(b,"\x60n","`n")),Order[Index,aa.NodeName Chr(127) UU.NodeName,a]:=Value
+						if(a="Regex")
+							Find[UU.NodeName,"Find"]:=GetFind(Value)
+					}
 			}}Keywords.CodeExplorerExempt[Language]:=Trim(ExemptList,"|")
 			for a,b in Keywords.FirstChar[Language]
 				Keywords.FirstChar[Language,a]:=Trim(b,"|")
@@ -6979,7 +6907,6 @@ Notify(csc*){
 					;#[Working Here]
 					t(Text)
 					m(Text)
-					flan is good
 					t(Text)
 					m(Text)
 					I am Typing Text
@@ -7319,7 +7246,7 @@ Omni_Search(start=""){
 		if(break){
 			break:=0
 			break
-		}order:=ll.nodename="file"?"filename,type,dir":b.type="menu"?"text,type,additional1":"text,type,file,args",info:=StrSplit(order,","),text:=b[info.1],rating:=0
+		}order:=ll.NodeName="file"?"filename,type,dir":b.type="menu"?"text,type,additional1":"text,type,file,args",info:=StrSplit(order,","),text:=b[info.1],rating:=0
 		if(b.filename="libraries")
 			Continue
 		if(b.libraries)
@@ -7437,9 +7364,22 @@ Omni_Search(start=""){
 			line:=sc.2166(StrPut(SubStr(Text,1,Pos),"UTF-8")-1),sc.2160(sc.2128(line),sc.2136(line)),hwnd({rem:20}),CenterSel()
 		}else{
 			NN:=(xx:=Keywords.Languages[LanguageFromFileExt(SSN(Node,"ancestor::file/@ext").text)]).SSN("//Code/descendant::" Item.Type)
+			Omni:=GetOmni(Current(3).Lang)
 			if((Parent:=NN.ParentNode)!="Code")
-				Item.SelectParent:=SSN(Node.ParentNode,"@text").text,Item.SelectParentRegex:=RegExReplace(SSN(Parent,"@find").text,"\x60n")
-			Item.File:=SSN(Node,"ancestor-or-self::file/@file").text,SelectText(item)
+				Item.SelectParent:=SSN(Node.ParentNode,"@text").text,Item.ParentRegex:=RegExReplace(Omni[Parent.NodeName].Find,"\$1",Item.SelectParent)
+			/*
+				for a,b in Item
+					List.=a " = " b "`n"
+			*/
+			Item.Regex:=RegExReplace(Omni[NN.NodeName].Find,"\$1",Item.Text)
+			/*
+				return m("Parent: " Item.ParentRegex,Item.Regex,Parent.xml)
+			*/
+			/*
+				FIX THIS TO BE THE RIGHT THING!!!!!
+				FIX ALL THE OTHER SelectText() STUFF
+			*/
+			Item.File:=SSN(Node,"ancestor-or-self::file/@file").text,SelectText(Item)
 		}
 	}
 	else if(item.type="gui"){
@@ -9099,8 +9039,43 @@ SelectText(Item,Node:=0){
 			tv(FEA.tv)
 			Sleep,400
 		}Item.ID:=FEA.ID
-	}text:=Update({get:Current(3).File}),Omni:=GetOmni(Files.SSN("//*[@id='" Item.ID "']/@ext").text)
+	}Text:=Update({get:Current(3).File}),Pos:=1
+	if(!Regex:=Item.Regex){
+		Omni:=GetOmni(Files.SSN("//*[@id='" Item.ID "']/@ext").text)
+		Regex:=RegExReplace(Omni[Item.Type].Find,"\$1",Item.Text)
+	}
+	if(ParentRegex:=Item.ParentRegex)
+		Pos:=RegExMatch(Text,ParentRegex)
+	else{
+		II:=[]
+		/*
+			Push in all that is found and then figure out which one is right
+			cause it might be inside a class or whatever
+			
+		*/
+	}
+	
+	RegExMatch(Text,Regex,Found,Pos)
+	Pos:=Found.Pos(1)
+	Pos:=StrPut(SubStr(Text,1,Pos),"UTF-8")-2
+	sc.2160(Pos,Pos+StrPut(Item.Text,"UTF-8")-1)
+	
+	
+	
+	return
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	if(!Omni[Item.Type].Inside){
+		for a,b in Omni
+			List.=a " = " b "`n"
+		m(List)
 		Search:=GetSearchRegex(Omni[Item.Type].Regex,Item.Text)
 		Pos:=1,Total:=[]
 		while(RegExMatch(Text,Search,Found,Pos),Pos:=Found.Pos(1)+Found.Len(1))
@@ -9161,8 +9136,9 @@ SelectText(Item,Node:=0){
 		return
 	}
 	for a,b in Item
-		List.=a " - " b "`n"
-	Regex:=RegExReplace(Omni[Item.Type].Find,"\$1",Item.Text)
+		List.=a " = " b "`n"
+	return m(List)
+	Regex:=RegExReplace(Item.Find,"\$1",Item.Text)
 	FindSearch:=Omni[Item.Type].Regex
 	Regex:=GetSearchRegex(FindSearch,Item.Text)
 	Node:=(xx:=Keywords.Languages[GetLanguage()]).SSN("//Code/descendant::" Item.Type)
@@ -9173,11 +9149,12 @@ SelectText(Item,Node:=0){
 			Search:=RegExReplace(Item.SelectParentRegex,"\$1",ParentText)
 			if(RegExMatch(Text,Search,Found)){
 				Pos:=Found.Pos(1)
+				m(Search,Item.SelectParentRegex,ParentText)
 				if(RegExMatch(Text,Regex,Found,Pos)){
 					Start:=StrPut(SubStr(Text,1,Found.Pos(1)-1),"UTF-8")-1
 					sc.2160(Start,Start+StrPut(Item.Text,"UTF-8")-1)
 				}else{
-					m("Unable to find: " Regex)
+					m("Unable to find: " Regex,"After: " Pos)
 				}
 			}else{
 				m("Can't Find:",Search)
@@ -9769,16 +9746,6 @@ Class SettingsClass{
 				this.ThemeSettings(node)
 	}}ThemeSettings(node){
 		static info:={Color:{Background:32}}
-		/*
-			,"Indent Guide":["//theme/font[@style=37]","style",37,"color",0]}
-			,qfobj:={"Bottom Background":"bb","Bottom Forground":"bf","Top Background":"tb"
-			,"Top Forground":"tf","Edit Background":"qfb"}
-		*/
-		/*
-			if(Node.NodeName=)
-				
-			t(Node.xml,"HERE! Flan","time:2")
-		*/
 		Alt:=GetKeyState("Alt","P"),Ctrl:=GetKeyState("Ctrl","P")
 		if(node.NodeName="parent")
 			return
