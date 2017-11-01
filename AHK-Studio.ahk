@@ -4848,7 +4848,7 @@ Full_Backup(remove:=0){
 	cur:=Current(2).file
 	SplitPath,cur,,dir
 	if(remove){
-		loop,%dir%\backup\*.*,2
+		Loop,%dir%\AHK-Studio Backup\*.*,2
 			FileRemoveDir,%A_LoopFileFullPath%,1
 	}
 	backup:=dir "\AHK-Studio Backup\Full Backup" A_Now
