@@ -78,6 +78,7 @@ return
 		DefaultOptions make sure to have them checked for and if they are not in your menus.xml, when you add them in, have them
 		pre-selected
 	}
+	FileSelectFile
 	MISC NOT WORKING:
 	Undo:
 	When you undo something with more than 1 class it doesn't undo properly
@@ -8805,11 +8806,11 @@ Save(option=""){
 		if(!v.Options.Disable_Backup){
 			parent:=SSN(aa,"ancestor::main/@file").text
 			SplitPath,parent,,dir
-			if(!FileExist(dir "\backup"))
-				FileCreateDir,% dir "\backup"
-			if(!FileExist(dir "\backup\" now))
-				FileCreateDir,% dir "\backup\" now
-			FileCopy,% ea.file,% dir "\backup\" now "\" ea.filename,1 ;change this to FileOpen()
+			if(!FileExist(dir "\AHK-Studio Backup"))
+				FileCreateDir,% dir "\AHK-Studio Backup"
+			if(!FileExist(dir "\AHK-Studio Backup\" now))
+				FileCreateDir,% dir "\AHK-Studio Backup\" now
+			FileCopy,% ea.file,% dir "\AHK-Studio Backup\" now "\" ea.filename,1 ;change this to FileOpen()
 			if(ErrorLevel)
 				m("There was an issue saving " ea.file,"Please close any error messages and try again")
 		}LineStatus.Save(ea.id),encoding:=ea.encoding
