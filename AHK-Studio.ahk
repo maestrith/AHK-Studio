@@ -4851,12 +4851,12 @@ Full_Backup(remove:=0){
 		loop,%dir%\backup\*.*,2
 			FileRemoveDir,%A_LoopFileFullPath%,1
 	}
-	backup:=dir "\backup\Full Backup" A_Now
+	backup:=dir "\AHK-Studio Backup\Full Backup" A_Now
 	FileCreateDir,%backup%
 	if(v.Options.Full_Backup_All_Files){
 		loop,%dir%\*.*,0,1
 		{
-			if(InStr(a_loopfilename,".exe")||InStr(A_LoopFileName,".dll")||InStr(A_LoopFileDir,dir "\backup"))
+			if(InStr(a_loopfilename,".exe")||InStr(A_LoopFileName,".dll")||InStr(A_LoopFileDir,dir "\AHK-Studio Backup"))
 				Continue
 			file:=Trim(RegExReplace(A_LoopFileFullPath,"i)\Q" dir "\E"),"\")
 			SplitPath,file,filename,ddir
