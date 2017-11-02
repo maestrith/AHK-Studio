@@ -1368,6 +1368,7 @@ Class MainWindowClass{
 		ControlGetPos,,,,h,,ahk_id%sb%
 		this.Gui:=new XML("gui","lib\Gui.xml"),this.main:=main,this.ID:="ahk_id" main,this.sb:=h
 		OnMessage(0xA0,MainWindowClass.ChangePointer),OnMessage(0xA1,MainWindowClass.Resize),OnMessage(0x232,MainWindowClass.ExitSizeMove),OnMessage(0x0211,MainWindowClass.EnterOff),OnMessage(0x0212,MainWindowClass.EnterOn)
+		OnMessage(6,"Activate")
 		for a,b in {all:32646,ns:32645,ew:32644}
 			this["curs" a]:=DllCall("LoadCursor",int,0,int,b,uptr)
 		Gui,Margin,0,0
