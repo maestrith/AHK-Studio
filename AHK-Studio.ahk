@@ -144,7 +144,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.07"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.08"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -686,7 +686,9 @@ Check_For_Edited(){
 Check_For_Update(startup:=""){
 	static newwin
 	;static DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk",VersionTextURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"
-	static DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/AHK-Studio.ahk",VersionTextURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/AHK-Studio.text"
+	static DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/AHK-Studio.ahk"
+		 ,VersionTextURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/AHK-Studio.text"
+		 ,url:="https://api.github.com/repos/maestrith/AHK-Studio/commits/Beta"
 	Run,RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
 	auto:=Settings.EA("//autoupdate"),sub:=A_NowUTC
 	if(startup=1){
@@ -698,7 +700,7 @@ Check_For_Update(startup:=""){
 	sub-=A_Now,hh
 	FileGetTime,time,%A_ScriptFullPath%
 	time+=sub,hh
-	ea:=Settings.EA("//github"),token:=ea.token?"?access_token=" ea.token:"",url:="https://api.github.com/repos/maestrith/AHK-Studio/commits" token,http:=ComObjCreate("WinHttp.WinHttpRequest.5.1"),http.Open("GET",url)
+	ea:=Settings.EA("//github"),token:=ea.token?"?access_token=" ea.token:"",http:=ComObjCreate("WinHttp.WinHttpRequest.5.1"),http.Open("GET",url token)
 	if(proxy:=Settings.SSN("//proxy").text)
 		http.setProxy(2,proxy)
 	http.Send(),RegExMatch(http.ResponseText,"iUO)\x22date\x22:\x22(.*)\x22",found),date:=RegExReplace(found.1,"\D")
@@ -713,7 +715,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.005.07"
+	Version:="1.005.08"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.Write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -1963,7 +1965,7 @@ Class PluginClass{
 	}m(info*){
 		m(info*)
 	}MoveStudio(){
-		Version:="1.005.07"
+		Version:="1.005.08"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(info){
@@ -2008,7 +2010,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.005.07"
+		Version:="1.005.08"
 		return version
 	}
 }
@@ -8495,12 +8497,12 @@ Rename_Current_Include(current:=""){
 	SplashTextOff
 }
 Replace_Selected(){
-	sc:=csc(),OnMessage(6,""),replace:=InputBox(sc.sc,"Replace Selected","Input text to replace what is selected"),clip:=Clipboard
+	sc:=csc(),TotalReplaced:=sc.2570,OnMessage(6,""),replace:=InputBox(sc.sc,"Replace Selected","Input text to replace what is selected"),clip:=Clipboard
 	if(ErrorLevel)
 		return
 	for a,b in StrSplit("``r,``n,``r``n,\r,\n,\r\n",",")
 		replace:=RegExReplace(replace,"i)\Q" b "\E","`n")
-	Clipboard:=replace,sc.2614(1),sc.2179,Clipboard:=clip,OnMessage(6,"Activate")
+	Clipboard:=replace,sc.2614(1),sc.2179,Clipboard:=clip,OnMessage(6,"Activate"),SetStatus("Total Replaced: " TotalReplaced,3)
 }
 Replace(){
 	sc:=csc(),cp:=sc.2008,word:=sc.TextRange(start:=sc.2266(cp-1,1),end:=sc.2267(cp-1,1)),rep:=Settings.SSN("//replacements/*[@replace='" word "']").text
@@ -10863,13 +10865,15 @@ UpPos(NoContext:=0){
 		else
 			sc.2069(Settings.Get("//theme/caret/@color",0xFFFFFF)),sc.2188(Settings.SSN("//theme/caret/@width").text),Multi:=0
 	}Text:="Line:" sc.2166(CPos)+1 " Column:" sc.2129(CPos) " Length:" Length " Position:" CPos,total:=0
-	if(CPos!=EPos){
+	if(CPos!=EPos)
 		Text.=" Selected Count:" Abs(CPos-EPos)
-		if(sc.2570>1){
-			Loop,% sc.2570
-				total+=Abs(sc.2579(A_Index-1)-sc.2577(A_Index-1))
-			Text.=" Total Selected:" total
-	}}if(v.LineEdited.MinIndex()!=""&&!v.LineEdited.HasKey(Line)&&Line)
+	if(sc.2570>1){
+		Loop,% sc.2570
+			total+=Abs(sc.2579(A_Index-1)-sc.2577(A_Index-1))
+		if(Total)
+			Text.=" Total Selected:" total 
+		Text.=" Selections: " sc.2570
+	}if(v.LineEdited.MinIndex()!=""&&!v.LineEdited.HasKey(Line)&&Line)
 		Scan_Line()
 	SetStatus(Text,1),LastLine:=Line
 	if(CPos=EPos&&LastPos!=CPos)
