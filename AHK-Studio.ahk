@@ -4527,7 +4527,7 @@ Find(){
 			if(ea.text)
 				aa.SetAttribute("tv",TV_Add((ea.Name?ea.Name " = ":"") ea.Text,SSN(aa.ParentNode,"@tv").text))
 		}Default("SysTreeView321",5)
-		TV_Modify(FindXML.SSN("//info/@tv").text,"Select Vis Focus Expand")
+		TV_Modify(FindXML.SSN("//info/@tv").text,"Select Vis Focus Expand"),Current:=FindXML.SSN("//info"),Current.SetAttribute("expand",1),Current.ParentNode.SetAttribute("expand",1)
 	}else if(Button="jump"){
 		ea:=FindXML.EA("//*[@tv='" TV_GetSelection() "']/ancestor-or-self::info"),Default("SysTreeView321",5),tv(ea.filetv),sc.2160(ea.pos,ea.pos+StrPut(ea.text,"UTF-8")-1),xpos:=sc.2164(0,ea.pos),ypos:=sc.2165(0,ea.pos)
 		WinGetPos,xx,yy,ww,hh,% NewWin.ahkid
@@ -4563,8 +4563,8 @@ Find(){
 				goto,5Close
 			return
 		}
-	}
-	SetTimer,FindLabel,-200
+	}SetTimer,FindLabel,-200
+	SetTimer,FindCurrent,-10
 	return
 	FindShowXML:
 	FindXML.Transform()
@@ -4613,17 +4613,25 @@ Find(){
 			if(!Current:=SSN(Node,"following-sibling::info")){
 				if(!Parent:=Node.ParentNode.NextSibling)
 					return
+				Current:=SSN(Parent,"descendant::info")
 			}
 		}
 	}
+	FindCurrent:
+	GuiControl,5:+g,SysTreeView321
 	GuiControl,5:-Redraw,SysTreeView321
-	if(Current){
-		Default("SysTreeView321",5),Sel:=SSN(Current,"@tv").text,all:=FindXML.SN("//info[not(@tv='" Sel "')]")
-		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-			TV_Modify(ea.tv,"-Expand")
-		TV_Modify(Sel,"Select Vis Focus Expand")
-	}
+	Default("SysTreeView321",5),Sel:=SSN(Current,"@tv").text,Sel:=Sel?Sel:TV_GetSelection(),all:=FindXML.SN("//*[not(@tv='" Sel "')]")
+	while(aa:=all.item[A_Index-1]){
+		if(TV_Get((tv:=SSN(aa,"@tv").text),"Expand"))
+			TV_Modify(tv,"-Expand"),aa.RemoveAttribute("expand")
+	}TV_Modify(Sel,"Select Vis Focus Expand")
+	/*
+		for a,b in [Current,Current.ParentNode]
+			b.SetAttribute("expand",1)
+	*/
 	GuiControl,5:+Redraw,SysTreeView321
+	GuiControl,5:+gState,SysTreeView321
+	Current:=""
 	return
 	FindLabel:
 	Gui,5:Default
