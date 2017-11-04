@@ -2,6 +2,8 @@
 Added: Suggested by Joe Glines
 -Selections: When you have multiple selections it will show how many you have
 -Total Replaced: When using Replace Selected it will show how many items you replaced
+Fixed: Reported by Joe Glines
+- ;~ { was causing indent. Only ;{ and ;} were supposed to effect indents
 1.005.07
 Changed:
 -Find: Layout is a bit different, Use Up and Down to go between found items
