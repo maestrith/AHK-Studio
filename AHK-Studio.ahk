@@ -4726,62 +4726,62 @@ FixLines(line,total,base:=""){
 		if(SubStr(text,1,1)=";"&&v.Options.Auto_Indent_Comment_Lines!=1)
 			Continue
 		firsttwo:=SubStr(text,1,2)
-		if(firsttwo=";{"||firsttwo=";}"){
+		if(Instr(text,";{")||InStr(text,";}")){
 			if(RegExReplace(text,"\{","",count))
 				specialbrace+=count
-		if(RegExReplace(text,"\}","",count))
-			specialbrace-=count
-		Continue
-	}if(InStr(text,Chr(59)))
-		text:=RegExReplace(SubStr(text,1,InStr(text,";")),"\s+" Chr(59) ".*"),comment:=1
-	first:=SubStr(text,1,1),last:=SubStr(text,0,1),ss:=(text~="i)^\s*(&&|\bOR\b|\bAND\b|\.|\,|\|\||:|\?)\s*"),indentcheck:=(RegExMatch(text,"iA)}*\s*[^#]?\b(" IndentRegex ")\b",string)&&IndentRegex)
-	/*
-		if(InStr(text,"IfWinNotExist"))
-			m(indentcheck,A_Index,IndentRegex)
-		if(String1="IfWinExist")
-			m(String1,A_Index,IndentRegex)
-		if(SubStr(string,1,2)="if"&&StrLen(string)>2)
-			indentcheck:=0
-	*/
-	if(first="<")
-		Continue
-	if(InStr(string,"try"))
-		if(RegExReplace(text,"i)(\{|try|\s)"))
-			indentcheck:=0
-	if(first="("&&InStr(text,")")=0)
-		skip:=1
-	if(Skip){
-		if(First=")")
-			Skip:=0
-		Continue
-	}if(firsttwo="*/")
-		block:=[],aa:=0
-	block.MinIndex()?(current:=block,cur:=1):(current:=lock,cur:=0),braces:=current[current.MaxIndex()].braces+1?current[current.MaxIndex()].braces:0,aa:=aaobj[cur]+0?aaobj[cur]:0
-	if(first="}"){
-		while((found:=SubStr(text,A_Index,1))~="(}|\s)"){
-			if(found~="\s")
-				Continue
-			if(cur&&current.MaxIndex()<=1)
-				Break
-			special:=current.pop().ind,braces--
-	}}if(first="{"&&aa)
-		aa--
-	tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind,tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind,tind+=Abs(specialbrace*indentation)
-	if(!(ss&&v.Options.Manual_Continuation_Line)&&sc.2127(a-1)!=tind+(base*ind))
-		sc.2126(a-1,tind+base*ind)
-	if(firsttwo="/*"){
-		if(block.1.ind="")
-			block.Insert({ind:(lock.1.ind!=""?lock[lock.MaxIndex()].ind+indentation:indentation),aa:aa,braces:lock.1.ind+1?Lock[lock.MaxIndex()].braces+1:1})
-		current:=block,aa:=0
-	}if(last="{"||firsttwo="{`t")
-		braces++,aa:=ss&&last="{"?aa-1:aa,!current.MinIndex()?current.Insert({ind:(aa+braces)*indentation,aa:aa,braces:braces}):current.Insert({ind:(aa+current[current.MaxIndex()].aa+braces)*indentation,aa:aa+current[current.MaxIndex()].aa,braces:braces}),aa:=0
-	if((aa||ss||indentcheck)&&(indentcheck&&last!="{"))
-		aa++
-	if(aa>0&&!(ss||indentcheck))
-		aa:=0
-	aaobj[cur]:=aa,special:=0,comment:=0
-}Update({sc:sc.2357}),SetStatus(A_ThisFunc " Process Time: " A_TickCount-tick "ms @ " A_TickCount " lines: " total,3)
-}
+			if(RegExReplace(text,"\}","",count))
+				specialbrace-=count
+			Continue
+		}if(InStr(text,Chr(59)))
+			text:=RegExReplace(SubStr(text,1,InStr(text,";")),"\s+" Chr(59) ".*"),comment:=1
+		first:=SubStr(text,1,1),last:=SubStr(text,0,1),ss:=(text~="i)^\s*(&&|\bOR\b|\bAND\b|\.|\,|\|\||:|\?)\s*"),indentcheck:=(RegExMatch(text,"iA)}*\s*[^#]?\b(" IndentRegex ")\b",string)&&IndentRegex)
+		/*
+			if(InStr(text,"IfWinNotExist"))
+				m(indentcheck,A_Index,IndentRegex)
+			if(String1="IfWinExist")
+				m(String1,A_Index,IndentRegex)
+			if(SubStr(string,1,2)="if"&&StrLen(string)>2)
+				indentcheck:=0
+		*/
+		if(first="<")
+			Continue
+		if(InStr(string,"try"))
+			if(RegExReplace(text,"i)(\{|try|\s)"))
+				indentcheck:=0
+		if(first="("&&InStr(text,")")=0)
+			skip:=1
+		if(Skip){
+			if(First=")")
+				Skip:=0
+			Continue
+		}if(firsttwo="*/")
+			block:=[],aa:=0
+		block.MinIndex()?(current:=block,cur:=1):(current:=lock,cur:=0),braces:=current[current.MaxIndex()].braces+1?current[current.MaxIndex()].braces:0,aa:=aaobj[cur]+0?aaobj[cur]:0
+		if(first="}"){
+			while((found:=SubStr(text,A_Index,1))~="(}|\s)"){
+				if(found~="\s")
+					Continue
+				if(cur&&current.MaxIndex()<=1)
+					Break
+				special:=current.pop().ind,braces--
+		}}if(first="{"&&aa)
+			aa--
+		tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind,tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind,tind+=Abs(specialbrace*indentation)
+		if(!(ss&&v.Options.Manual_Continuation_Line)&&sc.2127(a-1)!=tind+(base*ind))
+			sc.2126(a-1,tind+base*ind)
+		if(firsttwo="/*"){
+			if(block.1.ind="")
+				block.Insert({ind:(lock.1.ind!=""?lock[lock.MaxIndex()].ind+indentation:indentation),aa:aa,braces:lock.1.ind+1?Lock[lock.MaxIndex()].braces+1:1})
+			current:=block,aa:=0
+		}if(last="{"||firsttwo="{`t")
+			braces++,aa:=ss&&last="{"?aa-1:aa,!current.MinIndex()?current.Insert({ind:(aa+braces)*indentation,aa:aa,braces:braces}):current.Insert({ind:(aa+current[current.MaxIndex()].aa+braces)*indentation,aa:aa+current[current.MaxIndex()].aa,braces:braces}),aa:=0
+		if((aa||ss||indentcheck)&&(indentcheck&&last!="{"))
+			aa++
+		if(aa>0&&!(ss||indentcheck))
+			aa:=0
+		aaobj[cur]:=aa,special:=0,comment:=0
+	}Update({sc:sc.2357}),SetStatus(A_ThisFunc " Process Time: " A_TickCount-tick "ms @ " A_TickCount " lines: " total,3)
+	}
 Focus(a*){
 	if(a.1=0){
 		sc:=csc()
