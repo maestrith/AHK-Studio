@@ -400,7 +400,7 @@
 		<numbers style="2" ex="0123456789\n"></numbers>
 		<completequote style="3" ex="&quot;Complete Quote&quot;\n"></completequote>
 		<punctuation style="4" ex="{}[]^*()+~#\/!&amp;,'\n"></punctuation>
-		<normaltext style="5" ex="This is a sample of normal text\n"></normaltext>
+		<default style="5" ex="This is a sample of normal text\n"></default>
 		<multilinecomment style="11" fold="1" ex="/*\n\tMulti-Line\n\tcomments\n\t&lt;----Click on the fold box or lines to change the color\n*/\n"></multilinecomment>
 		<incompletequote style="13" ex="&quot;InComplete Quote\n"></incompletequote>
 		<backtick style="15" ex="`b`a`c`k`t`i`c\n"></backtick>

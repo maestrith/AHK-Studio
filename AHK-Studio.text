@@ -1,3 +1,6 @@
+1.005.09
+Save As and Save: Reported by derz00 #144
+-Saving with *.* selected still adds .ahk to the file extension
 1.005.08
 Added: Suggested by Joe Glines
 -Selections: When you have multiple selections it will show how many you have

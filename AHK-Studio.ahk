@@ -15,7 +15,7 @@ if(!settings[]){
 	Run,lib\Settings.xml
 	m("Oh boy...check the settings file to see what's up.")
 }v.LineEdited:=[],v.LinesEdited:=[],v.RunObject
-ComObjError(0),FileCheck(%true%),new Keywords(),Options("startup"),menus:=new XML("menus","Lib\Menus.xml"),new Omni_Search_Class(),Gui(),DefaultRCM(),CheckLayout()
+ComObjError(0),FileCheck(%True%),new Keywords(),Options("startup"),menus:=new XML("menus","Lib\Menus.xml"),new Omni_Search_Class(),Gui(),DefaultRCM(),CheckLayout()
 /*
 	Hotkey,End,EndThing,On
 	RegExMatch()
@@ -93,9 +93,6 @@ return
 		have it scan that line (add a thing in the Scan_Line() for it)
 	}
 */
-/*
-	
-*/
 #Include %A_ScriptDir%
 #IfWinActive
 #IfWinActive,AHK Studio
@@ -144,7 +141,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.08"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.09"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -198,9 +195,11 @@ Class TimerClass{ ;Thanks Run1e
 	}
 }
 Activate(a,b,c,d){
-	if(a&&v.Options.Check_For_Edited_Files_On_Focus=1)
-		Check_For_Edited()
-	csc().2400
+	if(A_Gui=1){
+		if(a&&v.Options.Check_For_Edited_Files_On_Focus=1)
+			Check_For_Edited()
+		csc().2400
+	}
 	return 0
 }
 Add_Selected_To_Personal_Variables(){
@@ -715,7 +714,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.005.08"
+	Version:="1.005.09"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.Write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -1965,7 +1964,7 @@ Class PluginClass{
 	}m(info*){
 		m(info*)
 	}MoveStudio(){
-		Version:="1.005.08"
+		Version:="1.005.09"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(info){
@@ -2010,7 +2009,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.005.08"
+		Version:="1.005.09"
 		return version
 	}
 }
@@ -2541,13 +2540,11 @@ Color(con:="",Language:="",FromFunc:=""){
 		if(ea.code=2082){
 			con.2082(7,ea.color),con.2498(1,7)
 			Continue
-		}
-		if(n.NodeName="linenumbers"){
+		}if(n.NodeName="linenumbers"){
 			for a,b in [2290,2291]
 				con[b](1,(Background:=ea.Background?ea.Background:Default.Background))
 			con.2052(33,Background),ea.style:=33
-		}
-		if(ea.style=""){
+		}if(ea.style=""){
 			if(n.NodeName!="keyword")
 				ea.style:=MainXML.SSN("//Styles/" n.NodeName "/@style").text
 			else
@@ -3592,9 +3589,9 @@ Dlg_Color(Node,Default:="",hwnd:="",Attribute:="color"){
 		m("Bottom of Dlg_Color()",Node.xml,Color)
 	return Color
 }
-Dlg_Font(Node,DefaultNode:="",window="",Effects=1){
+Dlg_Font(Node,DefaultNode:="//theme/default",window="",Effects=1){
 	static Remove:={bold:1,color:1,font:1,italic:1,size:1,strikeout:1,underline:1}
-	Node:=Node.xml?Node:Settings.Add(Trim(Node,"/")),Default:=Settings.EA(DefaultNode?DefaultNode:Settings.SSN("//theme/default")),DefaultClone:=Default.Clone(),Style:=XML.EA(Node)
+	Node:=Node.xml?Node:Settings.Add(Trim(Node,"/")),Default:=Settings.EA(DefaultNode),DefaultClone:=Default.Clone(),Style:=XML.EA(Node)
 	for a,b in Style
 		if(Remove[a])
 			Default[a]:=b,Node.RemoveAttribute(a)
@@ -3612,7 +3609,7 @@ Dlg_Font(Node,DefaultNode:="",window="",Effects=1){
 		else if(b="bold"&&!Style.Bold)
 			Style.Delete("bold")
 	}for a,b in Style
-		if(DefaultClone[a]!=b)
+		if(DefaultClone[a]!=b||Node.NodeName="Default")
 			Node.SetAttribute(a,b)
 	return Node
 }
@@ -4717,48 +4714,40 @@ FixLines(line,total,base:=""){
 	Loop,% code.MaxIndex(){
 		if(A_Index-1>total)
 			Break
-		text:=Trim(code[(a:=line+A_Index)],"`t ")
-		if(text~="i)\Q* * * Compile_AH" Chr "\E"){
+		Text:=RegExReplace(Trim(code[(a:=line+A_Index)],"`t "),"U)(\x22.*\x22)")
+		if(Text~="i)\Q* * * Compile_AH" Chr "\E"){
 			skipcompile:=skipcompile?0:1
 			Continue
 		}if(skipcompile)
 			Continue
-		if(SubStr(text,1,1)=";"&&v.Options.Auto_Indent_Comment_Lines!=1)
+		if(SubStr(Text,1,1)=";"&&v.Options.Auto_Indent_Comment_Lines!=1)
 			Continue
-		firsttwo:=SubStr(text,1,2)
-		if(Instr(text,";{")||InStr(text,";}")){
-			if(RegExReplace(text,"\{","",count))
+		FirstTwo:=SubStr(Text,1,2)
+		if(Instr(Text,";{")||InStr(Text,";}")){
+			if(RegExReplace(Text,"\{","",count))
 				specialbrace+=count
-			if(RegExReplace(text,"\}","",count))
+			if(RegExReplace(Text,"\}","",count))
 				specialbrace-=count
 			Continue
-		}if(InStr(text,Chr(59)))
-			text:=RegExReplace(SubStr(text,1,InStr(text,";")),"\s+" Chr(59) ".*"),comment:=1
-		first:=SubStr(text,1,1),last:=SubStr(text,0,1),ss:=(text~="i)^\s*(&&|\bOR\b|\bAND\b|\.|\,|\|\||:|\?)\s*"),indentcheck:=(RegExMatch(text,"iA)}*\s*[^#]?\b(" IndentRegex ")\b",string)&&IndentRegex)
-		/*
-			if(InStr(text,"IfWinNotExist"))
-				m(indentcheck,A_Index,IndentRegex)
-			if(String1="IfWinExist")
-				m(String1,A_Index,IndentRegex)
-			if(SubStr(string,1,2)="if"&&StrLen(string)>2)
-				indentcheck:=0
-		*/
+		}if(InStr(Text,Chr(59)))
+			Text:=RegExReplace(SubStr(Text,1,InStr(Text,";")),"\s+" Chr(59) ".*"),comment:=1
+		first:=SubStr(Text,1,1),last:=SubStr(Text,0,1),ss:=(Text~="i)^\s*(&&|\bOR\b|\bAND\b|\.|\,|\|\||:|\?)\s*"),indentcheck:=(RegExMatch(Text,"iA)}*\s*[^#]?\b(" IndentRegex ")\b",string)&&IndentRegex)
 		if(first="<")
 			Continue
 		if(InStr(string,"try"))
-			if(RegExReplace(text,"i)(\{|try|\s)"))
+			if(RegExReplace(Text,"i)(\{|try|\s)"))
 				indentcheck:=0
-		if(first="("&&InStr(text,")")=0)
+		if(first="("&&InStr(Text,")")=0)
 			skip:=1
 		if(Skip){
 			if(First=")")
 				Skip:=0
 			Continue
-		}if(firsttwo="*/")
+		}if(FirstTwo="*/")
 			block:=[],aa:=0
 		block.MinIndex()?(current:=block,cur:=1):(current:=lock,cur:=0),braces:=current[current.MaxIndex()].braces+1?current[current.MaxIndex()].braces:0,aa:=aaobj[cur]+0?aaobj[cur]:0
 		if(first="}"){
-			while((found:=SubStr(text,A_Index,1))~="(}|\s)"){
+			while((found:=SubStr(Text,A_Index,1))~="(}|\s)"){
 				if(found~="\s")
 					Continue
 				if(cur&&current.MaxIndex()<=1)
@@ -4769,11 +4758,11 @@ FixLines(line,total,base:=""){
 		tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind,tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind,tind+=Abs(specialbrace*indentation)
 		if(!(ss&&v.Options.Manual_Continuation_Line)&&sc.2127(a-1)!=tind+(base*ind))
 			sc.2126(a-1,tind+base*ind)
-		if(firsttwo="/*"){
+		if(FirstTwo="/*"){
 			if(block.1.ind="")
 				block.Insert({ind:(lock.1.ind!=""?lock[lock.MaxIndex()].ind+indentation:indentation),aa:aa,braces:lock.1.ind+1?Lock[lock.MaxIndex()].braces+1:1})
 			current:=block,aa:=0
-		}if(last="{"||firsttwo="{`t")
+		}if(last="{"||FirstTwo="{`t")
 			braces++,aa:=ss&&last="{"?aa-1:aa,!current.MinIndex()?current.Insert({ind:(aa+braces)*indentation,aa:aa,braces:braces}):current.Insert({ind:(aa+current[current.MaxIndex()].aa+braces)*indentation,aa:aa+current[current.MaxIndex()].aa,braces:braces}),aa:=0
 		if((aa||ss||indentcheck)&&(indentcheck&&last!="{"))
 			aa++
@@ -4781,15 +4770,17 @@ FixLines(line,total,base:=""){
 			aa:=0
 		aaobj[cur]:=aa,special:=0,comment:=0
 	}Update({sc:sc.2357}),SetStatus(A_ThisFunc " Process Time: " A_TickCount-tick "ms @ " A_TickCount " lines: " total,3)
-	}
+}
 Focus(a*){
+	t("HERE!","time:1")
 	if(a.1=0){
 		sc:=csc()
 		if(sc.sc=MainWin.tnsc.sc)
-			csc(2)
+			csc(2),t("TOP! HERE!")
 	}
 	if(a.1=1&&A_Gui=1){
 		csc().2400
+		t("HERE!","time:1")
 		if(a&&v.Options.Check_For_Edited_Files_On_Focus=1)
 			Check_For_Edited()
 		return 0
@@ -6802,7 +6793,7 @@ Notifications(a*){
 		if(A_GuiEvent~="S|Normal")
 			this.SwitchTab(A_EventInfo)
 	}else if(code=2027){
-		Style:=this.2010(pos:=NumGet(A_EventInfo,12)),Style:=(Style<0?255+Style+1:Style),ThemeXML:=Keywords.GetXML(GetLanguage())
+		Style:=this.2010(pos:=NumGet(A_EventInfo,12)),Style:=(Style<0?255+Style+1:Style),ThemeXML:=Keywords.GetXML(Settings.Language)
 		if(Style=255){
 			Node:=Settings.Add("theme/bracematch") ;here...ish
 			if(!Shift&&!Ctrl&&!alt)
@@ -6818,9 +6809,20 @@ Notifications(a*){
 		
 		
 		
-		
-		return m(Style,ThemeXML.SSN("//Styles/descendant::*[@style='" Style "']").xml,"Here!--->") ;here
-		
+		StyleNode:=ThemeXML.SSN("//Styles/descendant::*[@style='" Style "']")
+		if(!Node:=Settings.SSN("//theme/" StyleNode.NodeName)){
+			Node:=Settings.SSN("//Languages/" Settings.Language "/descendant::*[@style='" Style "']")
+		}
+		/*
+			m(Node.xml,Style,ThemeXML.SSN("//Styles").xml)
+		*/
+		if(GetKeyState("Ctrl","P"))
+			Dlg_Font(Node,,SettingsClass.HWND)
+		else
+			Dlg_Color(Node,,SettingsClass.HWND)
+		this.Color(),RefreshThemes(1)
+		WinActivate,% "ahk_id" SettingsClass.HWND
+		return ;m(Style,ThemeXML.SSN("//Styles/descendant::*[@style='" Style "']").xml,"Here!--->") ;here
 		
 		
 		
@@ -8318,8 +8320,7 @@ RefreshThemes(RefreshColor:=0){
 						text:=CompileFont(Node),ea:=XML.EA(Node)
 					else
 						text:=CompileFont(Settings.SSN("//theme/default")),ea:=Default
-				}
-				if(b="msctls_statusbar321")
+				}if(b="msctls_statusbar321")
 					Text:=CompileFont(Statusbar),ea:=XML.EA(Statusbar)
 				Gui,%win%:font,%text%,% ea.font
 				GuiControl,% "+background" RGB(ea.Background!=""?ea.Background:default.Background) " c" RGB(ea.color!=""?ea.color:default.color),%HWND%
@@ -8744,19 +8745,23 @@ Run_As(exe){
 }
 Save_As(){
 	Send,{Alt Up}
-	current:=Current(1),currentfile:=Current(2).file,all:=SN(current,"descendant-or-self::*[@untitled]")
+	current:=Current(1),CurrentFile:=Current(2).file,all:=SN(current,"descendant-or-self::*[@untitled]")
 	while(aa:=all.item[A_Index-1])
 		aa.RemoveAttribute("untitled")
 	current.RemoveAttribute("untitled")
-	SplitPath,currentfile,,dir
-	FileSelectFile,Newfile,S16,%dir%,Save File As...,*.ahk
-	if(ErrorLevel||Newfile="")
+	SplitPath,CurrentFile,,dir
+	if(!NewFile:=DLG_FileSave(hwnd(1),"AHK Files (*.ahk)|All Files (*.*)",,"My Dialog Text",CurrentFile))
 		return
 	SplitPath,Newfile,NewFN,NewDir,Ext,NNE
-	if(!Ext||!Settings.SSN("//Extensions/Extension[text()='" Ext "']")){
-		Newfile:=NewDir "\" NNE ".ahk"
-		SplitPath,Newfile,NewFN,NewDir,Ext
-	}
+	/*
+		FileSelectFile,Newfile,S16,%dir%,Save File As...,*.ahk
+		if(ErrorLevel||Newfile="")
+			return
+		if(!Ext||!Settings.SSN("//Extensions/Extension[text()='" Ext "']")){
+			Newfile:=NewDir "\" NNE ".ahk"
+			SplitPath,Newfile,NewFN,NewDir,Ext
+		}
+	*/
 	filelist:=SN(Current(1),"descendant::*")
 	while(fl:=filelist.item[A_Index-1],ea:=XML.EA(fl)){
 		if(NewFN=ea.filename&&A_Index>1)
@@ -9535,9 +9540,9 @@ Class SettingsClass{
 		/*
 			Make an RCM that you can edit the font, color, etc.
 		*/
-		this.2371(0),this.2188(1)
+		this.2371(0),this.2188(1),Language:=GetLanguage(),Settings.Language:=Language
 		Gui,Settings:Color,% RGB(ea.Background),% RGB(ea.background)
-		Color(this,GetLanguage(),A_ThisFunc " Settings"),ea:=Settings.EA("//theme/bracematch")
+		Color(this,Language,A_ThisFunc " Settings"),ea:=Settings.EA("//theme/bracematch")
 		ea.Style:=255
 		if(ea.code=2082){
 			this.2082(7,ea.color),this.2498(1,7)
@@ -9613,8 +9618,7 @@ Class SettingsClass{
 			Catch m
 				return m(m.message)
 			hotkey:=edit
-		}
-		StringUpper,hotkey,hotkey
+		}StringUpper,hotkey,hotkey
 		all:=menus.SN("//*[@hotkey='" hotkey "']")
 		if(all.length){
 			if(m("Hotkey belongs to: " SSN(all.item[0],"@clean").text,"Bind to: " SSN(node,"@clean").text "?","btn:ync")!="Yes")
@@ -9625,6 +9629,7 @@ Class SettingsClass{
 		TV_Modify(SSN(node,"@tv").text,,SettingsClass.TVName(node))
 		return
 	}Escape(){
+		Save(),Settings.Save()
 		this:=SettingsClass.keep,this.Default("MenuTV"),menus.SSN("//*[@tv='" TV_GetSelection() "']").SetAttribute("last",1)
 		if(SettingsClass.PopulatedMenu&&!InStr(A_ScriptName,"settings"))
 			MenuWipe(),Menu(),Hotkeys()
@@ -11363,4 +11368,26 @@ SetTimers(Timers*){
 		Obj:=StrSplit(b,",")
 		SetTimer,% Obj.1,% Obj.2
 	}
+}
+DLG_FileSave(HWND:=0,Filter="Text Files (*.txt)|All Files (*.*)",DefaultFilter=1,DialogTitle="Select file to open",DefaultFile:="",Flags:=0x00000002){
+	VarSetCapacity(lpstrFileTitle,0xFFFF,0),VarSetCapacity(lpstrFile,0xFFFF,0),VarSetCapacity(lpstrFilter,0xFFFF,0),VarSetCapacity(lpstrCustomFilter,0xFF,0),VarSetCapacity(OFName,90,0),VarSetCapacity(lpstrTitle,255,0)
+	Address:=&lpstrFilter
+	for a,b in StrSplit(Filter,"|"){
+		for c,d in StrSplit(b)
+			Address:=NumPut(Asc(d),Address+0,"UChar")
+		Address:=NumPut(0,Address+0,"UChar")
+		RegExMatch(b,"OU)\((.*)\)",Found)
+		for c,d in StrSplit(Found.1)
+			Address:=NumPut(Asc(d),Address+0,"UChar")
+		Address:=NumPut(0,Address+0,"UChar")
+	}NumPut(0,Address+0,"UChar"),StrPut(File,&lpstrFile,"UTF-8"),StrPut(DialogTitle,&lpstrTitle,"UTF-8")
+	;Structure https://msdn.microsoft.com/en-us/library/windows/desktop/ms646839(v=vs.85).aspx
+	Address:=&OFName
+	for a,b in [76,HWND,0,&lpstrFilter,&lpstrCustomFilter,255,defaultFilter,&lpstrFile,0xFFFF,&lpstrFileTitle,0xFFFF,&lpstrInitialDir,&lpstrTitle,Flags,0,&lpstrDefExt]
+		Address:=NumPut(b,Address+0,"UInt")
+	if(!DllCall("comdlg32\GetSaveFileNameA","Uint",&OFName))
+		Exit
+	while(Char:=NumGet(lpstrFile,A_Index-1,"UChar"))
+		FileName.=Chr(Char)
+	return FileName
 }
