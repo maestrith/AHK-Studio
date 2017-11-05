@@ -6808,6 +6808,7 @@ Notify(csc*){
 			debug.XML.Transform()
 			CoordMode,ToolTip,Screen
 			ToolTip,% (debug.xml[]) "`n`n`n`n" word,0,0,4
+			
 		*/
 		while(ll:=list.item[A_Index-1]),ea:=XML.EA(ll)
 			info:=ea.type="object"?"Object: Use List Variables (Alt+M LV) to see more info":info.=SSN(ll,"ancestor::*/@name").text " = " ll.text "`n"
@@ -6832,7 +6833,7 @@ Notify(csc*){
 			WinSetTitle(1,ea:=files.EA("//*[@sc='" sc.2357 "']"))
 		MouseGetPos,,,win
 		if(win=hwnd(1))
-			SetTimer,LButton,-200
+			SetTimer("LButton",-200)
 		TVC.Disable(1)
 		if(v.Options.Check_For_Edited_Files_On_Focus)
 			Check_For_Edited()
@@ -6863,7 +6864,7 @@ Notify(csc*){
 			fn[a]:=NumGet(Info+(A_PtrSize*b))
 	}if(fn.Code)
 		Mem.Push(fn)
-	SetTimer,ReadLater,-50
+	SetTimer("ReadLater",-50)
 	return 0
 	ReadLater:
 	Edited:=[]
@@ -6877,10 +6878,10 @@ Notify(csc*){
 				if(Show_Class_Methods(pre:=sc.TextRange(sc.2266(start-2,1),sc.2267(start-2,1)),word))
 					return
 			}if((StrLen(word)>1&&sc.2102=0&&v.Options.Auto_Complete))
-				SetTimer,ShowAutoComplete,-15
+				SetTimer("ShowAutoComplete",-15)
 			style:=sc.2010(cpos-2)
 			if(v.Options.Context_Sensitive_Help)
-				SetTimer,Context,-150
+				SetTimer("Context",-150)
 			c:=fn.ch
 			if(c~="44|32")
 				Replace()
@@ -6892,7 +6893,7 @@ Notify(csc*){
 				sc.2003(cpos," "),sc.2025(cpos+1)
 			ch:=c?c:sc.2007(sc.2008),SetStatus("Last Entered Character: " Chr(ch) " Code:" ch,2)
 			if(c=125){
-				SetTimer,FixBrace,-10
+				SetTimer("FixBrace",-10)
 				Continue
 			}if(c=10){
 				SetupEnter(1),line:=sc.2166(sc.2008),indent:=sc.2127(line-1),sc.2126(line,indent),sc.2025(sc.2128(line))
@@ -6991,7 +6992,7 @@ Notify(csc*){
 			}if(fn.ModType&0x02&&(fn.ModType&0x20=0&&fn.ModType&0x40=0)){
 				if(fn.linesadded)
 					MarginWidth(sc)
-			}SetTimer,UpPos,-10
+			}SetTimer("UpPos",-10)
 			if(sc.2423=3&&sc.2570>1){
 				list:=[]
 				Loop,% sc.2570
@@ -7039,7 +7040,7 @@ Notify(csc*){
 				*/
 				vv:=fn.Text,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(start,end-start),sc.2003(sc.2008,vault.SSN("//*[@name='" vv "']").text)
 				if(v.Options.Full_Auto_Indentation)
-					SetTimer,NewIndent,-1
+					SetTimer("NewIndent",-1)
 			}else if(fn.listType=3){
 				text:=fn.Text
 				loop,% sc.2570
@@ -7048,10 +7049,10 @@ Notify(csc*){
 				text:=fn.Text,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(start,end-start),sc.2003(sc.2008,text "."),sc.2025(sc.2008+StrLen(text ".")),Show_Class_Methods(text)
 			else if(fn.listtype=5){
 				text:=fn.Text,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),add:=sc.2007(end)=40?"":"()",sc.2645(start,end-start),sc.2003(sc.2008,text add),sc.2025(sc.2008+StrLen(text "."))
-				SetTimer,Context,-10
+				SetTimer("Context",-10)
 			}else if(fn.listtype=6){
 				text:=fn.Text,list:=v.firstlist
-				SetTimer,NJT,-50
+				SetTimer("NJT",-50)
 				Continue
 				NJT:
 				ll:=v.jtfa[text],SelectText(ll,1)
@@ -7063,7 +7064,7 @@ Notify(csc*){
 				text:=fn.Text,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(start,end-start),sc.2003(sc.2008,text (sc.2007(sc.2008)=46?"":".")),sc.2025(sc.2008+StrLen(text ".")),methods:="",node:=cexml.Find("//main/@file",Current(2).file,"descendant::info[@type='Class' and @upper='" Upper(text) "']/*[@type='Method']")
 				while(nn:=node.item[A_Index-1]),ea:=XML.EA(nn)
 					methods.=ea.text " "
-				SetTimer,ShowMethod,-10
+				SetTimer("ShowMethod",-10)
 				Continue
 				ShowMethod:
 				KeyWait,Enter,U
@@ -7096,11 +7097,11 @@ Notify(csc*){
 			for a,b in fn
 				List.=a " = " b "`n"
 			if(v.Options.Autocomplete_Enter_Newline){
-				SetTimer,Enter,-1
+				SetTimer("Enter",-1)
 			}Else{
 				v.word:=fn.Text
 				if(A_ThisHotkey="("){
-					SetTimer,notifynext,-1
+					SetTimer("notifynext",-1)
 					return
 					notifynext:
 					Loop,% sc.2570{
@@ -7113,16 +7114,16 @@ Notify(csc*){
 					Continue
 				}
 				if(v.word="#Include"&&v.Options.Disable_Include_Dialog!=1){
-					SetTimer,GetInclude,-200
+					SetTimer("GetInclude",-200)
 				}else if(v.word~="i)\b(goto|gosub)\b"){
-					SetTimer,goto,-100
+					SetTimer("goto",-100)
 				}else if(v.word="SetTimer"){
-					SetTimer,ShowLabels,-80
+					SetTimer("ShowLabels",-80)
 				}else if(Syntax:=Keywords.GetXML(Current(3).Lang).SSN("//*[text()='" v.word "']/@syntax").text){
 					if(SubStr(syntax,1,1)="(")
-						SetTimer,AutoParen,-40
+						SetTimer("AutoParen",-40)
 					else
-						SetTimer,AutoMenu,-150
+						SetTimer("AutoMenu",-50)
 					Continue
 					AutoParen:
 					Loop,% sc.2570{
@@ -7139,11 +7140,11 @@ Notify(csc*){
 				}else if(node:=cexml.SSN("//file[@id='" Current(2).ID "']/descendant::*[@text='" v.word "' and(@type='Class' or @type='Function' or @type='Instance')]")){
 					type:=SSN(node,"@type").text
 					if(type~="Class|Instance")
-						SetTimer,AutoClass,-100
+						SetTimer("AutoClass",-100)
 					else if(type="function")
-						SetTimer,AutoParen,-40
+						SetTimer("AutoParen",-40)
 				}else
-					SetTimer,AutoMenu,-150
+					SetTimer("AutoMenu",-50)
 		}}
 	}for a,sc in Edited
 		Update({sc:sc.2357}),Edited()

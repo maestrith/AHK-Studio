@@ -1,4 +1,6 @@
 1.005.00
+Added:
+-Regex Replace Selected: A small GUI to use Regex to replace the selected text
 Save As and Save: Reported by derz00 #144
 -Saving with *.* selected still adds .ahk to the file extension
 Find:
