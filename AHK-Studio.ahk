@@ -388,15 +388,13 @@ AutoMenu(){
 	sc:=csc()
 	if(sc.2007(sc.2008-1)~="40|123")
 		return
-	command:=RegExReplace(Context(1).word,"#")
+	Command:=RegExReplace(Context(1).word,"#")
 	if(v.word&&sc.2102=0&&v.Options.Auto_Complete){
-		if(l:=commands.SSN("//Context/" command "/descendant-or-self::list[text()='" RegExReplace(v.word,"#") "']")){
-			if(!list:=SSN(l,"@list"))
-				return
+		if(List:=Keywords.GetXML(Current(3).Lang).SSN("//Context/" Command "/descendant-or-self::list[text()='" RegExReplace(v.word,"#") "']/@list").text){
 			Insert:=v.Options.Auto_Space_After_Comma?", ":","
 			if(sc.2007(sc.2008-StrLen(Insert))!=44)
 				sc.2003(sc.2008,Insert),sc.2025(sc.2008+StrLen(Insert))
-			sc.2100(0,list.text,v.word:="")
+			sc.2100(0,List,v.word:="")
 	}}return
 }
 Backspace(sub:=1){
@@ -11289,27 +11287,6 @@ SetTimers(Timers*){
 		SetTimer,% Obj.1,% Obj.2
 	}
 }
-DLG_FileSave(HWND:=0,DefaultFilter=1,DialogTitle="Select file to open",DefaultFile:="",Flags:=0x00000002){
-	Filter:=GetExtensionList(Current(2).Lang?Current(2).Lang:"ahk"),VarSetCapacity(lpstrFileTitle,0xFFFF,0),VarSetCapacity(lpstrFile,0xFFFF,0),VarSetCapacity(lpstrFilter,0xFFFF,0),VarSetCapacity(lpstrCustomFilter,0xFF,0),VarSetCapacity(OFName,90,0),VarSetCapacity(lpstrTitle,255,0),Address:=&lpstrFilter
-	for a,b in StrSplit(Filter,"|"){
-		for c,d in StrSplit(b)
-			Address:=NumPut(Asc(d),Address+0,"UChar")
-		Address:=NumPut(0,Address+0,"UChar")
-		RegExMatch(b,"OU)\((.*)\)",Found)
-		for c,d in StrSplit(Found.1)
-			Address:=NumPut(Asc(d),Address+0,"UChar")
-		Address:=NumPut(0,Address+0,"UChar")
-	}NumPut(0,Address+0,"UChar"),StrPut(File,&lpstrFile,"UTF-8"),StrPut(DialogTitle,&lpstrTitle,"UTF-8")
-	;Structure https://msdn.microsoft.com/en-us/library/windows/desktop/ms646839(v=vs.85).aspx
-	Address:=&OFName
-	for a,b in [76,HWND,0,&lpstrFilter,&lpstrCustomFilter,255,defaultFilter,&lpstrFile,0xFFFF,&lpstrFileTitle,0xFFFF,&lpstrInitialDir,&lpstrTitle,Flags,0,&lpstrDefExt]
-		Address:=NumPut(b,Address+0,"UInt")
-	if(!DllCall("comdlg32\GetSaveFileNameA","Uint",&OFName))
-		Exit
-	while(Char:=NumGet(lpstrFile,A_Index-1,"UChar"))
-		FileName.=Chr(Char)
-	return FileName
-}
 GetFind(Text){
 	Start:=InStr(Text,"(?<Text"),Open:=0,Overall:=[]
 	for a,b in ["(",")"]{
@@ -11331,4 +11308,25 @@ GetExtensionList(Language){
 	for a,b in Ext
 		b:=Trim(b,"; "),(a="Language")?First:=a " (" b ")|":List.=a " (" b ")" "|"
 	return First List "Text Files (*.txt)|All Files (*.*)"
+}
+DLG_FileSave(HWND:=0,DefaultFilter=1,DialogTitle="Select file to open",DefaultFile:="",Flags:=0x00000002){
+	Filter:=GetExtensionList(Current(2).Lang?Current(2).Lang:"ahk"),VarSetCapacity(lpstrFileTitle,0xFFFF,0),VarSetCapacity(lpstrFile,0xFFFF,0),VarSetCapacity(lpstrFilter,0xFFFF,0),VarSetCapacity(lpstrCustomFilter,0xFF,0),VarSetCapacity(OFName,90,0),VarSetCapacity(lpstrTitle,255,0),Address:=&lpstrFilter
+	for a,b in StrSplit(Filter,"|"){
+		for c,d in StrSplit(b)
+			Address:=NumPut(Asc(d),Address+0,"UChar")
+		Address:=NumPut(0,Address+0,"UChar")
+		RegExMatch(b,"OU)\((.*)\)",Found)
+		for c,d in StrSplit(Found.1)
+			Address:=NumPut(Asc(d),Address+0,"UChar")
+		Address:=NumPut(0,Address+0,"UChar")
+	}NumPut(0,Address+0,"UChar"),StrPut(File,&lpstrFile,"UTF-8"),StrPut(DialogTitle,&lpstrTitle,"UTF-8")
+	;Structure https://msdn.microsoft.com/en-us/library/windows/desktop/ms646839(v=vs.85).aspx
+	Address:=&OFName
+	for a,b in [76,HWND,0,&lpstrFilter,&lpstrCustomFilter,255,defaultFilter,&lpstrFile,0xFFFF,&lpstrFileTitle,0xFFFF,&lpstrInitialDir,&lpstrTitle,Flags,0,&lpstrDefExt]
+		Address:=NumPut(b,Address+0,"UInt")
+	if(!DllCall("comdlg32\GetSaveFileNameA","Uint",&OFName))
+		Exit
+	while(Char:=NumGet(lpstrFile,A_Index-1,"UChar"))
+		FileName.=Chr(Char)
+	return FileName
 }
