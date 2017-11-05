@@ -160,13 +160,13 @@ OR PERFORMANCE OF THIS SOFTWARE.
 }
 Testing(){
 	/*
+		SetTimer,11Close,-100
 		sc:=csc()
 		RegExMatch(Clipboard,"O)start=\x22(\d+)\x22",Start)
 		RegExMatch(Clipboard,"O)end=\x22(\d+)\x22",End)
 		return sc.2160(Start.1,End.1)
 		return m((Lang:=GetLanguage(sc)),sc.2010(sc.2008),Keywords.GetXML(Lang)[])
 	*/
-	m(v.Words[csc().2357])
 	if(A_UserName!="maestrith")
 		return m("Testing")
 	/*
@@ -388,13 +388,13 @@ AutoMenu(){
 	sc:=csc()
 	if(sc.2007(sc.2008-1)~="40|123")
 		return
-	Command:=RegExReplace(Context(1).word,"#")
-	if(v.word&&sc.2102=0&&v.Options.Auto_Complete){
-		if(List:=Keywords.GetXML(Current(3).Lang).SSN("//Context/" Command "/descendant-or-self::list[text()='" RegExReplace(v.word,"#") "']/@list").text){
+	Command:=RegExReplace(Context(1).Word,"#")
+	if(v.Word&&sc.2102=0&&v.Options.Auto_Complete){
+		if(List:=Keywords.GetXML(Current(3).Lang).SSN("//Context/" Command "/descendant-or-self::list[text()='" RegExReplace(v.Word,"#") "']/@list").text){
 			Insert:=v.Options.Auto_Space_After_Comma?", ":","
 			if(sc.2007(sc.2008-StrLen(Insert))!=44)
 				sc.2003(sc.2008,Insert),sc.2025(sc.2008+StrLen(Insert))
-			sc.2100(0,List,v.word:="")
+			sc.2100(0,List,v.Word:="")
 	}}return
 }
 Backspace(sub:=1){
@@ -2616,7 +2616,7 @@ Command_Help(){
 		RegExMatch(line,"[\s+]?(\w+)",found)
 	if(RegExMatch(line,"O)^;*\s*;*#(\w*)",found))
 		OpenHelpFile("mk:@MSITStore:C:\Program%20Files\AutoHotkey\AutoHotkey.chm::/docs/commands/_" found.1 ".htm")
-	else if(RegExMatch(commands.SSN("//Commands/Commands").text,(CurrentWord?"\b(" found1 "|" CurrentWord ")\b":"\b(" found1 ")\b"),ff)){
+	else if(RegExMatch(Keywords.GetXML(Current(3).Lang).SSN("//Commands/Commands").text,(CurrentWord?"\b(" found1 "|" CurrentWord ")\b":"\b(" found1 ")\b"),ff)){
 		found1:=ff1
 		if(RegExMatch(found1,"i)Set(Caps|Num|Scroll)LockState"))
 			url.="commands/SetNumScrollCapsLockState.htm"
@@ -4216,7 +4216,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20161107223002,XMLFiles:={menus:[20170814205757,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20161107223002,XMLFiles:={menus:[20171105182355,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20170926222816,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -5620,6 +5620,7 @@ InputBox(parent,title,prompt,default=""){
 	WinGetPos,x,y,,,% "ahk_id" (parent?parent:sc.sc+0)
 	RegExReplace(prompt,"\n","",count),count:=count+2,sc:=csc(),height:=(sc.2279(0)*count)+(v.caption*3)+23+34,y:=((cpos:=sc.2165(0,sc.2008))<height)?y+cpos+sc.2279(sc.2166(sc.2008))+5:y
 	InputBox,var,%title%,%prompt%,,,%height%,%x%,%y%,,,%default%
+	KeyWait,Escape
 	if(ErrorLevel){
 		sc.Enable(1)
 		Exit
@@ -7117,7 +7118,7 @@ Notify(csc*){
 					SetTimer,goto,-100
 				}else if(v.word="SetTimer"){
 					SetTimer,ShowLabels,-80
-				}else if(Syntax:=Keywords.GetXML(Current(3).Lang).SSN("//*[text()='" v.word "']/@syntax").text){ ;syntax:=commands.SSN("//Commands/commands[text()='" v.word "']/@syntax").text){
+				}else if(Syntax:=Keywords.GetXML(Current(3).Lang).SSN("//*[text()='" v.word "']/@syntax").text){
 					if(SubStr(syntax,1,1)="(")
 						SetTimer,AutoParen,-40
 					else
@@ -9306,8 +9307,8 @@ SetStatus(text,part=""){
 	Gui,1:Default
 	widths[part]:=width*StrLen(text 1),SB_SetParts(widths.1,widths.2,widths.3),SB_SetText(text,part)
 }
-SetTimer(timer,duration){
-	SetTimer,%timer%,%duration%
+SetTimer(timer,Duration:="-10"){
+	SetTimer,%timer%,%Duration%
 }
 Settings(){
 	new SettingsClass("Auto Insert")
@@ -11329,4 +11330,72 @@ DLG_FileSave(HWND:=0,DefaultFilter=1,DialogTitle="Select file to open",DefaultFi
 	while(Char:=NumGet(lpstrFile,A_Index-1,"UChar"))
 		FileName.=Chr(Char)
 	return FileName
+}
+Regex_Replace_Selected(){
+	static
+	Gui,Regex:Destroy
+	Gui,Regex:Default
+	sc:=csc()
+	Text:=sc.TextRange(sc.2585(0),sc.2587(0))
+	if(!Text)
+		return m("Please select some text first")
+	NewWin:=new GUIKeep("Regex")
+	NewWin.Add("Edit,vText ReadOnly w500,,w","ListView,w500 r5 AltSubmit gLVRegexReplace,Name|In|Out,wh","Edit,gGoRegEx w250 vIn,,y","Edit,x+0 gGoRegEx w250 vOut,,wy","Edit,xm w500 h200,,wy","Button,gReplaceRegexGo,&Replace Selected,y","Button,x+M gSaveReplaceRegex,&Save,y","Button,x+M gReplaceRegexDelete,&Delete,y")
+	GuiControl,Regex:,Edit1,%Text%
+	NewWin.Show("Regex Replace")
+	gosub,PopulateReplaceRegex
+	GoRegEx:
+	Info:=NewWin[]
+	Text:=RegExReplace(Info.Text,Info.In,Info.Out)
+	GuiControl,Regex:,Edit4,% SubStr(Text,1,600)
+	return
+	ReplaceRegexDelete:
+	Next:=0,Default("SysListView321","Regex"),List:=[]
+	while(Next:=LV_GetNext(Next)){
+		LV_GetText(In,Next,2),LV_GetText(Out,Next,3)
+		if(Node:=Settings.SSN("//ReplaceRegex/Replace[@in='" In "' and @out='" Out "']"))
+			List.Push(Node)
+	}
+	for a,b in List
+		b.ParentNode.RemoveChild(b)
+	goto,PopulateReplaceRegex
+	return
+	SaveReplaceRegex:
+	Info:=NewWin[]
+	if(!Node:=Settings.SSN("//ReplaceRegex/descendant::*[@in='" Info.In "' and @out='" Info.Out "']"))
+		Name:=InputBox(NewWin.hwnd,"Name This Regex","Name for this regex"),Settings.Add("ReplaceRegex/Replace",{name:Name,in:Info.In,out:Info.Out},,1)
+	else
+		return m("Already exists as: " SSN(Node,"@name").text)
+	PopulateReplaceRegex:
+	Default("SysListView321","Regex"),LV_Delete(),all:=Settings.SN("//ReplaceRegex/Replace")
+	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+		LV_Add("",ea.Name,ea.In,ea.Out)
+	Loop,% LV_GetCount("Column")
+		LV_ModifyCol(A_Index,"AutoHDR")
+	return
+	LVRegexReplace:
+	if(!LV_GetNext())
+		return
+	Loop,2
+	{
+		Default("SysListView321","Regex"),LV_GetText(II,LV_GetNext(),A_Index+1)
+		GuiControl,Regex:,% "Edit" A_Index+1,%II%
+	}
+	return
+	RegexGuiEscape:
+	RegexGuiClose:
+	Gui,Regex:Destroy
+	return
+	ReplaceRegexGo:
+	sc.2078()
+	while((Start:=sc.2585(A_Index-1))!=""){
+		End:=sc.2587(A_Index-1)
+		if(Start>sc.2006||Start<0)
+			Break
+		Text:=sc.TextRange(Start,End)
+		sc.2190(Start),sc.2192(End)
+		Text:=RegExReplace(Text,Info.In,Info.Out)
+		sc.2194(StrPut(Text,"UTF-8")-1,Text)
+	}sc.2079()
+	return
 }
