@@ -5801,7 +5801,7 @@ Class Keywords{
 				Node:=Settings.Add("//Languages/" Language)
 			if(SSN(Node,"@date").text!=Date)
 				KeyWords.Refresh(Language),Node.SetAttribute("date",Date)
-			if(!SSN(Node,"@name"))
+			if(!SSN(Node,"@name").text)
 				Node.SetAttribute("name",LEA.Name)
 			all:=xx.SN("//Code/*"),Find:=v.OmniFind[Language]:=[],Order:=Keywords.OmniOrder[Language]:=[],Index:=0,ExemptList:=""
 			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
@@ -10953,9 +10953,10 @@ WinSetTitle(win:=1,Title:="AHK Studio",Open:=0){
 	}
 }
 Words_In_Document(NoDisplay:=0,text:="",Remove:="",AllowLastWord:=0){
-	Text:=Update({Get:Current(3).File})
-	Words:=RegExReplace(RegExReplace(RegExReplace(Text,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])"," "),"\s{2,}"," ")
-	sc:=csc()
+	Text:=Update({Get:Current(3).File}),Words:=RegExReplace(RegExReplace(RegExReplace(Text,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])"," "),"\s{2,}"," ")
+	sc:=csc(),CurrentWord:=sc.GetWord()
+	if(Text~="i)" CurrentWord "\w+")
+		Words:=RegExReplace(Words,"\b" CurrentWord "\b")
 	v.Words[sc.2357]:=Trim(Words)
 	if(!NoDisplay){
 		Words:=Trim(Words)
