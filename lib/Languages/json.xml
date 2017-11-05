@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0"?>
 <json>
-	<FileTypes lexer="json" language="json">json</FileTypes>
+	<FileTypes lexer="json" language="json" name="JSON">json</FileTypes>
 	<Styles>
 		<completequote style="4"/> <!--Key-->
 		<punctuation style="8"/>

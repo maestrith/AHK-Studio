@@ -141,7 +141,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.09"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.00"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -714,7 +714,7 @@ Check_For_Update(startup:=""){
 		}else
 			return
 	}
-	Version:="1.005.09"
+	Version:="1.005.00"
 	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.Write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
@@ -1112,7 +1112,7 @@ class debug{
 			if(message="stop")
 				return
 			else
-				exit
+				Exit
 		}
 		debug.wait:=1,sent:=DllCall("ws2_32\send","ptr",debug.socket,uptr,&buffer,"int",ll,"int",0,"cdecl")
 		if(sent&&mm!="stop"){
@@ -1964,7 +1964,7 @@ Class PluginClass{
 	}m(info*){
 		m(info*)
 	}MoveStudio(){
-		Version:="1.005.09"
+		Version:="1.005.00"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(info){
@@ -2009,7 +2009,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.005.09"
+		Version:="1.005.00"
 		return version
 	}
 }
@@ -4218,7 +4218,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20161107223002,XMLFiles:={menus:[20170814205757,"lib/menus.xml","lib\Menus.xml"],commands:[20170820110351,"lib/Commands.xml","lib\Commands.xml"]}
+	,scidate:=20161107223002,XMLFiles:={menus:[20170814205757,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20170926222816,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -5214,7 +5214,7 @@ Gui(){
 	}
 	return
 }
-exit:
+Exit:
 Exit()
 return
 class GUIKeep{
@@ -5735,20 +5735,6 @@ Jump_To_First_Available(){
 	else if((pos:=sc.2353(cpos-1))>=0)
 		sc.2025(pos+1)
 }
-GetFind(Text){
-	Start:=InStr(Text,"(?<Text"),Open:=0,Overall:=[]
-	for a,b in ["(",")"]{
-		Pos:=Start
-		while(Pos:=InStr(Text,b,0,Pos))
-			Overall[Pos]:=b,Pos++
-	}for a,b in Overall{
-		(b="(")?(Open++):(Open--)
-		if(!Open){
-			End:=a
-			Break
-		}
-	}return SubStr(Text,1,Start) "$1" SubStr(Text,End)
-}
 Class Keywords{
 	__New(){
 		Static Dates:={ahk:"20171029061149"},BaseURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/lib/Languages/",BaseDir:="Lib\Languages\"
@@ -5780,7 +5766,6 @@ Class Keywords{
 			if not
 				continue with the old file unless it is blank then create a new one.
 		*/
-		
 		FileList:={BaseDir "ahk.xml":1}
 		Loop,Files,Lib\Languages\*.xml
 			FileList[A_LoopFileFullPath]:=1
@@ -5806,14 +5791,18 @@ Class Keywords{
 					Node:=xx.Add("date")
 				Node.text:=Date,xx.Save(1)
 				SplashTextOff
-			}Lexer:=xx.SSN("//FileTypes")
-			Keywords.Languages[(Language:=Format("{:L}",SSN(Lexer,"@language").text))]:=xx
-			for i,Ext in StrSplit(Lexer.text," ")
+			}LEA:=XML.EA(Lexer:=xx.SSN("//FileTypes"))
+			Keywords.Languages[(Language:=Format("{:L}",LEA.Language))]:=xx
+			for _,Ext in StrSplit(Lexer.text," "){
 				if(!Settings.SSN("//Extensions/Extension[text()='" Ext "']"))
-					Settings.Add("Extensions/Extension",{language:SSN(Lexer,"@language").text},Format("{:L}",Ext),1)
-			FileGetTime,Date,%A_LoopFileLongPath%
-			if(Settings.SSN("//Languages/" Language "/@date").text!=Date)
-				Settings.Add("Languages/" Language),KeyWords.Refresh(Language),Settings.SSN("//Languages/" Language).SetAttribute("date",Date)
+					Settings.Add("Extensions/Extension",{language:Language},Format("{:L}",Ext),1)
+			}FileGetTime,Date,%A_LoopFileLongPath%
+			if(!Node:=Settings.SSN("//Languages/" Language))
+				Node:=Settings.Add("//Languages/" Language)
+			if(SSN(Node,"@date").text!=Date)
+				KeyWords.Refresh(Language),Node.SetAttribute("date",Date)
+			if(!SSN(Node,"@name"))
+				Node.SetAttribute("name",LEA.Name)
 			all:=xx.SN("//Code/*"),Find:=v.OmniFind[Language]:=[],Order:=Keywords.OmniOrder[Language]:=[],Index:=0,ExemptList:=""
 			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
 				Index++
@@ -5839,27 +5828,12 @@ Class Keywords{
 				Keywords.FirstChar[Language,a]:=Trim(b,"|")
 			for a,b in Keywords.BreakBook
 				Order[++Index,a,"Regex"]:=b,Order[Index,a,"Find"]:=Keywords.BreakBookFind[a]
-			
-			
-			
-			
 			for a,b in BreakBook
 				for c,d in b
 					Find[a,c]:=d
-			
-			
-			
 			Search:=""
 			for a,b in xx.EA("//Comments")
 				KeyWords.Comments[Language,a]:=b
-			
-			/*
-				Search.="(?<" a ">" b ")|"
-				m(Search)
-			*/
-			/*
-				KeyWords.Comments[Language]:=RegExReplace(xx.SSN("//Comments").text,"\x60n","`n")
-			*/
 			Delimiter:=Keywords.Delimiter[Language]:=[]
 			for a,b in xx.EA("//Delimiter"){
 				Delimiter[a]:=b
@@ -5868,15 +5842,10 @@ Class Keywords{
 						Add:="\"
 					Delimiter.ReplaceRegex:=Add b,Add:=""
 				}
-			}
-			if(Node:=xx.SSN("//ReplaceFirst"))
+			}if(Node:=xx.SSN("//ReplaceFirst"))
 				Keywords.ReplaceFirst[Language]:=XML.EA(Node)
 			Keywords.SearchTrigger[Language]:=xx.SSN("//SearchTrigger").text
 		}KeyWords.RefreshPersonal()
-		/*
-			for a,b in Keywords.CodeExplorerExempt
-				m(a,b)
-		*/
 	}BuildList(Language,Refresh:=0){
 		if(IsObject(Keywords.KeywordList[Language])&&!Refresh)
 			return
@@ -5926,56 +5895,6 @@ Class Keywords{
 		Keywords.Personal:=Settings.SSN("//Variables").text
 	}
 }
-/*
-	Keywords(){
-		list:=Settings.SN("//commands/*"),top:=commands.SSN("//Commands/Commands")
-		cmd:=Custom_Commands.SN("//Commands/commands"),col:=Custom_Commands.SN("//Color/*"),con:=Custom_Commands.SN("//Context/*")
-		while(new:=cmd.item[A_Index-1].CloneNode(1))
-			commands.SSN("//Commands/Commands").ReplaceChild(new,commands.SSN("//Commands/commands[text()='" new.text "']"))
-		;m(InStr(CommandsText,"ControlGetText"))
-		while(new:=col.item[A_Index-1].CloneNode(1))
-			commands.SSN("//Color").ReplaceChild(new,commands.SSN("//Color/" new.NodeName))
-		while(new:=con.item[A_Index-1].CloneNode(1))
-			commands.SSN("//Context").ReplaceChild(new,commands.SSN("//Context/" new.NodeName))
-		v.keywords:=[],v.kw:=[],v.custom:=[],colors:=commands.SN("//Color/*")
-		CommandsText:=commands.SSN("//Commands/Commands").text
-		StringLower,CommandsText,CommandsText
-		while(color:=colors.item[A_Index-1]){
-			text:=color.text,all.=text " "
-			StringLower,text,text
-			if(color.NodeName="Commands"){
-				CommandsAdd:=text
-				Continue
-			}
-			v.color[color.NodeName]:=text
-			RepText:=RegExReplace(text," ","\b|\b")
-			CommandsText:=RegExReplace(CommandsText,"(\b" RepText "\b)")
-		}
-		personal:=Settings.SSN("//Variables").text,all.=personal
-		StringLower,per,personal
-		v.color.Personal:=Trim(per),v.IndentRegex:=RegExReplace(v.color.indent," ","|"),command:=commands.SSN("//Commands/Commands").text
-		Sleep,4
-		Loop,Parse,command,%A_Space%,%A_Space%
-			v.kw[A_LoopField]:=A_LoopField,all.=" " A_LoopField
-		Sort,All,UD%A_Space%
-		list:=Settings.SSN("//custom_case_settings").text
-		for a,b in StrSplit(list," ")
-			all:=RegExReplace(all,"i)\b" b "\b",b)
-		Loop,Parse,all,%a_space%
-			v.keywords[SubStr(A_LoopField,1,1)].=A_LoopField " "
-		v.all:=all,v.context:=[],list:=commands.SN("//Context/*"),v.Directives:=[]
-		while,ll:=list.item[A_Index-1]{
-			cl:=RegExReplace(ll.text," ","|")
-			Sort,cl,UD|
-			v.context[ll.NodeName]:=cl
-		}for a,b in StrSplit(commands.SSN("//Directives").text," ")
-			b:=SubStr(b,2),v.Directives[b]:=b
-		while(RegExMatch(CommandsText,"\s#\s"))
-			CommandsText:=RegExReplace(CommandsText,"\s#\s"," ")
-		CommandsText:=RegExReplace(CommandsText,"(\s{2,})"," "),v.Color.Commands:=CommandsText " " CommandsAdd
-		return
-	}
-*/
 Kill_Process(){
 	WinGet,AList,List,ahk_class AutoHotkey
 	Loop,%AList%{
@@ -6588,25 +6507,22 @@ NewIndent(indentwidth:=""){
 	}sc.Enable(1)
 	SetStatus(A_ThisFunc " Process Time: " A_TickCount-tick "ms @ " A_TickCount " total: " totalcount ,3)
 }
-New(Filename:="",text:="",Select:=1){
+New(FileName:="",text:="",Select:=1){
 	template:=GetTemplate()
-	if(v.Options.New_File_Dialog&&!Filename){
-		FileSelectFile,Filename,S16,,Enter a Filename for a new project,*.ahk
-		if(!Filename)
+	if(v.Options.New_File_Dialog&&!FileName){
+		FileName:=DLG_FileSave(hwnd(1))
+		if(!FileName)
 			return
-		SplitPath,Filename,,NewDir,Ext,NNE
-		if(!Ext||!Settings.SSN("//Extensions/Extension[text()='" Ext "']")){
-			Filename:=NewDir "\" NNE ".ahk"
-		}
-		file:=FileOpen(Filename,"RW"),file.Seek(0),file.Write(template),file.Length(file.Position),file.Close()
-		if(FileExist(Filename))
-			return tv(Open(Filename))
+		
+		file:=FileOpen(FileName,"RW"),file.Seek(0),file.Write(template),file.Length(file.Position),file.Close()
+		if(FileExist(FileName))
+			return tv(Open(FileName))
 	}else
-		Filename:=(list:=files.SN("//main[@untitled]").length)?"Untitled" list ".ahk":"Untitled.ahk",Untitled:=1
-	Update({file:Filename,text:template,load:1,encoding:"UTF-8"})
-	main:=files.Under(files.SSN("//*"),"main",{file:Filename,id:(id:=GetID())})
-	SplitPath,Filename,mfn,maindir,Ext,mnne
-	node:=files.Under(main,"file",{ext:Ext,file:Filename,dir:maindir,filename:mfn,id:id,nne:mnne,scan:1,lang:"ahk"})
+		FileName:=(list:=files.SN("//main[@untitled]").length)?"Untitled" list ".ahk":"Untitled.ahk",Untitled:=1
+	Update({file:FileName,text:template,load:1,encoding:"UTF-8"})
+	main:=files.Under(files.SSN("//*"),"main",{file:FileName,id:(id:=GetID())})
+	SplitPath,FileName,mfn,maindir,Ext,mnne
+	node:=files.Under(main,"file",{ext:Ext,file:FileName,dir:maindir,filename:mfn,id:id,nne:mnne,scan:1,lang:"ahk"})
 	if(Untitled)
 		main.SetAttribute("untitled",1),node.SetAttribute("untitled",1)
 	FEUpdate(),ScanFiles()
@@ -6675,9 +6591,9 @@ Notifications(a*){
 		return
 	}if(A_GuiControl="FTAdd"){
 		ControlGetText,text,,% "ahk_id" Controls.FTEdit
-		if(Settings.SSN("//Extensions/Extension[text()='" text "']"))
+		if(Settings.SSN("//Extensions/Extension[text()='" (Text:=Format("{:L}",Text)) "']"))
 			return m("File Type already exists")
-		if(!text)
+		if(!Text)
 			return m("Please add a File Type to add to this list")
 		Settings.Add("Extensions/Extension",,,1).text:=Text
 		ControlSetText,,,% "ahk_id" Controls.FTEdit
@@ -7594,9 +7510,9 @@ Open(filelist="",show="",Redraw:=1){
 			if(ext="lnk"){
 				FileGetShortcut,%b%,b
 				SplitPath,b,,,ext
-			}if(!Settings.SSN("//Extensions/Extension[text()='" ext "']")){
+			}if(!Settings.SSN("//Extensions/Extension[text()='" Format("{:L}",ext) "']")){
 				m("Files with the extension: " ext " are not permitted by AHK Studio.","You can add this file type if you wish in Manage File Types")
-				exit
+				Exit
 			}if(files.Find("//main/@file",b))
 				Continue
 			fff:=FileOpen(b,"RW","utf-8"),file1:=file:=fff.read(fff.length),filename:=b
@@ -8750,7 +8666,10 @@ Save_As(){
 		aa.RemoveAttribute("untitled")
 	current.RemoveAttribute("untitled")
 	SplitPath,CurrentFile,,dir
-	if(!NewFile:=DLG_FileSave(hwnd(1),"AHK Files (*.ahk)|All Files (*.*)",,"My Dialog Text",CurrentFile))
+	/*
+		DLG_FileSave(hwnd(1),GetExtensionList(Current(2).Lang))
+	*/
+	if(!NewFile:=DLG_FileSave(hwnd(1),GetExtensionList(Current(2).Lang),,"My Dialog Text",CurrentFile))
 		return
 	SplitPath,Newfile,NewFN,NewDir,Ext,NNE
 	/*
@@ -11369,9 +11288,8 @@ SetTimers(Timers*){
 		SetTimer,% Obj.1,% Obj.2
 	}
 }
-DLG_FileSave(HWND:=0,Filter="Text Files (*.txt)|All Files (*.*)",DefaultFilter=1,DialogTitle="Select file to open",DefaultFile:="",Flags:=0x00000002){
-	VarSetCapacity(lpstrFileTitle,0xFFFF,0),VarSetCapacity(lpstrFile,0xFFFF,0),VarSetCapacity(lpstrFilter,0xFFFF,0),VarSetCapacity(lpstrCustomFilter,0xFF,0),VarSetCapacity(OFName,90,0),VarSetCapacity(lpstrTitle,255,0)
-	Address:=&lpstrFilter
+DLG_FileSave(HWND:=0,DefaultFilter=1,DialogTitle="Select file to open",DefaultFile:="",Flags:=0x00000002){
+	Filter:=GetExtensionList(Current(2).Lang?Current(2).Lang:"ahk"),VarSetCapacity(lpstrFileTitle,0xFFFF,0),VarSetCapacity(lpstrFile,0xFFFF,0),VarSetCapacity(lpstrFilter,0xFFFF,0),VarSetCapacity(lpstrCustomFilter,0xFF,0),VarSetCapacity(OFName,90,0),VarSetCapacity(lpstrTitle,255,0),Address:=&lpstrFilter
 	for a,b in StrSplit(Filter,"|"){
 		for c,d in StrSplit(b)
 			Address:=NumPut(Asc(d),Address+0,"UChar")
@@ -11390,4 +11308,26 @@ DLG_FileSave(HWND:=0,Filter="Text Files (*.txt)|All Files (*.*)",DefaultFilter=1
 	while(Char:=NumGet(lpstrFile,A_Index-1,"UChar"))
 		FileName.=Chr(Char)
 	return FileName
+}
+GetFind(Text){
+	Start:=InStr(Text,"(?<Text"),Open:=0,Overall:=[]
+	for a,b in ["(",")"]{
+		Pos:=Start
+		while(Pos:=InStr(Text,b,0,Pos))
+			Overall[Pos]:=b,Pos++
+	}for a,b in Overall{
+		(b="(")?(Open++):(Open--)
+		if(!Open){
+			End:=a
+			Break
+		}
+	}return SubStr(Text,1,Start) "$1" SubStr(Text,End)
+}
+GetExtensionList(Language){
+	Language:=Format("{:L}",Language),all:=Settings.SN("//Extensions/Extension"),Ext:=[]
+	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+		Lang:=ea.Language?Settings.SSN("//Languages/" ea.Language "/@name").text:"",Ext[Lang?Lang:"Personal File Extensions"].="*." aa.text "; "
+	for a,b in Ext
+		b:=Trim(b,"; "),(a="Language")?First:=a " (" b ")|":List.=a " (" b ")" "|"
+	return First List "Text Files (*.txt)|All Files (*.*)"
 }

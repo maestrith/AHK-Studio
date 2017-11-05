@@ -1,12 +1,8 @@
 ﻿<?xml version="1.0"?>
 <xml>
-	<FileTypes lexer="xml" language="xml">xml</FileTypes>
+	<FileTypes lexer="xml" language="xml" name="XML">xml</FileTypes>
 	<Styles>
-		<!-- This is a comment -->
 		<completequote style="6" ex="&quot;Complete Quote&quot;\n"/>
-		<!--
-			FLAN!
-		-->
 		<font style="1" ex="&lt;NodeName&gt;\n" color="16758590"/>
 		<font style="3" color="14732901"/>
 		<font style="3" color="14732901"/>
