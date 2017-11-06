@@ -3,11 +3,14 @@ Added:
 -Regex Replace Selected: A small GUI to use Regex to replace the selected text
 Save As and Save: Reported by derz00 #144
 -Saving with *.* selected still adds .ahk to the file extension
-Find:
--Changed how found items are displayed
--Auto Show Selected
+-Find:
+--Changed how found items are displayed
+--Auto Show Selected
+-Restore Current File:
+--Made it a part of Studio
 Changed:
 -Set_New_File_Default_Folder: Now keeps track of a Global folder and Project Specific folders
+-Changed the backup folder to AHK-Studio Backup to make it easier to find
 Added: Suggested by Joe Glines
 -Selections: When you have multiple selections it will show how many you have
 -Total Replaced: When using Replace Selected it will show how many items you replaced

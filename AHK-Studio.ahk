@@ -683,7 +683,7 @@ Check_For_Edited(){
 	return
 }
 Check_For_Update(startup:=""){
-	static newwin
+	static NewWin
 	;static DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk",VersionTextURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"
 	static DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/AHK-Studio.ahk"
 		 ,VersionTextURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/AHK-Studio.text"
@@ -715,12 +715,12 @@ Check_For_Update(startup:=""){
 			return
 	}
 	Version:="1.005.00"
-	newwin:=new GUIKeep("CFU"),newwin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),newwin.show("AHK Studio Version: " version)
+	NewWin:=new GUIKeep("CFU"),NewWin.Add("Edit,w400 h400 ReadOnly,No New Updates,wh","Button,gautoupdate,&Update,y","Button,x+5 gcurrentinfo,&Current Changelog,y","Button,x+5 gextrainfo,Changelog &History,y"),NewWin.show("AHK Studio Version: " version)
 	if(time<date){
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.Write(update:=RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position),file.Close()
-		ControlSetText,Edit1,%update%,% newwin.ahkid
+		ControlSetText,Edit1,%update%,% NewWin.ahkid
 	}if(!found.1)
-		ControlSetText,Edit1,% http.ResponseText,% newwin.ahkid
+		ControlSetText,Edit1,% http.ResponseText,% NewWin.ahkid
 	return
 	autoupdate:
 	Save(),Settings.Save(1),menus.Save(1),studio:=URLDownloadToVar(DownloadURL)
@@ -758,7 +758,7 @@ Check_For_Update(startup:=""){
 	return
 	cfuguiclose:
 	cfuguiescape:
-	newwin.Destroy()
+	NewWin.Destroy()
 	return
 }
 CheckLayout(){
@@ -3414,12 +3414,12 @@ Display_Classes(){
 		DisplayType("Function")
 }
 Display_Hotkeys(){
-	all:=menus.SN("//*[@hotkey!='']"),newwin:=new GUIKeep("hotkeys"),newwin.Add("ListView,w400 h600,Action|Hotkey,wh")
+	all:=menus.SN("//*[@hotkey!='']"),NewWin:=new GUIKeep("hotkeys"),NewWin.Add("ListView,w400 h600,Action|Hotkey,wh")
 	while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa)
 		LV_Add("",ea.clean,Convert_Hotkey(ea.hotkey))
 	Loop,2
 		LV_ModifyCol(A_Index,"AutoHDR")
-	newwin.Show("Hotkeys"),LV_ModifyCol(1,"Sort")
+	NewWin.Show("Hotkeys"),LV_ModifyCol(1,"Sort")
 }
 Display(PopulateVarBrowser:=0){
 	/*
@@ -3629,9 +3629,9 @@ Download_Plugins(){
 	SplashTextOff
 	if(!plug[])
 		return m("There was an error downloading the plugin list.  Please try again later")
-	newwin:=new GUIKeep(35)
+	NewWin:=new GUIKeep(35)
 	Gui,35:Margin,0,0
-	newwin.Add("ListView,w500 h300 Checked,Name|Author|Description|Installed,wh","Button,gdpdl,&Download Checked,y","Button,x+0 gdpsa,Select &All,y","Button,x+0 gdprem,Remove Checked,y"),newwin.show("Download Plugins")
+	NewWin.Add("ListView,w500 h300 Checked,Name|Author|Description|Installed,wh","Button,gdpdl,&Download Checked,y","Button,x+0 gdpsa,Select &All,y","Button,x+0 gdprem,Remove Checked,y"),NewWin.show("Download Plugins")
 	Goto,dppop
 	return
 	dprem:
@@ -3738,19 +3738,19 @@ Edit_Comment_Insert(){
 	Settings.Add("comment",{"xml:space":"preserve"},comment)
 }
 Edit_Hotkeys(ret:=""){
-	static newwin
+	static NewWin
 	if(ret.NodeName)
 		return ea:=XML.EA(ret),Default("SysTreeView321","Edit_Hotkeys"),TV_Modify(TV_GetSelection(),"",RegExReplace(ea.clean,"_"," ")(ea.hotkey?" - " Convert_Hotkey(ea.hotkey):""))
-	newwin:=new GUIKeep("Edit_Hotkeys"),newwin.Add("ComboBox,w400 gehfind vfind,,w","TreeView,w400 h400,,wh","Button,gehgo Default,Change Hotkey,y"),all:=menus.SN("//main/descendant::*")
+	NewWin:=new GUIKeep("Edit_Hotkeys"),NewWin.Add("ComboBox,w400 gehfind vfind,,w","TreeView,w400 h400,,wh","Button,gehgo Default,Change Hotkey,y"),all:=menus.SN("//main/descendant::*")
 	while,aa:=all.item[A_Index-1],ea:=XML.EA(aa)
 		if(aa.NodeName="menu")
 			list.=RegExReplace(ea.clean,"_"," ") "|",aa.SetAttribute("tv",TV_Add(RegExReplace(ea.clean,"_"," ") (ea.hotkey?" - Hotkey - " Convert_Hotkey(ea.hotkey):""),SSN(aa.ParentNode,"@tv").text))
 	GuiControl,Edit_Hotkeys:,ComboBox1,%list%
-	newwin.show("Edit Hotkeys"),TV_Modify(TV_GetChild(0),"Select Vis Focus")
+	NewWin.show("Edit Hotkeys"),TV_Modify(TV_GetChild(0),"Select Vis Focus")
 	Gui,1:+Disabled
 	return
 	ehfind:
-	value:=newwin[].find
+	value:=NewWin[].find
 	if(tv:=menus.SSN("//*[@clean='" RegExReplace(value," ","_") "']/@tv").text)
 		TV_Modify(tv,"Select Vis Focus")
 	return
@@ -4848,9 +4848,8 @@ Full_Backup(remove:=0){
 	if(remove){
 		Loop,%dir%\AHK-Studio Backup\*.*,2
 			FileRemoveDir,%A_LoopFileFullPath%,1
-	}
-	backup:=dir "\AHK-Studio Backup\Full Backup" A_Now
-	FileCreateDir,%backup%
+	}Backup:=dir "\AHK-Studio Backup\Full Backup " A_Now
+	FileCreateDir,%Backup%
 	if(v.Options.Full_Backup_All_Files){
 		loop,%dir%\*.*,0,1
 		{
@@ -4858,9 +4857,9 @@ Full_Backup(remove:=0){
 				Continue
 			file:=Trim(RegExReplace(A_LoopFileFullPath,"i)\Q" dir "\E"),"\")
 			SplitPath,file,filename,ddir
-			if(!FileExist(backup "\" ddir))
-				FileCreateDir,% backup "\" ddir
-			ndir:=ddir?backup "\" ddir:backup
+			if(!FileExist(Backup "\" ddir))
+				FileCreateDir,% Backup "\" ddir
+			ndir:=ddir?Backup "\" ddir:Backup
 			FileCopy,%A_LoopFileFullPath%,%ndir%\%filename%
 		}
 	}else{
@@ -4868,13 +4867,13 @@ Full_Backup(remove:=0){
 		while,af:=allfiles.item[A_Index-1]{
 			file:=Trim(RegExReplace(af.text,"i)\Q" dir "\E"),"\")
 			SplitPath,file,filename,ddir
-			if(!FileExist(backup "\" ddir))
-				FileCreateDir,% backup "\" ddir
-			ndir:=ddir?backup "\" ddir:backup
+			if(!FileExist(Backup "\" ddir))
+				FileCreateDir,% Backup "\" ddir
+			ndir:=ddir?Backup "\" ddir:Backup
 			FileCopy,% af.text,%ndir%\%filename%
 		}
 	}
-	loop,%dir%\backup\*.*,2
+	loop,%dir%\Backup\*.*,2
 		if(!InStr(A_LoopFileFullPath,"Full Backup"))
 			FileRemoveDir,%A_LoopFileFullPath%,1
 	SplashTextOff
@@ -5942,12 +5941,12 @@ MarginWidth(sc=""){
 	sc:=sc?sc:csc(),sc.2242(0,sc.2276(33,"a" sc.2154()))
 }
 Menu_Help(){
-	static help,newwin
+	static help,NewWin
 	help:=new XML("help","lib\Help Menu.xml"),current:=new XML("current"),current.XML.LoadXML(x.get("menus"))
-	newwin:=new GUIKeep("Menu_Help"),newwin.Add("TreeView,w300 h300 gMHSelect,,h","Edit,x+M w300 h300,,wh","Button,xm gUpdateHelp,Update Help File,y")
+	NewWin:=new GUIKeep("Menu_Help"),NewWin.Add("TreeView,w300 h300 gMHSelect,,h","Edit,x+M w300 h300,,wh","Button,xm gUpdateHelp,Update Help File,y")
 	if(!FileExist("lib\Help Menu.xml"))
 		Gosub,UpdateHelp
-	newwin.Show("Menu Help")
+	NewWin.Show("Menu Help")
 	Goto,MHPopulate
 	return
 	MHSelect:
@@ -6381,7 +6380,7 @@ New_Caret_Below(){
 	New_Caret(1)
 }
 New_File_Template(){
-	newwin:=new GUIKeep(28),newwin.Add("Edit,w500 r30,,wh","Button,gNFTDefault,Default Template,y","Button,gNFTClose Default,Save,y"),newwin.show("New File Template")
+	NewWin:=new GUIKeep(28),NewWin.Add("Edit,w500 r30,,wh","Button,gNFTDefault,Default Template,y","Button,gNFTClose Default,Save,y"),NewWin.show("New File Template")
 	if(template:=Settings.SSN("//template").text)
 		ControlSetText,Edit1,% RegExReplace(template,"\R","`r`n"),% hwnd([28])
 	else
@@ -7167,7 +7166,7 @@ ObjRegisterActive(Object,CLSID:="{DBD5A90A-A85C-11E4-B0C7-43449580656B}",Flags:=
 	cookieJar[Object]:=cookie
 }
 Omni_Search(start=""){
-	static newwin,select:=[],obj:=[],pre,sort,search,running,PrefixHotkeys:={Bookmark:"Bookmark_Search",Hotkey:"Hotkey_Search",Function:"Function_Search","Add Function Call":"Add_Function_Call",Property:"Property_Search",Label:"Search_Label",Instance:"Instance_Search",Menu:"Menu_Search",Method:"Method_Search",File:"File_Search",Class:"Class_Search"}
+	static NewWin,select:=[],obj:=[],pre,sort,search,running,PrefixHotkeys:={Bookmark:"Bookmark_Search",Hotkey:"Hotkey_Search",Function:"Function_Search","Add Function Call":"Add_Function_Call",Property:"Property_Search",Label:"Search_Label",Instance:"Instance_Search",Menu:"Menu_Search",Method:"Method_Search",File:"File_Search",Class:"Class_Search"}
 	if(hwnd(20))
 		return
 	sc:=csc()
@@ -7188,12 +7187,12 @@ Omni_Search(start=""){
 	*/
 	Update({sc:sc.2357})
 	Code_Explorer.AutoCList(1)
-	newwin:=new GUIKeep(20),newwin.Add("Edit,goss w600 vsearch,,w","ListView,w600 h200 -hdr -Multi gosgo,Menu C|A|1|2|R|I,wh")
+	NewWin:=new GUIKeep(20),NewWin.Add("Edit,goss w600 vsearch,,w","ListView,w600 h200 -hdr -Multi gosgo,Menu C|A|1|2|R|I,wh")
 	;Gui,20:-Caption
 	Gui,1:-Disabled
 	GuiControl,20:,Edit1,%start%
-	newwin.Show("Omni-Search",,,StrLen(start))
-	Hotkey,IfWinActive,% newwin.ID
+	NewWin.Show("Omni-Search",,,StrLen(start))
+	Hotkey,IfWinActive,% NewWin.ID
 	for a,b in {up:"omnikey",down:"omnikey",PgUp:"omnikey",PgDn:"omnikey","^Backspace":"deleteback",Enter:"osgo"}{
 		Try
 			Hotkey,%a%,%b%,On
@@ -7207,7 +7206,7 @@ Omni_Search(start=""){
 	omnisearch:
 	Gui,20:Default
 	GuiControl,20:-Redraw,SysListView321
-	FileSearch:=osearch:=search:=newwin[].search,Select:=[],LV_Delete(),sort:=[],stext:=[],fsearch:=search="^"?1:0
+	FileSearch:=osearch:=search:=NewWin[].search,Select:=[],LV_Delete(),sort:=[],stext:=[],fsearch:=search="^"?1:0
 	if(InStr(search,")")){
 		if(!v.Options.Clipboard_History){
 			Options("Clipboard_History")
@@ -7261,8 +7260,8 @@ Omni_Search(start=""){
 		find:="//*"
 	if(OnlyTop&&!search)
 		find:="//main/file[1]",OnlyTop:=0
-	if(SubStr(newwin[].search,1,1)="&")
-		search:=SubStr(newwin[].search,2),find:="//*[@type='Hotkey']"
+	if(SubStr(NewWin[].search,1,1)="&")
+		search:=SubStr(NewWin[].search,2),find:="//*[@type='Hotkey']"
 	for a,b in searchobj:=StrSplit(search)
 		b:=b~="(\\|\.|\*|\?|\+|\[|\{|\||\(|\)|\^|\$)"?"\" b:b,stext[b]:=stext[b]=""?1:stext[b]+1
 	list:=cexml.SN(find),break:=0,currentparent:=Current(2).file,index:=1
@@ -7322,13 +7321,13 @@ Omni_Search(start=""){
 	return
 	20Escape:
 	20Close:
-	newwin.SavePos(),hwnd({rem:20})
+	NewWin.SavePos(),hwnd({rem:20})
 	return
 	osgo:
 	if(running)
 		return m("here?")
 	Gui,20:Default
-	LV_GetText(num,LV_GetNext(),6),item:=XML.EA(node:=Select[num]),search:=newwin[].search,pre:=SubStr(search,1,1),LV_GetText(LV_Text,LV_GetNext())
+	LV_GetText(num,LV_GetNext(),6),item:=XML.EA(node:=Select[num]),search:=NewWin[].search,pre:=SubStr(search,1,1),LV_GetText(LV_Text,LV_GetNext())
 	if(!num){
 		LV_GetText(item,LV_GetNext())
 		ControlGetText,text,Edit1,% hwnd([20])
@@ -7345,8 +7344,8 @@ Omni_Search(start=""){
 	}
 	if(InStr(search,"?")){
 		LV_GetText(pre,LV_GetNext())
-		ControlSetText,Edit1,%pre%,% newwin.id
-		ControlSend,Edit1,^{End},% newwin.id
+		ControlSetText,Edit1,%pre%,% NewWin.id
+		ControlSend,Edit1,^{End},% NewWin.id
 		return
 	}else if(type:=item.launch){
 		text:=Clean(item.text)
@@ -7422,7 +7421,7 @@ Omni_Search(start=""){
 	}
 	return
 	omnikey:
-	ControlSend,SysListView321,{%A_ThisHotkey%},% newwin.ahkid
+	ControlSend,SysListView321,{%A_ThisHotkey%},% NewWin.ahkid
 	return
 	deleteback:
 	GuiControl,20:-Redraw,Edit1
@@ -7710,8 +7709,8 @@ PERefresh(){
 }
 Personal_Variable_List(){
 	static
-	newwin:=new GUIKeep(6),newwin.Add("ListView,w200 h400,Variables,wh","Edit,w200 vvariable,,yw","Button,gaddvar Default,Add,y","Button,x+10 gvdelete,Delete Selected,y")
-	newwin.Show("Variables",1),vars:=Settings.SN("//Variables/*")
+	NewWin:=new GUIKeep(6),NewWin.Add("ListView,w200 h400,Variables,wh","Edit,w200 vvariable,,yw","Button,gaddvar Default,Add,y","Button,x+10 gvdelete,Delete Selected,y")
+	NewWin.Show("Variables",1),vars:=Settings.SN("//Variables/*")
 	ControlFocus,Edit1,% hwnd([6])
 	while,vv:=vars.item(A_Index-1)
 		LV_Add("",vv.text)
@@ -7724,7 +7723,7 @@ Personal_Variable_List(){
 	}
 	return
 	addvar:
-	if(!variable:=newwin[].variable)
+	if(!variable:=NewWin[].variable)
 		return
 	if(!Settings.SSN("//Variables/Variable[text()='" variable "']"))
 		Settings.Add("Variables/Variable",,variable,1),LV_Add("",variable)
@@ -7733,7 +7732,7 @@ Personal_Variable_List(){
 	return
 	6Close:
 	6Escape:
-	Keywords.RefreshPersonal(),newwin.SavePos(),hwnd({rem:6})
+	Keywords.RefreshPersonal(),NewWin.SavePos(),hwnd({rem:6})
 	return
 }
 Plug(refresh:=0){
@@ -8718,7 +8717,7 @@ Save_Untitled(node,ask:=1){
 	}
 }
 Save(option=""){
-	sc:=csc(),Update({sc:sc.2357}),info:=Update("get"),now:=A_Now
+	sc:=csc(),Update({sc:sc.2357}),info:=Update("get"),Now:=A_Now
 	/*
 		Scan_Line()
 	*/
@@ -8738,12 +8737,21 @@ Save(option=""){
 			Continue
 		if(!v.Options.Disable_Backup){
 			parent:=SSN(aa,"ancestor::main/@file").text
-			SplitPath,parent,,dir
-			if(!FileExist(dir "\AHK-Studio Backup"))
-				FileCreateDir,% dir "\AHK-Studio Backup"
-			if(!FileExist(dir "\AHK-Studio Backup\" now))
-				FileCreateDir,% dir "\AHK-Studio Backup\" now
-			FileCopy,% ea.file,% dir "\AHK-Studio Backup\" now "\" ea.filename,1 ;change this to FileOpen()
+			SplitPath,parent,,Dir
+			FilePath:=SanitizePath(RelativePath(Current(2).File,ea.File))
+			FilePath:=Dir "\AHK-Studio Backup\" FilePath "\" Now
+			/*
+				if(!FileExist(dir "\AHK-Studio Backup"))
+					FileCreateDir,% dir "\AHK-Studio Backup"
+				if(!FileExist(dir "\AHK-Studio Backup\" now))
+					FileCreateDir,% dir "\AHK-Studio Backup\" now
+			*/
+			if(!FileExist(FilePath))
+				FileCreateDir,%FilePath%
+			/*
+				FileCopy,% ea.file,% dir "\AHK-Studio Backup\" now "\" ea.filename,1 ;change this to FileOpen()
+			*/
+			FileCopy,% ea.file,% FilePath "\" ea.filename,1 ;change this to FileOpen()
 			if(ErrorLevel)
 				m("There was an issue saving " ea.file,"Please close any error messages and try again")
 		}LineStatus.Save(ea.id),encoding:=ea.encoding
@@ -8935,24 +8943,24 @@ ScanLines(line){
 	}
 }
 Scintilla_Code_Lookup(){
-	static slist,cs,newwin
+	static slist,cs,NewWin
 	Scintilla(),slist:=scintilla.SN("//commands/item")
-	newwin:=new GUIKeep(8),newwin.Add("Edit,Uppercase w500 gCodeSort vcs,,w","ListView,w720 h500 -Multi,Name|Code|Syntax,wh","Radio,xm Checked gCodeSort,&Commands,y","Radio,x+5 gCodeSort,C&onstants,y","Radio,x+5 gCodeSort,&Notifications,y","Button,xm ginsert Default,Insert code into script,y","Button,gdocsite,Goto Scintilla Document Site,y")
+	NewWin:=new GUIKeep(8),NewWin.Add("Edit,Uppercase w500 gCodeSort vcs,,w","ListView,w720 h500 -Multi,Name|Code|Syntax,wh","Radio,xm Checked gCodeSort,&Commands,y","Radio,x+5 gCodeSort,C&onstants,y","Radio,x+5 gCodeSort,&Notifications,y","Button,xm ginsert Default,Insert code into script,y","Button,gdocsite,Goto Scintilla Document Site,y")
 	while,sl:=slist.item(A_Index-1)
 		LV_Add("",SSN(sl,"@name").text,SSN(sl,"@code").text,SSN(sl,"@syntax").text)
-	newwin.Show("Scintilla Code Lookup")
+	NewWin.Show("Scintilla Code Lookup")
 	Loop,3
 		LV_ModifyCol(A_Index,"AutoHDR")
 	Hotkeys(8,{up:"page",down:"page",PgDn:"page",PgUp:"page"})
 	return
 	page:
-	ControlSend,SysListView321,{%A_ThisHotkey%},% newwin.ahkid
+	ControlSend,SysListView321,{%A_ThisHotkey%},% NewWin.ahkid
 	return
 	docsite:
 	Run,http://www.scintilla.org/ScintillaDoc.html
 	return
 	CodeSort:
-	cs:=newwin[].cs
+	cs:=NewWin[].cs
 	Gui,8:Default
 	GuiControl,1:-Redraw,SysListView321
 	LV_Delete()
@@ -8979,7 +8987,7 @@ Scintilla_Code_Lookup(){
 	return
 	8Close:
 	8Escape:
-	newwin.SavePos(),hwnd({rem:8})
+	NewWin.SavePos(),hwnd({rem:8})
 	return
 }
 Scintilla_Control(){
@@ -10852,11 +10860,11 @@ URLDownloadToVar(URL){
 	return http.ResponseText
 }
 VarBrowser(){
-	static newwin,treeview
+	static NewWin,treeview
 	if(!debug.VarBrowser){
-		debugwin:=newwin:=new GUIKeep(98),newwin.Add("TreeView,w450 h200 gvalue vtreeview AltSubmit hwndtreeview,,wh","ListView,w450 r4 AltSubmit gVBGoto,Stack|File|Line,wy","Text,w200 Section,Debug Controls:,y"
+		debugwin:=NewWin:=new GUIKeep(98),NewWin.Add("TreeView,w450 h200 gvalue vtreeview AltSubmit hwndtreeview,,wh","ListView,w450 r4 AltSubmit gVBGoto,Stack|File|Line,wy","Text,w200 Section,Debug Controls:,y"
 			,"Button,gRun_Program,&Run,y","Button,x+M gStep_Into,Step &Into,y","Button,x+M gStep_Out,Step &Out,y"
-			,"Button,x+M gStep_Over,Step O&ver,y","Button,x+M gVarBrowserRefresh,R&efresh Variables,y","Button,x+M gStop_Debugger,&Stop,y"),newwin.show("Variable Browser"),hwnd:=newwin.XML.SSN("//*/@hwnd").text,debug.VarBrowser:=1
+			,"Button,x+M gStep_Over,Step O&ver,y","Button,x+M gVarBrowserRefresh,R&efresh Variables,y","Button,x+M gStop_Debugger,&Stop,y"),NewWin.show("Variable Browser"),hwnd:=NewWin.XML.SSN("//*/@hwnd").text,debug.VarBrowser:=1
 	}
 	SetTimer,ProcessDebugXML,-100
 	return
@@ -10876,7 +10884,7 @@ VarBrowser(){
 	return
 	98Close:
 	98Escape:
-	debug.xml:=new XML("debug"),debug.XML.Add("local"),debug.XML.Add("global"),debug.VarBrowser:=0,newwin.Exit()
+	debug.xml:=new XML("debug"),debug.XML.Add("local"),debug.XML.Add("global"),debug.VarBrowser:=0,NewWin.Exit()
 	return
 	VBGoto:
 	if(A_GuiEvent~="Normal|I"){
@@ -10918,7 +10926,7 @@ VarBrowser(){
 	}
 	return
 	VarBrowserStop:
-	if(WinExist(newwin.id)){
+	if(WinExist(NewWin.id)){
 		wait:=debug.XML.SN("//wait")
 		while(ww:=wait.item[A_Index-1]),ea:=XML.EA(ww)
 			Default("SysTreeView321",98),TV_Modify(ea.tv,,"Information Unavailable, Debugging has stopped")
@@ -11400,5 +11408,54 @@ Regex_Replace_Selected(){
 	Loop,% sc.2570
 		Start:=sc.2585(A_Index-1),End:=sc.2587(A_Index-1),Text:=sc.TextRange(Start,End),sc.2190(Start),sc.2192(End),Text:=RegExReplace(Text,Info.In,Info.Out),sc.2194(StrPut(Text,"UTF-8")-1,Text)
 	sc.2079()
+	return
+}
+SanitizePath(File){
+	return RegExReplace(File,"(\\|\/|:|\*|\?|<|>|\|)","_")
+}
+Restore_Current_File(){
+	static
+	NewWin:=new GUIKeep("Restore_Current_File")
+	NewWin.Add("TreeView,w350 h480 altsubmit grestore,,h","Edit,x+10 w550 h480 -Wrap,,wh","Edit,xm w550 vFormat,MM-dd-yyyy HH:mm:ss,wy","Button,x+10 grcfr,Refresh Folder List,xy","Button,xm gRestoreFile Default,R&estore selected file,y")
+	CurrentFile:=Current(3).File,MainFile:=Current(2).File
+	SplitPath,MainFile,,Folder
+	BackupFolder:=Folder "\AHK-Studio Backup\" SanitizePath(RelativePath(MainFile,CurrentFile))
+	NewWin.Show("Restore Current File")
+	PopulateRestore:
+	Default("SysTreeView321","Restore_Current_File"),Format:=NewWin[].Format,TV_Delete(),AllFiles:=[]
+	FileName:=SplitPath(CurrentFile).FileName
+	Loop,Files,% BackupFolder "\" FileName,FR
+		if(RegExMatch(A_LoopFileFullPath,"OU)(.*)(\d{14})",Found))
+			AllFiles[Found.2]:=({File:A_LoopFileFullPath,Text:FormatTime(Format,Found.2)})
+	Loop,Files,%Folder%\AHK-Studio Backup\Full Backup*.*,DR
+		if(RegExMatch(A_LoopFileName,"OU)(.*)(\d{14})",Found)){
+			Loop,Files,%A_LoopFileFullPath%\%FileName%,RF
+				AllFiles[Found.2]:=({File:A_LoopFileFullPath,Text:"Full Backup " FormatTime(Format,Found.2)})
+		}
+	Reverse:=[]
+	for a,b in AllFiles
+		Reverse.InsertAt(1,b)
+	for a,b in Reverse
+		AllFiles[TV_Add(b.Text)]:=b.File
+	Default(,"Restore_Current_File"),TV_Modify(TV_GetChild(0),"Select Vis Focus")
+	Goto,Restore
+	return
+	RestoreFile:
+	Default(,"Restore_Current_File"),TV:=TV_GetSelection()
+	if(FileExist(File:=AllFiles[TV]))
+		File:=FileOpen(File,"R","UTF-8"),tt:=File.Read(),Len:=Encode(tt,Text,"UTF-8"),csc().2181(0,&Text),File.Close(),NewWin.Escape()
+	return
+	rcfr:
+	Goto,PopulateRestore
+	return
+	Restore:
+	Default(,"Restore_Current_File"),TV:=TV_GetSelection()
+	if(TV=LastTV)
+		return
+	if(FileExist(File:=AllFiles[TV])){
+		File:=FileOpen(File,"R","UTF-8")
+		GuiControl,Restore_Current_File:,Edit1,% File.Read()
+		File.Close()
+	}LastTV:=TV
 	return
 }
