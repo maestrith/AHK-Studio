@@ -8667,7 +8667,7 @@ Save_As(){
 	/*
 		DLG_FileSave(hwnd(1),GetExtensionList(Current(2).Lang))
 	*/
-	if(!NewFile:=DLG_FileSave(hwnd(1),GetExtensionList(Current(2).Lang),,"My Dialog Text",CurrentFile))
+	if(!NewFile:=DLG_FileSave(hwnd(1),GetExtensionList(Current(2).Lang),"My Dialog Text",CurrentFile))
 		return
 	SplitPath,Newfile,NewFN,NewDir,Ext,NNE
 	/*
