@@ -5754,7 +5754,41 @@ Class Keywords{
 				Language:=new XML("ahk","lib\Languages\ahk.xml"),Language.Add("date",,LangDate),Language.Save(1)
 			}
 		*/
-		
+		/*
+			MAKE SURE TO REBUILD THE LANGUAGES/LANGUAGENAME STUFF SO THAT IT
+			WORKS RIGHT IN SAVE AS AND OTHER PLACES
+	<Languages>
+		<cpp date="" name="C++"></cpp>
+		<hypertext date="" name="HTML">
+			<font color="7843024" style="2"></font>
+			<font color="13617276" fold="1" style="1"></font></hypertext>
+		<json date="" name="JSON">
+			<font color="7843024" style="2"></font>
+			<font color="13617276" fold="1" style="1"></font></json>
+		<xml date="" name="XML">
+			<font color="16758590" style="1"></font>
+			<font color="14732901" style="3"></font>
+			<font color="16776960" style="11"></font>
+			<font color="16711680" style="12"></font>
+			<font style="13" color="12615680"></font></xml>
+		<ahk name="AutoHotkey">
+			<font style="0" color="12632256"></font>
+			<font style="40" color="65408"></font>
+			<font style="41" color="16711935"></font>
+			<font style="42" color="0" background="255"></font>
+			<font style="55" color="4227327"></font>
+			<font style="56" color="8421440"></font>
+			<font style="57" color="16744576"></font>
+			<font style="58" color="8388863"></font>
+			<font style="59" color="12615935"></font>
+			<font style="60" color="11184895"></font>
+			<font style="61" color="4737279"></font>
+			<font style="96" color="8388863"></font>
+			<font style="97" color="8388863"></font>
+			<font style="99" color="8388863"></font>
+			<font style="100" color="8388863"></font></ahk>
+	</Languages>
+		*/
 		/*
 			download the xml files using URLDownloadToVar()
 			check to see if they are valid files First
@@ -11342,7 +11376,12 @@ DLG_FileSave(HWND:=0,DefaultFilter=1,DialogTitle="Select file to open",DefaultFi
 	;Structure https://msdn.microsoft.com/en-us/library/windows/desktop/ms646839(v=vs.85).aspx
 	Address:=&OFName
 	SplitPath,DefaultFile,,Initial,Ext
-	Initial:=Ext?Initial "\":DefaultFile,VarSetCapacity(lpstrInitialDir,0XFFFF,0),StrPut(Initial,&lpstrInitialDir,"UTF-8")
+	Initial:=Ext?Initial "\":DefaultFile
+	VarSetCapacity(lpstrInitialDir,0XFFFF,0)
+	StrPut(Initial,&lpstrInitialDir,"UTF-8")
+	SplitPath,DefaultFile,FileName
+	VarSetCapacity(lpstrFile,0XFF,0)
+	StrPut(FileName,&lpstrFile,"UTF-8")
 	for a,b in [76,HWND,0,&lpstrFilter,&lpstrCustomFilter,255,defaultFilter,&lpstrFile,0xFFFF,&lpstrFileTitle,0xFFFF,&lpstrInitialDir,&lpstrTitle,Flags,0,&lpstrDefExt]
 		Address:=NumPut(b,Address+0,"UInt")
 	if(!DllCall("comdlg32\GetSaveFileNameA","Uint",&OFName))
