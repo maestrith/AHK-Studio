@@ -6,6 +6,8 @@ Save As and Save: Reported by derz00 #144
 Find:
 -Changed how found items are displayed
 -Auto Show Selected
+Changed:
+-Set_New_File_Default_Folder: Now keeps track of a Global folder and Project Specific folders
 Added: Suggested by Joe Glines
 -Selections: When you have multiple selections it will show how many you have
 -Total Replaced: When using Replace Selected it will show how many items you replaced

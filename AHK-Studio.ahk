@@ -16,6 +16,8 @@ if(!settings[]){
 	m("Oh boy...check the settings file to see what's up.")
 }v.LineEdited:=[],v.LinesEdited:=[],v.RunObject
 ComObjError(0),FileCheck(%True%),new Keywords(),Options("startup"),menus:=new XML("menus","Lib\Menus.xml"),new Omni_Search_Class(),Gui(),DefaultRCM(),CheckLayout()
+if((Folder:=Settings.SSN("//DefaultFolder")).text)
+	Folder.SetAttribute("folder",Folder.text),Folder.text:=""
 /*
 	Hotkey,End,EndThing,On
 	RegExMatch()
@@ -78,7 +80,6 @@ return
 		DefaultOptions make sure to have them checked for and if they are not in your menus.xml, when you add them in, have them
 		pre-selected
 	}
-	FileSelectFile
 	MISC NOT WORKING:
 	Undo:
 	When you undo something with more than 1 class it doesn't undo properly
@@ -93,6 +94,7 @@ return
 		have it scan that line (add a thing in the Scan_Line() for it)
 	}
 */
+
 #Include %A_ScriptDir%
 #IfWinActive
 #IfWinActive,AHK Studio
@@ -442,7 +444,7 @@ Backspace(sub:=1){
 					else
 						sc.2645(cpos,1)
 				}else
-					(Chr(sc.2007(cpos+1))=BraceMatch)?sc.2645(cpos,2):GoToPos(index,cpos+(sub?0:1))
+					(Chr(sc.2007(cpos+1))=BraceMatch)?sc.2645(cpos,2):GotoPos(index,cpos+(sub?0:1))
 		}}else if(BraceMatch:=v.DeleteBrace[chr]){
 			if(bracematch=Chr(sc.2007(cpos-1)))
 				sc.2645(cpos-1,2)
@@ -450,7 +452,7 @@ Backspace(sub:=1){
 				if((sc.2353(cpos)<0))
 					sc.2645(cpos,1)
 			else
-				GoToPos(index,cpos)
+				GotoPos(index,cpos)
 		}else{
 			if(cc<0){
 				if(send="Delete")
@@ -521,9 +523,9 @@ BraceSetup(Win:=1){
 		Loop,% sc.2570{
 			cpos:=sc.2585(A_Index-1)
 			if(Chr(sc.2007(cpos))=Hotkey)
-				GoToPos(A_Index-1,cpos+1)
+				GotoPos(A_Index-1,cpos+1)
 			else
-				sc.2686(cpos,cpos),sc.2194(1,Hotkey),GoToPos(A_Index-1,cpos+1)
+				sc.2686(cpos,cpos),sc.2194(1,Hotkey),GotoPos(A_Index-1,cpos+1)
 		}
 		
 		if(A_ThisHotkey=">"&&Language="xml"){
@@ -575,7 +577,7 @@ BraceSetup(Win:=1){
 		word:=sc.GetWord()
 		VarSetCapacity(text,sc.2610),sc.2610(0,&text),word:=StrGet(&text,"UTF-8") Hotkey v.BraceMatch[Hotkey]
 		loop,% sc.2570
-			pos:=sc.2585(A_Index-1),start:=sc.2266(pos,1),end:=sc.2267(pos,1),sc.2686(start,end),sc.2194((len:=StrPut(word,"UTF-8")-1),[word]),GoToPos(A_Index-1,start+len-1),sc.2101()
+			pos:=sc.2585(A_Index-1),start:=sc.2266(pos,1),end:=sc.2267(pos,1),sc.2686(start,end),sc.2194((len:=StrPut(word,"UTF-8")-1),[word]),GotoPos(A_Index-1,start+len-1),sc.2101()
 		return
 	}
 	if(A_ThisHotkey=">"&&Language="xml")
@@ -593,7 +595,7 @@ BraceSetup(Win:=1){
 				if(RegExMatch(prev,"iA)(}|\s)*#?\b(" Keywords.IndentRegex[Current(3).ext] ")\b"))
 					if(SubStr(RegExReplace(prev,"\s+" Chr(59) ".*"),0,1)!="{")
 						if(sc.2127(line)>sc.2127(line-1))
-							sc.2126(line,sc.2127(line)-tab),GoToPos(index,(cpos:=sc.2128(line)))
+							sc.2126(line,sc.2127(line)-tab),GotoPos(index,(cpos:=sc.2128(line)))
 				if(v.Options.Inline_Brace)
 					sc.2686(cpos,cpos),sc.2194(4,"{`t`n}"),ind:=sc.2127(line),sc.2126(line+1,ind),sc.2584(index,sc.2136(line)),sc.2586(index,sc.2136(line)),sc.2399
 				else
@@ -3630,7 +3632,7 @@ Download_Plugins(){
 	newwin:=new GUIKeep(35)
 	Gui,35:Margin,0,0
 	newwin.Add("ListView,w500 h300 Checked,Name|Author|Description|Installed,wh","Button,gdpdl,&Download Checked,y","Button,x+0 gdpsa,Select &All,y","Button,x+0 gdprem,Remove Checked,y"),newwin.show("Download Plugins")
-	goto,dppop
+	Goto,dppop
 	return
 	dprem:
 	Gui,35:Default
@@ -3643,7 +3645,7 @@ Download_Plugins(){
 		lastnext:=next
 	}
 	MenuWipe(),Menu("main")
-	goto,dppop
+	Goto,dppop
 	return
 	dpsa:
 	Loop,% LV_GetCount()
@@ -3667,7 +3669,7 @@ Download_Plugins(){
 	}
 	Refresh_Plugins()
 	m("Installation Report:",RegExReplace(pluglist,"\R"," - "))
-	goto,dppop
+	Goto,dppop
 	return
 	35GuiEscape:
 	35GuiClose:
@@ -3889,7 +3891,7 @@ Enter(){
 		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
 			if(!state){
 				if(ea.between)
-					InsertMultiple(ea.caret,ea.pos,"`n`n",ea.pos+1),indent:=sc.2127(ea.line),sc.2126(ea.line+1,indent+ind),sc.2126(ea.line+2,indent),GoToPos(ea.caret,sc.2128(ea.line+1))
+					InsertMultiple(ea.caret,ea.pos,"`n`n",ea.pos+1),indent:=sc.2127(ea.line),sc.2126(ea.line+1,indent+ind),sc.2126(ea.line+2,indent),GotoPos(ea.caret,sc.2128(ea.line+1))
 				else{
 					InsertMultiple(ea.caret,ea.pos,"`n",ea.pos+1),oindent:=indent:=sc.2127(ea.line),prevtext:=RemoveComment(sc.GetLine(ea.line-1)),text:=RemoveComment(sc.GetLine(ea.line))
 					if(SubStr(text,0,1)="{"||sc.2223(ea.line)&0x2000)
@@ -3903,7 +3905,7 @@ Enter(){
 						indent:=sc.2127(ea.line-1)
 					}if(ea.skip)
 						indent:=oindent
-					sc.2126(ea.line+1,indent),GoToPos(ea.caret,sc.2128(ea.line+1))
+					sc.2126(ea.line+1,indent),GotoPos(ea.caret,sc.2128(ea.line+1))
 			}}else if(state){
 				if(ea.group!=lastgroup&&lastgroup!=""){
 					sea:=map.EA("//*[@fix]")
@@ -4298,9 +4300,6 @@ FileCheck(file:=""){
 		UrlDownloadToFile,%base%/SciLexer.dll,SciLexer.dll
 	}SplashTextOff
 }
-Filename(filename){
-	return newfile:=filename~="\.ahk$"?filename:filename ".ahk"
-}
 Find_Replace(){
 	static
 	LastSC:=csc()
@@ -4315,7 +4314,7 @@ Find_Replace(){
 	if(!value.currentsel)
 		ControlSetText,Edit1,%last%,% hwnd([30])
 	else
-		gosub,checksel
+		Gosub,checksel
 	ControlSend,Edit1,^a,% hwnd([30])
 	Gui,1:-Disabled
 	return
@@ -4324,7 +4323,7 @@ Find_Replace(){
 	if(sc.2008=sc.2009)
 		GuiControl,30:,In Current Selection,0
 	else
-		gosub,currentsel
+		Gosub,currentsel
 	return
 	frregex:
 	Send,{!e,up}
@@ -4384,18 +4383,18 @@ Find_Replace(){
 			return m("No Matches Found")
 		pos:=1
 	}current:=Current(1).firstchild,looped:=1
-	goto,frrestart
+	Goto,frrestart
 	return
 	FRReplace:
 	info:=nw[],sc.2170(0,[NewLines(info.replace)]),Update({sc:sc.2357})
-	goto,frfind
+	Goto,frfind
 	return
 	frall:
 	info:=nw[],sc:=csc(),stop:=Current(3).file,looped:=0,current:=Current(),pos:=sc.2008,pre:="O",find:="",find:=info.regex?info.find:"\Q" RegExReplace(info.find, "\\E", "\E\\E\Q") "\E",pre.=info.greed?"":"U",pre.=info.cs?"":"i",pre.=info.ml?"":"m`n",find:=pre ")" find ""
 	if(info.currentsel)
 		return pos:=1,end:=sc.2509(2,start),text:=SubStr(Update({encoded:Current(3).file}),start+1,end-start),text:=RegExReplace(text,find,info.replace),sc.2190(start),sc.2192(end),sc.2194(StrPut(text,"utf-8")-1,[text]),sc.2500(2),sc.2505(0,sc.2006),sc.2504(start,len:=StrPut(text,"utf-8")-1),end:=start+len
 	if(info.Include)
-		goto,frseg
+		Goto,frseg
 	list:=SN(Current(1),"descendant::file"),All:=Update("get").1,info:=nw[],replace:=NewLines(info.replace)
 	while,ll:=list.Item[A_Index-1]{
 		text:=All[SSN(ll,"@file").text]
@@ -4441,11 +4440,6 @@ SearchWin(node:=""){
 	*/
 	return
 }
-/*
-	IMPORTANT!!!!!!!!!!!!!!!!!!!
-	THE TREEVIEWS ARE GETTING OUT OF WHACK :(
-	FIGURE OUT WHY THE POPULATION OF EASYVIEW IS GETTING ALL MESSED UP!!!!!!!!!!!!!!!!!!!!!
-*/
 Find(){
 	static
 	/*
@@ -4505,7 +4499,7 @@ Find(){
 				if(info.Sort&&!FindXML.SSN("//file[@id='" ea.ID "']"))
 					PP:=FindXML.Under(Top,"file",{text:fn,id:ea.ID},,1),DoSort:=1
 				RegExReplace(str:=str:=SubStr(out,1,Found.pos(2)),"\R","",count)
-				Next:=FindXML.Under((DoSort?PP:top),"info",Obj:={id:ea.ID,text:Found.2,found:Found.1,pos:StrPut(str,"UTF-8")-2,file:ea.file,line:Round(count)+1,filetv:ea.tv})
+				Next:=FindXML.Under((DoSort?PP:top),"info",Obj:={id:ea.ID,text:Found.2,found:Found.1,pos:(StartPos:=StrPut(str,"UTF-8")-2),end:StartPos+StrPut(Found.1,"UTF-8")-1,file:ea.file,line:Round(count)+1,filetv:ea.tv})
 				for a,b in ["File","Line","Pos","Found"]
 					FindXML.Under(Next,"moreinfo",{text:Obj[b],name:b})
 				lastl:=fn
@@ -4521,7 +4515,12 @@ Find(){
 			if(ea.text)
 				aa.SetAttribute("tv",TV_Add((ea.Name?ea.Name " = ":"") ea.Text,SSN(aa.ParentNode,"@tv").text))
 		}Default("SysTreeView321",5)
-		TV_Modify(FindXML.SSN("//info/@tv").text,"Select Vis Focus Expand"),Current:=FindXML.SSN("//info"),Current.SetAttribute("expand",1),Current.ParentNode.SetAttribute("expand",1)
+		if(!Current:=FindXML.SSN("//info[@id='" (ID:=Current(3).ID) "' and @pos<='" sc.2008 "' and @end>='" sc.2008 "']")){
+			if(!Current:=FindXML.SSN("//info[@id='" ID "' and @pos>'" sc.2008 "']"))
+				if(!Current:=FindXML.SSN("//info[@id='" ID "']"))
+					if(!Current:=FindXML.SSN("//info[@id>'" ID "']"))
+						Current:=FindXML.SSN("//info")
+		}TV_Modify(SSN(Current,"@tv").text,"Select Vis Focus Expand"),Current.SetAttribute("expand",1),Current.ParentNode.SetAttribute("expand",1)
 	}else if(Button="jump"){
 		ea:=FindXML.EA("//*[@tv='" TV_GetSelection() "']/ancestor-or-self::info"),Default("SysTreeView321",5),tv(ea.filetv),sc.2160(ea.pos,ea.pos+StrPut(ea.text,"UTF-8")-1),xpos:=sc.2164(0,ea.pos),ypos:=sc.2165(0,ea.pos)
 		WinGetPos,xx,yy,ww,hh,% NewWin.ahkid
@@ -4554,7 +4553,7 @@ Find(){
 				Sleep,200
 			}ea:=XML.EA(Node),sc:=csc(),sc.2160(ea.Pos,ea.Pos+StrPut(ea.text,"UTF-8")-1)
 			if(info.acdc)
-				goto,5Close
+				Goto,5Close
 			return
 		}
 	}SetTimer,FindLabel,-200
@@ -4657,7 +4656,7 @@ Find(){
 	return
 	fsort:
 	ControlSetText,,Search,% "ahk_id" NewWin.XML.SSN("//*[@label='Search']/@hwnd").text
-	goto,search
+	Goto,search
 	return
 	5Escape:
 	5Close:
@@ -5122,7 +5121,7 @@ Google_Search_Selected(){
 	Run,https://www.google.com/search?q=%text%
 }
 Goto(){
-	goto:
+	Goto:
 	sc:=csc(),InsertAll(",",1),list:=SN(cexml.Find("//file/@file",Current(3).file),"descendant::info[@type='Label']"),labels:=""
 	while,ll:=list.item[A_Index-1]
 		labels.=cexml.EA(ll).text " "
@@ -5131,7 +5130,7 @@ Goto(){
 		sc.2100(0,Trim(labels))
 	return
 }
-GoToPos(caret,pos){
+GotoPos(caret,pos){
 	sc:=csc(),sc.2584(caret,pos),sc.2586(caret,pos)
 }
 Gui(){
@@ -5554,10 +5553,10 @@ Create_Include_From_Selection(){
 		return m("Include name already exists. Please choose another")
 	if(files.Find(Current(1),"//@file",Filename))
 		return m("This file is already included in this Project")
-	sc.2326(),AddInclude(Filename(Filename),text,{start:StrPut(Include1 "(","UTF-8")-1,end:StrPut(Include1 "(","UTF-8")-1},0)
+	sc.2326(),AddInclude(Filename,text,{start:StrPut(Include1 "(","UTF-8")-1,end:StrPut(Include1 "(","UTF-8")-1},0)
 }
 Include(MainFile,File){
-	Relative:=RelativePath(MainFile,Filename(file))
+	Relative:=RelativePath(MainFile,file)
 	return "#Include " (SubStr(Relative,1,InStr(Relative,"\",0,0,1))="lib\"?"<" SplitPath(file).nne ">":relative)
 }
 Increment(){
@@ -5947,9 +5946,9 @@ Menu_Help(){
 	help:=new XML("help","lib\Help Menu.xml"),current:=new XML("current"),current.XML.LoadXML(x.get("menus"))
 	newwin:=new GUIKeep("Menu_Help"),newwin.Add("TreeView,w300 h300 gMHSelect,,h","Edit,x+M w300 h300,,wh","Button,xm gUpdateHelp,Update Help File,y")
 	if(!FileExist("lib\Help Menu.xml"))
-		gosub,UpdateHelp
+		Gosub,UpdateHelp
 	newwin.Show("Menu Help")
-	goto,MHPopulate
+	Goto,MHPopulate
 	return
 	MHSelect:
 	if(A_GuiEvent="S"){
@@ -5964,7 +5963,7 @@ Menu_Help(){
 	help:=new XML("help","lib\Help Menu.xml")
 	if(!help.SSN("//menu"))
 		return m("Unable to download the control file, Please try again.")
-	goto,MHPopulate
+	Goto,MHPopulate
 	return
 	MHPopulate:
 	Default("SysTreeView321","Menu_Help"),TV_Delete(),all:=help.SN("//main/descendant::*")
@@ -6085,7 +6084,7 @@ MenuActions(){
 	SWAction:
 	Default("SysListView323","Settings"),LV_GetText(text,LV_GetNext())
 	if(action:=SettingsWindow.CommandList[text].2)
-		goto,%action%
+		Goto,%action%
 	return
 	AddNewMenu:
 	top:=menus.SSN("//main"),info:=InputBox(this.hwnd,"New Top Level Menu","Enter a name for a new top level menu")
@@ -6386,7 +6385,7 @@ New_File_Template(){
 	if(template:=Settings.SSN("//template").text)
 		ControlSetText,Edit1,% RegExReplace(template,"\R","`r`n"),% hwnd([28])
 	else
-		goto,nftdefault
+		Goto,nftdefault
 	return
 	NFTClose:
 	ControlGetText,edit,Edit1,% hwnd([28])
@@ -6542,7 +6541,7 @@ New_Include_From_Current_Word(){
 		return
 	if(files.Find(Current(1),"//@file",filename))
 		return m("This file is already included in this Project")
-	AddInclude(Filename(Filename),word "(){`r`n`t`r`n}",{start:StrPut(word "(","UTF-8")-1,end:StrPut(word "(","UTF-8")-1})
+	AddInclude(Filename,word "(){`r`n`t`r`n}",{start:StrPut(word "(","UTF-8")-1,end:StrPut(word "(","UTF-8")-1})
 }
 NewLines(text){
 	for a,b in {"``n":"`n","``r":"`n","``t":"`t","\r":"`n","\t":"`t","\n":"`n"}
@@ -7044,7 +7043,7 @@ Notify(csc*){
 			}else if(fn.listType=3){
 				text:=fn.Text
 				loop,% sc.2570
-					cpos:=sc.2585(A_Index-1),add:=sc.2007(cpos)=40?"":"()",start:=sc.2266(cpos,1),end:=sc.2267(cpos,1),sc.2686(start,end),send:=(reptext:=RegExReplace(text,"(\(|\))")) add,len:=StrPut(send,"UTF-8")-1,sc.2194(len,send),len:=StrPut(reptext,"UTF-8"),GoToPos(A_Index-1,cpos:=sc.2585(A_Index-1)+len)
+					cpos:=sc.2585(A_Index-1),add:=sc.2007(cpos)=40?"":"()",start:=sc.2266(cpos,1),end:=sc.2267(cpos,1),sc.2686(start,end),send:=(reptext:=RegExReplace(text,"(\(|\))")) add,len:=StrPut(send,"UTF-8")-1,sc.2194(len,send),len:=StrPut(reptext,"UTF-8"),GotoPos(A_Index-1,cpos:=sc.2585(A_Index-1)+len)
 			}else if(fn.listtype=4)
 				text:=fn.Text,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(start,end-start),sc.2003(sc.2008,text "."),sc.2025(sc.2008+StrLen(text ".")),Show_Class_Methods(text)
 			else if(fn.listtype=5){
@@ -7107,7 +7106,7 @@ Notify(csc*){
 					Loop,% sc.2570{
 						cpos:=sc.2585(A_Index-1)
 						if(Chr(sc.2007(cpos))="(")
-							GoToPos(A_Index-1,cpos+1)
+							GotoPos(A_Index-1,cpos+1)
 						else
 							InsertMultiple(A_Index-1,cpos,"()",cpos+1)
 					}
@@ -7115,8 +7114,8 @@ Notify(csc*){
 				}
 				if(v.word="#Include"&&v.Options.Disable_Include_Dialog!=1){
 					SetTimer("GetInclude",-200)
-				}else if(v.word~="i)\b(goto|gosub)\b"){
-					SetTimer("goto",-100)
+				}else if(v.word~="i)\b(Goto|Gosub)\b"){
+					SetTimer("Goto",-100)
 				}else if(v.word="SetTimer"){
 					SetTimer("ShowLabels",-80)
 				}else if(Syntax:=Keywords.GetXML(Current(3).Lang).SSN("//*[text()='" v.word "']/@syntax").text){
@@ -7131,9 +7130,9 @@ Notify(csc*){
 						if(sc.2007(cpos-1)!=40&&sc.2007(cpos)!=40)
 							InsertMultiple(A_Index-1,cpos,"()",cpos+1)
 						if(sc.2007(cpos)=40)
-							GoToPos(A_Index-1,cpos+1)
+							GotoPos(A_Index-1,cpos+1)
 						if(!Context(1))
-							GoToPos(A_Index-1,cpos+1)
+							GotoPos(A_Index-1,cpos+1)
 					}
 					Context()
 					Continue
@@ -7434,7 +7433,7 @@ Omni_Search(start=""){
 One_Backup(){
 	current:=Current(2).file
 	SplitPath,current,,dir
-	RunWait,% comspec " /C RD /S /Q " Chr(34) dir "\backup" Chr(34),,Hide
+	RunWait,% comspec " /C RD /S /Q " Chr(34) dir "\AHK-Studio Backup" Chr(34),,Hide
 	Full_Backup()
 }
 Online_Help(){
@@ -7493,7 +7492,7 @@ Open(filelist="",show="",Redraw:=1){
 		if(ff:=files.Find("//main/@file",filename))
 			return tv(SSN(ff,"descendant::file/@tv").text)
 		fff:=FileOpen(filename,"RW","utf-8"),file1:=file:=fff.read(fff.length)
-		gosub,addfile
+		Gosub,addfile
 		if(CloseID)
 			Close(files.SN("//*[@id='" CloseID "']"),,0),CloseID:=""
 		Gui,1:TreeView,SysTreeView321
@@ -7516,7 +7515,7 @@ Open(filelist="",show="",Redraw:=1){
 			}if(files.Find("//main/@file",b))
 				Continue
 			fff:=FileOpen(b,"RW","utf-8"),file1:=file:=fff.read(fff.length),filename:=b
-			gosub,addfile
+			Gosub,addfile
 		}
 		SetTimer,ScanFiles,-1000
 		return SSN(files.Find("//main/@file",StrSplit(filelist,"`n").1),"descendant::file/@tv").text,PERefresh(),v.tngui.Populate()
@@ -7797,13 +7796,13 @@ Previous_Project(){
 Previous_Scripts(filename=""){
 	static nw
 	nw:=new GUIKeep("Previous_Scripts"),nw.Add("Edit,w430 gPSSort vSort,,w","ListView,w430 h400,File,wh","Button,xm gPSOpen Default,&Open Selected,y","Button,x+M gPSRemove,&Remove Selected,y","Button,x+M gPSClean,&Clean Up Deleted Projects,y"),nw.show("Previous Scripts"),Hotkeys("Previous_Scripts",{up:"pskey",down:"pskey",PgUp:"pskey",PgDn:"pskey","+up":"pskey","+down":"pskey"})
-	gosub,populateps
+	Gosub,populateps
 	return
 	PSSort:
 	PSBreak:=1
 	Sleep,20
 	PSBreak:=0
-	goto,populateps
+	Goto,populateps
 	return
 	PSClean:
 	scripts:=Settings.SN("//previous_scripts/*"),filelist:=[]
@@ -7813,7 +7812,7 @@ Previous_Scripts(filename=""){
 	for a,b in filelist
 		b.ParentNode.RemoveChild(b)
 	m("Removed " Round(filelist.MaxIndex()) " file" (filelist.MaxIndex()=1?"":"s")),WinActivate(hwnd([nw.win]))
-	goto,PopulatePS
+	Goto,PopulatePS
 	return
 	PSRemove:
 	filelist:=[]
@@ -7823,7 +7822,7 @@ Previous_Scripts(filename=""){
 	while,scr:=scripts.item[A_Index-1]
 		if(filelist[scr.text])
 			scr.ParentNode.RemoveChild(scr)
-	goto,populateps
+	Goto,populateps
 	return
 	pskey:
 	key:=RegExReplace(A_ThisHotkey,"\+",,count),shift:=count?"+":""
@@ -7911,7 +7910,7 @@ Project_Specific_AutoComplete(){
 	NewWin:=new GuiKeep("Project_Specific_AutoComplete")
 	NewWin.Add("ListView,w300 h300,Word List,wh","Button,gPSAAdd Default,&Add,y","Button,x+M gPSADelete,Delete Selected (Delete),y"),NewWin.Show("Project Specific AutoComplete")
 	Hotkeys("Project_Specific_AutoComplete",{Delete:"PSADelete"})
-	goto,PSAPopulate
+	Goto,PSAPopulate
 	return
 	PSAPopulate:
 	Default("SysListView321","Project_Specific_AutoComplete"),LV_Delete()
@@ -7923,7 +7922,7 @@ Project_Specific_AutoComplete(){
 	for a,b in StrSplit(text," ")
 		if(!RegExMatch(Node.text,"\b\Q" b "\E\b"))
 			Node.text:=Node.text " " b
-	goto,PSAPopulate
+	Goto,PSAPopulate
 	return
 	PSADelete:
 	Default("SysListView321","Project_Specific_AutoComplete")
@@ -8127,7 +8126,7 @@ QF(x:=0){
 	Set_Selection:
 	sc:=csc(),sc.2505(0,sc.2006),sc.2500(2)
 	if(sc.2008=sc.2009)
-		goto,Clear_Selection
+		Goto,Clear_Selection
 	SetSel:=[]
 	Loop,% sc.2570
 		o:=[],o[sc.2577(A_Index-1)]:=1,o[sc.2579(A_Index-1)]:=1,SetSel.Insert({min:o.MinIndex(),max:o.MaxIndex()})
@@ -8140,7 +8139,7 @@ QF(x:=0){
 		if(text:=sc.TextRange(sc.2143,sc.2145))
 			ControlSetText,Edit1,% text,% hwnd([1])
 	if(v.Options.Auto_Set_Area_On_Quick_Find)
-		gosub,Set_Selection
+		Gosub,Set_Selection
 	;ControlFocus,Edit1,% hwnd([1])
 	ControlFocus,,% "ahk_id" MainWin.QFEdit
 	ControlSend,Edit1,^A,% hwnd([1])
@@ -8155,7 +8154,7 @@ QF(x:=0){
 	Options(A_ThisLabel),lastFind:=""
 	ControlGetText,text,,% "ahk_id" MainWin.QFEdit
 	if(text)
-		goto,qf
+		Goto,qf
 	return
 	QFText:
 	SetTimer,qf,-300
@@ -8400,7 +8399,7 @@ Rename_Current_Include(current:=""){
 	FileSelectFile,Rename,,% ea.file,Rename Current Include,*.ahk
 	if(ErrorLevel)
 		return
-	rename:=Filename(rename)
+	rename:=rename
 	Loop,Files,%rename%,F
 		rnme:=A_LoopFileLongPath
 	rename:=rnme?rnme:rename
@@ -8408,7 +8407,7 @@ Rename_Current_Include(current:=""){
 		return
 	if(files.Find(Current(1),"descendant-or-self::file/@file",rename))
 		return m("You can not rename this the same as another #Include in the same project")
-	Rename:=Filename(Rename),Code_Explorer.RemoveTV(SN((root:=cexml.Find("//file/@file",ea.file)),"descendant-or-self::*")),MainFile:=SSN(current.ParentNode,"@file").text,sc:=csc(),RootFile:=Current(2).file,Include:=Include(RootFile,Rename),text:=RegExReplace(Update({get:MainFile}),"\Q" ea.include "\E",Include),current.ParentNode.RemoveAttribute("sc"),current.SetAttribute("scan",1),Update({file:MainFile,text:text})
+	Rename:=Rename,Code_Explorer.RemoveTV(SN((root:=cexml.Find("//file/@file",ea.file)),"descendant-or-self::*")),MainFile:=SSN(current.ParentNode,"@file").text,sc:=csc(),RootFile:=Current(2).file,Include:=Include(RootFile,Rename),text:=RegExReplace(Update({get:MainFile}),"\Q" ea.include "\E",Include),current.ParentNode.RemoveAttribute("sc"),current.SetAttribute("scan",1),Update({file:MainFile,text:text})
 	if(tv:=SSN(current,"@tv").text)
 		Default("SysTreeView321"),TV_Delete(tv)
 	current.ParentNode.RemoveChild(current),tv(SSN(files.Find("//file/@file",MainFile),"@tv").text),Edited(current.ParentNode)
@@ -8709,13 +8708,13 @@ Save_Untitled(node,ask:=1){
 				Exit
 			if(option!="Yes")
 				return
-		}FileSelectFile,filename,S16,,Save File,*.ahk
+		}FileSelectFile,FileName,S16,,Save File,*.ahk
 		if(ErrorLevel)
 			return
-		filename:=Filename(filename),file:=FileOpen(filename,"W","UTF-8"),file.Write(RegExReplace(text,"\R","`r`n")),file.Length(file.Position),all:=SN(SSN(node,"ancestor-or-self::main"),"descendant-or-self::*[@untitled]")
+		FileName:=FileName,file:=FileOpen(FileName,"W","UTF-8"),file.Write(RegExReplace(text,"\R","`r`n")),file.Length(file.Position),all:=SN(SSN(node,"ancestor-or-self::main"),"descendant-or-self::*[@untitled]")
 		while(aa:=all.item[A_Index-1])
 			aa.RemoveAttribute("untitled")
-		Close(files.SN("//main[@id='" SSN(node,"@id").text "']")),Open(filename),tv(SSN(files.Find("//main/@file",filename),"descendant::*/@tv").text)
+		Close(files.SN("//main[@id='" SSN(node,"@id").text "']")),Open(FileName),tv(SSN(files.Find("//main/@file",FileName),"descendant::*/@tv").text)
 	}
 }
 Save(option=""){
@@ -9046,15 +9045,18 @@ SelectAll(){
 SelectFile(Filename:="",Title:="New File",Ext:="*.ahk",Options:="S16"){
 	MainFile:=Current(2).file
 	SplitPath,MainFile,,Dir
-	if(Path:=Settings.SSN("//DefaultFolder").text){
-		Dir:=Dir "\" Path
-		if(!FileExist(Dir))
-			FileCreateDir,%Dir%
-	}
-	FileSelectFile,Filename,%Options%,% Dir "\" Filename,%Title%,*.ahk
+	Top:=Settings.SSN("//DefaultFolder")
+	if(Node:=Settings.Find(Top,"descendant::Folder/@file",MainFile))
+		Folder:=SSN(Node,"@folder").text
+	else
+		Folder:=SSN(Top,"@folder").text
+	Dir:=Dir "\" Folder
+	if(!FileExist(Dir))
+		FileCreateDir,%Dir%
+	FileName:=DLG_FileSave(hwnd(1),1,Title,Dir)
 	if(ErrorLevel)
 		Exit
-	return Filename(Filename)
+	return Filename
 }
 SelectText(Item,Node:=0){
 	sc:=csc()
@@ -9243,11 +9245,18 @@ Set_As_Default_Editor(){
 		m("Something went wrong :( Please restart Studio and try again.")
 }
 Set_New_File_Default_Folder(){
-	NewFolder:=InputBox("","New Default File Folder","Enter the name of the folder you wish to have all new files created in",Settings.SSN("//DefaultFolder").text)
-	if(!NewFolder)
-		Rem:=Settings.SSN("//DefaultFolder"),Rem.ParentNode.RemoveChild(Rem)
-	else
-		Settings.Add("DefaultFolder",,NewFolder)
+	static
+	Top:=Settings.SSN("//DefaultFolder"),Node:=Settings.Find(Top,"descendant::Folder/@file",(MainFile:=Current(2).File)),NewWin:=new GUIKeep("SetNewFile"),NewWin.Add("Text,,Global Default:","Edit,w500 vGlobal gSNFDFG," SSN(Top,"@folder").text,"Text,,Current Project: " SplitPath(MainFile).FileName,"Edit,w500 vCurrent gSNFDFCF," SSN(Node,"@folder").text),NewWin.Show("Set New File Default Folder")
+	return
+	SNFDFCF:
+	Info:=NewWin[].Current
+	if(!Node:=Settings.Find(Top,"descendant::Folder/@file",(MainFile:=Current(2).File)))
+		Node:=Settings.Under(Top,"Folder",{folder:Info,file:MainFile})
+	Node.SetAttribute("folder",Info)
+	return
+	SNFDFG:
+	Top.SetAttribute("folder",NewWin[].Global)
+	return
 }
 SetPos(oea:=""){
 	static
@@ -9271,7 +9280,7 @@ SetPos(oea:=""){
 	}
 	delay:=(WinActive("A")=hwnd(1))?1:200
 	if(delay=1)
-		goto,spnext
+		Goto,spnext
 	SetTimer,spnext,-%delay%
 	return
 	spnext:
@@ -10122,7 +10131,7 @@ Tab_To_Next_Comma(){
 		line:=sc.2166(start:=sc.2585(A_Index-1))
 		sc.2686(start,sc.2136(line))
 		if((pos:=sc.2197(1,","))>=0)
-			GoToPos(A_Index-1,pos+1)
+			GotoPos(A_Index-1,pos+1)
 		else
 			sc.2136(line)
 	}
@@ -10133,9 +10142,9 @@ Tab_To_Previous_Comma(){
 		line:=sc.2166(start:=sc.2585(A_Index-1))
 		sc.2686(start-1,sc.2167(line))
 		if((pos:=sc.2197(1,","))>=0){
-			GoToPos(A_Index-1,pos+1)
+			GotoPos(A_Index-1,pos+1)
 		}else
-			GoToPos(A_Index-1,sc.2167(line))
+			GotoPos(A_Index-1,sc.2167(line))
 	}
 }
 Tab_Width(){
@@ -10281,7 +10290,7 @@ Toolbar_Editor(control){
 	Enable("SysTreeView321","tetv","Toolbar_Editor")
 	Hotkey,IfWinActive,% nw.ID
 	Hotkey,Delete,DeleteButton,On
-	goto,TESelect
+	Goto,TESelect
 	return
 	TEHighlight:
 	color:=RGB(clr:=Dlg_Color(Settings.Get("//Toolbar_Editor/@highlight",0xEE00AA),nw.hwnd)),Settings.Add("Toolbar_Editor",{highlight:clr}),Default("SysListView321","Toolbar_Editor"),LV_GetText(id,LV_GetNext()),ea:=MainWin.gui.EA("//controls[@win=1]/descendant::control[@id='" id "']"),winname:=ea.win,current:=ea.hwnd,tb:=ToolBar.keep[ea.hwnd]
@@ -10585,13 +10594,13 @@ tv(tv*){
 		sc.4004("foldExplicitStart","//{")
 		sc.4004("foldExplicitEnd","//}")
 		/*
-			sc.4005(1,"and and_eq asm auto bitand bitor bool break case catch char class compl const const_cast continue default delete do double dynamic_cast else enum explicit export extern false float for friend goto if inline int long mutable namespace new not not_eq operator or or_eq private protected public register reinterpret_cast return short signed sizeof static static_cast struct switch template this throw true try typedef typeid typename union unsigned using virtual void volatile wchar_t while xor xor_eq")
+			sc.4005(1,"and and_eq asm auto bitand bitor bool break case catch char class compl const const_cast continue default delete do double dynamic_cast else enum explicit export extern false float for friend Goto if inline int long mutable namespace new not not_eq operator or or_eq private protected public register reinterpret_cast return short signed sizeof static static_cast struct switch template this throw true try typedef typeid typename union unsigned using virtual void volatile wchar_t while xor xor_eq")
 			sc.4005(3,"a addindex addtogroup anchor arg attention author b brief bug c class code date def defgroup deprecated dontinclude e em endcode endhtmlonly endif endlatexonly endlink endverbatim enum example exception f$ f[ f] file fn hideinitializer htmlinclude htmlonly if image include ingroup internal invariant interface latexonly li line link mainpage name namespace nosubgrouping note overload p page par param param[in] param[out] post pre ref relates remarks return retval sa section see showinitializer since skip skipline struct subsection test throw throws todo typedef union until var verbatim verbinclude version warning weakgroup")
 			sc.4005(4,"_MSC_VER SCI_NAMESPACE")
 		*/
 		sc.2056(11,"Consolas")
 		sc.2051(11,0xFFFFFF)
-		text=auto array bool break case char class complex ComplexInf ComplexNaN const continue default delete do double else enum export extern float for foreach goto if Inf inline int long namespace NaN new NULL private public register restrict return short signed sizeof static string_t struct switch this typedef union unsigned using void volatile wchar_t while __declspec
+		text=auto array bool break case char class complex ComplexInf ComplexNaN const continue default delete do double else enum export extern float for foreach Goto if Inf inline int long namespace NaN new NULL private public register restrict return short signed sizeof static string_t struct switch this typedef union unsigned using void volatile wchar_t while __declspec
 		/*
 			Loop,10
 				sc.4005(A_Index-1,text)
@@ -11324,6 +11333,8 @@ DLG_FileSave(HWND:=0,DefaultFilter=1,DialogTitle="Select file to open",DefaultFi
 	}NumPut(0,Address+0,"UChar"),StrPut(File,&lpstrFile,"UTF-8"),StrPut(DialogTitle,&lpstrTitle,"UTF-8")
 	;Structure https://msdn.microsoft.com/en-us/library/windows/desktop/ms646839(v=vs.85).aspx
 	Address:=&OFName
+	SplitPath,DefaultFile,,Initial,Ext
+	Initial:=Ext?Initial "\":DefaultFile,VarSetCapacity(lpstrInitialDir,0XFFFF,0),StrPut(Initial,&lpstrInitialDir,"UTF-8")
 	for a,b in [76,HWND,0,&lpstrFilter,&lpstrCustomFilter,255,defaultFilter,&lpstrFile,0xFFFF,&lpstrFileTitle,0xFFFF,&lpstrInitialDir,&lpstrTitle,Flags,0,&lpstrDefExt]
 		Address:=NumPut(b,Address+0,"UInt")
 	if(!DllCall("comdlg32\GetSaveFileNameA","Uint",&OFName))
@@ -11336,19 +11347,16 @@ Regex_Replace_Selected(){
 	static
 	Gui,Regex:Destroy
 	Gui,Regex:Default
-	sc:=csc()
-	Text:=sc.TextRange(sc.2585(0),sc.2587(0))
+	sc:=csc(),Text:=sc.TextRange(sc.2585(0),sc.2587(0))
 	if(!Text)
 		return m("Please select some text first")
-	NewWin:=new GUIKeep("Regex")
-	NewWin.Add("Edit,vText ReadOnly w500,,w","ListView,w500 r5 AltSubmit gLVRegexReplace,Name|In|Out,wh","Edit,gGoRegEx w250 vIn,,y","Edit,x+0 gGoRegEx w250 vOut,,wy","Edit,xm w500 h200,,wy","Button,gReplaceRegexGo,&Replace Selected,y","Button,x+M gSaveReplaceRegex,&Save,y","Button,x+M gReplaceRegexDelete,&Delete,y")
+	NewWin:=new GUIKeep("Regex"),NewWin.Add("Edit,vText ReadOnly w500,,w","ListView,w500 r5 AltSubmit gLVRegexReplace,Name|In|Out,wh","Edit,gGoRegEx w250 vIn,,y","Edit,x+0 gGoRegEx w250 vOut,,wy","Edit,xm w500 h200,,wy","Button,gReplaceRegexGo,&Replace Selected,y","Button,x+M gSaveReplaceRegex,&Save,y","Button,x+M gReplaceRegexDelete,&Delete,y")
 	GuiControl,Regex:,Edit1,%Text%
 	NewWin.Show("Regex Replace")
-	gosub,PopulateReplaceRegex
+	Gosub,PopulateReplaceRegex
 	GoRegEx:
-	Info:=NewWin[]
-	Text:=RegExReplace(Info.Text,Info.In,Info.Out)
-	GuiControl,Regex:,Edit4,% SubStr(Text,1,600)
+	Info:=NewWin[],Text:=RegExReplace(Info.Text,Info.In,Info.Out)
+	GuiControl,Regex:,Edit4,%Text%
 	return
 	ReplaceRegexDelete:
 	Next:=0,Default("SysListView321","Regex"),List:=[]
@@ -11359,7 +11367,7 @@ Regex_Replace_Selected(){
 	}
 	for a,b in List
 		b.ParentNode.RemoveChild(b)
-	goto,PopulateReplaceRegex
+	Goto,PopulateReplaceRegex
 	return
 	SaveReplaceRegex:
 	Info:=NewWin[]
@@ -11389,14 +11397,8 @@ Regex_Replace_Selected(){
 	return
 	ReplaceRegexGo:
 	sc.2078()
-	while((Start:=sc.2585(A_Index-1))!=""){
-		End:=sc.2587(A_Index-1)
-		if(Start>sc.2006||Start<0)
-			Break
-		Text:=sc.TextRange(Start,End)
-		sc.2190(Start),sc.2192(End)
-		Text:=RegExReplace(Text,Info.In,Info.Out)
-		sc.2194(StrPut(Text,"UTF-8")-1,Text)
-	}sc.2079()
+	Loop,% sc.2570
+		Start:=sc.2585(A_Index-1),End:=sc.2587(A_Index-1),Text:=sc.TextRange(Start,End),sc.2190(Start),sc.2192(End),Text:=RegExReplace(Text,Info.In,Info.Out),sc.2194(StrPut(Text,"UTF-8")-1,Text)
+	sc.2079()
 	return
 }

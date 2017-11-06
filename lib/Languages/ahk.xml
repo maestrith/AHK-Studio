@@ -64,8 +64,8 @@
 		<syntax first="( )" replace="," syntax="for key [,val] in obj `n[AutoHotkey_L]">for</syntax>
 		<syntax syntax=", OutputVar [, YYYYMMDDHH24MISS, Format]">FormatTime</syntax>
 		<syntax syntax=", OutputVar, WhichKey [, Mode [P|T]]">GetKeyState</syntax>
-		<syntax syntax=", Label`nJumps to the specified label and continues execution until Return is encountered.">gosub</syntax>
-		<syntax syntax=", Label`nJumps to the specified label and continues execution.">goto</syntax>
+		<syntax syntax=", Label`nJumps to the specified label and continues execution until Return is encountered.">Gosub</syntax>
+		<syntax syntax=", Label`nJumps to the specified label and continues execution.">Goto</syntax>
 		<syntax syntax=", GroupName [, R]">GroupActivate</syntax>
 		<syntax syntax=", GroupName, WinTitle [, WinText, Label, ExcludeTitle, ExcludeText]">GroupAdd</syntax>
 		<syntax syntax=", GroupName [, A|R]">GroupClose</syntax>
