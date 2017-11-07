@@ -1435,7 +1435,7 @@ Class MainWindowClass{
 			sc:=csc(2)
 		ControlGetPos,x,y,w,h,,% "ahk_id" sc.sc
 		this.NewCtrlPos:=[],this.NewCtrlPos.y:=Round((y+h)*.75),this.NewCtrlPos.ctrl:=sc.sc,this.Split("Below","Debug"),this.DebugSC:=sc
-	}Delete(){
+	}Delete(Supress:=0){
 		np:=this.NewCtrlPos,hwnd:=np.ctrl,win:=np.win
 		if(win!=this.hwnd)
 			return
@@ -1477,7 +1477,8 @@ Class MainWindowClass{
 				s.Hidden.push(oea.hwnd):=1,this.SetWinPos(oea.hwnd,0,0,0,0)
 				if(oea.type="Debug"){
 					v.debug:=""
-					debug.Send("stop")
+					if(!Supress)
+						debug.Send("stop")
 			}}else if(oea.type="Tracked Notes")
 				this.SetWinPos(this.tnsc.sc,0,0,0,0,ea),this.SetWinPos(this.tn,0,0,0,0,ea),Redraw()
 			else
@@ -1911,9 +1912,8 @@ Class PluginClass{
 	}Current(x:=""){
 		return Current(x)
 	}DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0){
-		static OldPos
 		sc:=v.debug
-		if(!v.debug.sc)
+		if(!sc.sc)
 			MainWin.DebugWindow(),Kill:=1
 		if(Clear)
 			sc.2004()
@@ -1921,33 +1921,13 @@ Class PluginClass{
 			sc.2003(sc.2006,"`n")
 		if(Sleep)
 			Sleep,%Sleep%
-		sc.2003(sc.2006,Text)
-		/*
-			if(!OldPos){
-				ControlGetPos,x,y,w,h,,% "ahk_id" sc.sc
-				if(h<30&&!OldPos){
-					xx:=MainWin.GUI
-					MinY:=xx.SSN("//*[@ba='" v.Debug.sc+0 "']/@y").text
-					if(y-100>MinY){
-						Node:=xx.SSN("//*[@hwnd='" v.Debug.sc+0 "']")
-						OldPos:=XML.EA(Node)
-						win:=MainWin.WinPos()
-						Node.SetAttribute("tp",(y-200)/(win.h-MainWin.sb))
-						MainWin.Size(),Timer:=Abs(AutoHide)
-						if(Timer)
-							SetTimer,DebugShrinkSize,-%Timer%
-					}
-				}
-			}
-		*/
-		if(Kill||AutoHide){
-			Timer:=AutoHide?Abs(Autohide):5000
-			SetTimer,DebugShrinkSize,-%Timer%
-		}
+		sc.2003(sc.2006,Text),sc.2025(sc.2006)
+		if(Kill||AutoHide)
+			Timer:=AutoHide?Abs(Autohide):5000,SetTimer("DebugShrinkSize",-Timer)
 		return
 		DebugShrinkSize:
-		np:=MainWin.NewCtrlPos:=[],np.Ctrl:=v.Debug.sc+0,np.Win:=MainWin.HWND,MainWin.Delete()
-		return OldPos:=""
+		np:=MainWin.NewCtrlPos:=[],np.Ctrl:=v.Debug.sc+0,np.Win:=MainWin.HWND,MainWin.Delete(1)
+		return
 	}DynaRun(script){
 		return DynaRun(script)
 	}EnableSC(x:=0){
