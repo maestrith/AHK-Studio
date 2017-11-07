@@ -1417,8 +1417,7 @@ Class MainWindowClass{
 					ri.left:=ll
 				if(ea.y-4<y&&ea.y+4>y&&ea.y>0)
 					ri.top:=ll
-			}
-			if(ri.left||ri.top)
+			}if(ri.left||ri.top)
 				DllCall("SetCursor","UInt",ri.left&&ri.top?obj.cursall:ri.top?obj.cursns:obj.cursew)
 	}}Close(){
 		Exit()
@@ -1435,7 +1434,7 @@ Class MainWindowClass{
 		if(sc.sc=MainWin.tnsc.sc)
 			sc:=csc(2)
 		ControlGetPos,x,y,w,h,,% "ahk_id" sc.sc
-		this.NewCtrlPos:=[],this.NewCtrlPos.y:=Round((y+h)*.75),this.NewCtrlPos.ctrl:=sc.sc,this.Split("Below","Debug")
+		this.NewCtrlPos:=[],this.NewCtrlPos.y:=Round((y+h)*.75),this.NewCtrlPos.ctrl:=sc.sc,this.Split("Below","Debug"),this.DebugSC:=sc
 	}Delete(){
 		np:=this.NewCtrlPos,hwnd:=np.ctrl,win:=np.win
 		if(win!=this.hwnd)
@@ -1679,13 +1678,13 @@ Class MainWindowClass{
 			DllCall("SetWindowPos",int,ea.toolbar,int,0,int,0,int,0,int,w,int,h,uint,0x0008|0x0004|0x0010|0x0020)
 	}Show(Title,info){
 		Gui,1:Show,Hide
-		xx:=this.xml,all:=this.XML.SN("//win[@win=1]/descendant::control"),win:=this.WinPos()
+		xx:=this.XML,all:=this.XML.SN("//win[@win=1]/descendant::control"),win:=this.WinPos()
 		while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa){
 			if(ea.x>0&&!ea.lp)
 				aa.SetAttribute("lp",Round(ea.x/win.w,6))
 			if(ea.y>0&&!ea.tp)
 				aa.SetAttribute("tp",Round(ea.y/win.h,6))
-		}pos:=this.XML.SSN("//*[@win=1]/@pos").text,pos:=pos?pos:info.pos
+		}pos:=xx.SSN("//*[@win=1]/@pos").text,pos:=pos?pos:info.pos
 		Gui,1:Show,%pos%,%title%
 	}Size(a*){
 		static init,lastw,lasth
@@ -1911,17 +1910,44 @@ Class PluginClass{
 		csc({plugin:obj,hwnd:hwnd})
 	}Current(x:=""){
 		return Current(x)
-	}DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0){
+	}DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0){
+		static OldPos
 		sc:=v.debug
 		if(!v.debug.sc)
-			MainWin.DebugWindow()
+			MainWin.DebugWindow(),Kill:=1
 		if(Clear)
 			sc.2004()
-		if(LineBreak)
+		if(LineBreak&&sc.2006)
 			sc.2003(sc.2006,"`n")
 		if(Sleep)
 			Sleep,%Sleep%
 		sc.2003(sc.2006,Text)
+		/*
+			if(!OldPos){
+				ControlGetPos,x,y,w,h,,% "ahk_id" sc.sc
+				if(h<30&&!OldPos){
+					xx:=MainWin.GUI
+					MinY:=xx.SSN("//*[@ba='" v.Debug.sc+0 "']/@y").text
+					if(y-100>MinY){
+						Node:=xx.SSN("//*[@hwnd='" v.Debug.sc+0 "']")
+						OldPos:=XML.EA(Node)
+						win:=MainWin.WinPos()
+						Node.SetAttribute("tp",(y-200)/(win.h-MainWin.sb))
+						MainWin.Size(),Timer:=Abs(AutoHide)
+						if(Timer)
+							SetTimer,DebugShrinkSize,-%Timer%
+					}
+				}
+			}
+		*/
+		if(Kill||AutoHide){
+			Timer:=AutoHide?Abs(Autohide):5000
+			SetTimer,DebugShrinkSize,-%Timer%
+		}
+		return
+		DebugShrinkSize:
+		np:=MainWin.NewCtrlPos:=[],np.Ctrl:=v.Debug.sc+0,np.Win:=MainWin.HWND,MainWin.Delete()
+		return OldPos:=""
 	}DynaRun(script){
 		return DynaRun(script)
 	}EnableSC(x:=0){
@@ -4218,7 +4244,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20161107223002,XMLFiles:={menus:[20171105182355,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20161107223002,XMLFiles:={menus:[20171107073055,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20170926222816,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -9242,9 +9268,9 @@ Set_As_Default_Editor(){
 	else
 		m("Something went wrong :( Please restart Studio and try again.")
 }
-Set_New_File_Default_Folder(){
+Set_New_Include_File_Default_Folder(){
 	static
-	Top:=Settings.SSN("//DefaultFolder"),Node:=Settings.Find(Top,"descendant::Folder/@file",(MainFile:=Current(2).File)),NewWin:=new GUIKeep("SetNewFile"),NewWin.Add("Text,,Global Default:","Edit,w500 vGlobal gSNFDFG," SSN(Top,"@folder").text,"Text,,Current Project: " SplitPath(MainFile).FileName,"Edit,w500 vCurrent gSNFDFCF," SSN(Node,"@folder").text),NewWin.Show("Set New File Default Folder")
+	Top:=Settings.SSN("//DefaultFolder"),Node:=Settings.Find(Top,"descendant::Folder/@file",(MainFile:=Current(2).File)),NewWin:=new GUIKeep("SetNewFile"),NewWin.Add("Text,,Global Default:","Edit,w500 vGlobal gSNFDFG," SSN(Top,"@folder").text,"Text,,Current Project: " SplitPath(MainFile).FileName,"Edit,w500 vCurrent gSNFDFCF," SSN(Node,"@folder").text),NewWin.Show("Set New Include File Default Folder")
 	return
 	SNFDFCF:
 	Info:=NewWin[].Current
