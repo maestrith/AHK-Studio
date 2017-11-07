@@ -4508,8 +4508,8 @@ Find(){
 		if(TV_GetCount())
 			ControlFocus,SysTreeView321
 		GuiControl,5:+Redraw,SysTreeView321
-		SetTimer,FindLabel,-200
-		GuiControl,5:+gstate,SysTreeView321
+		SetTimer("FindLabel",-200)
+		GuiControl,5:+gState,SysTreeView321
 		all:=FindXML.SN("//*")
 		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
 			if(ea.text)
@@ -4531,14 +4531,12 @@ Find(){
 			WinSet,Transparent,50,% NewWin.ahkid
 		else if(trans=50)
 			WinSet,Transparent,255,% NewWin.ahk
-		SetTimer,CenterSel,-10
+		SetTimer("CenterSel",-10)
 		if(v.Options.Auto_Close_Find)
 			return hwnd({rem:5})
 		WinActivate(hwnd([5]))
-	}else{
-		sel:=TV_GetSelection(),TV_Modify(sel,ec:=TV_Get(sel,"E")?"-Expand":"Expand")
-		SetTimer,FindLabel,-200
-	}
+	}else
+		sel:=TV_GetSelection(),TV_Modify(sel,ec:=TV_Get(sel,"E")?"-Expand":"Expand"),SetTimer("FindLabel",-200)
 	return
 	state:
 	if(A_GuiEvent="DoubleClick"){
@@ -4555,10 +4553,7 @@ Find(){
 			if(info.acdc)
 				Goto,5Close
 			return
-		}
-	}SetTimer,FindLabel,-200
-	SetTimer,FindCurrent,-10
-	return
+	}}return SetTimer("FindLabel",-200),SetTimer("FindCurrent",-10)
 	FindShowXML:
 	FindXML.Transform()
 	FindXML.Transform()
@@ -4607,9 +4602,7 @@ Find(){
 				if(!Parent:=Node.ParentNode.NextSibling)
 					return
 				Current:=SSN(Parent,"descendant::info")
-			}
-		}
-	}
+	}}}SetTimer("State",-10)
 	FindCurrent:
 	GuiControl,5:+g,SysTreeView321
 	GuiControl,5:-Redraw,SysTreeView321
@@ -4628,7 +4621,7 @@ Find(){
 	return
 	FindLabel:
 	Gui,5:Default
-	sel:=TV_GetSelection()
+	Default("SysTreeView321",5),sel:=TV_GetSelection()
 	Node:=FindXML.SSN("//*[@tv='" sel "']")
 	if(!TV_GetCount())
 		Buttontext:="Search"
@@ -5755,41 +5748,6 @@ Class Keywords{
 			}
 		*/
 		/*
-			MAKE SURE TO REBUILD THE LANGUAGES/LANGUAGENAME STUFF SO THAT IT
-			WORKS RIGHT IN SAVE AS AND OTHER PLACES
-	<Languages>
-		<cpp date="" name="C++"></cpp>
-		<hypertext date="" name="HTML">
-			<font color="7843024" style="2"></font>
-			<font color="13617276" fold="1" style="1"></font></hypertext>
-		<json date="" name="JSON">
-			<font color="7843024" style="2"></font>
-			<font color="13617276" fold="1" style="1"></font></json>
-		<xml date="" name="XML">
-			<font color="16758590" style="1"></font>
-			<font color="14732901" style="3"></font>
-			<font color="16776960" style="11"></font>
-			<font color="16711680" style="12"></font>
-			<font style="13" color="12615680"></font></xml>
-		<ahk name="AutoHotkey">
-			<font style="0" color="12632256"></font>
-			<font style="40" color="65408"></font>
-			<font style="41" color="16711935"></font>
-			<font style="42" color="0" background="255"></font>
-			<font style="55" color="4227327"></font>
-			<font style="56" color="8421440"></font>
-			<font style="57" color="16744576"></font>
-			<font style="58" color="8388863"></font>
-			<font style="59" color="12615935"></font>
-			<font style="60" color="11184895"></font>
-			<font style="61" color="4737279"></font>
-			<font style="96" color="8388863"></font>
-			<font style="97" color="8388863"></font>
-			<font style="99" color="8388863"></font>
-			<font style="100" color="8388863"></font></ahk>
-	</Languages>
-		*/
-		/*
 			download the xml files using URLDownloadToVar()
 			check to see if they are valid files First
 			if they are
@@ -5822,16 +5780,15 @@ Class Keywords{
 					Node:=xx.Add("date")
 				Node.text:=Date,xx.Save(1)
 				SplashTextOff
-			}LEA:=XML.EA(Lexer:=xx.SSN("//FileTypes"))
-			Keywords.Languages[(Language:=Format("{:L}",LEA.Language))]:=xx
+			}LEA:=XML.EA(Lexer:=xx.SSN("//FileTypes")),Keywords.Languages[(Language:=Format("{:L}",LEA.Language))]:=xx
 			for _,Ext in StrSplit(Lexer.text," "){
 				if(!Settings.SSN("//Extensions/Extension[text()='" Ext "']"))
 					Settings.Add("Extensions/Extension",{language:Language},Format("{:L}",Ext),1)
-			}FileGetTime,Date,%A_LoopFileLongPath%
+			}FileGetTime,Date,%a%
 			if(!Node:=Settings.SSN("//Languages/" Language))
 				Node:=Settings.Add("//Languages/" Language)
 			if(SSN(Node,"@date").text!=Date)
-				KeyWords.Refresh(Language),Node.SetAttribute("date",Date)
+				Node:=KeyWords.Refresh(Language),Node:=Settings.SSN("//Languages/" Language),Node.SetAttribute("date",Date),Node.SetAttribute("name",LEA.Name)
 			if(!SSN(Node,"@name").text)
 				Node.SetAttribute("name",LEA.Name)
 			all:=xx.SN("//Code/*"),Find:=v.OmniFind[Language]:=[],Order:=Keywords.OmniOrder[Language]:=[],Index:=0,ExemptList:=""
@@ -5914,8 +5871,7 @@ Class Keywords{
 	}GetXML(Language){
 		return Keywords.Languages[Language]
 	}Refresh(Language){
-		Lang:=this.GetXML(Language)
-		all:=Lang.SN("//Styles/font"),Default:=DefaultFont(1)
+		Lang:=this.GetXML(Language),all:=Lang.SN("//Styles/font"),Default:=DefaultFont(1)
 		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
 			if(Color:=Default.SSN("//font[@style='" ea.style "']/@color").text)
 				ea.Color:=Color
