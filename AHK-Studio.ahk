@@ -363,7 +363,7 @@ Auto_Insert(){
 	return
 	RemKey:
 	SettingsDefault("AIListview")
-	while,LV_GetNext()
+	while(LV_GetNext())
 		LV_GetText(trigger,LV_GetNext()),rem:=Settings.Find("//autoadd/key/@trigger",trigger),rem.ParentNode.RemoveChild(rem),LV_Delete(LV_GetNext())
 	return BraceSetup()
 }
@@ -391,12 +391,12 @@ AutoMenu(){
 	if(sc.2007(sc.2008-1)~="40|123")
 		return
 	Command:=RegExReplace(Context(1).Word,"#")
-	if(v.Word&&sc.2102=0&&v.Options.Auto_Complete){
+	if((v.Word&&sc.2102=0&&v.Options.Auto_Complete)){
 		if(List:=Keywords.GetXML(Current(3).Lang).SSN("//Context/" Command "/descendant-or-self::list[text()='" RegExReplace(v.Word,"#") "']/@list").text){
 			Insert:=v.Options.Auto_Space_After_Comma?", ":","
 			if(sc.2007(sc.2008-StrLen(Insert))!=44)
 				sc.2003(sc.2008,Insert),sc.2025(sc.2008+StrLen(Insert))
-			sc.2100(0,List,v.Word:="")
+			sc.2100(0,FirstText List),v.Word:=""
 	}}return
 }
 Backspace(sub:=1){
@@ -813,9 +813,10 @@ class Code_Explorer{
 		static last
 		CEGO:
 		if((Node:=cexml.SSN("//*[@cetv='" A_EventInfo "']"))&&(A_GuiEvent="S"||A_GuiEvent="Normal")){
-			
-			return m(Node.xml)
 			SelectText(Node,1),CenterSel()
+			/*
+				return m(Node.xml)
+			*/
 		}
 		return
 	}InComment(found,start:=0){
@@ -839,7 +840,7 @@ class Code_Explorer{
 			things:=SN(fn,"descendant::info"),filename:=SSN(fn,"@file").text
 			SplitPath,filename,file
 			TVC.Default(2),fn.SetAttribute("cetv",(main:=TVC.Add(2,file,0,"Sort")))
-			while,tt:=things.Item[A_Index-1],ea:=XML.EA(tt){
+			while(tt:=things.Item[A_Index-1],ea:=XML.EA(tt)){
 				if(!top:=SSN(fn,"descendant::header[@type='" ea.type "']"))
 					if(ea.type~="(" Exempt ")"=0)
 						top:=cexml.Under(fn,"header",{type:ea.type,cetv:TVC.Add(2,ea.type,SSN(fn,"@cetv").text,"Sort" (SSN(tt,"ancestor::main[@file='Libraries']")?"":" Vis"))})
@@ -851,7 +852,7 @@ class Code_Explorer{
 		return
 	}Remove(filename){
 		this.explore.remove(SSN(filename,"@file").text),list:=SN(filename,"@file")
-		while,ll:=list.item[A_Index-1]
+		while(ll:=list.item[A_Index-1])
 			this.explore.Remove(ll.text)
 	}RemoveItem(current,type,text){
 		rem:=SSN(current,"descendant::*[@type='" type "' and @text='" text "']")
@@ -894,23 +895,23 @@ class Code_Explorer{
 			this.ScanComments(text),this.ScanClass(text,node),this.ScanFM(text,node),no:=v.CommentArea
 			for type,find in {Hotkey:Omni.Hotkey,Label:Omni.Label}{
 				pos:=1
-				while,RegExMatch(text,find,fun,pos),pos:=fun.pos(1)+fun.len(1){
+				while(RegExMatch(text,find,fun,pos),pos:=fun.pos(1)+fun.len(1)){
 					if(!fun.len(1))
 						Break
 					if(!no.SSN("//bad[@min<'" fun.pos(1) "' and @max>'" fun.pos(1) "' and @type!='Class']"))
 						cexml.under(node,"info",{type:type,pos:StrPut(SubStr(text,1,fun.Pos(1)),"utf-8")-3,text:fun.1,upper:Upper(fun.1)})
 			}}pos:=1
-			while,RegExMatch(text,Omni.Instance,found,pos),pos:=found.Pos(2)+found.len(2){
+			while(RegExMatch(text,Omni.Instance,found,pos),pos:=found.Pos(2)+found.len(2)){
 				if(!found.len(1))
 					break
 				if(!no.SSN("//bad[@min<'" found.pos(1) "' and @max>'" found.pos(1) "' and @type!='Class']"))
 					cexml.Under(node,"info",{type:"Instance",upper:Upper(found.1),pos:StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-3,text:found.1,class:found.2})
 			}pos:=1
-			while,RegExMatch(text,"OUi);gui\[(.*)\].*\R(.*)\R;/gui\[.*\]",found,pos),pos:=found.Pos(1)+found.len(1)
+			while(RegExMatch(text,"OUi);gui\[(.*)\].*\R(.*)\R;/gui\[.*\]",found,pos),pos:=found.Pos(1)+found.len(1))
 				cexml.Under(node,"info",{type:"Gui",opos:found.Pos(1)-1,pos:ppp:=StrPut(SubStr(text,1,found.Pos(1)),"utf-8")-3,start:found.Pos(2)-1,end:found.Pos(2)+found.len(2),text:found.1,upper:Upper(found.1)})
 			for a,b in {Bookmark:"\s+;#\[(.*)\]",Breakpoint:"\s+;\*\[(.*)\]"}{
 				pos:=1
-				while,pos:=RegExMatch(text,"OU)" b,found,pos),pos:=found.Pos(1)+found.len(1){
+				while(pos:=RegExMatch(text,"OU)" b,found,pos),pos:=found.Pos(1)+found.len(1)){
 					nnn:=cexml.Under(node,"info",{type:a,upper:Upper(found.1),pos:StrPut(enter:=SubStr(text,1,found.Pos(0)),"utf-8"),text:found.1})
 					if(a="Breakpoint"){
 						RegExReplace(enter,"\R",,Count)
@@ -1872,7 +1873,7 @@ Class Omni_Search_Class{
 		return this
 	}Menus(){
 		rem:=cexml.SSN("//menu"),rem.ParentNode.RemoveChild(rem),this.MenuList:=[],List:=menus.SN("//menu"),Top:=cexml.Add("menu")
-		while,mm:=list.item[A_Index-1],ea:=XML.EA(mm){
+		while(mm:=list.item[A_Index-1],ea:=XML.EA(mm)){
 			clean:=ea.clean,hotkey:=Convert_Hotkey(ea.hotkey)
 			StringReplace,clean,clean,_,%A_Space%,All
 			launch:=IsFunc(ea.clean)?"func":IsLabel(ea.clean)?"label":v.Options.HasKey(ea.clean)?"option":""
@@ -2272,10 +2273,10 @@ Class Toolbar{
 		if(!top:=Settings.SSN("//toolbar/bar[@id='" this.id "']"))
 			top:=Settings.Add("toolbar/bar",{id:this.id},,1)
 		sep:=SN(top,"descendant::separator")
-		while,ss:=sep.item[A_Index-1]
+		while(ss:=sep.item[A_Index-1])
 			ss.ParentNode.RemoveChild(ss)
 		all:=SN(top,"descendant::button")
-		while,aa:=all.item[A_Index-1]
+		while(aa:=all.item[A_Index-1])
 			aa.SetAttribute("vis",0)
 		top:=Settings.SSN("//toolbar/bar[@id='" this.id "']")
 		SendMessage,0x400+24,0,0,,% "ahk_id" this.tb ;TB_BUTTONCOUNT
@@ -3401,7 +3402,7 @@ Delete(){
 }
 DisplayType(type){
 	all:=SN(cexml.Find("//main/@file",Current(2).file),"descendant-or-self::info[@type='" type "']/@text"),sc:=csc(),word:=sc.getword(),sc.2634(1)
-	while,aa:=all.item[A_Index-1]
+	while(aa:=all.item[A_Index-1])
 		if(aa.text~="i)^" word)
 			list.=aa.text " "
 	Sort,list,list,D%A_Space%
@@ -3455,7 +3456,7 @@ Display(PopulateVarBrowser:=0){
 			sc:=v.debug,sc.2003(sc.2006,"Breakpoint Removed`n"),sc.2025(sc.2006)
 		}if(info.NodeName="init"){
 			v.afterbug:=[],ad:=["stdout -c 1","stderr -c 1","feature_set -n max_depth -v 0","feature_set -n max_children -v 0"],bp:=cexml.SN("//*[@id='" debug.id "']/descendant::info[@type='Breakpoint']")
-			while,bb:=bp.item[A_Index-1],bpea:=XML.EA(bb)
+			while(bb:=bp.item[A_Index-1],bpea:=XML.EA(bb))
 				ad.Insert("breakpoint_set -t line -f " bpea.filename " -n" bpea.line+1 " -i " SSN(bb,"ancestor::file/@id").text "|" bpea.line)
 			for a,b in ad
 				v.afterbug.Insert(b)
@@ -3643,7 +3644,7 @@ Download_Plugins(){
 	dprem:
 	Gui,35:Default
 	Gui,35:ListView,SysListView321
-	while,next:=LV_GetNext(0,"C"){
+	while(next:=LV_GetNext(0,"C")){
 		if(next=lastnext)
 			Break
 		LV_Modify(next,"Col4 -check","No"),LV_GetText(plugin,next)
@@ -3659,10 +3660,10 @@ Download_Plugins(){
 	return
 	dpdl:
 	pluglist:=""
-	while,num:=LV_GetNext(0,"C"){
+	while(num:=LV_GetNext(0,"C")){
 		LV_GetText(name,num),pos:=1,text:=RegExReplace(URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio-Plugins/master/" name ".ahk"),"\R","`r`n"),list:=""
 		date:=plug.SSN("//*[@name='" name "']/@date").text,pos:=1
-		while,pos:=RegExMatch(text,"Oim)^\s*\;menu\s*(.*)\R",found,pos)
+		while(pos:=RegExMatch(text,"Oim)^\s*\;menu\s*(.*)\R",found,pos))
 			item:=StrSplit(found.1,","),item.1:=Trim(item.1,"`r|`r`n|`n"),list.=item.1 "`n",pos:=found.Pos(1)+1
 		pluglist.=list=""?"Error in " name "`n":list
 		if(list){
@@ -3684,7 +3685,7 @@ Download_Plugins(){
 	dppop:
 	Gui,35:Default
 	LV_Delete(),pgn:=plug.SN("//plugin")
-	while,pp:=pgn.item[A_Index-1],ea:=XML.EA(pp){
+	while(pp:=pgn.item[A_Index-1],ea:=XML.EA(pp)){
 		installed:="No"
 		if(FileExist("plugins\" ea.name ".ahk")){
 			FileGetTime,time,% "plugins\" ea.name ".ahk"
@@ -3748,7 +3749,7 @@ Edit_Hotkeys(ret:=""){
 	if(ret.NodeName)
 		return ea:=XML.EA(ret),Default("SysTreeView321","Edit_Hotkeys"),TV_Modify(TV_GetSelection(),"",RegExReplace(ea.clean,"_"," ")(ea.hotkey?" - " Convert_Hotkey(ea.hotkey):""))
 	NewWin:=new GUIKeep("Edit_Hotkeys"),NewWin.Add("ComboBox,w400 gehfind vfind,,w","TreeView,w400 h400,,wh","Button,gehgo Default,Change Hotkey,y"),all:=menus.SN("//main/descendant::*")
-	while,aa:=all.item[A_Index-1],ea:=XML.EA(aa)
+	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
 		if(aa.NodeName="menu")
 			list.=RegExReplace(ea.clean,"_"," ") "|",aa.SetAttribute("tv",TV_Add(RegExReplace(ea.clean,"_"," ") (ea.hotkey?" - Hotkey - " Convert_Hotkey(ea.hotkey):""),SSN(aa.ParentNode,"@tv").text))
 	GuiControl,Edit_Hotkeys:,ComboBox1,%list%
@@ -3763,7 +3764,7 @@ Edit_Hotkeys(ret:=""){
 	Edit_HotkeysEscape:
 	Edit_HotkeysClose:
 	all:=menus.SN("//menu/@tv")
-	while,aa:=all.item[A_Index-1]
+	while(aa:=all.item[A_Index-1])
 		aa.RemoveAttribute("tv")
 	hwnd({rem:"Edit_Hotkeys"}),Hotkeys()
 	SetTimer,RefreshMenu,-1
@@ -3784,7 +3785,7 @@ EditHotkey(node,window){
 	info:=nw[],hotkey:=info.hotkey,edit:=info.edit,LV_Delete()
 	StringUpper,uhotkey,hotkey
 	if(dup:=menus.SN("//*[(@hotkey='" hotkey "' or @hotkey='" uhotkey "')and(@clean!='" SSN(editnode,"@clean").text "')]"))
-		while,dd:=dup.item[A_Index-1],ea:=XML.EA(dd)
+		while(dd:=dup.item[A_Index-1],ea:=XML.EA(dd))
 			LV_Add("",ea.clean)
 	return
 	CustomHotkey:
@@ -3805,10 +3806,10 @@ EditHotkey(node,window){
 	dup:=menus.SN("//*[(@hotkey='" hotkey "' or @hotkey='" uhotkey "')and(@clean!='" SSN(editnode,"@clean").text "')]")
 	if(dup.length){
 		list:=""
-		while,dd:=dup.item[A_Index-1],ea:=XML.EA(dd)
+		while(dd:=dup.item[A_Index-1],ea:=XML.EA(dd))
 			list.=ea.clean "`n"
 		if(m("This hotkey already exists for:" list "Replace?","btn:ync")="yes"){
-			while,dd:=dup.item[A_Index-1]
+			while(dd:=dup.item[A_Index-1])
 				dd.RemoveAttribute("hotkey")
 		}else
 			return
@@ -4409,7 +4410,7 @@ Find_Replace(){
 	if(info.Include)
 		Goto,frseg
 	list:=SN(Current(1),"descendant::file"),All:=Update("get").1,info:=nw[],replace:=NewLines(info.replace)
-	while,ll:=list.Item[A_Index-1]{
+	while(ll:=list.Item[A_Index-1]){
 		text:=All[SSN(ll,"@file").text]
 		if(RegExMatch(text,find,found)){
 			rep:=RegExReplace(text,find,replace),ea:=XML.EA(ll)
@@ -4809,7 +4810,7 @@ Fold_Level_X(Level=""){
 	if(level="")
 		level:=InputBox(sc.sc,"Fold Levels","Enter a level to fold`n0-100")
 	current:=0
-	while,(current<sc.2154){
+	while((current<sc.2154)){
 		fold:=sc.2223(current)
 		if (fold&0xff=level)
 			sc.2237(current,0),current:=sc.2224(current,fold)
@@ -4826,7 +4827,7 @@ Unfold_Level_X(Level=""){
 	if(ErrorLevel)
 		return
 	fold=0
-	while,sc.2618(fold)>=0,fold:=sc.2618(fold){
+	while(sc.2618(fold)>=0,fold:=sc.2618(fold)){
 		lev:=sc.2223(fold)
 		if(lev&0xff=level)
 			sc.2237(fold,1)
@@ -4870,7 +4871,7 @@ Full_Backup(remove:=0){
 		}
 	}else{
 		allfiles:=SN(Current(1),"descendant::file/@file")
-		while,af:=allfiles.item[A_Index-1]{
+		while(af:=allfiles.item[A_Index-1]){
 			file:=Trim(RegExReplace(af.text,"i)\Q" dir "\E"),"\")
 			SplitPath,file,filename,ddir
 			if(!FileExist(Backup "\" ddir))
@@ -4985,50 +4986,21 @@ GetControl(ctrl){
 		node:=MainWin.gui.SSN("//*[@hwnd='" ctrl+0 "']")
 	return node
 }
-GetCurrentClass(Line){
+GetCurrentClass(){
 	ScanFile.RemoveComments(Current(3),,1),Text:=ScanFile.CurrentText,b:=v.OmniFind[Current(3).Lang].Class,Pos:=LastPos:=1
-	if(!InStr(Text,Chr(127)))
+	if(!InStr(Text,Chr(127))||!b.Open)
 		return
 	while(RegExMatch(Text,b.regex,Found,Pos),Pos:=Found.Pos(0)+Found.Len(0)){
 		if(Pos=LastPos)
 			Break
-		LastPos:=Pos
-		if(b.Open){
-			Search:=b.Open,Start:=Pos1:=Found.Pos(1),Open:=LastPos1:=0,Bounds:=b.Bounds
-			Loop
-			{
-				RegExMatch(Text,b.Open,OpenObj,Pos1),RegExMatch(Text,b.Close,Close,Pos1),OP:=OpenObj.Pos(1),CP:=Close.Pos(1)
-				if(!OP||!CP)
-					Break
-				if(CP<OP)
-					Pos1:=CP+Close.Len(1),FoundSearch:=Close.0,FIS:="Close"
-				else
-					Pos1:=OP+OpenObj.Len(1),FoundSearch:=OpenObj.0,FIS:="Open"
-				RegExReplace(FoundSearch,"(" Bounds ")",,Count)
-				if(Count){
-					Open+=FIS="Open"?+Count:-Count
-					SavedPos:=Pos1
-					if(Open<=0)
-						Break
-				}if(Pos1=LastPos1)
-					Break
-				LastPos1:=Pos1
-		}}if(InStr(SubStr(Text,Start,SavedPos-Start),Chr(127)))
-			return Show_Class_Methods(Found.1)
-	}
-}
-Class Spoonz{
-	Class Food{
-		Farts(){
-			this.Things:="Farts"
-			/*
-				this.
-				this.
-			*/
-			
-		}
-	}
-}
+		LastPos:=Pos,b.Text:=Text,Text1:=SearchFor(b,Found.Pos(1)).Text
+		if(InStr(Text1,Chr(127))){
+			Text:=Text1,Pos:=1,Outer:=Found.1,b.Text:=Text
+			while(RegExMatch(Text,b.regex,Found,Pos),Pos:=Found.Pos(1)+Found.Len(1))
+				if(InStr(SearchFor(b,Found.Pos(1)).Text,Chr(127)))
+					return Found.1
+			return Outer
+}}}
 GetID(){
 	static ID:=0
 	return ++ID
@@ -5983,7 +5955,7 @@ Menu_Help(){
 	return
 	MHPopulate:
 	Default("SysTreeView321","Menu_Help"),TV_Delete(),all:=help.SN("//main/descendant::*")
-	while,aa:=all.item[A_Index-1],ea:=XML.EA(aa)
+	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
 		if(aa.nodename!="separator")
 			aa.SetAttribute("tv",TV_Add(RegExReplace(ea.clean,"_"," "),SSN(aa.ParentNode,"@tv").text))
 	return
@@ -6986,17 +6958,6 @@ Notify(csc*){
 				if(sc.2008=sc.2009&&fn.ModType&0x20=0&&fn.ModType&0x40=0)
 					epos:=fn.position,del:=sc.2007(epos),poskeep:=""
 				start:=sc.2166(fn.position),end:=sc.2166(fn.position+fn.length)
-				/*
-					if(start!=end){
-						RemoveLines(start,sc.2166(fn.position+fn.length-1))
-						SetScan()
-					}else
-						
-					Run,%A_StartMenu%
-				*/
-				/*
-					t("Deleted",A_TickCount,"time:2")
-				*/
 				if(!v.LineEdited[start]){
 					if(MainWin.tnsc.sc!=ctrl)
 						SetScan(start)
@@ -7106,10 +7067,12 @@ Notify(csc*){
 				if(pos:=fn.Position+StrPut(Found.1,"UTF-8")-1)
 					sc.2025(pos)
 			}else if(fn.ListType=11){
-				ea:=Settings.EA("//ReplaceRegex/Replace[@name='" fn.Text "']"),sc.2078(),In:=ea.In,Out:=ea.Out
+				ea:=Settings.EA(Node:=Settings.SSN("//ReplaceRegex/Replace[@name='" fn.Text "']")),sc.2078(),In:=ea.In,Out:=ea.Out
 				Loop,% sc.2570
 					Start:=sc.2585(A_Index-1),End:=sc.2587(A_Index-1),Text:=sc.TextRange(Start,End),sc.2190(Start),sc.2192(End),Text:=RegExReplace(Text,In,Out),sc.2194(StrPut(Text,"UTF-8")-1,Text)
-				sc.2079()
+				sc.2079(),Parent:=Node.ParentNode
+				if(SN(Parent,"*").length>1&&Node.PreviousSibling)
+					Parent.InsertBefore(Node,SSN(Parent,"*")),m("HERE!")
 			}
 		}else if(fn.Code=2022){
 			v.Word:=fn.Text,List:=""
@@ -7733,12 +7696,12 @@ Personal_Variable_List(){
 	NewWin:=new GUIKeep(6),NewWin.Add("ListView,w200 h400,Variables,wh","Edit,w200 vvariable,,yw","Button,gaddvar Default,Add,y","Button,x+10 gvdelete,Delete Selected,y")
 	NewWin.Show("Variables",1),vars:=Settings.SN("//Variables/*")
 	ControlFocus,Edit1,% hwnd([6])
-	while,vv:=vars.item(A_Index-1)
+	while(vv:=vars.item(A_Index-1))
 		LV_Add("",vv.text)
 	ControlFocus,Edit1,% hwnd([6])
 	return
 	vdelete:
-	while,LV_GetNext(){
+	while(LV_GetNext()){
 		LV_GetText(string,LV_GetNext()),rem:=Settings.SSN("//Variable[text()='" string "']")
 		rem.ParentNode.RemoveChild(rem),LV_Delete(LV_GetNext())
 	}
@@ -7762,7 +7725,7 @@ Plug(refresh:=0){
 	plHks:=[]
 	if(refresh){
 		list:=menus.SN("//main/menu[@clean='Plugin']/menu")
-		while,ll:=list.item[A_Index-1],ea:=XML.EA(ll)
+		while(ll:=list.item[A_Index-1],ea:=XML.EA(ll))
 			if(!FileExist(ea.plugin))
 				ll.ParentNode.RemoveChild(ll)
 	}Loop,Files,plugins\*.ahk
@@ -7771,7 +7734,7 @@ Plug(refresh:=0){
 			plugin:=menus.Add("menu",{clean:"Plugin",name:"P&lugin"},,1)
 		FileRead,plg,%A_LoopFileFullPath%
 		pos:=1
-		while,pos:=RegExMatch(plg,"Oim)\;menu\s+(.*)\R",found,pos){
+		while(pos:=RegExMatch(plg,"Oim)\;menu\s+(.*)\R",found,pos)){
 			item:=StrSplit(found.1,","),item.1:=Trim(item.1,"`r|`r`n|`n")
 			if(!ii:=menus.SSN("//*[@clean='" Clean(Trim(item.1)) "']"))
 				ii:=menus.Under(plugin,"menu",{name:Trim(item.1),clean:Clean(item.1),plugin:A_LoopFileFullPath,option:item.2,hotkey:plHks[item.1]})
@@ -7799,7 +7762,7 @@ PosInfo(){
 }
 Previous_File(){
 	Default("SysTreeView321"),prev:=0,tv:=TV_GetSelection()
-	while,tv!=prev:=TV_GetNext(prev,"F")
+	while(tv!=prev:=TV_GetNext(prev,"F"))
 		newtv:=prev
 	TV_Modify(newtv,"Select Vis Focus")
 }
@@ -7826,7 +7789,7 @@ Previous_Scripts(filename=""){
 	return
 	PSClean:
 	scripts:=Settings.SN("//previous_scripts/*"),filelist:=[]
-	while,ss:=scripts.item[A_Index-1],ea:=XML.EA(ss)
+	while(ss:=scripts.item[A_Index-1],ea:=XML.EA(ss))
 		if(!FileExist(ss.text))
 			filelist.push(ss)
 	for a,b in filelist
@@ -7836,10 +7799,10 @@ Previous_Scripts(filename=""){
 	return
 	PSRemove:
 	filelist:=[]
-	while,next:=LV_GetNext()
+	while(next:=LV_GetNext())
 		LV_GetText(file,next),filelist[file]:=1,LV_Modify(next,"-Select")
 	scripts:=Settings.SN("//previous_scripts/*")
-	while,scr:=scripts.item[A_Index-1]
+	while(scr:=scripts.item[A_Index-1])
 		if(filelist[scr.text])
 			scr.ParentNode.RemoveChild(scr)
 	Goto,populateps
@@ -7854,7 +7817,7 @@ Previous_Scripts(filename=""){
 	return
 	PSOpen:
 	Default("SysListView321","Previous_Scripts"),openlist:=""
-	while,next:=LV_GetNext()
+	while(next:=LV_GetNext())
 		LV_GetText(file,next),openlist.=file "`n",LV_Modify(next,"-Select")
 	Open(Trim(openlist,"`n")),tv(SSN(files.Find("//file/@file",StrSplit(openlist,"`n").1),"@tv").text),nw.Exit()
 	return
@@ -7863,7 +7826,7 @@ Previous_Scripts(filename=""){
 	Gui,Previous_Scripts:ListView,SysListView321
 	scripts:=Settings.SN("//previous_scripts/*")
 	LV_Delete(),sort:=nw[].Sort
-	while,scr:=scripts.item[A_Index-1]{
+	while(scr:=scripts.item[A_Index-1]){
 		if(PSBreak)
 			break
 		info:=scr.text
@@ -7983,11 +7946,11 @@ Publish(return=""){
 	number:=SSN(vversion.Find("//info/@file",Current(2).file),"descendant::version/@number").text
 	if(!number)
 		number:=SSN(vversion.Find("//info/@file",Current(2).file),"descendant::version/@name").text
-	while,ii:=includes.item[A_Index-1]
+	while(ii:=includes.item[A_Index-1])
 		if(InStr(publish,SSN(ii,"@include").text))
 			StringReplace,publish,publish,% SSN(ii,"@include").text,% Update({encoded:SSN(ii,"@file").text}),All
 	rem:=SN(Current(1),"descendant::remove")
-	while,rr:=rem.Item[A_Index-1]
+	while(rr:=rem.Item[A_Index-1])
 		publish:=RegExReplace(publish,"m)^\Q" SSN(rr,"@inc").text "\E$")
 	change:=Settings.SSN("//auto_version").text?Settings.SSN("//auto_version").text:"Version:=" Chr(34) "$v" Chr(34)
 	if(InStr(publish,Chr(59) "auto_version"))
@@ -8021,7 +7984,7 @@ PublishIndent(Code,Indent:="`t",Newline:="`r`n"){
 			Current:=Lock,Cur:=0
 		Braces:=Round(Current[Current.MaxIndex()].Braces),ParentIndent:=Round(ParentIndentObj[Cur])
 		if(First=="}"){
-			while,((Found:=SubStr(Text,A_Index,1))~="}|\s"){
+			while(((Found:=SubStr(Text,A_Index,1))~="}|\s")){
 				if(Found~="\s")
 					continue
 				if(Cur&&Current.MaxIndex()<=1)
@@ -8193,7 +8156,7 @@ Quick_Scintilla_Code_Lookup(){
 		return
 	}
 	slist:=scintilla.SN("//commands/item[contains(@name,'" word "')]"),ll:="",count:=0
-	while,sl:=slist.item[A_Index-1]
+	while(sl:=slist.item[A_Index-1])
 		ll.=SSN(sl,"@name").text " ",count++
 	if(count=0)
 		return
@@ -8361,54 +8324,6 @@ RemoveComment(text){
 RemoveHistory(ea){
 	while(hh:=History.SSN("//*[@id='" ea.ID "']"))
 		hh.ParentNode.RemoveChild(hh)
-}
-RemoveLines(start,end){
-	return
-	static current,Classes,AllText,OText,node
-	current:=Current(5),sc:=csc(),StartScan:=sc.2167(start),AllText:=sc.GetUNI(),EndScan:=sc.2136(end),LineStatus.Delete(start,end),Classes:=[]
-	if(StartScan>EndScan)
-		return
-	if(start=end&&sc.2127(start)=0)
-		return
-	RemoveClassText:=text:=OText:=sc.TextRange(StartScan,EndScan),Omni:=GetOmni(SSN(Current,"@ext").text)
-	if(!Trim(OText))
-		return
-	for a,b in [start,end]
-		if(sc.2225(b)>=0){
-			while((b:=sc.2225(b))>=0)
-				if(RegExMatch(ScanLines(b).text,Omni.Class,found))
-					lastclass:=found.2
-			Classes.push(lastclass)
-		}
-	if(Classes.1==Classes.2&&Classes.1)
-		node:=SSN(current,"descendant::*[@type='Class' and @text='" Classes.1 "']"),RemoveAllButClass(text,current),Code_Explorer.RemoveTV(SN(node,"descendant-or-self::*"))
-	else if(!Classes.1&&!Classes.2){
-		RemoveAllButClass(text,current)
-	}else if(Classes.1||Classes.2){
-		class1:=GetClassText(AllText,Classes.1,,Omni),class2:=GetClassText(AllText,Classes.2,,Omni),Class(class1,current,1),Class(class2,current,1)
-		for a,b in [class1,class2]{
-			start:=0,total:="",text:=Trim(text,"`n")
-			for c,d in StrSplit(text,"`n"){
-				if(!start&&InStr(b,d))
-					start:=1
-				if(!InStr(b,d)&&start)
-					Break
-				if(start)
-					total.="`n" d
-			}
-			StringReplace,text,text,% Trim(total,"`n")
-		}RemoveAllButClass(text,current)
-	}
-	SetTimer,RLRC,-10
-	SetTimer,RWID,-100
-	return
-	RWID:
-	Words_In_Document(1,OText,1,1)
-	return
-	RLRC:
-	Class(GetClassText(csc().GetUNI(),Classes.1,,GetOmni(Current(3).ext)),current)
-	GuiControl,1:+Redraw,SysTreeView322
-	return
 }
 Rename_Current_Include(current:=""){
 	if(!current.xml)
@@ -8597,9 +8512,9 @@ Run_Comment_Block(){
 	if (sc.2127(line)>0){
 		up:=down:=line
 		ss:=sc.2127(line)-tab
-		while,sc.2127(--line)!=ss
+		while(sc.2127(--line)!=ss)
 			up:=line
-		while,sc.2127(++line)!=ss
+		while(sc.2127(++line)!=ss)
 			down:=line
 	}
 	Dynarun(sc.textrange(sc.2128(up),sc.2136(down)))
@@ -8925,37 +8840,11 @@ ScanFiles(){
 		SetTimer,AutoExpand,-200
 	v.Startup:=0,Words_In_Document(1),Code_Explorer.AutoCList(1),csc({last:1})
 }
-ScanLines(line){
-	sc:=csc(),total:=sc.2154
-	if(RegExMatch(sc.GetLine(line),"^\s*\{")){
-		Loop,% line+1{
-			LineText:=sc.GetLine(line-(A_Index-1))
-			if(SubStr(Trim(RegExReplace(LineText,"(\s+;.*)|(\s*)"),"`n"),0,1)="{"&&A_Index>1) ;#[AHK-Studio]
-				return {text:text,line:line-(A_Index-1)}
-			if(A_Index>1&&!RegExMatch(LineText,"^\s*;"))
-				return {text:LineText text,line:line-(A_Index-1)}
-			text:=LineText text
-		}
-	}else{
-		Loop,% total-line{
-			LineText:=sc.GetLine(line+(A_Index-1))
-			if(SubStr(Trim(RegExReplace(LineText,"(\s+;.*)|(\s*)"),"`n"),0,1)="{"&&A_Index=1)
-				return {text:LineText,line:line}
-			if(RegExMatch(LineText,"^\s*\{"))
-				return {text:text.=LineText,line:line} ;#[AHK-Studio]
-			else if(A_Index>1&&!RegExMatch(LineText,"^\s*;"))
-				return {text:text,line:line}
-			else if(RegExMatch(LineText,"^\s*\}")&&A_Index>1)
-				return {text:text,line:line}
-			text.=LineText
-		}return {text:text,line:line}
-	}
-}
 Scintilla_Code_Lookup(){
 	static slist,cs,NewWin
 	Scintilla(),slist:=scintilla.SN("//commands/item")
 	NewWin:=new GUIKeep(8),NewWin.Add("Edit,Uppercase w500 gCodeSort vcs,,w","ListView,w720 h500 -Multi,Name|Code|Syntax,wh","Radio,xm Checked gCodeSort,&Commands,y","Radio,x+5 gCodeSort,C&onstants,y","Radio,x+5 gCodeSort,&Notifications,y","Button,xm ginsert Default,Insert code into script,y","Button,gdocsite,Goto Scintilla Document Site,y")
-	while,sl:=slist.item(A_Index-1)
+	while(sl:=slist.item(A_Index-1))
 		LV_Add("",SSN(sl,"@name").text,SSN(sl,"@code").text,SSN(sl,"@syntax").text)
 	NewWin.Show("Scintilla Code Lookup")
 	Loop,3
@@ -8980,7 +8869,7 @@ Scintilla_Code_Lookup(){
 			break
 	}
 	slist:=scintilla.SN("//" value "/*[contains(@name,'" cs "')]")
-	while,(sl:=XML.EA(slist.item(A_Index-1))).name
+	while((sl:=XML.EA(slist.item(A_Index-1))).name)
 		LV_Add("",sl.name,sl.code,sl.syntax)
 	LV_Modify(1,"Select Vis Focus")
 	Loop,3
@@ -9001,7 +8890,7 @@ Scintilla_Code_Lookup(){
 }
 Scintilla_Control(){
 	sc:=csc(),test:=MainWin.Gui.SN("//*[@type='Scintilla']"),list:="",v.jts:=[]
-	while,ss:=test.item[A_Index-1],ea:=XML.EA(ss)
+	while(ss:=test.item[A_Index-1],ea:=XML.EA(ss))
 		list.=ea.file ",",v.jts[ea.file]:=ea.hwnd
 	sc.2106(44),sc.2117(7,Trim(list,",")),sc.2106(32)
 }
@@ -10021,24 +9910,24 @@ Show_Class_Methods(object,search:=""){
 	static list
 	sc:=csc()
 	if(object="this")
-		class:=GetCurrentClass(sc.2166(sc.2008)),list:=SN(class.node,"descendant::*[@type='Method']")
+		class:=GetCurrentClass(),Node:=SSN(Current(7),"descendant::*[@upper='" Upper(Class) "' and @type='Class']"),list:=SN(Node,"*[@type='Method']")
 	else if(class:=SSN((parent:=Current(7)),"descendant::*[@type='Instance' and @upper='" Upper(object) "']/@class").text){
-		list:=SN(parent,"descendant::*[@type='Class' and @upper='" Upper(Class) "']/descendant::*[@type='Method']")
+		list:=SN(parent,"descendant::*[@type='Class' and @upper='" Upper(Class) "']/*[@type='Method']")
 	}else if(parent:=SSN(Current(7),"descendant::*[@type='Class' and @upper='" Upper(object) "']"))
-		list:=SN(parent,"descendant::*[@type='Method']")
-	while,ll:=list.item[A_Index-1],ea:=XML.EA(ll)
+		list:=SN(parent,"*[@type='Method']")
+	while(ll:=list.item[A_Index-1],ea:=XML.EA(ll))
 		if(RegExMatch(ea.text,"i)\b" search))
-			total.=ea.text " "
-	if(total:=Trim(total))
-		sc.2117(3,total)
+			Total.=ea.text " "
+	if(Total:=Trim(Total))
+		sc.2117(3,Total)
 	return sc.2102?1:0
 }
 Show_Scintilla_Code_In_Line(){
 	Scintilla(),sc:=csc()
    	text:=sc.TextRange(sc.2128(sc.2166(sc.2008)),sc.2136(sc.2166(sc.2008))),pos:=1
-	while,RegExMatch(text,"O)(\d\d\d\d)",found,pos),pos:=found.pos(1)+found.len(1){
+	while(RegExMatch(text,"O)(\d\d\d\d)",found,pos),pos:=found.pos(1)+found.len(1)){
 		codes:=scintilla.SN("//*[@code='" found.1 "']"),list.="Code : " found.1 " = "
-		while,c:=codes.item(A_Index-1)
+		while(c:=codes.item(A_Index-1))
 			list.=A_Index>1?" - " SSN(c,"@name").text:SSN(c,"@name").text
 		list.="`n"
 	}
@@ -10057,7 +9946,7 @@ ShowAutoComplete(){
 			List.=" " node.text
 		List.=" " Keywords.Personal " ",List.=" " Keywords.Suggestions[Language,FirstTwo] " ",List:=Trim(List)
 		Sort,List,CUD%A_Space%
-		if(List&&InStr(List,word)&&word)
+		if((List&&InStr(List,word)&&word))
 			sc.2100(StrLen(word),Trim(List))
 	}
 }
@@ -10067,7 +9956,7 @@ ShowLabels(x:=0){
 	if(x!="nocomma")
 		Loop,% sc.2570
 			cpos:=sc.2585(A_Index-1),InsertMultiple(A_Index-1,cpos,",",cpos+1)
-	while,aa:=all.item[A_Index-1]
+	while(aa:=all.item[A_Index-1])
 		if(!dup[aa.text])
 			list.=aa.text " ",dup[aa.Text]:=1
 	Sort,list,list,D%A_Space%
@@ -10124,7 +10013,7 @@ Switch_Focus(){
 	hwnd:=hwnd=MainWin.tnsc.sc?MainWin.tnsc.sc+0:hwnd+0,sc:=csc(),test:=MainWin.Gui.SN("//*[@type='Scintilla']"),list:="",v.jts:=[]
 	if(hwnd!=MainWin.tnsc.sc)
 		list:="Tracked Notes,",v.jts["Tracked Notes"]:=MainWin.tnsc.sc
-	while,ss:=test.item[A_Index-1],ea:=XML.EA(ss){
+	while(ss:=test.item[A_Index-1],ea:=XML.EA(ss)){
 		if(hwnd=ea.hwnd)
 			Continue
 		if(ea.type="scintilla"){
@@ -10191,7 +10080,7 @@ Toggle_Comment_Line(){
 	pi:=PosInfo(),sl:=sc.2166(pi.start),el:=sc.2166(pi.end),end:=pi.end,single:=sl=el?1:0
 	replace:=Settings.SSN("//comment").text,replace:=replace?replace:";",replace:=RegExReplace(replace,"%a_space%"," ")
 	if(v.options.Build_Comment!=1){
-		while,(sl<=el){
+		while((sl<=el)){
 			letter:=sc.textrange(min:=sc.2128(sl),min+StrLen(replace))
 			if(min>end&&!single)
 				break
@@ -10296,7 +10185,7 @@ Toolbar_Editor(control){
 	nw.Add("ComboBox,gtesearch w460 vedit gTEFindTV,,w","ListView,xm w260 h200 gTESelect AltSubmit -Multi,Toolbars,h","TreeView,x+0 w200 h200 Checked AltSubmit,,wh","ListView,x+M200 yM w" width " h180 icon Section gSelectIcon AltSubmit,Icon,xh")
 	ControlGet,hwnd,hwnd,,SysListView322,% hwnd(["Toolbar_Editor"])
 	new Icon_Browser(nw,hwnd,"Toolbar_Editor","xy",300,"Toolbar_Editor","Toolbar_Editor"),nw.Add("Button,xm gTEHighlight,Toolbar Selection Highlight Color,y","Button,x+M gNextChecked,&Next Button,y","Button,x+M gAddExternal,Add &External Program,y"),nw.show("Toolbar Editor"),total:="",cross:=[],Default("SysTreeView321","Toolbar_Editor"),all:=menus.SN("//main/descendant::*")
-	while,aa:=all.item[A_Index-1],ea:=XML.EA(aa){
+	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
 		if(aa.HasChildNodes())
 			aa.SetAttribute("tv",TV_Add(ea.clean,SSN(aa.ParentNode,"@tv").text))
 		else if(aa.nodename="menu")
@@ -10351,7 +10240,7 @@ Toolbar_Editor(control){
 	Toolbar_EditorClose:
 	Gui,1:-Disabled
 	nw.SavePos(),nw.Exit(),nw.Destroy(),remtv:=menus.SN("//*[@tv]"),oea:=LastID:=OControl:=nw:=tb:=""
-	while,rr:=remtv.item[A_Index-1],ea:=XML.EA(rr)
+	while(rr:=remtv.item[A_Index-1],ea:=XML.EA(rr))
 		rr.RemoveAttribute("tv")
 	Gosub,ResetToolbar
 	return
@@ -10444,7 +10333,7 @@ class Tracked_Notes{
 	}
 	Populate(){
 		TVC.Default(3),this.XML.SSN("//*[@tv='" TV_GetSelection() "']").SetAttribute("last",1),all:=this.XML.SN("//*"),TVC.Delete(3,0)
-		while,aa:=all.item[A_Index-1],ea:=XML.EA(aa){
+		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
 			if(aa.NodeName="global")
 				Continue
 			if(aa.NodeName="master"||aa.NodeName="file"||aa.NodeName="main")
@@ -10691,7 +10580,7 @@ Undo(){
 }
 UnSaved(){
 	un:=files.SN("//main[@untitled]"),ts:=Settings.SSN("//template").text,file:=FileOpen("c:\windows\shellnew\template.ahk",0),td:=file.Read(file.length),file.Close(),template:=ts?ts:td
-	while,uu:=un.item[A_Index-1],ea:=XML.EA(uu.FirstChild){
+	while(uu:=un.item[A_Index-1],ea:=XML.EA(uu.FirstChild)){
 		text:=Update({encoded:ea.file})
 		if(text=template)
 			Continue
@@ -11136,14 +11025,6 @@ class ScanFile{
 			Text:=RegExReplace(Text,"\R\R")
 			ScanFile.CurrentText:=Text
 		}
-		/*
-			if(ea.FileName="AHK-Studio.ahk")
-				m(Clipboard:=RegExReplace(Text,"\R","`r`n"))
-		*/
-		/*
-			if(!Scanfile.Once)
-				m(Search.Open,"","",Text),Scanfile.Once:=1
-		*/
 		if(Language)
 			return Text
 		if(!ea.ID)
@@ -11377,7 +11258,7 @@ Regex_Replace_Selected(){
 		return Regex_Replace_Selected_Dialog()
 	while(aa:=all.item[A_Index-1])
 		List.=aa.text "|"
-	sc.2106(124),sc.2117(11,Trim(List,"|")),sc.2106(32)
+	sc.2106(124),Order:=sc.2661(),sc.2660(2),sc.2117(11,Trim(List,"|")),sc.2106(32),sc.2660(1)
 }
 Regex_Replace_Selected_Dialog(){
 	static
@@ -11485,4 +11366,31 @@ Restore_Current_File(){
 		File.Close()
 	}LastTV:=TV
 	return
+}
+SearchFor(b,Pos1){
+	Start:=Pos1,Open:=0,Text:=b.Text
+	Loop
+	{
+		RegExMatch(Text,b.Open,OpenObj,Pos1),RegExMatch(Text,b.Close,Close,Pos1),OP:=OpenObj.Pos(1),CP:=Close.Pos(1)
+		if(!OP&&!CP)
+			Break
+		if(CP&&OP){
+			if(CP<OP)
+				Pos1:=CP+Close.Len(1),FoundSearch:=Close.0,FIS:="Close"
+			else
+				Pos1:=OP+OpenObj.Len(1),FoundSearch:=OpenObj.0,FIS:="Open"
+		}else if(CP&&!OP)
+			Pos1:=CP+Close.Len(1),FoundSearch:=Close.0,FIS:="Close"
+		else if(OP&&!CP)
+			Pos1:=OP+OpenObj.Len(1),FoundSearch:=OpenObj.0,FIS:="Open"
+		RegExReplace(FoundSearch,"(" b.Bounds ")",,Count)
+		if(Count){
+			Open+=FIS="Open"?+Count:-Count
+			SavedPos:=Pos1
+			if(Open<=0)
+				Break
+		}if(Pos1=LastPos1)
+			Break
+		LastPos1:=Pos1
+	}return {Text:SubStr(Text,Start,SavedPos-Start),SavedPos:SavedPos,Pos1:Pos1}
 }
