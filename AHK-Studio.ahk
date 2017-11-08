@@ -169,7 +169,7 @@ Testing(){
 		return sc.2160(Start.1,End.1)
 		return m((Lang:=GetLanguage(sc)),sc.2010(sc.2008),Keywords.GetXML(Lang)[])
 	*/
-	if(A_UserName!="maestrith")
+	if(A_UserName!="maest")
 		return m("Testing")
 	/*
 		return m(TVC.Controls.1.hwnd) ;the hwnd for Project Explorer
@@ -4224,7 +4224,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20161107223002,XMLFiles:={menus:[20171107073055,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20161107223002,XMLFiles:={menus:[20171108075553,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20170926222816,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -4987,6 +4987,8 @@ GetControl(ctrl){
 }
 GetCurrentClass(Line){
 	ScanFile.RemoveComments(Current(3),,1),Text:=ScanFile.CurrentText,b:=v.OmniFind[Current(3).Lang].Class,Pos:=LastPos:=1
+	if(!InStr(Text,Chr(127)))
+		return
 	while(RegExMatch(Text,b.regex,Found,Pos),Pos:=Found.Pos(0)+Found.Len(0)){
 		if(Pos=LastPos)
 			Break
@@ -5014,7 +5016,17 @@ GetCurrentClass(Line){
 		}}if(InStr(SubStr(Text,Start,SavedPos-Start),Chr(127)))
 			return Show_Class_Methods(Found.1)
 	}
-}			
+}
+Class Spoonz{
+	Farts(){
+		this.Things:="Farts"
+		/*
+			this.
+			this.
+		*/
+		
+	}
+}
 GetID(){
 	static ID:=0
 	return ++ID
@@ -6003,11 +6015,11 @@ Menu(menuname:="main"){
 		top:=v.hkxml.Add("win",{hwnd:hwnd(1)},,1)
 	Disable:=[]
 	Menu,%menuname%,UseErrorLevel,On
-	while,mm:=topmenu.item[A_Index-1],ea:=XML.EA(mm)
+	while(mm:=topmenu.item[A_Index-1],ea:=XML.EA(mm))
 		if(mm.HasChildNodes())
 			Menu,% ea.name,DeleteAll
 	Menu,%menuname%,DeleteAll
-	while,aa:=menu.item[A_Index-1],ea:=XML.EA(aa),pea:=XML.EA(aa.ParentNode){
+	while(aa:=menu.item[A_Index-1],ea:=XML.EA(aa),pea:=XML.EA(aa.ParentNode)){
 		parent:=pea.name?pea.name:menuname
 		if(ea.hide)
 			Continue
@@ -6015,7 +6027,7 @@ Menu(menuname:="main"){
 			if(aa.nodename="separator"){
 				Menu,%parent%,Add
 				Continue
-			}if((!IsFunc(ea.clean)&&!IsLabel(ea.clean))&&!ea.plugin&&!v.options.HasKey(ea.clean)){
+			}if((!IsFunc(ea.clean)&&!IsLabel(ea.clean))&&!ea.plugin&&!v.Options.HasKey(ea.clean)){
 				Disable[parent,ea.name (ea.hotkey?"`t" Convert_Hotkey(ea.hotkey):"")]:=1
 				aa.SetAttribute("no",1) ;,fixlist.=ea.clean "`n"
 				aa.SetAttribute("delete",1)
@@ -6260,11 +6272,10 @@ MenuWipe(x:=0){
 	all:=menus.SN("//*")
 	if(x)
 		Gui,1:Menu
-	while,aa:=all.item[A_Index-1],ea:=XML.EA(aa){
+	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
 		parent:=SSN(aa.ParentNode,"@name").text,hotkey:=SSN(aa,"@hotkey").text,hotkey:=hotkey?"`t" Convert_Hotkey(hotkey):"",current:=SSN(aa,"@name").text
 		Menu,%parent%,Delete,% current hotkey
-	}
- 	while,aa:=all.item[A_Index-1],ea:=XML.EA(aa)
+	}while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
 		if(SSN(aa,"descendant::*"))
 			Menu,main,Delete,% ea.name
 	Sleep,100
@@ -6455,7 +6466,7 @@ NewIndent(indentwidth:=""){
 			block:=[],aa:=0
 		block.MinIndex()?(current:=block,cur:=1):(current:=lock,cur:=0),braces:=current[current.MaxIndex()].braces+1?current[current.MaxIndex()].braces:0,aa:=aaobj[cur]+0?aaobj[cur]:0
 		if(first="}"){
-			while,((found:=SubStr(text,A_Index,1))~="(}|\s)"){
+			while(((found:=SubStr(text,A_Index,1))~="(}|\s)")){
 				if(found~="\s")
 					Continue
 				if(cur&&current.MaxIndex()<=1)
@@ -7092,6 +7103,11 @@ Notify(csc*){
 				name:=fn.Text,sc.2645(fn.Position,Abs(fn.Position-sc.2008)),RegExMatch(name,"O)\|\s+(.*)",Found),sc.2025(fn.Position),sc.2003(fn.Position,Found.1)
 				if(pos:=fn.Position+StrPut(Found.1,"UTF-8")-1)
 					sc.2025(pos)
+			}else if(fn.ListType=11){
+				ea:=Settings.EA("//ReplaceRegex/Replace[@name='" fn.Text "']"),sc.2078(),In:=ea.In,Out:=ea.Out
+				Loop,% sc.2570
+					Start:=sc.2585(A_Index-1),End:=sc.2587(A_Index-1),Text:=sc.TextRange(Start,End),sc.2190(Start),sc.2192(End),Text:=RegExReplace(Text,In,Out),sc.2194(StrPut(Text,"UTF-8")-1,Text)
+				sc.2079()
 			}
 		}else if(fn.Code=2022){
 			v.Word:=fn.Text,List:=""
@@ -7244,7 +7260,7 @@ Omni_Search(start=""){
 		if(found.1="^")
 			OnlyTop:=1
 		pos:=1,replist:=[],find1:="",index:=1
-		while,RegExMatch(search,"O)(\W)",found,pos),pos:=found.Pos(1)+found.len(1){
+		while(RegExMatch(search,"O)(\W)",found,pos),pos:=found.Pos(1)+found.len(1)){
 			if(found.1=" ")
 				Continue
 			if(pre:=omni_search_class.prefix[found.1]){
@@ -7673,7 +7689,7 @@ ShowOSD(show){
 		node:=list.under(top,"item",{name:show,count:1})
 	LV_Delete()
 	all:=list.SN("//item")
-	while,aa:=all.item[A_Index-1],ea:=XML.EA(aa)
+	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
 		LV_Add("",ea.name,ea.count)
 	Loop,2
 		LV_ModifyCol(A_Index,"AutoHDR")
@@ -11351,13 +11367,24 @@ DLG_FileSave(HWND:=0,DefaultFilter=1,DialogTitle="Select file to open",DefaultFi
 	return FileName
 }
 Regex_Replace_Selected(){
+	sc:=csc()
+	if(sc.2008=sc.2009)
+		return m("Please select some text first")
+	all:=Settings.SN("//ReplaceRegex/Replace/@name")
+	if(all.Length=0)
+		return Regex_Replace_Selected_Dialog()
+	while(aa:=all.item[A_Index-1])
+		List.=aa.text "|"
+	sc.2106(124),sc.2100(0,Trim(List,"|")),sc.2106(32)
+}
+Regex_Replace_Selected_Dialog(){
 	static
 	Gui,Regex:Destroy
 	Gui,Regex:Default
 	sc:=csc(),Text:=sc.TextRange(sc.2585(0),sc.2587(0))
 	if(!Text)
 		return m("Please select some text first")
-	NewWin:=new GUIKeep("Regex"),NewWin.Add("Edit,vText ReadOnly w500,,w","ListView,w500 r5 AltSubmit gLVRegexReplace,Name|In|Out,wh","Edit,gGoRegEx w250 vIn,,y","Edit,x+0 gGoRegEx w250 vOut,,wy","Edit,xm w500 h200,,wy","Button,gReplaceRegexGo,&Replace Selected,y","Button,x+M gSaveReplaceRegex,&Save,y","Button,x+M gReplaceRegexDelete,&Delete,y")
+	NewWin:=new GUIKeep("Regex"),NewWin.Add("Edit,vText ReadOnly w500,,w","ListView,w500 r5 AltSubmit gLVRegexReplace,Name|In|Out,wh","Edit,gGoRegEx w250 vIn,Regex String,y","Edit,x+0 gGoRegEx w250 vOut,Regex Replace,wy","Edit,xm w500 h200,,wy","Button,gReplaceRegexGo,&Replace Selected,y","Button,x+M gSaveReplaceRegex,&Save,y","Button,x+M gReplaceRegexDelete,&Delete,y")
 	GuiControl,Regex:,Edit1,%Text%
 	NewWin.Show("Regex Replace")
 	Gosub,PopulateReplaceRegex
@@ -11371,8 +11398,7 @@ Regex_Replace_Selected(){
 		LV_GetText(In,Next,2),LV_GetText(Out,Next,3)
 		if(Node:=Settings.SSN("//ReplaceRegex/Replace[@in='" In "' and @out='" Out "']"))
 			List.Push(Node)
-	}
-	for a,b in List
+	}for a,b in List
 		b.ParentNode.RemoveChild(b)
 	Goto,PopulateReplaceRegex
 	return
