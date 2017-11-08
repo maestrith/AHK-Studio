@@ -268,7 +268,7 @@ AddInclude(Filename:="",text:="",pos:="",Show:=1){
 				TV:=SSN(Node,"@tv").text
 	}}else
 		TV:=SSN(current,"@tv").text
-	new:=files.Under(current,"file",{id:GetID(),encoding:"UTF-8",file:filename,include:"#Include " rel,inside:SSN(current,"@file").text,dir:dir,filename:fn,github:fn,nne:nne,time:time,encoding:"UTF-8",scan:1,ext:Ext,tv:TVC.Add(1,fn,TV,"Sort")})
+	new:=files.Under(current,"file",{id:GetID(),encoding:"UTF-8",file:filename,include:"#Include " rel,inside:SSN(current,"@file").text,dir:dir,filename:fn,github:fn,nne:nne,time:time,encoding:"UTF-8",scan:1,ext:Ext,tv:TVC.Add(1,fn,TV,"Sort"),lang:LanguageFromFileExt(Ext)})
 	add:=Current(7).AppendChild(new.CloneNode(1))
 	add.SetAttribute("type","File")
 	Update({file:filename,text:text,encoding:"UTF-8",node:current})
@@ -4300,7 +4300,14 @@ FileCheck(file:=""){
 	(!value)?RegisterID("{DBD5A90A-A85C-11E4-B0C7-43449580656B}","AHK-Studio"):""
 	if(FileExist("lib\Scintilla.xml"))
 		Scintilla()
-	FileGetTime,time,SciLexer.dll
+	LibDir:=A_MyDocuments "\Autohotkey\Lib\"
+	FileGetTime,Time,%LibDir%DebugWindow.ahk
+	if(Time<20171107191611){
+		DebugWindow:="DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0){`r`n`tx:=ComObjActive(""{DBD5A90A-A85C-11E4-B0C7-43449580656B}""),x.DebugWindow(Text,Clear,LineBreak,Sleep,AutoHide)`r`n}"
+		if(!FileExist(LibDir))
+			FileCreateDir,%LibDir%
+		File:=FileOpen(LibDir "DebugWindow.AHK","RW","UTF-8"),File.Write(DebugWindow),File.Length(File.Position),File.Close
+	}FileGetTime,time,SciLexer.dll
 	if(!FileExist("SciLexer.dll")||time<scidate){
 		SplashTextOn,200,100,Downloading SciLexer.dll,Please Wait....
 		UrlDownloadToFile,%base%/SciLexer.dll,SciLexer.dll
@@ -8655,26 +8662,14 @@ Run_As(exe){
 }
 Save_As(){
 	Send,{Alt Up}
-	current:=Current(1),CurrentFile:=Current(2).file,all:=SN(current,"descendant-or-self::*[@untitled]")
+	Current:=Current(1),CurrentFile:=Current(2).file
+	if(!NewFile:=DLG_FileSave(hwnd(1),1,"Save File As...",CurrentFile))
+		return
+	SplitPath,CurrentFile,,dir
+	SplitPath,NewFile,NewFN,NewDir,Ext,NNE
+	all:=SN(Current,"descendant-or-self::*[@untitled]")
 	while(aa:=all.item[A_Index-1])
 		aa.RemoveAttribute("untitled")
-	current.RemoveAttribute("untitled")
-	SplitPath,CurrentFile,,dir
-	/*
-		DLG_FileSave(hwnd(1),GetExtensionList(Current(2).Lang))
-	*/
-	if(!NewFile:=DLG_FileSave(hwnd(1),GetExtensionList(Current(2).Lang),"My Dialog Text",CurrentFile))
-		return
-	SplitPath,Newfile,NewFN,NewDir,Ext,NNE
-	/*
-		FileSelectFile,Newfile,S16,%dir%,Save File As...,*.ahk
-		if(ErrorLevel||Newfile="")
-			return
-		if(!Ext||!Settings.SSN("//Extensions/Extension[text()='" Ext "']")){
-			Newfile:=NewDir "\" NNE ".ahk"
-			SplitPath,Newfile,NewFN,NewDir,Ext
-		}
-	*/
 	filelist:=SN(Current(1),"descendant::*")
 	while(fl:=filelist.item[A_Index-1],ea:=XML.EA(fl)){
 		if(NewFN=ea.filename&&A_Index>1)
@@ -8690,7 +8685,7 @@ Save_As(){
 		else if !FileExist(NewDir "\" file)
 			FileAppend,% Update({get:filename}),%NewDir%\%file%
 	}SplashTextOff
-	Open(Newfile),Close(files.SN("//main[@id='" Current(2).id "']")),tv(SSN(files.Find("//file/@file",Newfile),"@tv").text)
+	Open(NewFile),Close(files.SN("//main[@id='" Current(2).ID "']")),tv(SSN(files.Find("//file/@file",NewFile),"@tv").text)
 }
 Save_Untitled(node,ask:=1){
 	ea:=XML.EA(node),template:=GetTemplate(),text:=Update({get:ea.file})
@@ -11338,16 +11333,19 @@ DLG_FileSave(HWND:=0,DefaultFilter=1,DialogTitle="Select file to open",DefaultFi
 	;Structure https://msdn.microsoft.com/en-us/library/windows/desktop/ms646839(v=vs.85).aspx
 	Address:=&OFName
 	SplitPath,DefaultFile,,Initial,Ext
+	if(FileExist(Initial)!="D")
+		FileCreateDir,%Initial%
 	Initial:=Ext?Initial "\":DefaultFile
 	VarSetCapacity(lpstrInitialDir,0XFFFF,0)
 	StrPut(Initial,&lpstrInitialDir,"UTF-8")
 	SplitPath,DefaultFile,FileName
-	VarSetCapacity(lpstrFile,0XFF,0)
-	StrPut(FileName,&lpstrFile,"UTF-8")
+	if(FileExist(DefaultFile)!="D")
+		VarSetCapacity(lpstrFile,0XFF,0),StrPut(FileName,&lpstrFile,"UTF-8")
 	for a,b in [76,HWND,0,&lpstrFilter,&lpstrCustomFilter,255,defaultFilter,&lpstrFile,0xFFFF,&lpstrFileTitle,0xFFFF,&lpstrInitialDir,&lpstrTitle,Flags,0,&lpstrDefExt]
 		Address:=NumPut(b,Address+0,"UInt")
 	if(!DllCall("comdlg32\GetSaveFileNameA","Uint",&OFName))
 		Exit
+	FileName:=""
 	while(Char:=NumGet(lpstrFile,A_Index-1,"UChar"))
 		FileName.=Chr(Char)
 	return FileName
