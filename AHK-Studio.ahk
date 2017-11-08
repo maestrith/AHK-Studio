@@ -1910,9 +1910,9 @@ Class PluginClass{
 		return Current(x)
 	}DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0){
 		sc:=v.debug
-		if(!sc.sc){
-			MainWin.DebugWindow(),Kill:=1,sc:=v.debug
-		}if(Clear)
+		if(!sc.sc)
+			MainWin.DebugWindow(),sc:=v.debug
+		if(Clear)
 			sc.2004()
 		if(LineBreak&&sc.2006)
 			sc.2003(sc.2006,"`n")
@@ -1921,7 +1921,7 @@ Class PluginClass{
 		sc.2003(sc.2006,Text),sc.2025(sc.2006)
 		while(!WinExist("ahk_id" v.Debug.SC))
 			Sleep,100
-		if(Kill||AutoHide)
+		if(AutoHide)
 			Timer:=AutoHide?Abs(Autohide):5000,SetTimer("DebugShrinkSize",-Timer)
 		return
 		DebugShrinkSize:
