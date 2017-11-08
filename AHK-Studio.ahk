@@ -5018,13 +5018,15 @@ GetCurrentClass(Line){
 	}
 }
 Class Spoonz{
-	Farts(){
-		this.Things:="Farts"
-		/*
-			this.
-			this.
-		*/
-		
+	Class Food{
+		Farts(){
+			this.Things:="Farts"
+			/*
+				this.
+				this.
+			*/
+			
+		}
 	}
 }
 GetID(){
@@ -5140,7 +5142,7 @@ Google_Search_Selected(){
 Goto(){
 	Goto:
 	sc:=csc(),InsertAll(",",1),list:=SN(cexml.Find("//file/@file",Current(3).file),"descendant::info[@type='Label']"),labels:=""
-	while,ll:=list.item[A_Index-1]
+	while(ll:=list.item[A_Index-1])
 		labels.=cexml.EA(ll).text " "
 	Sort,labels,D%A_Space%
 	if(Trim(Labels))
@@ -5374,7 +5376,7 @@ class GUIKeep{
 		SetTimer,GUIKeepShow,-1
 		return
 		GUIKeepShow:
-		while,this:=GUIKeep.Showlist.pop(){
+		while(this:=GUIKeep.Showlist.pop()){
 			position:=(node:=Settings.SSN("//gui/position[@window='" this.win "']")).text,position:=position?position:defpos,win:=[]
 			for a,b in ["x","y","w","h"]
 				RegExMatch(position,"Oi)" b "(-?\d*)\b",found),win[b]:=found.1
@@ -11375,7 +11377,7 @@ Regex_Replace_Selected(){
 		return Regex_Replace_Selected_Dialog()
 	while(aa:=all.item[A_Index-1])
 		List.=aa.text "|"
-	sc.2106(124),sc.2100(0,Trim(List,"|")),sc.2106(32)
+	sc.2106(124),sc.2100(11,Trim(List,"|")),sc.2106(32)
 }
 Regex_Replace_Selected_Dialog(){
 	static
