@@ -812,12 +812,8 @@ class Code_Explorer{
 	}}CEGO(){
 		static last
 		CEGO:
-		if((Node:=cexml.SSN("//*[@cetv='" A_EventInfo "']"))&&(A_GuiEvent="S"||A_GuiEvent="Normal")){
+		if((Node:=cexml.SSN("//*[@cetv='" A_EventInfo "']"))&&(A_GuiEvent="S"||A_GuiEvent="Normal"))
 			SelectText(Node,1),CenterSel()
-			/*
-				return m(Node.xml)
-			*/
-		}
 		return
 	}InComment(found,start:=0){
 		return v.CommentArea.SSN("//*[@min<" found.pos(0)+start " and @max>" found.pos(0)+start "]")?1:0
@@ -1758,7 +1754,7 @@ Class MainWindowClass{
 	}Split(direction:=0,type:="Scintilla"){
 		space:=[],np:=this.NewCtrlPos,hwnd:=np.ctrl,add:=0
 		win:=this.WinPos()
-		if(!node:=this.GUI.SSN("//*[@hwnd='" hwnd "']"))
+		if(!Node:=this.GUI.SSN("//*[@hwnd='" hwnd "']"))
 			if(!node:=this.GUI.SSN("//*[@hwnd='" hwnd+0 "']"))
 				return m("Something went Terribly wrong.")
 		ea:=XML.EA(node),npos:=this.WinPos(ea.hwnd),x-=this.Border+npos.x
@@ -1914,15 +1910,17 @@ Class PluginClass{
 		return Current(x)
 	}DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0){
 		sc:=v.debug
-		if(!sc.sc)
-			MainWin.DebugWindow(),Kill:=1
-		if(Clear)
+		if(!sc.sc){
+			MainWin.DebugWindow(),Kill:=1,sc:=v.debug
+		}if(Clear)
 			sc.2004()
 		if(LineBreak&&sc.2006)
 			sc.2003(sc.2006,"`n")
 		if(Sleep)
 			Sleep,%Sleep%
 		sc.2003(sc.2006,Text),sc.2025(sc.2006)
+		while(!WinExist("ahk_id" v.Debug.SC))
+			Sleep,100
 		if(Kill||AutoHide)
 			Timer:=AutoHide?Abs(Autohide):5000,SetTimer("DebugShrinkSize",-Timer)
 		return
