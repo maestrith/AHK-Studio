@@ -1919,12 +1919,10 @@ Class PluginClass{
 		if(Sleep)
 			Sleep,%Sleep%
 		sc.2003(sc.2006,Text),sc.2025(sc.2006)
-		while(!WinExist("ahk_id" v.Debug.SC))
-			Sleep,100
+		if(Message)
+			MsgBox,% Message=1?"Pause":Message
 		if(AutoHide)
 			Timer:=AutoHide?Abs(Autohide):5000,SetTimer("DebugShrinkSize",-Timer)
-		if(Message)
-			m(Message=1?Pause:Message)
 		return
 		DebugShrinkSize:
 		np:=MainWin.NewCtrlPos:=[],np.Ctrl:=v.Debug.sc+0,np.Win:=MainWin.HWND,MainWin.Delete(1)
@@ -4303,8 +4301,8 @@ FileCheck(file:=""){
 		Scintilla()
 	LibDir:=A_MyDocuments "\Autohotkey\Lib\"
 	FileGetTime,Time,%LibDir%DebugWindow.ahk
-	if(Time<20171108171723){
-		DebugWindow:="DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0,Message:=0){`r`n`tx:=ComObjActive(""{DBD5A90A-A85C-11E4-B0C7-43449580656B}""),x.DebugWindow(Text,Clear,LineBreak,Sleep,AutoHide)`r`n}"
+	if(Time<20171108172702){
+		DebugWindow:="DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0,Message:=0){`r`n`tx:=ComObjActive(""{DBD5A90A-A85C-11E4-B0C7-43449580656B}""),x.DebugWindow(Text,Clear,LineBreak,Sleep,AutoHide,Message)`r`n}"
 		if(!FileExist(LibDir))
 			FileCreateDir,%LibDir%
 		File:=FileOpen(LibDir "DebugWindow.AHK","RW","UTF-8"),File.Write(DebugWindow),File.Length(File.Position),File.Close
