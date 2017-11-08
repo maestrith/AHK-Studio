@@ -11377,7 +11377,7 @@ Regex_Replace_Selected(){
 		return Regex_Replace_Selected_Dialog()
 	while(aa:=all.item[A_Index-1])
 		List.=aa.text "|"
-	sc.2106(124),sc.2100(11,Trim(List,"|")),sc.2106(32)
+	sc.2106(124),sc.2117(11,Trim(List,"|")),sc.2106(32)
 }
 Regex_Replace_Selected_Dialog(){
 	static
