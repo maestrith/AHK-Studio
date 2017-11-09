@@ -1427,7 +1427,7 @@ Class MainWindowClass{
 	}DebugWindow(){
 		if(type="Debug"&&this.Gui.SSN("//win[@win=1]/descendant::*[@type='Debug']"))
 			return
-		sc:=csc()
+		sc:=csc(),Color(sc)
 		if(sc.sc=MainWin.tnsc.sc)
 			sc:=csc(2)
 		ControlGetPos,x,y,w,h,,% "ahk_id" sc.sc
@@ -1560,7 +1560,7 @@ Class MainWindowClass{
 			else if(ea.type="Tracked Notes"){
 				hwnd:=this.tn+0
 			}else if(ea.type="Debug"){
-				sc:=new s(1,{pos:"x" ea.x " y" ea.y " w" ea.w " h" ea.h}),hwnd:=sc.sc+0,v.debug:=sc
+				sc:=new s(1,{pos:"x" ea.x " y" ea.y " w" ea.w " h" ea.h}),hwnd:=sc.sc+0,v.debug:=sc,Color(sc)
 				Loop,4
 					sc.2242(A_Index-1,0)
 				sc.2403(0x08,0)
@@ -1772,7 +1772,7 @@ Class MainWindowClass{
 			if(type="Debug"){
 				Loop,4
 					sc.2242(A_Index-1,0)
-				v.debug:=sc,sc.2403(0x08,0)
+				v.debug:=sc,Color(sc),sc.2403(0x08,0)
 			}
 		}else if(type="Search"){
 			node:=this.Add(this.NewCtrlPos.hwnd,"Search")
@@ -1923,6 +1923,7 @@ Class PluginClass{
 			MsgBox,% Message=1?"Pause":Message
 		if(AutoHide)
 			Timer:=AutoHide?Abs(Autohide):5000,SetTimer("DebugShrinkSize",-Timer)
+		MarginWidth(sc)
 		return
 		DebugShrinkSize:
 		np:=MainWin.NewCtrlPos:=[],np.Ctrl:=v.Debug.sc+0,np.Win:=MainWin.HWND,MainWin.Delete(1)
