@@ -611,11 +611,9 @@ BraceSetup(Win:=1){
 			sc.2686(cpos,cpos),sc.2194(1,hotkey),sc.2584(index,cpos+1),sc.2586(index,cpos+1)
 	}
 	return SetStatus("Last Entered Character: " hotkey " Code:" Asc(hotkey),2)
-	return
 	if(Hotkey="}"){
 		FixBrace:
-		sc.2078
-		sc:=csc(),line:=sc.2166(sc.2008)
+		sc:=csc(),line:=sc.2166(sc.2008),sc.2078
 		Sleep,100
 		match:=sc.2166(pos:=sc.2353(sc.2008-1))
 		if(line!=match&&pos>=0){
@@ -5564,10 +5562,7 @@ Decrement(){
 			if(RegExReplace(text,"-")~="\D")
 				start++,text:=sc.TextRange(start,end)
 			sc.2686(start,end),sc.2194(StrLen(text+add.2),[text+add.2]),sc.2584(A_Index-1,start),sc.2586(A_Index-1,end+(StrLen(text+add.2)-StrLen(text)))
-		}
-	}
-	sc.Enable(1),sc.2079()
-	return
+	}}return sc.Enable(1),sc.2079()
 }
 /*
 	Settings.SSN(a)
@@ -6271,7 +6266,6 @@ Move_Selected_Lines_Down(){
 		return
 	if(line+1>=sc.2154&&Trim(sc.GetLine(line))="")
 		return
-	
 	sc.Enable()
 	/*
 		in here the only thing that will change is going to be the current
@@ -6279,16 +6273,11 @@ Move_Selected_Lines_Down(){
 		unless it happens to go into another area....
 		damn...
 		and if the start is a part of it then the top area as well...
-		
 	*/
-	sc.2078(),start:=sc.2166(sc.2143),end:=sc.2166(sc.2145-1),LineStatus.StoreEdited(start,end,1),Edited()
-	sc.2621()
+	sc.2078(),start:=sc.2166(sc.2143),end:=sc.2166(sc.2145-1),LineStatus.StoreEdited(start,end,1),Edited(),sc.2621()
 	if(v.Options.Full_Auto_Indentation)
 		FixIndentArea()
-	
-	sc.Enable(1)
-	
-	LineStatus.UpdateRange(),sc.2079
+	sc.Enable(1),LineStatus.UpdateRange(),sc.2079
 	return
 }
 Move_Selected_Lines_Up(){
@@ -6308,22 +6297,12 @@ Move_Selected_Word_Left(){
 	MoveSelectedWord(-1)
 }
 MoveSelectedWord(add){
-	sc:=csc()
-	sc.2078
+	sc:=csc(),sc.2078
 	Loop,% sc.2570{
 		index:=A_Index-1,start:=sc.2585(index),end:=sc.2587(index)
-		if(start!=end){
-			sc.2686(start,end)
-			VarSetCapacity(text,end-start)
-			sc.2687(0,&text)
-			text:=StrGet(&text,end-start,"UTF-8")
-			sc.2645(start,end-start)
-			sc.2686(start+add,start+add)
-			sc.2194(StrPut(text,"UTF-8")-1,[text])
-			sc.2584(index,start+add),sc.2586(index,end+add)
-		}
-	}
-	sc.2079
+		if(start!=end)
+			VarSetCapacity(text,end-start),sc.2686(start,end),sc.2687(0,&text),text:=StrGet(&text,end-start,"UTF-8"),sc.2645(start,end-start),sc.2686(start+add,start+add),sc.2194(StrPut(text,"UTF-8")-1,[text]),sc.2584(index,start+add),sc.2586(index,end+add)
+	}sc.2079
 }
 m(x*){
 	static list:={btn:{oc:1,ari:2,ync:3,yn:4,rc:5,ctc:6},ico:{"x":16,"?":32,"!":48,"i":64}},msg:=[]
@@ -7069,7 +7048,7 @@ Notify(csc*){
 					Start:=sc.2585(A_Index-1),End:=sc.2587(A_Index-1),Text:=sc.TextRange(Start,End),sc.2190(Start),sc.2192(End),Text:=RegExReplace(Text,In,Out),sc.2194(StrPut(Text,"UTF-8")-1,Text)
 				sc.2079(),Parent:=Node.ParentNode
 				if(SN(Parent,"*").length>1&&Node.PreviousSibling)
-					Parent.InsertBefore(Node,SSN(Parent,"*")),m("HERE!")
+					Parent.InsertBefore(Node,SSN(Parent,"*"))
 			}
 		}else if(fn.Code=2022){
 			v.Word:=fn.Text,List:=""
@@ -7666,9 +7645,9 @@ Paste(){
 	if(Focus="Edit1"){
 		SendMessage,0x302,0,0,Edit1,% MainWin.ID
 		return
-	}sc:=csc(),line:=sc.2166(sc.2008),sc.2078(),sc.2179(),MarginWidth(sc),Edited(),RegExReplace(Clipboard,"\n",,count)
-	Loop,% count+1
-		LineStatus.Add(line+(A_Index-1),2)
+	}sc:=csc(),Line:=sc.2166(sc.2008),sc.2078(),sc.2179(),MarginWidth(sc),Edited(),RegExReplace(Clipboard,"\n",,Count)
+	Loop,% Count+1
+		LineStatus.Add(Line+(A_Index-1),2)
 	if(v.Options.Full_Auto_Indentation)
 		FixIndentArea()
 	sc.2079
@@ -8363,7 +8342,6 @@ Replace(){
 	sc:=csc(),cp:=sc.2008,word:=sc.TextRange(start:=sc.2266(cp-1,1),end:=sc.2267(cp-1,1)),rep:=Settings.SSN("//replacements/*[@replace='" word "']").text
 	if(!rep)
 		return
-	sc.2078
 	pos:=1,list:=[],foundList:=[],origRepLen:=StrLen(rep)
 	while(pos:=RegExMatch(rep,"U)(\$\||\$.+\b)",found,pos)){
 		if(found1="$E"){
@@ -8378,7 +8356,8 @@ Replace(){
 		if(b!="$|"){
 			value:=InputBox(sc,"Value for " b,"Insert value for: "  b "`n`n" rep)
 			StringReplace,rep,rep,%b%,%value%,All
-	}}if(rep){
+	}}sc.2078
+	if(rep){
 		AddLine:=0
 		if(eend:=InStr(rep,"$E"))
 			RegExReplace(SubStr(rep,1,eend),"\R|" Chr(127),,AddLine)
@@ -10073,12 +10052,10 @@ Theme(){
 	new SettingsClass("Theme")
 }
 Toggle_Comment_Line(){
-	sc:=csc(),sc.2078
-	pi:=PosInfo(),sl:=sc.2166(pi.start),el:=sc.2166(pi.end),end:=pi.end,single:=sl=el?1:0
-	replace:=Settings.SSN("//comment").text,replace:=replace?replace:";",replace:=RegExReplace(replace,"%a_space%"," ")
+	sc:=csc(),sc.2078,pi:=PosInfo(),sl:=sc.2166(pi.start),el:=sc.2166(pi.end),end:=pi.end,single:=sl=el?1:0,replace:=Settings.SSN("//comment").text,replace:=replace?replace:";",replace:=RegExReplace(replace,"%a_space%"," ")
 	if(v.options.Build_Comment!=1){
 		while((sl<=el)){
-			letter:=sc.textrange(min:=sc.2128(sl),min+StrLen(replace))
+			letter:=sc.TextRange(min:=sc.2128(sl),min+StrLen(replace))
 			if(min>end&&!single)
 				break
 			if(letter=replace)
@@ -10088,13 +10065,11 @@ Toggle_Comment_Line(){
 			sl++
 		}
 	}else{
-		sc:=csc(),order:=[],pi:=PosInfo(),order[sc.2166(sc.2008)]:=1,order[sc.2166(sc.2009)]:=1,min:=order.MinIndex(),max:=order.MaxIndex()
+		Order:=[],pi:=PosInfo(),Order[sc.2166(sc.2008)]:=1,Order[sc.2166(sc.2009)]:=1,min:=Order.MinIndex(),max:=Order.MaxIndex()
 		Loop,% max-min+1{
 			if(!RegExMatch(sc.getline(min+(A_Index-1)),"^\s*;")){
-				Loop,% max-min+1{
-					indentpos:=sc.2128(min+(A_Index-1))
-					sc.2003(indentpos,";"),added:=1,pi.end+=1
-				}
+				Loop,% max-min+1
+					indentpos:=sc.2128(min+(A_Index-1)),sc.2003(indentpos,";"),added:=1,pi.end+=1
 				pi.start+=1
 			}
 		}
@@ -10109,8 +10084,7 @@ Toggle_Comment_Line(){
 			}
 		}
 		sc.2160(pi.start,pi.end)
-	}
-	sc.2079
+	}sc.2079
 }
 ToggleMenu(Label){
 	if(!Label)
@@ -10142,8 +10116,7 @@ Toggle_Multiple_Line_Comment(){
 		if(Trim(Trim(sc.GetLine(top)),"`n")="/*")
 			for a,b in [bottom,top]
 				start:=sc.2167(b),length:=(sc.2136(b)+1)-start,start:=sc.2136(b)=sc.2006?start-1:start,sc.2645(start,length)
-	}
-	if(v.Options.Disable_Line_Status!=1)
+	}if(v.Options.Disable_Line_Status!=1)
 		Loop,% ELine-SLine+1
 			LineStatus.Add(SLine+(A_Index-1),2)
 	sc.2079(),sc.Enable(1),Edited(),sc.2025(sc.2128(top+AddLine)),sc.2399
