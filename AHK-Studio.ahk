@@ -2957,7 +2957,7 @@ ContextMenu(){
 			Continue
 		}else{
 			Menu,RCM,Add,% ea.name,MenuEnd
-			if(((code:=UnRedo[ea.name])&&!sc[code])||(sc.2008=sc.2009&&ea.name~="Copy|Cut|Delete")||Clipboard=""&&ea.name="Paste"||sc.2143=0&&sc.2145=sc.2006&&ea.name="Select All"||(ea.name="Open Folder"&&Current(2).untitled||!Current(2).file))
+			if(((code:=UnRedo[ea.name])&&!sc[code])||(sc.2008=sc.2009&&(ea.name="Copy"||ea.name="Cut"||ea.name="Delete"))||Clipboard=""&&ea.name="Paste"||sc.2143=0&&sc.2145=sc.2006&&ea.name="Select All"||(ea.name="Open Folder"&&Current(2).untitled||!Current(2).file))
 				Menu,RCM,Disable,% ea.name
 			Disabled:=""
 			if(v.Options[Clean(ea.name)])
@@ -3074,9 +3074,9 @@ ContextMenu(){
 	}else if(A_ThisMenuItem="Track File"){
 		TNotes.Track()
 	}else if(RegExMatch(A_ThisMenuItem,"iO)Copy (.*) Path",found)){
-		if(found.1="file")
+		if(found.1="File")
 			Clipboard:=Current(3).file
-		if(found.1="folder")
+		if(found.1="Folder")
 			Clipboard:=Current(3).dir
 	}else if(A_ThisMenuItem="Close Project")
 		Close()
@@ -4223,7 +4223,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20161107223002,XMLFiles:={menus:[20171108075553,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20161107223002,XMLFiles:={menus:[20171109071637,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20170926222816,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -11391,4 +11391,10 @@ SearchFor(b,Pos1){
 			Break
 		LastPos1:=Pos1
 	}return {Text:SubStr(Text,Start,SavedPos-Start),SavedPos:SavedPos,Pos1:Pos1}
+}
+Copy_Folder_Path(){
+	Clipboard:=Current(3).Dir
+}
+Copy_File_Path(){
+	Clipboard:=Current(3).File
 }
