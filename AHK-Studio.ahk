@@ -8429,7 +8429,7 @@ Right_Click_Menu_Editor(menu){
 	}
 	GuiControl,RCMEditor:,ComboBox1,% Trim(list,"|")
 	Hotkey,IfWinActive,% nw.id
-	for a,b in [["Remove Selected","RCMRS","!r"],["Add Selected","RCMAS","!a"]]{
+	for a,b in [["Remove Selected","RCMRS","!r"],["Add Selected","RCMAS","!a"],["Remove Selected","RCMRS","Delete"],["Remove Selected","RCMRS","Backspace"]]{
 		TVRCM.Add("l2",[b.1,Convert_Hotkey(b.3)])
 		Hotkey,% b.3,% b.2
 	}
@@ -10082,9 +10082,9 @@ Toggle_Comment_Line(){
 			if(min>end&&!single)
 				break
 			if(letter=replace)
-				sc.2190(min),sc.2192(min+StrLen(replace)),sc.2194(0,""),end--
+				sc.2190(min),sc.2192(min+StrLen(replace)),sc.2194(0,""),end-=Strlen(Replace)
 			else
-				sc.2190(min),sc.2192(min),sc.2194(StrLen(replace),replace),end++
+				sc.2190(min),sc.2192(min),sc.2194(StrLen(replace),replace),end+=Strlen(Replace)
 			sl++
 		}
 	}else{
