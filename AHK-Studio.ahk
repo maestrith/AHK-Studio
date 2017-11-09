@@ -2820,9 +2820,7 @@ Context(return=""){
 						if(!InStr(Word,WordSplit))
 							Continue
 					Matches.Push({att:ea.att,ea:ea,syntax:Word "(" ea.att ")",type:ea.type,file:SSN(aa,"ancestor::file/@filename").text})
-				}
-			}
-			RegExMatch(Word,"O)(\W)",Delim)
+			}}RegExMatch(Word,"O)(\W)",Delim)
 			if(Delim.1)
 				WordObj:=StrSplit(Word,Delim.1)
 			if(WW:=Keywords.Words[Language,(Delim.1?WordObj[WordObj.MaxIndex()]:Word)]){
@@ -6991,7 +6989,7 @@ Notify(csc*){
 			}else if(fn.listType=2){
 				/*
 					look up what sc.2117() uses 2 as the thing
-				or add one that uses the vault stuff
+					add one that uses the vault stuff
 				*/
 				vv:=fn.Text,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(start,end-start),sc.2003(sc.2008,vault.SSN("//*[@name='" vv "']").text)
 				if(v.Options.Full_Auto_Indentation)
@@ -7063,9 +7061,9 @@ Notify(csc*){
 			}Else{
 				v.word:=fn.Text
 				if(A_ThisHotkey="("){
-					SetTimer("notifynext",-1)
+					SetTimer("NotifyText",-1)
 					return
-					notifynext:
+					NotifyText:
 					Loop,% sc.2570{
 						CPos:=sc.2585(A_Index-1)
 						if(Chr(sc.2007(CPos))="(")
@@ -7075,13 +7073,13 @@ Notify(csc*){
 					}
 					Continue
 				}
-				if(v.word="#Include"&&v.Options.Disable_Include_Dialog!=1){
+				if(v.word="#Include"&&v.Options.Disable_Include_Dialog!=1)
 					SetTimer("GetInclude",-200)
-				}else if(v.word~="i)\b(Goto|Gosub)\b"){
+				else if(v.word~="i)\b(Goto|Gosub)\b")
 					SetTimer("Goto",-100)
-				}else if(v.word="SetTimer"){
+				else if(v.word="SetTimer")
 					SetTimer("ShowLabels",-80)
-				}else if(Syntax:=Keywords.GetXML(Current(3).Lang).SSN("//*[text()='" v.word "']/@syntax").text){
+				else if(Syntax:=Keywords.GetXML(Current(3).Lang).SSN("//*[text()='" v.word "']/@syntax").text){
 					if(SubStr(syntax,1,1)="(")
 						SetTimer("AutoParen",-40)
 					else
@@ -7099,13 +7097,14 @@ Notify(csc*){
 					}
 					Context()
 					Continue
-				}else if(node:=cexml.SSN("//file[@id='" Current(2).ID "']/descendant::*[@text='" v.word "' and(@type='Class' or @type='Function' or @type='Instance')]")){
-					type:=SSN(node,"@type").text
-					if(type~="Class|Instance")
+				}else if(node:=cexml.SSN("//main[@id='" Current(2).ID "']/descendant::*[@text='" v.word "']")){
+					Type:=SSN(node,"@type").text
+					if(Type~="Class|Instance")
 						SetTimer("AutoClass",-100)
-					else if(type="function")
-						SetTimer("AutoParen",-40)
-				}else
+					else if(Add:=Keywords.GetXML(Current(3).Lang).SSN("//Code/descendant::" Type "/@autoadd").text){
+						if(Add="(")
+							SetTimer("AutoParen",-40)
+				}}else
 					SetTimer("AutoMenu",-50)
 		}}
 	}for a,sc in Edited

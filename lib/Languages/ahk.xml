@@ -386,11 +386,11 @@
 		<Label regex="OUm`n)^\s*(?&lt;Text&gt;(\w|[^\x00-\x7F])+):($|\R|\s+;.*$)"></Label>
 		<!--Class bounds="\{|\}" regex="Oim`n)^[\s|}]*class\s+(?&lt;Text&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" close="Om`n)^([\s*|}])+" open="Om`n)(\{)(\s+;|\R)"-->
 		<Class full="1" bounds="\{|\}" regex="Oim`n)^[\s|}]*class\s+(?&lt;Text&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*((\s*;.*\R)|(\s*\/\*\s+.*\s*\*\/)){0,}\s*(\{)" close="Om`n)^([\s*|}])+" open="Om`n)(\{)(\s+;|\R)">
-			<Method wordsplit="." firstchar="(" exclude="if|while" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Att&gt;.*)\)((\s*;.*\R)|(\s*\/\*\s+.*\s*\*\/)){0,}\s*(\{)"></Method>
+			<Method autoadd="(" wordsplit="." firstchar="(" exclude="if|while" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Att&gt;.*)\)((\s*;.*\R)|(\s*\/\*\s+.*\s*\*\/)){0,}\s*(\{)"></Method>
 			<Property regex="Om`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\[(?&lt;Att&gt;.*)\](\s*;.*\R){0,}\s*(\{)"></Property></Class>
 		<!--(((\R)(\s)*\/\*(\R|.*)+\R\s*\*\/)|([\R\s*|\s+];.*$)+)-->
 		<!--\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}-->
-		<Function exclude="if|while" firstchar="(" vis="Text" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Att&gt;.*)\)((\s*;.*\R)|(\s*\/\*\s+.*\s*\*\/)){0,}\s*(\{)"></Function>
+		<Function autoadd="(" exclude="if|while" firstchar="(" vis="Text" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Att&gt;.*)\)((\s*;.*\R)|(\s*\/\*\s+.*\s*\*\/)){0,}\s*(\{)"></Function>
 	</Code>
 	<Delimiter delimiter="," preserve="OU)((?&lt;Open&gt;\{|\[)|(?&lt;Close&gt;\}|\])|(?&lt;PreserveOpen&gt;\()|(?&lt;PreserveClose&gt;\)))" removeall="OU)(\x22.*\x22)" search="(\(|,[^\[)" replace="(" replaceinvalid="."></Delimiter>
 	<ReplaceFirst replace="," first="( )"></ReplaceFirst>
