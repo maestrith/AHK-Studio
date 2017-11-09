@@ -2811,15 +2811,18 @@ Context(return=""){
 				if(Node.NodeName)
 					FoundThings:=1,Matches.Push({att:Syntax,ea:XML.EA(Node),search:Syntax,syntax:Word Syntax,type:a,file:SSN(Node,"ancestor::file/@filename").text}),Split[b.Delimiter]:=1
 		}}if(!FoundThings){
-			all:=SN(Current(7),"descendant::*[@upper='" Upper(Word) "']"),Index:=1,Syntax:="",List:=[],Reverse:=[]
-			if(!all.Length)
-				LastWord:=SubStr(Word,InStr(Word,".",0,0)+1),all:=SN(Current(7),"descendant::*[@upper='" Upper(LastWord) "']")
-			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
-				if(WordSplit:=Omni[ea.Type].WordSplit)
-					if(!InStr(Word,WordSplit))
-						Continue
-				Matches.Push({att:ea.att,ea:ea,syntax:Word "(" ea.att ")",type:ea.type,file:SSN(aa,"ancestor::file/@filename").text})
-			}RegExMatch(Word,"O)(\W)",Delim)
+			Index:=1,Syntax:="",List:=[],Reverse:=[]
+			for a,all in [SN(Current(7),"descendant::*[@upper='" Upper(Word) "']"),cexml.SN("//main[@file='Libraries']/descendant::*[@upper='" Upper(Word) "']")]{
+				if(!all.Length)
+					LastWord:=SubStr(Word,InStr(Word,".",0,0)+1),all:=SN(Current(7),"descendant::*[@upper='" Upper(LastWord) "']")
+				while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
+					if(WordSplit:=Omni[ea.Type].WordSplit)
+						if(!InStr(Word,WordSplit))
+							Continue
+					Matches.Push({att:ea.att,ea:ea,syntax:Word "(" ea.att ")",type:ea.type,file:SSN(aa,"ancestor::file/@filename").text})
+				}
+			}
+			RegExMatch(Word,"O)(\W)",Delim)
 			if(Delim.1)
 				WordObj:=StrSplit(Word,Delim.1)
 			if(WW:=Keywords.Words[Language,(Delim.1?WordObj[WordObj.MaxIndex()]:Word)]){
