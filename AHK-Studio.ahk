@@ -3966,6 +3966,7 @@ Escape(a*){
 	}v.DisableContext:=sc.2166(sc.2008),sc.2201
 	if(InStr(Focus,"Scintilla"))
 		Send,{Escape}
+	v.DebugText:=""
 	DllCall("EndMenu"),UpPos(1)
 }
 ExecScript(){
@@ -3991,14 +3992,14 @@ ExecScript(){
 				v.exec.Terminate(),sc:=csc()
 				if(info.file!=Current(2).file)
 					tv(SSN(files.Find(Current(1),"descendant::file/@file",info.file),"@tv").text)
-				sc.2160(sc.2128(info.line),sc.2136(info.line)),sc.2200(sc.2128(info.line),text)
+				v.DebugText:=1,sc.2160(sc.2128(info.line),sc.2136(info.line)),sc.2200(sc.2128(info.line),text)
 				return
 	}}}else if(text:=v.exec.StdERR.ReadAll()){
 		if(InStr(text,"cannot be opened"))
 			return m(text,"","If the script file is located in the same directory as the main Project try adding #Include %A_ScriptDir% to the main Project file.")
 		exec.Terminate(),sc:=csc(),info:=StripError(text,"*"),tv(SSN(files.Find(Current(1),"descendant::file/@file",info.file),"@tv").text),line:=info.line
 		Sleep,100
-		sc.2160(sc.2128(line),sc.2136(line)),sc.2200(sc.2128(line),text)
+		v.DebugText:="Press Escape to remove this window`n`n" Text,sc.2160(sc.2128(line),sc.2136(line)),sc.2200(sc.2128(line),v.DebugText)
 	}
 }
 Exit(ExitApp:=0){
@@ -6793,8 +6794,10 @@ Notify(csc*){
 		else
 			WinSetTitle(1,ea:=files.EA("//*[@sc='" sc.2357 "']"))
 		MouseGetPos,,,win
-		if(win=hwnd(1))
-			SetTimer("LButton",-200)
+		/*
+			if(win=hwnd(1))
+				SetTimer("LButton",-200)
+		*/
 		TVC.Disable(1)
 		if(v.Options.Check_For_Edited_Files_On_Focus)
 			Check_For_Edited()
@@ -10700,7 +10703,9 @@ UpPos(NoContext:=0){
 	else if(CPos!=EPos)
 		sc.2500(6),sc.2505(0,Length)
 	LastPos:=CPos
-	if(!NoContext)
+	if(v.DebugText)
+		return sc.2200(sc.2167(Line),v.DebugText)
+	if(!NoContext&&)
 		SetTimer,Context,-500
 }
 URIDecode(str){
