@@ -33,7 +33,6 @@ return
 */
 return
 /*
-	More things
  	Add in #Include brings up a list of items in your library
 	Debugging Joe Glines{
 		have the option to have the Variable browser dockable to the side of debug window.
