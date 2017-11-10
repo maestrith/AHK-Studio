@@ -26,3 +26,4 @@ Fixed: Reported by Joe Glines
 - ;~ { was causing indent. Only ;{ and ;} were supposed to effect indents
 Fixed: Reported by Barney
 -Hotkeys with Up were not being indexed
+Fixed: Reported by bugrobot #145
