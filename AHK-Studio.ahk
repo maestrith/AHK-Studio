@@ -5602,7 +5602,7 @@ Jump_To_First_Available(){
 }
 Class Keywords{
 	__New(){
-		Static Dates:={ahk:"20171029061149"},BaseURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/lib/Languages/",BaseDir:="Lib\Languages\"
+		Static Dates:={ahk:"20171111110614"},BaseURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/lib/Languages/",BaseDir:="Lib\Languages\"
 		for a,b in StrSplit("IndentRegex,KeywordList,Suggestions,Languages,Comments,OmniOrder,CodeExplorerExempt,Words,FirstChar,Delimiter,ReplaceFirst,SearchTrigger",",")
 			Keywords[b]:=[]
 		if(!IsObject(v.OmniFind))
