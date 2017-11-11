@@ -490,4 +490,4 @@
 			<list list="Off On" tv="44212024">SetStoreCapslockMode</list></SetStoreCapslockMode>
 		<Suspend tv="44212096">
 			<list list="Off On Permit Toggle" tv="44211520">Suspend</list></Suspend></Context>
-	<date tv="44213536">20171029061149</date></ahk>
+	<date tv="44213536">20171111110614</date></ahk>
