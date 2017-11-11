@@ -3846,6 +3846,8 @@ Escape(a*){
 			(A_Index=1)?sc.2160(b.2,b.1):sc.2573(b.1,b.2)
 		sc.2574(main),CenterSel()
 	}v.DisableContext:=sc.2166(sc.2008),sc.2201
+	if(v.Options.Auto_Set_Area_On_Quick_Find)
+		SetTimer,Clear_Selection,-1
 	if(InStr(Focus,"Scintilla"))
 		Send,{Escape}
 	v.DebugText:=""
