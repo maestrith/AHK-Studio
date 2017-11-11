@@ -389,6 +389,11 @@
 	<Delimiter delimiter="," preserve="OU)((?&lt;Open&gt;\{|\[)|(?&lt;Close&gt;\}|\])|(?&lt;PreserveOpen&gt;\()|(?&lt;PreserveClose&gt;\)))" removeall="OU)(\x22.*\x22)" search="(\(|,[^\[)" replace="(" replaceinvalid="." tv="44204016"></Delimiter>
 	<ReplaceFirst replace="," first="( )" tv="44204376"></ReplaceFirst>
 	<SearchTrigger tv="44204520">{</SearchTrigger>
+	<Special>
+		<Context>
+			<Associate this="new" to="descendant::*[@type='Class' and @upper='$word']" upper="__NEW" reptype="Method" type="Create Class" replace="$Found $Syntax$Word($Value)"></Associate>
+		</Context>
+	</Special>
 	<Styles tv="44204232">
 		<inlinecomment style="1" ex=";InLine Comment\n" tv="44203584"></inlinecomment>
 		<numbers style="2" ex="0123456789\n" tv="44204448"></numbers>

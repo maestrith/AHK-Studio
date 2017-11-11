@@ -4,6 +4,10 @@ Added:
 -Regex Replace Selected: Use the saved Regex items from the above dialog
 Save As and Save: Reported by derz00 #144
 -Saving with *.* selected still adds .ahk to the file extension
+-Refresh Current File:
+-Refresh Current Project:
+--Re-Scans the current File/Project and updates the Code Explorer/Omni-Search
+Changed:
 -Find:
 --Changed how found items are displayed
 --Auto Show Selected
@@ -27,3 +31,4 @@ Fixed: Reported by Joe Glines
 Fixed: Reported by Barney
 -Hotkeys with Up were not being indexed
 Fixed: Reported by bugrobot #145
+-I was using Duplicate Selection for Duplicate Line.  It worked when nothing was selected...
