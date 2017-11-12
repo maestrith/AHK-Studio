@@ -8,11 +8,13 @@ Save As and Save: Reported by derz00 #144
 -Refresh Current Project:
 --Re-Scans the current File/Project and updates the Code Explorer/Omni-Search
 Changed:
+-Publish: Now does Additional Publish
 -Find:
 --Changed how found items are displayed
 --Auto Show Selected
 -Restore Current File:
 --Made it a part of Studio
+-Jump To First Available: Numbered multiple items in the list
 Creates:
 -%A_MyDocuments%\DebugWindow.ahk: For the function DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0) to display text in the Debug Window
 Changed:

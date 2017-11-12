@@ -2672,8 +2672,7 @@ Context(return=""){
 			if(Letter~="(\s|\W)")
 				Break
 			dorW:=Letter dorW
-		}
-		for a,b in Keywords.Special[Language]{
+		}for a,b in Keywords.Special[Language]{
 			if(b.this=dorW){
 				Search:=RegExReplace(b.to,"\$word",Upper(Word))
 				Replace:=b.Replace
@@ -4112,7 +4111,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20161107223002,XMLFiles:={menus:[20171111040715,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20161107223002,XMLFiles:={menus:[20171112093638,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20170926222816,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -5527,20 +5526,22 @@ Jump_To_First_Available(){
 	sc:=csc(),line:=sc.GetLine(sc.2166(sc.2008))
 	/*
 		Scan_Line()
+		DebugWindow()
 	*/
 	v.jtfa:=[]
 	if(RegExMatch(line,"Oi)^\s*\x23include\s*(.*)(\s*;.*)?$",found))
 		Jump_To_Include()
 	else{
 		word:=Upper(sc.GetWord()),root:=Current(7)
-		if(SubStr(word,1,1)="g"&&node:=SSN(root,"descendant::*[@upper='" Upper(SubStr(word,2)) "' and(@type='Label' or @type='Function')]"))
+		if(SubStr(word,1,1)="g"&&node:=SSN(root,"descendant::*[@upper='" Upper(SubStr(word,2)) "']"))
 			return CEXMLSel(node),SelectText(node,1)
 		all:=cexml.SN("//*[@upper='" Word "']")
 		if(all.length=1)
 			SelectText(all.item[0],1)
 		else{
-			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-				total.=(info:=ea.type " " StrSplit(SSN(aa,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=aa
+			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
+				total.=(info:=A_Index ". " ea.type " " StrSplit(SSN(aa,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=aa
+			}
 			sc.2106(124),sc.2117(6,Trim(total,"|")),sc.2106(32)
 			if(!InStr(total,"|"))
 				sc.2104
@@ -7808,29 +7809,40 @@ Publish(return=""){
 	sc:=csc()
 	text:=Update("get").1
 	Save()
-	mainfile:=Current(2).file
-	publish:=Update({encoded:mainfile})
+	MainFile:=Current(2).file
+	Publish:=Update({encoded:MainFile})
 	includes:=SN(Current(1),"descendant::*/@include/..")
 	number:=SSN(vversion.Find("//info/@file",Current(2).file),"descendant::version/@number").text
 	if(!number)
 		number:=SSN(vversion.Find("//info/@file",Current(2).file),"descendant::version/@name").text
 	while(ii:=includes.item[A_Index-1])
-		if(InStr(publish,SSN(ii,"@include").text))
-			StringReplace,publish,publish,% SSN(ii,"@include").text,% Update({encoded:SSN(ii,"@file").text}),All
+		if(InStr(Publish,SSN(ii,"@include").text))
+			StringReplace,Publish,Publish,% SSN(ii,"@include").text,% Update({encoded:SSN(ii,"@file").text}),All
 	rem:=SN(Current(1),"descendant::remove")
 	while(rr:=rem.Item[A_Index-1])
-		publish:=RegExReplace(publish,"m)^\Q" SSN(rr,"@inc").text "\E$")
+		Publish:=RegExReplace(Publish,"m)^\Q" SSN(rr,"@inc").text "\E$")
 	change:=Settings.SSN("//auto_version").text?Settings.SSN("//auto_version").text:"Version:=" Chr(34) "$v" Chr(34)
-	if(InStr(publish,Chr(59) "auto_version"))
-		publish:=RegExReplace(publish,Chr(59) "auto_version",RegExReplace(change,"\Q$v\E",number))
-	publish:=RegExReplace(publish,"U)^\s*(;{.*\R|;}.*\R)","`n")
-	StringReplace,publish,publish,`n,`r`n,All
-	if(!publish)
+	if(InStr(Publish,Chr(59) "auto_version"))
+		Publish:=RegExReplace(Publish,Chr(59) "auto_version",RegExReplace(change,"\Q$v\E",number))
+	Publish:=RegExReplace(Publish,"U)^\s*(;{.*\R|;}.*\R)","`n")
+	OtherInc:=ES(Chr(34)  MainFile Chr(34))
+	OtherInc:=Trim(RegExReplace(OtherInc,"i)" Chr(35) "include(again)?\s+"),"`n")
+	for a,b in StrSplit(OtherInc,"`n","`r"){
+		if(FileExist(b)!="D"){
+			FileRead,Contents,%b%
+			Publish.="`r`n" Contents
+	}}Publish:=RegExReplace(Publish,"\R","`r`n")
+	if(!Publish)
 		return sc.GetEnc()
 	if(return)
-		return publish
-	Clipboard:=v.Options.Full_Auto_Indentation?PublishIndent(publish):publish
+		return Publish
+	Clipboard:=v.Options.Full_Auto_Indentation?PublishIndent(Publish):Publish
 	TrayTip,AHK Studio,Code copied to your clipboard
+}
+ES(Script,Wait:=true){
+	Shell:=ComObjCreate("WScript.Shell"),Exec:=Shell.Exec(A_AhkPath " /ilib * " script),Exec.StdIn.Close()
+	if(Wait)
+		return Exec.StdOut.ReadAll()
 }
 PublishIndent(Code,Indent:="`t",Newline:="`r`n"){
 	indentregex:=Keywords.IndentRegex[Current(3).ext],Lock:=[],Block:=[],ParentIndent:=Braces:=0,ParentIndentObj:=[]
@@ -11238,4 +11250,19 @@ Refresh_Current_File(){
 	while(aa:=All.item[A_Index-1],ea:=XML.EA(aa))
 		WinSetTitle(1,"Scanning: " ea.FileName),ScanFile.Scan(aa,1)
 	Code_Explorer.Refresh_Code_Explorer(),WinSetTitle()
+}
+Edit_Plugin(){
+	static NewWin,List
+	NewWin:=new GUIKeep("Edit_Plugin"),NewWin.Add("TreeView,w500 h500,,wh","Button,gEditPluginGo Default,Edit Plugin")
+	NewWin.Show("Edit Plugin")
+	Goto,Populate
+	return
+	Populate:
+	Default("SysTreeView321","Edit_Plugin"),TV_Delete(),List:=[]
+	Loop,Files,Plugins\*.*
+		List[TV_Add(A_LoopFileName)]:=A_LoopFileLongPath
+	return
+	EditPluginGo:
+	Default(,"Edit_Plugin"),Open((OpenFile:=List[TV_GetSelection()])),tv(SSN(files.Find("//main/file/@file",OpenFile),"@tv").text),NewWin.Exit()
+	return
 }
