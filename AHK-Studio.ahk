@@ -15,7 +15,7 @@ if(!settings[]){
 	Run,lib\Settings.xml
 	m("Oh boy...check the settings file to see what's up.")
 }v.LineEdited:=[],v.LinesEdited:=[],v.RunObject
-ComObjError(0),FileCheck(%True%),new Keywords(),Options("startup"),menus:=new XML("menus","Lib\Menus.xml"),new Omni_Search_Class(),Gui(),DefaultRCM(),CheckLayout()
+ComObjError(0),new Keywords(),FileCheck(%True%),Options("startup"),menus:=new XML("menus","Lib\Menus.xml"),new Omni_Search_Class(),Gui(),DefaultRCM(),CheckLayout()
 if((Folder:=Settings.SSN("//DefaultFolder")).text)
 	Folder.SetAttribute("folder",Folder.text),Folder.text:=""
 /*
@@ -1221,7 +1221,7 @@ Class MainWindowClass{
 		Gui,Add,TreeView,x0 y0 w0 h0 hwndce +0x400000 AltSubmit
 		Gui,Add,TreeView,hwndtn x0 y0 w0 h0 +0x400000
 		Gui,Color,% RGB(ea.Background),% RGB(ea.Background)
-		hwnd(1,main),this.QuickFind(),this.hwnd:=main,TVC.Register(1,pe,"tv",,"projectexplorer"),TVC.Register(2,ce,"CEGO",,"codeexplorer"),TVC.Register(3,tn,"tn",,"trackednotestv"),TV_Add("Tracked Notes Here"),TNotes:=new Tracked_Notes(),this.tnsc:=new s(1,{pos:"x0 y0 w0 h0"}),this.tn:=tn+0,this.win:=1,this.ID:="ahk_id" main,TVC.Add(2,"Right Click to Refresh")
+		hwnd(1,main),this.QuickFind(),this.hwnd:=main,TVC.Register(1,pe,"tv",,"projectexplorer"),TVC.Register(2,ce,"CEGO",,"codeexplorer"),TVC.Register(3,tn,"tn",,"trackednotestv"),TV_Add("Tracked Notes Here"),TNotes:=new Tracked_Notes(),this.tnsc:=new s(1,{pos:"x0 y0 w0 h0"}),this.tnsc.4006(0,"ahk"),Color(this.tnsc,"ahk"),this.tn:=tn+0,this.win:=1,this.ID:="ahk_id" main,TVC.Add(2,"Right Click to Refresh")
 		Gui,Color,0,0
 		Gui,Menu,% Menu("main")
 		this.pe:=pe+0,this.peid:="ahk_id" pe,this.ce:=ce+0,this.ceid:="ahk_id" ce
@@ -2380,8 +2380,7 @@ Color(con:="",Language:="",FromFunc:=""){
 	con:=con?con:v.con,con.Enable()
 	if(!con.sc)
 		return v.con:=""
-	ConBackup:=con
-	OldPath:="//fonts"
+	ConBackup:=con,OldPath:="//fonts"
 	if(Node:=Settings.SSN(OldPath "/font[@style=5]"))
 		ConvertTheme()
 	for a,b in (Default:=Settings.EA("//theme/default")){
@@ -2395,34 +2394,34 @@ Color(con:="",Language:="",FromFunc:=""){
 			con[ea.code](ea.bool,ea.color)
 	}con.2050(),con.2052(30,0x0000ff),con.2052(31,0x00ff00),con.2052(48,0xff00ff)
 	Language:=Language?Language:(GetLanguage(con)?GetLanguage(con):"ahk"),MainXML:=Keywords.GetXML(Language),Extra:=Settings.SSN("//" Language)?Language:"ahk",nodes:=Settings.SN("//theme/*|//Languages/" Extra "/*")
-	while(n:=nodes.item(A_Index-1),ea:=Settings.EA(n)){
-		if(n.NodeName="indentguide"){
+	while(nn:=nodes.item(A_Index-1),ea:=Settings.EA(nn)){
+		if(nn.NodeName="indentguide"){
 			con.2051(37,ea.color)
 			Continue
-		}else if(n.NodeName="caret"){
+		}else if(nn.NodeName="caret"){
 			for a,b in {2069:ea.Color,2098:ea.LineBack,2188:ea.Width}
 				con[a](b)
 			Continue
-		}else if(n.NodeName~="i)(default|bracematch)")
+		}else if(nn.NodeName~="i)(default|bracematch)")
 			Continue
 		for a,b in ["bold","italic","underline"]
 			con[list[b]](ea.style,0)
 		if(ea.code=2082){
 			con.2082(7,ea.color),con.2498(1,7)
 			Continue
-		}if(n.NodeName="linenumbers"){
+		}if(nn.NodeName="linenumbers"){
 			for a,b in [2290,2291]
 				con[b](1,(Background:=ea.Background?ea.Background:Default.Background))
 			con.2052(33,Background),ea.style:=33
 		}if(ea.style=""){
-			if(n.NodeName!="keyword")
-				ea.style:=MainXML.SSN("//Styles/" n.NodeName "/@style").text
+			if(nn.NodeName!="keyword")
+				ea.style:=MainXML.SSN("//Styles/" nn.NodeName "/@style").text
 			else
 				ea.style:=MainXML.SSN("//Styles/descendant::*[@set='" ea.set "']/@style").text
 			if(ea.style=34)
 				con.2498(0,7)
-			if(n.NodeName="linenumbers")
-				m(ea.style,n.xml)
+			if(nn.NodeName="linenumbers")
+				m(ea.style,nn.xml)
 		}for a,b in ea
 			if(list[a]&&ea.style!="")
 				con[list[a]](ea.style,b)
@@ -2451,8 +2450,7 @@ Color(con:="",Language:="",FromFunc:=""){
 	}else{
 		for a,b in XML.EA(Node)
 			con[List[a]](34,b)
-	}
-	for a,b in Options
+	}for a,b in Options
 		if(v.Options[a])
 			con[b](b)
 	if(node:=Settings.SSN("//theme/fold")){
@@ -2470,9 +2468,9 @@ Color(con:="",Language:="",FromFunc:=""){
 	for a,b in {20:Settings.Get("//theme/editedmarkers/@edited",0x0000ff),21:Settings.Get("//theme/editedmarkers/@saved",0x00ff00)}
 		con.2040(a,27),con.2042(a,b)
 	con.4004("fold",[1]),MarginWidth(con)
-	for a,b in Keywords.GetList(GetLanguage(con)){
+	Keywords.BuildList(Language)
+	for a,b in Keywords.GetList(Language)
 		con.4005(a,b)
-	}
 	return con.Enable(1)
 }
 Command_Help(){
@@ -5663,7 +5661,7 @@ Class Keywords{
 					Settings.Add("Extensions/Extension",{language:Language},Format("{:L}",Ext),1)
 			}FileGetTime,Date,%a%
 			if(!Node:=Settings.SSN("//Languages/" Language))
-				Node:=Settings.Add("//Languages/" Language)
+				Node:=Settings.Add("Languages/" Language)
 			if(SSN(Node,"@date").text!=Date)
 				Node:=KeyWords.Refresh(Language),Node:=Settings.SSN("//Languages/" Language),Node.SetAttribute("date",Date),Node.SetAttribute("name",LEA.Name)
 			if(!SSN(Node,"@name").text)
@@ -7832,11 +7830,11 @@ Publish(return=""){
 			FileRead,Contents,%b%
 			Publish.="`r`n" Contents
 	}}Publish:=RegExReplace(Publish,"\R","`r`n")
+	Clipboard:=v.Options.Full_Auto_Indentation?PublishIndent(Publish):Publish
 	if(!Publish)
 		return sc.GetEnc()
 	if(return)
 		return Publish
-	Clipboard:=v.Options.Full_Auto_Indentation?PublishIndent(Publish):Publish
 	TrayTip,AHK Studio,Code copied to your clipboard
 }
 ES(Script,Wait:=true){
@@ -10344,7 +10342,7 @@ tv(tv*){
 				sc.2358(0,0)
 				Sleep,80
 				doc:=sc.2357,sc.2376(0,doc),node.SetAttribute("sc",doc),tt:=Update({get:ea.file}),encoding:=ea.encoding,sc.2037(65001),Len:=Encode(tt,text,encoding),sc.2181(0,&text),sc.2175()
-				Language:=Settings.SSN("//Extensions/Extension[text()='" ea.ext "']/@language").text,Language:=Language?Language:"ahk",sc.4006(0,Language),Keywords.BuildList(Language),Color(sc,GetLanguage(sc))
+				Language:=Settings.SSN("//Extensions/Extension[text()='" ea.ext "']/@language").text,Language:=Language?Language:"ahk",sc.4006(0,Language),Color(sc,GetLanguage(sc))
 			}else
 				m("The current document is not the right document. If this continues to happen please let maestrith know."),tv(files.SSN("//main/file/@tv").text)
 		}TVC.Disable(1),TVC.Modify(1,"",sel,"Select Vis Focus"),TVC.Enable(1)
