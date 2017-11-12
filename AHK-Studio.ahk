@@ -8,9 +8,9 @@ SetWinDelay,-1
 DetectHiddenWindows,On
 CoordMode,ToolTip,Screen
 Tick:=A_TickCount
-global v:=[],MainWin,Settings:=new XML("settings","lib\Settings.xml"),files:=new XML("files"),Positions:=new XML("positions","lib\Positions.xml"),cexml:=new XML("cexml","Lib\FileCache.xml"),History:=new XML("HistoryXML"),vversion,commands,menus,scintilla,TVC:=new EasyView(),RCMXML:=new XML("RCM","lib\RCM.xml"),TNotes,debugwin,Selection:=new SelectionClass(),Menus,Vault:=new XML("vault","lib\Vault.xml")
+global v:=[],MainWin,Settings:=new XML("settings","lib\Settings.xml"),Files:=new XML("files"),Positions:=new XML("positions","lib\Positions.xml"),cexml:=new XML("cexml","Lib\FileCache.xml"),History:=new XML("HistoryXML"),vversion,commands,menus,scintilla,TVC:=new EasyView(),RCMXML:=new XML("RCM","lib\RCM.xml"),TNotes,DebugWin,Selection:=new SelectionClass(),Menus,Vault:=new XML("vault","lib\Vault.xml")
 new ScanFile()
-vversion:=new XML("versions",(FileExist("lib\Github.xml")?"lib\Github.xml":"lib\Versions.xml")),History("Startup")
+VVersion:=new XML("versions",(FileExist("lib\Github.xml")?"lib\Github.xml":"lib\Versions.xml")),History("Startup")
 if(!settings[]){
 	Run,lib\Settings.xml
 	m("Oh boy...check the settings file to see what's up.")
@@ -51,30 +51,6 @@ return
 	CUSTOM COMMANDS{
 		needs fixed, when changing things from auto-indent to another area it didn't save
 	}
-	SysGet,Count,MonitorCount
-	Loop,%count%
-	{
-		SysGet,Mon,Monitor,%A_Index%
-		Monitors.="Monitor " A_Index "`n`nLeft: " MonLeft " Top: " MonTop " Right: " MonRight " Bottom: " MonBottom "`n`n"
-	}
-	MsgBox,% Clipboard:=Monitors "`n`nPlease send this to maestrith"
-	see if the caption area is within the visible area and if not move it.
-	when you close make sure that the coordinates are within the same screen that the window is on.
-	if not
-		move the coords to the top left or center of that screen and update.
-	have it check to see if the window (any part) is in the visible area
-	also check to see if the last GUI position is somewhere on that monitor
-	if it isn't
-		update the positions.
-	Monitor 1
-	Left: 0 Top: 0 Right: 1920 Bottom: 1200
-	Monitor 2
-	Left: 1920 Top: -454 Right: 3000 Bottom: 1466
-	Ok, I found it. For some reason, with the previous update,
-	auto complete was disabled in all its various incarnations (you have a lot of auto-complete options lol) and
-	I found the tooltip-from-documentation thingy I was talking about.
-	You designated it context sensitive help.
-	So, those weren't bugs per se, they were just disabled. Didn't expect that since I never had to enable them before
 	FileCheck(){
 		DefaultOptions make sure to have them checked for and if they are not in your menus.xml, when you add them in, have them
 		pre-selected
@@ -91,9 +67,8 @@ return
 	more languages (spoken)
 	When you edit/add a line with an include:{
 		have it scan that line (add a thing in the Scan_Line() for it)
-	}
+	} ;*[BreakSpoons] ;#[BookSpoons]
 */
-
 #Include %A_ScriptDir%
 #IfWinActive
 #IfWinActive,AHK Studio
@@ -168,11 +143,31 @@ Testing(){
 		return sc.2160(Start.1,End.1)
 		return m((Lang:=GetLanguage(sc)),sc.2010(sc.2008),Keywords.GetXML(Lang)[])
 	*/
+	static NewWin
+	NewWin:=new GUIKeep("Testing"),NewWin.Add("Edit,w500 vSearch,,w","Button,gSelectSpecial Default,Select Text")
+	NewWin.Show("Find Special")
+	return
+	SelectSpecial:
+	sc:=csc(),sc.2686(0,sc.2006)
+	Text:=NewWin[].Search,Index:=1
+	while((Pos:=sc.2197((Len:=StrPut(Text,"UTF-8")-1),Text))>=0){
+		/*
+			Pos:=sc.2197((Len:=StrPut(Text,"UTF-8")-1),Text)
+		*/
+		sc.2686(Pos+1,sc.2006)
+		if((Style:=sc.2010(Pos))~="\b(3|11)\b")
+			Continue
+		if(Index=1)
+			sc.2160(Pos,Pos+Len)
+		else
+			sc.2573(Pos,Pos+Len)
+		Index++
+		
+		;~m(sc.2010(Pos))
+	}
+	return
 	if(A_UserName!="maest")
 		return m("Testing")
-	/*
-		return m(TVC.Controls.1.hwnd) ;the hwnd for Project Explorer
-	*/
 	return m("I'm sleepy.")
 }
 /*
@@ -809,8 +804,22 @@ class Code_Explorer{
 	}}CEGO(){
 		static last
 		CEGO:
-		if((Node:=cexml.SSN("//*[@cetv='" A_EventInfo "']"))&&(A_GuiEvent="S"||A_GuiEvent="Normal"))
-			SelectText(Node,1),CenterSel()
+		static BreakBook:={Breakpoint:";\*\[$1\]",Bookmark:";#\[$1\]"}
+		if((Node:=cexml.SSN("//*[@cetv='" A_EventInfo "']"))&&(A_GuiEvent="S"||A_GuiEvent="Normal")){
+			Type:=SSN(Node,"@type").text
+			if(Type="Header")
+				return
+			if(Type~="\b(Bookmark|Breakpoint)"&&Node.NodeName="info"){
+				tv:=Files.SSN("//file[@id='" SSN(Node,"ancestor::file/@id").text "']/@tv").text,Item:=XML.EA(Node)
+				if(tv!=TVC.Selection(1))
+					tv(tv),Sleep(200) ;#[spoon]
+				sc:=csc(),Text:=sc.GetUNI(),pre:=SN(node,"preceding-sibling::*[@type='" item.type "' and @text='" item.text "']").Length,Pos:=0,Search:=RegExReplace(BreakBook[Item.Type],"\$1",Item.Text)
+				Loop,% 1+pre
+					Pos:=RegExMatch(Text,Search,,Pos+1)
+				line:=sc.2166(StrPut(SubStr(Text,1,Pos),"UTF-8")-1),sc.2160(sc.2128(line),sc.2136(line)),hwnd({rem:20}),CenterSel()
+			}else
+				SelectText(Node,1),CenterSel()
+		}
 		return
 	}InComment(found,start:=0){
 		return v.CommentArea.SSN("//*[@min<" found.pos(0)+start " and @max>" found.pos(0)+start "]")?1:0
@@ -5633,9 +5642,11 @@ Class Keywords{
 		FileList:={BaseDir "ahk.xml":1}
 		Loop,Files,Lib\Languages\*.xml
 			FileList[A_LoopFileFullPath]:=1
-		Keywords.BreakBook:={Breakpoint:"OU)(\s+|^);\*\[(?<Text>.*)\]",Bookmark:"OU)(\s+|^);#\[(?<Text>.*)\]",multiple:1}
-		Keywords.BreakBookFind:={Breakpoint:";\*\[$1\]",Bookmark:";#\[$1\]"}
-		BreakBook:={Breakpoint:{Regex:Keywords.BreakBook.Breakpoint,Multiple:1},Bookmark:{Regex:Keywords.BreakBook.Bookmark,Multiple:1}}
+		/*
+			Keywords.BreakBook:={Breakpoint:"OU)(\s+|^);\*\[(?<Text>.*)\]",Bookmark:"OU)(\s+|^);#\[(?<Text>.*)\]",multiple:1}
+			Keywords.BreakBookFind:={Breakpoint:";\*\[$1\]",Bookmark:";#\[$1\]"}
+			BreakBook:={Breakpoint:{Regex:Keywords.BreakBook.Breakpoint,Multiple:1},Bookmark:{Regex:Keywords.BreakBook.Bookmark,Multiple:1}}
+		*/
 		for a in FileList
 		{
 			xx:=new XML(Language,a)
@@ -5668,33 +5679,23 @@ Class Keywords{
 				Node.SetAttribute("name",LEA.Name)
 			all:=xx.SN("//Code/*"),Find:=v.OmniFind[Language]:=[],Order:=Keywords.OmniOrder[Language]:=[],Index:=0,ExemptList:=""
 			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
-				Index++
-				Keywords.FirstChar[Language,ea.FirstChar].=aa.NodeName "|"
+				Index++,Keywords.FirstChar[Language,ea.FirstChar].=aa.NodeName "|"
 				for a,b in ea{
 					Find[aa.NodeName,a]:=(Value:=RegExReplace(b,"\x60n","`n")),Order[Index,aa.NodeName,a]:=Value
 					if(a="Regex")
 						Find[aa.NodeName,"Find"]:=GetFind(Value)
-				}
-				Under:=SN(aa,"*")
+				}Under:=SN(aa,"*")
 				if(Under.Length)
 					Index++
 				while(UU:=Under.item[A_Index-1],ea:=XML.EA(UU)){
-					ExemptList.=UU.NodeName "|"
-					Keywords.FirstChar[Language,ea.FirstChar].=UU.NodeName "|"
+					ExemptList.=UU.NodeName "|",Keywords.FirstChar[Language,ea.FirstChar].=UU.NodeName "|"
 					for a,b in ea{
 						Find[UU.NodeName,"Inside"]:=aa.NodeName,Find[UU.NodeName,a]:=(Value:=RegExReplace(b,"\x60n","`n")),Order[Index,aa.NodeName Chr(127) UU.NodeName,a]:=Value
 						if(a="Regex")
 							Find[UU.NodeName,"Find"]:=GetFind(Value)
-					}
-			}}Keywords.CodeExplorerExempt[Language]:=Trim(ExemptList,"|")
+			}}}Keywords.CodeExplorerExempt[Language]:=Trim(ExemptList,"|")
 			for a,b in Keywords.FirstChar[Language]
 				Keywords.FirstChar[Language,a]:=Trim(b,"|")
-			for a,b in Keywords.BreakBook
-				Order[++Index,a,"Regex"]:=b,Order[Index,a,"Find"]:=Keywords.BreakBookFind[a]
-			for a,b in BreakBook
-				for c,d in b
-					Find[a,c]:=d
-			Search:=""
 			for a,b in xx.EA("//Comments")
 				KeyWords.Comments[Language,a]:=b
 			Delimiter:=Keywords.Delimiter[Language]:=[]
@@ -5711,17 +5712,14 @@ Class Keywords{
 				Special:=Keywords.Special[Language]:=[]
 				while(aa:=All.item[A_Index-1],ea:=XML.EA(aa))
 					Special.Push(ea)
-			}
-			Keywords.SearchTrigger[Language]:=xx.SSN("//SearchTrigger").text
+			}Keywords.SearchTrigger[Language]:=xx.SSN("//SearchTrigger").text
 		}KeyWords.RefreshPersonal()
 	}BuildList(Language,Refresh:=0){
 		if(IsObject(Keywords.KeywordList[Language])&&!Refresh)
 			return
 		if(!IsObject(Obj:=Keywords.Obj))
 			Obj:=Keywords.Obj:=[]
-		Obj[Language]:=[]
-		Lang:=this.GetXML(Language)
-		Keywords.IndentRegex[Language]:=RegExReplace(Lang.SSN("//Indent").text," ","|")
+		Obj[Language]:=[],Lang:=this.GetXML(Language),Keywords.IndentRegex[Language]:=RegExReplace(Lang.SSN("//Indent").text," ","|")
 		if(Optional:=Lang.SSN("//OptionalIndent").text)
 			Keywords.IndentRegex[Language].="|" RegExReplace(Optional," ","|")
 		if(Keywords.IndentRegex[Language]){
@@ -5735,16 +5733,11 @@ Class Keywords{
 				KeywordList.=" " MainXML.SSN(ea.add).text,KeywordList:=Trim(KeywordList)
 			Sort,KeywordList,UD%A_Space%
 			CamelKeywordList:=KeywordList
-			/*
-				if(InStr(KeywordList,"SplitPath"))
-					m(KeywordList)
-			*/
 			StringLower,KeywordList,KeywordList
 			Obj[ea.Set]:=RegExReplace(KeywordList,"#")
 			for a,b in StrSplit(CamelKeywordList," ")
 				Suggestions[SubStr(b,1,2)].=b " ",Keywords.Words[Language,b]:=b
-		}
-	}GetList(Language){
+	}}GetList(Language){
 		return Keywords.KeywordList[Language]
 	}GetSuggestions(Language,FirstTwo){
 		return Keywords.Suggestions[Language,FirstTwo]
@@ -5757,8 +5750,7 @@ Class Keywords{
 				ea.Color:=Color
 			if(!Settings.SSN("//Languages/" Format("{:L}",Language) "/font[@style='" ea.Style "']"))
 				ea.Delete("ex"),Settings.Add("Languages/" Format("{:L}",Language) "/font",ea,,1)
-		}
-	}RefreshPersonal(){
+	}}RefreshPersonal(){
 		Keywords.Personal:=Settings.SSN("//Variables").text
 	}
 }
@@ -6784,10 +6776,6 @@ Notify(csc*){
 					Maybe store the important bits that need waching by position and length
 					or at least a pos/end.  Then if anything in there gets edited it gets flagged?
 					;#[Working Here]
-					t(Text)
-					m(Text)
-					t(Text)
-					m(Text)
 					I am Typing Text
 					Enter does not trigger
 					In here and the else below
@@ -7232,7 +7220,8 @@ Omni_Search(start=""){
 			Sleep,400
 		}
 		if(item.type~="Bookmark|Breakpoint"){
-			sc:=csc(),Text:=sc.GetUNI(),pre:=SN(node,"preceding-sibling::*[@type='" item.type "' and @text='" item.text "']").Length,Pos:=0,Search:=RegExReplace(Keywords.BreakBookFind[Item.Type],"\$1",Item.Text)
+			static BreakBook:={Breakpoint:";\*\[$1\]",Bookmark:";#\[$1\]"}
+			sc:=csc(),Text:=sc.GetUNI(),pre:=SN(node,"preceding-sibling::*[@type='" item.type "' and @text='" item.text "']").Length,Pos:=0,Search:=RegExReplace(BreakBook[Item.Type],"\$1",Item.Text)
 			Loop,% 1+pre
 				Pos:=RegExMatch(Text,Search,,Pos+1)
 			line:=sc.2166(StrPut(SubStr(Text,1,Pos),"UTF-8")-1),sc.2160(sc.2128(line),sc.2136(line)),hwnd({rem:20}),CenterSel()
@@ -10888,15 +10877,14 @@ class ScanFile{
 			}if(Search.Line)
 				Text:=RegExReplace(Text,Search.Line)
 			Text:=RegExReplace(Text,"(\R\s*)","`n"),Text:=RegExReplace(Text,"\R\R"),ScanFile.CurrentText:=Text
-		}
-		if(Language)
+		}if(Language)
 			return Text
 		if(!ea.ID)
 			return
 		rem:=xx.SSN("//file[@id='" ea.ID "']")
-		if(!Language){
+		if(!Language)
 			rem.ParentNode.RemoveChild(rem),Top:=xx.Add("file",{id:ea.ID,filename:ea.FileName},,1)
-		}else{
+		else{
 			Top:=Rem,all:=SN(Top,"comment")
 			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
 				aa.ParentNode.RemoveChild(aa)
@@ -10938,10 +10926,6 @@ class ScanFile{
 					}
 				}else{
 					Pos:=1
-					/*
-						if(ea.FileName="ScanLines.ahk"&&a="BookMark") I have a list of multiples within Keywords. Omni NOT ORDER
-							m(a,b.regex,Found.Text)
-					*/
 					while(RegExMatch(Text,b.regex,Found,Pos),Pos:=Found.Pos(0)+Found.Len(0)){
 						if(Pos=LastPos)
 							Break
@@ -10987,7 +10971,14 @@ class ScanFile{
 										Atts[q]:=r
 									Spam:=cexml.Under(Node,"info",Atts),No.AppendChild(Spam.CloneNode(0))
 						}}}LastPos:=Pos
-}}}}}}
+		}}}}Text:=Update({get:ea.file})
+		for a,b in {Breakpoint:"OUm`n)(\s+|^);\*\[(?<Text>.*)\]",Bookmark:"OUm`n)(\s+|^);#\[(?<Text>.*)\]"}{
+			LastPos:=Pos:=1
+			while(RegExMatch(Text,b,Found,Pos),Pos:=Found.Pos(1)+Found.Len("Text")){
+				Spam:=cexml.Under(Node,"info",{type:a,text:Found.Text,upper:Upper(Found.Text)}),No.AppendChild(Spam.CloneNode(0))
+				if(Pos=LastPos),LastPos:=Pos
+					Break
+}}}}
 LanguageFromFileExt(Ext){
 	static Languages:=[]
 	return (Languages[Ext]:=Languages[Ext]?Languages[Ext]:Settings.SSN("//Extensions/Extension[text()='" Format("{:L}",Ext) "']/@language").text)
@@ -11186,6 +11177,7 @@ Restore_Current_File(){
 	for a,b in Reverse
 		AllFiles[TV_Add(b.Text)]:=b.File
 	Default(,"Restore_Current_File"),TV_Modify(TV_GetChild(0),"Select Vis Focus")
+	Sleep,500
 	Goto,Restore
 	return
 	RestoreFile:
@@ -11263,4 +11255,7 @@ Edit_Plugin(){
 	EditPluginGo:
 	Default(,"Edit_Plugin"),Open((OpenFile:=List[TV_GetSelection()])),tv(SSN(files.Find("//main/file/@file",OpenFile),"@tv").text),NewWin.Exit()
 	return
+}
+Sleep(Time:="-10"){
+	Sleep,%Time%
 }
