@@ -143,7 +143,15 @@ Testing(){
 		return sc.2160(Start.1,End.1)
 		return m((Lang:=GetLanguage(sc)),sc.2010(sc.2008),Keywords.GetXML(Lang)[])
 	*/
-	static NewWin
+	static sc
+	
+	sc:=new s("SetStyles","{pos:w500 h500}")
+	Gui,SetStyles:Show,w800 h800
+	return
+	SetStylesGuiEscape:
+	SetStylesGuiClose:
+	Gui,SetStyles:Destroy
+	return
 	NewWin:=new GUIKeep("Testing"),NewWin.Add("Edit,w500 vSearch,,w","Button,gSelectSpecial Default,Select Text")
 	NewWin.Show("Find Special")
 	return
@@ -162,7 +170,6 @@ Testing(){
 		else
 			sc.2573(Pos,Pos+Len)
 		Index++
-		
 		;~m(sc.2010(Pos))
 	}
 	return
@@ -1764,12 +1771,12 @@ Class PluginClass{
 	}AutoClose(script){
 		if(!this.Close[script])
 			this.Close[script]:=1
-	}Call(info*){
+	}Call(Info*){
 		;this can cause major errors
-		if(IsFunc(info.1)&&info.1~="i)(Fix_Indent|newindent)"=0){
-			func:=info.1,info.Remove(1)
-			return %func%(info*)
-		}SetTimer,% info.1,-100
+		if(IsFunc(Info.1)&&Info.1~="i)(Fix_Indent|newindent)"=0){
+			func:=Info.1,Info.Remove(1)
+			return %func%(Info*)
+		}SetTimer,% Info.1,-100
 	}CallTip(text){
 		sc:=csc(),sc.2200(sc.2128(sc.2166(sc.2008)),text)
 	}Color(con){
@@ -1782,9 +1789,9 @@ Class PluginClass{
 	}Current(x:=""){
 		return Current(x)
 	}DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0,MsgBox:=0){
-		sc:=v.debug
+		sc:=v.Debug
 		if(!sc.sc)
-			MainWin.DebugWindow(),sc:=v.debug
+			MainWin.DebugWindow(),sc:=v.Debug
 		if(Clear)
 			sc.2004()
 		if(LineBreak&&sc.2006)
@@ -1823,8 +1830,8 @@ Class PluginClass{
 		SetPos(TV_GetSelection()),csc(1)
 	}Get(name){
 		return _:=%name%
-	}GuiControl(info*){
-		GuiControl,% info.1,% info.2,% info.3
+	}GuiControl(Info*){
+		GuiControl,% Info.1,% Info.2,% Info.3
 	}Hotkey(win:=1,key:="",label:="",on:=1){
 		if(!(win,key,label))
 			return m("Unable to set hotkey")
@@ -1840,20 +1847,20 @@ Class PluginClass{
 			sc.2025(sc.2008+StrPut(text,"UTF-8")-1)
 		else if(end)
 			sc.2025(sc.2008+end)
-	}m(info*){
-		m(info*)
+	}m(Info*){
+		m(Info*)
 	}MoveStudio(){
 		Version:="1.005.00"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
-	}Open(info){
-		tv:=Open(info),tv(tv),WinActivate(hwnd([1]))
+	}Open(Info){
+		tv:=Open(Info),tv(tv),WinActivate(hwnd([1]))
 	}Path(){
 		return A_ScriptDir
 	}Plugin(action,hwnd){
 		SetTimer,%action%,-10
-	}Publish(info:=0){
-		return,Publish(info)
+	}Publish(Info:=0){
+		return,Publish(Info)
 	}ReplaceSelected(text){
 		Encode(text,return),csc().2170(0,&return)
 	}Save(){
@@ -1872,14 +1879,14 @@ Class PluginClass{
 		WinActivate(hwnd([1]))
 		GuiControl,+Redraw,% sc.sc
 		SetPos(sc.2357),sc.2400
-	}SSN(node,path){
-		return node.SelectSingleNode(path)
+	}SSN(Node,XPath){
+		return Node.SelectSingleNode(XPath)
 	}StudioPath(){
 		return A_ScriptFullPath
 	}Style(){
-		return ea:=Settings.EA(Settings.SSN("//theme/default")),ea.color:=RGB(ea.color),ea.Background:=RGB(ea.Background)
-	}TrayTip(info){
-		TrayTip,AHK Studio,%info%,2
+		return ea:=Settings.EA(Settings.SSN("//theme/default")),ea.Color:=RGB(ea.Color),ea.Background:=RGB(ea.Background)
+	}TrayTip(Info){
+		TrayTip,AHK Studio,%Info%,2
 	}tv(tv){
 		if(tv~="\D"=0)
 			return tv(tv)
@@ -5531,21 +5538,18 @@ InsertMultiple(caret,CPos,text,end){
 }
 Jump_To_First_Available(){
 	sc:=csc(),line:=sc.GetLine(sc.2166(sc.2008))
-	/*
-		Scan_Line()
-		DebugWindow()
-	*/
 	v.jtfa:=[]
 	if(RegExMatch(line,"Oi)^\s*\x23include\s*(.*)(\s*;.*)?$",found))
 		Jump_To_Include()
 	else{
-		word:=Upper(sc.GetWord()),root:=Current(7)
-		if(SubStr(word,1,1)="g"&&node:=SSN(root,"descendant::*[@upper='" Upper(SubStr(word,2)) "']"))
+		word:=Upper(sc.GetWord()),Root:=Current(7)
+		if(SubStr(word,1,1)="g"&&node:=SSN(Root,"descendant::*[@upper='" Upper(SubStr(word,2)) "']"))
 			return CEXMLSel(node),SelectText(node,1)
-		all:=cexml.SN("//*[@upper='" Word "']")
+		all:=SN(Root,"descendant::*[@upper='" Word "']")
 		if(all.length=1)
 			SelectText(all.item[0],1)
 		else{
+			all:=cexml.SN("//*[@upper='" Word "']")
 			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
 				total.=(info:=A_Index ". " ea.type " " StrSplit(SSN(aa,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=aa
 			}
@@ -5554,23 +5558,23 @@ Jump_To_First_Available(){
 				sc.2104
 		}
 		/*
-			if(SubStr(word,1,1)="g"&&node:=SSN(root,"descendant::*[@upper='" Upper(SubStr(word,2)) "' and(@type='Label' or @type='Function')]")){
+			if(SubStr(word,1,1)="g"&&node:=SSN(Root,"descendant::*[@upper='" Upper(SubStr(word,2)) "' and(@type='Label' or @type='Function')]")){
 				return CEXMLSel(node),SelectText(node,1)
 			}if(sc.2007((pos:=sc.2266(sc.2008,1)-1))=46){
 				word2:=Upper(sc.TextRange(sc.2266(pos-1,1),sc.2267(pos-1,1)))
-				if(node:=SSN(root,"descendant::*[@upper='" word2 "' and @type='Instance']")){
-					if(node:=SSN(root,"descendant::*[@upper='" word "' and @class='" SSN(node,"@class").text "' and @type='Method']"))
+				if(node:=SSN(Root,"descendant::*[@upper='" word2 "' and @type='Instance']")){
+					if(node:=SSN(Root,"descendant::*[@upper='" word "' and @class='" SSN(node,"@class").text "' and @type='Method']"))
 						total.=(info:=SSN(node,"@type").text " " StrSplit(SSN(node,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=node
-				}if(node:=SSN(root,"descendant::*[@upper='" word2 "' and @type='Class']")){
+				}if(node:=SSN(Root,"descendant::*[@upper='" word2 "' and @type='Class']")){
 					if(node:=SSN(node,"descendant::*[@upper='" word "' and (@type='Method' or @type='Property')]"))
 						total.=(info:=SSN(node,"@type").text " " StrSplit(SSN(node,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=node
-				}else if((list:=cexml.SN(root,"descendant::*[@upper='" word "' and @type='Method']")).length){
+				}else if((list:=cexml.SN(Root,"descendant::*[@upper='" word "' and @type='Method']")).length){
 					while(ll:=list.item[A_Index-1]),ea:=XML.EA(ll)
 						total.=(info:=ea.type " " StrSplit(SSN(ll,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=ll
 				}
-			}if(node:=SSN(root,"descendant::*[@upper='" word "' and (@type='Function' or @type='Label')]"))
+			}if(node:=SSN(Root,"descendant::*[@upper='" word "' and (@type='Function' or @type='Label')]"))
 				total.=(info:=SSN(node,"@type").text " " StrSplit(SSN(node,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=node
-			if(node:=SSN(root,"descendant::*[@upper='" word "' and @type='Class']"))
+			if(node:=SSN(Root,"descendant::*[@upper='" word "' and @type='Class']"))
 				total.=(info:=SSN(node,"@type").text " " StrSplit(SSN(node,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=node
 			if((list:=cexml.SN(node,"descendant::*[@upper='" word "' and @type!='Method' and @type!='Function']")).length)
 				while(ll:=list.item[A_Index-1]),ea:=XML.EA(ll)
