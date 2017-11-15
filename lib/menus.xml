@@ -178,6 +178,7 @@
 				<menu name="Multi Line" clean="Multi_Line"></menu>
 				<menu name="&amp;Regex" clean="Regex" hotkey="^!r"></menu>
 				<menu name="Copy Selected Text on Quick Find" clean="Copy_Selected_Text_on_Quick_Find"></menu>
+				<menu name="Quick Find Ignore" clean="Quick_Find_Ignore"></menu>
 				<menu name="&amp;Set Selection" clean="Set_Selection" hotkey="^F1"></menu></menu>
 			<menu clean="Formatting_Options" name="Formatting Options" tv="11459656" option="1">
 				<menu name="New Include Add Space" clean="New_Include_Add_Space" option="1"></menu>
