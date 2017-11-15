@@ -16,8 +16,10 @@ if(!settings[]){
 	m("Oh boy...check the settings file to see what's up.")
 }v.LineEdited:=[],v.LinesEdited:=[],v.RunObject
 ComObjError(0),new Keywords(),FileCheck(%True%),Options("startup"),menus:=new XML("menus","Lib\Menus.xml"),new Omni_Search_Class(),Gui(),DefaultRCM(),CheckLayout()
-if((Folder:=Settings.SSN("//DefaultFolder")).text)
-	Folder.SetAttribute("folder",Folder.text),Folder.text:=""
+/*
+	if((Folder:=Settings.SSN("//DefaultFolder")).text)
+		Folder.SetAttribute("folder",Folder.text),Folder.text:=""
+*/
 /*
 	Hotkey,End,EndThing,On
 	RegExMatch()
@@ -135,44 +137,6 @@ OR PERFORMANCE OF THIS SOFTWARE.
 	return
 }
 Testing(){
-	/*
-		SetTimer,11Close,-100
-		sc:=csc()
-		RegExMatch(Clipboard,"O)start=\x22(\d+)\x22",Start)
-		RegExMatch(Clipboard,"O)end=\x22(\d+)\x22",End)
-		return sc.2160(Start.1,End.1)
-		return m((Lang:=GetLanguage(sc)),sc.2010(sc.2008),Keywords.GetXML(Lang)[])
-	*/
-	static sc
-	
-	sc:=new s("SetStyles","{pos:w500 h500}")
-	Gui,SetStyles:Show,w800 h800
-	return
-	SetStylesGuiEscape:
-	SetStylesGuiClose:
-	Gui,SetStyles:Destroy
-	return
-	NewWin:=new GUIKeep("Testing"),NewWin.Add("Edit,w500 vSearch,,w","Button,gSelectSpecial Default,Select Text")
-	NewWin.Show("Find Special")
-	return
-	SelectSpecial:
-	sc:=csc(),sc.2686(0,sc.2006)
-	Text:=NewWin[].Search,Index:=1
-	while((Pos:=sc.2197((Len:=StrPut(Text,"UTF-8")-1),Text))>=0){
-		/*
-			Pos:=sc.2197((Len:=StrPut(Text,"UTF-8")-1),Text)
-		*/
-		sc.2686(Pos+1,sc.2006)
-		if((Style:=sc.2010(Pos))~="\b(3|11)\b")
-			Continue
-		if(Index=1)
-			sc.2160(Pos,Pos+Len)
-		else
-			sc.2573(Pos,Pos+Len)
-		Index++
-		;~m(sc.2010(Pos))
-	}
-	return
 	if(A_UserName!="maest")
 		return m("Testing")
 	return m("I'm sleepy.")
@@ -878,53 +842,73 @@ class Code_Explorer{
 				TVC.Delete(2,tv)
 			node.ParentNode.RemoveChild(node)
 }}}
-class debug{
-	static socket
+class Debug{
+	static Socket
 	__New(){
-		if(this.socket){
-			debug.Send("stop")
+		if(this.Socket){
+			Debug.Send("stop")
 			Sleep,500
 			this.Disconnect()
-		}debug.XML:=new XML("debug"),sock:=-1
-		if(!v.debug.sc)
+		}Debug.XML:=new XML("Debug"),sock:=-1
+		if(!v.Debug.sc)
 			MainWin.DebugWindow()
-		DllCall("LoadLibrary","str","ws2_32","ptr"),VarSetCapacity(wsadata,394+A_PtrSize),DllCall("ws2_32\WSAStartup","ushort",0,"ptr",&wsadata),DllCall("ws2_32\WSAStartup","ushort",NumGet(wsadata,2,"ushort"),"ptr",&wsadata),OnMessage(0x9987,debug.sock),socket:=sock,next:=debug.AddrInfo(),sockaddrlen:=NumGet(next+0,16,"uint"),sockaddr:=NumGet(next+0,16+(2*A_PtrSize),"ptr"),socket:=DllCall("ws2_32\socket","int",NumGet(next+0,4,"int"),"int",1,"int",6,"ptr")
-		if(DllCall("ws2_32\bind","ptr",socket,"ptr",sockaddr,"uint",sockaddrlen,"int")!=0)
+		DllCall("LoadLibrary","str","ws2_32","ptr"),VarSetCapacity(wsadata,394+A_PtrSize),DllCall("ws2_32\WSAStartup","ushort",0,"ptr",&wsadata),DllCall("ws2_32\WSAStartup","ushort",NumGet(wsadata,2,"ushort"),"ptr",&wsadata),OnMessage(0x9987,Debug.sock),Socket:=sock,next:=Debug.AddrInfo(),sockaddrlen:=NumGet(next+0,16,"uint"),sockaddr:=NumGet(next+0,16+(2*A_PtrSize),"ptr"),Socket:=DllCall("ws2_32\socket","int",NumGet(next+0,4,"int"),"int",1,"int",6,"ptr")
+		if(DllCall("ws2_32\bind","ptr",Socket,"ptr",sockaddr,"uint",sockaddrlen,"int")!=0)
 			return m(DllCall("ws2_32\WSAGetLastError"))
-		DllCall("ws2_32\freeaddrinfo","ptr",next),DllCall("ws2_32\WSAAsyncSelect","ptr",socket,"ptr",A_ScriptHwnd,"uint",0x9987,"uint",0x29),ss:=DllCall("ws2_32\listen","ptr",socket,"int",32),debug.socket:=socket,debug.filename:=Current(2).file,debug.id:=Current(2).id,debug.Hotkeys(1),debug.Breakpoints:=[]
-	}
-	Hotkeys(State){
+		DllCall("ws2_32\freeaddrinfo","ptr",next),DllCall("ws2_32\WSAAsyncSelect","ptr",Socket,"ptr",A_ScriptHwnd,"uint",0x9987,"uint",0x29),ss:=DllCall("ws2_32\listen","ptr",Socket,"int",32),Debug.Socket:=Socket,Debug.filename:=Current(2).file,Debug.id:=Current(2).id,Debug.Hotkeys(1),Debug.Breakpoints:=[]
+	}Accept(){
+		if((sock:=DllCall("ws2_32\accept","ptr",Debug.Socket,"ptr",0,"int",0,"ptr"))!=-1)
+			Debug.Socket:=sock,Debug.Register()
+		Else
+			Debug.Disconnect()
+	}AddrInfo(){
+		VarSetCapacity(hints,8*A_PtrSize,0),DllCall("ws2_32\getaddrinfo",astr,"127.0.0.1",astr,"9000","uptr",hints,"ptr*",results)
+		return results
+	}Caret(state){
+		color:=state=1?Settings.Get("//theme/caret/@Debug",0x0000ff):Settings.Get("//theme/caret/@color",0xFFFFFF),width:=state=1?3:Settings.Get("//theme/caret/@width",1)
+		for a,b in s.ctrl
+			b.2069(color),b.2188(width)
+	}Decode(string){ ;original http://www.autohotkey.com/forum/viewtopic.php?p=238120#238120
+		if(string="")
+			return
+		DllCall("Crypt32.dll\CryptStringToBinary","ptr",&string,"uint",StrLen(string),"uint",1,"ptr",0,"uint*",cp:=0,"ptr",0,"ptr",0),VarSetCapacity(bin,cp),DllCall("Crypt32.dll\CryptStringToBinary","ptr",&string,"uint",StrLen(string),"uint",1,"ptr",&bin,"uint*",cp,"ptr",0,"ptr",0)
+		return StrGet(&bin,cp,"UTF-8")
+	}Disconnect(){
+		Debug.Send("stop")
+		Sleep,200
+		DllCall("ws2_32\WSAAsyncSelect","uint",Debug.Socket,"ptr",A_ScriptHwnd,"uint",0,"uint",0),DllCall("ws2_32\closesocket","uint",Debug.Socket,"int"),DllCall("ws2_32\WSACleanup"),Debug.Socket:="",Debug.Off(),csc().2264(10000000)
+		v.DebugHighlight:=[],DebugHighlight(),Debug.Hotkeys(0),Debug.Caret(0)
+	}Encode(text){
+		IfEqual,text,,return
+			cp:=0,VarSetCapacity(rawdata,StrPut(text,"UTF-8")),sz:=StrPut(text,&rawdata,"UTF-8")-1,DllCall("Crypt32.dll\CryptBinaryToString","ptr",&rawdata,"uint",sz,"uint",0x40000001,"ptr",0,"uint*",cp),VarSetCapacity(str,cp*(A_IsUnicode?2:1)),DllCall("Crypt32.dll\CryptBinaryToString","ptr",&rawdata,"uint",sz,"uint",0x40000001,"str",str,"uint*",cp)
+		return str
+	}Focus(){
+		if(!v.Options.Focus_Studio_On_Debug_Breakpoint)
+			WinActivate,% hwnd([1])
+	}Hotkeys(State){
 		state:=state?"On":"Off"
 		if(v.Options.Global_Debug_Hotkeys){
 			Hotkey,IfWinActive
 			for a,b in ["Stop_Debugger","Run_Program","Step_Into","Step_Out","Step_Over","List_Variables"]{
 				if(key:=menus.SSN("//*[@clean='" b "']/@hotkey").text)
 					Hotkey,%key%,HotkeyLabel,%state%
-	}}}
-	TopXML(){
-		return debug.XML.SSN("//main")
-	}
-	AddrInfo(){
-		VarSetCapacity(hints,8*A_PtrSize,0),DllCall("ws2_32\getaddrinfo",astr,"127.0.0.1",astr,"9000","uptr",hints,"ptr*",results)
-		return results
-	}
-	Run(filename){
+	}}}Run(filename){
 		static pid
-		debug.filename:=filename
+		Debug.filename:=filename
 		SetTimer,runn,-1
 		return
 		runn:
-		filename:=debug.filename
+		filename:=Debug.filename
 		SplitPath,filename,,dir
 		if(FileExist(A_ScriptDir "\AutoHotkey.exe"))
-			Run,%A_ScriptDir%\AutoHotkey.exe /debug "%filename%",%dir%,,pid
+			Run,%A_ScriptDir%\AutoHotkey.exe /Debug "%filename%",%dir%,,pid
 		else
-			Run,"%A_AhkPath%" /debug "%filename%",%dir%,,pid
-		sc:=v.debug
+			Run,"%A_AhkPath%" /Debug "%filename%",%dir%,,pid
+		sc:=v.Debug
 		while(!WinExist("ahk_pid" pid)){
 			Sleep,100
 			if(A_Index=5){
-				return m("Debugger failed, Please close all instances of " SplitPath(debug.filename).filename " and try again")
+				return m("Debugger failed, Please close all instances of " SplitPath(Debug.filename).filename " and try again")
 		}}sc.2004(),sc.2003(0,"Initializing Debugger, Please Wait...`n"),csc().2264(500)
 		if(v.Options.Auto_Variable_Browser)
 			VarBrowser()
@@ -933,100 +917,33 @@ class debug{
 		cee:
 		if(WinExist("ahk_pid" pid)){
 			ControlGetText,text,Static1,% "ahk_pid" pid
-			sc:=csc(),info:=StripError(text,debug.filename) ;IMPORTANT
+			sc:=csc(),info:=StripError(text,Debug.filename) ;IMPORTANT
 			if(info.line&&info.file)
-				SetPos({file:info.file,line:info.line}),v.debug.2003(v.debug.2006,"`n" text)
+				SetPos({file:info.file,line:info.line}),v.Debug.2003(v.Debug.2006,"`n" text)
 		}return
-	}
-	Decode(string){ ;original http://www.autohotkey.com/forum/viewtopic.php?p=238120#238120
-		if(string="")
-			return
-		DllCall("Crypt32.dll\CryptStringToBinary","ptr",&string,"uint",StrLen(string),"uint",1,"ptr",0,"uint*",cp:=0,"ptr",0,"ptr",0),VarSetCapacity(bin,cp),DllCall("Crypt32.dll\CryptStringToBinary","ptr",&string,"uint",StrLen(string),"uint",1,"ptr",&bin,"uint*",cp,"ptr",0,"ptr",0)
-		return StrGet(&bin,cp,"UTF-8")
-	}
-	Encode(text){
-		IfEqual,text,,return
-			cp:=0,VarSetCapacity(rawdata,StrPut(text,"UTF-8")),sz:=StrPut(text,&rawdata,"UTF-8")-1,DllCall("Crypt32.dll\CryptBinaryToString","ptr",&rawdata,"uint",sz,"uint",0x40000001,"ptr",0,"uint*",cp),VarSetCapacity(str,cp*(A_IsUnicode?2:1)),DllCall("Crypt32.dll\CryptBinaryToString","ptr",&rawdata,"uint",sz,"uint",0x40000001,"str",str,"uint*",cp)
-		return str
-	}
-	/*
-		Off(){
-			global x
-			for a,b in [10002,10003,10004]
-				toolbar.list.10002.setstate(b,16)
-			for a,b in [10000,10001]
-				toolbar.list.10002.setstate(b,4)
-		}
-	*/
-	/*
-		On(){
-			for a,b in [10002,10003,10004]
-				toolbar.list.10002.setstate(b,4)
-			for a,b in [10000,10001]
-				toolbar.list.10002.setstate(b,16)
-		}
-	*/
-	Register(){
-		DllCall("ws2_32\WSAAsyncSelect","ptr",debug.socket,"ptr",A_ScriptHwnd,"uint",0x9987,"uint",0x29)
-	}
-	Disconnect(){
-		debug.Send("stop")
-		Sleep,200
-		DllCall("ws2_32\WSAAsyncSelect","uint",debug.socket,"ptr",A_ScriptHwnd,"uint",0,"uint",0),DllCall("ws2_32\closesocket","uint",debug.socket,"int"),DllCall("ws2_32\WSACleanup"),debug.socket:="",debug.Off(),csc().2264(10000000)
-		v.DebugHighlight:=[],DebugHighlight(),debug.Hotkeys(0),debug.Caret(0)
-	}
-	Accept(){
-		if((sock:=DllCall("ws2_32\accept","ptr",debug.socket,"ptr",0,"int",0,"ptr"))!=-1)
-			debug.socket:=sock,debug.Register()
-		Else
-			debug.Disconnect()
-	}
-	Send(message){
-		mm:=message,message.=Chr(0),len:=StrPut(message,"UTF-8"),VarSetCapacity(buffer,len),ll:=StrPut(message,&buffer,"UTF-8")
-		if(!debug.socket){
-			t("Debugger not functioning: " debug.socket,"time:1")
-			if(message="stop")
-				return
-			else
-				Exit
-		}
-		debug.wait:=1,sent:=DllCall("ws2_32\send","ptr",debug.socket,uptr,&buffer,"int",ll,"int",0,"cdecl")
-		if(sent&&mm!="stop"){
-			sendwait:
-			Sleep,20
-			if(debug.socket<=0)
-				return t("Debugging has stopped")
-			While(debug.wait){
-				Sleep,10
-				if(debug.socket<1)
-					return
-				if(A_Index>20){
-					debug.wait:=0,v.ready:=1,debug.Receive(),InsertDebugMessage()
-					Break
-		}}}return
 	}Receive(){
 		static last
 		;Thank you Lexikos and fincs http://ahkscript.org/download/tools/DBGP.ahk
-		socket:=debug.socket
-		while(DllCall("ws2_32\recv","ptr",socket,"char*",c,"int",1,"int",0)){
+		Socket:=Debug.Socket
+		while(DllCall("ws2_32\recv","ptr",Socket,"char*",c,"int",1,"int",0)){
 			if(c=0)
 				break
 			length.=Chr(c)
 		}if(length<=0)
-			return debug.wait:=0
+			return Debug.wait:=0
 		VarSetCapacity(packet,++length,0),recd:=0
 		While(r<length){
-			index:=A_Index,rr:=r,r:=DllCall("ws2_32\recv","ptr",socket,"ptr",&packet,"int",length,"int",0x2)
-			if(!debug.socket)
+			index:=A_Index,rr:=r,r:=DllCall("ws2_32\recv","ptr",Socket,"ptr",&packet,"int",length,"int",0x2)
+			if(!Debug.Socket)
 				m("Socket Disconnected, Debugging has stopped")
 			if(r<1)
-				error:=DllCall("GetLastError"),t(r,socket,length,received,"An error occured",error,"Possible reasons for the error:","1.  Sending OutputDebug faster than 1ms per message","2.  Max_Depth or Max_Children value too large","time:2")
+				error:=DllCall("GetLastError"),t(r,Socket,length,received,"An error occured",error,"Possible reasons for the error:","1.  Sending OutputDebug faster than 1ms per message","2.  Max_Depth or Max_Children value too large","time:2")
 			if(r<length)
 				Sleep,5
 			if(A_Index>10){
 				crap:=1
 				break
-		}}DllCall("ws2_32\recv","ptr",socket,"ptr",&packet,"int",length,"int",0),debug.wait:=0
+		}}DllCall("ws2_32\recv","ptr",Socket,"ptr",&packet,"int",length,"int",0),Debug.wait:=0
 		if(!IsObject(v.displaymsg))
 			v.displaymsg:=[]
 		if(info:=StrGet(&packet,length-1,"UTF-8")){
@@ -1039,51 +956,65 @@ class debug{
 			t()
 		return
 		crap:
-		debug.Receive()
+		Debug.Receive()
 		return
-	}Focus(){
-		if(!v.Options.Focus_Studio_On_Debug_Breakpoint)
-			WinActivate,% hwnd([1])
-	}
-	Sock(info*){
+	}Register(){
+		DllCall("ws2_32\WSAAsyncSelect","ptr",Debug.Socket,"ptr",A_ScriptHwnd,"uint",0x9987,"uint",0x29)
+	}Send(message){
+		mm:=message,message.=Chr(0),len:=StrPut(message,"UTF-8"),VarSetCapacity(buffer,len),ll:=StrPut(message,&buffer,"UTF-8")
+		if(!Debug.Socket){
+			t("Debugger not functioning: " Debug.Socket,"time:1")
+			if(message="stop")
+				return
+			else
+				Exit
+		}Debug.wait:=1,sent:=DllCall("ws2_32\send","ptr",Debug.Socket,uptr,&buffer,"int",ll,"int",0,"cdecl")
+		if(sent&&mm!="stop"){
+			sendwait:
+			Sleep,20
+			if(Debug.Socket<=0)
+				return t("Debugging has stopped")
+			While(Debug.wait){
+				Sleep,10
+				if(Debug.Socket<1)
+					return
+				if(A_Index>20){
+					Debug.wait:=0,v.ready:=1,Debug.Receive(),InsertDebugMessage()
+					Break
+		}}}return
+	}Sock(info*){
 		if(info.2=0x9987){
 			if(info.1=1)
-				debug.Receive()
+				Debug.Receive()
 			if(info.1&0xffff=8)
-				debug.Accept()
+				Debug.Accept()
 			if(info.1&0xFFFF=32)
-				debug.Disconnect()
-		}
-	}Caret(state){
-		color:=state=1?Settings.Get("//theme/caret/@debug",0x0000ff):Settings.Get("//theme/caret/@color",0xFFFFFF)
-		width:=state=1?3:Settings.Get("//theme/caret/@width",1)
-		for a,b in s.ctrl
-			b.2069(color),b.2188(width)
+				Debug.Disconnect()
+	}}TopXML(){
+		return Debug.XML.SSN("//main")
 	}
 }
 Debug_Current_Script(){
-	/*
-		Scan_Line()
-	*/
-	if(debug.socket){
-		sc:=v.debug,sc.2003(sc.2006,"`nKilling Current Process"),debug.Send("stop")
+	Scan_Line()
+	if(Debug.Socket){
+		sc:=v.Debug,sc.2003(sc.2006,"`nKilling Current Process"),Debug.Send("stop")
 		Sleep,200
-		if(debug.Socket){
-			debug.Send("stop")
+		if(Debug.Socket){
+			Debug.Send("stop")
 			Sleep,200
 	}}new Debug()
-	if(debug.VarBrowser)
+	if(Debug.VarBrowser)
 		Default("SysTreeView321",98),TV_Delete()
 	if(Current(2).file=A_ScriptFullPath)
-		return m("Can not debug AHK Studio using AHK Studio.")
+		return m("Can not Debug AHK Studio using AHK Studio.")
 	/*
 		break:=SN(Current(7),"descendant::*[@type='Breakpoint']")
 		get the files that have breakpoints
 		remove the breakpoints and re-scan the file/s for them
-		then debug with the proper line numbers.
+		then Debug with the proper line numbers.
 	*/
 	Save()
-	debug.Run(Current(2).file)
+	Debug.Run(Current(2).file)
 }
 class EasyView{
 	Register(Control,HWND,Label,win:=1,ID:=""){
@@ -1232,7 +1163,7 @@ Class MainWindowClass{
 			Menu,Tray,Icon,AHKStudio.ico
 		if(v.Options.Hide_Tray_Icon)
 			Menu,Tray,NoIcon
-		Gui,+Resize +LabelMainWindowClass. +hwndmain +MinSize400x200 -DPIScale
+		Gui,+Resize +LabelMainWindowClass. +hwndmain +MinSize800x600 -DPIScale
 		Gui,Add,TreeView,x0 y0 w0 h0 hwndpe +0x400000
 		Gui,Add,TreeView,x0 y0 w0 h0 hwndce +0x400000 AltSubmit
 		Gui,Add,TreeView,hwndtn x0 y0 w0 h0 +0x400000
@@ -4125,7 +4056,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20161107223002,XMLFiles:={menus:[20171112093638,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20161107223002,XMLFiles:={menus:[20171115045409,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20170926222816,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -5007,10 +4938,13 @@ Go_To_Line(){
 	sc.2025(sc.2128(value-1))
 }
 Google_Search_Selected(){
-	sc:=csc(),text:=sc.getseltext()
-	if(!text)
-		return m("Please select some text to search for")
-	Run,https://www.google.com/search?q=%text%
+	sc:=csc(),Text:=sc.GetSelText()
+	if(!Text)
+		return m("Please select some Text to search for")
+	if(Text~="i)^http(s)?://")
+		Run,%Text%
+	else
+		Run,https://www.google.com/search?q=%Text%
 }
 Goto(){
 	Goto:
@@ -5432,7 +5366,7 @@ Create_Include_From_Selection(){
 	if(pos.start=pos.end)
 		return m("Please select some text to create a new Include from")
 	text:=sc.GetSelText(),RegExMatch(text,"^(\w+)",Include)
-	Filename:=SelectFile(RegExReplace(Include1,"_"," ") ".ahk","New Include Filename")
+	Filename:=SelectFile(RegExReplace(Include1,"_"," ") "." Current(3).Ext,"New Include Filename",Current(3).Ext)
 	if(FileExist(Filename))
 		return m("Include name already exists. Please choose another")
 	if(files.Find(Current(1),"//@file",Filename))
@@ -5537,8 +5471,7 @@ InsertMultiple(caret,CPos,text,end){
 	sc:=csc(),sc.2686(CPos,CPos),sc.2194(StrPut(text,"UTF-8")-1,text),sc.2584(caret,end),sc.2586(caret,end)
 }
 Jump_To_First_Available(){
-	sc:=csc(),line:=sc.GetLine(sc.2166(sc.2008))
-	v.jtfa:=[]
+	sc:=csc(),line:=sc.GetLine(sc.2166(sc.2008)),v.jtfa:=[]
 	if(RegExMatch(line,"Oi)^\s*\x23include\s*(.*)(\s*;.*)?$",found))
 		Jump_To_Include()
 	else{
@@ -5550,45 +5483,14 @@ Jump_To_First_Available(){
 			SelectText(all.item[0],1)
 		else{
 			all:=cexml.SN("//*[@upper='" Word "']")
-			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
-				total.=(info:=A_Index ". " ea.type " " StrSplit(SSN(aa,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=aa
-			}
+			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+				total.=(info:=A_Index ". " ea.Type " " StrSplit(SSN(aa,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=aa
 			sc.2106(124),sc.2117(6,Trim(total,"|")),sc.2106(32)
 			if(!InStr(total,"|"))
 				sc.2104
-		}
-		/*
-			if(SubStr(word,1,1)="g"&&node:=SSN(Root,"descendant::*[@upper='" Upper(SubStr(word,2)) "' and(@type='Label' or @type='Function')]")){
-				return CEXMLSel(node),SelectText(node,1)
-			}if(sc.2007((pos:=sc.2266(sc.2008,1)-1))=46){
-				word2:=Upper(sc.TextRange(sc.2266(pos-1,1),sc.2267(pos-1,1)))
-				if(node:=SSN(Root,"descendant::*[@upper='" word2 "' and @type='Instance']")){
-					if(node:=SSN(Root,"descendant::*[@upper='" word "' and @class='" SSN(node,"@class").text "' and @type='Method']"))
-						total.=(info:=SSN(node,"@type").text " " StrSplit(SSN(node,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=node
-				}if(node:=SSN(Root,"descendant::*[@upper='" word2 "' and @type='Class']")){
-					if(node:=SSN(node,"descendant::*[@upper='" word "' and (@type='Method' or @type='Property')]"))
-						total.=(info:=SSN(node,"@type").text " " StrSplit(SSN(node,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=node
-				}else if((list:=cexml.SN(Root,"descendant::*[@upper='" word "' and @type='Method']")).length){
-					while(ll:=list.item[A_Index-1]),ea:=XML.EA(ll)
-						total.=(info:=ea.type " " StrSplit(SSN(ll,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=ll
-				}
-			}if(node:=SSN(Root,"descendant::*[@upper='" word "' and (@type='Function' or @type='Label')]"))
-				total.=(info:=SSN(node,"@type").text " " StrSplit(SSN(node,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=node
-			if(node:=SSN(Root,"descendant::*[@upper='" word "' and @type='Class']"))
-				total.=(info:=SSN(node,"@type").text " " StrSplit(SSN(node,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=node
-			if((list:=cexml.SN(node,"descendant::*[@upper='" word "' and @type!='Method' and @type!='Function']")).length)
-				while(ll:=list.item[A_Index-1]),ea:=XML.EA(ll)
-					total.=(info:=ea.type " " StrSplit(SSN(ll,"ancestor-or-self::file[@file]/@file").text,"\").pop()) "|",v.jtfa[info]:=ll
-			if(total:=Trim(total,"|")){
-				sc.2106(124),sc.2117(6,total),sc.2106(32)
-				if(!InStr(total,"|"))
-					sc.2104
-			}
-		*/
-	}
-}Jump_To(type){
+}}}Jump_To(Type){
 	sc:=csc(),line:=sc.GetLine(sc.2166(sc.2008)),word:=Upper(sc.getword())
-	if(node:=SSN(Current(7),"descendant::*[@type='" type "' and @upper='" word "']"))
+	if(node:=SSN(Current(7),"descendant::*[@type='" Type "' and @upper='" word "']"))
 		CEXMLSel(node)
 }Jump_To_Function(){
 	Jump_To("Function")
@@ -6377,19 +6279,19 @@ New(FileName:="",text:="",Select:=1){
 	return new
 }
 New_Include_From_Current_Word(){
-	sc:=csc(),word:=sc.GetWord(),file:=Current(2).file
-	if(Context(1).word="gui"){
-		word:=InputBox(hwnd(1),"Possible g-label detected","Confirm the new Function and File to be created",word)
-		if(ErrorLevel||word="")
+	sc:=csc(),Word:=sc.GetWord(),file:=Current(2).file
+	if(Context(1).Word="gui"){
+		Word:=InputBox(hwnd(1),"Possible g-label detected","Confirm the new Function and File to be created",Word)
+		if(ErrorLevel||Word="")
 			return
-	}
-	SplitPath,file,,dir
-	FileSelectFile,Filename,S16,% dir "\" RegExReplace(word,"_"," ") ".ahk",Confirm New File,*.ahk
+	}SplitPath,file,,Dir
+	FileName:=SelectFile(Dir "\" RegExReplace(Word,"_"," ") "." Current(3).Ext,"FileName for " Word,Current(3).Ext)
+	return m(FileName)
 	if(ErrorLevel)
 		return
-	if(files.Find(Current(1),"//@file",filename))
-		return m("This file is already included in this Project")
-	AddInclude(Filename,word "(){`r`n`t`r`n}",{start:StrPut(word "(","UTF-8")-1,end:StrPut(word "(","UTF-8")-1})
+	if(files.Find(Current(1),"//@file",FileName))
+		return m("A file with this name is already included in this Project")
+	AddInclude(FileName,Word "(){`r`n`t`r`n}",{start:StrPut(Word "(","UTF-8")-1,end:StrPut(Word "(","UTF-8")-1})
 }
 NewLines(text){
 	for a,b in {"``n":"`n","``r":"`n","``t":"`t","\r":"`n","\t":"`t","\n":"`n"}
@@ -7023,6 +6925,7 @@ Omni_Search(start=""){
 		Up/Down selects the next item like before
 		but it collapses the previous item and expands the next tv item
 		Sounds like fun :)
+		make it work like Find basically :)
 	*/
 	if(sc.notes)
 		csc({hwnd:gui.SSN("//*[@type='Scintilla']/@hwnd").text}),sc:=csc(),sc.2400
@@ -7037,7 +6940,7 @@ Omni_Search(start=""){
 	Gui,1:-Disabled
 	GuiControl,20:,Edit1,%start%
 	Hotkey,IfWinActive,% NewWin.ID
-	for a,b in {up:"omnikey",down:"omnikey",PgUp:"omnikey",PgDn:"omnikey","^Backspace":"deleteback",Enter:"osgo"}{
+	for a,b in {up:"omnikey",down:"omnikey",PgUp:"omnikey",PgDn:"omnikey","^Backspace":"deleteback",Enter:"OSGo"}{
 		Try
 			Hotkey,%a%,%b%,On
 		Catch,e
@@ -7051,7 +6954,7 @@ Omni_Search(start=""){
 	omnisearch:
 	Gui,20:Default
 	GuiControl,20:-Redraw,SysListView321
-	FileSearch:=osearch:=search:=NewWin[].search,Select:=[],LV_Delete(),sort:=[],stext:=[],fsearch:=search="^"?1:0
+	FileSearch:=osearch:=search:=NewWin[].search,Select:=[],LV_Delete(),sort:=[],stext:=[],fsearch:=search="^"?1:0,NewWin.Instructions:=0
 	if(InStr(search,")")){
 		if(!v.Options.Clipboard_History){
 			Options("Clipboard_History")
@@ -7068,7 +6971,7 @@ Omni_Search(start=""){
 		if(a!=".")
 			FileSearch:=RegExReplace(FileSearch,"\Q" a "\E")
 	}if(InStr(search,"?")||search=""){
-		LV_Delete()
+		LV_Delete(),NewWin.Instructions:=1
 		for a,b in Omni_Search_Class.Prefix{
 			info:=a="+"?"Add Function Call":b
 			LV_Add("",a,info,Convert_Hotkey(menus.SSN("//*[@clean='" PrefixHotkeys[info] "']/@hotkey").text))
@@ -7168,7 +7071,7 @@ Omni_Search(start=""){
 	20Close:
 	NewWin.SavePos(),hwnd({rem:20})
 	return
-	osgo:
+	OSGo:
 	if(running)
 		return m("here?")
 	Gui,20:Default
@@ -7182,12 +7085,10 @@ Omni_Search(start=""){
 		}
 		ControlFocus,Edit1,% hwnd([20])
 		Send,{%item%}
-	}
-	if(SubStr(search,1,1)=")"){
+	}if(SubStr(search,1,1)=")"){
 		text:=sort[LV_GetNext()]
 		return Clipboard:=text,m("Clipboard now contains:",text,"time:1")
-	}
-	if(InStr(search,"?")){
+	}if(NewWin.Instructions){
 		LV_GetText(pre,LV_GetNext())
 		ControlSetText,Edit1,%pre%,% NewWin.id
 		ControlSend,Edit1,^{End},% NewWin.id
@@ -7206,19 +7107,19 @@ Omni_Search(start=""){
 				Run,%type% "%option%"
 			}
 		}
-		hwnd({rem:20})
+		NewWin.Exit()
 	}else if(pre="+"){
-		hwnd({rem:20}),args:=item.args,sc:=csc(),args:=RegExReplace(args,"U)=?" chr(34) "(.*)" chr(34)),build:=item.text "("
+		NewWin.Exit(),args:=item.args,sc:=csc(),args:=RegExReplace(args,"U)=?" chr(34) "(.*)" chr(34)),build:=item.text "("
 		for a,b in StrSplit(args,",")
 			comma:=A_Index>1?",":"",value:=InputBox(sc.sc,"Add Function Call","Insert a value for : " b " :`n" item.text "(" item.args ")`n" build ")",""),value:=value?value:Chr(34) Chr(34),build.=comma value
 		build.=")"
 		sc.2003(sc.2008,build)
 	}else if(item.type="file")
-		hwnd({rem:20}),tv(files.SSN("//*[@id='" SSN(node,"ancestor::main/@id").text "']/descendant::*[@id='" item.id "']/@tv").text)
+		NewWin.Exit(),tv(files.SSN("//*[@id='" SSN(node,"ancestor::main/@id").text "']/descendant::*[@id='" item.id "']/@tv").text)
 	else if(item.type!="gui"){
 		if(!item.id)
 			item.id:=SSN(node,"ancestor::file/@id").text
-		hwnd({rem:20}),tv:=files.SSN("//*[@id='" item.id "']/@tv").text
+		NewWin.Exit(),tv:=files.SSN("//*[@id='" item.id "']/@tv").text
 		if(TVC.Selection(1)!=tv){
 			tv(tv)
 			Sleep,400
@@ -7228,29 +7129,14 @@ Omni_Search(start=""){
 			sc:=csc(),Text:=sc.GetUNI(),pre:=SN(node,"preceding-sibling::*[@type='" item.type "' and @text='" item.text "']").Length,Pos:=0,Search:=RegExReplace(BreakBook[Item.Type],"\$1",Item.Text)
 			Loop,% 1+pre
 				Pos:=RegExMatch(Text,Search,,Pos+1)
-			line:=sc.2166(StrPut(SubStr(Text,1,Pos),"UTF-8")-1),sc.2160(sc.2128(line),sc.2136(line)),hwnd({rem:20}),CenterSel()
+			line:=sc.2166(StrPut(SubStr(Text,1,Pos),"UTF-8")-1),sc.2160(sc.2128(line),sc.2136(line)),NewWin.Exit(),CenterSel()
 		}else{
-			NN:=(xx:=Keywords.Languages[LanguageFromFileExt(SSN(Node,"ancestor::file/@ext").text)]).SSN("//Code/descendant::" Item.Type)
-			Omni:=GetOmni(Current(3).Lang)
+			NN:=(xx:=Keywords.Languages[LanguageFromFileExt(SSN(Node,"ancestor::file/@ext").text)]).SSN("//Code/descendant::" Item.Type),Omni:=GetOmni(Current(3).Lang)
 			if((Parent:=NN.ParentNode)!="Code")
 				Item.SelectParent:=SSN(Node.ParentNode,"@text").text,Item.ParentRegex:=RegExReplace(Omni[Parent.NodeName].Find,"\$1",Item.SelectParent)
-			/*
-				for a,b in Item
-					List.=a " = " b "`n"
-			*/
-			Item.Regex:=RegExReplace(Omni[NN.NodeName].Find,"\$1",Item.Text)
-			/*
-				return m("Parent: " Item.ParentRegex,Item.Regex,Parent.xml)
-			*/
-			/*
-				FIX THIS TO BE THE RIGHT THING!!!!!
-				FIX ALL THE OTHER SelectText() STUFF
-			*/
-			Item.File:=SSN(Node,"ancestor-or-self::file/@file").text,SelectText(Item)
-		}
-	}
-	else if(item.type="gui"){
-		hwnd({rem:20}),tv(files.SSN("//*[@id='" item.id "']/@tv").text)
+			Item.Regex:=RegExReplace(Omni[NN.NodeName].Find,"\$1",Item.Text),Item.File:=SSN(Node,"ancestor-or-self::file/@file").text,SelectText(Item)
+	}}else if(item.type="gui"){
+		NewWin.Exit(),tv(files.SSN("//*[@id='" item.id "']/@tv").text)
 		Sleep,200
 		csc().2160(item.pos,item.pos+StrLen(item.text)),CenterSel()
 		text:=Update({get:item.file})
@@ -7260,9 +7146,8 @@ Omni_Search(start=""){
 			m("Go to " item.text,SubStr(text,item.start,item.end-item.start))
 	}else if(!item.text&&!item.type){
 		return
-	}else{
+	}else
 		m("Omni-Search",item.text,item.type,"Broken :(") ;leave this until I figure things out.
-	}
 	return
 	omnikey:
 	ControlSend,SysListView321,{%A_ThisHotkey%},% NewWin.ahkid
@@ -7884,98 +7769,86 @@ PublishIndent(Code,Indent:="`t",Newline:="`r`n"){
 	return SubStr(Out,StrLen(Newline)+1)
 }
 QF(x:=0){
-	static quickFind:=[],Find,LastFind:=[],break,select,MinMax:=new XML("MinMax"),search
+	static QuickFind:=[],Find,LastFind:=[],Break,Select,MinMax:=new XML("MinMax"),Search
 	qf:
 	if(v.Options.Require_Enter_For_Search&&x!="Enter")
 		return
 	if(x=1)
-		lastFind:=[]
-	sc:=csc(),startpos:=sc.2008,break:=1
+		LastFind:=[]
+	sc:=csc(),Break:=1
 	ControlGetText,Find,,% "ahk_id" MainWin.QFEdit
-	if(Find=lastFind&&sc.2570>1){
+	if(Find=LastFind&&sc.2570>1){
 		if(GetKeyState("Shift","P"))
-			return current:=sc.2575,sc.2574((current=0)?sc.2570-1:current-1),CenterSel()
+			return Current:=sc.2575,sc.2574((Current=0)?sc.2570-1:Current-1),CenterSel()
 		return sc.2606(),CenterSel()
-	}
-	pre:="O",Find1:="",Find1:=v.Options.Regex?Find:"\Q" RegExReplace(Find,"\\E","\E\\E\Q") "\E",pre.=v.Options.greed?"":"U",pre.=v.Options.case_sensitive?"":"i",pre.=v.Options.multi_line?"m`n":"",Find1:=pre ")" (v.Options.Word_Border?"\b":"") Find1 (v.Options.Word_Border?"\b":"")
+	}pre:="O",Find1:="",Find1:=v.Options.Regex?Find:"\Q" RegExReplace(Find,"\\E","\E\\E\Q") "\E",pre.=v.Options.greed?"":"U",pre.=v.Options.case_sensitive?"":"i",pre.=v.Options.multi_line?"m`n":"",Find1:=pre ")" (v.Options.Word_Border?"\b":"") Find1 (v.Options.Word_Border?"\b":"")
 	if(Find=""||Find="."||Find=".*"||Find="\")
 		return sc.2571
-	sc.Enable()
-	opos:=select.opos,select:=[],select.opos:=opos?opos:sc.2008,select.items:=[],text:=sc.GetUNI()
-	if(sc.2508(0,start:=quickFind[sc.2357]+1)!=""){
-		end:=sc.2509(0,start)
-		if(end)
-			text:=SubStr(text,1,end)
-	}
-	pos:=start?start:1,pos:=pos=0?1:pos,mainsel:="",index:=1,break:=0
-	start:=1,rem:=MinMax.SSN("//list"),rem.ParentNode.RemoveChild(rem),top:=MinMax.Add("list")
-	while(start<sc.2006){
-		min:=sc.2508(2,start),max:=sc.2509(2,start)
-		if((min!=0||max!=0)&&sc.2507(2,min))
-			MinMax.Under(top,"sel",{min:min,max:max})
-		if(min=0&&max=0){
-			MinMax.Under(top,"sel",{min:0,max:sc.2006})
-			break
-		}
-		if(min||max)
-			start:=max
-	}
-	if(v.Options.Current_Area){
-		Line:=sc.2166(sc.2008)
-		if((parent:=sc.2225(line))>=0){
-			MinMax.XML.LoadXML("<MinMax/>"),top:=MinMax.Add("list")
-			last:=sc.2224(parent,-1)
-			MinMax.Under(top,"sel",{min:sc.2167(Parent),max:sc.2167(Last)})
-		}
-	}
-	search:=sc.GetText(),pos:=1
-	while(RegExMatch(search,Find1,found,pos)){
-		if(found.len(1)=0)
-			break
-		if(break){
-			break:=0
+	sc.Enable(),OPos:=Select.OPos,Select:=[],Select.OPos:=OPos?OPos:sc.2008,Select.Items:=[],Text:=sc.GetUNI()
+	if(sc.2508(0,Start:=QuickFind[sc.2357]+1)!=""){
+		End:=sc.2509(0,Start)
+		if(End)
+			Text:=SubStr(Text,1,End)
+	}Pos:=Start?Start:1,Pos:=Pos=0?1:Pos,Break:=0,Start:=1,Rem:=MinMax.SSN("//list"),Rem.ParentNode.RemoveChild(Rem),Top:=MinMax.Add("list")
+	while(Start<sc.2006){
+		Min:=sc.2508(2,Start),Max:=sc.2509(2,Start)
+		if((Min!=0||Max!=0)&&sc.2507(2,Min))
+			MinMax.Under(Top,"sel",{min:Min,max:Max})
+		if(Min=0&&Max=0){
+			MinMax.Under(Top,"sel",{min:0,max:sc.2006})
 			Break
-		}
-		if(found.Count()){
-			if(!found.len(A_Index))
-				Break
-			Loop,% found.Count(){
-				ns:=StrPut(SubStr(search,1,found.Pos(A_Index)),"utf-8")-2
-				if(MinMax.SSN("//*[@min<='" ns "' and @max>='" ns "']"))
-					select.items.push({start:ns,end:ns+StrPut(found[A_Index],"UTF-8")-1})
-				pos:=found.Pos(A_Index)+found.len(A_Index)
-			}
-		}else{
-			if(found.len=0)
-				Break
-			ns:=StrPut(SubStr(search,1,found.Pos(0)),"utf-8")-2
-			if(MinMax.SSN("//*[@min<='" ns "' and @max>='" ns "']"))
-				select.items.InsertAt(1,{start:ns,end:ns+StrPut(found[0],"UTF-8")-1})
-			pos:=found.Pos(0)+found.len(0)
-		}
-		if(lastpos=pos)
+		}if(Min||Max)
+			Start:=Max
+	}if(v.Options.Current_Area){
+		if((Parent:=sc.2225(sc.2166(sc.2008)))>=0){
+			MinMax.XML.LoadXML("<MinMax/>"),Top:=MinMax.Add("list"),Last:=sc.2224(Parent,-1),MinMax.Under(Top,"sel",{min:sc.2167(Parent),max:sc.2167(Last)})
+	}}Search:=sc.GetText(),Ignore:=Settings.SSN("//QuickFind/Language[@language='" Current(3).Lang "']").Text,Pos:=LastPos:=1
+	while(RegExMatch(Search,Find1,Found,Pos)){
+		if(LastPos=Found.Pos(0)),LastPos:=Found.Pos(0)
 			Break
-		lastpos:=pos
-	}
-	lastFind:=Find
-	if(select.items.MaxIndex()=1)
-		obj:=select.items.1,sc.2160(obj.start,obj.end)
+		if(Found.Len(1)=0)
+			Break
+		if(Break){
+			Break:=0
+			Break
+		}if(Found.Count()){
+			if(!Found.Len(A_Index))
+				Break
+			Loop,% Found.Count(){
+				Pos:=Found.Pos(A_Index)+Found.Len(A_Index),NS:=StrPut(SubStr(Search,1,Found.Pos(A_Index)),"UTF-8")-2
+				if(Ignore)
+					if(sc.2010(NS+1)~="(" Ignore ")")
+						Continue,2
+				if(MinMax.SSN("//*[@min<='" NS "' and @max>='" NS "']"))
+					Select.Items.Push({Start:NS,End:NS+StrPut(Found[A_Index],"UTF-8")-1})
+		}}else{
+			Pos:=Found.Pos(0)+Found.Len(0)
+			if(Found.Len=0)
+				Break
+			NS:=StrPut(SubStr(Search,1,Found.Pos(0)),"UTF-8")-2
+			if(Ignore)
+				if(sc.2010(NS+1)~="(" Ignore ")")
+					Continue
+			if(MinMax.SSN("//*[@min<='" NS "' and @max>='" NS "']"))
+				Select.Items.InsertAt(1,{Start:NS,End:NS+StrPut(Found[0],"UTF-8")-1})
+	}}LastFind:=Find
+	if(Select.Items.MaxIndex()=1)
+		Obj:=Select.Items.1,sc.2160(Obj.Start,Obj.End)
 	else{
-		num:=-1
-		while(obj:=select.items.Pop()){
-			if(break)
-				break
-			sc[A_Index=1?2160:2573](A_Index=1?obj.start:obj.end,A_Index=1?obj.end:obj.start),num:=(obj.end>select.opos&&num<0)?A_Index-1:num
-		}
-		if(num>=0)
-			sc.2574(num)
-	}select:=[],sc.Enable(1),CenterSel()
+		Num:=-1
+		while(Obj:=Select.Items.Pop()){
+			if(Break)
+				Break
+			sc[A_Index=1?2160:2573](A_Index=1?Obj.Start:Obj.End,A_Index=1?Obj.End:Obj.Start),Num:=(Obj.End>Select.OPos&&Num<0)?A_Index-1:Num
+		}if(Num>=0)
+			sc.2574(Num)
+	}Select:=[],sc.Enable(1),CenterSel()
 	return
-	next:
+	Next:
 	sc:=csc(),sc.2606(),sc.2169()
 	return
 	Clear_Selection:
-	sc:=csc(),sc.2500(2),sc.2505(0,sc.2006),quickFind.remove(sc.2357)
+	sc:=csc(),sc.2500(2),sc.2505(0,sc.2006),QuickFind.Remove(sc.2357)
 	return
 	Set_Selection:
 	sc:=csc(),sc.2505(0,sc.2006),sc.2500(2)
@@ -7983,21 +7856,20 @@ QF(x:=0){
 		Goto,Clear_Selection
 	SetSel:=[]
 	Loop,% sc.2570
-		o:=[],o[sc.2577(A_Index-1)]:=1,o[sc.2579(A_Index-1)]:=1,SetSel.Insert({min:o.MinIndex(),max:o.MaxIndex()})
+		O:=[],O[sc.2577(A_Index-1)]:=1,O[sc.2579(A_Index-1)]:=1,SetSel.Insert({min:O.MinIndex(),Max:O.MaxIndex()})
 	for a,b in SetSel
-		sc.2504(b.min,b.max-b.min)
+		sc.2504(b.min,b.Max-b.min)
 	return
 	Quick_Find:
 	sc:=csc()
 	if(v.Options.Copy_Selected_Text_on_Quick_Find)
-		if(text:=sc.TextRange(sc.2143,sc.2145))
-			ControlSetText,Edit1,% text,% hwnd([1])
+		if(Text:=sc.TextRange(sc.2143,sc.2145))
+			ControlSetText,Edit1,%Text%,% hwnd([1])
 	if(v.Options.Auto_Set_Area_On_Quick_Find)
 		Gosub,Set_Selection
-	;ControlFocus,Edit1,% hwnd([1])
 	ControlFocus,,% "ahk_id" MainWin.QFEdit
 	ControlSend,Edit1,^A,% hwnd([1])
-	lastFind:=""
+	LastFind:=""
 	return
 	Case_Sensitive:
 	Regex:
@@ -8005,9 +7877,9 @@ QF(x:=0){
 	Greed:
 	Word_Border:
 	Current_Area:
-	Options(A_ThisLabel),lastFind:=""
-	ControlGetText,text,,% "ahk_id" MainWin.QFEdit
-	if(text)
+	Options(A_ThisLabel),LastFind:=""
+	ControlGetText,Text,,% "ahk_id" MainWin.QFEdit
+	if(Text)
 		Goto,qf
 	return
 	QFText:
@@ -8502,7 +8374,7 @@ Save_Untitled(node,ask:=1){
 				Exit
 			if(option!="Yes")
 				return
-		}FileSelectFile,FileName,S16,,Save File,*.ahk
+		}FileName:=DLG_FileSave(hwnd(1),,"Save Untitled File")
 		if(ErrorLevel)
 			return
 		FileName:=FileName,file:=FileOpen(FileName,"W","UTF-8"),file.Write(RegExReplace(text,"\R","`r`n")),file.Length(file.Position),all:=SN(SSN(node,"ancestor-or-self::main"),"descendant-or-self::*[@untitled]")
@@ -8819,21 +8691,19 @@ SelectAll(){
 	}
 	return
 }
-SelectFile(Filename:="",Title:="New File",Ext:="*.ahk",Options:="S16"){
-	MainFile:=Current(2).file
-	SplitPath,MainFile,,Dir
-	Top:=Settings.SSN("//DefaultFolder")
+SelectFile(FileName:="",Title:="New File",Ext:="",Options:="S16"){
+	MainFile:=Current(2).file,Ext:=Ext?Ext:Current(3).Ext,Top:=Settings.SSN("//DefaultFolder"),Dir:=SplitPath(MainFile).Dir,BackupFileName:=SplitPath(FileName).FileName
 	if(Node:=Settings.Find(Top,"descendant::Folder/@file",MainFile))
 		Folder:=SSN(Node,"@folder").text
 	else
 		Folder:=SSN(Top,"@folder").text
-	Dir:=Dir "\" Folder
+	Dir:=Trim(Dir "\" Folder,"\"),FileName:=Dir "\" BackupFileName
 	if(!FileExist(Dir))
 		FileCreateDir,%Dir%
-	FileName:=DLG_FileSave(hwnd(1),1,Title,Dir)
+	FileName:=DLG_FileSave(hwnd(1),1,Title,FileName)
 	if(ErrorLevel)
 		Exit
-	return Filename
+	return FileName
 }
 SelectText(Item,Node:=0){
 	sc:=csc()
@@ -9137,7 +9007,7 @@ Class SettingsClass{
 		this.SetTab(SettingsClass.Tabs.Manage_File_Types),this.Add("ListView,x300 ym,Extension,FileType,w-300|h-100","Text,,FileType:,FTT,y-" sbh+75,"Edit,w200,,FTEdit,y-" sbh+60,"Button,vFTAdd gNotifications,&Add,FTAdd,y-" sbh+35,"Button,x+M vFTRemove gNotifications,&Remove,FTRemoe,y-" sbh+35)
 		this.SetTab(SettingsClass.Tabs.Menus),this.Add("ComboBox,x300 ym gNotifications vComboBox,,ComboBox,w-600","TreeView,x300 y+M Checked vMenuTV gNotifications AltSubmit,,MenuTV,w-600|h-323","ListView,h277 Icon vIcon gSelectIcon AltSubmit,Icon,Icon,w-300|y-" sbh+277,"Button,w110 gLoadDefault,&Default Icons,FButton,x-200|y-328","Button,w90 gLoadFile,&Load Icons,SButton,x-90|y-328","Listview,ym w300,Description|Hotkey,Hotkeys,x-300|h-328"),TV_Add("Please Wait...")
 		this.ILAdd("init"),ib:=new Icon_Browser("",SettingsClass.Controls.Icon,"Settings",,,"Notifications"),SettingsClass.IconID:="ahk_id" SettingsClass.Controls.Icon,this.SetTab(SettingsClass.Tabs.Theme)
-		Gui,Settings:Add,custom,x300 ym classScintilla hwndsc gNotifications
+		Gui,Settings:Add,Custom,x300 ym classScintilla hwndsc gNotifications
 		this.SC({register:sc}),obj:=SettingsClass,obj.Controls.Scintilla:=sc,obj.pos["Scintilla"]:={h:-sbh,w:-300}
 		if(!node:=Settings.SSN("//gui/position[@window='Settings']"))
 			node:=Settings.Add("gui/position"),node.SetAttribute("window","Settings")
@@ -10450,18 +10320,16 @@ UnSaved(){
 		if(text=template)
 			Continue
 		if(m(ea.file,"This is an untitled document meaning there is no file created to the HDD/SSD yet.","Would you like to save it?","Contents:",SubStr(text,1,200) (StrLen(text)>200?"...":""),b,"btn:ync")="Yes"){
-			FileSelectFile,newfile,S16,,Save Untitled File,*.ahk
-			if(ErrorLevel||newfile="")
+			NewFile:=DLG_FileSave(hwnd(1),,"Save Untitled File")
+			if(ErrorLevel||NewFile="")
 				Continue
-			if(FileExist(newfile)){
-				SplitPath,newfile,,dir,ext,nne
-				FileMove,%newfile%,%dir%\%nne%-%A_Now%.%ext%,1
-			}
-			newfile:=SubStr(newfile,-3)!=".ahk"?newfile ".ahk":newfile,file:=FileOpen(newfile,"RW","UTF-8"),file.seek(0),file.write(RegExReplace(text,"\R","`r`n")),file.length(file.position),file.Close()
-			if(!Settings.SSN("//open/file[text()='" newfile "']")&&newfile)
-				Settings.Add("open/file",,newfile)
-			Settings.Add("last/file",,newfile)
-			uu.RemoveChild(uu.FirstChild)
+			if(FileExist(NewFile)){
+				SplitPath,NewFile,,dir,ext,nne
+				FileMove,%NewFile%,%dir%\%nne%-%A_Now%.%ext%,1
+			}NewFile:=SubStr(NewFile,-3)!=".ahk"?NewFile ".ahk":NewFile,file:=FileOpen(NewFile,"RW","UTF-8"),file.seek(0),file.write(RegExReplace(text,"\R","`r`n")),file.length(file.position),file.Close()
+			if(!Settings.SSN("//open/file[text()='" NewFile "']")&&NewFile)
+				Settings.Add("open/file",,NewFile)
+			Settings.Add("last/file",,NewFile),uu.RemoveChild(uu.FirstChild)
 	}}v.unsaved:=1
 }
 Update_Github_Info(){
@@ -11263,3 +11131,70 @@ Edit_Plugin(){
 Sleep(Time:="-10"){
 	Sleep,%Time%
 }
+Quick_Find_Ignore(){
+	static sc,Ignore
+	NewWin:=new GUIKeep("SetStyles")
+	Gui,+hwndSS
+	Hotkey,IfWinActive,ahk_id%SS%
+	Hotkey,Escape,SetStylesGuiClose,On
+	sc:=new ExtraScintilla("SetStyles",{Pos:"w500 h600"})
+	Color(sc,(Language:=Current(3).Lang)),v.TestingSC:=sc,sc.4006(0,Language),xx:=Keywords.GetXML(Language),all:=xx.SN("//Styles/*[@ex]")
+	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
+		if(sc.2007(sc.2006-1)!=10&&A_Index>1)
+			AddText(["`n"],sc)
+		AddText(["Style " ea.Style " = ",5],sc),ex:=RegExReplace(RegExReplace(ea.ex,"\\n","`n"),"\\t","`t")
+		if(aa.NodeName="keyword"&&ea.ex="Personal Variables")
+			AddText(["Personal Variables = " Settings.SSN("//Variables").text "`n",ea.style],sc)
+		else if(aa.NodeName="keyword"&&ea.ex!="Personal Variables"){
+			if(ea.Add)
+				Add:=ControlFile.SSN(ea.Add).text
+			AddText([ea.ex " = " aa.text " " Add "`n",ea.style],sc)
+		}else if(RegExMatch(ex,"\[\d+\]")){
+			pos:=1
+			while(RegExMatch(ex,"OU)\[(\d+)\](.+)((\[\d+\])|$)",Found,pos),pos:=Found.Pos(1)+Found.Len(1))
+				AddText([Found.2,Found.1],sc)
+		}else
+			AddText([ex,ea.style],sc)
+	}Loop,4
+		sc.2242(A_Index-1,0)
+	Gui,SetStyles:Add,Text,,Enter a | Delimited list of Styles you want Quick Find to Ignore
+	Gui,Add,Edit,w500 vIgnore gEditIgnore,% Settings.SSN("//QuickFind/Language[@language='" Language "']").text
+	Gui,Show,,Edit Ignored Colors
+	ControlFocus,Edit1,% NewWin.ID
+	sc.2025(0)
+	return
+	SetStylesGuiEscape:
+	SetStylesGuiClose:
+	Gui,SetStyles:Destroy
+	Settings.Save(1)
+	return
+	EditIgnore:
+	Gui,SetStyles:Submit,Nohide
+	Language:=Current(3).Lang
+	if(!Node:=Settings.SSN("//QuickFind/Language[@language='" Language "']"))
+		Node:=Settings.Add("QuickFind/Language",{language:Language})
+	Node.text:=Trim(RegExReplace(RegExReplace(Ignore,"\D","|"),"\|+","|"),"|")
+	return
+}AddText(Text,sc){
+	VarSetCapacity(var,(len:=StrPut(Text.1,"UTF-8"))),StrPut(Text.1,&var,len,"UTF-8"),sc.2003((start:=sc.2006()),&var),sc.ThemeTextText.=Text.1,sc.2032(start),sc.2033(len,Text.2)
+}
+Class ExtraScintilla{
+	static ctrl:=[],main:=[],temp:=[],hidden:=[]
+	__New(window,info:="{Notify:Pos}"){ ;keep adding valid things in the Default
+		Notify:=info.Notify,win:=window?window:1,pos:=info.pos?info.pos:"x0 y0 w0 h0"
+		Gui,%win%:Add,custom,%pos% classScintilla +%mask% hwndsc g%Notify% ;g%Notify% ; +1387331584
+		for a,b in {fn:2184,ptr:2185}
+			this[a]:=DllCall("SendMessageA",UInt,sc,int,b,int,0,int,0)
+		this.sc:=sc+0
+		return this
+	}__Get(x*){
+		return DllCall(this.fn,"Ptr",this.ptr,"UInt",x.1,int,0,int,0,"Cdecl")
+	}__Call(code,lparam=0,wparam=0,extra=""){
+		wp:=(wparam+0)!=""?"Int":"AStr",lp:=(lparam+0)!=""?"Int":"AStr"
+		if(wparam.1!="")
+			wp:="AStr",wparam:=wparam.1
+		wparam:=wparam=""?0:wparam,lparam:=lparam=""?0:lparam
+		if(wparam=""||lparam="")
+			return
+		return DllCall(this.fn,"Ptr",this.ptr,"UInt",code,lp,lparam,wp,wparam,"Cdecl")
+}}

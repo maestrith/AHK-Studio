@@ -7,6 +7,9 @@ Save As and Save: Reported by derz00 #144
 -Refresh Current File:
 -Refresh Current Project:
 --Re-Scans the current File/Project and updates the Code Explorer/Omni-Search
+--Quick Find Ignore: A list of Styles that will be ignored by Quick Find
+
+
 Changed:
 -Publish: Now does Additional Publish
 -Find:
