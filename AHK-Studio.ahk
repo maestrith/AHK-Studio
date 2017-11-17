@@ -2170,6 +2170,8 @@ Class XML{
 	}Get(XPath,Default){
 		text:=this.SSN(XPath).text
 		return text?text:Default
+	}Lang(info){
+		this.xml.SetProperty("SelectionLanguage",(info=""?"XPath":"XSLPattern"))
 	}ReCreate(XPath,new){
 		rem:=this.SSN(XPath),rem.ParentNode.RemoveChild(rem),new:=this.Add(new)
 		return new
@@ -4056,7 +4058,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20161107223002,XMLFiles:={menus:[20171115045409,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20161107223002,XMLFiles:={menus:[20171115170328,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20170926222816,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -5366,6 +5368,8 @@ Create_Include_From_Selection(){
 	if(pos.start=pos.end)
 		return m("Please select some text to create a new Include from")
 	text:=sc.GetSelText(),RegExMatch(text,"^(\w+)",Include)
+	if(Include1="Class")
+		RegExMatch(Text,"^(\w+\s+\w+)",Include)
 	Filename:=SelectFile(RegExReplace(Include1,"_"," ") "." Current(3).Ext,"New Include Filename",Current(3).Ext)
 	if(FileExist(Filename))
 		return m("Include name already exists. Please choose another")
@@ -6286,7 +6290,6 @@ New_Include_From_Current_Word(){
 			return
 	}SplitPath,file,,Dir
 	FileName:=SelectFile(Dir "\" RegExReplace(Word,"_"," ") "." Current(3).Ext,"FileName for " Word,Current(3).Ext)
-	return m(FileName)
 	if(ErrorLevel)
 		return
 	if(files.Find(Current(1),"//@file",FileName))
@@ -11161,6 +11164,7 @@ Quick_Find_Ignore(){
 	Gui,Add,Edit,w500 vIgnore gEditIgnore,% Settings.SSN("//QuickFind/Language[@language='" Language "']").text
 	Gui,Show,,Edit Ignored Colors
 	ControlFocus,Edit1,% NewWin.ID
+	ControlSend,Edit1,^A,% NewWin.ID
 	sc.2025(0)
 	return
 	SetStylesGuiEscape:
