@@ -20,6 +20,7 @@ ComObjError(0),new Keywords(),FileCheck(%True%),Options("startup"),menus:=new XM
 	if((Folder:=Settings.SSN("//DefaultFolder")).text)
 		Folder.SetAttribute("folder",Folder.text),Folder.text:=""
 */
+return
 /*
 	Hotkey,End,EndThing,On
 	RegExMatch()
@@ -4059,7 +4060,7 @@ FEUpdate(Redraw:=0){
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
 	,scidate:=20161107223002,XMLFiles:={menus:[20171115170328,"lib/menus.xml","lib\Menus.xml"]}
-	,OtherFiles:={scilexer:{date:20170926222816,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
+	,OtherFiles:={scilexer:{date:20171118143605,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
 		DefaultFont(),ConvertTheme()
@@ -5524,7 +5525,7 @@ Jump_To_First_Available(){
 }
 Class Keywords{
 	__New(){
-		Static Dates:={ahk:"20171111110614"},BaseURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/lib/Languages/",BaseDir:="Lib\Languages\"
+		Static Dates:={ahk:"20171118144345"},BaseURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/lib/Languages/",BaseDir:="Lib\Languages\"
 		for a,b in StrSplit("IndentRegex,KeywordList,Suggestions,Languages,Comments,OmniOrder,CodeExplorerExempt,Words,FirstChar,Delimiter,ReplaceFirst,SearchTrigger",",")
 			Keywords[b]:=[]
 		if(!IsObject(v.OmniFind))
@@ -6483,6 +6484,16 @@ Notifications(a*){
 		if(!Node:=Settings.SSN("//theme/" StyleNode.NodeName)){
 			Node:=Settings.SSN("//Languages/" Settings.Language "/descendant::*[@style='" Style "']")
 		}
+		
+		/*
+			this is wrong!
+			the StyleNode contains what main node I need to Select
+		*/
+		
+		return m(Node.xml,"",StyleNode.xml)
+		
+		
+		
 		/*
 			m(Node.xml,Style,ThemeXML.SSN("//Styles").xml)
 		*/
