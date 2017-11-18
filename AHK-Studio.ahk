@@ -5187,6 +5187,9 @@ class GUIKeep{
 					position.=" w" win.w
 				if(win.h)
 					position.=" h" win.h
+			}Mon:=Monitors()
+			if(Win.x<Mon.Left.MinIndex()||Win.y<Mon.Top.MinIndex()){
+				Position:="xCenter yCenter"
 			}NA:=this.NA?"NA":""
 			Gui,% this.win ":Show",% position " " pos " " NA,% this.name
 			if(sel)
@@ -6943,7 +6946,7 @@ Omni_Search(start=""){
 	Gui,1:-Disabled
 	GuiControl,20:,Edit1,%start%
 	Hotkey,IfWinActive,% NewWin.ID
-	for a,b in {up:"omnikey",down:"omnikey",PgUp:"omnikey",PgDn:"omnikey","^Backspace":"deleteback",Enter:"OSGo"}{
+	for a,b in {up:"omnikey",down:"omnikey",PgUp:"omnikey",PgDn:"omnikey","^Backspace":"deleteback",Enter:"OSGo",NumpadEnter:"OSGo"}{
 		Try
 			Hotkey,%a%,%b%,On
 		Catch,e
@@ -9419,7 +9422,12 @@ Class SettingsClass{
 		}
 		return
 	}Show(){
-		Gui,Settings:Show,% (SettingsClass.Node.text?SettingsClass.Node.text:"w" A_ScreenWidth-200 " h" A_ScreenHeight-200),Settings
+		Position:=SettingsClass.Node.text,Mon:=Monitors()
+		for a,b in ["x","y","w","h"]
+			RegExMatch(position,"Oi)" b "(-?\d*)\b",found),win[b]:=found.1
+		if(Win.x<Mon.Left.MinIndex()||Win.y<Mon.Top.MinIndex())
+			Position:="xCenter yCenter"
+		Gui,Settings:Show,% (Position?Position:"w" A_ScreenWidth-200 " h" A_ScreenHeight-200),Settings
 	}Size(a,w,h){
 		for a,b in SettingsClass.pos{
 			hwnd:=SettingsClass.Controls[a],pos:=""
@@ -11207,3 +11215,14 @@ Class ExtraScintilla{
 			return
 		return DllCall(this.fn,"Ptr",this.ptr,"UInt",code,lp,lparam,wp,wparam,"Cdecl")
 }}
+Monitors(){
+	SysGet,Count,MonitorCount
+	Coords:=[]
+	Loop,%Count%{
+		SysGet,Monitor,Monitor,%A_Index%
+				;Total.="Monitor " A_Index " = " MonitorLeft "`n" MonitorTop "`n" MonitorRight "`n" MonitorBottom "`n`n"
+		for c,d in {Left:MonitorLeft,Right:MonitorRight,Top:MonitorTop,Bottom:MonitorBottom}
+			Coords[c,d]:=1
+	}
+	return Coords
+}
