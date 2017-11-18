@@ -1163,7 +1163,7 @@ Class MainWindowClass{
 			Menu,Tray,Icon,AHKStudio.ico
 		if(v.Options.Hide_Tray_Icon)
 			Menu,Tray,NoIcon
-		Gui,+Resize +LabelMainWindowClass. +hwndmain +MinSize800x600 -DPIScale
+		Gui,+Resize +LabelMainWindowClass. +hwndmain +MinSize400x400 -DPIScale
 		Gui,Add,TreeView,x0 y0 w0 h0 hwndpe +0x400000
 		Gui,Add,TreeView,x0 y0 w0 h0 hwndce +0x400000 AltSubmit
 		Gui,Add,TreeView,hwndtn x0 y0 w0 h0 +0x400000
@@ -8109,7 +8109,13 @@ Replace_Selected(){
 	Clipboard:=replace,sc.2614(1),sc.2179,Clipboard:=clip,OnMessage(6,"Activate"),SetStatus("Total Replaced: " TotalReplaced,3)
 }
 Replace(){
-	sc:=csc(),cp:=sc.2008,word:=sc.TextRange(start:=sc.2266(cp-1,1),end:=sc.2267(cp-1,1)),rep:=Settings.SSN("//replacements/*[@replace='" word "']").text
+	sc:=csc(),cp:=sc.2008,String:=sc.TextRange(sc.2128(sc.2166(cp)),(End:=sc.2267(cp-1,1))),Obj:=StrSplit(String),Start:=End
+	while(b:=Obj[Obj.MaxIndex()-(A_Index-1)]){
+		if(b~="\s")
+			Break
+		Word:=b Word
+		Start--
+	}rep:=Settings.SSN("//replacements/*[@replace='" word "']").text
 	if(!rep)
 		return
 	pos:=1,list:=[],foundList:=[],origRepLen:=StrLen(rep)
@@ -8120,8 +8126,7 @@ Replace(){
 		}if(!ObjHasKey(foundList,found))
 			foundList[found]:=pos,List.Insert(found)
 		pos++
-	}
-	for a,b in List{
+	}for a,b in List{
 		value:=""
 		if(b!="$|"){
 			value:=InputBox(sc,"Value for " b,"Insert value for: "  b "`n`n" rep)

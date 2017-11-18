@@ -37,3 +37,5 @@ Fixed: Reported by Barney
 -Hotkeys with Up were not being indexed
 Fixed: Reported by bugrobot #145
 -I was using Duplicate Selection for Duplicate Line.  It worked when nothing was selected...
+Changed: Requested by derz00
+-Replacements: Non-Word characters will trigger
