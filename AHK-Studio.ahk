@@ -9,7 +9,7 @@ DetectHiddenWindows,On
 CoordMode,ToolTip,Screen
 Tick:=A_TickCount
 global v:=[],MainWin,Settings:=new XML("settings","lib\Settings.xml"),Files:=new XML("files"),Positions:=new XML("positions","lib\Positions.xml"),cexml:=new XML("cexml","Lib\FileCache.xml"),History:=new XML("HistoryXML"),vversion,commands,menus,scintilla,TVC:=new EasyView(),RCMXML:=new XML("RCM","lib\RCM.xml"),TNotes,DebugWin,Selection:=new SelectionClass(),Menus,Vault:=new XML("vault","lib\Vault.xml")
-new ScanFile()
+v.WordsObj:=[],new ScanFile()
 VVersion:=new XML("versions",(FileExist("lib\Github.xml")?"lib\Github.xml":"lib\Versions.xml")),History("Startup")
 if(!settings[]){
 	Run,lib\Settings.xml
@@ -650,9 +650,9 @@ Check_For_Edited(){
 }
 Check_For_Update(startup:=""){
 	static NewWin
-	;static DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk",VersionTextURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text"
-	static DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/AHK-Studio.ahk"
-		 ,VersionTextURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/AHK-Studio.text"
+	;static DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk?refresh" A_Now,VersionTextURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.text?refresh=" A_Now
+	static DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/AHK-Studio.ahk?refresh=" A_Now
+		 ,VersionTextURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/AHK-Studio.text?refresh=" A_Now
 		 ,url:="https://api.github.com/repos/maestrith/AHK-Studio/commits/Beta"
 	Run,RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
 	auto:=Settings.EA("//autoupdate"),sub:=A_NowUTC
@@ -688,7 +688,7 @@ Check_For_Update(startup:=""){
 	}if(!found.1)
 		ControlSetText,Edit1,% http.ResponseText,% NewWin.ahkid
 	return
-	autoupdate:
+	AutoUpdate:
 	Save(),Settings.Save(1),menus.Save(1),studio:=URLDownloadToVar(DownloadURL)
 	if(!InStr(studio,";download complete"))
 		return m("There was an error. Please contact maestrith@gmail.com if this error continues")
@@ -712,7 +712,7 @@ Check_For_Update(startup:=""){
 	Reload
 	ExitApp
 	return
-	currentinfo:
+	CurrentInfo:
 	file:=FileOpen("changelog.txt","rw")
 	if(!file.length)
 		file:=FileOpen("changelog.txt","rw"),file.seek(0),file.write(RegExReplace(URLDownloadToVar(VersionTextURL),"\R","`r`n")),file.length(file.position)
@@ -722,8 +722,8 @@ Check_For_Update(startup:=""){
 	extrainfo:
 	Run,https://github.com/maestrith/AHK-Studio/wiki/Version-Update-History
 	return
-	cfuguiclose:
-	cfuguiescape:
+	CFUGuiClose:
+	CFUGuiEscape:
 	NewWin.Destroy()
 	return
 }
@@ -2671,7 +2671,7 @@ Context(return=""){
 				}Pos:=LastPos:=1
 				while(RegExMatch(Build,"O)(\w+)",Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
 					LastWord:=Found.1
-					if(Pos=LastPos)
+					if(Pos=LastPos),LastPos:=Pos
 						Break
 				}if((Node:=SSN(Top,"descendant::syntax[contains(.,'" LastWord "')]")))
 					NoHighlight:=1,ea:=XML.EA(Node),Syntax:=ea.Replace?ea.Syntax:Trim(Build,Del) ea.Syntax,Matches.Push({att:Syntax,ea:ea,syntax:Syntax,NoHighlight:(InStr(Syntax,Delimiter.Delimiter)?0:1),First:Syntax})
@@ -3426,7 +3426,7 @@ Dlg_Color(Node,Default:="",hwnd:="",Attribute:="color"){
 		m("Bottom of Dlg_Color()",Node.xml,Color)
 	return Color
 }
-Dlg_Font(Node,DefaultNode:="//theme/default",window="",Effects=1){
+Dlg_Font(Node,DefaultNode:="//theme/default",window="",Attribute:="color",Effects=1){
 	static Remove:={bold:1,color:1,font:1,italic:1,size:1,strikeout:1,underline:1}
 	Node:=Node.xml?Node:Settings.Add(Trim(Node,"/")),Default:=Settings.EA(DefaultNode),DefaultClone:=Default.Clone(),Style:=XML.EA(Node)
 	for a,b in Style
@@ -3439,7 +3439,7 @@ Dlg_Font(Node,DefaultNode:="//theme/default",window="",Effects=1){
 	Style.size?NumPut(Floor(Style.size*LogPixels/72),LogFont,0):NumPut(16,LogFont,0),VarSetCapacity(ChooseFont,60,0),NumPut(60,ChooseFont,0),NumPut(&LogFont,ChooseFont,12),NumPut(Effects,ChooseFont,20),NumPut(Style.color,ChooseFont,24),NumPut(window,ChooseFont,4)
 	if(!r:=DllCall("comdlg32\ChooseFontA","uint",&ChooseFont))
 		Exit
-	Color:=NumGet(ChooseFont,24),Style:={size:((Size:=NumGet(ChooseFont,16)//10)>4?Size:4),font:StrGet(&LogFont+28,"CP0"),color:color,bold:NumGet(LogFont,16)>=700?1:0}
+	Color:=NumGet(ChooseFont,24),Style:={size:((Size:=NumGet(ChooseFont,16)//10)>4?Size:4),font:StrGet(&LogFont+28,"CP0"),(Attribute):color,bold:NumGet(LogFont,16)>=700?1:0}
 	for a,b in font{
 		if((Value:=NumGet(LogFont,a,"UChar")?1:0)&&b!="bold")
 			Style[b]:=Value
@@ -3919,10 +3919,38 @@ Extract(mainfile){
 		node:=files.Under(main,"file",{file:file,dir:maindir,filename:mfn,id:id,nne:mnne,scan:1,lower:Format("{:L}",file),ext:Ext,lang:Language})
 	ExtractNext:
 	id:=GetID()
-	if(!v.Options["Force_UTF-8"])
-		q:=FileOpen(file,"R"),len:=StrPut((Text1:=q.Read()),"UTF-8")-1,enc1:=q.encoding,q.Close(),q:=FileOpen(file,"R","UTF-8"),len1:=StrPut((Text2:=q.Read()),"UTF-8")-1,enc2:=q.encoding,q.Close(),(len=len1)?(encoding:=enc1,text:=Text1):(encoding:=enc2,text:=Text2)
-	else
-		fff:=FileOpen(file,"R",(v.Options["Force_UTF-8"]?"UTF-8":"")),encoding:=fff.encoding,text:=fff.Read(fff.length),fff.Close(),dir:=Trim(dir,"\")
+	q:=FileOpen(file,"R")
+	if(q.Encoding="CP1252"){
+		if(RegExMatch((Text:=q.Read()),"OU)([^\x00-\x7F])",Found)){
+			q:=FileOpen(file,"R","UTF-8"),Text:=q.Read()
+			Encoding:="UTF-8"
+		}else
+			Encoding:=q.Encoding
+	}else
+		Encoding:=q.Encoding,Text:=q.Read()
+	q.Close()
+	dir:=Trim(dir,"\")
+	/*
+		if(!v.Options["Force_UTF-8"]){
+			q:=FileOpen(file,"R")
+			len:=StrPut((Text1:=q.Read()),"UTF-8")-1
+			enc1:=q.encoding
+			q.Close()
+			q:=FileOpen(file,"R","UTF-8")
+			len1:=StrPut((Text2:=q.Read()),"UTF-8")-1
+			enc2:=q.encoding
+			q.Close()
+			(len=len1)?(encoding:=enc1,text:=Text1):(encoding:=enc2,text:=Text2)
+		}else{
+			fff:=FileOpen(file,"R")
+			encoding:="UTF-8"
+			text:=fff.Read(fff.length)
+			fff.Close()
+			dir:=Trim(dir,"\")
+		}
+	*/
+	
+	
 	if(nnnn:=files.Find("//*/@file",file)){
 		if(SSN(nnnn,"@time"))
 			id:=SSN(nnnn,"@id").text
@@ -4532,9 +4560,10 @@ FixIndentArea(){
 		FixLines(line,sc.2224(line,-1)-line),sc.Enable(1)
 	}else{
 		start:=line
-		while((above:=sc.2225(--start))<0)
+		while((above:=sc.2225(--start))<0){
 			if(start<=0)
 				Break
+		}
 		StartLine:=(sl:=sc.2224(above,-1))>=0?sl:0,start:=line,lastline:=sc.2154-1
 		while((below:=sc.2225(++start))<0)
 			if(start>=lastline)
@@ -6476,36 +6505,31 @@ Notifications(a*){
 			return Node:=Settings.Add("theme/additionalselback"),Color:=Dlg_Color(Node,,this.hwnd),RefreshThemes(1),SettingsClass.SetHighlight()
 		}else if(Style=253){
 			return Node:=Settings.Add("theme/selback"),Node.SetAttribute("bool",1),Color:=Dlg_Color(Node,,this.hwnd),RefreshThemes(1),SettingsClass.SetHighlight()
-		}
-		
-		
-		
-		StyleNode:=ThemeXML.SSN("//Styles/descendant::*[@style='" Style "']")
-		if(!Node:=Settings.SSN("//theme/" StyleNode.NodeName)){
+		}StyleNode:=ThemeXML.SSN("//Styles/descendant::*[@style='" Style "']")
+		if(!Node:=Settings.SSN("//theme/" StyleNode.NodeName))
 			Node:=Settings.SSN("//Languages/" Settings.Language "/descendant::*[@style='" Style "']")
-		}
-		
-		/*
-			this is wrong!
-			the StyleNode contains what main node I need to Select
-		*/
-		
-		return m(Node.xml,"",StyleNode.xml)
-		
-		
-		
-		/*
-			m(Node.xml,Style,ThemeXML.SSN("//Styles").xml)
-		*/
+		if(StyleNode.NodeName="keyword")
+			Node:=Settings.SSN("//theme/keyword[@set='" SSN(StyleNode,"@set").text "']")
 		if(GetKeyState("Ctrl","P"))
 			Dlg_Font(Node,,SettingsClass.HWND)
 		else
-			Dlg_Color(Node,,SettingsClass.HWND)
+			Dlg_Color(Node,,SettingsClass.HWND,(GetKeyState("Alt","P")?"background":"color"))
 		this.Color(),RefreshThemes(1)
 		WinActivate,% "ahk_id" SettingsClass.HWND
 		return ;m(Style,ThemeXML.SSN("//Styles/descendant::*[@style='" Style "']").xml,"Here!--->") ;here
 		
-		
+		/*
+			for whatever reason when you click on the keywords colors (maybe others)
+				the default color picked is the orange in the corner.
+			Bad Unicode{
+				I think when I read the file I need to see if it isn't UTF-8
+				if it isn't and RegExMatch() characters outside of 0-255
+					just force UTF-8
+				but they have force UTF-8 on....{
+					so not sure what is up.
+				}
+			}
+		*/
 		
 		
 		if(Shift){
@@ -8123,7 +8147,10 @@ Replace_Selected(){
 	Clipboard:=replace,sc.2614(1),sc.2179,Clipboard:=clip,OnMessage(6,"Activate"),SetStatus("Total Replaced: " TotalReplaced,3)
 }
 Replace(){
-	sc:=csc(),cp:=sc.2008,String:=sc.TextRange(sc.2128(sc.2166(cp)),(End:=sc.2267(cp-1,1))),Obj:=StrSplit(String),Start:=End
+	sc:=csc(),cp:=sc.2008,Start:=sc.2128(sc.2166(cp)),End:=sc.2267(cp-1,1)
+	if(End<=Start)
+		return
+	String:=sc.TextRange(Start,End),Obj:=StrSplit(String),Start:=End
 	while(b:=Obj[Obj.MaxIndex()-(A_Index-1)]){
 		if(b~="\s")
 			Break
@@ -8476,15 +8503,21 @@ Scan_Line(text:=""){
 		RegExReplace(Obj.1,"\R",,Count),StartLine:=Count+1,StartPosition:=StrLen(Obj.1),AfterText:=SubStr(Obj.2,1,InStr(Obj.2,"`n",0,1,2)-1)
 		if(RegExMatch(AfterText,"^\s*\{"))
 			RegExMatch(Text,"OUm`n)\R?(.*\R" Chr(127) ".*\R)",Found),AfterText:=RegExReplace(Found.1,Chr(127) " ")
-		Text:=Update({get:Current.File}),Pos1:=InStr(Text,"`n",0,1,b.Line),NewText:=(SubStr(Text,1,Pos1) Chr(127) " " SubStr(Text,Pos1+1)),NewText:=ScanFile.RemoveComments(NewText,Current.Lang),Obj:=StrSplit(NewText,Chr(127)),AfterText1:=SubStr(Obj.2,1,InStr(Obj.2,"`n",0,1,2)-1)
-		Words:=v.words[(sc:=csc()).2357],OldWords:=RegExReplace(RegExReplace(RegExReplace(AfterText,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])","|"),"\|{2,}","|"),NewWords:=RegExReplace(RegExReplace(RegExReplace(AfterText1,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])"," "),"\s{2,}"," "),OWords:=Words,Words:=RegExReplace(Words,"\b(" Trim(OldWords,"|") ")\b"),Words.=NewWords,Words:=RegExReplace(Words,"\s{2,}"," ")
-		Sort,Words,CUD%A_Space%
-		v.words[sc.2357]:=Words
-		FoundStartPos:=StrLen(Obj.1)
+		Text:=Update({get:Current.File}),Pos1:=InStr(Text,"`n",0,1,b.Line),NewText:=(SubStr(Text,1,Pos1) Chr(127) " " SubStr(Text,Pos1+1)),NewText:=ScanFile.RemoveComments(NewText,Current.Lang),Obj:=StrSplit(NewText,Chr(127)),AfterText1:=SubStr(Obj.2,1,InStr(Obj.2,"`n",0,1,2)-1),Document:=csc().2357
+		if(!IsObject(WordsObj:=v.WordsObj[Document]))
+			WordsObj:=v.WordsObj[Document]:=[]
+		OldWords:=RegExReplace(RegExReplace(RegExReplace(AfterText,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])"," "),"\s{2,}"," ")
+		for a,b in StrSplit(OldWords," ")
+			WO:=WordsObj[(FirstTwo:=SubStr(b,1,2))],WordsObj[FirstTwo]:=Trim(RegExReplace(RegExReplace(WO,"\b(" b ")\b"),"\s{2,}"," "))
+		NewWords:=RegExReplace(RegExReplace(RegExReplace(AfterText1,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])"," "),"\s{2,}"," "),Words:=RegExReplace(Words,"\b(" Trim(OldWords,"|") ")\b"),Words.=NewWords,Words:=RegExReplace(Words,"\s{2,}"," ")
+		for a,b in StrSplit(NewWords," "){
+			if(!Trim(b))
+				Continue
+			FirstTwo:=SubStr(b,1,2),WordsObj[FirstTwo].=" " b
+		}FoundStartPos:=StrLen(Obj.1)
 		if(RegExMatch(AfterText1,"^\s*\{"))
 			RegExMatch(NewText,"OUm`n)\R?(.*\R" Chr(127) ".*\R)",Found),AfterText1:=RegExReplace(Found.1,Chr(127) " ")
-		OverallFind:=RegExReplace(NewText,Chr(127) " ")
-		TextObj:=StrSplit(OverallFind,"`n")
+		OverallFind:=RegExReplace(NewText,Chr(127) " "),TextObj:=StrSplit(OverallFind,"`n")
 		/*
 			This could be put into a timer and lowered priority
 		*/
@@ -8524,9 +8557,8 @@ Scan_Line(text:=""){
 					}if(ParentItem:=AddItems.1){
 						while(RegExMatch(AfterText,d.Regex,Old,IPos),IPos:=Old.Pos(1)+Old.Len(1)){
 							StringReplace,AfterText,AfterText,% Old.Text
-							if(IPos=LastIPos)
+							if(IPos=LastIPos),LastIPos:=IPos
 								Break
-							LastIPos:=IPos
 							RemoveNode:=SSN(ParentItem.Parent,"descendant::*[@type='" Obj.2 "' and @text='" Old.Text "']")
 							if(tv:=SSN(RemoveNode,"@cetv").text)
 								TVC.Delete(2,tv)
@@ -8559,12 +8591,8 @@ Scan_Line(text:=""){
 					LastAfterText:=AfterText1
 					if(RegExMatch(Found.Text,"(" d.Exclude ")"))
 						Continue
-					Total:=Combine({upper:Upper(Found.text),type:c,cetv:TVC.Add(2,Found.Text,Header(c),"Vis Sort")},Found)
-					New:=cexml.Under(Parent,"item",Total)
-				}
-			}
-		}
-	}SetStatus("Scan_Line() " A_TickCount-Tick "ms Tick: " A_TickCount,3)
+					Total:=Combine({upper:Upper(Found.text),type:c,cetv:TVC.Add(2,Found.Text,Header(c),"Vis Sort")},Found),New:=cexml.Under(Parent,"item",Total)
+	}}}}SetStatus("Scan_Line() " A_TickCount-Tick "ms Tick: " A_TickCount,3)
 }
 ScanChildren(){
 	xx:=debug.XML,exp:=xx.SN("//descendant::*[@expanded=1]")
@@ -9703,19 +9731,19 @@ Show_Scintilla_Code_In_Line(){
 		sc.2200(sc.2128(sc.2166(sc.2008)),Trim(list,"`n"))
 }
 ShowAutoComplete(){
-	sc:=csc(),CPos:=sc.2008,SetWords(1),start:=sc.2266(CPos,1),end:=sc.2267(CPos,1),word:=sc.TextRange(start,CPos),SetWords(),word:=LTrim(word,"-")
+	sc:=csc(),CPos:=sc.2008,SetWords(1),start:=sc.2266(CPos,1),end:=sc.2267(CPos,1),Word:=sc.TextRange(start,CPos),SetWords(),Word:=LTrim(Word,"-")
 	if((sc.2202&&!v.Options.Auto_Complete_While_Tips_Are_Visible)||(sc.2010(CPos)~="\b(13|1|11|3)\b"=1&&!v.Options.Auto_Complete_In_Quotes)){
 	}else{
-		word:=RegExReplace(word,"^\d*"),List:=Trim(Keywords.GetSuggestions((Language:=GetLanguage(sc)),FirstTwo:=SubStr(word,1,2)))
-		if(v.words[sc.2357])
-			List.=" " v.words[sc.2357]
+		Word:=RegExReplace(Word,"^\d*"),List:=Trim(Keywords.GetSuggestions((Language:=GetLanguage(sc)),FirstTwo:=SubStr(Word,1,2)))
+		if(WordList:=v.WordsObj[sc.2357,FirstTwo])
+			List.=" " WordList
 		List.=" " Code_Explorer.AutoCList()
 		if(node:=Settings.Find("//autocomplete/project/@file",Current(2).file))
 			List.=" " node.text
 		List.=" " Keywords.Personal " ",List.=" " Keywords.Suggestions[Language,FirstTwo] " ",List:=Trim(List)
 		Sort,List,CUD%A_Space%
-		if((List&&InStr(List,word)&&word))
-			sc.2100(StrLen(word),Trim(List))
+		if((List&&InStr(List,Word)&&Word))
+			sc.2100(StrLen(Word),Trim(List))
 	}
 }
 ShowLabels(x:=0){
@@ -10629,12 +10657,15 @@ WinSetTitle(win:=1,Title:="AHK Studio",Open:=0){
 		WinSetTitle,% hwnd([win]),,% (open?"Include Open!  -  ":"") "AHK Studio - " (Info.edited?"*":"") (Info.dir "\" (v.Options.Hide_File_Extensions?Info.nne:Info.filename))
 	}
 }
-Words_In_Document(NoDisplay:=0,text:="",Remove:="",AllowLastWord:=0){
-	Text:=Update({Get:Current(3).File}),Words:=RegExReplace(RegExReplace(RegExReplace(Text,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])"," "),"\s{2,}"," ")
+Words_In_Document(NoDisplay:=0,Text:="",Remove:="",AllowLastWord:=0){
+	Text:=Update({Get:Current(3).File}),Words:=Trim(RegExReplace(RegExReplace(RegExReplace(Text,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])"," "),"\s{2,}"," "))
 	sc:=csc(),CurrentWord:=sc.GetWord()
 	if(Text~="i)" CurrentWord "\w+")
 		Words:=RegExReplace(Words,"\b" CurrentWord "\b")
-	v.Words[sc.2357]:=Trim(Words)
+	if(!IsObject(Obj:=v.WordsObj[(Document:=sc.2357)]))
+		Obj:=v.WordsObj[Document]:=[]
+	for a,b in StrSplit(Words," ")
+		FirstTwo:=SubStr(b,1,2),Obj[FirstTwo].=(Obj[FirstTwo]?" " b:b)
 	if(!NoDisplay){
 		Words:=Trim(Words)
 		Sort,Words,CUD%A_Space%
