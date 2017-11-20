@@ -10662,8 +10662,7 @@ Words_In_Document(NoDisplay:=0,Text:="",Remove:="",AllowLastWord:=0){
 	sc:=csc(),CurrentWord:=sc.GetWord()
 	if(Text~="i)" CurrentWord "\w+")
 		Words:=RegExReplace(Words,"\b" CurrentWord "\b")
-	if(!IsObject(Obj:=v.WordsObj[(Document:=sc.2357)]))
-		Obj:=v.WordsObj[Document]:=[]
+	Obj:=v.WordsObj[(Document:=sc.2357)]
 	for a,b in StrSplit(Words," ")
 		FirstTwo:=SubStr(b,1,2),Obj[FirstTwo].=(Obj[FirstTwo]?" " b:b)
 	if(!NoDisplay){
