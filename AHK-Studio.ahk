@@ -6593,7 +6593,7 @@ Notify(csc*){
 	if(Code=2016){
 		pos:=sc.2023(fn.x,fn.y)
 		word:=sc.TextRange(sc.2266(pos,1),sc.2267(pos,1))
-		list:=debug.XML.SN("//property[@name='" word "']"),info:=""
+		List:=debug.XML.SN("//property[@name='" word "']"),info:=""
 		/*
 			debug.XML.Transform()
 			CoordMode,ToolTip,Screen
@@ -7413,11 +7413,11 @@ Options(x:=0){
 		RefreshThemes()
 }
 ShowOSD(show){
-	static list:=new XML("osd"),top,win:="OSD"
+	static List:=new XML("osd"),top,win:="OSD"
 	if(!v.Options.OSD)
 		return
 	if(!hwnd(win)){
-		rem:=list.SSN("//list"),rem.ParentNode.RemoveChild(rem)
+		rem:=List.SSN("//list"),rem.ParentNode.RemoveChild(rem)
 		Gui,win:Destroy
 		Gui,win:Default
 		Gui,Color,0x111111,0x111111
@@ -7430,16 +7430,16 @@ ShowOSD(show){
 		WinGetPos,x,y,w,h,% hwnd([1])
 		Gui,-Caption
 		Gui,win:Show,% "x" (x+w-MainWin.Border)-(300) " y" y+MainWin.caption+MainWin.menu+MainWin.Border+(v.Options.top_find?.qfheight:0) " NA AutoSize",OSD
-		top:=list.Add("list")
+		top:=List.Add("list")
 	}show:=RegExReplace(show,"_"," ")
 	Gui,win:Default
 	Gui,win:ListView,SysListView321
-	if((ea:=XML.EA(node:=list.SSN("//list").LastChild())).name=show)
+	if((ea:=XML.EA(node:=List.SSN("//list").LastChild())).name=show)
 		node.SetAttribute("count",ea.count+1)
 	else
-		node:=list.under(top,"item",{name:show,count:1})
+		node:=List.under(top,"item",{name:show,count:1})
 	LV_Delete()
-	all:=list.SN("//item")
+	all:=List.SN("//item")
 	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
 		LV_Add("",ea.name,ea.count)
 	Loop,2
@@ -7447,7 +7447,7 @@ ShowOSD(show){
 	SetTimer,killosd,-2000
 	return
 	killosd:
-	hwnd({rem:win,na:1}),rem:=list.SSN("//list"),rem.ParentNode.RemoveAttribute(rem)
+	hwnd({rem:win,na:1}),rem:=List.SSN("//list"),rem.ParentNode.RemoveAttribute(rem)
 	return
 }
 Paste(){
@@ -9737,6 +9737,8 @@ ShowAutoComplete(){
 		Word:=RegExReplace(Word,"^\d*"),List:=Trim(Keywords.GetSuggestions((Language:=GetLanguage(sc)),FirstTwo:=SubStr(Word,1,2)))
 		if(WordList:=v.WordsObj[sc.2357,FirstTwo])
 			List.=" " WordList
+		for a,b in v.WordsObj[sc.2357]
+			Total:=A_Index
 		List.=" " Code_Explorer.AutoCList()
 		if(node:=Settings.Find("//autocomplete/project/@file",Current(2).file))
 			List.=" " node.text
@@ -10658,11 +10660,11 @@ WinSetTitle(win:=1,Title:="AHK Studio",Open:=0){
 	}
 }
 Words_In_Document(NoDisplay:=0,Text:="",Remove:="",AllowLastWord:=0){
-	Text:=Update({Get:Current(3).File}),Words:=Trim(RegExReplace(RegExReplace(RegExReplace(Text,"(\b\d+\b|\b(\w{1,2})\b)",""),"x)([^\w])"," "),"\s{2,}"," "))
+	Current:=Current(3),Text:=Update({Get:Current.File}),Words:=Trim(RegExReplace(RegExReplace(RegExReplace(Text,"(\b\d+\b|\b(\w{1,2})\b)"),"x)([^\w])"," "),"\s{2,}"," "))
 	sc:=csc(),CurrentWord:=sc.GetWord()
 	if(Text~="i)" CurrentWord "\w+")
 		Words:=RegExReplace(Words,"\b" CurrentWord "\b")
-	Obj:=v.WordsObj[(Document:=sc.2357)]
+	Obj:=v.WordsObj[(Document:=Current.sc)]:=[]
 	for a,b in StrSplit(Words," ")
 		FirstTwo:=SubStr(b,1,2),Obj[FirstTwo].=(Obj[FirstTwo]?" " b:b)
 	if(!NoDisplay){
