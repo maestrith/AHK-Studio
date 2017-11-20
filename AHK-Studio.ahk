@@ -9,7 +9,8 @@ DetectHiddenWindows,On
 CoordMode,ToolTip,Screen
 Tick:=A_TickCount
 global v:=[],MainWin,Settings:=new XML("settings","lib\Settings.xml"),Files:=new XML("files"),Positions:=new XML("positions","lib\Positions.xml"),cexml:=new XML("cexml","Lib\FileCache.xml"),History:=new XML("HistoryXML"),vversion,commands,menus,scintilla,TVC:=new EasyView(),RCMXML:=new XML("RCM","lib\RCM.xml"),TNotes,DebugWin,Selection:=new SelectionClass(),Menus,Vault:=new XML("vault","lib\Vault.xml")
-v.WordsObj:=[],new ScanFile()
+v.WordsObj:=[]
+new ScanFile()
 VVersion:=new XML("versions",(FileExist("lib\Github.xml")?"lib\Github.xml":"lib\Versions.xml")),History("Startup")
 if(!settings[]){
 	Run,lib\Settings.xml
