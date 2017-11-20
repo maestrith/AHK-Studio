@@ -12,6 +12,7 @@ Save As and Save: Reported by derz00 #144
 
 Changed:
 -Publish: Now does Additional Publish
+-Words In Document: Changed the backend so that it only will add the words related to the first 2 letters you typed rather than the entire list to improve performance
 -Find:
 --Changed how found items are displayed
 --Auto Show Selected

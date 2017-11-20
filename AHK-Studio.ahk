@@ -661,7 +661,7 @@ Check_For_Update(startup:=""){
 			return
 		if(auto.reset>A_Now)
 			return
-	} ;I can edit it and it will remember
+	}
 	sub-=A_Now,hh
 	FileGetTime,time,%A_ScriptFullPath%
 	time+=sub,hh
