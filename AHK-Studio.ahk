@@ -71,7 +71,7 @@ return
 	more languages (spoken)
 	When you edit/add a line with an include:{
 		have it scan that line (add a thing in the Scan_Line() for it)
-	} ;*[BreakSpoons] ;#[BookSpoons]
+	}
 */
 #Include %A_ScriptDir%
 #IfWinActive
@@ -476,10 +476,6 @@ BraceSetup(Win:=1){
 	return
 	Brace:
 	ControlGetFocus,focus,A
-	/*
-		t(Current(3).file,Current(3).ext,A_ThisFunc,A_ThisLabel,"time:1")
-	*/
-	
 	if(!InStr(focus,"Scintilla")){
 		Send,{%A_ThisHotkey%}
 		return
@@ -496,7 +492,6 @@ BraceSetup(Win:=1){
 			else
 				sc.2686(CPos,CPos),sc.2194(1,Hotkey),GotoPos(A_Index-1,CPos+1)
 		}
-		
 		if(A_ThisHotkey=">"&&Language="xml"){
 			Sleep,100
 			Match:=sc.2353(CPos)
@@ -508,12 +503,8 @@ BraceSetup(Win:=1){
 						sc.2003(sc.2008,"</" Word ">")
 			}
 		}
-		
-		
-		
 		return
-	}
-	if(hotkey="}"&&v.Options.Full_Auto_Indentation){
+	}if(hotkey="}"&&v.Options.Full_Auto_Indentation){
 		parent:=FoldParent(),end:=sc.2224(parent,-1)
 		if(Trim(sc.GetLine(line),"`t `n")="}"){
 			sc.2003(sc.2008,"}")
@@ -739,21 +730,21 @@ CheckLayout(){
 }
 class Code_Explorer{
 	static explore:=[]
-	Add(type,found,node:=""){
+	Add(type,found,Node:=""){
 		return
 		if(type="Class")
 			cexml.Under(Current(5),"info",{type:type,text:found.2,upper:Upper(found.2),cetv:TVC.Add(2,found.2,Header(type),"Sort")})
 		else{
-			new:=cexml.Under((node?node:Current(5)),"info",{type:type,text:found.1,upper:Upper(found.1),cetv:TVC.Add(2,found.1,Header(type),"Sort")}),Default("SysTreeView322"),TV_GetText(text,Header(type))
+			new:=cexml.Under((Node?Node:Current(5)),"info",{type:type,text:found.1,upper:Upper(found.1),cetv:TVC.Add(2,found.1,Header(type),"Sort")}),Default("SysTreeView322"),TV_GetText(text,Header(type))
 			if(type~="Function|Method")
 				new.SetAttribute("args",found.3)
 			if(type="Instance")
 				new.SetAttribute("class",found.2)
 			if(type="Breakpoint")
 				new.SetAttribute("filename",Current(6).file)
-	}}AutoCList(node:=0){
+	}}AutoCList(Node:=0){
 		static list:=[]
-		if(node=1){
+		if(Node=1){
 			all:=cexml.SN("//main")
 			while(aa:=all.item[A_Index-1]),mea:=XML.EA(aa){
 				obj:=list[mea.file]:=[],CF:=SN(aa,"descendant::*[@type='Class' or @type='Function' or @type='Instance']")
@@ -763,11 +754,11 @@ class Code_Explorer{
 					obj.list.=ea.text " "
 				}obj.list:=Trim(obj.list)
 			}return
-		}if(node){
-			parent:=SSN(node,"ancestor-or-self::main/@file").text
+		}if(Node){
+			parent:=SSN(Node,"ancestor-or-self::main/@file").text
 			if(!obj:=IsObject(list[parent]))
 				obj:=list[parent]:=[]
-			obj.list:=[],all:=SN(node.ParentNode,"descendant::*[@type='Class' or @type='Function']")
+			obj.list:=[],all:=SN(Node.ParentNode,"descendant::*[@type='Class' or @type='Function']")
 			while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa)
 				obj.list.=ea.text " "
 			obj.list:=Trim(obj.list)
@@ -785,8 +776,8 @@ class Code_Explorer{
 			if(Type~="\b(Bookmark|Breakpoint)"&&Node.NodeName="info"){
 				tv:=Files.SSN("//file[@id='" SSN(Node,"ancestor::file/@id").text "']/@tv").text,Item:=XML.EA(Node)
 				if(tv!=TVC.Selection(1))
-					tv(tv),Sleep(200) ;#[spoon]
-				sc:=csc(),Text:=sc.GetUNI(),pre:=SN(node,"preceding-sibling::*[@type='" item.type "' and @text='" item.text "']").Length,Pos:=0,Search:=RegExReplace(BreakBook[Item.Type],"\$1",Item.Text)
+					tv(tv),Sleep(200)
+				sc:=csc(),Text:=sc.GetUNI(),pre:=SN(Node,"preceding-sibling::*[@type='" item.type "' and @text='" item.text "']").Length,Pos:=0,Search:=RegExReplace(BreakBook[Item.Type],"\$1",Item.Text)
 				Loop,% 1+pre
 					Pos:=RegExMatch(Text,Search,,Pos+1)
 				line:=sc.2166(StrPut(SubStr(Text,1,Pos),"UTF-8")-1),sc.2160(sc.2128(line),sc.2136(line)),hwnd({rem:20}),CenterSel()
@@ -839,10 +830,10 @@ class Code_Explorer{
 				TVC.Delete(2,ea.cetv)
 			nn.ParentNode.RemoveChild(nn)
 		}if(!SSN((Parent:=Current(7)),"descendant::info[@type='" type "']")){
-			node:=SSN(Parent,"descendant::header[@type='" type "']")
-			if(tv:=SSN(node,"@cetv").text)
+			Node:=SSN(Parent,"descendant::header[@type='" type "']")
+			if(tv:=SSN(Node,"@cetv").text)
 				TVC.Delete(2,tv)
-			node.ParentNode.RemoveChild(node)
+			Node.ParentNode.RemoveChild(Node)
 }}}
 class Debug{
 	static Socket
@@ -3690,7 +3681,7 @@ Enter(){
 	static map:=new XML("map"),NotIndent:={IfEqual:1,IfNotEqual:1,IfGreater:1,IfGreaterOrEqual:1,IfLess:1,IfLessOrEqual:1,IfInString:1}
 	ControlGetFocus,Focus,% hwnd([1])
 	checkqf:
-	sc:=csc(),fixlines:=[],ind:=Settings.Get("//tab",5),ShowOSD(GetKeyState("Shift","P")?"Shift+Enter":"Enter")
+	sc:=csc(),fixlines:=[],Ind:=Settings.Get("//tab",5),ShowOSD(GetKeyState("Shift","P")?"Shift+Enter":"Enter")
 	if(InStr(focus,"scintilla")){
 		if(sc.2202)
 			sc.2201
@@ -3705,21 +3696,21 @@ Enter(){
 				return Replace()
 		}order:=[],sc.2078,group:=0,sc.Enable(),Edited()
 		Loop,% sc.2570{
-			CPos:=sc.2585(A_Index-1),line:=sc.2166(CPos),end:=sc.2587(A_Index-1),LineStatus.Add(line,2)
-			if(CPos!=end)
-				sc.2645(CPos,end-CPos)
-			if(A_Index>1&&(line+1!=last&&line-1!=last))
+			CPos:=sc.2585(A_Index-1),Line:=sc.2166(CPos),End:=sc.2587(A_Index-1),LineStatus.Add(Line,2)
+			if(CPos!=End)
+				sc.2645(CPos,End-CPos)
+			if(A_Index>1&&(Line+1!=last&&Line-1!=last))
 				group++
-			start:=sc.2128(line),skip:=0
-			if(CPos=sc.2136(line)||sc.2007(CPos-1)=123)
+			start:=sc.2128(Line),skip:=0
+			if(CPos=sc.2136(Line)||sc.2007(CPos-1)=123)
 				skip:=0
 			else{
-				sc.2686(CPos,sc.2128(line))
+				sc.2686(CPos,sc.2128(Line))
 				if((brace:=sc.2197(1,"{"))>=0)
-					skip:=sc.2166(sc.2353(brace))!=line?0:1
+					skip:=sc.2166(sc.2353(brace))!=Line?0:1
 				else
 					skip:=1
-			}new:=map.Add("line",{skip:skip,line:line,between:sc.2007(CPos)=125&&sc.2007(CPos-1)=123,group:group,pos:CPos,caret:A_Index-1},"",1),order[line]:=new,last:=line
+			}new:=map.Add("line",{skip:skip,line:Line,between:sc.2007(CPos)=125&&sc.2007(CPos-1)=123,group:group,pos:CPos,caret:A_Index-1},"",1),order[Line]:=new,last:=Line
 		}rev:=[]
 		for a,b in order
 			rev.InsertAt(1,b)
@@ -3729,41 +3720,38 @@ Enter(){
 		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
 			if(!state){
 				if(ea.between)
-					InsertMultiple(ea.caret,ea.pos,"`n`n",ea.pos+1),indent:=sc.2127(ea.line),sc.2126(ea.line+1,indent+ind),sc.2126(ea.line+2,indent),GotoPos(ea.caret,sc.2128(ea.line+1))
+					InsertMultiple(ea.caret,ea.pos,"`n`n",ea.pos+1),Indent:=sc.2127(ea.Line),sc.2126(ea.Line+1,Indent+Ind),sc.2126(ea.Line+2,Indent),GotoPos(ea.caret,sc.2128(ea.Line+1))
 				else{
-					InsertMultiple(ea.caret,ea.pos,"`n",ea.pos+1),oindent:=indent:=sc.2127(ea.line),prevtext:=RemoveComment(sc.GetLine(ea.line-1)),text:=RemoveComment(sc.GetLine(ea.line))
-					if(SubStr(text,0,1)="{"||sc.2223(ea.line)&0x2000)
-						indent+=ind
-					else if(RegExMatch(text,"iA)(}|\s)*#?\b(" IndentRegex ")\b",string)){
+					InsertMultiple(ea.caret,ea.pos,"`n",ea.pos+1),OIndent:=Indent:=sc.2127(ea.Line),PrevText:=RemoveComment(sc.GetLine(ea.Line-1)),Text:=RemoveComment(sc.GetLine(ea.Line))
+					if(SubStr(Text,0,1)="{"||sc.2223(ea.Line)&0x2000)
+						Indent+=Ind
+					else if(RegExMatch(Text,"iA)(}|\s)*#?\b(" IndentRegex ")\b",String)){
 						if(NotIndent[string2])
-							indent:=indent
+							Indent:=Indent
 						else
-							indent+=ind
-					}else if(RegExMatch(prevtext,"iA)(}|\s)*#?\b(" IndentRegex ")\b",string)&&SubStr(prevtext,0,1)!="{"){
-						indent:=sc.2127(ea.line-1)
+							Indent+=Ind
+					}else if(RegExMatch(PrevText,"iA)(}|\s)*#?\b(" IndentRegex ")\b",String)&&SubStr(PrevText,0,1)!="{"){
+						Indent:=sc.2127(ea.Line-1)
 					}if(ea.skip)
-						indent:=oindent
-					sc.2126(ea.line+1,indent),GotoPos(ea.caret,sc.2128(ea.line+1))
+						Indent:=OIndent
+					sc.2126(ea.Line+1,Indent),GotoPos(ea.caret,sc.2128(ea.Line+1))
 			}}else if(state){
 				if(ea.group!=lastgroup&&lastgroup!=""){
 					sea:=map.EA("//*[@fix]")
 					FixLines(sc.2166(sea.pos),sc.2166(sc.2353(sea.pos-1))-sc.2166(sea.pos))
 					map.SSN("//*[@fix]").RemoveAttribute("fix")
 				}if(ea.between){
-					lea:=XML.EA(map.SSN("//*[@group='" ea.group "']"))
-					nextline:=SSN(map.SSN("//*[@group='" ea.group "']"),"@line").text+1<=sc.2154?1:0
-					sc.2645(ea.pos,1)
-					end:=sc.2136(lea.line+nextline)
-					if(sc.2007(end-1)=123){
-						end:=sc.2353(end-1)+1
-						if(sc.GetLine(sc.2166(end))~="i)(\}|\s)*(else|if)")
-							end:=sc.2128(sc.2166(end)),InsertMultiple(ea.caret,end,"}",ea.pos)
+					lea:=XML.EA(map.SSN("//*[@group='" ea.group "']")),NextLine:=SSN(map.SSN("//*[@group='" ea.group "']"),"@line").Text+1<=sc.2154?1:0,sc.2645(ea.pos,1),End:=sc.2136(lea.Line+NextLine)
+					if(sc.2007(End-1)=123){
+						End:=sc.2353(End-1)+1
+						if(sc.GetLine(sc.2166(End))~="i)(\}|\s)*(else|if)")
+							End:=sc.2128(sc.2166(End)),InsertMultiple(ea.caret,End,"}",ea.pos)
 						else
-							end:=sc.2128(sc.2166(end)),InsertMultiple(ea.caret,end,"}",ea.pos)
-					}else if(sc.GetLine(sc.2166(end)+1)~="i)(\}|\s)*(else|if)")
-						end:=sc.2128(sc.2166(end)+1),InsertMultiple(ea.caret,end,"}",ea.pos)
+							End:=sc.2128(sc.2166(End)),InsertMultiple(ea.caret,End,"}",ea.pos)
+					}else if(sc.GetLine(sc.2166(End)+1)~="i)(\}|\s)*(else|if)")
+						End:=sc.2128(sc.2166(End)+1),InsertMultiple(ea.caret,End,"}",ea.pos)
 					else
-						InsertMultiple(ea.caret,end,"`n}",ea.pos)
+						InsertMultiple(ea.caret,End,"`n}",ea.pos)
 					fix:=map.SN("//*[@group='" ea.group "']"),fix.item[fix.length-1].SetAttribute("fix",1)
 			}}lastgroup:=ea.group
 		}all:=map.SN("//*[@fix]")
@@ -4745,8 +4733,8 @@ Full_Backup(remove:=0){
 			FileCopy,% af.text,%ndir%\%filename%
 		}
 	}
-	loop,%dir%\Backup\*.*,2
-		if(!InStr(A_LoopFileFullPath,"Full Backup"))
+	Loop,%dir%\AHK-Studio Backup\*.*,2
+		if(!RegExMatch(A_LoopFileFullPath,"Full Backup \d{14}"))
 			FileRemoveDir,%A_LoopFileFullPath%,1
 	SplashTextOff
 }
@@ -8153,7 +8141,7 @@ Replace(){
 		return
 	String:=sc.TextRange(Start,End),Obj:=StrSplit(String),Start:=End
 	while(b:=Obj[Obj.MaxIndex()-(A_Index-1)]){
-		if(b~="\s")
+		if(b~="(\s|\x22)")
 			Break
 		Word:=b Word
 		Start--
@@ -8593,7 +8581,34 @@ Scan_Line(text:=""){
 					if(RegExMatch(Found.Text,"(" d.Exclude ")"))
 						Continue
 					Total:=Combine({upper:Upper(Found.text),type:c,cetv:TVC.Add(2,Found.Text,Header(c),"Vis Sort")},Found),New:=cexml.Under(Parent,"item",Total)
-	}}}}SetStatus("Scan_Line() " A_TickCount-Tick "ms Tick: " A_TickCount,3)
+				}
+			}
+		}
+		/*
+			for a,b in {Breakpoint:"OUm`n)(\s+|^);\*\[(?<Text>.*)\]",Bookmark:"OUm`n)(\s+|^);#\[(?<Text>.*)\]"}{
+				LastPos:=Pos:=1
+				while(RegExMatch(AfterText,b,Found,Pos),Pos:=Found.Pos(1)+Found.Len("Text")){
+					if(Pos=LastPos),LastPos:=Pos
+						Break
+					
+				}
+				
+				
+				
+				LastPos:=Pos:=1
+				while(RegExMatch(Text,b,Found,Pos),Pos:=Found.Pos(1)+Found.Len("Text")){
+					Spam:=cexml.Under(Node,"info",{type:a,text:Found.Text,upper:Upper(Found.Text)}),No.AppendChild(Spam.CloneNode(0))
+					if(Pos=LastPos),LastPos:=Pos
+						Break
+				}
+			}
+		*/
+		/*
+			AfterText1 is After the update
+			t(AfterText,AfterText1)
+		*/
+	}
+	SetStatus("Scan_Line() " A_TickCount-Tick "ms Tick: " A_TickCount,3)
 }
 ScanChildren(){
 	xx:=debug.XML,exp:=xx.SN("//descendant::*[@expanded=1]")
