@@ -3575,7 +3575,8 @@ Edit_Hotkeys(ret:=""){
 		if(aa.NodeName="menu")
 			list.=RegExReplace(ea.clean,"_"," ") "|",aa.SetAttribute("tv",TV_Add(RegExReplace(ea.clean,"_"," ") (ea.hotkey?" - Hotkey - " Convert_Hotkey(ea.hotkey):""),SSN(aa.ParentNode,"@tv").text))
 	GuiControl,Edit_Hotkeys:,ComboBox1,%list%
-	NewWin.show("Edit Hotkeys"),TV_Modify(TV_GetChild(0),"Select Vis Focus")
+	NewWin.Show("Edit Hotkeys"),TV_Modify(TV_GetChild(0),"Select Vis Focus")
+	GuiControl,Edit_hotkeys:ChooseString,ComboBox1,Search
 	Gui,1:+Disabled
 	return
 	ehfind:
