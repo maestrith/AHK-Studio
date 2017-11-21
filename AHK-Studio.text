@@ -40,3 +40,5 @@ Fixed: Reported by bugrobot #145
 -I was using Duplicate Selection for Duplicate Line.  It worked when nothing was selected...
 Changed: Requested by derz00
 -Replacements: Non-Word characters will trigger
+Added: Requested by Joe Glines
+-Close Debug Window: Closes the Debug Window

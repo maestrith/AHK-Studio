@@ -139,10 +139,12 @@ OR PERFORMANCE OF THIS SOFTWARE.
 	return
 }
 Testing(){
+	Close_Debug_Window()
 	if(A_UserName!="maest")
 		return m("Testing")
 	return m("I'm sleepy.")
 }
+DebugWindow("testing")
 /*
 	put this in there and use it for A_TickCount stuffs.
 */
@@ -1237,7 +1239,8 @@ Class MainWindowClass{
 		ControlGetPos,x,y,w,h,,% "ahk_id" sc.sc
 		this.NewCtrlPos:=[],this.NewCtrlPos.y:=Round((y+h)*.75),this.NewCtrlPos.ctrl:=sc.sc,this.Split("Below","Debug"),this.DebugSC:=sc
 	}Delete(Supress:=0){
-		np:=this.NewCtrlPos,hwnd:=np.ctrl,win:=np.win
+
+np:=this.NewCtrlPos,hwnd:=np.ctrl,win:=np.win
 		if(win!=this.hwnd)
 			return
 		nope:=1,xx:=this.GUI
@@ -11285,4 +11288,7 @@ Monitors(){
 			Coords[c,d]:=1
 	}
 	return Coords
+}
+Close_Debug_Window(){
+	MainWin.NewCtrlPos:={ctrl:v.Debug.sc,win:hwnd(1)},MainWin.Delete(),debug.Disconnect(),Redraw()
 }
