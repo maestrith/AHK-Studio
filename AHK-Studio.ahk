@@ -374,7 +374,7 @@ Backspace(sub:=1){
 	ControlGetFocus,focus,A
 	Send:=sub?"Backspace":"Delete",sc:=csc(),Start:=sc.2166(sc.2008)
 	if(!v.LineEdited[Start])
-		SetScan(Start)
+		SetScan(Start,,sc.GetLine(Start))
 	if(!InStr(focus,"Scintilla")){
 		Send,{%A_ThisHotkey%}
 		return
@@ -1885,7 +1885,7 @@ class s{
 		}else if(code="TextRange"){
 			cap:=VarSetCapacity(text,Abs(lparam-wparam)),VarSetCapacity(TextRange,12,0),NumPut(lparam,TextRange,0),NumPut(wparam,TextRange,4),NumPut(&text,TextRange,8),this.2162(0,&TextRange)
 			return StrGet(&text,cap,"UTF-8")
-		}else if(code="GetLine"){
+		}else if(code="GetLine"&&lparam!=""){
 			length:=this.2350(lparam),cap:=VarSetCapacity(text,length,0),this.2153(lparam,&text)
 			return StrGet(&text,length,"UTF-8")
 		}else if(code="GetPlain"){
@@ -6609,7 +6609,9 @@ Notify(csc*){
 	}else if(Code=2028){
 		if(s.ctrl[Ctrl])
 			sc:=csc({hwnd:hwnd})
-		sc.2400()
+		/*
+			sc.2400()
+		*/
 		if(sc.sc=MainWin.tnsc.sc)
 			WinSetTitle(1,"Tracked Notes")
 		else
@@ -6640,7 +6642,10 @@ Notify(csc*){
 			else if(style=-105)
 				List_Variables()
 		}return
-	}if Code not in 2007,2001,2006,2008,2010,2014,2022,2016,2019
+	}
+	if(Code=2008&&(!v.LineEdited[(Line:=sc.2166(sc.2008))])&&sc.2008!="")
+		SetScan(Line,,sc.GetLine(Line))
+	if Code not in 2007,2001,2006,2008,2010,2014,2022,2016,2019
 		return 0
 	fn:=[],fn.Code:=Code,fn.Ctrl:=NumGet(A_EventInfo+0)
 	for a,b in CodeGet[Code]{
@@ -6659,9 +6664,9 @@ Notify(csc*){
 		if(MainWin.tnsc.sc=fn.Ctrl)
 			TNotes.Write(),tn:=1
 		if(fn.Code=2001){
-			SetWords(1),CPos:=sc.2008,start:=sc.2266(CPos,1),end:=sc.2267(CPos,1),word:=sc.TextRange(start,CPos),SetWords()
-			if(sc.2007(start-1)=46){
-				if(Show_Class_Methods(pre:=sc.TextRange(sc.2266(start-2,1),sc.2267(start-2,1)),word))
+			SetWords(1),CPos:=sc.2008,Start:=sc.2266(CPos,1),end:=sc.2267(CPos,1),word:=sc.TextRange(Start,CPos),SetWords()
+			if(sc.2007(Start-1)=46){
+				if(Show_Class_Methods(pre:=sc.TextRange(sc.2266(Start-2,1),sc.2267(Start-2,1)),word))
 					return
 			}if((StrLen(word)>1&&sc.2102=0&&v.Options.Auto_Complete))
 				SetTimer("ShowAutoComplete",-15)
@@ -6738,7 +6743,7 @@ Notify(csc*){
 							RegExReplace(text,"\R",,count),AddNewLines(text,Current(5)),LineStatus.DelayAdd(line,count)
 					}else{
 						if(MainWin.tnsc.sc!=ctrl)
-							SetScan(line)
+							SetScan(Line,,sc.GetLine(Line))
 						if(v.Options.Disable_Line_Status!=1){
 							LineStatus.Add(line,2)
 			}}}}else if(fn.ModType&0x800&&!tn){
@@ -6753,12 +6758,12 @@ Notify(csc*){
 					Edited()
 				if(sc.2008=sc.2009&&fn.ModType&0x20=0&&fn.ModType&0x40=0)
 					epos:=fn.position,del:=sc.2007(epos),poskeep:=""
-				start:=sc.2166(fn.position),end:=sc.2166(fn.position+fn.length)
-				if(!v.LineEdited[start]){
+				Start:=sc.2166(fn.position),end:=sc.2166(fn.position+fn.length)
+				if(!v.LineEdited[Start]){
 					if(MainWin.tnsc.sc!=ctrl)
-						SetScan(start)
+						SetScan(Start,,sc.GetLine(Start))
 					if(v.Options.Disable_Line_Status!=1)
-						LineStatus.Add(start,2)
+						LineStatus.Add(Start,2)
 				}
 			}if(fn.ModType&0x02&&(fn.ModType&0x20=0&&fn.ModType&0x40=0)){
 				if(fn.linesadded)
@@ -6781,7 +6786,7 @@ Notify(csc*){
 			if(margin=1){
 				line:=sc.2166(fn.position),shift:=GetKeyState("Shift","P"),ShiftBP:=v.Options.Shift_Breakpoint,text:=Trim(sc.GetLine(line)),search:=(shift&&ShiftBP||!shift&&!ShiftBP)?["*","UO)(\s*;\*\[(.*)\])","Breakpoint",";*[","]"]:["#","UO)(\s*;#\[(.*)\])","Bookmark",";#[","]"]
 				if(pos:=RegExMatch(text,search.2,found)){
-					start:=sc.2128(line),sc.2645(start+pos-1,StrPut(found.1,"UTF-8")-1)
+					Start:=sc.2128(line),sc.2645(Start+pos-1,StrPut(found.1,"UTF-8")-1)
 					if(ShiftBP&&shift||!shift&&!ShiftBP)
 						if(debug.Socket>0){
 							if(node:=files.SSN("//*[@id='" debug.id "']/descendant::*[@sc='" sc.2357 "']")){
@@ -6801,25 +6806,25 @@ Notify(csc*){
 			if(fn.listtype=1){
 				if(!IsObject(scintilla))
 					scintilla:=new xml("scintilla","lib\scintilla.xml")
-				command:=fn.Text,info:=scintilla.SSN("//commands/item[@name='" command "']"),ea:=XML.EA(info),start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),syn:=ea.syntax?ea.Code "()":ea.Code,sc.2160(start,end),sc.2170(0,[syn])
+				command:=fn.Text,info:=scintilla.SSN("//commands/item[@name='" command "']"),ea:=XML.EA(info),Start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),syn:=ea.syntax?ea.Code "()":ea.Code,sc.2160(Start,end),sc.2170(0,[syn])
 				if(ea.syntax)
-					sc.2025(sc.2008-1),sc.2200(start,ea.Code ea.syntax)
+					sc.2025(sc.2008-1),sc.2200(Start,ea.Code ea.syntax)
 			}else if(fn.listType=2){
 				/*
 					look up what sc.2117() uses 2 as the thing
 					add one that uses the vault stuff
 				*/
-				vv:=fn.Text,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(start,end-start),sc.2003(sc.2008,vault.SSN("//*[@name='" vv "']").text)
+				vv:=fn.Text,Start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(Start,end-Start),sc.2003(sc.2008,vault.SSN("//*[@name='" vv "']").text)
 				if(v.Options.Full_Auto_Indentation)
 					SetTimer("NewIndent",-1)
 			}else if(fn.listType=3){
 				text:=fn.Text
 				loop,% sc.2570
-					CPos:=sc.2585(A_Index-1),add:=sc.2007(CPos)=40?"":"()",start:=sc.2266(CPos,1),end:=sc.2267(CPos,1),sc.2686(start,end),send:=(reptext:=RegExReplace(text,"(\(|\))")) add,len:=StrPut(send,"UTF-8")-1,sc.2194(len,send),len:=StrPut(reptext,"UTF-8"),GotoPos(A_Index-1,CPos:=sc.2585(A_Index-1)+len)
+					CPos:=sc.2585(A_Index-1),add:=sc.2007(CPos)=40?"":"()",Start:=sc.2266(CPos,1),end:=sc.2267(CPos,1),sc.2686(Start,end),send:=(reptext:=RegExReplace(text,"(\(|\))")) add,len:=StrPut(send,"UTF-8")-1,sc.2194(len,send),len:=StrPut(reptext,"UTF-8"),GotoPos(A_Index-1,CPos:=sc.2585(A_Index-1)+len)
 			}else if(fn.listtype=4)
-				text:=fn.Text,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(start,end-start),sc.2003(sc.2008,text "."),sc.2025(sc.2008+StrLen(text ".")),Show_Class_Methods(text)
+				text:=fn.Text,Start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(Start,end-Start),sc.2003(sc.2008,text "."),sc.2025(sc.2008+StrLen(text ".")),Show_Class_Methods(text)
 			else if(fn.listtype=5){
-				text:=fn.Text,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),add:=sc.2007(end)=40?"":"()",sc.2645(start,end-start),sc.2003(sc.2008,text add),sc.2025(sc.2008+StrLen(text "."))
+				text:=fn.Text,Start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),add:=sc.2007(end)=40?"":"()",sc.2645(Start,end-Start),sc.2003(sc.2008,text add),sc.2025(sc.2008+StrLen(text "."))
 				SetTimer("Context",-10)
 			}else if(fn.listtype=6){
 				text:=fn.Text,list:=v.firstlist
@@ -6832,7 +6837,7 @@ Notify(csc*){
 				text:=fn.Text,s.ctrl[v.jts[text]].2400()
 			}else if(fn.listtype=8){
 				static methods
-				text:=fn.Text,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(start,end-start),sc.2003(sc.2008,text (sc.2007(sc.2008)=46?"":".")),sc.2025(sc.2008+StrLen(text ".")),methods:="",node:=cexml.Find("//main/@file",Current(2).file,"descendant::info[@type='Class' and @upper='" Upper(text) "']/*[@type='Method']")
+				text:=fn.Text,Start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2645(Start,end-Start),sc.2003(sc.2008,text (sc.2007(sc.2008)=46?"":".")),sc.2025(sc.2008+StrLen(text ".")),methods:="",node:=cexml.Find("//main/@file",Current(2).file,"descendant::info[@type='Class' and @upper='" Upper(text) "']/*[@type='Method']")
 				while(nn:=node.item[A_Index-1]),ea:=XML.EA(nn)
 					methods.=ea.text " "
 				SetTimer("ShowMethod",-10)
@@ -8490,7 +8495,25 @@ SaveGUI(win:=1){
 }
 Scan_Line(text:=""){
 	while(b:=v.LineEdited.Pop()){
-		Current:=Current(3),Orig:=b,Tick:=A_TickCount,Text:=ScanFile.RemoveComments(b.Text,Current.Lang),Obj:=StrSplit(Text,Chr(127))
+		Current:=Current(3),Orig:=b,Tick:=A_TickCount,Text:=ScanFile.RemoveComments(b.Text,Current.Lang,1),Obj:=StrSplit(Text,Chr(127))
+		Parent:=Current(5)
+		for c,d in {Breakpoint:"OUm`n)(\s+|^);\*\[(?<Text>.*)\]",Bookmark:"OUm`n)(\s+|^);#\[(?<Text>.*)\]"}{
+			LastPos:=Pos:=1
+			while(RegExMatch(Orig.LineText,d,Found,Pos),Pos:=Found.Pos(1)+Found.Len("Text")){
+				if(Pos=LastPos),LastPos:=Pos
+					Break
+				Rem:=SSN(Parent,"descendant::*[@type='" a "' and @upper='" Upper(Found.text) "']")
+				if(tv:=SSN(Rem,"@cetv").text)
+					TVC.Disable(2),TVC.Delete(2,tv),TVC.Enable(2)
+				Rem.ParentNode.RemoveChild(Rem)
+			}LastPos:=Pos:=1
+			while(RegExMatch(csc().GetLine(Orig.Line),d,Found,Pos),Pos:=Found.Pos(1)+Found.Len("Text")){
+				if(Pos=LastPos),LastPos:=Pos
+					Break
+				Total:=Combine({upper:Upper(Found.text),type:a,cetv:TVC.Add(2,Found.Text,Header(a),"Vis Sort")},Found),New:=cexml.Under(Parent,"info",Total)
+			}
+		}
+		Found:="",Pos:=Pos1:=1
 		if(!Obj.2)
 			return SetStatus("Scan_Line() " A_TickCount-Tick "ms No Results",3)
 		RegExReplace(Obj.1,"\R",,Count),StartLine:=Count+1,StartPosition:=StrLen(Obj.1),AfterText:=SubStr(Obj.2,1,InStr(Obj.2,"`n",0,1,2)-1)
@@ -8518,7 +8541,16 @@ Scan_Line(text:=""){
 		/*
 			Do the Breakpoint and Bookmark stuff like below but better.
 		*/
-		AfterText1:=AfterText1,AddItems:=[]
+		AddItems:=[]
+		/*
+			positions for something is off...
+			AfterText and AfterText1
+			are messed up....
+			t(AfterText,AfterText1)
+		*/
+		/*
+			/positions for something is off...
+		*/
 		for a,b in OmniOrder{
 			for c,d in b{
 				Pos:=1,LastPos:=0
@@ -8557,7 +8589,7 @@ Scan_Line(text:=""){
 								TVC.Delete(2,tv)
 							RemoveNode.ParentNode.RemoveChild(RemoveNode)
 					}}while(Item:=AddItems.Pop())
-						cexml.Under(Item.Parent,"item",Item.Obj)
+						cexml.Under(Item.Parent,"info",Item.Obj)
 					Continue
 				}Parent:=Current(5)
 				while(RegExMatch(AfterText,d.Regex,Found)){
@@ -8584,29 +8616,10 @@ Scan_Line(text:=""){
 					LastAfterText:=AfterText1
 					if(RegExMatch(Found.Text,"(" d.Exclude ")"))
 						Continue
-					Total:=Combine({upper:Upper(Found.text),type:c,cetv:TVC.Add(2,Found.Text,Header(c),"Vis Sort")},Found),New:=cexml.Under(Parent,"item",Total)
+					Total:=Combine({upper:Upper(Found.text),type:c,cetv:TVC.Add(2,Found.Text,Header(c),"Vis Sort")},Found),New:=cexml.Under(Parent,"info",Total)
 				}
 			}
 		}
-		/*
-			for a,b in {Breakpoint:"OUm`n)(\s+|^);\*\[(?<Text>.*)\]",Bookmark:"OUm`n)(\s+|^);#\[(?<Text>.*)\]"}{
-				LastPos:=Pos:=1
-				while(RegExMatch(AfterText,b,Found,Pos),Pos:=Found.Pos(1)+Found.Len("Text")){
-					if(Pos=LastPos),LastPos:=Pos
-						Break
-					
-				}
-				
-				
-				
-				LastPos:=Pos:=1
-				while(RegExMatch(Text,b,Found,Pos),Pos:=Found.Pos(1)+Found.Len("Text")){
-					Spam:=cexml.Under(Node,"info",{type:a,text:Found.Text,upper:Upper(Found.Text)}),No.AppendChild(Spam.CloneNode(0))
-					if(Pos=LastPos),LastPos:=Pos
-						Break
-				}
-			}
-		*/
 		/*
 			AfterText1 is After the update
 			t(AfterText,AfterText1)
@@ -9020,8 +9033,8 @@ SetPos(oea:=""){
 	}
 	return
 }
-SetScan(Line,Delete:=0){
-	Text:=Update({get:Current(3).File}),Pos1:=InStr(Text,"`n",0,1,Line),NewText:=(SubStr(Text,1,Pos1) Chr(127) " " SubStr(Text,Pos1+1)),v.LineEdited[Line]:={text:NewText,Line:Line}
+SetScan(Line,Delete:=0,LineText:=""){
+	Text:=Update({get:Current(3).File}),Pos1:=InStr(Text,"`n",0,1,Line),NewText:=(SubStr(Text,1,Pos1) Chr(127) " " SubStr(Text,Pos1+1)),v.LineEdited[Line]:={text:NewText,Line:Line,LineText:LineText}
 }
 SetStatus(text,part=""){
 	static widths:=[],width
