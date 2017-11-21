@@ -3729,12 +3729,12 @@ Enter(){
 					InsertMultiple(ea.caret,ea.pos,"`n",ea.pos+1),OIndent:=Indent:=sc.2127(ea.Line),PrevText:=RemoveComment(sc.GetLine(ea.Line-1)),Text:=RemoveComment(sc.GetLine(ea.Line))
 					if(SubStr(Text,0,1)="{"||sc.2223(ea.Line)&0x2000)
 						Indent+=Ind
-					else if(RegExMatch(Text,"iA)(}|\s)*#?\b(" IndentRegex ")\b",String)){
+					else if(RegExMatch(Text,"iA)(}|\s)*#?\b(" IndentRegex ")\b",String)&&IndentRegex!=""){
 						if(NotIndent[string2])
 							Indent:=Indent
 						else
 							Indent+=Ind
-					}else if(RegExMatch(PrevText,"iA)(}|\s)*#?\b(" IndentRegex ")\b",String)&&SubStr(PrevText,0,1)!="{"){
+					}else if(RegExMatch(PrevText,"iA)(}|\s)*#?\b(" IndentRegex ")\b",String)&&SubStr(PrevText,0,1)!="{"&&IndentRegex!=""){
 						Indent:=sc.2127(ea.Line-1)
 					}if(ea.skip)
 						Indent:=OIndent
