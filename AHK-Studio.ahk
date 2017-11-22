@@ -21,6 +21,7 @@ ComObjError(0),new Keywords(),FileCheck(%True%),Options("startup"),menus:=new XM
 	if((Folder:=Settings.SSN("//DefaultFolder")).text)
 		Folder.SetAttribute("folder",Folder.text),Folder.text:=""
 */
+
 return
 /*
 	Hotkey,End,EndThing,On
@@ -73,6 +74,7 @@ return
 		have it scan that line (add a thing in the Scan_Line() for it)
 	}
 */
+
 #Include %A_ScriptDir%
 #IfWinActive
 #IfWinActive,AHK Studio
@@ -341,6 +343,7 @@ Auto_Insert(){
 SettingsDefault(id,return:=0){
 	main:=SettingsWindow.win.xml,node:=main.SSN("//*[@id='" id "']"),win:=main.SSN("//window/@name").text,ea:=XML.EA(node)
 	if(ea.type){
+		
 		Gui,%win%:Default
 		Gui,% win ":" ea.type,% ea.hwnd
 	}
@@ -1259,8 +1262,8 @@ Class MainWindowClass{
 		ControlGetPos,x,y,w,h,,% "ahk_id" sc.sc
 		this.NewCtrlPos:=[],this.NewCtrlPos.y:=Round((y+h)*.75),this.NewCtrlPos.ctrl:=sc.sc,this.Split("Below","Debug"),this.DebugSC:=sc
 	}Delete(Supress:=0){
-
-np:=this.NewCtrlPos,hwnd:=np.ctrl,win:=np.win
+		
+		np:=this.NewCtrlPos,hwnd:=np.ctrl,win:=np.win
 		if(win!=this.hwnd)
 			return
 		nope:=1,xx:=this.GUI
@@ -1387,7 +1390,7 @@ np:=this.NewCtrlPos,hwnd:=np.ctrl,win:=np.win
 			else if(ea.type="Tracked Notes"){
 				hwnd:=this.tn+0
 			}else if(ea.type="Debug"){
-				sc:=new s(1,{pos:"x" ea.x " y" ea.y " w" ea.w " h" ea.h}),hwnd:=sc.sc+0,v.debug:=sc,Color(sc)
+				sc:=new ExtraScintilla(1,{pos:"x" ea.x " y" ea.y " w" ea.w " h" ea.h}),hwnd:=sc.sc+0,v.debug:=sc,Color(sc)
 				Loop,4
 					sc.2242(A_Index-1,0)
 				sc.2403(0x08,0)
@@ -1593,15 +1596,17 @@ np:=this.NewCtrlPos,hwnd:=np.ctrl,win:=np.win
 			this.SetWinPos(hwnd,np.x,ea.y+add,ea.w-(np.x-ea.x),ea.h,ea,,1),space:={x:ea.x,y:ea.y+add,w:np.x-ea.x,h:ea.h}
 		if(direction="Right")
 			this.SetWinPos(hwnd,ea.x,ea.y,np.x-ea.x,ea.h,ea,,1),space:={x:np.x,y:ea.y+add,w:ea.w-(np.x-ea.x),h:ea.h}
-		if(type~="i)(Scintilla|Debug)"){
+		if(type="Scintilla"){
 			sc:=new s(1,{pos:"x0 y0 w0 h0"}),Redraw()
+			node:=this.Add(sc.sc,type),Color(sc,"",A_ThisFunc " Class Mainwin"),sc.2277(v.Options.End_Document_At_Last_Line)
+		}else if(type="Debug"){
+			sc:=new ExtraScintilla(1,{pos:"x0 y0 w0 h0"}),Redraw()
 			node:=this.Add(sc.sc,type),Color(sc,"",A_ThisFunc " Class Mainwin"),sc.2277(v.Options.End_Document_At_Last_Line)
 			if(type="Debug"){
 				Loop,4
 					sc.2242(A_Index-1,0)
-				v.debug:=sc,Color(sc),sc.2403(0x08,0)
-			}
-		}else if(type="Search"){
+				Color(sc),sc.2403(0x08,0)
+		}}else if(type="Search"){
 			node:=this.Add(this.NewCtrlPos.hwnd,"Search")
 		}else if(type="Code Explorer"){
 			node:=this.Add(this.ce,type)
@@ -7000,7 +7005,10 @@ Notify(csc*){
 			else if(style=-105)
 				List_Variables()
 		}return
-	}if(Code=2008&&(!v.LineEdited[(Line:=sc.2166(sc.2008))])&&sc.2008!="")
+	}if(ctrl=v.Debug.sc){
+		return 0
+	}
+	if(Code=2008&&(!v.LineEdited[(Line:=sc.2166(sc.2008))])&&sc.2008!="")
 		SetScan(Line)
 	if Code not in 2007,2001,2006,2008,2010,2014,2022,2016,2019
 		return 0
