@@ -1256,13 +1256,12 @@ Class MainWindowClass{
 	}DebugWindow(){
 		if(type="Debug"&&this.Gui.SSN("//win[@win=1]/descendant::*[@type='Debug']"))
 			return
-		sc:=csc(),Color(sc)
+		sc:=csc(),Color(sc,"ahk")
 		if(sc.sc=MainWin.tnsc.sc)
 			sc:=csc(2)
 		ControlGetPos,x,y,w,h,,% "ahk_id" sc.sc
 		this.NewCtrlPos:=[],this.NewCtrlPos.y:=Round((y+h)*.75),this.NewCtrlPos.ctrl:=sc.sc,this.Split("Below","Debug"),this.DebugSC:=sc
 	}Delete(Supress:=0){
-		
 		np:=this.NewCtrlPos,hwnd:=np.ctrl,win:=np.win
 		if(win!=this.hwnd)
 			return
@@ -1390,6 +1389,7 @@ Class MainWindowClass{
 			else if(ea.type="Tracked Notes"){
 				hwnd:=this.tn+0
 			}else if(ea.type="Debug"){
+				m("HERE!")
 				sc:=new ExtraScintilla(1,{pos:"x" ea.x " y" ea.y " w" ea.w " h" ea.h}),hwnd:=sc.sc+0,v.debug:=sc,Color(sc)
 				Loop,4
 					sc.2242(A_Index-1,0)
@@ -1600,13 +1600,14 @@ Class MainWindowClass{
 			sc:=new s(1,{pos:"x0 y0 w0 h0"}),Redraw()
 			node:=this.Add(sc.sc,type),Color(sc,"",A_ThisFunc " Class Mainwin"),sc.2277(v.Options.End_Document_At_Last_Line)
 		}else if(type="Debug"){
-			sc:=new ExtraScintilla(1,{pos:"x0 y0 w0 h0"}),Redraw()
-			node:=this.Add(sc.sc,type),Color(sc,"",A_ThisFunc " Class Mainwin"),sc.2277(v.Options.End_Document_At_Last_Line)
+			v.Debug:=sc:=new ExtraScintilla(1,{pos:"x0 y0 w0 h0"}),Redraw()
+			node:=this.Add(sc.sc,type),sc.2277(v.Options.End_Document_At_Last_Line)
 			if(type="Debug"){
 				Loop,4
 					sc.2242(A_Index-1,0)
-				Color(sc),sc.2403(0x08,0)
-		}}else if(type="Search"){
+				Color(sc,Current(3).Lang),sc.2403(0x08,0)
+			}
+		}else if(type="Search"){
 			node:=this.Add(this.NewCtrlPos.hwnd,"Search")
 		}else if(type="Code Explorer"){
 			node:=this.Add(this.ce,type)
@@ -1630,7 +1631,7 @@ Class MainWindowClass{
 			tv:=Current(3).tv
 			ControlFocus,,% "ahk_id" sc.sc
 			tv(tv)
-		}
+		}return
 	}Theme(){
 		RefreshThemes()
 	}Tracked_Notes(){
