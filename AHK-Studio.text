@@ -1,3 +1,21 @@
+1.005.09
+Save As and Save: Reported by derz00 #144-Saving with *.* selected still adds .ahk to the file extension
+1.005.08
+Added: Suggested by Joe Glines-Selections: When you have multiple selections it will show how many you have-Total Replaced: When using Replace Selected it will show how many items you replacedFixed: Reported by Joe Glines- ;~ { was causing indent. Only ;{ and ;
+1.005.07
+Changed:-Find: Layout is a bit different, Use Up and Down to go between found items
+1.005.06
+Testing New Version
+1.005.05
+ok
+1.005.04
+New
+1.005.03
+Yet another test
+1.005.02
+Another test
+1.005.01
+New Test
 1.005.00
 Added:
 -Regex Replace Selected Dialog: A small GUI to use Regex to replace the selected text
@@ -8,7 +26,7 @@ Save As and Save: Reported by derz00 #144
 -Refresh Current Project:
 --Re-Scans the current File/Project and updates the Code Explorer/Omni-Search
 --Quick Find Ignore: A list of Styles that will be ignored by Quick Find
-
+-Edit Hotkeys: Now with a better search feature
 
 Changed:
 -Publish: Now does Additional Publish
@@ -20,7 +38,7 @@ Changed:
 --Made it a part of Studio
 -Jump To First Available: Numbered multiple items in the list
 Creates:
--%A_MyDocuments%\DebugWindow.ahk: For the function DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0) to display text in the Debug Window
+-%A_MyDocuments%\\DebugWindow.ahk: For the function DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0) to display text in the Debug Window
 Changed:
 -Set_New_File_Default_Folder: Now keeps track of a Global folder and Project Specific folders
 -Changed the backup folder to AHK-Studio Backup to make it easier to find
@@ -33,12 +51,4 @@ Added: Suggested by Joe Glines
 Added: Suggested by Joe Glines
 -DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0) Plugin method to display text in the debug window in Studio
 Fixed: Reported by Joe Glines
-- ;~ { was causing indent. Only ;{ and ;} were supposed to effect indents
-Fixed: Reported by Barney
--Hotkeys with Up were not being indexed
-Fixed: Reported by bugrobot #145
--I was using Duplicate Selection for Duplicate Line.  It worked when nothing was selected...
-Changed: Requested by derz00
--Replacements: Non-Word characters will trigger
-Added: Requested by Joe Glines
--Close Debug Window: Closes the Debug Window
+- ;~ { was causing indent. Only ;{ and ;
