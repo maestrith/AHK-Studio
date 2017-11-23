@@ -2353,7 +2353,7 @@ Class XML{
 			this.Transform()
 		if(this.XML.SelectSingleNode("*").xml="")
 			return m("Errors happened while trying to save " this.file ". Reverting to old version of the XML")
-		FileName:=this.file?this.file:x.1.1,ff:=FileOpen(FileName,"R"),text:=ff.Read(ff.length),ff.Close()
+		FileName:=this.file?this.file:x.1.1,ff:=FileOpen(FileName,"R","UTF-8"),text:=ff.Read(ff.length),ff.Close()
 		if(ff.encoding!="UTF-8")
 			FileDelete,%FileName%
 		if(!this[])
