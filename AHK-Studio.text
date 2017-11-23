@@ -17,6 +17,8 @@ Another test
 1.005.01
 New Test
 1.005.00
+BACKUP YOUR CURRENT VERSION...THIS MIGHT BE A BUMPY RIDE
+
 Added:
 -Regex Replace Selected Dialog: A small GUI to use Regex to replace the selected text
 -Regex Replace Selected: Use the saved Regex items from the above dialog
