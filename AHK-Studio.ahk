@@ -3016,6 +3016,7 @@ ContextMenu(){
 	else
 		node:=RCMXML.SSN("//main[@name='" (type:=SSN(node,"@type").text) "']")
 	if(oea.type="Project Explorer"){
+		MouseClick,Left
 		current:=Current(3).file
 		SplitPath,current,filename
 		Menu,RCM,Add,%filename%,deadend
@@ -4205,12 +4206,10 @@ Escape(a*){
 			(A_Index=1)?sc.2160(b.2,b.1):sc.2573(b.1,b.2)
 		sc.2574(main),CenterSel()
 	}v.DisableContext:=sc.2166(sc.2008),sc.2201
-	if(v.Options.Auto_Set_Area_On_Quick_Find){
+	if(v.Options.Auto_Set_Area_On_Quick_Find)
 		SetTimer,Clear_Selection,-1
-	}
 	if(InStr(Focus,"Scintilla"))
 		Send,{Escape}
-	v.DebugText:=""
 	DllCall("EndMenu"),UpPos(1)
 }
 ExecScript(){
@@ -4236,14 +4235,19 @@ ExecScript(){
 				v.exec.Terminate(),sc:=csc()
 				if(info.file!=Current(2).file)
 					tv(SSN(cexml.Find(Current(1),"descendant::file/@file",info.file),"@tv").text)
-				v.DebugText:=1,sc.2160(sc.2128(info.line),sc.2136(info.line)),sc.2200(sc.2128(info.line),text)
+				sc.2160(sc.2128(info.line),sc.2136(info.line))
+				if(!v.Debug)
+					MainWin.DebugWindow()
+				dd:=v.Debug,dd.2003(dd.2006,(dd.2006?"`n" Text:Text)),sc.2160(sc.2128(line),sc.2136(line)),dd.2025(dd.2006),MarginWidth(dd)
 				return
 	}}}else if(text:=v.exec.StdERR.ReadAll()){
 		if(InStr(text,"cannot be opened"))
 			return m(text,"","If the script file is located in the same directory as the main Project try adding #Include %A_ScriptDir% to the main Project file.")
 		exec.Terminate(),sc:=csc(),info:=StripError(text,"*"),tv(SSN(cexml.Find(Current(1),"descendant::file/@file",info.file),"@tv").text),line:=info.line
 		Sleep,100
-		v.DebugText:="Press Escape to remove this window`n`n" Text,sc.2160(sc.2128(line),sc.2136(line)),sc.2200(sc.2128(line),v.DebugText)
+		if(!v.Debug)
+			MainWin.DebugWindow()
+		dd:=v.Debug,dd.2003(dd.2006,(dd.2006?"`n" Text:Text)),sc.2160(sc.2128(line),sc.2136(line)),dd.2025(dd.2006),MarginWidth(dd)
 	}
 }
 Exit(ExitApp:=0){
@@ -4779,7 +4783,7 @@ Find(){
 			while(RegExMatch(out,pre ")(.*(" ff ").*$)",Found,pos),pos:=Found.pos(2)+Found.len(2)){
 				if(info.Sort&&!FindXML.SSN("//file[@id='" ea.ID "']"))
 					PP:=FindXML.Under(Top,"file",{text:fn,id:ea.ID},,1),DoSort:=1
-				RegExReplace(str:=str:=SubStr(out,1,Found.pos(2)),"\R","",count)
+				RegExReplace((str:=SubStr(out,1,Found.Pos(2))),"\R","",count)
 				Next:=FindXML.Under((DoSort?PP:top),"info",Obj:={id:ea.ID,text:Found.2,found:Found.1,pos:(StartPos:=StrPut(str,"UTF-8")-2),end:StartPos+StrPut(Found.1,"UTF-8")-1,file:ea.file,line:Round(count)+1,filetv:ea.tv})
 				for a,b in ["File","Line","Pos","Found"]
 					FindXML.Under(Next,"moreinfo",{text:Obj[b],name:b})
@@ -4834,7 +4838,10 @@ Find(){
 			if(info.acdc)
 				Goto,5Close
 			return
-	}}return SetTimer("FindLabel",-200),SetTimer("FindCurrent",-10)
+	}}else if(FindXML.SSN("//*[@tv='" A_EventInfo "']")){
+		TV_Modify(A_EventInfo,"Select Vis Focus")
+	}
+	return SetTimer("FindLabel",-200),SetTimer("FindCurrent",-10)
 	FindShowXML:
 	FindXML.Transform()
 	FindXML.Transform()
@@ -5473,7 +5480,7 @@ Gui(){
 					Encoding:=q.Encoding
 			}else
 				Encoding:=q.Encoding,Text:=q.Read()
-			q.Close(),Update({file:ea.file,text:text,load:1,encoding:encoding}),Opened:=1
+			q.Close(),Update({file:ea.file,text:RegExReplace(text,"\R","`n"),load:1,encoding:encoding}),Opened:=1
 		}
 	}else{
 		while(oo:=open.item[A_Index-1])
@@ -5509,7 +5516,7 @@ Gui(){
 			tv(SSN(Node,"@tv").text)
 		return this
 	}if(Node:=cexml.Find("//file/@file",v.OpenFile))
-		tv(SSN(Node,"@tv").text,m(Node.xml))
+		tv(SSN(Node,"@tv").text)
 	this.qfhwnd:=this.QuickFind(),sc:=new s(1,{pos:"x0 y0 w100 h100"}),this.Add(sc.sc,"Scintilla"),sc.2277(v.Options.End_Document_At_Last_Line),this.test:=sc.sc,this.Pos(),Redraw(),ObjRegisterActive(PluginClass)
 	/*
 		if(FocusNew)
@@ -7469,16 +7476,6 @@ Omni_Search(start=""){
 	if(hwnd(20))
 		return
 	sc:=csc()
-	/*
-		change the listview to a treeview
-		split up the data so that all the info needed is below the top item
-		this needs re-written anyway...
-		When an item is selected it shows the info below
-		Up/Down selects the next item like before
-		but it collapses the previous item and expands the next tv item
-		Sounds like fun :)
-		make it work like Find basically :)
-	*/
 	if(sc.notes)
 		csc({hwnd:gui.SSN("//*[@type='Scintilla']/@hwnd").text}),sc:=csc(),sc.2400
 	/*
@@ -7498,7 +7495,7 @@ Omni_Search(start=""){
 		Catch,e
 			m(e.message,a,b)
 	}
-	NewWin.Show("Omni-Search",,,StrLen(start)),Sleep(100),NewWin.Size()
+	NewWin.Show("Omni-Search: Fuzzy Search find Check For Update by typing @CFU",,,StrLen(start)),Sleep(100),NewWin.Size()
 	oss:
 	break:=1,running:=1
 	SetTimer,omnisearch,-10
@@ -7532,10 +7529,6 @@ Omni_Search(start=""){
 		Loop,4
 			LV_ModifyCol(A_Index,"AutoHDR")
 		LV_Modify(1,"Select Vis Focus")
-		GuiControl,20:+g,Edit1
-		GuiControl,20:,Edit1,Fuzzy Search find Check For Update by typing @CFU
-		SendMessage,0xB1,0,49,Edit1,% NewWin.ID
-		GuiControl,20:+goss,Edit1
 		return running:=0
 	}else if(RegExMatch(search,"O)(\W)",found)){
 		if(found.1="^")
@@ -11294,9 +11287,7 @@ UpPos(NoContext:=0){
 	else if(CPos!=EPos)
 		sc.2500(6),sc.2505(0,Length)
 	LastPos:=CPos
-	if(v.DebugText)
-		return sc.2200(sc.2167(Line),v.DebugText)
-	if(!NoContext&&!v.DebugText)
+	if(!NoContext)
 		SetTimer,Context,-500
 }
 URIDecode(str){

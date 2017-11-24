@@ -29,7 +29,6 @@ Save As and Save: Reported by derz00 #144
 --Re-Scans the current File/Project and updates the Code Explorer/Omni-Search
 --Quick Find Ignore: A list of Styles that will be ignored by Quick Find
 -Edit Hotkeys: Now with a better search feature
-
 Changed:
 -Publish: Now does Additional Publish
 -Words In Document: Changed the backend so that it only will add the words related to the first 2 letters you typed rather than the entire list to improve performance
@@ -41,6 +40,9 @@ Changed:
 -Jump To First Available: Numbered multiple items in the list
 Creates:
 -%A_MyDocuments%\\DebugWindow.ahk: For the function DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0) to display text in the Debug Window
+
+Changed: Suggested by Run1e
+-Omni-Search: Title now contains instructions
 Changed:
 -Set_New_File_Default_Folder: Now keeps track of a Global folder and Project Specific folders
 -Changed the backup folder to AHK-Studio Backup to make it easier to find
@@ -54,3 +56,9 @@ Added: Suggested by Joe Glines
 -DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0) Plugin method to display text in the debug window in Studio
 Fixed: Reported by Joe Glines
 - ;~ { was causing indent. Only ;{ and ;
+Fixed: Reported by Run1e
+-Full Tree
+Fixed: Reported by Astral Essence (Discord)
+-Find: Clicking on the + to expand an item was causing it to quickly show then hide the information
+-Right Click on Project Explorer was not showing the information for the file you right clicked on
+-Moved the Debug Tip from the main GUI to the Debug Panel
