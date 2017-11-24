@@ -15,11 +15,7 @@ if(!settings[]){
 	Run,lib\Settings.xml
 	m("Oh boy...check the settings file to see what's up.")
 }v.LineEdited:=[],v.LinesEdited:=[],v.RunObject
-ComObjError(0),new Keywords(),FileCheck(%True%),Options("startup"),menus:=new XML("menus","Lib\Menus.xml")
-if(!cexml.SSN("//menu"))
-	new Omni_Search_Class()
-Gui()
-DefaultRCM(),CheckLayout()
+ComObjError(0),new Keywords(),FileCheck(%True%),Options("startup"),menus:=new XML("menus","Lib\Menus.xml"),Gui(),DefaultRCM(),CheckLayout()
 return
 /*
 	if((Folder:=Settings.SSN("//DefaultFolder")).text)
@@ -2316,114 +2312,141 @@ Class Toolbar{
 	}
 }
 Class XML{
-	keep:=[]
+	Keep:=[]
 	__Get(x=""){
 		return this.XML.xml
-	}__New(param*){
-		if(!FileExist(A_ScriptDir "\lib"))
-			FileCreateDir,%A_ScriptDir%\lib
-		root:=param.1,file:=param.2,file:=file?file:root ".xml",temp:=ComObjCreate("MSXML2.DOMDocument"),temp.SetProperty("SelectionLanguage","XPath"),this.XML:=temp,this.file:=file,XML.keep[root]:=this
+	}__New(Param*){
+		if(!FileExist(A_ScriptDir "\Lib"))
+			FileCreateDir,%A_ScriptDir%\Lib
+		Root:=Param.1,File:=Param.2,File:=File?File:Root ".xml",New:=ComObjCreate("MSXML2.DOMDocument"),New.SetProperty("SelectionLanguage","XPath"),this.XML:=New,this.File:=File,XML.Keep[Root]:=this
 		if(Param.3)
-			temp.preserveWhiteSpace:=1
-		if(FileExist(file)){
-			ff:=FileOpen(file,"R","UTF-8"),info:=ff.Read(ff.Length),ff.Close()
-			this.XML.LoadXML(info)
-			if(!this.XML.XML||!info){
-				this.XML:=ComObjCreate("MSXML2.DOMDocument"),this.XML.SetProperty("SelectionLanguage","XPath")
-				this.XML:=this.CreateElement(temp,root)
-				FileDelete,%file%
+			New.PreserveWhiteSpace:=1
+		if(FileExist(File)){
+			FileObj:=FileOpen(File,"R","UTF-8"),Info:=FileObj.Read(FileObj.Length),FileObj.Close(),this.XML.LoadXML(Info)
+			if(!this.XML.XML&&Info){
+				SplitPath,File,,,,NNE
+				NewFile:=((Folder:="Lib\XML Backup\"  NNE) "\" NNE " " A_Now ".xml")
+				if(!FileExist(Folder))
+					FileCreateDir,%Folder%
+				FileMove,%File%,%NewFile%
+				this.XML:=ComObjCreate("MSXML2.DOMDocument"),this.XML.SetProperty("SelectionLanguage","XPath"),this.XML:=this.CreateElement(New,Root)
 			}else
-				temp.LoadXML(info),this.XML:=temp
+				New.LoadXML(Info),this.XML:=New
 		}else
-			this.XML:=this.CreateElement(temp,root)
-		SplitPath,file,,dir
+			this.XML:=this.CreateElement(New,Root)
+		SplitPath,File,,dir
 		if(!FileExist(dir))
 			FileCreateDir,%dir%
-	}Add(XPath,att:="",text:="",dup:=0){
-		p:="/",add:=(next:=this.SSN("//" XPath))?1:0,last:=SubStr(XPath,InStr(XPath,"/",0,0)+1)
-		if(!next.xml){
-			next:=this.SSN("//*")
+	}Add(XPath,ATT:="",Text:="",Dup:=0){
+		p:="/",Add:=(Next:=this.SSN("//" XPath))?1:0,Last:=SubStr(XPath,InStr(XPath,"/",0,0)+1)
+		if(!Next.xml){
+			Next:=this.SSN("//*")
 			for a,b in StrSplit(XPath,"/")
-				p.="/" b,next:=(x:=this.SSN(p))?x:next.AppendChild(this.XML.CreateElement(b))
-		}if(dup&&add)
-			next:=next.ParentNode.AppendChild(this.XML.CreateElement(last))
-		for a,b in att
-			next.SetAttribute(a,b)
-		if(text!="")
-			next.text:=text
-		return next
+				p.="/" b,Next:=(x:=this.SSN(p))?x:Next.AppendChild(this.XML.CreateElement(b))
+		}if(Dup&&Add)
+			Next:=Next.ParentNode.AppendChild(this.XML.CreateElement(Last))
+		for a,b in ATT
+			Next.SetAttribute(a,b)
+		if(Text!="")
+			Next.Text:=Text
+		return Next
 	}Clear(XPath){
 		Node:=this.SSN(XPath),All:=SN(Node,"descendant::*")
 		while(aa:=All.Item[A_Index-1])
 			aa.ParentNode.RemoveChild(aa)
 		return Node
-	}CreateElement(doc,root){
-		return doc.AppendChild(this.XML.CreateElement(root)).ParentNode
-	}EA(XPath,att:=""){
-		list:=[]
-		if(att)
-			return XPath.NodeName?SSN(XPath,"@" att).text:this.SSN(XPath "/@" att).text
-		nodes:=XPath.NodeName?XPath.SelectNodes("@*"):nodes:=this.SN(XPath "/@*")
-		while(nn:=nodes.item[A_Index-1])
-			list[nn.NodeName]:=nn.text
-		return list
-	}Find(info*){
-		static last:=[]
-		doc:=info.1.NodeName?info.1:this.xml
-		if(info.1.NodeName)
-			node:=info.2,find:=info.3,return:=info.4!=""?"SelectNodes":"SelectSingleNode",search:=info.4
+	}CreateElement(Doc,Root){
+		return Doc.AppendChild(this.XML.CreateElement(Root)).ParentNode
+	}EA(XPath,Att:=""){
+		List:=[]
+		if(Att)
+			return XPath.NodeName?SSN(XPath,"@" Att).Text:this.SSN(XPath "/@" Att).Text
+		Nodes:=XPath.NodeName?XPath.SelectNodes("@*"):Nodes:=this.SN(XPath "/@*")
+		while(nn:=Nodes.Item[A_Index-1])
+			List[nn.NodeName]:=nn.Text
+		return List
+	}Find(Info*){
+		static Last:=[]
+		Doc:=Info.1.NodeName?Info.1:this.XML
+		if(Info.1.NodeName)
+			Node:=Info.2,Find:=Info.3,Return:=Info.4!=""?"SelectNodes":"SelectSingleNode",Search:=Info.4
 		else
-			node:=info.1,find:=info.2,return:=info.3!=""?"SelectNodes":"SelectSingleNode",search:=info.3
-		if(InStr(info.2,"descendant"))
-			last.1:=info.1,last.2:=info.2,last.3:=info.3,last.4:=info.4
-		if(InStr(find,"'"))
-			return doc[return](node "[.=concat('" RegExReplace(find,"'","'," Chr(34) "'" Chr(34) ",'") "')]/.." (search?"/" search:""))
+			Node:=Info.1,Find:=Info.2,Return:=Info.3!=""?"SelectNodes":"SelectSingleNode",Search:=Info.3
+		if(InStr(Info.2,"descendant"))
+			Last.1:=Info.1,Last.2:=Info.2,Last.3:=Info.3,Last.4:=Info.4
+		if(InStr(Find,"'"))
+			return Doc[Return](Node "[.=concat('" RegExReplace(Find,"'","'," Chr(34) "'" Chr(34) ",'") "')]/.." (Search?"/" Search:""))
 		else
-			return doc[return](node "[.='" find "']/.." (search?"/" search:""))
+			return Doc[Return](Node "[.='" Find "']/.." (Search?"/" Search:""))
 	}Get(XPath,Default){
-		text:=this.SSN(XPath).text
-		return text?text:Default
-	}Lang(info){
-		this.xml.SetProperty("SelectionLanguage",(info=""?"XPath":"XSLPattern"))
-	}ReCreate(XPath,new){
-		rem:=this.SSN(XPath),rem.ParentNode.RemoveChild(rem),new:=this.Add(new)
-		return new
+		Text:=this.SSN(XPath).Text
+		return Text?Text:Default
+	}Lang(Info){
+		this.XML.SetProperty("SelectionLanguage",(Info=""?"XPath":"XSLPattern"))
+	}ReCreate(XPath,New){
+		Rem:=this.SSN(XPath),Next:=Rem.nextSibling,Rem.ParentNode.RemoveChild(Rem),New:=this.Add(New)
+		if(Next)
+			New.ParentNode.InsertBefore(New,Next)
+		return New
 	}Save(x*){
 		if(x.1=1)
 			this.Transform()
 		if(this.XML.SelectSingleNode("*").xml="")
-			return m("Errors happened while trying to save " this.file ". Reverting to old version of the XML")
-		FileName:=this.file?this.file:x.1.1,ff:=FileOpen(FileName,"R","UTF-8"),text:=ff.Read(ff.length),ff.Close()
+			return m("Errors happened while trying to save " this.File ". Reverting to old version of the XML")
+		FileName:=this.File?this.File:x.1.1,ff:=FileOpen(FileName,"R","UTF-8"),text:=ff.Read(ff.length),ff.Close()
 		if(ff.encoding!="UTF-8")
 			FileDelete,%FileName%
 		if(!this[])
-			return m("Error saving the " this.file " XML.  Please get in touch with maestrith if this happens often")
-		if(text!=this[])
-			file:=FileOpen(FileName,"W","UTF-8"),file.Write(this[]),file.Length(file.Position),file.Close()
+			return m("Error saving the " this.File " XML.  Please get in touch with maestrith if this happens often")
+		if(text!=this[]){
+			SplitPath,FileName,,,,NNE
+			if(NNE~="i)\b(CEXML|Positions)"=0){
+				File:=((Folder:="Lib\XML Backup\"  NNE) "\" NNE " " A_Now ".xml"),All:=this.SN("//*[@tv]")
+				while(aa:=All.item[A_Index-1])
+					aa.RemoveAttribute("tv")
+				if(NNE="Gui"){
+					Compare:=[]
+					for a,b in [Text,this[]]
+						Compare.Push(RegExReplace(b,"U)(?<file>(file=\x22.*\x22))|(?<hwnd>(hwnd=\x22.*\x22))|(?<last>(last=\x22.*\x22))|(?<ra>(ra=\x22.*\x22))|(?<ba>(ba=\x22.*\x22))|(?<space>(\s))"))
+					if(Compare.1!=Compare.2){
+						if(!FileExist(Folder))
+							FileCreateDir,%Folder%
+						FileMove,%FileName%,%File%
+					}
+					File:=FileOpen(FileName,"W","UTF-8"),File.Write(this[]),File.Length(File.Position),File.Close()
+				}else if(Text!=this[]){
+					if(!FileExist(Folder))
+						FileCreateDir,%Folder%
+					FileMove,%FileName%,%File%
+				}
+				File:=FileOpen(FileName,"W","UTF-8"),File.Write(this[]),File.Length(File.Position),File.Close()
+			}else
+				File:=FileOpen(FileName,"W","UTF-8"),File.Write(this[]),File.Length(File.Position),File.Close()
+		}
 	}SSN(XPath){
 		return this.XML.SelectSingleNode(XPath)
 	}SN(XPath){
 		return this.XML.SelectNodes(XPath)
 	}Transform(Loop:=1){
 		static
-		if(!IsObject(xsl))
-			xsl:=ComObjCreate("MSXML2.DOMDocument"),xsl.loadXML("<xsl:stylesheet version=""1.0"" xmlns:xsl=""http://www.w3.org/1999/XSL/Transform""><xsl:output method=""xml"" indent=""yes"" encoding=""UTF-8""/><xsl:template match=""@*|node()""><xsl:copy>`n<xsl:apply-templates select=""@*|node()""/><xsl:for-each select=""@*""><xsl:text></xsl:text></xsl:for-each></xsl:copy>`n</xsl:template>`n</xsl:stylesheet>"),style:=null
+		if(!IsObject(XSL))
+			XSL:=ComObjCreate("MSXML2.DOMDocument"),XSL.LoadXML("<xsl:stylesheet version=""1.0"" xmlns:xsl=""http://www.w3.org/1999/XSL/Transform""><xsl:output method=""xml"" indent=""yes"" encoding=""UTF-8""/><xsl:template match=""@*|node()""><xsl:copy>`n<xsl:apply-templates select=""@*|node()""/><xsl:for-each select=""@*""><xsl:text></xsl:text></xsl:for-each></xsl:copy>`n</xsl:template>`n</xsl:stylesheet>"),Style:=null
 		Loop,%Loop%
-			this.XML.TransformNodeToObject(xsl,this.xml)
-	}Under(under,node,att:="",text:="",list:=""){
-		new:=under.AppendChild(this.XML.CreateElement(node)),new.text:=text
-		for a,b in att
-			new.SetAttribute(a,b)
-		for a,b in StrSplit(list,",")
-			new.SetAttribute(b,att[b])
-		return new
+			this.XML.TransformNodeToObject(XSL,this.XML)
+	}Under(Under,Node,Att:="",Text:="",List:=""){
+		New:=Under.AppendChild(this.XML.CreateElement(Node)),New.Text:=Text
+		for a,b in Att
+			New.SetAttribute(a,b)
+		for a,b in StrSplit(List,",")
+			New.SetAttribute(b,Att[b])
+		return New
 	}
 }
-SSN(node,XPath){
-	return node.SelectSingleNode(XPath)
+SSN(Node,XPath){
+	return Node.SelectSingleNode(XPath)
 }
-SN(node,XPath){
-	return node.SelectNodes(XPath)
+SN(Node,XPath){
+	return Node.SelectNodes(XPath)
 }
 Class(text,current:="",Remove:=0){
 	return
@@ -4419,7 +4442,7 @@ FEUpdate(Redraw:=0){
 	}Master:=cexml.Add("files"),mea:=XML.EA(Master)
 	if(!mea.tv)
 		Master.SetAttribute("tv",TVC.Add(1,"Projects"))
-	projects:=SSN(Master,"@tv").text,all:=cexml.SN("descendant::file[not(@tv)]")
+	projects:=SSN(Master,"@tv").text,all:=cexml.SN("descendant::file[not(@tv)]|descendant::main")
 	while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa){
 		if(aa.NodeName="folder"){
 			aa.ParentNode.RemoveChild(aa)
@@ -5421,7 +5444,7 @@ Gui(){
 			DefaultFont(),ConvertTheme()
 	*/
 	Options("Auto_Advance")
-	v.startup:=1,this:=MainWin:=New MainWindowClass(1),ea:=Settings.EA("//theme/descendant::*[@style=32]"),win:=1,Plug(),Omni_Search_Class.Menus()
+	v.startup:=1,this:=MainWin:=New MainWindowClass(1),ea:=Settings.EA("//theme/descendant::*[@style=32]"),win:=1,Plug()
 	if(!this.Gui.SSN("//control"))
 		Gui,Show,Hide
 	if(!Settings.SSN("//autoadd")){
@@ -6280,6 +6303,7 @@ Menu(menuname:="main"){
 		if(mm.HasChildNodes())
 			Menu,% ea.name,DeleteAll
 	Menu,%menuname%,DeleteAll
+	CXMLTop:=cexml.ReCreate("//menu","menu")
 	while(aa:=menu.item[A_Index-1],ea:=XML.EA(aa),pea:=XML.EA(aa.ParentNode)){
 		parent:=pea.name?pea.name:menuname
 		if(ea.hide)
@@ -6288,24 +6312,25 @@ Menu(menuname:="main"){
 			if(aa.nodename="separator"){
 				Menu,%parent%,Add
 				Continue
-			}if((!IsFunc(ea.clean)&&!IsLabel(ea.clean))&&!ea.plugin&&!v.Options.HasKey(ea.clean)){
-				Disable[parent,ea.name (ea.hotkey?"`t" Convert_Hotkey(ea.hotkey):"")]:=1
-				aa.SetAttribute("no",1) ;,fixlist.=ea.clean "`n"
-				aa.SetAttribute("delete",1)
+			}if((!IsFunc(ea.Clean)&&!IsLabel(ea.Clean))&&!ea.Plugin&&!v.Options.HasKey(ea.Clean)){
+				Disable[parent,ea.name (ea.hotkey?"`t" (ConvertedHotkey:=Convert_Hotkey(ea.hotkey)):"")]:=1,aa.SetAttribute("no",1),aa.SetAttribute("delete",1)
 				Continue
 			}if(ea.no)
 				aa.RemoveAttribute("no")
+			Clean:=RegExReplace(ea.Clean,"_"," ")
+			Launch:=IsFunc(ea.Clean)?"func":IsLabel(ea.Clean)?"label":v.Options.HasKey(ea.Clean)?"option":""
+			cexml.Under(CXMLTop,"item",{launch:(Launch?Launch:ea.Plugin),text:Clean,type:"Menu",sort:Clean,additional1:ConvertedHotkey,order:"text,type,additional1",clean:ea.Clean})
 			exist[parent]:=1
-		}v.available[ea.clean]:=1,(aa.HasChildNodes())?(track.push({name:ea.name,parent:parent,clean:ea.clean}),route:="deadend",aa.SetAttribute("top",1)):(route:="MenuRoute")
+		}v.available[ea.Clean]:=1,(aa.HasChildNodes())?(track.push({name:ea.name,parent:parent,clean:ea.Clean}),route:="deadend",aa.SetAttribute("top",1)):(route:="MenuRoute")
 		if(ea.hotkey)
-			new:=v.hkxml.Under(top,"hotkey",{hotkey:ea.hotkey,action:ea.clean})
+			new:=v.hkxml.Under(top,"hotkey",{hotkey:ea.hotkey,action:ea.Clean})
 		hotkey:=ea.hotkey?"`t" Convert_Hotkey(ea.hotkey):""
 		Menu,%parent%,Add,% ea.name hotkey,menuroute
 		if(Disable[parent,ea.name hotkey]){
 			Menu,%parent%,Icon,% ea.name hotkey,Shell32.dll,23
 			Menu,%parent%,Disable,% ea.name hotkey
-		}if(value:=Settings.SSN("//options/@" ea.clean).text){
-			v.Options[ea.clean]:=value
+		}if(value:=Settings.SSN("//options/@" ea.Clean).text){
+			v.Options[ea.Clean]:=value
 			Menu,%parent%,ToggleCheck,% ea.name hotkey
 		}if(ea.icon!=""&&ea.filename)
 			Menu,%Parent%,Icon,% ea.name hotkey,% ea.filename,% ea.icon
@@ -6317,7 +6342,7 @@ Menu(menuname:="main"){
 	Gui,1:Menu,%menuname%
 	return menuname
 	MenuRoute:
-	item:=Clean(A_ThisMenuItem),ea:=menus.EA("//*[@clean='" item "']"),plugin:=ea.plugin,option:=ea.option
+	item:=Clean(A_ThisMenuItem),ea:=menus.EA("//*[@clean='" item "']"),plugin:=ea.Plugin,option:=ea.option
 	ShowOSD(item)
 	if(IsFunc(item)||IsLabel(item))
 		SetTimer,%item%,-1
@@ -6797,6 +6822,8 @@ New(FileName:="",text:="",Select:=1){
 }
 New_Include_From_Current_Word(){
 	sc:=csc(),Word:=sc.GetWord(),file:=Current(2).file
+	if(!Word)
+		return m("Either select a word or place your caret within a word")
 	if(Context(1).Word="gui"){
 		Word:=InputBox(hwnd(1),"Possible g-label detected","Confirm the new Function and File to be created",Word)
 		if(ErrorLevel||Word="")
@@ -7517,7 +7544,7 @@ Omni_Search(start=""){
 		while(RegExMatch(search,"O)(\W)",found,pos),pos:=found.Pos(1)+found.len(1)){
 			if(found.1=" ")
 				Continue
-			if(pre:=omni_search_class.prefix[found.1]){
+			if(pre:=Omni_Search_Class.prefix[found.1]){
 				replist.push(found.1)
 				if(found.1="+"){
 					find:="//main[@file='" Current(2).file "']/descendant::*[@type='Class' or @type='Function'"
@@ -8019,7 +8046,7 @@ Plug(refresh:=0){
 	return
 	RefreshMenu:
 	Gui,1:Default
-	MenuWipe(),Omni_Search_Class.Menus()
+	MenuWipe()
 	Gui,1:Menu,% Menu("main")
 	return
 }
@@ -8494,17 +8521,15 @@ Redraw(){
 	WinSet,Redraw,,% MainWin.ID
 }
 Refresh_Code_Explorer(){
-	FileName:=Current(3).File,Save(),Scanfile.Once:=0,TVC.Delete(1,0),TVC.Delete(2,0),TVC.Add(2,"Please Wait..."),TVC.Add(1,"Please Wait..."),FileList:=[],all:=Settings.SN("//open/file")
-	while(aa:=all.item[A_Index-1])
-		FileList.Push(aa.text)
-	cexml.XML.LoadXML("<cexml/>"),GetID(1)
-	Omni_Search_Class.Menus()
-	for a,b in FileList
-		Extract(GetMainNode(b))
-	Index_Lib_Files()
-	ScanFiles(1),Code_Explorer.Refresh_Code_Explorer(),FEUpdate(1),TV(SSN(cexml.Find("//*/@file",FileName),"@tv").text)
-}
-Refresh_Project_Explorer(){
+	FileName:=Current(3).File,Save(),Scanfile.Once:=0,TVC.Delete(1,0),TVC.Delete(2,0),TVC.Add(2,"Please Wait..."),TVC.Add(1,"Please Wait...")
+	All:=cexml.SN("//*[@sc]"),sc:=csc(),sc.2358(0,0),sc.2181(0,"Reloading, Please Wait...")
+	while(aa:=All.item[A_Index-1],ea:=XML.EA(aa))
+		sc.2377(0,ea.sc)
+	cexml.XML.LoadXML("<cexml/>"),GetID(1),Omni_Search_Class.Menus(),All:=Settings.SN("//open/file")
+	while(aa:=All.item[A_Index-1])
+		Extract(GetMainNode(aa.Text))
+	Index_Lib_Files(),ScanFiles(1),Code_Explorer.Refresh_Code_Explorer(),FEUpdate(1),TV(SSN(cexml.Find("//*/@file",FileName),"@tv").Text)
+}Refresh_Project_Explorer(){
 	Refresh_Code_Explorer()
 }
 Refresh_Current_File(){
@@ -10626,38 +10651,40 @@ Theme(){
 	new SettingsClass("Theme")
 }
 Toggle_Comment_Line(){
-	sc:=csc(),sc.2078,pi:=PosInfo(),sl:=sc.2166(pi.start),el:=sc.2166(pi.end),end:=pi.end,single:=sl=el?1:0,replace:=Settings.SSN("//comment").text,replace:=replace?replace:";",replace:=RegExReplace(replace,"%a_space%"," ")
-	if(v.options.Build_Comment!=1){
+	sc:=csc(),sc.2078,pi:=PosInfo(),sl:=sc.2166(pi.start),el:=sc.2166(pi.End),End:=pi.End,Single:=sl=el?1:0,Replace:=Settings.SSN("//comment").text,Replace:=Replace?Replace:";",Replace:=RegExReplace(Replace,"%a_space%"," ")
+	if(v.Options.Build_Comment!=1){
+		m("here?")
 		while((sl<=el)){
-			letter:=sc.TextRange(min:=sc.2128(sl),min+StrLen(replace))
-			if(min>end&&!single)
+			Letter:=sc.TextRange(Min:=sc.2128(sl),Min+StrLen(Replace))
+			t(Replace,sl,el,"Min: " Min)
+			if(Min>End&&!Single)
 				break
-			if(letter=replace)
-				sc.2190(min),sc.2192(min+StrLen(replace)),sc.2194(0,""),end-=Strlen(Replace)
+			if(Letter=Replace)
+				sc.2190(Min),sc.2192(Min+StrLen(Replace)),sc.2194(0,""),End-=Strlen(Replace)
 			else
-				sc.2190(min),sc.2192(min),sc.2194(StrLen(replace),replace),end+=Strlen(Replace)
+				sc.2190(Min),sc.2192(Min),sc.2194(StrLen(Replace),Replace),End+=Strlen(Replace)
 			sl++
 		}
 	}else{
-		Order:=[],pi:=PosInfo(),Order[sc.2166(sc.2008)]:=1,Order[sc.2166(sc.2009)]:=1,min:=Order.MinIndex(),max:=Order.MaxIndex()
-		Loop,% max-min+1{
-			if(!RegExMatch(sc.getline(min+(A_Index-1)),"^\s*;")){
-				Loop,% max-min+1
-					indentpos:=sc.2128(min+(A_Index-1)),sc.2003(indentpos,";"),added:=1,pi.end+=1
+		Order:=[],pi:=PosInfo(),Order[sc.2166(sc.2008)]:=1,Order[sc.2166(sc.2009)]:=1,Min:=Order.MinIndex(),max:=Order.MaxIndex()
+		Loop,% max-Min+1{
+			if(!RegExMatch(sc.GetLine(Min+(A_Index-1)),"^\s*;")){
+				Loop,% max-Min+1
+					indentpos:=sc.2128(Min+(A_Index-1)),sc.2003(indentpos,";"),added:=1,pi.End+=1
 				pi.start+=1
 			}
 		}
 		if(!added){
-			Loop,% max-min+1{
-				if(RegExMatch(sc.getline(min+(A_Index-1)),"^\s*;")){
-					indentpos:=sc.2128(min+(A_Index-1))
-					sc.2645(indentpos,1),pi.end-=1
+			Loop,% max-Min+1{
+				if(RegExMatch(sc.GetLine(Min+(A_Index-1)),"^\s*;")){
+					indentpos:=sc.2128(Min+(A_Index-1))
+					sc.2645(indentpos,1),pi.End-=1
 					if(A_Index=1)
 						pi.start-=1
 				}
 			}
 		}
-		sc.2160(pi.start,pi.end)
+		sc.2160(pi.start,pi.End)
 	}sc.2079
 }
 ToggleMenu(Label){
@@ -10872,10 +10899,15 @@ class Tracked_Notes{
 			}ll.SetAttribute("id",id)
 		}this.Populate()
 		return this
-	}Register(sc){
-		this.sc:=sc
-	}
-	Populate(){
+	}GetPos(){
+		sc:=MainWin.tnsc,fold:=0,node:=this.node,node.RemoveAttribute("fold")
+		for a,b in {start:sc.2008,end:sc.2009,scroll:sc.2152}
+			node.SetAttribute(a,b)
+		while(sc.2618(fold)>=0,fold:=sc.2618(fold))
+			list.=fold ",",fold++
+		if(list)
+			node.SetAttribute("fold",list)
+	}Populate(){
 		TVC.Default(3),this.XML.SSN("//*[@tv='" TV_GetSelection() "']").SetAttribute("last",1),all:=this.XML.SN("//*"),TVC.Delete(3,0)
 		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
 			if(aa.NodeName="global")
@@ -10885,6 +10917,46 @@ class Tracked_Notes{
 			if(ea.last)
 				aa.RemoveAttribute("last")
 		}
+	}Register(sc){
+		this.sc:=sc
+	}Set(file:=""){
+		TVC.Disable(3),project:=Current(2).file,file:=Current(3).file
+		if(master:=this.XML.Find("//main/@file",project)){
+			if(node:=this.XML.Find(master,"descendant::file/@file",file))
+				TVC.Modify(3,,SSN(node,"@tv").text,"Select Vis Focus"),this.node:=node
+			else
+				TVC.Modify(3,,SSN(master,"@tv").text,"Select Vis Focus"),this.node:=SSN(master,"global")
+			this.SetText()
+		}else
+			node:=this.XML.SSN("//master"),TVC.Modify(3,,SSN(node,"@tv").text,"Select Vis Focus"),this.node:=node,this.SetText()
+		TVC.Enable(3)
+	}SetText(){
+		static node
+		sc:=MainWin.tnsc,last:=csc().sc
+		if(this.node.XML!=node.XML&&this.node.XML){
+			Encode(RegExReplace(this.node.text,Chr(127),"`n"),txt),sc.2181(0,&txt)
+			ea:=XML.EA(this.node),sc.2160(Round(ea.start),Round(ea.end))
+			Sleep,10
+			for a,b in StrSplit(ea.fold,",")
+				sc.2237(b,0)
+			sc.2613(Round(ea.scroll))
+			MarginWidth(sc)
+		}
+		node:=this.node,csc({hwnd:last})
+	}tn(){
+		tn:
+		if(A_GuiEvent="S"){
+			if(node:=TNotes.XML.SSN("//*[@tv='" A_EventInfo "']")){
+				TNotes.node:=node
+				if(node.NodeName!="master"){
+					if(tv:=SSN(cexml.Find("//file/@file",SSN(node,"@file").text),"@tv").text)
+						tv(tv)
+					else
+						TNotes.node:=TNotes.node.NodeName="main"?SSN(TNotes.node,"global"):TNotes.node,TNotes.SetText()
+				}else
+					TNotes.SetText()
+		}}
+		return
 	}Track(){
 		project:=Current(2).file,file:=Current(3).file,id:=0
 		if(node:=this.XML.Find("//*/@file",file))
@@ -10899,57 +10971,7 @@ class Tracked_Notes{
 			while(this.XML.SSN("//*[@id='" ++id "']")){
 			}node.SetAttribute("id",id)
 		this.node:=node,this.Populate(),this.Set(file)
-	}SetText(){
-		static node
-		sc:=MainWin.tnsc,last:=csc().sc
-		if(this.node.XML!=node.XML&&this.node.XML){
-			Encode(RegExReplace(this.node.text,Chr(127),"`n"),txt),sc.2181(0,&txt)
-			ea:=XML.EA(this.node),sc.2160(Round(ea.start),Round(ea.end))
-			Sleep,10
-			for a,b in StrSplit(ea.fold,",")
-				sc.2237(b,0)
-			sc.2613(Round(ea.scroll))
-			MarginWidth(sc)
-		}
-		node:=this.node,csc({hwnd:last})
-	}
-	Set(file:=""){
-		TVC.Disable(3),project:=Current(2).file,file:=Current(3).file
-		if(master:=this.XML.Find("//main/@file",project)){
-			if(node:=this.XML.Find(master,"descendant::file/@file",file))
-				TVC.Modify(3,,SSN(node,"@tv").text,"Select Vis Focus"),this.node:=node
-			else
-				TVC.Modify(3,,SSN(master,"@tv").text,"Select Vis Focus"),this.node:=SSN(master,"global")
-			this.SetText()
-		}else
-			node:=this.XML.SSN("//master"),TVC.Modify(3,,SSN(node,"@tv").text,"Select Vis Focus"),this.node:=node,this.SetText()
-		TVC.Enable(3)
-	}
-	tn(){
-		tn:
-		if(A_GuiEvent="S"){
-			if(node:=TNotes.XML.SSN("//*[@tv='" A_EventInfo "']")){
-				TNotes.node:=node
-				if(node.NodeName!="master"){
-					if(tv:=SSN(cexml.Find("//file/@file",SSN(node,"@file").text),"@tv").text)
-						tv(tv)
-					else
-						TNotes.node:=TNotes.node.NodeName="main"?SSN(TNotes.node,"global"):TNotes.node,TNotes.SetText()
-				}else
-					TNotes.SetText()
-		}}
-		return
-	}
-	GetPos(){
-		sc:=MainWin.tnsc,fold:=0,node:=this.node,node.RemoveAttribute("fold")
-		for a,b in {start:sc.2008,end:sc.2009,scroll:sc.2152}
-			node.SetAttribute(a,b)
-		while(sc.2618(fold)>=0,fold:=sc.2618(fold))
-			list.=fold ",",fold++
-		if(list)
-			node.SetAttribute("fold",list)
-	}
-	Write(){
+	}Write(){
 		this.node.text:=RegExReplace(csc().GetUni(),"\R",Chr(127))
 	}
 }
