@@ -749,7 +749,6 @@ class Code_Explorer{
 				line:=sc.2166(StrPut(SubStr(Text,1,Pos),"UTF-8")-1),sc.2160(sc.2128(line),sc.2136(line)),hwnd({rem:20}),CenterSel()
 			}else{
 				if(Node.NodeName="info"){
-					m(Node.xml)
 					SelectText(Node,1),CenterSel()
 				}
 			}
@@ -3326,6 +3325,8 @@ Create_Toolbar(){
 }
 csc(set:=0){
 	static Current,last
+	if(!Set&&!Current)
+		return Current:=s.ctrl[s.MinIndex()]
 	if(!set&&Current)
 		return Current
 	if(set.plugin)
@@ -4053,10 +4054,7 @@ EditHotkey(node,window){
 }
 Edit_Plugin(){
 	static NewWin,List
-	NewWin:=new GUIKeep("Edit_Plugin"),NewWin.Add("TreeView,w500 h500,,wh","Button,gEditPluginGo Default,Edit Plugin")
-	NewWin.Show("Edit Plugin")
-	Goto,Populate
-	return
+	NewWin:=new GUIKeep("Edit_Plugin"),NewWin.Add("TreeView,w500 h500,,wh","Button,gEditPluginGo Default,Edit Plugin"),NewWin.Show("Edit Plugin")
 	Populate:
 	Default("SysTreeView321","Edit_Plugin"),TV_Delete(),List:=[]
 	Loop,Files,Plugins\*.*
@@ -4348,7 +4346,7 @@ Extract(Main){
 	SplitPath,A_AhkPath,,ahkdir
 	Pool[MainDir]:=1,Pool[ahkdir]:=1,out:=SplitPath(MainFile),Language:=LanguageFromFileExt(Ext)
 	if(!node:=cexml.Find(main,"descendant::file/@file",file))
-		node:=cexml.Under(main,"file",{file:file,dir:MainDir,filename:MFN,id:GetID(),nne:mnne,scan:1,lower:Format("{:L}",file),ext:Ext,lang:Language})
+		node:=cexml.Under(main,"file",{file:file,dir:MainDir,filename:MFN,id:GetID(),nne:mnne,scan:1,lower:Format("{:L}",file),ext:Ext,lang:Language,type:"File"})
 	ExtractNext:
 	id:=GetID(),q:=FileOpen(file,"R")
 	if(q.Encoding="CP1252"){
@@ -4495,7 +4493,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20171122084657,XMLFiles:={menus:[20171123144245,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20171122084657,XMLFiles:={menus:[20171125033724,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20171122084436,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -5209,9 +5207,9 @@ GetClass(class,current:=""){
 GetClassText(FileText,search,ReturnClass:=0,Omni:=""){
 	find:=v.OmniFindText.Class
 	searchtext:=find.1 (IsObject(search)?search.2:search) find.2
-	if(RegExMatch(FileText,searchtext,found,IsObject(search)?search.pos(0):1)){
-		start:=pos:=found.pos(1)
-		while(RegExMatch(FileText,"OUm`n)((?<SkipClose>^\s*\Q*/\E)|(?<SkipOpen>^\s*\Q/*\E)|(?<Close>^\s*}.*((\{)\s*(;.*)*)*)$)|((?<Open>.*\{)(\s+;.*|\t\w?\d?.*)*(\s*)*$)",found,pos)),pos:=found.pos(0)+found.len(0){
+	if(RegExMatch(FileText,searchtext,found,IsObject(search)?Search.Pos(0):1)){
+		start:=Pos:=Found.Pos(1)
+		while(RegExMatch(FileText,"OUm`n)((?<SkipClose>^\s*\Q*/\E)|(?<SkipOpen>^\s*\Q/*\E)|(?<Close>^\s*}.*((\{)\s*(;.*)*)*)$)|((?<Open>.*\{)(\s+;.*|\t\w?\d?.*)*(\s*)*$)",found,Pos)),Pos:=found.Pos(0)+found.len(0){
 			/*
 				make a ?<Class> that deals with class opens
 				have it make a not of the brace opens
@@ -5251,10 +5249,10 @@ GetClassText(FileText,search,ReturnClass:=0,Omni:=""){
 				Break
 		}
 		if(ReturnClass)
-			return {start:start,length:(alt?found.pos(1):found.pos(0)+found.len(0))-(start-1)}
+			return {start:start,length:(alt?found.Pos(1):found.Pos(0)+found.len(0))-(start-1)}
 		if(brace>0)
 			return SubStr(FileText,start)
-		return SubStr(FileText,start,(alt?found.pos(1):found.pos(0)+found.len(0))-(start-1))
+		return SubStr(FileText,start,(alt?found.Pos(1):found.Pos(0)+found.len(0))-(start-1))
 	}
 }
 GetControl(ctrl){
@@ -5490,7 +5488,7 @@ Gui(){
 		New("","",0),FocusNew:=1
 	Code_Explorer.Refresh_Code_Explorer()
 	FEList:=cexml.SN("//main")
-	Hotkeys(),Index_Lib_Files(),SetTimer("ScanFiles",-400)
+	Hotkeys(),Index_Lib_Files(),SetTimer("ScanFiles",-400),SetTimer("RemoveXMLBackups",-1000)
 	if((list:=this.Gui.SN("//win[@win='" win "']/descendant::control")).length){
 		this.Rebuild(list),ea:=this.gui.EA("//*[@type='Tracked Notes']"),this.SetWinPos(ea.hwnd,ea.x,ea.y,ea.w,ea.h,ea),this.Theme(),all:=MainWin.gui.SN("//*[@type='Scintilla' and @file]")
 		while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa){
@@ -6108,8 +6106,13 @@ Class Keywords{
 				SplashTextOff
 			}LEA:=XML.EA(Lexer:=xx.SSN("//FileTypes")),Keywords.Languages[(Language:=Format("{:L}",LEA.Language))]:=xx
 			for _,Ext in StrSplit(Lexer.text," "){
-				if(!Settings.SSN("//Extensions/Extension[text()='" Ext "']"))
+				if(!Settings.SSN("//Extensions/Extension[@language='" Ext "']").xml)
 					Settings.Add("Extensions/Extension",{language:Language},Format("{:L}",Ext),1)
+				/*
+					
+					if(!Settings.SSN("//Extensions/Extension[text()='" Ext "']"))
+						Settings.Add("Extensions/Extension",{language:Language},Format("{:L}",Ext),1)
+				*/
 			}FileGetTime,Date,%a%
 			if(!Node:=Settings.SSN("//Languages/" Language))
 				Node:=Settings.Add("Languages/" Language)
@@ -6179,6 +6182,8 @@ Class Keywords{
 				Suggestions[SubStr(b,1,2)].=b " ",Keywords.Words[Language,b]:=b
 	}}GetList(Language){
 		return Keywords.KeywordList[Language]
+	}GetOmni(Language){
+		
 	}GetSuggestions(Language,FirstTwo){
 		return Keywords.Suggestions[Language,FirstTwo]
 	}GetXML(Language){
@@ -7494,8 +7499,7 @@ Omni_Search(start=""){
 			Hotkey,%a%,%b%,On
 		Catch,e
 			m(e.message,a,b)
-	}
-	NewWin.Show("Omni-Search: Fuzzy Search find Check For Update by typing @CFU",,,StrLen(start)),Sleep(100),NewWin.Size()
+	}NewWin.Show("Omni-Search: Fuzzy Search find Check For Update by typing @CFU",,,StrLen(start)),Sleep(400),NewWin.Size()
 	oss:
 	break:=1,running:=1
 	SetTimer,omnisearch,-10
@@ -7636,7 +7640,7 @@ Omni_Search(start=""){
 		return Clipboard:=text,m("Clipboard now contains:",text,"time:1")
 	}if(NewWin.Instructions){
 		LV_GetText(pre,LV_GetNext())
-		ControlSetText,Edit1,%pre%,% NewWin.id ;#[Farts]
+		ControlSetText,Edit1,%pre%,% NewWin.id
 		ControlSend,Edit1,^{End},% NewWin.id
 		return
 	}else if(type:=item.launch){
@@ -7651,9 +7655,7 @@ Omni_Search(start=""){
 			else{
 				option:=menus.SSN("//*[@clean='" RegExReplace(item.sort," ","_") "']/@option").text
 				Run,%type% "%option%"
-			}
-		}
-		NewWin.Exit()
+		}}NewWin.Exit()
 	}else if(pre="+"){
 		NewWin.Exit(),args:=item.args,sc:=csc(),args:=RegExReplace(args,"U)=?" chr(34) "(.*)" chr(34)),build:=item.text "("
 		for a,b in StrSplit(args,",")
@@ -7663,23 +7665,43 @@ Omni_Search(start=""){
 	}else if(item.type="file"||Node.NodeName="file"){
 		NewWin.Exit(),tv(cexml.SSN("//*[@id='" SSN(node,"ancestor-or-self::main/@id").text "']/descendant::*[@id='" item.id "']/@tv").text)
 	}else if(item.type!="gui"){
-		NewWin.Exit(),IDS:=SN(Node,"ancestor::file"),tv:=SSN(IDS.Item[IDS.Length-1],"@tv").text
-		if(TVC.Selection(1)!=tv){
-			tv(tv)
-			Sleep,400
-		}if(item.type~="Bookmark|Breakpoint"){
+		NewWin.Exit()
+		if(item.type~="Bookmark|Breakpoint"){
+			IDS:=SN(Node,"ancestor::file"),tv:=SSN(IDS.Item[IDS.Length-1],"@tv").text
+			if(TVC.Selection(1)!=tv){
+				tv(tv)
+				Sleep,400
+			}
 			static BreakBook:={Breakpoint:";\*\[$1\]",Bookmark:";#\[$1\]"}
 			sc:=csc(),Text:=sc.GetUNI(),pre:=SN(node,"preceding-sibling::*[@type='" item.type "' and @text='" item.text "']").Length,Pos:=0,Search:=RegExReplace(BreakBook[Item.Type],"\$1",Item.Text)
 			Loop,% 1+pre
 				Pos:=RegExMatch(Text,Search,,Pos+1)
 			line:=sc.2166(StrPut(SubStr(Text,1,Pos),"UTF-8")-1),sc.2160(sc.2128(line),sc.2136(line)),NewWin.Exit(),CenterSel()
-		}else{
-			NN:=(xx:=Keywords.Languages[LanguageFromFileExt(SSN(Node,"ancestor::file/@ext").text)]).SSN("//Code/descendant::" Item.Type),Omni:=GetOmni(Current(3).Lang)
-			if((Parent:=NN.ParentNode)!="Code")
-				Item.SelectParent:=SSN(Node.ParentNode,"@text").text,Item.ParentRegex:=RegExReplace(Omni[Parent.NodeName].Find,"\$1",Item.SelectParent)
-			Item.Regex:=RegExReplace(Omni[NN.NodeName].Find,"\$1",Item.Text),Item.File:=SSN(Node,"ancestor-or-self::file/@file").text
-			SelectText(Item)
-	}}else if(item.type="gui"){
+		}else
+			SelectText(Node)
+		/*
+			else{
+				NN:=(xx:=Keywords.Languages[LanguageFromFileExt(SSN(Node,"ancestor::file/@ext").text)]).SSN("//Code/descendant::" Item.Type),Omni:=GetOmni(Current(3).Lang)
+				if((Parent:=NN.ParentNode)!="Code")
+					Item.SelectParent:=SSN(Node.ParentNode,"@text").text,Item.ParentRegex:=RegExReplace(Omni[Parent.NodeName].Find,"\$1",Item.SelectParent)
+				
+				
+				
+				
+				
+				
+				
+				Item.Regex:=RegExReplace(Omni[NN.NodeName].Find,"\$1",Item.Text)
+				Item.File:=SSN(Node,"ancestor-or-self::file/@file").text
+				
+				
+				
+				
+				
+				
+			}
+		*/
+	}else if(item.type="gui"){
 		NewWin.Exit(),tv(cexml.SSN("//*[@id='" item.id "']/@tv").text)
 		Sleep,200
 		csc().2160(item.pos,item.pos+StrLen(item.text)),CenterSel()
@@ -7729,7 +7751,7 @@ Open_Folder(){
 	}
 	Run,%dir%
 }
-Open(filelist="",show="",Redraw:=1){
+Open(FileList="",show="",Redraw:=1){
 	static root,top
 	for a,b in [19,14,3,11]{
 		if(hwnd(b)){
@@ -7737,26 +7759,26 @@ Open(filelist="",show="",Redraw:=1){
 			return m("Please close the " title " window before proceeding")
 		}
 	}
-	if(!filelist){
+	if(!FileList){
 		OpenFile:=Current(2).file
 		SplitPath,OpenFile,,dir
 		Gui,1:+OwnDialogs
-		list:=Settings.SN("//Extensions/Extension"),extlist:=""
-		while(ll:=list.item[A_Index-1]),ea:=XML.EA(ll)
-			extlist.="*." ll.text "; "
+		List:=Settings.SN("//Extensions/Extension"),EXTList:=""
+		while(ll:=List.item[A_Index-1]),ea:=XML.EA(ll)
+			EXTList.="*." ll.text "; "
 		CloseID:=CloseSingleUntitled()
-		FileSelectFile,FileName,,%dir%,,% SubStr(extlist,1,-2)
+		FileSelectFile,FileName,,%dir%,,% SubStr(EXTList,1,-2)
 		if(ErrorLevel)
 			return
 		if(!FileExist(FileName))
 			return m("File does not exist. Create a new file with File/New")
 		SplitPath,FileName,,,ext
 		if(!Settings.SSN("//Extensions/Extension[text()='" ext "']")){
-			extlist:=""
-			list:=Settings.SN("//Extensions/Extension")
-			while(ll:=list.item[A_Index-1]),ea:=XML.EA(ll)
-				extlist.=ll.text "`n"
-			if(m("AHK Studio by default can only open these file types:","",extlist,"","While " ext " files may be a text based file I had to add these restrictions to prevent opening media or other types of files","Would you like to add this to the list of acceptable extensions?","ico:!","btn:ync")="Yes")
+			EXTList:=""
+			List:=Settings.SN("//Extensions/Extension")
+			while(ll:=List.item[A_Index-1]),ea:=XML.EA(ll)
+				EXTList.=ll.text "`n"
+			if(m("AHK Studio by default can only open these file types:","",EXTList,"","While " ext " files may be a text based file I had to add these restrictions to prevent opening media or other types of files","Would you like to add this to the List of acceptable extensions?","ico:!","btn:ync")="Yes")
 				Settings.Under(Settings.SSN("//Extensions"),"Extension",,ext)
 			else
 				return
@@ -7768,15 +7790,11 @@ Open(filelist="",show="",Redraw:=1){
 		if(CloseID)
 			Close(cexml.SN("//*[@id='" CloseID "']"),,0),CloseID:=""
 		Gui,1:TreeView,SysTreeView321
-		filelist:=SN(cexml.Find("//main/@file",FileName),"descendant::file"),tv(SSN(cexml.Find("//main/@file",FileName),"file/@tv").text)
-		ScanFiles(),Code_Explorer.Refresh_Code_Explorer(),PERefresh(),v.tngui.Populate()
+		FileList:=SN(cexml.Find("//main/@file",FileName),"descendant::file"),tv(SSN(cexml.Find("//main/@file",FileName),"file/@tv").text)
+		ScanFiles(),Code_Explorer.Refresh_Code_Explorer(),PERefresh(),v.TNGui.Populate(),Settings.Add("open/file",,FileName,1)
 	}else{
 		CloseSingleUntitled()
-		for a,b in StrSplit(filelist,"`n"){
-			/*
-				if(InStr(b,"'"))
-					return m("FileNames and folders can not contain the ' character (Chr(39))")
-			*/
+		for a,b in StrSplit(FileList,"`n"){
 			SplitPath,b,,,ext
 			if(ext="lnk"){
 				FileGetShortcut,%b%,b
@@ -7786,11 +7804,11 @@ Open(filelist="",show="",Redraw:=1){
 				Exit
 			}if(cexml.Find("//main/@file",b))
 				Continue
-			fff:=FileOpen(b,"RW","utf-8"),file1:=file:=fff.read(fff.length),FileName:=b
+			fff:=FileOpen(b,"RW","utf-8"),file1:=file:=fff.Read(fff.Length),FileName:=b
 			Gosub,addfile
 		}
 		SetTimer,ScanFiles,-1000
-		return SSN(cexml.Find("//main/@file",StrSplit(filelist,"`n").1),"descendant::file/@tv").text,PERefresh(),v.tngui.Populate()
+		return SSN(cexml.Find("//main/@file",StrSplit(FileList,"`n").1),"descendant::file/@tv").text,PERefresh(),v.TNGui.Populate(),Settings.Add("open/file",,FileName,1)
 	}
 	return root
 	AutoExpand:
@@ -8107,10 +8125,10 @@ Previous_Scripts(filename=""){
 	nw.Exit()
 	return
 	PSOpen:
-	Default("SysListView321","Previous_Scripts"),openlist:=""
+	Default("SysListView321","Previous_Scripts"),OpenList:=""
 	while(next:=LV_GetNext())
-		LV_GetText(file,next),openlist.=file "`n",LV_Modify(next,"-Select")
-	Open(Trim(openlist,"`n")),tv(SSN(cexml.Find("//file/@file",StrSplit(openlist,"`n").1),"@tv").text),nw.Exit()
+		LV_GetText(file,next),OpenList.=file "`n",LV_Modify(next,"-Select")
+	Open(Trim(OpenList,"`n")),tv(SSN(cexml.Find("//file/@file",StrSplit(OpenList,"`n").1),"@tv").text),nw.Exit()
 	return
 	PopulatePS:
 	Gui,Previous_Scripts:Default
@@ -8521,7 +8539,7 @@ Refresh_Code_Explorer(){
 	cexml.XML.LoadXML("<cexml/>"),GetID(1),Omni_Search_Class.Menus(),All:=Settings.SN("//open/file")
 	while(aa:=All.item[A_Index-1])
 		Extract(GetMainNode(aa.Text))
-	Index_Lib_Files(),ScanFiles(1),Code_Explorer.Refresh_Code_Explorer(),FEUpdate(1),TV(SSN(cexml.Find("//*/@file",FileName),"@tv").Text)
+	Index_Lib_Files(),ScanFiles(1),Code_Explorer.Refresh_Code_Explorer(),FEUpdate(1),TV(SSN(cexml.Find("//file/@file",FileName),"@tv").Text)
 }Refresh_Project_Explorer(){
 	Refresh_Code_Explorer()
 }
@@ -8753,75 +8771,6 @@ Replace(){
 	v.word:=rep?rep:word
 	SetTimer,AutoMenu,-80
 	sc.2079(),sc.Enable(1)
-}
-Regex_Replace_Selected(){
-	sc:=csc()
-	if(sc.2008=sc.2009)
-		return m("Please select some text first")
-	all:=Settings.SN("//ReplaceRegex/Replace/@name")
-	if(all.Length=0)
-		return Regex_Replace_Selected_Dialog()
-	while(aa:=all.item[A_Index-1])
-		List.=aa.text "|"
-	sc.2106(124),Order:=sc.2661(),sc.2660(2),sc.2117(11,Trim(List,"|")),sc.2106(32),sc.2660(1)
-}
-Regex_Replace_Selected_Dialog(){
-	static
-	Gui,Regex:Destroy
-	Gui,Regex:Default
-	sc:=csc(),Text:=sc.TextRange(sc.2585(0),sc.2587(0))
-	if(!Text)
-		return m("Please select some text first")
-	NewWin:=new GUIKeep("Regex"),NewWin.Add("Edit,vText ReadOnly w500,,w","ListView,w500 r5 AltSubmit gLVRegexReplace,Name|In|Out,wh","Edit,gGoRegEx w250 vIn,Regex String,y","Edit,x+0 gGoRegEx w250 vOut,Regex Replace,wy","Edit,xm w500 h200,,wy","Button,gReplaceRegexGo,&Replace Selected,y","Button,x+M gSaveReplaceRegex,&Save,y","Button,x+M gReplaceRegexDelete,&Delete,y")
-	GuiControl,Regex:,Edit1,%Text%
-	NewWin.Show("Regex Replace")
-	Gosub,PopulateReplaceRegex
-	GoRegEx:
-	Info:=NewWin[],Text:=RegExReplace(Info.Text,Info.In,Info.Out)
-	GuiControl,Regex:,Edit4,%Text%
-	return
-	ReplaceRegexDelete:
-	Next:=0,Default("SysListView321","Regex"),List:=[]
-	while(Next:=LV_GetNext(Next)){
-		LV_GetText(In,Next,2),LV_GetText(Out,Next,3)
-		if(Node:=Settings.SSN("//ReplaceRegex/Replace[@in='" In "' and @out='" Out "']"))
-			List.Push(Node)
-	}for a,b in List
-		b.ParentNode.RemoveChild(b)
-	Goto,PopulateReplaceRegex
-	return
-	SaveReplaceRegex:
-	Info:=NewWin[]
-	if(!Node:=Settings.SSN("//ReplaceRegex/descendant::*[@in='" Info.In "' and @out='" Info.Out "']"))
-		Name:=InputBox(NewWin.hwnd,"Name This Regex","Name for this regex"),Settings.Add("ReplaceRegex/Replace",{name:Name,in:Info.In,out:Info.Out},,1)
-	else
-		return m("Already exists as: " SSN(Node,"@name").text)
-	PopulateReplaceRegex:
-	Default("SysListView321","Regex"),LV_Delete(),all:=Settings.SN("//ReplaceRegex/Replace")
-	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-		LV_Add("",ea.Name,ea.In,ea.Out)
-	Loop,% LV_GetCount("Column")
-		LV_ModifyCol(A_Index,"AutoHDR")
-	return
-	LVRegexReplace:
-	if(!LV_GetNext())
-		return
-	Loop,2
-	{
-		Default("SysListView321","Regex"),LV_GetText(II,LV_GetNext(),A_Index+1)
-		GuiControl,Regex:,% "Edit" A_Index+1,%II%
-	}
-	return
-	RegexGuiEscape:
-	RegexGuiClose:
-	Gui,Regex:Destroy
-	return
-	ReplaceRegexGo:
-	sc.2078()
-	Loop,% sc.2570
-		Start:=sc.2585(A_Index-1),End:=sc.2587(A_Index-1),Text:=sc.TextRange(Start,End),sc.2190(Start),sc.2192(End),Text:=RegExReplace(Text,Info.In,Info.Out),sc.2194(StrPut(Text,"UTF-8")-1,Text)
-	sc.2079()
-	return
 }
 ReplaceText(start,end,text){
 	sc:=csc(),sc.2686(start,end),sc.2194(StrPut(text,"UTF-8")-1,text)
@@ -9525,15 +9474,48 @@ SelectFile(FileName:="",Title:="New File",Ext:="",Options:="S16"){
 	return FileName
 }
 SelectText(Item,Node:=0){
-	sc:=csc()
+	sc:=csc(),Node:=Item?Item:Node,FileNode:=GetFileNode(Node),ea:=XML.EA(Node)
+	if(TVC.Selection(1)!=SSN(FileNode,"@tv").text)
+		tv(SSN(FileNode,"@tv").text),Sleep(200)
+	Regex:=GetSearchRegex(GetOmni(SSN(FileNode,"@ext").text)[ea.Type].Regex,ea.Text)
+	Text:=Update({Get:SSN(FileNode,"@file").text})
+	Pos:=1,FoundPos:=[]
+	while(RegExMatch(Text,Regex,Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
+		if(Pos=LastPos),LastPos:=Pos
+			Break
+		FoundPos.Push(StrPut(SubStr(Text,1,Found.Pos(1)))-2)
+	}if(FoundPos.MaxIndex()=1){
+		sc.2160(FoundPos.1,StrPut(ea.Text,"UTF-8")-1+FoundPos.1)
+	}else{
+		
+		m("Oh joy, there are " FoundPos.MaxIndex() " things that match on this page")
+		
+	}
+	return
+	
+	
+	
+	
+	
 	if(Node){
 		Node:=Item,Item:=XML.EA(Node),FEA:=XML.EA(Node.ParentNode)
-		if(!Ext:=FEA.Ext)
-			return
+		/*
+			if(!Ext:=FEA.Ext)
+				return m(Node.xml,"Stopped!")
+		*/
 		NN:=(xx:=Keywords.Languages[LanguageFromFileExt(Ext)]).SSN("//Code/descendant::" Item.Type)
 		if((Parent:=NN.ParentNode).NodeName!="Code")
 			Item.SelectParent:=SSN(Node.ParentNode,"@text").text,Item.SelectParentRegex:=RegExReplace(SSN(Parent,"@find").text,"\x60n")
 		Item.File:=FEA.File
+		FileNode:=GetFileNode(Node)
+		
+		return m(Item.File,SSN(FileNode,"@file").text)
+		/*
+			I got the file node using GetFileNode(Node)
+			:) Use that.
+			add SelectText to all of the <Code> items in ahk.xml
+			selecttext="Oim`n)^[\s|}]*class\s+\b($1)\b" this is the class one.
+		*/
 		if(TVC.Selection(1)!=FEA.tv){
 			tv(FEA.tv)
 			Sleep,400
@@ -9541,7 +9523,8 @@ SelectText(Item,Node:=0){
 	}Text:=Update({get:Current(3).File}),Pos:=1
 	if(!Regex:=Item.Regex){
 		Omni:=GetOmni(Files.SSN("//*[@id='" Item.ID "']/@ext").text)
-		Regex:=RegExReplace(Omni[Item.Type].Find,"\$1",Item.Text)
+		if(!Regex:=RegExReplace(Omni[Item.Type].SelectText,"\$1",Item.Text))
+			Regex:=RegExReplace(Omni[Item.Type].Find,"\$1",Item.Text)
 	}
 	if(ParentRegex:=Item.ParentRegex)
 		Pos:=RegExMatch(Text,ParentRegex)
@@ -9550,7 +9533,6 @@ SelectText(Item,Node:=0){
 		/*
 			Push in all that is found and then figure out which one is right
 			cause it might be inside a class or whatever
-			
 		*/
 	}
 	
@@ -9558,6 +9540,9 @@ SelectText(Item,Node:=0){
 	Pos:=Found.Pos(1)
 	Pos:=StrPut(SubStr(Text,1,Pos),"UTF-8")-2
 	sc.2160(Pos,Pos+StrPut(Item.Text,"UTF-8")-1)
+	/*
+		m(Regex,Omni[Item.Type].SelectText,Found.Pos(1),"Poo")
+	*/
 	
 	
 	
@@ -9654,42 +9639,30 @@ SelectText(Item,Node:=0){
 		}
 	*/
 }
-GetSearchRegex(FindSearch,Text,Replace:="Text"){
-	if(RegExMatch(FindSearch,"OU)(\(\?\<" Replace "\>)",FF)){
-		Start:=FF.Pos(1),Open:=0
-		for a,b in StrSplit(FindSearch){
-			if(A_Index<Start)
-				Continue
-			if(b="(")
-				Open++
-			if(b=")")
-				Open--
-			if(Open=0){
-				End:=A_Index
-				Regex:=SubStr(FindSearch,1,Start) Text SubStr(FindSearch,End)
-				Break
-	}}}if(!Regex){
-		m("No Text found in the regex")
-		Exit
-	}Return Regex
-}
 Set_As_Default_Editor(){
 	RegRead,current,HKCU,SOFTWARE\Classes\AutoHotkeyScript\Shell\Edit\Command
 	SplitPath,A_ScriptFullPath,,,ext
-	q:=Chr(34),p:=Chr(37),s:=Chr(32)
-	if(ext="exe")
-		New_Editor:=q A_ScriptFullPath q s q p 1 q
-	else if(ext="ahk")
-		New_Editor:=q A_AhkPath q s q A_ScriptFullPath q s q p 1 q
-	if(InStr(current,A_ScriptFullPath))
-		New_Editor:=q A_WinDir "\Notepad.exe" q s q p 1 q
+	if(!InStr(Current,A_ScriptName)){
+		Settings.Add("DefaultEditor",,Current)
+		q:=Chr(34),p:=Chr(37)
+		if(ext="exe")
+			New_Editor:=q A_ScriptFullPath q A_Space q p 1 q
+		else if(ext="ahk")
+			New_Editor:=q A_AhkPath q A_Space q A_ScriptFullPath q A_Space q p 1 q
+		if(InStr(current,A_ScriptFullPath))
+			New_Editor:=q A_WinDir "\Notepad.exe" q A_Space q p 1 q
+	}else{
+		New_Editor:=Settings.SSN("//DefaultEditor").text
+	}
 	RegWrite,REG_SZ,HKCU,SOFTWARE\Classes\AutoHotkeyScript\Shell\Edit\Command,,%New_Editor%
 	RegRead,output,HKCU,SOFTWARE\Classes\AutoHotkeyScript\Shell\Edit\Command
 	if(InStr(output,A_ScriptName))
 		m("AHK Studio is now your default editor for .ahk file")
-	else if(InStr(output,"notepad.exe"))
-		m("Notepad.exe is now your default editor")
-	else
+	else if(Output=New_Editor){
+		RegExMatch(Output,"OU)\x22(.*)\x22",Found),File:=Found.1
+		SplitPath,File,,,,NNE
+		m(NNE " is now your default editor")
+	}else
 		m("Something went wrong :( Please restart Studio and try again.")
 }
 Set_New_Include_File_Default_Folder(){
@@ -10644,41 +10617,23 @@ Theme(){
 	new SettingsClass("Theme")
 }
 Toggle_Comment_Line(){
-	sc:=csc(),sc.2078,pi:=PosInfo(),sl:=sc.2166(pi.start),el:=sc.2166(pi.End),End:=pi.End,Single:=sl=el?1:0,Replace:=Settings.SSN("//comment").text,Replace:=Replace?Replace:";",Replace:=RegExReplace(Replace,"%a_space%"," ")
-	if(v.Options.Build_Comment!=1){
-		m("here?")
-		while((sl<=el)){
-			Letter:=sc.TextRange(Min:=sc.2128(sl),Min+StrLen(Replace))
-			t(Replace,sl,el,"Min: " Min)
-			if(Min>End&&!Single)
-				break
-			if(Letter=Replace)
-				sc.2190(Min),sc.2192(Min+StrLen(Replace)),sc.2194(0,""),End-=Strlen(Replace)
-			else
-				sc.2190(Min),sc.2192(Min),sc.2194(StrLen(Replace),Replace),End+=Strlen(Replace)
-			sl++
-		}
-	}else{
-		Order:=[],pi:=PosInfo(),Order[sc.2166(sc.2008)]:=1,Order[sc.2166(sc.2009)]:=1,Min:=Order.MinIndex(),max:=Order.MaxIndex()
-		Loop,% max-Min+1{
-			if(!RegExMatch(sc.GetLine(Min+(A_Index-1)),"^\s*;")){
-				Loop,% max-Min+1
-					indentpos:=sc.2128(Min+(A_Index-1)),sc.2003(indentpos,";"),added:=1,pi.End+=1
-				pi.start+=1
-			}
-		}
-		if(!added){
-			Loop,% max-Min+1{
-				if(RegExMatch(sc.GetLine(Min+(A_Index-1)),"^\s*;")){
-					indentpos:=sc.2128(Min+(A_Index-1))
-					sc.2645(indentpos,1),pi.End-=1
-					if(A_Index=1)
-						pi.start-=1
-				}
-			}
-		}
-		sc.2160(pi.start,pi.End)
-	}sc.2079
+	sc:=csc(),sc.2078,PI:=PosInfo(),sl:=sc.2166(PI.Start),el:=sc.2166((End:=PI.End)),Single:=sl=el?1:0,Replace:=RegExReplace(Settings.Get("//comment",";"),"%a_space%"," "),Comment:=[],SelectionEnd:=PI.End,LineComment:=[],AllComment:=1,Len:=StrPut(Replace,"UTF-8")-1
+	for a,b in StrSplit(Replace)
+		Comment.Push(Asc(b))
+	while((Line:=sl+(A_Index-1))<=el){
+		LineStart:=sc.2128(Line),LineComment[Line]:=1
+		for a,b in Comment{
+			if(sc.2007(LineStart+(A_Index-1))!=b){
+				LineComment[Line]:=0,AllComment:=0
+				Break
+	}}}for a,b in LineComment{
+		LineStart:=sc.2128(a)
+		if((b&&AllComment)||(b&&!v.Options.Build_Comment))
+			sc.2645(LineStart,Len),SelectionEnd-=Len
+		else
+			sc.2003(LineStart,Replace),SelectionEnd+=Len
+	}(Single?"":sc.2160(PI.Start,SelectionEnd))
+	sc.2079
 }
 ToggleMenu(Label){
 	if(!Label)
@@ -10716,8 +10671,8 @@ Toggle_Multiple_Line_Comment(){
 	sc.2079(),sc.Enable(1),Edited(),sc.2025(sc.2128(top+AddLine)),sc.2399
 }
 ToggleDuplicate(){
-	MouseGetPos,x,y,,control,2
-	if(!sc:=s.ctrl[control+0])
+	MouseGetPos,x,y,,Control,2
+	if(!sc:=s.ctrl[Control+0])
 		return
 	ControlGetPos,wx,wy,,,,% "ahk_id" sc.sc
 	pos:=sc.2022(x-wx,y-wy),main:=Selection.GetMain(),select:=[]
@@ -11469,6 +11424,112 @@ Class OutPutDebugPane{
 	}Hide(){
 		Close_Debug_Window()
 	}
+}
+Regex_Replace_Selected_Dialog(){
+	static
+	Gui,Regex:Destroy
+	Gui,Regex:Default
+	sc:=csc(),Text:=sc.TextRange(sc.2585(0),sc.2587(0))
+	if(!Text)
+		return m("Please select some text first")
+	NewWin:=new GUIKeep("Regex"),NewWin.Add("Edit,vText ReadOnly w500,,w","ListView,w500 r5 AltSubmit gLVRegexReplace,Name|In|Out,wh","Edit,gGoRegEx w250 vIn,Regex String,y","Edit,x+0 gGoRegEx w250 vOut,Regex Replace,wy","Edit,xm w500 h200,,wy","Button,gReplaceRegexGo,&Replace Selected,y","Button,x+M gSaveReplaceRegex,&Save,y","Button,x+M gReplaceRegexDelete,&Delete,y")
+	GuiControl,Regex:,Edit1,%Text%
+	NewWin.Show("Regex Replace")
+	Gosub,PopulateReplaceRegex
+	ControlFocus,Edit2,% NewWin.ID
+	ControlSend,Edit2,^a,% NewWin.ID
+	GoRegEx:
+	Info:=NewWin[],Text:=RegExReplace(Info.Text,Info.In,Info.Out)
+	GuiControl,Regex:,Edit4,%Text%
+	return
+	ReplaceRegexDelete:
+	Next:=0,Default("SysListView321","Regex"),List:=[]
+	while(Next:=LV_GetNext(Next)){
+		LV_GetText(In,Next,2),LV_GetText(Out,Next,3)
+		if(Node:=Settings.SSN("//ReplaceRegex/Replace[@in='" In "' and @out='" Out "']"))
+			List.Push(Node)
+	}for a,b in List
+		b.ParentNode.RemoveChild(b)
+	Goto,PopulateReplaceRegex
+	return
+	SaveReplaceRegex:
+	Info:=NewWin[]
+	if(!Node:=Settings.SSN("//ReplaceRegex/descendant::*[@in='" Info.In "' and @out='" Info.Out "']"))
+		Name:=InputBox(NewWin.hwnd,"Name This Regex","Name for this regex"),Settings.Add("ReplaceRegex/Replace",{name:Name,in:Info.In,out:Info.Out},,1)
+	else
+		return m("Already exists as: " SSN(Node,"@name").text)
+	PopulateReplaceRegex:
+	Default("SysListView321","Regex"),LV_Delete(),all:=Settings.SN("//ReplaceRegex/Replace")
+	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+		LV_Add("",ea.Name,ea.In,ea.Out)
+	Loop,% LV_GetCount("Column")
+		LV_ModifyCol(A_Index,"AutoHDR")
+	return
+	LVRegexReplace:
+	if(!LV_GetNext())
+		return
+	Loop,2
+	{
+		Default("SysListView321","Regex"),LV_GetText(II,LV_GetNext(),A_Index+1)
+		GuiControl,Regex:,% "Edit" A_Index+1,%II%
+	}
+	return
+	RegexGuiEscape:
+	RegexGuiClose:
+	Gui,Regex:Destroy
+	return
+	ReplaceRegexGo:
+	sc.2078()
+	Loop,% sc.2570
+		Start:=sc.2585(A_Index-1),End:=sc.2587(A_Index-1),Text:=sc.TextRange(Start,End),sc.2190(Start),sc.2192(End),Text:=RegExReplace(Text,Info.In,Info.Out),sc.2194(StrPut(Text,"UTF-8")-1,Text)
+	sc.2079()
+	return
+}
+Regex_Replace_Selected(){
+	sc:=csc()
+	if(sc.2008=sc.2009)
+		return m("Please select some text first")
+	all:=Settings.SN("//ReplaceRegex/Replace/@name")
+	if(all.Length=0)
+		return Regex_Replace_Selected_Dialog()
+	while(aa:=all.item[A_Index-1])
+		List.=aa.text "|"
+	sc.2106(124),Order:=sc.2661(),sc.2660(2),sc.2117(11,Trim(List,"|")),sc.2106(32),sc.2660(1)
+}
+RemoveXMLBackups(){
+	Count:=[],Max:=5
+	Loop,Files,Lib\XML Backup\*.XML,FR
+	{
+		if(!IsObject(Count[A_LoopFileDir]))
+			Count[A_LoopFileDir]:=[]
+		Count[A_LoopFileDir].Push(A_LoopFileFullPath)
+	}for a,b in Count
+		if(b.MaxIndex()>Max)
+			Loop,% b.MaxIndex()-Max
+				FileDelete,% b.RemoveAt(1)
+}
+GetFileNode(Node,Att:=""){
+	List:=SN(Node,"ancestor-or-self::file"),Node:=List.Item[List.Length-1]
+	return Att?SSN(Node,"@" Att).Text:Node
+}
+GetSearchRegex(FindSearch,Text,Replace:="Text"){
+	if(RegExMatch(FindSearch,"OU)(\(\?\<" Replace "\>)",FF)){
+		Start:=FF.Pos(1),Open:=0
+		for a,b in StrSplit(FindSearch){
+			if(A_Index<Start)
+				Continue
+			if(b="(")
+				Open++
+			if(b=")")
+				Open--
+			if(Open<=0){
+				End:=A_Index
+				Regex:=SubStr(FindSearch,1,Start) Text SubStr(FindSearch,End)
+				Break
+	}}}if(!Regex){
+		m("No Text found in the regex")
+		Exit
+	}Return Regex
 }
 DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0,MsgBox:=0){
 	x:=ComObjActive("{DBD5A90A-A85C-11E4-B0C7-43449580656B}"),x.DebugWindow(Text,Clear,LineBreak,Sleep,AutoHide,MsgBox)

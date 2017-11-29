@@ -35,6 +35,7 @@ Changed:
 -Find:
 --Changed how found items are displayed
 --Auto Show Selected
+--Up and Down arrows will navigate between found items
 -Restore Current File:
 --Made it a part of Studio
 -Jump To First Available: Numbered multiple items in the list
@@ -61,4 +62,4 @@ Fixed: Reported by Run1e
 Fixed: Reported by Astral Essence (Discord)
 -Find: Clicking on the + to expand an item was causing it to quickly show then hide the information
 -Right Click on Project Explorer was not showing the information for the file you right clicked on
--Moved the Debug Tip from the main GUI to the Debug Panel
+-Moved the Debug Tip from the main GUI to the Debug Panel (where it should be)
