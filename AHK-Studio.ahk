@@ -5171,7 +5171,7 @@ GetAllTopClasses(text:="",startline:=0,lines:=0,Omni:=""){
 	while(RegExMatch(text,Omni.Class,found)){
 		if(!found.Len(1))
 			Break
-		CText:=GetClassText(text,found.2,,Omni)
+		;CText:=GetClassText(text,found.2,,Omni)
 		RegExReplace((FindStart:=SubStr(otext,1,InStr(otext,CText)-1)),"\R","",count)
 		length:=StrLen(CText)
 		if(!length)
@@ -5204,10 +5204,10 @@ GetClass(class,current:=""){
 		nest:=SSN(current,"descendant::info[@type='Class' and @text='" class.inside "']")
 	return nest?nest:root
 }
-GetClassText(FileText,search,ReturnClass:=0,Omni:=""){
-	find:=v.OmniFindText.Class
-	searchtext:=find.1 (IsObject(search)?search.2:search) find.2
-	if(RegExMatch(FileText,searchtext,found,IsObject(search)?Search.Pos(0):1)){
+GetClassText(EA,SearchText,Type:="Class",ReturnClass:=0){
+	FileText:=Update({Get:EA.File})
+	SearchText:=Regex:=GetSearchRegex(v.OmniFind[EA.Lang][Type].Regex,SearchText)
+	if(RegExMatch(FileText,SearchText,found,IsObject(search)?Search.Pos(0):1)){
 		start:=Pos:=Found.Pos(1)
 		while(RegExMatch(FileText,"OUm`n)((?<SkipClose>^\s*\Q*/\E)|(?<SkipOpen>^\s*\Q/*\E)|(?<Close>^\s*}.*((\{)\s*(;.*)*)*)$)|((?<Open>.*\{)(\s+;.*|\t\w?\d?.*)*(\s*)*$)",found,Pos)),Pos:=found.Pos(0)+found.len(0){
 			/*
@@ -9474,12 +9474,10 @@ SelectFile(FileName:="",Title:="New File",Ext:="",Options:="S16"){
 	return FileName
 }
 SelectText(Item,Node:=0){
-	sc:=csc(),Node:=Item?Item:Node,FileNode:=GetFileNode(Node),ea:=XML.EA(Node)
+	sc:=csc(),Node:=Item?Item:Node,FileNode:=GetFileNode(Node),ea:=XML.EA(Node),FNEA:=XML.EA(FileNode)
 	if(TVC.Selection(1)!=SSN(FileNode,"@tv").text)
 		tv(SSN(FileNode,"@tv").text),Sleep(200)
-	Regex:=GetSearchRegex(GetOmni(SSN(FileNode,"@ext").text)[ea.Type].Regex,ea.Text)
-	Text:=Update({Get:SSN(FileNode,"@file").text})
-	Pos:=1,FoundPos:=[]
+	Regex:=GetSearchRegex(v.OmniFind[FNEA.Lang][ea.Type].Regex,ea.Text),Text:=Update({Get:SSN(FileNode,"@file").text}),Pos:=1,FoundPos:=[]
 	while(RegExMatch(Text,Regex,Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
 		if(Pos=LastPos),LastPos:=Pos
 			Break
@@ -9487,157 +9485,19 @@ SelectText(Item,Node:=0){
 	}if(FoundPos.MaxIndex()=1){
 		sc.2160(FoundPos.1,StrPut(ea.Text,"UTF-8")-1+FoundPos.1)
 	}else{
-		
-		m("Oh joy, there are " FoundPos.MaxIndex() " things that match on this page")
-		
-	}
+		Obj:=GetClassText(XML.EA(FileNode),SSN(Node.ParentNode,"@text").text,"Class",1)
+		if(SSN(Node.ParentNode,"@type").text!="File"){
+			for a,b in FoundPos
+				if(b>Obj.Start&&b<Obj.Start+Obj.Length){
+					sc.2160(b,b+StrPut(ea.Text,"UTF-8")-1)
+					Break
+		}}else{
+			for a,b in FoundPos
+				if(!(b>Obj.Start&&b<Obj.Start+Obj.Length)){
+					sc.2160(b,b+StrPut(ea.Text,"UTF-8")-1)
+					Break
+	}}}
 	return
-	
-	
-	
-	
-	
-	if(Node){
-		Node:=Item,Item:=XML.EA(Node),FEA:=XML.EA(Node.ParentNode)
-		/*
-			if(!Ext:=FEA.Ext)
-				return m(Node.xml,"Stopped!")
-		*/
-		NN:=(xx:=Keywords.Languages[LanguageFromFileExt(Ext)]).SSN("//Code/descendant::" Item.Type)
-		if((Parent:=NN.ParentNode).NodeName!="Code")
-			Item.SelectParent:=SSN(Node.ParentNode,"@text").text,Item.SelectParentRegex:=RegExReplace(SSN(Parent,"@find").text,"\x60n")
-		Item.File:=FEA.File
-		FileNode:=GetFileNode(Node)
-		
-		return m(Item.File,SSN(FileNode,"@file").text)
-		/*
-			I got the file node using GetFileNode(Node)
-			:) Use that.
-			add SelectText to all of the <Code> items in ahk.xml
-			selecttext="Oim`n)^[\s|}]*class\s+\b($1)\b" this is the class one.
-		*/
-		if(TVC.Selection(1)!=FEA.tv){
-			tv(FEA.tv)
-			Sleep,400
-		}Item.ID:=FEA.ID
-	}Text:=Update({get:Current(3).File}),Pos:=1
-	if(!Regex:=Item.Regex){
-		Omni:=GetOmni(Files.SSN("//*[@id='" Item.ID "']/@ext").text)
-		if(!Regex:=RegExReplace(Omni[Item.Type].SelectText,"\$1",Item.Text))
-			Regex:=RegExReplace(Omni[Item.Type].Find,"\$1",Item.Text)
-	}
-	if(ParentRegex:=Item.ParentRegex)
-		Pos:=RegExMatch(Text,ParentRegex)
-	else{
-		II:=[]
-		/*
-			Push in all that is found and then figure out which one is right
-			cause it might be inside a class or whatever
-		*/
-	}
-	
-	RegExMatch(Text,Regex,Found,Pos)
-	Pos:=Found.Pos(1)
-	Pos:=StrPut(SubStr(Text,1,Pos),"UTF-8")-2
-	sc.2160(Pos,Pos+StrPut(Item.Text,"UTF-8")-1)
-	/*
-		m(Regex,Omni[Item.Type].SelectText,Found.Pos(1),"Poo")
-	*/
-	
-	
-	
-	return
-	
-	/*
-		if(!Omni[Item.Type].Inside){
-			for a,b in Omni
-				List.=a " = " b "`n"
-			m(List)
-			Search:=GetSearchRegex(Omni[Item.Type].Regex,Item.Text)
-			Pos:=1,Total:=[]
-			while(RegExMatch(Text,Search,Found,Pos),Pos:=Found.Pos(1)+Found.Len(1))
-				Total.Push(Found.Pos(1))
-			if(!Total.2){
-				Start:=StrPut(SubStr(Text,1,Total.1-1),"UTF-8")-1
-				sc.2160(Start,Start+StrPut(Item.Text,"UTF-8")-1)
-				return
-			}
-			Doc:=StrSplit(Text,"`n"),all:=xx.SN("//Code/descendant::*")
-			for a,b in Total{
-				RegExReplace(SubStr(Text,1,b),"\R",,Count),StartLine:=Count+1
-				while(aa:=all.item[A_Index-1]){
-					if(SSN(aa,"*")){
-						Regex:=SSN(aa,"@regex").text,SearchText:=""
-						while(StartLine>0){
-							SearchText:=Doc[StartLine] "`n" SearchText
-							Regex:=v.OmniFind[Current(3).Lang,aa.NodeName].Regex
-							if(RegExMatch(SearchText,Regex,FoundParent))
-								Break
-							StartLine--
-						}
-						FindObj:=v.OmniFind[Current(3).Lang,aa.NodeName]
-						Search:=FindObj.Open
-						Pos1:=RegExMatch(Text,"\Q" SearchText "\E")
-						StartPos:=Pos1
-						Open:=0
-						LastPos1:=0
-						Multiple:=FindObj.Multiple
-						while(RegExMatch(Text,Search,FF,Pos1),Pos1:=FF.Open?FF.Pos("Open")+FF.Len("Open"):FF.Pos("Close")+FF.Len("Close")){
-							if(RegExReplace(FF.0,"(" Multiple ")",,Count)){
-								Open+=FF.Open?+Count:-Count
-								SavedPos:=Pos1
-								if(Open<=0&&FF.Close&&Count)
-									break
-						}}Start:=StrPut(SubStr(Text,1,StartPos),"UTF-8")-2,Start:=Start<0?0:Start
-						End:=StrPut(SubStr(Text,1,SavedPos),"UTF-8")-2
-						if(!(Start<b&&End>b)){
-							Start:=StrPut(SubStr(Text,1,b),"UTF-8")-2
-							sc.2160(Start,Start+StrPut(Item.Text,"UTF-8")-1)
-							break
-						}
-					}
-				}
-			}
-			return
-		}
-		for a,b in Item
-			List.=a " = " b "`n"
-		return m(List)
-		Regex:=RegExReplace(Item.Find,"\$1",Item.Text)
-		FindSearch:=Omni[Item.Type].Regex
-		Regex:=GetSearchRegex(FindSearch,Item.Text)
-		Node:=(xx:=Keywords.Languages[GetLanguage()]).SSN("//Code/descendant::" Item.Type)
-		if(!Regex.Multi){
-			Count:=0
-			SelectAgain:
-			if(ParentText:=Item.SelectParent){
-				Search:=RegExReplace(Item.SelectParentRegex,"\$1",ParentText)
-				if(RegExMatch(Text,Search,Found)){
-					Pos:=Found.Pos(1)
-					m(Search,Item.SelectParentRegex,ParentText)
-					if(RegExMatch(Text,Regex,Found,Pos)){
-						Start:=StrPut(SubStr(Text,1,Found.Pos(1)-1),"UTF-8")-1
-						sc.2160(Start,Start+StrPut(Item.Text,"UTF-8")-1)
-					}else{
-						m("Unable to find: " Regex,"After: " Pos)
-					}
-				}else{
-					m("Can't Find:",Search)
-				}
-			}else if(RegExMatch(Text,Regex,Found)){
-				Tick:=A_TickCount
-				ScanFile.ScanText(Files.SSN("//*[@id='" Current(3).ID "']"))
-				Pos:=cexml.SSN("//*[@file='" Item.File "']/descendant::*[@type='" Item.Type "' and @text='" Item.text "']/@pos").text
-				SetStatus("Scan took " A_TickCount-Tick "ms.  Change this when you get everything else working properly: " A_TickCount,2)
-				;Start:=StrPut(SubStr(Text,1,Found.Pos(1)-1),"UTF-8")-1
-				;sc.2160(Start,Start+StrPut(Item.Text,"UTF-8")-1)
-				sc.2160(Pos,Pos+StrPut(Item.Text,"UTF-8")-1)
-			}else
-				m("Can't Find it.",Item.Text,List)
-		}else{
-			m("Most Likely Class")
-		}
-	*/
 }
 Set_As_Default_Editor(){
 	RegRead,current,HKCU,SOFTWARE\Classes\AutoHotkeyScript\Shell\Edit\Command
@@ -11351,7 +11211,7 @@ WalkDownClasses(text,find){
 	while(RegExMatch(text,Omni.Class,ff,pos)),pos:=ff.Pos(1)+ff.Len(1){
 		if(!ff.len(1))
 			break
-		found:=GetClassText(text,ff.2,ff.pos(1),Omni)
+		;found:=GetClassText(text,ff.2,ff.pos(1),Omni)
 		search:=SubStr(text,ff.pos(1),found.pos(1)-ff.pos(1))
 		RegExMatch(search,Omni.Class,ss)
 		if(ss.2=find)
