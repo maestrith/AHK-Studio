@@ -7682,12 +7682,14 @@ Open(FileList="",show="",Redraw:=1){
 		CloseSingleUntitled()
 		for a,b in StrSplit(FileList,"`n"){
 			SplitPath,b,,,ext
-			if(ext="lnk"){
+			if(Ext="lnk"){
 				FileGetShortcut,%b%,b
-				SplitPath,b,,,ext
-			}if(!Settings.SSN("//Extensions/Extension[text()='" Format("{:L}",ext) "']")){
-				m("Files with the extension: " ext " are not permitted by AHK Studio.","You can add this file type if you wish in Manage File Types")
-				Exit
+				SplitPath,b,,,Ext
+			}if(!Settings.SSN("//Extensions/Extension[text()='" Format("{:L}",Ext) "']")){
+				if(m("Files with the extension: " Ext " are not permitted by AHK Studio.","","Would you like to associate this file type with AHK Studio?","","Keep in mind that if you open anything other than text files it will crash AHK Studio.","btn:ync","ico:?","def:2")="Yes"){
+					Settings.Add("Extensions/Extension",,Format("{:L}",Ext))
+				}else
+					Exit
 			}if(cexml.Find("//main/@file",b))
 				Continue
 			fff:=FileOpen(b,"RW","utf-8"),file1:=file:=fff.Read(fff.Length),FileName:=b
