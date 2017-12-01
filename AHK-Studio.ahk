@@ -5958,7 +5958,9 @@ Class Keywords{
 			if not
 				continue with the old file unless it is blank then create a new one.
 		*/
-		FileList:={BaseDir "ahk.xml":1}
+		FileList:=[]
+		for a,b in Dates
+			FileList[BaseDir a ".xml"]:=1
 		Loop,Files,Lib\Languages\*.xml
 			FileList[A_LoopFileFullPath]:=1
 		for a in FileList
