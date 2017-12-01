@@ -1,4 +1,4 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <ahk>
 	<FileTypes lexer="ahk" language="ahk" name="AutoHotkey">ahk</FileTypes>
 	<Comments Open="OUm`n)^\s*\/\*" Close="OUm`n)^\s*\*\/" Line="OUm`n)^\s*\;.*($|\R)"></Comments>
@@ -366,31 +366,35 @@
 	</Method>
 	<Object wordsplit=".">
 		<syntax syntax="()`nReturns a new enumerator to enumerate this object's key-value pairs. This method is usually not called directly, but by the for-loop.">_NewEnum</syntax>
+		<syntax syntax="()`nReturns the overall number of subpatterns.">Count</syntax>
 		<syntax syntax="(FirstKey[, LastKey])`nRemoves key-value pairs from an object.">Delete</syntax>
 		<syntax syntax="(Key)`nReturns the current address of the field's string buffer, if it has one.">GetAddress</syntax>
 		<syntax syntax="(Key)`nReturns the current capacity of an object () or one of its fields (Key).">GetCapacity</syntax>
 		<syntax syntax="()`nReturns a shallow copy of the object.">Clone</syntax>
 		<syntax syntax="(Key)`nReturns true if Key is associated with a value (even &quot;&quot;) within Object, otherwise false.">HasKey</syntax>
 		<syntax syntax="(Pos, Value1 [, Value2*])`nInserts one or more values at a given position within a linear array.">InsertAt</syntax>
+		<syntax syntax="(N)`nReturns the length of the overall match or a captured subpattern.">Len</syntax>
 		<syntax syntax="()`nReturns the length of a linear array beginning at position 1; that is, the highest positive integer key contained by the object, or 0 if there aren't any.">Length</syntax>
 		<syntax syntax="()`nIf any integer keys are present, MaxIndex returns the highest integer">MaxIndex</syntax>
 		<syntax syntax="()`nIf any integer keys are present, MinIndex returns the lowest integer">MinIndex</syntax>
+		<syntax syntax="(N)`nReturns the name of the given subpattern, if it has one.">Name</syntax>
 		<syntax syntax="(Object, Key, Value)`nThis function is provided to allow scripts to bypass the __Set meta-function. If that isn't required, a normal assignment should be used instead. For example: Object[Key] := Value">ObjRawSet</syntax>
 		<syntax syntax="()`nRemoves and returns the last array element.">Pop</syntax>
+		<syntax syntax="(N)`nReturns the position of the overall match or a captured subpattern.">Pos</syntax>
 		<syntax syntax="([ Value, Value2*])`nAppends values to the end of an array.">Push</syntax>
 		<syntax syntax="(Start Position[,Length])`nRemoves items from the given position in a linear array.">RemoveAt</syntax>
-		<syntax syntax="(Key[, ByteSize])`nAdjusts the capacity of an object (MaxItems) or one of its fields (Key,ByteSize).">SetCapacity</syntax></Object>
+		<syntax syntax="(Key[, ByteSize])`nAdjusts the capacity of an object (MaxItems) or one of its fields (Key,ByteSize).">SetCapacity</syntax>
+		<syntax syntax="(N)`nReturns the overall match or a captured subpattern.">Value</syntax></Object>
 	<Code>
-		<Hotkey regex="OUi`nm)^\s*(?&lt;Text&gt;((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*)+\s+&amp;\s+)*((\w|[^\x00-\x7F]+)|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+(\s*up)?)::"></Hotkey>
-		<Instance multiple="1" wordsplit="." delimiter="." add="Method" associate="Class" regex="OUi`nm)(?&lt;Text&gt;(\w|[^\x00-\x7F]|\.)+)\s*:=\s*new\s*(?&lt;Class&gt;(\w|[^\x00-\x7F])+)\("></Instance>
-		<Label regex="OUm`n)^\s*(?&lt;Text&gt;(\w|[^\x00-\x7F])+):($|\R|\s+;.*$)"></Label>
-		<!--Class bounds="\{|\}" regex="Oim`n)^[\s|}]*class\s+(?&lt;Text&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*(\s*;.*\R){0,}\s*(\{)" close="Om`n)^([\s*|}])+" open="Om`n)(\{)(\s+;|\R)"-->
-		<Class full="1" bounds="\{|\}" regex="Oim`n)^[\s|}]*class\s+(?&lt;Text&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*((\s*;.*\R)|(\s*\/\*\s+.*\s*\*\/)){0,}\s*(\{)" close="Om`n)^([\s*|}])+" open="Om`n)(\{)(\s+;|\R)">
-			<Method autoadd="(" wordsplit="." firstchar="(" exclude="if|while" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Att&gt;.*)\)((\s*;.*\R)|(\s*\/\*\s+.*\s*\*\/)){0,}\s*(\{)"></Method>
-			<Property regex="Om`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\[(?&lt;Att&gt;.*)\](\s*;.*\R){0,}\s*(\{)"></Property></Class>
-		<!--(((\R)(\s)*\/\*(\R|.*)+\R\s*\*\/)|([\R\s*|\s+];.*$)+)-->
-		<!--\s*;.*\R|\s*\R\s*\/\*.*\R\s*\*\/){0,}-->
-		<Function autoadd="(" exclude="if|while" firstchar="(" vis="Text" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Att&gt;.*)\)((\s*;.*\R)|(\s*\/\*\s+.*\s*\*\/)){0,}\s*(\{)"></Function>
+		<Bookmark multiple="1" before="1" prefix="#" selectline="1" regex="OU)(\s+|^);#\[(?&lt;Text&gt;.*)\]"></Bookmark>
+		<Breakpoint multiple="1" before="1" prefix="*" selectline="1" regex="OU)(\s+|^);\*\[(?&lt;Text&gt;.*)\]"></Breakpoint>
+		<Hotkey prefix="&amp;" regex="OUi`nm)^\s*(?&lt;Text&gt;((\w|[^\x00-\x7F]|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*)+\s+&amp;\s+)*((\w|[^\x00-\x7F]+)|#|!|\^|\+|~|\$|&amp;|&lt;|&gt;|\*|-|\[|\]|\\|\;|\'|\,|\.|\/)+(\s*up)?)::"></Hotkey>
+		<Instance prefix="&lt;" multiple="1" wordsplit="." delimiter="." add="Method" associate="Class" regex="OUi`nm)(?&lt;Text&gt;(\w|[^\x00-\x7F]|\.)+)\s*:=\s*new\s*(?&lt;Class&gt;(\w|[^\x00-\x7F])+)\("></Instance>
+		<Label prefix=":" regex="OUm`n)^\s*(?&lt;Text&gt;(\w|[^\x00-\x7F])+):($|\R|\s+;.*$)"></Label>
+		<Class prefix="{" full="1" bounds="\{|\}" selecttext="Oim`n)^[\s|}]*class\s+\b($1)\b" regex="Oim`n)^[\s|}]*class\s+(?&lt;Text&gt;((\w|[^\x00-\x7F])+))[\s+extends\s+\w+\s*]*((\s*;.*\R)|(\s*\/\*\s+.*\s*\*\/)){0,}\s*(\{)" close="Om`n)^([\s*|}])+" open="Om`n)(\{)(\s+;|\R)">
+			<Method prefix="[" autoadd="(" wordsplit="." firstchar="(" exclude="if|while" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Att&gt;.*)\)((\s*;.*\R)|(\s*\/\*\s+.*\s*\*\/)){0,}\s*(\{)"></Method>
+			<Property prefix="." regex="Om`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\[(?&lt;Att&gt;.*)\](\s*;.*\R){0,}\s*(\{)"></Property></Class>
+		<Function prefix="(" autoadd="(" exclude="if|while" firstchar="(" vis="Text" regex="OUm`n)^[\s|}]*(?&lt;Text&gt;(\w|[^\x00-\x7F])+)\((?&lt;Att&gt;.*)\)((\s*;.*\R)|(\s*\/\*\s+.*\s*\*\/)){0,}\s*(\{)"></Function>
 	</Code>
 	<Delimiter delimiter="," preserve="OU)((?&lt;Open&gt;\{|\[)|(?&lt;Close&gt;\}|\])|(?&lt;PreserveOpen&gt;\()|(?&lt;PreserveClose&gt;\)))" removeall="OU)(\x22.*\x22)" search="(\(|,[^\[)" replace="(" replaceinvalid="."></Delimiter>
 	<ReplaceFirst replace="," first="( )"></ReplaceFirst>
