@@ -4566,7 +4566,7 @@ Find_Replace(){
 	frfind:
 	info:=nw[],startsearch:=0,sc:=csc(),stop:=Current(3).file,looped:=0,current:=Current(1),pos:=sc.2008,pre:="O",find:="",find:=info.regex?info.find:"\Q" RegExReplace(info.find, "\\E", "\E\\E\Q") "\E",pre.=info.greed?"":"U",pre.=info.cs?"":"i",pre.=info.ml?"":"m`n",find:=pre ")" find ""
 	if(info.currentsel){
-		end:=sc.2509(2,start),text:=SubStr(Update({encoded:Current(3).file}),start+1,end-start+1),greater:=sc.2008>sc.2009?sc.2008:sc.2009,pos:=greater>start?greater-start:1
+		end:=sc.2509(2,start),text:=SubStr(Update({Get:Current(3).File}),start+1,end-start+1),greater:=sc.2008>sc.2009?sc.2008:sc.2009,pos:=greater>start?greater-start:1
 		if(RegExMatch(text,find,found,pos))
 			fp:=found.Pos(1)!=""?found.Pos(1):found.Pos(0),fl:=found.len(1)!=""?found.len(1):found.len(0),sc.2160(start+fp-1,start+fp-1+fl)
 		else{
@@ -4579,7 +4579,7 @@ Find_Replace(){
 	frrestart:
 	if(!info.find)
 		return m("Enter search text")
-	if(RegExMatch(text:=Update({encoded:Current(3).file}),find,found,sc.2008+1))
+	if(RegExMatch(text:=Update({Get:Current(3).File}),find,found,sc.2008+1))
 		return sc.2160(start:=StrPut(SubStr(text,1,found.Pos(0)),"utf-8")-2,start+StrPut(found.0,"utf-8")-1)
 	list:=info.Include?SN(Current(),"self::*"):SN(Current(1),"descendant::file")
 	while(current:=list.Item[A_Index-1],ea:=XML.EA(current)){
@@ -4602,7 +4602,7 @@ Find_Replace(){
 	frall:
 	info:=nw[],sc:=csc(),stop:=Current(3).file,looped:=0,current:=Current(),pos:=sc.2008,pre:="O",find:="",find:=info.regex?info.find:"\Q" RegExReplace(info.find, "\\E", "\E\\E\Q") "\E",pre.=info.greed?"":"U",pre.=info.cs?"":"i",pre.=info.ml?"":"m`n",find:=pre ")" find ""
 	if(info.currentsel)
-		return pos:=1,end:=sc.2509(2,start),text:=SubStr(Update({encoded:Current(3).file}),start+1,end-start),text:=RegExReplace(text,find,info.replace),sc.2190(start),sc.2192(end),sc.2194(StrPut(text,"utf-8")-1,[text]),sc.2500(2),sc.2505(0,sc.2006),sc.2504(start,len:=StrPut(text,"utf-8")-1),end:=start+len
+		return pos:=1,end:=sc.2509(2,start),text:=SubStr(Update({Get:Current(3).file}),start+1,end-start),text:=RegExReplace(text,find,info.replace),sc.2190(start),sc.2192(end),sc.2194(StrPut(text,"utf-8")-1,[text]),sc.2500(2),sc.2505(0,sc.2006),sc.2504(start,len:=StrPut(text,"utf-8")-1),end:=start+len
 	if(info.Include)
 		Goto,frseg
 	list:=SN(Current(1),"descendant::file"),All:=Update("get").1,info:=nw[],replace:=NewLines(info.replace)
@@ -8836,7 +8836,7 @@ Run(){
 		Exit(1)
 	}SetStatus("Run Script: " SplitPath(Current(2).file).Filename " @ " FormatTime("hh:mm:ss",A_Now),3)
 	if(Current(2).untitled)
-		return DynaRun(Update({encoded:Current(3).file}),1,Current(2).file)
+		return DynaRun(Update({Get:Current(3).file}),1,Current(2).file)
 	SplitPath,file,,dir,ext
 	if(ext!="ahk")
 		return Save()
@@ -10831,7 +10831,7 @@ Undo(){
 UnSaved(){
 	un:=cexml.SN("//main[@untitled]"),ts:=Settings.SSN("//template").text,file:=FileOpen("c:\windows\shellnew\template.ahk",0),td:=file.Read(file.length),file.Close(),template:=ts?ts:td
 	while(uu:=un.item[A_Index-1],ea:=XML.EA(uu.FirstChild)){
-		text:=Update({encoded:ea.file})
+		text:=Update({Get:ea.file})
 		if(text=template)
 			Continue
 		if(m(ea.file,"This is an untitled document meaning there is no file created to the HDD/SSD yet.","Would you like to save it?","Contents:",SubStr(text,1,200) (StrLen(text)>200?"...":""),b,"btn:ync")="Yes"){
