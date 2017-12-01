@@ -5845,7 +5845,7 @@ Index_Lib_Files(){
 InputBox(parent,title,prompt,default=""){
 	sc:=csc()
 	WinGetPos,x,y,,,% "ahk_id" (parent?parent:sc.sc+0)
-	RegExReplace(prompt,"\n","",count),count:=count+2,sc:=csc(),height:=(sc.2279(0)*count)+(v.caption*3)+23+34,y:=((CPos:=sc.2165(0,sc.2008))<height)?y+CPos+sc.2279(sc.2166(sc.2008))+5:y
+	RegExReplace(prompt,"\n","",count),count:=count+3,sc:=csc(),height:=(sc.2279(0)*count)+(v.caption*3)+23+34,y:=((CPos:=sc.2165(0,sc.2008))<height)?y+CPos+sc.2279(sc.2166(sc.2008))+5:y
 	InputBox,var,%title%,%prompt%,,,%height%,%x%,%y%,,,%default%
 	KeyWait,Escape
 	if(ErrorLevel){
@@ -8625,17 +8625,26 @@ Replace(){
 		}
 	if(!Rep)
 		return
-	sc.2078(),CP:=sc.2008,Len:=StrPut(Word,"UTF-8")-1,sc.2025((Start:=CP-Len)),sc.2645(CP-Len,Len),Indent:=sc.2127(Line),Tab:=Settings.Get("//tab",5),EOL:=1
-	for a,b in (Obj:=StrSplit(Rep,Chr(127))){
+	sc.2078(),CP:=sc.2008,Len:=StrPut(Word,"UTF-8")-1,sc.2025((Start:=CP-Len)),sc.2645(CP-Len,Len),Indent:=sc.2127(Line),Tab:=Settings.Get("//tab",5),EOL:=1,List:=[],Pos:=1
+	while(RegExMatch(Rep,"OU)(\$\w+)\b",Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
+		Found:=Trim(Found.1,"`n")
+		if(Found="$|"||Found=="$E")
+			Continue
+		List[Found]:=1
+	}for a in List{
+		if(!Value:=InputBox(sc.sc+0,"Enter Replacement","Enter the replacement for: " a "`n`n" RegExReplace(Rep,Chr(127),"`n")))
+			Exit
+		Rep:=RegExReplace(Rep,"\Q" a "\E",Value)
+	}for a,b in (Obj:=StrSplit(Rep,Chr(127))){
 		if(Pos:=InStr(b,"$|"))
-			b:=RegExReplace(b,"\$\|"),SetPos:=StrPut(SubStr(b,1,Pos),"UTF-8")-1,EOL:=0
+			Pos--,SetPos:=StrPut(SubStr(b,1,Pos),"UTF-8")-1,b:=RegExReplace(b,"\$\|"),EOL:=0
 		else if(InStr(b,"$E"))
 			b:=RegExReplace(b,"\$E"),LineEnd:=1,EOL:=0
 		b:=RegExReplace(b,"\x60t","`t"),RegExReplace(b,"^(\t)",,AddExtraTabs)
 		if(A_Index=1)
 			sc.2003((CurrentPos:=CP-Len),b (a!=Obj.MaxIndex()?"`n":""))
 		else
-			sc.2003((CurrentPos:=sc.2128(Line+(A_Index-1))),b (a!=Obj.MaxIndex()?"`n":"")),sc.2126(Line+(A_Index-1),Indent+Round(AddExtraTabs*Tab))
+			sc.2003(sc.2128(Line+(A_Index-1)),b (a!=Obj.MaxIndex()?"`n":"")),sc.2126(Line+(A_Index-1),Indent+Round(AddExtraTabs*Tab)),CurrentPos:=sc.2128(Line+(A_Index-1))
 		if(SetPos)
 			sc.2025(CurrentPos+SetPos),SetPos:=0
 		else if(LineEnd)
@@ -8646,7 +8655,7 @@ Replace(){
 		sc.2025(StrPut(Rep,"UTF-8")-1+Start+Round(Overall))
 	if(v.Options.Auto_Space_After_Comma)
 		sc.2003(sc.2008," "),sc.2025(sc.2008+1)
-	v.word:=rep?rep:word
+	v.Word:=Rep?Rep:Word
 	SetTimer,AutoMenu,-80
 	sc.2079(),sc.Enable(1)
 	return
