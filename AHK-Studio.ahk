@@ -7687,7 +7687,7 @@ Open(FileList="",show="",Redraw:=1){
 				SplitPath,b,,,Ext
 			}if(!Settings.SSN("//Extensions/Extension[text()='" Format("{:L}",Ext) "']")){
 				if(m("Files with the extension: " Ext " are not permitted by AHK Studio.","","Would you like to associate this file type with AHK Studio?","","Keep in mind that if you open anything other than text files it will crash AHK Studio.","btn:ync","ico:?","def:2")="Yes"){
-					Settings.Add("Extensions/Extension",,Format("{:L}",Ext))
+					Settings.Add("Extensions/Extension",,Format("{:L}",Ext),1)
 				}else
 					Exit
 			}if(cexml.Find("//main/@file",b))
