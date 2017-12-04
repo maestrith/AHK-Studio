@@ -2,9 +2,13 @@
 <html>
 	<FileTypes lexer="hypertext" language="hypertext" name="HTML">html htm</FileTypes>
 	<Styles>
-		<completequote style="4"/> <!--Key-->
-		<punctuation style="8"/>
-		<font style="2" color="7843024"/><!--Quoted Value-->
-		<font style="1" ex="[8]{\n\t[4]&quot;Key&quot;[8]:[0] [2]&quot;Value&quot;[0]\n\t[4]&quot;Key&quot;[8]:[0] [1]44\n[8]}\n" color="13617276" fold="1"/><!--Int Value-->
+		<completequote style="4"></completequote>
+		<!--Key-->
+		<punctuation style="8"></punctuation>
+		<font style="2" color="7843024"></font>
+		<!--Quoted Value-->
+		<font style="1" ex="[8]{\n\t[4]&quot;Key&quot;[8]:[0] [2]&quot;Value&quot;[0]\n\t[4]&quot;Key&quot;[8]:[0] [1]44\n[8]}\n" color="13617276" fold="1"></font>
+		<!--Int Value-->
 	</Styles>
+	<date>20171201061319</date>
 </html>

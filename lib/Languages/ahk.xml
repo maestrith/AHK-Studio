@@ -1,7 +1,7 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <ahk>
 	<FileTypes lexer="ahk" language="ahk" name="AutoHotkey">ahk</FileTypes>
-	<Comments Open="OUm`n)^\s*\/\*" Close="OUm`n)^\s*\*\/" Line="OUm`n)^\s*\;.*($|\R)"></Comments>
+	<Comments Open="OUm`n)^\s*\/\*" Close="OUm`n)^\s*\*\/" Line="OUm`n)^\s*\;.*($|\R)" Single=";"></Comments>
 	<Command>
 		<syntax syntax=", On|Off">AutoTrim</syntax>
 		<syntax syntax=", On|Off|Send|Mouse|SendAndMouse|Default|MouseMove|MouseMoveOff">BlockInput</syntax>
