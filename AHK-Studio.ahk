@@ -616,7 +616,9 @@ Check_For_Update(startup:=""){
 	AutoUpdate:
 	Master:=NewWin[].Master,Branch:=(Master?"master":"Beta")
 	URL:=RegExReplace(DownloadURL,"\$1",Branch)
-	return m(URL,Branch)
+	/*
+		return m(URL,Branch)
+	*/
 	Save(),Settings.Save(1),menus.Save(1),Studio:=URLDownloadToVar(URL)
 	if(!InStr(studio,";download complete"))
 		return m("There was an error. Please contact maestrith@gmail.com if this error continues")
