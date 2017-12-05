@@ -188,11 +188,11 @@ AddBookmark(line,search){
 	}sc.2003(end," " Chr(59) search.1 "[" name "]"),sc.2160(end+4,end+4+StrPut(name,utf-8)-1)
 	return name
 }
-AddInclude(Filename:="",text:="",pos:="",Show:=1){
+AddInclude(FileName:="",text:="",pos:="",Show:=1){
 	static new
-	file:=FileOpen(filename,"RW","UTF-8"),file.write(text),file.length(file.position),rel:=RelativePath(Current(2).file,filename),sc:=csc(),current:=Current(4)
-	SplitPath,filename,fn,dir,ext,nne,drive
-	FileGetTime,time,%filename%
+	file:=FileOpen(FileName,"RW","UTF-8"),File.Write(text),File.Length(File.Position),rel:=RelativePath(Current(2).file,FileName),sc:=csc(),current:=Current(4)
+	SplitPath,FileName,fn,dir,ext,nne,drive
+	FileGetTime,time,%FileName%
 	if(v.Options.Includes_In_Place){
 		line:=sc.2166(sc.2008)
 		if(Trim(RegExReplace(sc.GetLine(line),"\R"))){
@@ -224,10 +224,10 @@ AddInclude(Filename:="",text:="",pos:="",Show:=1){
 				TV:=SSN(Node,"@tv").text
 	}}else
 		TV:=SSN(current,"@tv").text
-	new:=cexml.Under(current,"file",{id:GetID(),encoding:"UTF-8",file:filename,include:"#Include " rel,inside:SSN(current,"@file").text,dir:dir,filename:fn,github:fn,nne:nne,time:time,encoding:"UTF-8",scan:1,ext:Ext,tv:TVC.Add(1,fn,TV,"Sort"),lang:LanguageFromFileExt(Ext)})
+	new:=cexml.Under(current,"file",{id:GetID(),encoding:"UTF-8",file:FileName,include:"#Include " rel,inside:SSN(current,"@file").text,dir:dir,FileName:fn,github:fn,nne:nne,time:time,encoding:"UTF-8",scan:1,ext:Ext,tv:TVC.Add(1,fn,TV,"Sort"),lang:LanguageFromFileExt(Ext)})
 	add:=Current(7).AppendChild(new.CloneNode(1))
 	add.SetAttribute("type","File")
-	Update({file:filename,text:text,encoding:"UTF-8",node:current})
+	Update({file:FileName,text:text,encoding:"UTF-8",node:current})
 	ScanFiles()
 	Default("SysTreeView321")
 	if(Show)
@@ -2728,7 +2728,7 @@ CompileFont(XMLObject,RGB:=1){
 Context(return=""){
 	Static FindFirst:="O)^[\s|}]*((\w|[^\x00-\x7F])+)"
 	if(v.ShowTT)
-		t("It is getting here","time:1")
+		t("It is getting here","time:1",v.ShowTT.="Context,")
 	ControlGetFocus,Focus,% hwnd([1])
 	if(!InStr(Focus,"Scintilla"))
 		return
@@ -3709,7 +3709,7 @@ Dlg_Color(Node,Default:="",hwnd:="",Attribute:="color"){
 		m("Bottom of Dlg_Color()",Node.xml,Color)
 	return Color
 }
-DLG_FileSave(HWND:=0,DefaultFilter=1,DialogTitle="Select file to open",DefaultFile:="",Flags:=0x00000002){
+DLG_FileSave(HWND:=0,DefaultFilter=1,DialogTitle="Select file to open",DefaultFile:="",Flags:=0x00000002,ForceFile:=0){
 	Filter:=GetExtensionList(Current(2).Lang?Current(2).Lang:"ahk"),VarSetCapacity(lpstrFileTitle,0xFFFF,0),VarSetCapacity(lpstrFile,0xFFFF,0),VarSetCapacity(lpstrFilter,0xFFFF,0),VarSetCapacity(lpstrCustomFilter,0xFF,0),VarSetCapacity(OFName,90,0),VarSetCapacity(lpstrTitle,255,0),Address:=&lpstrFilter
 	for a,b in StrSplit(Filter,"|"){
 		for c,d in StrSplit(b)
@@ -3723,16 +3723,17 @@ DLG_FileSave(HWND:=0,DefaultFilter=1,DialogTitle="Select file to open",DefaultFi
 	;Structure https://msdn.microsoft.com/en-us/library/windows/desktop/ms646839(v=vs.85).aspx
 	Address:=&OFName
 	SplitPath,DefaultFile,FileName,Initial,Ext,NNE
-	if(InStr(NNE,"Untitled")||!FileExist(DefaultFile)){
+	if((InStr(NNE,"Untitled")||!FileExist(DefaultFile))&&!ForceFile){
 		if(!DefaultFile:=Settings.SSN("//SaveAs").text){
 			Initial:=A_ScriptDir "\Projects"
 		}else
 			SplitPath,DefaultFile,FileName,Initial,Ext,NNE
 	}if(FileExist(Initial)!="D")
 		FileCreateDir,%Initial%
+	InitialDD:=Initial
 	Initial:=DefaultFile?DefaultFile:Initial "\"
 	VarSetCapacity(lpstrInitialDir,0XFFFF,0)
-	StrPut(Initial,&lpstrInitialDir,"UTF-8")
+	StrPut(InitialDD,&lpstrInitialDir,"UTF-8")
 	if(FileExist(DefaultFile)!="D")
 		VarSetCapacity(lpstrFile,0XFF,0),StrPut(FileName,&lpstrFile,"UTF-8")
 	for a,b in [76,HWND,0,&lpstrFilter,&lpstrCustomFilter,255,defaultFilter,&lpstrFile,0xFFFF,&lpstrFileTitle,0xFFFF,&lpstrInitialDir,&lpstrTitle,Flags,0,&lpstrDefExt]
@@ -6742,7 +6743,7 @@ New_Include_From_Current_Word(){
 		if(ErrorLevel||Word="")
 			return
 	}SplitPath,file,,Dir
-	FileName:=SelectFile(Dir "\" RegExReplace(Word,"_"," ") "." Current(3).Ext,"FileName for " Word,Current(3).Ext)
+	FileName:=SelectFile(Dir "\" RegExReplace(Word,"_"," ") "." Current(3).Ext,"FileName for " Word,Current(3).Ext,,1)
 	if(ErrorLevel)
 		return
 	if(cexml.Find(Current(1),"//@file",FileName))
@@ -9428,7 +9429,7 @@ SelectAll(){
 	}
 	return
 }
-SelectFile(FileName:="",Title:="New File",Ext:="",Options:="S16"){
+SelectFile(FileName:="",Title:="New File",Ext:="",Options:="S16",Force:=0){
 	MainFile:=Current(2).file,Ext:=Ext?Ext:Current(3).Ext,Top:=Settings.SSN("//DefaultFolder"),Dir:=SplitPath(MainFile).Dir,BackupFileName:=SplitPath(FileName).FileName
 	if(Node:=Settings.Find(Top,"descendant::Folder/@file",MainFile))
 		Folder:=SSN(Node,"@folder").text
@@ -9437,7 +9438,10 @@ SelectFile(FileName:="",Title:="New File",Ext:="",Options:="S16"){
 	Dir:=Trim(Dir "\" Folder,"\"),FileName:=Dir "\" BackupFileName
 	if(!FileExist(Dir))
 		FileCreateDir,%Dir%
-	FileName:=DLG_FileSave(hwnd(1),1,Title,FileName)
+	/*
+		Explorer()
+	*/
+	FileName:=DLG_FileSave(hwnd(1),1,Title,FileName,,Force)
 	if(ErrorLevel)
 		Exit
 	return FileName
@@ -11067,8 +11071,11 @@ UpPos(NoContext:=0){
 	else if(CPos!=EPos)
 		sc.2500(6),sc.2505(0,Length)
 	LastPos:=CPos
-	if(!NoContext)
+	if(!NoContext){
+		if(v.ShowTT)
+			t("UpPos Here","time:1",v.ShowTT.="UpPos,")
 		SetTimer,Context,-500
+	}
 	BraceHighlight()
 }
 URIDecode(str){
