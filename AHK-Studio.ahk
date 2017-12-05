@@ -2450,7 +2450,7 @@ Close(x:=1,all:="",Redraw:=1){
 		WORK ON THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	*/
 	while(nn:=nodes.item[A_Index-1]),pea:=XML.EA(nn){
-		if(!Node:=Settings.Find("//previous_scripts/script/text()",pea.file))
+		if((!Node:=Settings.Find("//previous_scripts/script/text()",pea.file))&&!pea.Untitled)
 			Node:=Settings.Add("previous_scripts/script",,pea.file,1)
 		Top:=Settings.SSN("//previous_scripts/script")
 		if(Top.xml!=Node.xml)
@@ -2727,6 +2727,8 @@ CompileFont(XMLObject,RGB:=1){
 }
 Context(return=""){
 	Static FindFirst:="O)^[\s|}]*((\w|[^\x00-\x7F])+)"
+	if(v.ShowTT)
+		t("It is getting here","time:1")
 	ControlGetFocus,Focus,% hwnd([1])
 	if(!InStr(Focus,"Scintilla"))
 		return
@@ -5431,7 +5433,7 @@ Gui(){
 		ControlGetFocus,focus,% hwnd([1])
 		ControlGet,hwnd,hwnd,,%focus%,% hwnd([1])
 	*/
-	TNotes.Set(),MarginWidth()
+	TNotes.Set(),MarginWidth(),VVersion:=new XML("versions",(FileExist("lib\Github.xml")?"lib\Github.xml":"lib\Versions.xml"))
 	SetTimer,ScanWID,-10
 	SetupEnter(1),csc({Set:1})
 	MainWin.Size(1)
@@ -5840,15 +5842,17 @@ Index_Lib_Files(){
 			if(FileName="Studio.ahk")
 				Continue
 			FileGetTime,Time,%file%
-			q:=FileOpen(File,"R")
-			if(q.Encoding="CP1252"){
-				if(RegExMatch((Text:=q.Read()),"OU)([^\x00-\x7F])",Found))
-					q:=FileOpen(File,"R","UTF-8"),Text:=q.Read(),Encoding:="UTF-8"
-				else
-					Encoding:=q.Encoding
-			}else
-				Encoding:=q.Encoding,Text:=q.Read()
-			q.Close(),dir:=Trim(dir,"\")
+			/*
+				q:=FileOpen(File,"R")
+				if(q.Encoding="CP1252"){
+					if(RegExMatch((Text:=q.Read()),"OU)([^\x00-\x7F])",Found))
+						q:=FileOpen(File,"R","UTF-8"),Text:=q.Read(),Encoding:="UTF-8"
+					else
+						Encoding:=q.Encoding
+				}else
+					Encoding:=q.Encoding,Text:=q.Read()
+				q.Close(),dir:=Trim(dir,"\")
+			*/
 			/*
 				CHECK THE TIME TOO!!!!!!
 			*/
@@ -5858,7 +5862,7 @@ Index_Lib_Files(){
 				if(!New:=cexml.Find("//*/@file",File))
 					New:=cexml.Under(main,"file",{file:file,dir:dir,ext:Ext,filename:FileName,lang:LanguageFromFileExt(Ext),nne:nne,inside:"Libraries",scan:1,id:GetID()})
 			*/
-			StringReplace,text,text,`r`n,`n,All
+			StringReplace,Text,Text,`r`n,`n,All
 			Update({file:File,text:Text,load:1,encoding:Encoding}),new.SetAttribute("time",time),new.SetAttribute("encoding",encoding)
 }}}
 InputBox(parent,title,prompt,default=""){
@@ -6046,7 +6050,7 @@ Class Keywords{
 				Special:=Keywords.Special[Language]:=[]
 				while(aa:=All.item[A_Index-1],ea:=XML.EA(aa))
 					Special.Push(ea)
-			}Keywords.SearchTrigger[Language]:=xx.SSN("//SearchTrigger").text
+			}Keywords.SearchTrigger[Language]:=xx.SSN("//SearchTrigger").text,Keywords.SetPrefix(Language,xx)
 		}KeyWords.RefreshPersonal()
 	}BuildList(Language,Refresh:=0){
 		if(IsObject(Keywords.KeywordList[Language])&&!Refresh)
@@ -6073,6 +6077,13 @@ Class Keywords{
 				Suggestions[SubStr(b,1,2)].=b " ",Keywords.Words[Language,b]:=b
 	}}GetList(Language){
 		return Keywords.KeywordList[Language]
+	}SetPrefix(Language,xx){
+		all:=xx.SN("//Code/descendant::*"),Prefix:=[]
+		for a,b in Omni_Search_Class.Prefix
+			Prefix.Push({Prefix:a,Type:b})
+		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+			Prefix.Push({Prefix:ea.Prefix,Type:aa.NodeName})
+		Keywords.Prefix[Language]:=Prefix
 	}GetOmni(Language){
 		
 	}GetSuggestions(Language,FirstTwo){
@@ -7413,8 +7424,24 @@ Omni_Search(start=""){
 	return
 	OmniSearch:
 	Gui,20:Default
+	/*
+		Search String:="cfu"
+		convert everything to Lowercase in the xml
+		do a list of contains(each letter)
+		like the search feature for hotkey commands.
+		XMLSearchText(Attributes,Search){
+			Search:=Format("{:L}",Search)
+			for a in Attributes
+				SearchText.="contains(translate(translate(@" a ", 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'\&','') , '" Search "') or "
+			return SearchText "contains(translate(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'\&','') , '" Search "')"
+		}
+		so this but constrain it to @text or @filename
+		//file[@filename] or //info[@text]
+		
+	*/
 	GuiControl,20:-Redraw,SysListView321
-	FileSearch:=osearch:=Search:=NewWin[].Search,Select:=[],LV_Delete(),Sort:=[],stext:=[],fsearch:=Search="^"?1:0,NewWin.Instructions:=0
+	Language:=Current(3).Lang
+	FileSearch:=OSearch:=Search:=NewWin[].Search,SearchString:="",Select:=[],LV_Delete(),Sort:=[],stext:=[],fsearch:=Search="^"?1:0,NewWin.Instructions:=0
 	if(InStr(Search,")")){
 		if(!v.Options.Clipboard_History){
 			Options("Clipboard_History")
@@ -7426,81 +7453,83 @@ Omni_Search(start=""){
 		LV_ModifyCol(1,"AutoHDR")
 		GuiControl,20:+Redraw,SysListView321
 		return running:=0
-	}for a in Omni_Search_Class.prefix{
-		osearch:=RegExReplace(osearch,"\Q" a "\E")
-		if(a!=".")
-			FileSearch:=RegExReplace(FileSearch,"\Q" a "\E")
-	}if(InStr(Search,"?")||Search=""){
+	}
+	/*
+		for a in Omni_Search_Class.prefix{
+			OSearch:=RegExReplace(OSearch,"\Q" a "\E")
+			if(a!=".")
+				FileSearch:=RegExReplace(FileSearch,"\Q" a "\E")
+		}
+	*/
+	if(InStr(Search,"?")||Search=""){
 		LV_Delete(),NewWin.Instructions:=1
-		for a,b in Omni_Search_Class.Prefix
-			info:=a="+"?"Add Function Call":b,LV_Add("",a,info,Convert_Hotkey(menus.SSN("//*[@clean='" b "_Search']/@hotkey").text))
-		all:=Keywords.GetXML(Current(3).Lang).SN("//Code/descendant::*")
-		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-			LV_Add("",ea.Prefix,aa.NodeName,Convert_Hotkey(menus.SSN("//*[@clean='" aa.NodeName "_Search']/@hotkey").text))
+		for a,b in Keywords.Prefix[Language]
+			LV_Add("Sort",b.Prefix,b.Type,Convert_Hotkey(menus.SSN("//*[@clean='" b.Type "_Search']/@hotkey").text))
 		GuiControl,20:+Redraw,SysListView321
 		Loop,4
 			LV_ModifyCol(A_Index,"AutoHDR")
 		return LV_Modify(1,"Select Vis Focus"),running:=0
-	}else if(RegExMatch(Search,"O)(\W)",Found)){
-		if(Found.1="^")
-			OnlyTop:=1
-		Pos:=1,RepList:=[],Find1:="",Index:=1,xx:=Keywords.GetXML(Current(3).Lang)
-		while(RegExMatch(Search,"O)(\W)",Found,Pos),Pos:=Found.Pos(1)+Found.len(1)){
-			if(Found.1=" ")
-				Continue
-			if(Pre:=Omni_Search_Class.prefix[Found.1]){
-				RepList.Push(Found.1)
-				if(Found.1="+"){
-					find:="//main[@file='" Current(2).File "']/descendant::*[@type='Class' or @type='Function'"
-					Break
-				}else if(Pre)
-					add:="@type='" Pre "'"
-				Find1.=Index>1?" or " add:add
-			}else if(Node:=xx.SSN("//Code/descendant::*[@prefix='" Found.1 "']")){
-				RepList.Push(Found.1),add:="@type='" Node.NodeName "'",Find1.=Index>1?" or " add:add
-			}
-			/*
-				for a,b in {Bookmark:"#",Breakpoint:"*"}{
-					if(b=Found.1)
-						RepList.Push(Found.1),add:="@Type='" a "'",Find1.=Index>1?" or " add:add
-				}
-			*/
-			Index++
-		}
-		for a,b in RepList
-			Search:=RegExReplace(Search,"\Q" b "\E")
-		find:=Find1?"//*[" Find1 "]":"//*"
-	}else
-		find:="//*"
-	if(OnlyTop&&!Search)
-		find:="//main/file[1]",OnlyTop:=0
-	/*
-		if(SubStr(NewWin[].Search,1,1)="&")
-			Search:=SubStr(NewWin[].Search,2),find:="//*[@Type='Hotkey']"
-	*/
+	}else if(Search="^"){
+		LV_Delete()
+		all:=cexml.SN("//files/main"),MainFile:=Current(2).File,FileList:=[]
+		while(aa:=all.Item[A_Index-1],ea:=XML.EA(aa)){
+			Split:=SplitPath(ea.File),(ea.File=MainFile?FileList.InsertAt(1,[Split.FileName,"File",Split.Dir,aa]):FileList.Push([Split.FileName,"File",Split.Dir,aa]))
+		}for a,b in FileList
+			LV_Add("",b.1,b.2,b.3),Select[A_Index]:=SSN(b.4,"file")
+		GuiControl,20:+Redraw,SysListView321
+		Loop,3
+			LV_ModifyCol(A_Index,"AutoHDR")
+		return LV_Modify(1,"Select Vis Focus"),running:=0
+	}else if(Search~="\W"){
+		PreFixList:=[]
+		for a,b in Keywords.Prefix[Language]{
+			Search:=RegExReplace(Search,"\Q" b.Prefix "\E",,Count)
+			if(Count)
+				SearchString.="@type='" b.Type "' or ",PreFixList.Push(b.Type)
+	}}else
+		find:="//files/descendant::*|//Libraries/descendant::*|//menu/descendant::*"
+	SearchString:=Trim(SearchString," or ")
 	for a,b in searchobj:=StrSplit(Search)
 		b:=b~="(\\|\.|\*|\?|\+|\[|\{|\||\(|\)|\^|\$)"?"\" b:b,stext[b]:=stext[b]=""?1:stext[b]+1
-	List:=cexml.SN(find),Break:=0,CurrentParent:=Current(2).File,Index:=1
+	Search:=Trim(Search)
+	if(Search){
+		Contains:="",SearchLetter:=[]
+		for a,b in StrSplit("clean,text,filename",","){
+			Contains.=" or (",Line:=""
+			for c,d in StrSplit(Format("{:L}",Search)){
+				if(!SearchLetter[d]),SearchLetter[d]:=1
+					Line.="contains(translate(@" b ", 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'" d "') and "
+			}
+			Contains.=Trim(Line," and ") ")",SearchLetter:=[]
+		}
+		if(SearchString)
+			List:=cexml.SN("//*[(" SearchString ") and (" Trim(Contains," or ") ")]")
+		else
+			List:=cexml.SN("//*[" Trim(Contains," or ") "]")
+	}else
+		List:=cexml.SN("//*[" SearchString "]"),Break:=0,CurrentParent:=Current(2).File
+	Index:=0
 	while(ll:=List.Item[A_Index-1],b:=XML.EA(ll)){
-		if(Break){
-			Break:=0
+		if(b.Type="Menu"&&b.clean="Omni_Search")
+			Continue
+		if(Break),Break:=0
 			Break
-		}Order:=ll.NodeName="file"?"filename,type,dir":b.Type="Menu"?"text,type,additional1":"text,type,file,args",info:=StrSplit(Order,","),text:=b[info.1],Rating:=0
-		if(b.FileName="libraries")
-			Continue
-		if(b.libraries)
-			Continue
+		Order:=ll.NodeName="file"?"filename,type,dir":b.Type="Menu"?"text,type,additional1":"text,type,file,args",info:=StrSplit(Order,","),text:=b[info.1],Rating:=0
 		if(!b.id){
 			IDS:=SN(ll,"ancestor::file")
 			b.ID:=SSN(IDS.Item[IDS.Length-1],"@id").text
-		}if(!b.File)
+		}
+		
+		/*
+			use GetFileNode() to get the file node for the item if Order~="i)\b(File|FileName)"  
+		*/
+		
+		if(!b.File)
 			b.File:=SSN(ll,"file[@id='" b.id "']/@file").text
 		if(!b.FileName)
 			b.FileName:=SplitPath(b.File).FileName
 		if(v.Options.HasKey(b.clean))
 			b.Type:=(v.Options[b.clean]?"Enabled":"Disabled")
-		if(b.Type="Menu"&&b.clean="Omni_Search")
-			Continue
 		if(fsearch){
 			if(b.File=SSN(ll,"ancestor::main/@file").text)
 				Rating+=50
@@ -7517,22 +7546,17 @@ Omni_Search(start=""){
 				}spos:=1
 				Rating+=100/InStr(text,".")
 				for c,d in searchobj
-					if(Pos:=RegExMatch(text,"iO)(\b" d ")",Found,spos),spos:=Found.Pos(1)+Found.len(1))
+					if(Pos:=RegExMatch(text,"iO)(\b" d ")",Found,spos),spos:=Found.Pos(1)+Found.Len(1))
 						Rating+=100/Pos
 				for c,d in StrSplit(FileSearch," ")
 					if(text~="i)\b" d)
 						Rating+=400
 				if(CurrentParent=SSN(ll,"ancestor::main/@file").text)
-					Rating+=100
+					Rating+=200
 				if(FPos:=InStr(text,FileSearch))
 					Rating+=100/FPos
-		}}
-		if(b[info.1]){
-			b.Node:=ll
-			;figure out what should go here
-			LV_Add("",b[info.1],b[info.2],(b[info.2]="Method"?b.class " : ":"") (info.3="file"?Trim(StrSplit(b[info.3],"\").pop(),".ahk"):b[info.3]),b[info.4],Rating,++Index)
-			Select[Index]:=ll
-		}
+		}}if(b[info.1])
+			LV_Add("",b[info.1],b[info.2],(ll.ParentNode.NodeName="info"?": " SSN(ll.ParentNode,"@text").text:"") (info.3="file"?Trim(StrSplit(b[info.3],"\").Pop(),".ahk"):b[info.3]),b[info.4],Rating,++Index),Select[Index]:=ll
 	}running:=0
 	loops:=v.Options.Omni_Search_Stats?[5,[6]]:[4,[5,6]]
 	Loop,% loops.1
@@ -7550,15 +7574,14 @@ Omni_Search(start=""){
 	if(running)
 		return m("here?")
 	Gui,20:Default
-	LV_GetText(num,LV_GetNext(),6),item:=XML.EA(Node:=Select[num]),Search:=NewWin[].Search,Pre:=SubStr(Search,1,1),LV_GetText(LV_Text,LV_GetNext())
+	LV_GetText(num,LV_GetNext(),6),Num:=Num?Num:LV_GetNext(),item:=XML.EA(Node:=Select[num]),Search:=NewWin[].Search,Pre:=SubStr(Search,1,1),LV_GetText(LV_Text,LV_GetNext())
 	if(!num){
 		LV_GetText(item,LV_GetNext())
 		ControlGetText,text,Edit1,% hwnd([20])
 		if(InStr(text,"?")){
 			ControlSetText,Edit1,% RegExReplace(text,"\?"),% hwnd([20])
 			Send,{End}
-		}
-		ControlFocus,Edit1,% hwnd([20])
+		}ControlFocus,Edit1,% hwnd([20])
 		Send,{%item%}
 	}if(SubStr(Search,1,1)=")"){
 		text:=Sort[LV_GetNext()]
@@ -7587,9 +7610,9 @@ Omni_Search(start=""){
 			comma:=A_Index>1?",":"",value:=InputBox(sc.sc,"Add Function Call","Insert a value for : " b " :`n" item.text "(" item.args ")`n" build ")",""),value:=value?value:Chr(34) Chr(34),build.=comma value
 		build.=")"
 		sc.2003(sc.2008,build)
-	}else if(item.Type="file"||Node.NodeName="file"){
+	}else if(item.Type="file"||Node.NodeName="file")
 		NewWin.Exit(),tv(cexml.SSN("//*[@id='" SSN(Node,"ancestor-or-self::main/@id").text "']/descendant::*[@id='" item.id "']/@tv").text)
-	}else if(item.Type!="gui"){
+	else if(item.Type!="gui"){
 		NewWin.Exit(),xx:=Keywords.GetXML(SSN((FileNode:=GetFileNode(Node)),"@lang").text)
 		TypeInfo:=XML.EA(xx.SSN("//Code/descendant::" item.Type))
 		if(TypeInfo.Multiple){
@@ -8157,8 +8180,6 @@ Add_Selected_To_Project_Specific_AutoComplete(){
 }
 Publish(Return="",Branch:="",Version:=""){
 	static Init
-	if(!Init)
-		VVersion:=new XML("versions",(FileExist("lib\Github.xml")?"lib\Github.xml":"lib\Versions.xml")),Init:=1
 	sc:=csc(),Text:=Update("get").1,Save(),MainFile:=Current(2).file,Publish:=Update({Get:MainFile}),includes:=SN(Current(1),"descendant::*/@include/..")
 	while(ii:=Includes.item[A_Index-1])
 		if(InStr(Publish,SSN(ii,"@include").Text))

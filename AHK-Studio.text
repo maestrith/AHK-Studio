@@ -11,7 +11,6 @@ Save As and Save: Reported by derz00 #144
 -Edit Hotkeys: Now with a better search feature
 -Check For Updates: Development Branch Switch
 -Create Comment: For Making Comments.
-
 Changed:
 -Publish: Now does Additional Publish
 -Words In Document: Changed the backend so that it only will add the words related to the first 2 letters you typed rather than the entire list to improve performance
@@ -24,7 +23,6 @@ Changed:
 -Jump To First Available: Numbered multiple items in the list
 Creates:
 -%A_MyDocuments%\\\\DebugWindow.ahk: For the function DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0) to display text in the Debug Window
-
 Changed: Suggested by Run1e
 -Omni-Search: Title now contains instructions
 Changed:
