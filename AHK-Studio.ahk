@@ -9438,9 +9438,6 @@ SelectFile(FileName:="",Title:="New File",Ext:="",Options:="S16",Force:=0){
 	Dir:=Trim(Dir "\" Folder,"\"),FileName:=Dir "\" BackupFileName
 	if(!FileExist(Dir))
 		FileCreateDir,%Dir%
-	/*
-		Explorer()
-	*/
 	FileName:=DLG_FileSave(hwnd(1),1,Title,FileName,,Force)
 	if(ErrorLevel)
 		Exit
