@@ -7509,7 +7509,7 @@ Omni_Search(start=""){
 			List:=cexml.SN("//*[" Trim(Contains," or ") "]")
 	}else
 		List:=cexml.SN("//*[" SearchString "]"),Break:=0,CurrentParent:=Current(2).File
-	Index:=0
+	Index:=0,CurrentProject:=Current(2).File
 	while(ll:=List.Item[A_Index-1],b:=XML.EA(ll)){
 		if(b.Type="Menu"&&b.clean="Omni_Search")
 			Continue
@@ -7520,43 +7520,34 @@ Omni_Search(start=""){
 			IDS:=SN(ll,"ancestor::file")
 			b.ID:=SSN(IDS.Item[IDS.Length-1],"@id").text
 		}
-		
-		/*
-			use GetFileNode() to get the file node for the item if Order~="i)\b(File|FileName)"  
-		*/
-		
 		if(!b.File)
 			b.File:=SSN(ll,"file[@id='" b.id "']/@file").text
 		if(!b.FileName)
 			b.FileName:=SplitPath(b.File).FileName
 		if(v.Options.HasKey(b.clean))
 			b.Type:=(v.Options[b.clean]?"Enabled":"Disabled")
-		if(fsearch){
-			if(b.File=SSN(ll,"ancestor::main/@file").text)
-				Rating+=50
-			if(CurrentParent=b.File)
-				Rating+=100
-		}else{
-			if(Search){
-				for c,d in stext{
-					RegExReplace(text,"i)" c,"",count)
-					if(Count<d)
-						Continue,2
-					if(Pos:=RegExMatch(text,Upper(c)))
-						Rating+=100/Pos
-				}spos:=1
-				Rating+=100/InStr(text,".")
-				for c,d in searchobj
-					if(Pos:=RegExMatch(text,"iO)(\b" d ")",Found,spos),spos:=Found.Pos(1)+Found.Len(1))
-						Rating+=100/Pos
-				for c,d in StrSplit(FileSearch," ")
-					if(text~="i)\b" d)
-						Rating+=400
-				if(CurrentParent=SSN(ll,"ancestor::main/@file").text)
-					Rating+=200
-				if(FPos:=InStr(text,FileSearch))
-					Rating+=100/FPos
-		}}if(b[info.1])
+		if(CurrentProject=SSN(ll,"ancestor::main/@file").text)
+			Rating+=1000
+		if(Search){
+			for c,d in stext{
+				RegExReplace(text,"i)" c,"",count)
+				if(Count<d)
+					Continue,2
+				if(Pos:=RegExMatch(text,Upper(c)))
+					Rating+=100/Pos
+			}spos:=1
+			Rating+=100/InStr(text,".")
+			for c,d in searchobj
+				if(Pos:=RegExMatch(text,"iO)(\b" d ")",Found,spos),spos:=Found.Pos(1)+Found.Len(1))
+					Rating+=100/Pos
+			for c,d in StrSplit(FileSearch," ")
+				if(text~="i)\b" d)
+					Rating+=400
+			if(CurrentParent=SSN(ll,"ancestor::main/@file").text)
+				Rating+=200
+			if(FPos:=InStr(text,FileSearch))
+				Rating+=100/FPos
+		}if(b[info.1])
 			LV_Add("",b[info.1],b[info.2],(ll.ParentNode.NodeName="info"?": " SSN(ll.ParentNode,"@text").text:"") (info.3="file"?Trim(StrSplit(b[info.3],"\").Pop(),".ahk"):b[info.3]),b[info.4],Rating,++Index),Select[Index]:=ll
 	}running:=0
 	loops:=v.Options.Omni_Search_Stats?[5,[6]]:[4,[5,6]]
