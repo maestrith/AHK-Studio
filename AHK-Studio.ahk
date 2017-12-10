@@ -14,6 +14,7 @@ if(!settings[]){
 	m("Oh boy...check the settings file to see what's up.")
 }v.LineEdited:=[],v.LinesEdited:=[],v.RunObject,ComObjError(0),new Keywords(),FileCheck(%True%),Options("startup"),Menus:=new XML("menus","Lib\Menus.xml"),Gui(),DefaultRCM(),CheckLayout()
 Allowed(),SetTimer("RemoveXMLBackups",-1000),CheckOpen()
+Gui,Splash:Destroy
 return
 CheckOpen(){
 	All:=Settings.SN("//open/*")
@@ -4298,14 +4299,9 @@ Export(){
 		indir.text:=filename
 }
 Extract(Main){
-	static FileCount:=0,TotalTick:=0 ;,ADODB:=ComObjCreate("ADODB.Stream")
-	FileList:=[],Pool:=[]
-	/*
-		if(!main:=cexml.Find("//main/@file",MainFile))
-			main:=cexml.Under(cexml.SSN("//*"),"main",{file:MainFile,id:(inside:=id:=GetID())})
-	*/
-	all:=SN(Main,"file")
-	while(aa:=all.item[A_Index-1])
+	static ;,ADODB:=ComObjCreate("ADODB.Stream")
+	FileList:=[],Pool:=[],All:=SN(Main,"file")
+	while(aa:=All.Item[A_Index-1])
 		aa.ParentNode.RemoveChild(aa)
 	MainFile:=SSN(Main,"@file").text,File:=MainFile
 	SplitPath,MainFile,MFN,MainDir,Ext,mnne
@@ -4323,10 +4319,6 @@ Extract(Main){
 			Encoding:=q.Encoding
 	}else
 		Encoding:=q.Encoding,Text:=q.Read()
-	/*
-		if(InStr(File,"About.ahk")||file="D:\AHK\AHK-Studio\Activate.ahk")
-			m("After",fn,Text)
-	*/
 	q.Close(),dir:=Trim(dir,"\")
 	if(nnnn:=cexml.Find("//*/@file",file)){
 		if(SSN(nnnn,"@time"))
@@ -5380,11 +5372,15 @@ GotoPos(caret,pos){
 	sc:=csc(),sc.2584(caret,pos),sc.2586(caret,pos)
 }
 Gui(){
-	/*
-		if(!Settings.SSN("//theme|//fonts"))
-			DefaultFont(),ConvertTheme()
-	*/
 	v.startup:=1,this:=MainWin:=New MainWindowClass(1),ea:=Settings.EA("//theme/descendant::*[@style=32]"),win:=1,Plug()
+	Gui,Splash:Destroy
+	Gui,Splash:Default
+	Gui,Color,0x000001,0x000001
+	Gui,-Caption +hwndSplash
+	Gui,Add,Picture,w100 h100,ahkstudio.ico
+	Gui,Show
+	WinSet,TransColor,0x000001,ahk_id%Splash%
+	Gui,1:Default
 	if(!this.Gui.SSN("//control"))
 		Gui,Show,Hide
 	if(!Settings.SSN("//autoadd")){
@@ -5998,7 +5994,7 @@ Jump_To_First_Available(){
 }
 Class Keywords{
 	__New(){
-		static Dates:={ahk:"20171118144345",xml:"20171201061116",html:"20171201061319"},BaseURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/lib/Languages/",BaseDir:="Lib\Languages\"
+		static Dates:={ahk:"20171210105314",xml:"20171201061116",html:"20171201061319"},BaseURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/Beta/lib/Languages/",BaseDir:="Lib\Languages\"
 		for a,b in StrSplit("IndentRegex,KeywordList,Suggestions,Languages,Comments,OmniOrder,CodeExplorerExempt,Words,FirstChar,Delimiter,ReplaceFirst,SearchTrigger",",")
 			Keywords[b]:=[]
 		if(!IsObject(v.OmniFind))
@@ -7437,10 +7433,6 @@ Omni_Search(start=""){
 		if(v.LineEdited.MinIndex()!="")
 			Scan_Line()
 	*/
-	/*
-		the base prefix keys are in class Omni_Search_Class
-		the rest will be in the Keywords.List <Code>IN HERE IN THE DEFINITIONS!!!!</Code>
-	*/
 	Update({sc:sc.2357}),Code_Explorer.AutoCList(1)
 	NewWin:=new GUIKeep(20),NewWin.Add("Edit,goss w600 vsearch,,w","ListView,w600 h200 -hdr -Multi gosgo,Menu C|A|1|2|R|I,wh")
 	Gui,1:-Disabled
@@ -7578,7 +7570,7 @@ Omni_Search(start=""){
 					Rating+=400
 			if(CurrentParent=SSN(ll,"ancestor::main/@file").text)
 				Rating+=200
-			if(FPos:=InStr(text,FileSearch))
+			if(FPos:=InStr(Text,Search))
 				Rating+=100/FPos
 		}if(b[info.1])
 			LV_Add("",b[info.1],b[info.2],(ll.ParentNode.NodeName="info"?": " SSN(ll.ParentNode,"@text").text:"") (info.3="file"?Trim(StrSplit(b[info.3],"\").Pop(),".ahk"):b[info.3]),b[info.4],Rating,++Index),Select[Index]:=ll
@@ -8221,11 +8213,6 @@ Publish(Return="",Bcranch:="",Version:=""){
 			FileRead,Contents,%b%
 			Publish.="`r`n" Contents
 	}}Publish:=RegExReplace(Publish,"\R","`r`n")
-	
-	/*
-		this is where we are going to work on auto_branch and auto_version
-	*/
-	
 	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	;~ !!!!!!!!!! Send the Publish text along with whatever you need to tell the new window  !!!!!!!!!!!
 	;~ !!!!!!!!!!                     what to do with the text afterward                     !!!!!!!!!!!
@@ -8233,40 +8220,21 @@ Publish(Return="",Bcranch:="",Version:=""){
 	;~ !!!!!!!!!!          There will be Clipboard, oh and there can be plugins...           !!!!!!!!!!!
 	;~ !!!!!!!!!!                                And Junk...                                 !!!!!!!!!!!
 	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	;~ !!!!!!!!!!!!!! Have the auto version and Auto Branch both set in the control XML  !!!!!!!!!!!!!!!
-	;~ !!!!!!!!!!!!!!              Rather than hard coding them into Studio              !!!!!!!!!!!!!!!
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Make Custom  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!   Branches   !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!     Too      !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	
 	if(RegExMatch(Publish,"\x3Bauto_version")){
 		if(Version&&VVersion.SSN("//*[@select]/ancestor::info/@file").text!=Current(2).File&&!Version)
 			return m("Auto Version is present and a version is not set")
-		;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		;~ !!!!!!!!!!!!!!!!!!!!!!  In here and in the auto_branch area have it stop  !!!!!!!!!!!!!!!!!!!!!!!
-		;~ !!!!!!!!!!!!!!!!!!!!!!              and provide buttons for               !!!!!!!!!!!!!!!!!!!!!!!
-		;~ !!!!!!!!!!!!!!!!!!!!!!                 -Copy To Clipboard                 !!!!!!!!!!!!!!!!!!!!!!!
-		;~ !!!!!!!!!!!!!!!!!!!!!! Also have the function pass it's name to return to !!!!!!!!!!!!!!!!!!!!!!!
-		;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		if(!Version:=SSN(VVersion.Find("//info/@file",Current(2).File),"descendant::*[@select]/ancestor-or-self::version/@name").text)
-			return m("Version not set for this Project."),new Version_Tracker()
+			return m("Version not set or selected for this Project.","Please select the version in the window that is about to show in order for this to work"),new Version_Tracker()
 		Change:=Settings.SSN("//auto_version").Text?Settings.SSN("//auto_version").Text:"Version:=""" Version """"
 		Publish:=RegExReplace(Publish,"\x3Bauto_version",RegExReplace(Change,"\Q$v\E",Version))
 	}if(RegExMatch(Publish,"\x3Bauto_branch")){
 		if(VVersion.SSN("//*[@select]/ancestor::info/@file").text!=Current(2).File)
-			return m("Branch not set for this Project.")
+			return m("Branch not set for this Project.","Please select the version in the window that is about to show in order for this to work"),new Version_Tracker()
 		if(!Branch:=SSN(VVersion.Find("//info/@file",Current(2).File),"descendant::*[@select]/ancestor::branch/@name").text)
 			return m("Branch not set for this Project."),new Version_Tracker()
 		Change:=(AutoBranch:=Settings.SSN("//auto_branch").Text)?AutoBranch:"Branch:=""" Branch """"
 		Publish:=RegExReplace(Publish,"\x3Bauto_branch",(Change:=RegExReplace(Change,"\Q$v\E",Branch)))
-	}
-	Publish:=RegExReplace(Publish,"U)^\s*(;{.*\R|;}.*\R)","`n")
+	}Publish:=RegExReplace(Publish,"U)^\s*(;{.*\R|;}.*\R)","`n")
 	if(!Publish)
 		return sc.GetEnc()
 	if(Return)
@@ -11619,21 +11587,14 @@ Class Version_Tracker{
 	}OtherThings(){
 		static
 		xx:=VVersion
-		if(!Root:=xx.Find("//info/@file",Current(2).File)){
+		if(!Root:=xx.Find("//info/@file",Current(2).File))
 			Info:=xx.Under(xx.Under((Branch:=xx.Under((Root:=xx.Add("info",{file:Current(2).File},,1)),"branch",{name:"master"})),"version",{name:"1",draft:"false",prerelease:"true",target_commitish:"master"}),"info",{type:"",action:"",issue:"",user:""}),Select:=Info
-			/*
-				Root:=xx.Add("info",{file:Current(2).File},,1)
-				Branch:=xx.Under(Root,"branch",{name:"master"})
-				Version:=xx.Under(Branch,"version",{name:"1",draft:"false",prerelease:"true",target_commitish:"master"})
-				Info:=xx.Under(Version,"info",{type:"",action:"",issue:"",user:""}),Select:=Info
-			*/
-		}Version_Tracker.Root:=Root
 		VersionGUI:
 		NewWin:=new GUIKeep("Version"),Version_Tracker.NewWin:=NewWin
 		NewWin.Add("TreeView,w350 h500 vVT gVersionShowVersion vTVVersion AltSubmit,,h"
 			,"Edit,x+M w500 h500 gVerEdit vEdit,,wh")
 		NewWin.Show((Settings.SSN("//github")?"Github ":"")"Version Tracker")
-		NewWin.Hotkeys({Delete:"VarDelete","!a":"VersionAddAction",F1:"VersionCompileCurrent","!Up":"VersionMove"
+		NewWin.Hotkeys({Delete:"VerDelete","!a":"VersionAddAction",F1:"VersionCompileCurrent","!Up":"VersionMove"
 					,"!Down":"VersionMove",Enter:"VersionEdit","!n":"NewVersionBranch"
 					,"^Up":"AddNewVersion","^Down":"AddNewVersion"})
 		if(Select)
@@ -11642,11 +11603,11 @@ Class Version_Tracker{
 		;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		;~ !!!! MAKE SURE TO NOT REMOVE ANYTHING IF/WHEN THE USER RE-DOWNLOADS EVERYTHING FROM GITHUB  !!!!!
 		;~ !!!!                         RUN IT THROUGH HERE AFTER DOWNLOADING                          !!!!!
+		;~ !!!!                           Have it go through ConvertStyle()                            !!!!!
 		;~ !!!!                                                                                        !!!!!
 		;~ !!!!                                         Need:                                          !!!!!
 		;~ !!!!                                       Drag/Drop:                                       !!!!!
 		;~ !!!!                             -Make it like Github basically                             !!!!!
-		;~ !!!!                                                                                        !!!!!
 		;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		AddNewVersion:
 		Direction:=SubStr(A_ThisHotkey,2)
@@ -11685,6 +11646,12 @@ Class Version_Tracker{
 		Root:=SSN(Node,"ancestor::info")
 		if(Repo:=SSN(Root,"@repo").text){
 			;here
+			;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!          DO Things           !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!      to make this work       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!            Please            !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Re-Write the Github thingie  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+			;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 			m("Create the actual Branch on Github",Repo)
 		}
 		Branch:=InputBox(NewWin.HWND,"New Branch","Enter the name for this new branch`nSpaces will be replaced with -`nAnything other than [A-Za-z0-9_-] will be removed")
@@ -11705,10 +11672,10 @@ Class Version_Tracker{
 				Node.SetAttribute("name",Number),Version_Tracker.Populate(1)
 				return
 			}else if(SSN(Node,"ancestor-or-self::Github")){
-				Key:=Node.NodeName,Node:=Settings.SSN("//github")
+				Select:=Node,Key:=Node.NodeName,Node:=Settings.SSN("//github")
 				if(Value:=InputBox(NewWin.ID,"Enter A New Value","Enter A New Value For: " Format("{:T}",Key),SSN(Node,"@" Key).text))
 					Node.SetAttribute(Key,Value)
-				Version_Tracker.Populate(1)
+				Version_Tracker.Select(Select)
 				return
 			}
 			return Version_Tracker.VersionAddAction()
@@ -11759,16 +11726,25 @@ Class Version_Tracker{
 				while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
 					Info.=(Info?"`r`n":"") ea.Type ":" (ea.Action?" " ea.Action " by " ea.User:"") "`r`n" RegExReplace(aa.Text,Chr(127),"`r`n")
 				}GuiControl,Version:,Edit1,%Info%
-				NewWin.Disable("VerEdit",1)
+				NewWin.Disable("VerEdit")
+			}else if(Node.NodeName="Branch"){
+				All:=SN(Node,"descendant::version"),VersionList:=""
+				while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
+					VersionList.=ea.Name "`n",Count:=A_Index
+				GuiControl,Version:,Edit1,% (Count=1?"Version":"Versions") ":`r`n`r`n" VersionList
+				NewWin.Disable("VerEdit")
 			}else
-				NewWin.Disable("VerEdit",1)
+				NewWin.Disable("VerEdit")
 		}
 		return
 		VersionEscape:
 		VersionClose:
 		if(!Version_Tracker.GetNode())
 			return NewWin.Exit()
-		All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::*[@select]")
+		xx:=VVersion
+		if(!Root:=Version_Tracker.GetNode("ancestor::info")),NewWin:=Version_Tracker.NewWin,xx:=VVersion
+			Root:=xx.Find("//info/@file",Current(2).File)
+		All:=SN(Root,"descendant::*[@select]|//GitHub/descendant::*[@select]")
 		while(aa:=All.Item[A_Index-1])
 			aa.RemoveAttribute("select")
 		NewWin.Default("VT"),Node:=xx.SSN("//*[@tv='" TV_GetSelection() "']"),Node.SetAttribute("select",1),Version_Tracker.TVState(),NewWin.Exit(),All:=VVersion.SN("//*[@tv]")
@@ -11804,7 +11780,9 @@ Class Version_Tracker{
 			for a in d
 				Index:=LV_Add((Match=a?"Select Vis Focus":""),a),Select:=(Match=a?Index:Select)
 			LV_Modify((Select?Select:1),"Select Vis Focus"),Select:=""
-		}
+		}if(EditNode)
+			if(!Node:=SSN(EditNode,"ancestor::info/descendant::*[@action!='' or @issue!='' or @type!='' or @user!='']"))
+				ControlFocus,Edit1,% AddWin.ID
 		return
 		VersionHelp:
 		m("Alt+T/A/U/I will focus on the items below their ListViews")
@@ -11856,16 +11834,40 @@ Class Version_Tracker{
 		ControlGetFocus,Focus,% AddWin.ID
 		m(Focus " Is focused, Delete something within it.")
 		return
-		VarDelete:
+		VerDelete:
 		NewWin:=Version_Tracker.NewWin
 		ControlGetFocus,Focus,% NewWin.ID
 		if(Focus="SysTreeView321"){
 			Node:=Version_Tracker.GetNode()
-			if(SSN(Node,"@id"))
-				return m("Can not delete a Pushed version just yet")
-			if(Node.NodeName~="i)\b(version|info)"=0)
+			if(SSN(Node,"@id")){
+				Repo:=Version_Tracker.GetNode("ancestor::info/@repo").text
+				Res:=m("Tags on GitHub can not be deleted through the API","","","Select:","-Yes to remove the tag from your local version after doing Cancel","-No to go to GitHub and delete the tag","-Cancel to cancel","btn:ync","def:2")
+				if(Res="No")
+					Run,% "https://github.com/" Settings.SSN("//github/@owner").text "/" Repo "/releases/tag/" SSN(Node,"@name").text
+				else if(Res="Yes"){
+					if(m("Are you sure? This Can Not Be Undone!","btn:ync","ico:!","def:2")="Yes")
+						Next:=Node.NextSibling?Node.NextSibling:Node.PreviousSibling?Node.PreviousSibling:Node.ParentNode,Node.ParentNode.RemoveChild(Node),Version_Tracker.Select(Next)
+				}
+				return
+			}if(Node.NodeName="Branch"){
+				if(Repo:=Version_Tracker.GetNode("ancestor::info/@repo").text){
+					Res:=m("This Can Not Be Undone!","This will only remove the local branch.","","To remove the cached branch from GitHub you will need to press No and it will take you to Github.com and you can manage your Branches there.","btn:ync","def:3")
+					if(Res="No")
+						Run,% "https://github.com/" Settings.EA("//github").Owner "/" Repo "/branches"
+					else if(Res="Yes"){
+						if(m("Are you sure? This Can NOT Be Undone!","btn:ync","def:2")="Yes")
+							Next:=Node.NextSibling?Node.NextSibling:Node.PreviousSibling?Node.PreviousSibling:Node.ParentNode,Node.ParentNode.RemoveChild(Node),Version_Tracker.Select(Next)
+					}
+					return
+				}if(m("This can not be undone. Are you sure?","ico:!","btn:ync","def:2")="Yes")
+					Next:=Node.NextSibling?Node.NextSibling:Node.PreviousSibling?Node.PreviousSibling:Node.ParentNode,Node.ParentNode.RemoveChild(Node),Version_Tracker.Select(Next)
+				return
+			}
+			if(Node.NodeName~="i)\b(version|info)"=0){
+				if(!Node)
+					return new Version_Tracker()
 				return m("You can only delete Versions or Actions currently")
-			if(m("Are you sure you want to delete this?","btn:ync","def:2")="Yes"){
+			}if(m("Are you sure you want to delete this?","btn:ync","def:2")="Yes"){
 				Next:=Node.NextSibling?Node.NextSibling:Node.PreviousSibling?Node.PreviousSibling:Node.ParentNode,All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::*[@select]")
 				while(aa:=All.Item[A_Index-1])
 					aa.RemoveAttribute("select")
@@ -11875,9 +11877,10 @@ Class Version_Tracker{
 			Send,{Delete}
 		return
 	}Populate(SetCurrent:=0){
-		Root:=Version_Tracker.Root,NewWin:=Version_Tracker.NewWin,xx:=VVersion
+		if(!Root:=Version_Tracker.GetNode("ancestor::info")),NewWin:=Version_Tracker.NewWin,xx:=VVersion
+			Root:=xx.Find("//info/@file",Current(2).File)
 		if(SetCurrent){
-			Node:=Version_Tracker.GetNode(),All:=SN(SSN(Node,"ancestor::info"),"descendant::*[@select]")
+			Node:=Version_Tracker.GetNode(),All:=SN(Root,"//Github/descendant::*[@select]|descendant::*[@select]")
 			while(aa:=All.Item[A_Index-1])
 				aa.RemoveAttribute("select")
 			Node.SetAttribute("select",1)
@@ -11896,14 +11899,17 @@ Class Version_Tracker{
 		}Instructions:=TV_Add("Instructions")
 		for a,b in ["Delete will delete a version","Alt+A Will Add An Action","Enter Will Edit Whatever Is Selected","F1 Will Compile The Current Version/Branch","Alt+N To Create A New Branch"]
 			TV_Add(b,Instructions,"Vis")
-		if(tv:=xx.SSN("//*[@select]/@tv").text)
-			TV_Modify(tv,"Select Vis Focus")
 		All:=xx.SN("//*[@expand]")
 		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
 			TV_Modify(ea.tv,"Expand")
+		if(tv:=SSN(Root,"descendant::*[@select]/@tv|//Github/descendant::*[@select]/@tv").text)
+			TV_Modify(tv,"Select Vis Focus")
 		GuiControl,Version:+Redraw,SysTreeView321
 	}Select(Node){
-		All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::*[@select]")
+		Version_Tracker.TVState()
+		if(!Root:=Version_Tracker.GetNode("ancestor::info")),NewWin:=Version_Tracker.NewWin,xx:=VVersion
+			Root:=xx.Find("//info/@file",Current(2).File)
+		All:=SN(Root,"descendant::*[@select]|//Github/descendant::*[@select]")
 		while(aa:=All.Item[A_Index-1])
 			aa.RemoveAttribute("select")
 		Node.SetAttribute("select",1),Version_Tracker.Populate()
