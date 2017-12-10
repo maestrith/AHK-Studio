@@ -1,5 +1,4 @@
 1.005.00
-Added:
 -Regex Replace Selected Dialog: A small GUI to use Regex to replace the selected text
 -Regex Replace Selected: Use the saved Regex items from the above dialog
 Save As and Save: Reported by derz00 #144
@@ -10,9 +9,7 @@ Save As and Save: Reported by derz00 #144
 --Quick Find Ignore: A list of Styles that will be ignored by Quick Find
 -Edit Hotkeys: Now with a better search feature
 -Check For Updates: Development Branch Switch
--Create Comment: For Making Comments.
-Changed:
--Publish: Now does Additional Publish
+-Create Comment: For Making Comments. -Publish: Now does Additional Publish
 -Words In Document: Changed the backend so that it only will add the words related to the first 2 letters you typed rather than the entire list to improve performance
 -Find:
 --Changed how found items are displayed
@@ -21,26 +18,13 @@ Changed:
 -Restore Current File:
 --Made it a part of Studio
 -Jump To First Available: Numbered multiple items in the list
-Creates:
--%A_MyDocuments%\\\\DebugWindow.ahk: For the function DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0) to display text in the Debug Window
-Changed: Suggested by Run1e
--Omni-Search: Title now contains instructions
-Changed:
--Set_New_File_Default_Folder: Now keeps track of a Global folder and Project Specific folders
--Changed the backup folder to AHK-Studio Backup to make it easier to find
-Added: Suggested by Joe Glines
--Selections: When you have multiple selections it will show how many you have
+-Creates:
+-%A_MyDocuments%\Lib\DebugWindow.ahk: For the function DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0) to display text in the Debug Window -Omni-Search: Title now contains instructions -Set_New_File_Default_Folder: Now keeps track of a Global folder and Project Specific folders
+-Changed the backup folder to AHK-Studio Backup to make it easier to find -Selections: When you have multiple selections it will show how many you have
 -Total Replaced: When using Replace Selected it will show how many items you replaced
 -New Language Setup
 -New Theme Setup to include multiple programming languages
--Words In Document: Fixed
-Added: Suggested by Joe Glines
--DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0) Plugin method to display text in the debug window in Studio
-Fixed: Reported by Joe Glines
-- ;~ { was causing indent. Only ;{ and ;
-Fixed: Reported by Run1e
--Full Tree
-Fixed: Reported by Astral Essence (Discord)
--Find: Clicking on the + to expand an item was causing it to quickly show then hide the information
+-Words In Document: Fixed -DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0) Plugin method to display text in the debug window in Studio - ;~ { was causing indent. Only ;{ and ; -Full Tree
+-Exemption error causing a scroll -Find: Clicking on the + to expand an item was causing it to quickly show then hide the information
 -Right Click on Project Explorer was not showing the information for the file you right clicked on
--Moved the Debug Tip from the main GUI to the Debug Panel (where it should be)
+-Moved the Debug Tip from the main GUI to the Debug Panel (where it should be) -Show Type Prefix: I never used it.

@@ -41,7 +41,7 @@ return
 */
 return
 /*
-	Add in #Include brings up a list of items in your library
+ 	Add in #Include brings up a list of items in your library
 	Debugging Joe Glines{
 		have the option to have the Variable browser dockable to the side of debug window.
 	}
@@ -205,7 +205,7 @@ AddInclude(FileName:="",text:="",pos:="",Show:=1){
 			else
 				TV:=SSN(Node,"@tv").text
 	}}else
-	TV:=SSN(current,"@tv").text
+		TV:=SSN(current,"@tv").text
 	new:=cexml.Under(current,"file",{id:GetID(),encoding:"UTF-8",file:FileName,include:"#Include " rel,inside:SSN(current,"@file").text,dir:dir,FileName:fn,github:fn,nne:nne,time:time,encoding:"UTF-8",scan:1,ext:Ext,tv:TVC.Add(1,fn,TV,"Sort"),lang:LanguageFromFileExt(Ext)})
 	add:=Current(7).AppendChild(new.CloneNode(1))
 	add.SetAttribute("type","File")
@@ -259,7 +259,7 @@ Auto_Insert(){
 	for a,b in ["EnteredKey","AddedKey"]{
 		ea:=SettingsDefault(b,1)
 		if(A_Index=1)
-			ControlFocus,,% "ahk_id" ea.hwnd
+			ControlFocus,,% "ahk_id" ea.hwnd 
 		GuiControl,Settings:,% ea.hwnd
 	}BraceSetup()
 	return
@@ -322,7 +322,7 @@ Backspace(sub:=1){
 			Send,{%Send%}
 			return Edited(),UpPos(),Update({sc:sc.2357})
 	}}if(sc.2102)
-	sc.2101
+		sc.2101
 	if(sc.2102){
 		if(sub)
 			Send,{Backspace}
@@ -565,7 +565,7 @@ Check_For_Edited(){
 				sc.2377(ea.sc),aa.RemoveAttribute("sc")
 			Update({File:ea.File,Text:Text}),SetPos(),sc.Enable(1)
 	}}if(List)
-	SetStatus("Files Updated:" Trim(List,","),3)
+		SetStatus("Files Updated:" Trim(List,","),3)
 	return 1
 	SetScrollPos2:
 	if(ea.Scroll!="")
@@ -585,11 +585,11 @@ Check_For_Update(startup:=""){
 	}
 	Version:="1.005.00"
 	NewWin:=new GUIKeep("CFU"),NewWin.Add("Edit,w400 h400 ReadOnly,No New Version,wh"
-	,"Radio,gSwitchBranch Checked vmaster,Master Branch,y"
-	,"Radio,x+M gSwitchBranch vBeta,Beta Branch,y"
-	,"Button,xm gautoupdate,&Update,y"
-	,"Button,x+5 gcurrentinfo,&Current ChangeLog,y"
-	,"Button,x+5 gextrainfo,ChangeLog &History,y"),NewWin.Show("AHK Studio Version: " Version)
+								  ,"Radio,gSwitchBranch Checked vmaster,Master Branch,y"
+								  ,"Radio,x+M gSwitchBranch vBeta,Beta Branch,y"
+								  ,"Button,xm gautoupdate,&Update,y"
+								  ,"Button,x+5 gcurrentinfo,&Current ChangeLog,y"
+								  ,"Button,x+5 gextrainfo,ChangeLog &History,y"),NewWin.Show("AHK Studio Version: " Version)
 	if(!Branch)
 		Branch:="Beta"
 	GuiControl,,%Branch%,1
@@ -1110,7 +1110,7 @@ Class LineStatus{
 		if(mask&2**20)
 			sc.2044(line,20)
 		if(mask&2**21)
-			sc.2044(line,21)
+			sc.2044(line,21)		
 	}StoreEdited(start,end,add){
 		sc:=csc()
 		Loop,% (end+1)-start{
@@ -1260,7 +1260,7 @@ Class MainWindowClass{
 					if(!Supress)
 						debug.Send("stop")
 			}}else if(oea.type="Tracked Notes")
-			this.SetWinPos(this.tnsc.sc,0,0,0,0,ea),this.SetWinPos(this.tn,0,0,0,0,ea),Redraw()
+				this.SetWinPos(this.tnsc.sc,0,0,0,0,ea),this.SetWinPos(this.tn,0,0,0,0,ea),Redraw()
 			else
 				DllCall("DestroyWindow",uptr,oea.hwnd)
 			if(oea.type="Tracked Notes")
@@ -1947,7 +1947,7 @@ class ScanFile{
 											if(VVV:=Found[NNN]){
 												Atts[Format("{:L}",NNN)]:=VVV
 									}}}for q,r in {type:a,upper:Upper(Found.Text)}
-									Atts[q]:=r
+										Atts[q]:=r
 									Spam:=cexml.Under(Node,"info",Atts),No.AppendChild(Spam.CloneNode(0))
 						}}}LastPos:=Pos
 		}}}}
@@ -2202,7 +2202,7 @@ Class Toolbar{
 			else if(button.runfile)
 				Run,% button.runfile
 			return 0
-		}
+		} 
 		if(code=-708) ;toolbar change
 			this.ideal()
 		if(code=-720){
@@ -2998,7 +2998,7 @@ ContextMenu(){
 			if(v.Options[Clean(ea.name)])
 				Menu,% parent.NodeName="main"?"RCM":pea.name,Check,% ea.name
 	}}for a,b in track
-	Menu,%b%,Add,%a%,:%a%
+		Menu,%b%,Add,%a%,:%a%
 	Menu,RCM,Add
 	if(oea.type="Toolbar")
 		Menu,RCM,Add,Edit Toolbar,EditToolbar
@@ -3204,8 +3204,8 @@ ConvertTheme(){
 		}else if(aa.NodeName="default"){
 			for a in ea
 				Orig.RemoveAttribute(a)
-				for a,b in XML.EA(SSN(Orig,"//*[@style=5]"))
-					aa.SetAttribute(a,b)
+			for a,b in XML.EA(SSN(Orig,"//*[@style=5]"))
+				aa.SetAttribute(a,b)
 		}else if(NodeName:=Controls[ea.Control]){
 			New:=Settings.Add("theme/" NodeName)
 			for a,b in ea
@@ -3445,7 +3445,7 @@ DefaultFont(Return:=0){
 	/*
 		umm not every language has hex
 	*/
-	/*
+	/* 
 		MAKE SURE YOU CHECK ALL OF THE @CODES TO MAKE SURE THAT THEY DON'T
 		BELONG IN THE MAIN THEME BECAUSE I'D GUESS THAT THEY ALL DO!!!!!!!!!
 		ALSO WHEN PACKAGING UP THEMES MAKE SURE TO INCLUDE ALL (OR A LOT)
@@ -3464,11 +3464,11 @@ DefaultFont(Return:=0){
 }
 DefaultRCM(){
 	static all:={Scintilla:"Undo,Redo,Copy,Cut,Paste,Select All,Close,Delete,Open,Open Folder,Omni Search"
-	,"Tracked Notes":"Track File,Backup Notes,Contract All,Switch Orientation,Remove Tracked File"
-	,"Project Explorer":"New,Close,Open,Rename Current Include,Remove Include,Copy File Path,Copy Folder Path,Open Folder,Hide/Show Icons,File Icon,Folder Icon,Hide/Show File Extensions,Refresh Project Explorer"
-	,"Code Explorer":"Refresh Code Explorer,Collapse All"
-	,Toolbar:"Small Icons"
-	,Debug:"Close Debug Window"}
+		    ,"Tracked Notes":"Track File,Backup Notes,Contract All,Switch Orientation,Remove Tracked File"
+		    ,"Project Explorer":"New,Close,Open,Rename Current Include,Remove Include,Copy File Path,Copy Folder Path,Open Folder,Hide/Show Icons,File Icon,Folder Icon,Hide/Show File Extensions,Refresh Project Explorer"
+		    ,"Code Explorer":"Refresh Code Explorer,Collapse All"
+		    ,Toolbar:"Small Icons"
+		    ,Debug:"Close Debug Window"}
 	for a,b in ["Scintilla","Code Explorer","Project Explorer","Tracked Notes","Toolbar","Debug"]{
 		if(!main:=RCMXML.SSN("//main[@name='" b "']"))
 			main:=RCMXML.Add("main",{name:b},,1)
@@ -3673,7 +3673,7 @@ Display(PopulateVarBrowser:=0){
 							top.SetAttribute(a,b)
 						top.SetAttribute("updated",1)
 				}}if(!ea.children)
-				top.text:=debug.Decode(pp.text)
+					top.text:=debug.Decode(pp.text)
 			}
 		}
 	}
@@ -4301,8 +4301,8 @@ Extract(Main){
 	static FileCount:=0,TotalTick:=0 ;,ADODB:=ComObjCreate("ADODB.Stream")
 	FileList:=[],Pool:=[]
 	/*
-			if(!main:=cexml.Find("//main/@file",MainFile))
-				main:=cexml.Under(cexml.SSN("//*"),"main",{file:MainFile,id:(inside:=id:=GetID())})
+		if(!main:=cexml.Find("//main/@file",MainFile))
+			main:=cexml.Under(cexml.SSN("//*"),"main",{file:MainFile,id:(inside:=id:=GetID())})
 	*/
 	all:=SN(Main,"file")
 	while(aa:=all.item[A_Index-1])
@@ -4383,7 +4383,7 @@ Extract(Main){
 				FileList[a "\" info]:={file:a "\" info,include:found.0,inside:file},added:=1
 				Break
 		}}if(!added&&FileExist(orig))
-		FileList[orig]:={file:orig,include:found.0,inside:file},added:=1
+			FileList[orig]:={file:orig,include:found.0,inside:file},added:=1
 	}LastFile:=""
 	for fn,obj in FileList{
 		if(InStr(fn,"..")){
@@ -5003,7 +5003,7 @@ FixLines(line,total,base:=""){
 					Break
 				special:=current.pop().ind,braces--
 		}}if(first="{"&&aa)
-		aa--
+			aa--
 		tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind,tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind,tind+=Abs(specialbrace*indentation)
 		if(!(ss&&v.Options.Manual_Continuation_Line)&&sc.2127(a-1)!=tind+(base*ind))
 			sc.2126(a-1,tind+base*ind)
@@ -5123,8 +5123,8 @@ Full_Backup(Remove:=0){
 			NDir:=DDir?Backup "\" DDir:Backup
 			FileCopy,% af.Text,%NDir%\%Filename%
 	}}Loop,%Dir%\AHK-Studio Backup\*.*,2
-	if(!RegExMatch(A_LoopFileFullPath,"Full Backup \d{14}"))
-		FileRemoveDir,%A_LoopFileFullPath%,1
+		if(!RegExMatch(A_LoopFileFullPath,"Full Backup \d{14}"))
+			FileRemoveDir,%A_LoopFileFullPath%,1
 	SplashTextOff
 }
 GetWebBrowser(){
@@ -5419,7 +5419,7 @@ Gui(){
 				else
 					SetPos({scroll:pea.scroll,start:pea.start,end:pea.end,sc:ea.hwnd})
 		}}if(last:=this.Gui.SSN("//*[@last]/@hwnd").text)
-		s.ctrl[last].2400
+			s.ctrl[last].2400
 		SetTimer,RefreshTV,-400
 		ObjRegisterActive(PluginClass)
 		SetTimer,SetTN,-600
@@ -5738,7 +5738,7 @@ Hotkeys(win:=1,keys:=""){
 		}
 		for a,b in {Delete:"Delete",Backspace:"Backspace","~Escape":"Escape","^a":"SelectAll","^v":"Paste",WheelLeft:"ScrollWheel",WheelRight:"ScrollWheel","~Ctrl":"ToggleDuplicate"}{ ;,Hotkeys(1,Enter)
 			Try
-				Hotkey,%a%,%b%,On
+			Hotkey,%a%,%b%,On
 	}}else{
 		for a,b in keys{
 			Try{
@@ -5752,7 +5752,7 @@ Hotkeys(win:=1,keys:=""){
 	for a,b in ["^R","^E"]{
 		if(!menus.SSN("//*[@hotkey='" b "']"))
 			Try
-				Hotkey,%b%,DeadEnd,On
+		Hotkey,%b%,DeadEnd,On
 	}
 	Hotkey,RButton,RButton,On
 	Hotkey,IfWinActive
@@ -6540,7 +6540,7 @@ Monitors(){
 	Coords:=[]
 	Loop,%Count%{
 		SysGet,Monitor,Monitor,%A_Index%
-		;Total.="Monitor " A_Index " = " MonitorLeft "`n" MonitorTop "`n" MonitorRight "`n" MonitorBottom "`n`n"
+				;Total.="Monitor " A_Index " = " MonitorLeft "`n" MonitorTop "`n" MonitorRight "`n" MonitorBottom "`n`n"
 		for c,d in {Left:MonitorLeft,Right:MonitorRight,Top:MonitorTop,Bottom:MonitorBottom}
 			Coords[c,d]:=1
 	}
@@ -6741,9 +6741,9 @@ NewIndent(indentwidth:=""){
 		newpos:=sc.2128(line)+posinline,newpos:=newpos>sc.2128(line)?newpos:sc.2128(line),sc.2025(newpos)
 		/*
 			;if cursor position gets really messed up.
-			if(sc.2129(sc.2008)){
-				Send,{Left}{Right}
-			}
+				if(sc.2129(sc.2008)){
+					Send,{Left}{Right}
+				}
 		*/
 	}else
 		sc.2160(sc.2167(startline),sc.2136(endline))
@@ -6827,7 +6827,7 @@ Notifications(a*){
 	}if(A_GuiControl="ComboBox"){
 		ControlGetText,item,,% "ahk_id" Controls.ComboBox
 		this.Default("MenuTV"),TV_Modify(SettingsClass.MenuSearch[item],"Select Vis Focus")
-		return
+		return 
 	}if(A_GuiControl="Icon"){
 		SettingsClass.Default("MenuTV"),node:=menus.SSN("//*[@tv='" TV_GetSelection() "']")
 		if(node.NodeName="separator")
@@ -7403,7 +7403,7 @@ Notify(csc*){
 						if(Add="(")
 							SetTimer("AutoParen",-40)
 				}}else
-				SetTimer("AutoMenu",-50)
+					SetTimer("AutoMenu",-50)
 		}}
 	}for a,sc in Edited
 		Update({sc:sc.2357}),Edited()
@@ -7521,7 +7521,7 @@ Omni_Search(start=""){
 			if(Count)
 				SearchString.="@type='" b.Type "' or ",PreFixList.Push(b.Type)
 	}}else
-	find:="//files/descendant::*|//Libraries/descendant::*|//menu/descendant::*"
+		find:="//files/descendant::*|//Libraries/descendant::*|//menu/descendant::*"
 	SearchString:=Trim(SearchString," or ")
 	for a,b in searchobj:=StrSplit(Search)
 		b:=b~="(\\|\.|\*|\?|\+|\[|\{|\||\(|\)|\^|\$)"?"\" b:b,stext[b]:=stext[b]=""?1:stext[b]+1
@@ -7653,7 +7653,7 @@ Omni_Search(start=""){
 			CenterSel()
 		}else
 			SelectText(Node)
-		return
+		return 
 	}else if(item.Type="gui"){
 		NewWin.Exit(),tv(cexml.SSN("//*[@id='" item.id "']/@tv").text)
 		Sleep,200
@@ -8308,7 +8308,7 @@ PublishIndent(Code,Indent:="`t",Newline:="`r`n"){
 					break
 				Special:=Current.Pop().Ind,Braces--
 		}}if(First=="{"&&ParentIndent)
-		ParentIndent--
+			ParentIndent--
 		Out.=Newline
 		Loop,% Special?Special-1:Round(Current[Current.MaxIndex()].Ind)+Round(ParentIndent)
 			Out .= Indent
@@ -8901,7 +8901,7 @@ Right_Click_Menu_Editor(menu){
 				before.ParentNode.InsertBefore(current.CloneNode(1),before)
 			Goto,RCME
 		}
-	}
+	}	
 	return
 	RCME:
 	if(A_GuiEvent~="Normal|I"|update){
@@ -9227,7 +9227,7 @@ Scan_Line(text:=""){
 								TVC.Delete(2,tv)
 							RemoveNode.ParentNode.RemoveChild(RemoveNode)
 					}}while(Item:=AddItems.Pop())
-					cexml.Under(Item.Parent,"info",Item.Obj)
+						cexml.Under(Item.Parent,"info",Item.Obj)
 					Continue
 				}Parent:=Current(5) ;might be able to get rid of this one
 				while(RegExMatch(AfterText,d.Regex,Found)){
@@ -10331,7 +10331,7 @@ Show_Class_Methods(object,search:=""){
 }
 Show_Scintilla_Code_In_Line(){
 	Scintilla(),sc:=csc()
-	text:=sc.TextRange(sc.2128(sc.2166(sc.2008)),sc.2136(sc.2166(sc.2008))),pos:=1
+   	text:=sc.TextRange(sc.2128(sc.2166(sc.2008)),sc.2136(sc.2166(sc.2008))),pos:=1
 	while(RegExMatch(text,"O)(\d\d\d\d)",found,pos),pos:=found.pos(1)+found.len(1)){
 		codes:=scintilla.SN("//*[@code='" found.1 "']"),list.="Code : " found.1 " = "
 		while(c:=codes.item(A_Index-1))
@@ -10493,7 +10493,7 @@ Testing(){
 	return m("I'm sleepy.")
 }
 /*
-		put this in there and use it for A_TickCount stuffs.
+	put this in there and use it for A_TickCount stuffs.
 */
 Class TimerClass{ ;Thanks Run1e
 	static Timers:=[]
@@ -10684,7 +10684,7 @@ Toolbar_Editor(control){
 			while(Settings.SSN("//toolbar/bar[@id='" LastID "']/descendant::*[@id='" ++start "']")){
 			}new:=Settings.Under(Settings.SSN("//toolbar/bar[@id='" LastID "']"),"button",{file:"shell32.dll",func:ea.clean,icon:2,id:start,state:4,text:RegExReplace(ea.clean,"_"," "),vis:1}),tb.Add(nea:=XML.EA(new)),tb.AddButton(start),Default("SysTreeView321","Toolbar_Editor"),TV_Modify(A_EventInfo,"Select")
 	}}else if(node:=Settings.SSN("//toolbar/bar[@id='" LastID "']/button[@func='" ea.clean "']"))
-	tb.Delete(XML.EA(node)),node.ParentNode.RemoveChild(node)
+		tb.Delete(XML.EA(node)),node.ParentNode.RemoveChild(node)
 	else if(node:=Settings.SSN("//toolbar/bar[@id='" LastID "']/button[@runfile='" ea.runfile "']"))
 		tb.Delete(XML.EA(node)),node.ParentNode.RemoveChild(node)
 	return
@@ -11125,7 +11125,7 @@ UpPos(NoContext:=0){
 		Loop,% sc.2570
 			total+=Abs(sc.2579(A_Index-1)-sc.2577(A_Index-1))
 		if(Total)
-			Text.=" Total Selected:" total
+			Text.=" Total Selected:" total 
 		Text.=" Selections: " sc.2570
 	}if(v.LineEdited.MinIndex()!=""&&!v.LineEdited.HasKey(Line)&&Line)
 		Scan_Line()
@@ -11173,8 +11173,8 @@ VarBrowser(){
 	static NewWin,treeview
 	if(!debug.VarBrowser){
 		debugwin:=NewWin:=new GUIKeep(98),NewWin.Add("TreeView,w450 h200 gvalue vtreeview AltSubmit hwndtreeview,,wh","ListView,w450 r4 AltSubmit gVBGoto,Stack|File|Line,wy","Text,w200 Section,Debug Controls:,y"
-		,"Button,gRun_Program,&Run,y","Button,x+M gStep_Into,Step &Into,y","Button,x+M gStep_Out,Step &Out,y"
-		,"Button,x+M gStep_Over,Step O&ver,y","Button,x+M gVarBrowserRefresh,R&efresh Variables,y","Button,x+M gStop_Debugger,&Stop,y"),NewWin.show("Variable Browser"),hwnd:=NewWin.XML.SSN("//*/@hwnd").text,debug.VarBrowser:=1
+			,"Button,gRun_Program,&Run,y","Button,x+M gStep_Into,Step &Into,y","Button,x+M gStep_Out,Step &Out,y"
+			,"Button,x+M gStep_Over,Step O&ver,y","Button,x+M gVarBrowserRefresh,R&efresh Variables,y","Button,x+M gStop_Debugger,&Stop,y"),NewWin.show("Variable Browser"),hwnd:=NewWin.XML.SSN("//*/@hwnd").text,debug.VarBrowser:=1
 	}
 	SetTimer,ProcessDebugXML,-100
 	return
@@ -11631,11 +11631,11 @@ Class Version_Tracker{
 		VersionGUI:
 		NewWin:=new GUIKeep("Version"),Version_Tracker.NewWin:=NewWin
 		NewWin.Add("TreeView,w350 h500 vVT gVersionShowVersion vTVVersion AltSubmit,,h"
-		,"Edit,x+M w500 h500 gVerEdit vEdit,,wh")
+			,"Edit,x+M w500 h500 gVerEdit vEdit,,wh")
 		NewWin.Show((Settings.SSN("//github")?"Github ":"")"Version Tracker")
 		NewWin.Hotkeys({Delete:"VarDelete","!a":"VersionAddAction",F1:"VersionCompileCurrent","!Up":"VersionMove"
-		,"!Down":"VersionMove",Enter:"VersionEdit","!n":"NewVersionBranch"
-		,"^Up":"AddNewVersion","^Down":"AddNewVersion"})
+					,"!Down":"VersionMove",Enter:"VersionEdit","!n":"NewVersionBranch"
+					,"^Up":"AddNewVersion","^Down":"AddNewVersion"})
 		if(Select)
 			return Version_Tracker.Select(Select)
 		return Version_Tracker.Populate()
@@ -11789,7 +11789,7 @@ Class Version_Tracker{
 			Actions[ea.Action]:=1,Users[ea.User]:=1,Type[ea.Type]:=1,Issues[ea.Issue]:=1
 		AddWin:=new GUIKeep("AddWin")
 		AddWin.Add("ListView,w300 h200 vType -Multi,Type (Added Removed Changed Etc)","ListView,x+M w300 h200 vAction -Multi,Action (Requested Reported Etc)","ListView,x+M w300 h200 vUser -Multi,User (If Action Is Set)","ListView,x+M w300 h200 vIssue -Multi,Issue #"
-		,"Edit,xm w300 vEdit1","Edit,x+M w300 vEdit2","Edit,x+M w300 vEdit3","Edit,x+M w300 vEdit4","Button,xm gVersionHelp,&Help"),AddWin.Show("Add Action")
+			,"Edit,xm w300 vEdit1","Edit,x+M w300 vEdit2","Edit,x+M w300 vEdit3","Edit,x+M w300 vEdit4","Button,xm gVersionHelp,&Help"),AddWin.Show("Add Action")
 		ControlGetPos,x,y,w,h,SysListView324,% AddWin.ID
 		if(v.Options.Add_Margins_To_Windows){
 			ControlGetPos,x1,,,,SysListView321,% AddWin.ID
