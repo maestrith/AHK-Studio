@@ -115,7 +115,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
 OR PERFORMANCE OF THIS SOFTWARE. 
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), ;auto_version
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.00"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -576,14 +576,14 @@ Check_For_Edited(){
 Check_For_Update(startup:=""){
 	static NewWin,master,Beta,DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/$1/AHK-Studio.ahk",URL:="https://api.github.com/repos/maestrith/AHK-Studio/commits/$1"
 	Run,RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
-	Auto:=Settings.EA("//autoupdate"), Branch:="master"
+	Auto:=Settings.EA("//autoupdate"), Branch:="Beta"
 	if(startup=1){
 		if(v.Options.Auto_Check_For_Update_On_Startup!=1)
 			return
 		if(Auto.Reset>A_Now)
 			return
 	}
-	Version:="1.003.31"
+	Version:="1.005.00"
 	NewWin:=new GUIKeep("CFU"),NewWin.Add("Edit,w400 h400 ReadOnly,No New Version,wh"
 	,"Radio,gSwitchBranch Checked vmaster,Master Branch,y"
 	,"Radio,x+M gSwitchBranch vBeta,Beta Branch,y"
@@ -1757,7 +1757,7 @@ Class PluginClass{
 	}m(Info*){
 		m(Info*)
 	}MoveStudio(){
-		Version:="1.003.31"
+		Version:="1.005.00"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(Info){
@@ -1802,7 +1802,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.003.31"
+		Version:="1.005.00"
 		return version
 	}
 }
@@ -1880,7 +1880,7 @@ class ScanFile{
 		return Top
 	}Scan(Node,Refresh:=0){
 		if(Refresh){
-			All:=SN(Node,"descendant::*")
+			All:=SN(Node,"descendant::info")
 			while(aa:=All.Item[A_Index-1])
 				aa.ParentNode.RemoveChild(aa)
 		}
@@ -2271,9 +2271,9 @@ Class XML{
 				this.XML:=ComObjCreate("MSXML2.DOMDocument"),this.XML.SetProperty("SelectionLanguage","XPath"),this.XML:=this.CreateElement(New,Root)
 			}else
 				New.LoadXML(Info),this.XML:=New
-			this.OriginalText:=Info
 		}else
 			this.XML:=this.CreateElement(New,Root)
+		this.OriginalText:=Info
 		SplitPath,File,,dir
 		if(!FileExist(dir))
 			FileCreateDir,%dir%
@@ -2324,9 +2324,15 @@ Class XML{
 	}Lang(Info){
 		this.XML.SetProperty("SelectionLanguage",(Info=""?"XPath":"XSLPattern"))
 	}ReCreate(XPath,New){
-		Rem:=this.SSN(XPath),Next:=Rem.nextSibling,Rem.ParentNode.RemoveChild(Rem),New:=this.Add(New)
-		if(Next)
-			New.ParentNode.InsertBefore(New,Next)
+		if(IsObject(XPath)){
+			NodeName:=XPath.NodeName,Parent:=XPath.ParentNode,XPath.ParentNode.RemoveChild(XPath),New:=this.XML.Under(Parent,NodeName)
+			if(Next:=XPath.NextSibling)
+				Parent.InsertBefore(New,Next)
+		}else{
+			Rem:=this.SSN(XPath),Next:=Rem.NextSibling,Rem.ParentNode.RemoveChild(Rem),New:=this.Add(New)
+			if(Next)
+				New.ParentNode.InsertBefore(New,Next)
+		}
 		return New
 	}Save(x*){
 		if(x.1=1)
@@ -4192,19 +4198,19 @@ ExecScript(){
 		if(WinExist("ahk_pid" v.exec.ProcessID)){
 			WinGetText,text,% "ahk_pid" v.exec.ProcessID
 			info:=StripError(text,Current(2).text)
-			if(info.line!=""){
-				v.exec.Terminate(),sc:=csc()
+			if(Info.Line!=""){
+				v.exec.Terminate(),sc:=csc(),Line:=
 				if(info.file!=Current(2).file)
 					tv(SSN(cexml.Find(Current(1),"descendant::file/@file",info.file),"@tv").text)
-				sc.2160(sc.2128(info.line),sc.2136(info.line))
+				sc.2160(sc.2128(Info.Line),sc.2136(Info.Line))
 				if(!v.Debug)
 					MainWin.DebugWindow()
-				dd:=v.Debug,dd.2003(dd.2006,(dd.2006?"`n" Text:Text)),sc.2160(sc.2128(line),sc.2136(line)),dd.2025(dd.2006),MarginWidth(dd)
+				dd:=v.Debug,dd.2003(dd.2006,(dd.2006?"`n" Text:Text)),sc.2160(sc.2128(Info.Line),sc.2136(Info.Line)),dd.2025(dd.2006),MarginWidth(dd)
 				return
 	}}}else if(text:=v.exec.StdERR.ReadAll()){
 		if(InStr(text,"cannot be opened"))
 			return m(text,"","If the script file is located in the same directory as the main Project try adding #Include %A_ScriptDir% to the main Project file.")
-		exec.Terminate(),sc:=csc(),info:=StripError(text,"*"),tv(SSN(cexml.Find(Current(1),"descendant::file/@file",info.file),"@tv").text),line:=info.line
+		exec.Terminate(),sc:=csc(),info:=StripError(text,"*"),tv(SSN(cexml.Find(Current(1),"descendant::file/@file",info.file),"@tv").text),line:=Info.Line
 		Sleep,100
 		if(!v.Debug)
 			MainWin.DebugWindow()
@@ -4317,6 +4323,10 @@ Extract(Main){
 			Encoding:=q.Encoding
 	}else
 		Encoding:=q.Encoding,Text:=q.Read()
+	/*
+		if(InStr(File,"About.ahk")||file="D:\AHK\AHK-Studio\Activate.ahk")
+			m("After",fn,Text)
+	*/
 	q.Close(),dir:=Trim(dir,"\")
 	if(nnnn:=cexml.Find("//*/@file",file)){
 		if(SSN(nnnn,"@time"))
@@ -4374,22 +4384,21 @@ Extract(Main){
 				Break
 		}}if(!added&&FileExist(orig))
 		FileList[orig]:={file:orig,include:found.0,inside:file},added:=1
-	}
-	for fn,obj in filelist{
+	}LastFile:=""
+	for fn,obj in FileList{
 		if(InStr(fn,"..")){
 			Loop,Files,%fn%,F
 				obj.file:=A_LoopFileLongPath
-		}
-		if(cexml.Find(Node,"descendant-or-self::file/@file",obj.File))
-			Continue
-		filelist.Delete(fn),file:=obj.file:=Trim(obj.file)
-		if(!cexml.Find(node,"descendant::file/@file",file)){
-			SplitPath,file,filename,dir,Ext,nne
+		}FileList.Delete(fn),file:=obj.file:=Trim(obj.file)
+		if(!cexml.Find(Node,"descendant::file/@file",file)){
+			SplitPath,File,FileName,dir,Ext,nne
 			Language:=LanguageFromFileExt(Ext),obj.ext:=Ext,obj.lang:=Language,new:=cexml.Under(cexml.Find(node,"descendant-or-self::file/@file",obj.inside),"file",obj)
 			for a,b in {file:file,type:"File",filename:filename,dir:dir,nne:nne,github:(MainDir=dir?filename:"lib\" filename),scan:1,lower:Format("{:L}",filename)}
 				new.SetAttribute(a,b)
 			qea:=XML.EA(new)
-		}Goto,ExtractNext
+		}else
+			Continue
+		Goto,ExtractNext
 }}
 FEAdd(value,parent:=0,options:=""){
 	if(v.Options.Hide_File_Extensions){
@@ -4456,7 +4465,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20171122084657,XMLFiles:={menus:[20171203094019,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20171122084657,XMLFiles:={menus:[20171210000133,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20171122084436,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -5375,7 +5384,6 @@ Gui(){
 		if(!Settings.SSN("//theme|//fonts"))
 			DefaultFont(),ConvertTheme()
 	*/
-	Options("Auto_Advance")
 	v.startup:=1,this:=MainWin:=New MainWindowClass(1),ea:=Settings.EA("//theme/descendant::*[@style=32]"),win:=1,Plug()
 	if(!this.Gui.SSN("//control"))
 		Gui,Show,Hide
@@ -5399,9 +5407,7 @@ Gui(){
 	}t(),FEUpdate()
 	if(!Opened)
 		New("","",0),FocusNew:=1
-	Code_Explorer.Refresh_Code_Explorer()
-	FEList:=cexml.SN("//main")
-	Hotkeys(),Index_Lib_Files(),SetTimer("ScanFiles",-400)
+	Code_Explorer.Refresh_Code_Explorer(),FEList:=cexml.SN("//main"),Hotkeys(),Index_Lib_Files(),SetTimer("ScanFiles",-400)
 	if((list:=this.Gui.SN("//win[@win='" win "']/descendant::control")).length){
 		this.Rebuild(list),ea:=this.gui.EA("//*[@type='Tracked Notes']"),this.SetWinPos(ea.hwnd,ea.x,ea.y,ea.w,ea.h,ea),this.Theme(),all:=MainWin.gui.SN("//*[@type='Scintilla' and @file]")
 		while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa){
@@ -6927,7 +6933,7 @@ Notifications(a*){
 		Gui,Settings:ListView,SysListView321
 		next:=LV_GetNext(A_EventInfo-1,"C"),LV_GetText(text,A_EventInfo),text:=RegExReplace(text," ","_")
 		if((v.Options[text]&&next!=A_EventInfo)||(!v.Options[text]&&next=A_EventInfo))
-			Options(text)
+			Options(text),t(Text,"time:1 ")
 		return
 	}code:=NumGet(A_EventInfo,8),Alt:=GetKeyState("Alt","P"),Ctrl:=GetKeyState("Ctrl","P"),Shift:=GetKeyState("Shift","P")
 	if(Code=2010){
@@ -7075,12 +7081,6 @@ Notify(csc*){
 	}else if(Code=2028){
 		if(s.ctrl[Ctrl])
 			sc:=csc({hwnd:hwnd})
-		/*
-			sc.2400()
-		*/
-		/*
-			t("Focus In","Time:1")
-		*/
 		if(sc.sc=MainWin.tnsc.sc)
 			WinSetTitle(1,"Tracked Notes")
 		else
@@ -7094,11 +7094,6 @@ Notify(csc*){
 		TVC.Enable(1)
 		if(CheckLayout())
 			Hotkeys()
-		/*
-			if(Pos:=FocusPos[Ctrl]){
-				sc.2160(Pos.2008,Pos.2009),t(Pos.2008,Pos.2009,"Time:1")
-			}
-		*/
 		return 0
 	}else if(Code=2029){
 		/*
@@ -7822,8 +7817,8 @@ Options(x:=0){
 	static list:={Virtual_Space:[2596,3],End_Document_At_Last_Line:2277,Show_EOL:2356,Show_Caret_Line:2096,Show_Whitespace:2021,Word_Wrap:2268,Hide_Indentation_Guides:2132,Center_Caret:[2403,0x04|0x08],Word_Wrap_Indicators:2460,Hide_Horizontal_Scrollbars:2130,Hide_Vertical_Scrollbars:2280},Disable,options,other
 	if(x="startup"){
 		v.Options:=[]
-		disable:="Center_Caret|Disable_Autosave|Disable_Backup|Disable_Line_Status|Disable_Variable_List|Word_Wrap_Indicators|End_Document_At_Last_Line|Hide_File_Extensions|Hide_Indentation_Guides|Remove_Directory_Slash|Run_As_Admin|Show_Caret_Line|Show_EOL|Show_Type_Prefix|Show_WhiteSpace|Warn_Overwrite_On_Export|Hide_Horizontal_Scrollbars|Hide_Vertical_Scrollbars|Virtual_Space"
-		options:="Add_Margins_To_Windows|Disable_Auto_Advance|Auto_Close_Find|Auto_Expand_Includes|Auto_Indent_Comment_Lines|Auto_Set_Area_On_Quick_Find|Auto_Space_After_Comma|Autocomplete_Enter_Newline|Build_Comment|Center_Caret|Check_For_Edited_Files_On_Focus|Auto_Check_For_Update_On_Startup|Clipboard_History|Copy_Selected_Text_on_Quick_Find|Disable_Auto_Complete|Auto_Complete_In_Quotes|Auto_Complete|Auto_Complete_While_Tips_Are_Visible|Disable_Auto_Delete|Disable_Auto_Indent_For_Non_Ahk_Files|Disable_Auto_Insert_Complete|Disable_Autosave|Disable_Backup|Disable_Compile_AHK|Context_Sensitive_Help|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Disable_Line_Status|Disable_Variable_List|Enable_Close_On_Save|End_Document_At_Last_Line|Full_Auto_Indentation|Full_Backup_All_Files|Full_Tree|Hide_File_Extensions|Hide_Indentation_Guides|Highlight_Current_Area|Includes_In_Place|Manual_Continuation_Line|New_File_Dialog|OSD|Remove_Directory_Slash|Run_As_Admin|Shift_Breakpoint|Show_Caret_Line|Show_EOL|Show_Type_Prefix|Show_WhiteSpace|Small_Icons|Top_Find|Warn_Overwrite_On_Export|Regex|Word_Border|Current_Area|Case_Sensitive|Greed|Multi_Line|Require_Enter_For_Search|Omni_Search_Stats|Verbose_Debug_Window|Focus_Studio_On_Debug_Breakpoint|Select_Current_Debug_Line|Global_Debug_Hotkeys|Smart_Delete|Auto_Variable_Browser|Inline_Brace|New_Include_Add_Space"
+		disable:="Disable_Exemption_Handling|Center_Caret|Disable_Autosave|Disable_Backup|Disable_Line_Status|Disable_Variable_List|Word_Wrap_Indicators|End_Document_At_Last_Line|Hide_File_Extensions|Hide_Indentation_Guides|Remove_Directory_Slash|Run_As_Admin|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Warn_Overwrite_On_Export|Hide_Horizontal_Scrollbars|Hide_Vertical_Scrollbars|Virtual_Space"
+		options:="Add_Margins_To_Windows|Disable_Auto_Advance|Auto_Close_Find|Auto_Expand_Includes|Auto_Indent_Comment_Lines|Auto_Set_Area_On_Quick_Find|Auto_Space_After_Comma|Autocomplete_Enter_Newline|Build_Comment|Center_Caret|Check_For_Edited_Files_On_Focus|Auto_Check_For_Update_On_Startup|Clipboard_History|Copy_Selected_Text_on_Quick_Find|Disable_Auto_Complete|Auto_Complete_In_Quotes|Auto_Complete|Auto_Complete_While_Tips_Are_Visible|Disable_Auto_Delete|Disable_Auto_Indent_For_Non_Ahk_Files|Disable_Auto_Insert_Complete|Disable_Autosave|Disable_Backup|Disable_Compile_AHK|Context_Sensitive_Help|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Disable_Line_Status|Disable_Variable_List|Enable_Close_On_Save|End_Document_At_Last_Line|Full_Auto_Indentation|Full_Backup_All_Files|Full_Tree|Hide_File_Extensions|Hide_Indentation_Guides|Highlight_Current_Area|Includes_In_Place|Manual_Continuation_Line|New_File_Dialog|OSD|Remove_Directory_Slash|Run_As_Admin|Shift_Breakpoint|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Small_Icons|Top_Find|Warn_Overwrite_On_Export|Regex|Word_Border|Current_Area|Case_Sensitive|Greed|Multi_Line|Require_Enter_For_Search|Omni_Search_Stats|Verbose_Debug_Window|Focus_Studio_On_Debug_Breakpoint|Select_Current_Debug_Line|Global_Debug_Hotkeys|Smart_Delete|Auto_Variable_Browser|Inline_Brace|New_Include_Add_Space"
 		other:="Auto_Space_After_Comma|Auto_Space_Before_Comma|Autocomplete_Enter_Newline|Disable_Auto_Delete|Disable_Auto_Insert_Complete|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Enable_Close_On_Save|Full_Tree|Highlight_Current_Area|Manual_Continuation_Line|Small_Icons|Top_Find|Hide_Tray_Icon|Match_Any_Word|Force_UTF-8"
 		special:="Word_Wrap"
 		alloptions.=disable "|" options "|" other "|" special
@@ -8534,8 +8529,8 @@ Redraw(){
 	WinSet,Redraw,,% MainWin.ID
 }
 Refresh_Code_Explorer(){
-	FileName:=Current(3).File,Save(),Scanfile.Once:=0,TVC.Delete(1,0),TVC.Delete(2,0),TVC.Add(2,"Please Wait..."),TVC.Add(1,"Please Wait...")
-	All:=cexml.SN("//*[@sc]"),sc:=csc(),sc.2358(0,0),sc.2181(0,"Reloading, Please Wait...")
+	FileName:=Current(3).File,Save(),Scanfile.Once:=0,TVC.Delete(1,0),TVC.Delete(2,0),TVC.Add(2,"Please Wait..."),TVC.Add(1,"Please Wait..."),sc:=csc(),sc.2358(0,0),sc.2181(0,"Reloading, Please Wait...")
+	All:=cexml.SN("//*[@sc]")
 	while(aa:=All.item[A_Index-1],ea:=XML.EA(aa))
 		sc.2377(0,ea.sc)
 	cexml.XML.LoadXML("<cexml/>"),GetID(1),Omni_Search_Class.Menus(),All:=Settings.SN("//open/file")
@@ -8548,7 +8543,13 @@ Refresh_Code_Explorer(){
 Refresh_Current_File(){
 	Refresh(cexml.SN("//*[@id='" Current(3).ID "']"))
 }Refresh_Current_Project(){
-	Save(),GetPos(),sc:=csc(),sc.2358(0,0),sc.2181(0,"Reloading, Please Wait..."),File:=Current(3).File,Main:=Current(2).File,Rem:=Current(1),Rem.ParentNode.RemoveChild(Rem),Open(Main),tv(SSN(cexml.Find(cexml.Find("//main/@file",Main),"descendant::file/@file",File),"@tv").text)
+	Save(),GetPos(),sc:=csc(),sc.2358(0,0),sc.2181(0,"Reloading, Please Wait...")
+	File:=Current(3).File
+	Main:=Current(2).File
+	Rem:=Current(1)
+	Rem.ParentNode.RemoveChild(Rem)
+	Open(Main)
+	tv(SSN(cexml.Find(cexml.Find("//main/@file",Main),"descendant::file/@file",File),"@tv").text)
 }Refresh(All){
 	while(aa:=All.item[A_Index-1],ea:=XML.EA(aa)){
 		WinSetTitle(1,"Scanning: " ea.FileName)
@@ -8973,10 +8974,11 @@ Run(){
 	main:=SSN(Current(1),"@file").text
 	if(FileExist(A_ScriptDir "\AutoHotkey.exe"))
 		run:=Chr(34) A_ScriptDir "\AutoHotkey.exe" Chr(34) " " Chr(34) file Chr(34)
-	else
+	else{
 		run:=FileExist(dir "\AutoHotkey.exe")?Chr(34) dir "\AutoHotkey.exe" Chr(34) " " Chr(34) file Chr(34):Chr(34) file Chr(34)
+	}
 	admin:=v.options.Run_As_Admin?"*RunAs ":""
-	if(!v.Options.Run_As_Admin)
+	if(!v.Options.Run_As_Admin&&!v.Options.Disable_Exemption_Handling)
 		ExecScript()
 	else
 		Run,%admin%%run%,%dir%,,pid
@@ -10482,6 +10484,34 @@ Tab_Width(){
 Test_Plugin(){
 	Exit(1)
 }
+Testing(){
+	
+	
+	return new Version_Tracker()
+	if(A_UserName!="maest")
+		return m("Testing")
+	return m("I'm sleepy.")
+}
+/*
+		put this in there and use it for A_TickCount stuffs.
+*/
+Class TimerClass{ ;Thanks Run1e
+	static Timers:=[]
+	Init(){
+		DllCall("QueryPerformanceFrequency", "Int64P", F)
+		this.Freq := F
+	}
+	Current(){
+		DllCall("QueryPerformanceCounter","Int64P",Timer)
+		return Timer
+	}
+	Start(ID){
+		this.Timers[ID]:=this.Current()
+	}
+	Stop(ID){
+		return ((this.Current()-this.Timers[ID])/this.Freq),this.Timers.Delete(ID)
+	}
+}
 Theme(){
 	new SettingsClass("Theme")
 }
@@ -10794,7 +10824,7 @@ class Tracked_Notes{
 }
 tv(tv*){
 	/*
-			static fn,noredraw,tvbak,historysave
+		static fn,noredraw,tvbak,historysave
 	*/
 	static lasttv,LastExt:=[],Last
 	Default("SysTreeView321",1),ctv:=TV_GetSelection()
