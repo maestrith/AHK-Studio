@@ -12,8 +12,11 @@ v.WordsObj:=[],v.Tick:=A_TickCount,new ScanFile(),History("Startup")
 if(!settings[]){
 	Run,lib\Settings.xml
 	m("Oh boy...check the settings file to see what's up.")
-}v.LineEdited:=[],v.LinesEdited:=[],v.RunObject,ComObjError(0),new Keywords(),FileCheck(%True%),Options("startup"),Menus:=new XML("menus","Lib\Menus.xml"),Gui(),DefaultRCM(),CheckLayout()
-Allowed(),SetTimer("RemoveXMLBackups",-1000),CheckOpen()
+}v.LineEdited:=[],v.LinesEdited:=[],v.RunObject,ComObjError(0),new Keywords(),FileCheck(%True%)
+Options("startup"),Menus:=new XML("menus","Lib\Menus.xml"),Gui(),DefaultRCM(),CheckLayout(),Allowed(),SetTimer("RemoveXMLBackups",-1000),CheckOpen()
+SetTimer("SplashDestroy",-1000)
+return
+SplashDestroy:
 Gui,Splash:Destroy
 return
 CheckOpen(){
@@ -2406,15 +2409,17 @@ SSN(Node,XPath){
 SN(Node,XPath){
 	return Node.SelectNodes(XPath)
 }
-Clean(clean,tab=""){
+Clean(Clean,tab=""){
+	if(tab=1)
+		return RegExReplace(Clean,"[^\w ]")
 	if(tab=2)
-		return RegExReplace(clean,"_"," ")
-	if(tab)
-		return RegExReplace(clean,"[^\w ]")
-	clean:=RegExReplace(RegExReplace(clean,"&")," ","_")
-	if(InStr(clean,"`t"))
-		clean:=SubStr(clean,1,InStr(clean,"`t")-1)
-	return clean
+		return RegExReplace(Clean,"_"," ")
+	if(Tab=3)
+		return RegExReplace(RegExReplace(Clean,"\s","-"),"[^a-zA-Z-_0-9]")
+	Clean:=RegExReplace(RegExReplace(Clean,"&")," ","_")
+	if(InStr(Clean,"`t"))
+		Clean:=SubStr(Clean,1,InStr(Clean,"`t")-1)
+	return Clean
 }
 Clear_Line_Status(){
 	LineStatus.Clear()
@@ -5382,7 +5387,7 @@ Gui(){
 	WinSet,TransColor,0x000001,ahk_id%Splash%
 	Gui,1:Default
 	if(!this.Gui.SSN("//control"))
-		Gui,Show,Hide
+		Gui,1:Show,Hide
 	if(!Settings.SSN("//autoadd")){
 		layout:=DllCall("GetKeyboardLayout",int,0),AltGR:=0
 		if(layout&0xff!=9)
@@ -8516,6 +8521,7 @@ Refresh_Current_File(){
 	Main:=Current(2).File
 	Rem:=Current(1)
 	Rem.ParentNode.RemoveChild(Rem)
+	FEUpdate(1),Code_Explorer.Refresh_Code_Explorer()
 	Open(Main)
 	tv(SSN(cexml.Find(cexml.Find("//main/@file",Main),"descendant::file/@file",File),"@tv").text)
 }Refresh(All){
@@ -11584,6 +11590,11 @@ Class Version_Tracker{
 	}GetNode(VersionNode:=""){
 		Version_Tracker.NewWin.Default("VT"),Node:=VVersion.SSN("//*[@tv='" TV_GetSelection() "']" (VersionNode=1?"ancestor-or-self::version":VersionNode?VersionNode:""))
 		return Node
+	}GetRoot(){
+		xx:=VVersion
+		if(!Root:=Version_Tracker.GetNode("ancestor::info"))
+			Root:=xx.Find("//info/@file",Current(2).File)
+		return Root
 	}OtherThings(){
 		static
 		xx:=VVersion
@@ -11673,7 +11684,24 @@ Class Version_Tracker{
 				return
 			}else if(SSN(Node,"ancestor-or-self::Github")){
 				Select:=Node,Key:=Node.NodeName,Node:=Settings.SSN("//github")
-				if(Value:=InputBox(NewWin.ID,"Enter A New Value","Enter A New Value For: " Format("{:T}",Key),SSN(Node,"@" Key).text))
+				if(Key="Repo"){
+					Root:=Version_Tracker.GetRoot()
+					if(Value:=InputBox(NewWin.ID,"Enter A New Value","Enter A New Value For: Repository (Most Non-Word Characters will be replaced)",SSN(Root,"@repo").text)){
+						Value:=Clean(Value,3)
+						;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						;~ !!!!!!!!!!!!!!! MAKE SURE THAT !!!!!!!!!!!!!!!!
+						;~ !!!!!!!!!!!!!!!    you edit    !!!!!!!!!!!!!!!!
+						;~ !!!!!!!!!!!!!!!    the name    !!!!!!!!!!!!!!!!
+						;~ !!!!!!!!!!!!!!!    of this     !!!!!!!!!!!!!!!!
+						;~ !!!!!!!!!!!!!!!      REPO      !!!!!!!!!!!!!!!!
+						;~ !!!!!!!!!!!!!!!   On GitHub    !!!!!!!!!!!!!!!!
+						;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						Root.SetAttribute("repo",Value),Version_Tracker.Select(Select)
+						if(m("Refresh This Repo?","btn:ync","def:2")="Yes"){
+							;heree
+						}
+						return
+				}}else if(Value:=InputBox(NewWin.ID,"Enter A New Value","Enter A New Value For: " Format("{:T}",Key),SSN(Node,"@" Key).text))
 					Node.SetAttribute(Key,Value)
 				Version_Tracker.Select(Select)
 				return
@@ -11841,7 +11869,7 @@ Class Version_Tracker{
 			Node:=Version_Tracker.GetNode()
 			if(SSN(Node,"@id")){
 				Repo:=Version_Tracker.GetNode("ancestor::info/@repo").text
-				Res:=m("Tags on GitHub can not be deleted through the API","","","Select:","-Yes to remove the tag from your local version after doing Cancel","-No to go to GitHub and delete the tag","-Cancel to cancel","btn:ync","def:2")
+				Res:=m("Tags on GitHub can not be deleted through the API","","","Select:","-Yes to remove the tag from your local version after doing No","-No to go to GitHub and delete the tag","-Cancel to cancel","btn:ync","def:2")
 				if(Res="No")
 					Run,% "https://github.com/" Settings.SSN("//github/@owner").text "/" Repo "/releases/tag/" SSN(Node,"@name").text
 				else if(Res="Yes"){
@@ -11850,6 +11878,8 @@ Class Version_Tracker{
 				}
 				return
 			}if(Node.NodeName="Branch"){
+				if(SSN(Node,"@name").text="master")
+					return m("Can not delete the master.")
 				if(Repo:=Version_Tracker.GetNode("ancestor::info/@repo").text){
 					Res:=m("This Can Not Be Undone!","This will only remove the local branch.","","To remove the cached branch from GitHub you will need to press No and it will take you to Github.com and you can manage your Branches there.","btn:ync","def:3")
 					if(Res="No")
@@ -11894,8 +11924,10 @@ Class Version_Tracker{
 			aa.SetAttribute("tv",TV_Add((aa.NodeName~="i)\b(branch|version)\b"?ea.Name:aa.NodeName="info"?(ea.Type?ea.Type (ea.Action?" - " ea.Action " by " ea.User:"")(ea.Issue?" " ea.Issue:""):"(Enter to change this)"):aa.xml),SSN(aa.ParentNode,"@tv").text))
 		}for a,b in Settings.EA("//github"){
 			if(A_Index=1)
-				VVersion.Add("Github").SetAttribute("tv",TVRoot:=TV_Add("Github"))
+				VVersion.Add("Github").SetAttribute("tv",TVRoot:=TV_Add("Github")),AddRepoName:=1
 			VVersion.Add("Github/" a).SetAttribute("tv",TV_Add(Format("{:T}",a) ": " (a!="token"?b:"Entered"),TVRoot,"Vis"))
+		}if(AddRepoName){
+			VVersion.Add("Github/Repo").SetAttribute("tv",TV_Add("Repository: " SSN(Root,"@repo").text,TVRoot,"Vis"))
 		}Instructions:=TV_Add("Instructions")
 		for a,b in ["Delete will delete a version","Alt+A Will Add An Action","Enter Will Edit Whatever Is Selected","F1 Will Compile The Current Version/Branch","Alt+N To Create A New Branch"]
 			TV_Add(b,Instructions,"Vis")
