@@ -8254,15 +8254,15 @@ Publish(Return="",Bcranch:="",Version:=""){
 		;~ !!!!!!!!!!!!!!!!!!!!!!                 -Copy To Clipboard                 !!!!!!!!!!!!!!!!!!!!!!!
 		;~ !!!!!!!!!!!!!!!!!!!!!! Also have the function pass it's name to return to !!!!!!!!!!!!!!!!!!!!!!!
 		;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		if(!Version:=VVersion.SSN("//*[@select]/@name").text)
-			return m("Version not set for this Project.","Ask maestrith nicely to add in the version system")
+		if(!Version:=SSN(VVersion.Find("//info/@file",Current(2).File),"descendant::*[@select]/ancestor-or-self::version/@name").text)
+			return m("Version not set for this Project."),new Version_Tracker()
 		Change:=Settings.SSN("//auto_version").Text?Settings.SSN("//auto_version").Text:"Version:=""" Version """"
 		Publish:=RegExReplace(Publish,"\x3Bauto_version",RegExReplace(Change,"\Q$v\E",Version))
 	}if(RegExMatch(Publish,"\x3Bauto_branch")){
 		if(VVersion.SSN("//*[@select]/ancestor::info/@file").text!=Current(2).File)
-			return m("Branch not set for this Project.","Ask maestrith nicely to add in the version system")
-		if(!Branch:=VVersion.SSN("//*[@select]/ancestor::branch/@name").text)
-			return m("Branch not set for this Project.","Ask maestrith nicely to add in the version system")
+			return m("Branch not set for this Project.")
+		if(!Branch:=SSN(VVersion.Find("//info/@file",Current(2).File),"descendant::*[@select]/ancestor::branch/@name").text)
+			return m("Branch not set for this Project."),new Version_Tracker()
 		Change:=(AutoBranch:=Settings.SSN("//auto_branch").Text)?AutoBranch:"Branch:=""" Branch """"
 		Publish:=RegExReplace(Publish,"\x3Bauto_branch",(Change:=RegExReplace(Change,"\Q$v\E",Branch)))
 	}
