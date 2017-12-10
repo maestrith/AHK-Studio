@@ -13,8 +13,15 @@ if(!settings[]){
 	Run,lib\Settings.xml
 	m("Oh boy...check the settings file to see what's up.")
 }v.LineEdited:=[],v.LinesEdited:=[],v.RunObject,ComObjError(0),new Keywords(),FileCheck(%True%),Options("startup"),Menus:=new XML("menus","Lib\Menus.xml"),Gui(),DefaultRCM(),CheckLayout()
-Allowed(),SetTimer("RemoveXMLBackups",-1000)
+Allowed(),SetTimer("RemoveXMLBackups",-1000),CheckOpen()
 return
+CheckOpen(){
+	All:=Settings.SN("//open/*")
+	while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
+		if(!cexml.Find("//main/@file",aa.Text))
+			Open(aa.Text,1)
+	}
+}
 /*
 	if((Folder:=Settings.SSN("//DefaultFolder")).text)
 		Folder.SetAttribute("folder",Folder.text),Folder.text:=""
@@ -34,7 +41,7 @@ return
 */
 return
 /*
- 	Add in #Include brings up a list of items in your library
+	Add in #Include brings up a list of items in your library
 	Debugging Joe Glines{
 		have the option to have the Variable browser dockable to the side of debug window.
 	}
@@ -64,92 +71,9 @@ return
 #IfWinActive
 #IfWinActive,AHK Studio
 #Include *i HotStrings.ahk
-About(){
-	about=
-(
-If you wish to use this software, great.
 
-If you wish to use this as a part of your project I require payment.
 
-If you wish to donate to help me with my living expenses please click the donate button at the bottom
-
-I want to thank all of the people who helped this project become a reality.
-
-Chris Mallet - Creator of the original AutoHotkey
-	All of the people who helped him.
-Lexikos - For all of the amazing work on AHK 1.1
-	All of the people who helped him.
-
-Help from friends who have given me great ideas and bug reports
-	Uberi,Coco,Tidbit,GeekDude,joedf,budRich,tomoe_uehara,hoppfrosch,Run1e and everyone who I have not listed I am thankful.
-	
-All of the editors that I have used for giving me ideas for this project
-
-Special thanks to number1nub and Run1e for helping with the beta testing for the latest version
-
-License for Scintilla and SciTE
-
-Copyright 1998-2002 by Neil Hodgson <neilh@scintilla.org>
-
-All Rights Reserved 
-
-Permission to use, copy, modify, and distribute this software and its 
-documentation for any purpose and without fee is hereby granted, 
-provided that the above copyright notice appear in all copies and that 
-both that copyright notice and this permission notice appear in 
-supporting documentation. 
-
-NEIL HODGSON DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS 
-SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY 
-AND FITNESS, IN NO EVENT SHALL NEIL HODGSON BE LIABLE FOR ANY 
-SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES 
-WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, 
-WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER 
-TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE 
-OR PERFORMANCE OF THIS SOFTWARE. 
-)
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.00"
-	Gui,Margin,0,0
-	sc:=new s(11,{pos:"x0 y0 w700 h500"}),csc({hwnd:sc})
-	Gui,Add,Button,gdonate,Donate
-	Gui,Add,Button,x+M gsite,Website
-	Gui,Show,w700 h550,AHK Studio Help Version: %version%
-	sc.2181(0,about),sc.2025(0),sc.2268(1)
-	return
-	11Close:
-	11GuiClose:
-	11GuiEscape:
-	hwnd({rem:11})
-	return
-	site:
-	Run,https://github.com/maestrith/AHK-Studio
-	return
-}
-Testing(){
-	if(A_UserName!="maest")
-		return m("Testing")
-	return m("I'm sleepy.")
-}
-/*
-	put this in there and use it for A_TickCount stuffs.
-*/
-Class TimerClass{ ;Thanks Run1e
-	static Timers:=[]
-	Init(){
-		DllCall("QueryPerformanceFrequency", "Int64P", F)
-		this.Freq := F
-	}
-	Current(){
-		DllCall("QueryPerformanceCounter","Int64P",Timer)
-		return Timer
-	}
-	Start(ID){
-		this.Timers[ID]:=this.Current()
-	}
-	Stop(ID){
-		return ((this.Current()-this.Timers[ID])/this.Freq),this.Timers.Delete(ID)
-	}
-}
+#Include About.ahk
 Activate(a,b,c,d){
 	if(A_Gui=1&&a=1){
 		if(a&&v.Options.Check_For_Edited_Files_On_Focus=1)
@@ -223,7 +147,7 @@ AddInclude(FileName:="",text:="",pos:="",Show:=1){
 			else
 				TV:=SSN(Node,"@tv").text
 	}}else
-		TV:=SSN(current,"@tv").text
+	TV:=SSN(current,"@tv").text
 	new:=cexml.Under(current,"file",{id:GetID(),encoding:"UTF-8",file:FileName,include:"#Include " rel,inside:SSN(current,"@file").text,dir:dir,FileName:fn,github:fn,nne:nne,time:time,encoding:"UTF-8",scan:1,ext:Ext,tv:TVC.Add(1,fn,TV,"Sort"),lang:LanguageFromFileExt(Ext)})
 	add:=Current(7).AppendChild(new.CloneNode(1))
 	add.SetAttribute("type","File")
@@ -277,7 +201,7 @@ Auto_Insert(){
 	for a,b in ["EnteredKey","AddedKey"]{
 		ea:=SettingsDefault(b,1)
 		if(A_Index=1)
-			ControlFocus,,% "ahk_id" ea.hwnd 
+			ControlFocus,,% "ahk_id" ea.hwnd
 		GuiControl,Settings:,% ea.hwnd
 	}BraceSetup()
 	return
@@ -340,7 +264,7 @@ Backspace(sub:=1){
 			Send,{%Send%}
 			return Edited(),UpPos(),Update({sc:sc.2357})
 	}}if(sc.2102)
-		sc.2101
+	sc.2101
 	if(sc.2102){
 		if(sub)
 			Send,{Backspace}
@@ -583,7 +507,7 @@ Check_For_Edited(){
 				sc.2377(ea.sc),aa.RemoveAttribute("sc")
 			Update({File:ea.File,Text:Text}),SetPos(),sc.Enable(1)
 	}}if(List)
-		SetStatus("Files Updated:" Trim(List,","),3)
+	SetStatus("Files Updated:" Trim(List,","),3)
 	return 1
 	SetScrollPos2:
 	if(ea.Scroll!="")
@@ -594,20 +518,20 @@ Check_For_Edited(){
 Check_For_Update(startup:=""){
 	static NewWin,master,Beta,DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/$1/AHK-Studio.ahk",URL:="https://api.github.com/repos/maestrith/AHK-Studio/commits/$1"
 	Run,RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
-	Auto:=Settings.EA("//autoupdate"), Branch:="Beta"
+	Auto:=Settings.EA("//autoupdate"), Branch:="master"
 	if(startup=1){
 		if(v.Options.Auto_Check_For_Update_On_Startup!=1)
 			return
 		if(Auto.Reset>A_Now)
 			return
 	}
-	Version:="1.005.00"
+	Version:="1.003.31"
 	NewWin:=new GUIKeep("CFU"),NewWin.Add("Edit,w400 h400 ReadOnly,No New Version,wh"
-								  ,"Radio,gSwitchBranch Checked vmaster,Master Branch,y"
-								  ,"Radio,x+M gSwitchBranch vBeta,Beta Branch,y"
-								  ,"Button,xm gautoupdate,&Update,y"
-								  ,"Button,x+5 gcurrentinfo,&Current ChangeLog,y"
-								  ,"Button,x+5 gextrainfo,ChangeLog &History,y"),NewWin.Show("AHK Studio Version: " Version)
+	,"Radio,gSwitchBranch Checked vmaster,Master Branch,y"
+	,"Radio,x+M gSwitchBranch vBeta,Beta Branch,y"
+	,"Button,xm gautoupdate,&Update,y"
+	,"Button,x+5 gcurrentinfo,&Current ChangeLog,y"
+	,"Button,x+5 gextrainfo,ChangeLog &History,y"),NewWin.Show("AHK Studio Version: " Version)
 	if(!Branch)
 		Branch:="Beta"
 	GuiControl,,%Branch%,1
@@ -1128,7 +1052,7 @@ Class LineStatus{
 		if(mask&2**20)
 			sc.2044(line,20)
 		if(mask&2**21)
-			sc.2044(line,21)		
+			sc.2044(line,21)
 	}StoreEdited(start,end,add){
 		sc:=csc()
 		Loop,% (end+1)-start{
@@ -1278,7 +1202,7 @@ Class MainWindowClass{
 					if(!Supress)
 						debug.Send("stop")
 			}}else if(oea.type="Tracked Notes")
-				this.SetWinPos(this.tnsc.sc,0,0,0,0,ea),this.SetWinPos(this.tn,0,0,0,0,ea),Redraw()
+			this.SetWinPos(this.tnsc.sc,0,0,0,0,ea),this.SetWinPos(this.tn,0,0,0,0,ea),Redraw()
 			else
 				DllCall("DestroyWindow",uptr,oea.hwnd)
 			if(oea.type="Tracked Notes")
@@ -1775,7 +1699,7 @@ Class PluginClass{
 	}m(Info*){
 		m(Info*)
 	}MoveStudio(){
-		Version:="1.005.00"
+		Version:="1.003.31"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(Info){
@@ -1820,7 +1744,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.005.00"
+		Version:="1.003.31"
 		return version
 	}
 }
@@ -1897,6 +1821,11 @@ class ScanFile{
 		}LastPos:=0
 		return Top
 	}Scan(Node,Refresh:=0){
+		if(Refresh){
+			All:=SN(Node,"descendant::*")
+			while(aa:=All.Item[A_Index-1])
+				aa.ParentNode.RemoveChild(aa)
+		}
 		this.ScanText(Node)
 	}ScanText(Node){
 		static ScanTextXML:=new XML("ScanFile")
@@ -1960,7 +1889,7 @@ class ScanFile{
 											if(VVV:=Found[NNN]){
 												Atts[Format("{:L}",NNN)]:=VVV
 									}}}for q,r in {type:a,upper:Upper(Found.Text)}
-										Atts[q]:=r
+									Atts[q]:=r
 									Spam:=cexml.Under(Node,"info",Atts),No.AppendChild(Spam.CloneNode(0))
 						}}}LastPos:=Pos
 		}}}}
@@ -2215,7 +2144,7 @@ Class Toolbar{
 			else if(button.runfile)
 				Run,% button.runfile
 			return 0
-		} 
+		}
 		if(code=-708) ;toolbar change
 			this.ideal()
 		if(code=-720){
@@ -2609,6 +2538,8 @@ Combine(Atts,Found){
 }
 Command_Help(){
 	static stuff,hwnd,ifurl:={between:"commands/IfBetween.htm",in:"commands/IfIn.htm",contains:"commands/IfIn.htm",is:"commands/IfIs.htm"}
+	if((Language:=Current(3).Lang)!="ahk")
+		return m("Sorry but I can only help with AutoHotkey at the moment")
 	RegRead,outdir,HKEY_LOCAL_MACHINE,SOFTWARE\AutoHotkey,InstallDir
 	if(!outdir)
 		SplitPath,A_AhkPath,,outdir
@@ -2618,17 +2549,36 @@ Command_Help(){
 		found1:=word
 	if(!found1)
 		RegExMatch(line,"[\s+]?(\w+)",found)
-	if(RegExMatch(line,"O)^;*\s*;*#(\w*)",found))
+	xx:=Keywords.GetXML(Language)
+	if(Text:=xx.SSN("//*[contains(translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'" Format("{:L}",Found1) "')]").text){
+		RegExMatch(Text,"Oi)(" Found1 ")",Find)
+		if(Find.1)
+			FoundWord:=Find.1
+	}if(RegExMatch(line,"O)^;*\s*;*#(\w*)",found))
 		OpenHelpFile("mk:@MSITStore:C:\Program%20Files\AutoHotkey\AutoHotkey.chm::/docs/commands/_" found.1 ".htm")
-	else if(RegExMatch(Keywords.GetXML(Current(3).Lang).SSN("//Commands/Commands").text,(CurrentWord?"\b(" found1 "|" CurrentWord ")\b":"\b(" found1 ")\b"),ff)){
-		found1:=ff1
+	else if(RegExMatch(CurrentWord,"Oi)A_(\w*)",found))
+		OpenHelpFile(url "Variables.htm#" found.1)
+	else if(found1~="i)\b(loop|gui)\b")
+		OpenHelpFile(url "commands/" found1 ".htm")
+	else if(FoundWord){
+		found1:=FoundWord
 		if(RegExMatch(found1,"i)Set(Caps|Num|Scroll)LockState"))
 			url.="commands/SetNumScrollCapsLockState.htm"
-		else if(found1~="(FileExist|GetKeyState|InStr|SubStr|StrLen|StrSplit|WinActive|WinExist|Asc|Chr|GetKeyName|IsByRef|IsFunc|IsLabel|IsObject|NumGet|NumPut|StrGet|StrPut|RegisterCallback|Trim|Abs|Ceil|Exp|Floor|Log|Ln|Mod|Round|Sqrt|Sin|ASin|ACos|ATan)"){
+		else if(found1~="i)\b(FileExist|GetKeyState|InStr|SubStr|StrLen|StrSplit|WinActive|WinExist|Asc|Chr|GetKeyName|IsByRef|IsFunc|IsLabel|IsObject|NumGet|NumPut|StrGet|StrPut|RegisterCallback|Trim|Abs|Ceil|Exp|Floor|Log|Ln|Mod|Round|Sqrt|Sin|ASin|ACos|ATan)\b"){
 			url.="Functions.htm#" found1
 		}else if(found1~="i)^if"){
-			if(found1~="i)\bIfEqual|IfNotEqual|IfLess|IfLessOrEqual|IfGreater|IfGreaterOrEqual\b")
+			if(found1~="i)\b(IfEqual|IfNotEqual|IfLess|IfLessOrEqual|IfGreater|IfGreaterOrEqual)\b")
 				url.="commands/IfEqual.htm"
+			else if(Found1~="i)\b(IfExist|IfNotExist)\b")
+				url.="commands/IfExist.htm"
+			else if(Found1~="i)\b(IfInString|IfNotInString)\b")
+				url.="commands/IfInString.htm"
+			else if(Found1~="\b(IfWinActive|IfWinNotActive)\b")
+				url.="commands/WinActive.htm"
+			else if(Found1~="\b(IfWinExist|IfWinNotExist)\b")
+				url.="commands/WinExist.htm"
+			else if(Found1~="i)\b(IfMsgBox)\b")
+				url.="commands/" Found1 ".htm"
 			else
 				url.=ifurl[info.last]?ifurl[info.last]:"commands/IfExpression.htm"
 		}else{
@@ -2643,10 +2593,7 @@ Command_Help(){
 					url.="Functions.htm#" found1
 			}
 		}OpenHelpFile(url)
-	}else if(RegExMatch(CurrentWord,"Oi)A_(\w*)",found))
-		OpenHelpFile(url "Variables.htm#" found.1)
-	else if(found1~="i)\b(loop|gui)\b")
-		OpenHelpFile(url "commands/" found1 ".htm")
+	}
 	else{
 		if(!Settings.SSN("//HelpNag").text)
 			if(m("The word: " Chr(34) found1 Chr(34) " was found and was not handled by AHK Studio.","If this is a command please let maestrith know.","btn:ync","Opening the help file","","Show again?")="No")
@@ -2987,7 +2934,7 @@ ContextMenu(){
 			if(v.Options[Clean(ea.name)])
 				Menu,% parent.NodeName="main"?"RCM":pea.name,Check,% ea.name
 	}}for a,b in track
-		Menu,%b%,Add,%a%,:%a%
+	Menu,%b%,Add,%a%,:%a%
 	Menu,RCM,Add
 	if(oea.type="Toolbar")
 		Menu,RCM,Add,Edit Toolbar,EditToolbar
@@ -3193,8 +3140,8 @@ ConvertTheme(){
 		}else if(aa.NodeName="default"){
 			for a in ea
 				Orig.RemoveAttribute(a)
-			for a,b in XML.EA(SSN(Orig,"//*[@style=5]"))
-				aa.SetAttribute(a,b)
+				for a,b in XML.EA(SSN(Orig,"//*[@style=5]"))
+					aa.SetAttribute(a,b)
 		}else if(NodeName:=Controls[ea.Control]){
 			New:=Settings.Add("theme/" NodeName)
 			for a,b in ea
@@ -3434,7 +3381,7 @@ DefaultFont(Return:=0){
 	/*
 		umm not every language has hex
 	*/
-	/* 
+	/*
 		MAKE SURE YOU CHECK ALL OF THE @CODES TO MAKE SURE THAT THEY DON'T
 		BELONG IN THE MAIN THEME BECAUSE I'D GUESS THAT THEY ALL DO!!!!!!!!!
 		ALSO WHEN PACKAGING UP THEMES MAKE SURE TO INCLUDE ALL (OR A LOT)
@@ -3453,11 +3400,11 @@ DefaultFont(Return:=0){
 }
 DefaultRCM(){
 	static all:={Scintilla:"Undo,Redo,Copy,Cut,Paste,Select All,Close,Delete,Open,Open Folder,Omni Search"
-		    ,"Tracked Notes":"Track File,Backup Notes,Contract All,Switch Orientation,Remove Tracked File"
-		    ,"Project Explorer":"New,Close,Open,Rename Current Include,Remove Include,Copy File Path,Copy Folder Path,Open Folder,Hide/Show Icons,File Icon,Folder Icon,Hide/Show File Extensions,Refresh Project Explorer"
-		    ,"Code Explorer":"Refresh Code Explorer,Collapse All"
-		    ,Toolbar:"Small Icons"
-		    ,Debug:"Close Debug Window"}
+	,"Tracked Notes":"Track File,Backup Notes,Contract All,Switch Orientation,Remove Tracked File"
+	,"Project Explorer":"New,Close,Open,Rename Current Include,Remove Include,Copy File Path,Copy Folder Path,Open Folder,Hide/Show Icons,File Icon,Folder Icon,Hide/Show File Extensions,Refresh Project Explorer"
+	,"Code Explorer":"Refresh Code Explorer,Collapse All"
+	,Toolbar:"Small Icons"
+	,Debug:"Close Debug Window"}
 	for a,b in ["Scintilla","Code Explorer","Project Explorer","Tracked Notes","Toolbar","Debug"]{
 		if(!main:=RCMXML.SSN("//main[@name='" b "']"))
 			main:=RCMXML.Add("main",{name:b},,1)
@@ -3662,7 +3609,7 @@ Display(PopulateVarBrowser:=0){
 							top.SetAttribute(a,b)
 						top.SetAttribute("updated",1)
 				}}if(!ea.children)
-					top.text:=debug.Decode(pp.text)
+				top.text:=debug.Decode(pp.text)
 			}
 		}
 	}
@@ -3724,18 +3671,23 @@ DLG_FileSave(HWND:=0,DefaultFilter=1,DialogTitle="Select file to open",DefaultFi
 	Address:=&OFName
 	SplitPath,DefaultFile,FileName,Initial,Ext,NNE
 	if((InStr(NNE,"Untitled")||!FileExist(DefaultFile))&&!ForceFile){
-		if(!DefaultFile:=Settings.SSN("//SaveAs").text){
-			Initial:=A_ScriptDir "\Projects"
-		}else
-			SplitPath,DefaultFile,FileName,Initial,Ext,NNE
-	}if(FileExist(Initial)!="D")
+		;#[This needs re-visitied.]
+		/*
+			if(!DefaultFile:=Settings.SSN("//SaveAs").text){
+				Initial:=A_ScriptDir "\Projects"
+			}else
+		*/
+		SplitPath,DefaultFile,FileName,Initial,Ext,NNE
+	}
+	if(FileExist(Initial)!="D")
 		FileCreateDir,%Initial%
-	InitialDD:=Initial
+	;here later
 	Initial:=DefaultFile?DefaultFile:Initial "\"
 	VarSetCapacity(lpstrInitialDir,0XFFFF,0)
-	StrPut(InitialDD,&lpstrInitialDir,"UTF-8")
-	if(FileExist(DefaultFile)!="D")
+	StrPut(Initial,&lpstrInitialDir,"UTF-8")
+	if(FileExist(DefaultFile)!="D"){
 		VarSetCapacity(lpstrFile,0XFF,0),StrPut(FileName,&lpstrFile,"UTF-8")
+	}
 	for a,b in [76,HWND,0,&lpstrFilter,&lpstrCustomFilter,255,defaultFilter,&lpstrFile,0xFFFF,&lpstrFileTitle,0xFFFF,&lpstrInitialDir,&lpstrTitle,Flags,0,&lpstrDefExt]
 		Address:=NumPut(b,Address+0,"UInt")
 	if(!DllCall("comdlg32\GetSaveFileNameA","Uint",&OFName))
@@ -4238,6 +4190,9 @@ Exit(ExitApp:=0){
 	RCMXML.Save(1),MainWin.Gui.SSN("//*[@hwnd='" csc().sc "']").SetAttribute("last",1),MainWin.Gui.Save(1),menus.Save(1),GetPos(),positions.Save(1),TNotes.GetPos(),TNotes.XML.Save(1)
 	if(debug.socket)
 		debug.Send("stop")
+	All:=cexml.SN("//*[@file='']")
+	while(aa:=All.Item[A_Index-1])
+		aa.ParentNode.RemoveChild(aa)
 	Top:=Settings.ReCreate("//open","open")
 	all:=cexml.SN("//files/main")
 	while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
@@ -4282,8 +4237,8 @@ Extract(Main){
 	static FileCount:=0,TotalTick:=0 ;,ADODB:=ComObjCreate("ADODB.Stream")
 	FileList:=[],Pool:=[]
 	/*
-		if(!main:=cexml.Find("//main/@file",MainFile))
-			main:=cexml.Under(cexml.SSN("//*"),"main",{file:MainFile,id:(inside:=id:=GetID())})
+			if(!main:=cexml.Find("//main/@file",MainFile))
+				main:=cexml.Under(cexml.SSN("//*"),"main",{file:MainFile,id:(inside:=id:=GetID())})
 	*/
 	all:=SN(Main,"file")
 	while(aa:=all.item[A_Index-1])
@@ -4360,13 +4315,16 @@ Extract(Main){
 				FileList[a "\" info]:={file:a "\" info,include:found.0,inside:file},added:=1
 				Break
 		}}if(!added&&FileExist(orig))
-			FileList[orig]:={file:orig,include:found.0,inside:file},added:=1
+		FileList[orig]:={file:orig,include:found.0,inside:file},added:=1
 	}
 	for fn,obj in filelist{
 		if(InStr(fn,"..")){
 			Loop,Files,%fn%,F
 				obj.file:=A_LoopFileLongPath
-		}filelist.Delete(fn),file:=obj.file:=Trim(obj.file)
+		}
+		if(cexml.Find(Node,"descendant-or-self::file/@file",obj.File))
+			Continue
+		filelist.Delete(fn),file:=obj.file:=Trim(obj.file)
 		if(!cexml.Find(node,"descendant::file/@file",file)){
 			SplitPath,file,filename,dir,Ext,nne
 			Language:=LanguageFromFileExt(Ext),obj.ext:=Ext,obj.lang:=Language,new:=cexml.Under(cexml.Find(node,"descendant-or-self::file/@file",obj.inside),"file",obj)
@@ -4978,7 +4936,7 @@ FixLines(line,total,base:=""){
 					Break
 				special:=current.pop().ind,braces--
 		}}if(first="{"&&aa)
-			aa--
+		aa--
 		tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind,tind:=current[current.MaxIndex()].ind+1?current[current.MaxIndex()].ind:0,tind+=aa?aa*indentation:0,tind:=tind+1?tind:0,tind:=special?special-indentation:tind,tind+=Abs(specialbrace*indentation)
 		if(!(ss&&v.Options.Manual_Continuation_Line)&&sc.2127(a-1)!=tind+(base*ind))
 			sc.2126(a-1,tind+base*ind)
@@ -5068,42 +5026,38 @@ FormatTime(format,time){
 Forum(){
 	Run,https://autohotkey.com/boards/viewtopic.php?f=6&t=300&hilit=ahk+studio
 }
-Full_Backup(remove:=0){
-	Save(),sc:=csc()
+Full_Backup(Remove:=0){
 	SplashTextOn,300,100,Backing up...,Please wait, This may take some time if it has been a while since your last full backup.
-	cur:=Current(2).file
-	SplitPath,cur,,dir
-	if(remove){
-		Loop,%dir%\AHK-Studio Backup\*.*,2
+	Save(),sc:=csc(),Current:=Current(2).File,Dir:=SplitPath(Current).Dir
+	if(Remove){
+		Loop,%Dir%\AHK-Studio Backup\*.*,2
 			FileRemoveDir,%A_LoopFileFullPath%,1
-	}Backup:=dir "\AHK-Studio Backup\Full Backup " A_Now
+	}Backup:=Dir "\AHK-Studio Backup\Full Backup " A_Now
 	FileCreateDir,%Backup%
 	if(v.Options.Full_Backup_All_Files){
-		loop,%dir%\*.*,0,1
+		Loop,%Dir%\*.*,0,1
 		{
-			if(InStr(a_loopfilename,".exe")||InStr(A_LoopFileName,".dll")||InStr(A_LoopFileDir,dir "\AHK-Studio Backup"))
+			if(InStr(A_LoopFileName,".exe")||InStr(A_LoopFileName,".dll")||InStr(A_LoopFileDir,Dir "\AHK-Studio Backup"))
 				Continue
-			file:=Trim(RegExReplace(A_LoopFileFullPath,"i)\Q" dir "\E"),"\")
-			SplitPath,file,filename,ddir
-			if(!FileExist(Backup "\" ddir))
-				FileCreateDir,% Backup "\" ddir
-			ndir:=ddir?Backup "\" ddir:Backup
-			FileCopy,%A_LoopFileFullPath%,%ndir%\%filename%
+			File:=Trim(RegExReplace(A_LoopFileFullPath,"i)\Q" Dir "\E"),"\")
+			SplitPath,File,Filename,DDir
+			if(!FileExist(Backup "\" DDir))
+				FileCreateDir,% Backup "\" DDir
+			NDir:=DDir?Backup "\" DDir:Backup
+			FileCopy,%A_LoopFileFullPath%,%NDir%\%Filename%
 		}
 	}else{
-		allfiles:=SN(Current(1),"descendant::file/@file")
-		while(af:=allcexml.item[A_Index-1]){
-			file:=Trim(RegExReplace(af.text,"i)\Q" dir "\E"),"\")
-			SplitPath,file,filename,ddir
-			if(!FileExist(Backup "\" ddir))
-				FileCreateDir,% Backup "\" ddir
-			ndir:=ddir?Backup "\" ddir:Backup
-			FileCopy,% af.text,%ndir%\%filename%
-		}
-	}
-	Loop,%dir%\AHK-Studio Backup\*.*,2
-		if(!RegExMatch(A_LoopFileFullPath,"Full Backup \d{14}"))
-			FileRemoveDir,%A_LoopFileFullPath%,1
+		AllFiles:=SN(Current(1),"descendant::file/@file")
+		while(af:=AllFiles.Item[A_Index-1]){
+			File:=Trim(RegExReplace(af.Text,"i)\Q" Dir "\E"),"\")
+			SplitPath,File,Filename,DDir
+			if(!FileExist(Backup "\" DDir))
+				FileCreateDir,% Backup "\" DDir
+			NDir:=DDir?Backup "\" DDir:Backup
+			FileCopy,% af.Text,%NDir%\%Filename%
+	}}Loop,%Dir%\AHK-Studio Backup\*.*,2
+	if(!RegExMatch(A_LoopFileFullPath,"Full Backup \d{14}"))
+		FileRemoveDir,%A_LoopFileFullPath%,1
 	SplashTextOff
 }
 GetWebBrowser(){
@@ -5401,7 +5355,7 @@ Gui(){
 				else
 					SetPos({scroll:pea.scroll,start:pea.start,end:pea.end,sc:ea.hwnd})
 		}}if(last:=this.Gui.SSN("//*[@last]/@hwnd").text)
-			s.ctrl[last].2400
+		s.ctrl[last].2400
 		SetTimer,RefreshTV,-400
 		ObjRegisterActive(PluginClass)
 		SetTimer,SetTN,-600
@@ -5511,9 +5465,9 @@ class GUIKeep{
 				count:=this.classcount[class]:=Round(this.classcount[class])+1
 				RegExMatch(i.2,"U)\bg(.*)\b",label)
 				if(node)
-					new:=this.XML.Under(node,"control",{hwnd:hwnd,class:class count,label:label1})
+					new:=this.XML.Under(node,"control",{hwnd:hwnd,class:Class Count,type:RegExReplace(Class,"i)(Sys|\d)"),label:label1})
 				else
-					new:=this.XML.Add("control",{hwnd:hwnd,class:class count,label:label1},,1)
+					new:=this.XML.Add("control",{hwnd:hwnd,class:class count,label:label1,type:RegExReplace(Class,"i)(Sys|\d)")},,1)
 				if(RegExMatch(i.2,"U)\bv(.*)\b",var))
 					this.var[var1]:=1,new.SetAttribute("var",var1)
 			}this.con[hwnd]:=[]
@@ -5531,10 +5485,38 @@ class GUIKeep{
 			SetTimer,%label%,-1
 		}else
 			this.SavePos(),this.Exit()
+	}Default(VarName){
+		Node:=this.XML.SSN("//*[@var='" VarName "']"),Type:=SSN(Node,"@type").text
+		Gui,% this.Win ":Default"
+		if(Type~="i)\b(TreeView|ListView)\b")
+			Gui,% this.Win ":" Type,% SSN(Node,"@hwnd").text
+	}Disable(Label,Disable:=1){
+		ea:=XML.EA(Node:=this.XML.SSN("//*[@label='" Label "']"))
+		if(Disable)
+			GuiControl,% this.Win ":Disable",% ea.HWND
+		else
+			GuiControl,% this.Win ":Enable",% ea.HWND
 	}DropFiles(filelist,ctrl,x,y){
 		df:="DropFiles"
 		if(IsFunc(df))
 			%df%(filelist,ctrl,x,y)
+	}Enable(Label,Enable:=1){
+		ea:=XML.EA(Node:=this.XML.SSN("//*[@label='" Label "']"))
+		if(Enable)
+			GuiControl,% this.Win ":+g" Label,% ea.HWND
+		else
+			GuiControl,% this.Win ":+g",% ea.HWND
+	}Escape(){
+		this:=GUIKeep.table[A_Gui]
+		KeyWait,Escape,U
+		if(IsFunc(func:=A_Gui "Escape"))
+			return %func%()
+		else if(IsLabel(label:=A_Gui "Escape"))
+			SetTimer,%label%,-1
+		else
+			this.SavePos(),this.Exit()
+	}Exit(){
+		this.SavePos(),hwnd({rem:this.win})
 	}GetDisplays(){
 		SysGet,mon,MonitorCount
 		Displays:=GUIKeep.Displays
@@ -5558,17 +5540,11 @@ class GUIKeep{
 				d~="w|h"?(obj[d]:=%d%-w%d%):d~="x|y"?(obj[d]:=%d%-(d="y"?wh+this.Caption+this.Border:ww+this.Border))
 		}
 		Gui,% this.win ":+MinSize"
-	}Escape(){
-		this:=GUIKeep.table[A_Gui]
-		KeyWait,Escape,U
-		if(IsFunc(func:=A_Gui "Escape"))
-			return %func%()
-		else if(IsLabel(label:=A_Gui "Escape"))
-			SetTimer,%label%,-1
-		else
-			this.SavePos(),this.Exit()
-	}Exit(){
-		this.SavePos(),hwnd({rem:this.win})
+	}Hotkeys(Info){
+		Hotkey,IfWinActive,% this.ID
+		for a,b in Info
+			Try
+				Hotkey,%a%,%b%,On
 	}SavePos(){
 		if(!top:=Settings.SSN("//gui/position[@window='" this.win "']"))
 			top:=Settings.Add("gui/position",,,1),top.SetAttribute("window",this.win)
@@ -5604,14 +5580,16 @@ class GUIKeep{
 			Gui,% this.win ":Show",% position " " pos " " NA,% this.name
 			if(sel)
 				SendMessage,0xB1,%sel%,%sel%,Edit1,% this.id
-			this.Size()
 			if(this.resize!=1)
 				Gui,% this.win ":Show",AutoSize NA
+			this.Size()
 			if(!NA)
 				WinActivate,% this.id
 		}return
 	}Size(){
-		this:=GUIKeep.table[A_Gui],pos:=this.WinPos()
+		if(!this.Gui)
+			this:=GUIKeep.table[A_Gui]
+		pos:=this.WinPos()
 		for a,b in this.gui
 			for c,d in b
 				GuiControl,% this.win ":MoveDraw",%a%,% c (c~="y|h"?pos.h:pos.w)+d
@@ -5696,7 +5674,7 @@ Hotkeys(win:=1,keys:=""){
 		}
 		for a,b in {Delete:"Delete",Backspace:"Backspace","~Escape":"Escape","^a":"SelectAll","^v":"Paste",WheelLeft:"ScrollWheel",WheelRight:"ScrollWheel","~Ctrl":"ToggleDuplicate"}{ ;,Hotkeys(1,Enter)
 			Try
-			Hotkey,%a%,%b%,On
+				Hotkey,%a%,%b%,On
 	}}else{
 		for a,b in keys{
 			Try{
@@ -5710,7 +5688,7 @@ Hotkeys(win:=1,keys:=""){
 	for a,b in ["^R","^E"]{
 		if(!menus.SSN("//*[@hotkey='" b "']"))
 			Try
-		Hotkey,%b%,DeadEnd,On
+				Hotkey,%b%,DeadEnd,On
 	}
 	Hotkey,RButton,RButton,On
 	Hotkey,IfWinActive
@@ -5783,7 +5761,9 @@ Create_Include_From_Selection(){
 	text:=sc.GetSelText(),RegExMatch(text,"^(\w+)",Include)
 	if(Include1="Class")
 		RegExMatch(Text,"^(\w+\s+\w+)",Include)
-	Filename:=SelectFile(RegExReplace(Include1,"_"," ") "." Current(3).Ext,"New Include Filename",Current(3).Ext)
+	MainFile:=Current(2).File
+	SplitPath,MainFile,,Dir
+	Filename:=SelectFile(Dir "\" RegExReplace(Include1,"_"," ") "." Current(3).Ext,"New Include Filename",Current(3).Ext)
 	if(FileExist(Filename))
 		return m("Include name already exists. Please choose another")
 	if(cexml.Find(Current(1),"//@file",Filename))
@@ -6156,7 +6136,7 @@ MarginWidth(sc=""){
 }
 Menu_Help(){
 	static help,NewWin
-	help:=new XML("help","lib\Help Menu.xml"),current:=new XML("current"),current.XML.LoadXML(x.get("menus"))
+	help:=new XML("help","lib\Help Menu.xml"),CurrentMenu:=new XML("current"),CurrentMenu.XML.LoadXML(x.get("menus"))
 	NewWin:=new GUIKeep("Menu_Help"),NewWin.Add("TreeView,w300 h300 gMHSelect,,h","Edit,x+M w300 h300,,wh","Button,xm gUpdateHelp,Update Help File,y")
 	if(!FileExist("lib\Help Menu.xml"))
 		Gosub,UpdateHelp
@@ -6496,7 +6476,7 @@ Monitors(){
 	Coords:=[]
 	Loop,%Count%{
 		SysGet,Monitor,Monitor,%A_Index%
-				;Total.="Monitor " A_Index " = " MonitorLeft "`n" MonitorTop "`n" MonitorRight "`n" MonitorBottom "`n`n"
+		;Total.="Monitor " A_Index " = " MonitorLeft "`n" MonitorTop "`n" MonitorRight "`n" MonitorBottom "`n`n"
 		for c,d in {Left:MonitorLeft,Right:MonitorRight,Top:MonitorTop,Bottom:MonitorBottom}
 			Coords[c,d]:=1
 	}
@@ -6697,9 +6677,9 @@ NewIndent(indentwidth:=""){
 		newpos:=sc.2128(line)+posinline,newpos:=newpos>sc.2128(line)?newpos:sc.2128(line),sc.2025(newpos)
 		/*
 			;if cursor position gets really messed up.
-				if(sc.2129(sc.2008)){
-					Send,{Left}{Right}
-				}
+			if(sc.2129(sc.2008)){
+				Send,{Left}{Right}
+			}
 		*/
 	}else
 		sc.2160(sc.2167(startline),sc.2136(endline))
@@ -6783,7 +6763,7 @@ Notifications(a*){
 	}if(A_GuiControl="ComboBox"){
 		ControlGetText,item,,% "ahk_id" Controls.ComboBox
 		this.Default("MenuTV"),TV_Modify(SettingsClass.MenuSearch[item],"Select Vis Focus")
-		return 
+		return
 	}if(A_GuiControl="Icon"){
 		SettingsClass.Default("MenuTV"),node:=menus.SSN("//*[@tv='" TV_GetSelection() "']")
 		if(node.NodeName="separator")
@@ -7370,7 +7350,7 @@ Notify(csc*){
 						if(Add="(")
 							SetTimer("AutoParen",-40)
 				}}else
-					SetTimer("AutoMenu",-50)
+				SetTimer("AutoMenu",-50)
 		}}
 	}for a,sc in Edited
 		Update({sc:sc.2357}),Edited()
@@ -7488,7 +7468,7 @@ Omni_Search(start=""){
 			if(Count)
 				SearchString.="@type='" b.Type "' or ",PreFixList.Push(b.Type)
 	}}else
-		find:="//files/descendant::*|//Libraries/descendant::*|//menu/descendant::*"
+	find:="//files/descendant::*|//Libraries/descendant::*|//menu/descendant::*"
 	SearchString:=Trim(SearchString," or ")
 	for a,b in searchobj:=StrSplit(Search)
 		b:=b~="(\\|\.|\*|\?|\+|\[|\{|\||\(|\)|\^|\$)"?"\" b:b,stext[b]:=stext[b]=""?1:stext[b]+1
@@ -7620,7 +7600,7 @@ Omni_Search(start=""){
 			CenterSel()
 		}else
 			SelectText(Node)
-		return 
+		return
 	}else if(item.Type="gui"){
 		NewWin.Exit(),tv(cexml.SSN("//*[@id='" item.id "']/@tv").text)
 		Sleep,200
@@ -7671,7 +7651,7 @@ Open_Folder(){
 	}
 	Run,%dir%
 }
-Open(FileList="",show="",Redraw:=1){
+Open(FileList="",Show="",Redraw:=1){
 	static root,top
 	for a,b in [19,14,3,11]{
 		if(hwnd(b)){
@@ -7731,7 +7711,10 @@ Open(FileList="",show="",Redraw:=1){
 			Gosub,addfile
 		}
 		SetTimer,ScanFiles,-1000
-		return SSN(cexml.Find("//main/@file",StrSplit(FileList,"`n").1),"descendant::file/@tv").text,PERefresh(),v.TNGui.Populate(),Settings.Add("open/file",,FileName,1)
+		tv:=SSN(cexml.Find("//main/@file",StrSplit(FileList,"`n").1),"descendant::file/@tv").text,PERefresh(),v.TNGui.Populate(),Settings.Add("open/file",,FileName,1)
+		if(Show)
+			tv(tv)
+		return tv
 	}
 	return root
 	AutoExpand:
@@ -7925,7 +7908,7 @@ PERefresh(){
 }
 Personal_Variable_List(){
 	static
-	NewWin:=new GUIKeep(6),NewWin.Add("ListView,w200 h400,Variables,wh","Edit,w200 vvariable,,yw","Button,gaddvar Default,Add,y","Button,x+10 gvdelete,Delete Selected,y")
+	NewWin:=new GUIKeep(6),NewWin.Add("ListView,w200 h400,Variables,wh","Edit,w200 vvariable,,yw","Button,gaddvar Default,&Add,y","Button,x+10 gvdelete,&Delete Selected,y")
 	NewWin.Show("Variables",1),vars:=Settings.SN("//Variables/*")
 	ControlFocus,Edit1,% hwnd([6])
 	while(vv:=vars.item(A_Index-1))
@@ -7934,9 +7917,9 @@ Personal_Variable_List(){
 	return
 	vdelete:
 	while(LV_GetNext()){
-		LV_GetText(string,LV_GetNext()),rem:=Settings.SSN("//Variable[text()='" string "']")
-		rem.ParentNode.RemoveChild(rem),LV_Delete(LV_GetNext())
-	}
+		LV_GetText(String,LV_GetNext()),Rem:=Settings.SSN("//Variable[text()='" String "']")
+		Rem.ParentNode.RemoveChild(Rem),LV_Delete(LV_GetNext())
+	}GuiControl,6:,Edit1,%String%
 	return
 	addvar:
 	if(!variable:=NewWin[].variable)
@@ -7948,7 +7931,7 @@ Personal_Variable_List(){
 	return
 	6Close:
 	6Escape:
-	Keywords.RefreshPersonal(),NewWin.SavePos(),hwnd({rem:6})
+	Keywords.RefreshPersonal(),NewWin.SavePos(),hwnd({Rem:6})
 	return
 }
 Plug(refresh:=0){
@@ -8170,7 +8153,7 @@ Add_Selected_To_Project_Specific_AutoComplete(){
 		lastpos:=pos
 	}m("Added:",SubStr(list,1,300)(StrLen(list)>300?"...":""),"To " Current(2).file)
 }
-Publish(Return="",Branch:="",Version:=""){
+Publish(Return="",Bcranch:="",Version:=""){
 	static Init
 	sc:=csc(),Text:=Update("get").1,Save(),MainFile:=Current(2).file,Publish:=Update({Get:MainFile}),includes:=SN(Current(1),"descendant::*/@include/..")
 	while(ii:=Includes.item[A_Index-1])
@@ -8272,7 +8255,7 @@ PublishIndent(Code,Indent:="`t",Newline:="`r`n"){
 					break
 				Special:=Current.Pop().Ind,Braces--
 		}}if(First=="{"&&ParentIndent)
-			ParentIndent--
+		ParentIndent--
 		Out.=Newline
 		Loop,% Special?Special-1:Round(Current[Current.MaxIndex()].Ind)+Round(ParentIndent)
 			Out .= Indent
@@ -8505,14 +8488,16 @@ Refresh_Code_Explorer(){
 	Refresh_Code_Explorer()
 }
 Refresh_Current_File(){
-	return m("Coming Soon (If not soon ask Maestrith nicely.)")
 	Refresh(cexml.SN("//*[@id='" Current(3).ID "']"))
 }Refresh_Current_Project(){
-	Refresh(cexml.SN("//*[@id='" Current(2).ID "']/descendant::*"))
+	Save(),GetPos(),sc:=csc(),sc.2358(0,0),sc.2181(0,"Reloading, Please Wait..."),File:=Current(3).File,Main:=Current(2).File,Rem:=Current(1),Rem.ParentNode.RemoveChild(Rem),Open(Main),tv(SSN(cexml.Find(cexml.Find("//main/@file",Main),"descendant::file/@file",File),"@tv").text)
 }Refresh(All){
-	while(aa:=All.item[A_Index-1],ea:=XML.EA(aa))
-		WinSetTitle(1,"Scanning: " ea.FileName),Extract(GetMainNode(ea.File))
+	while(aa:=All.item[A_Index-1],ea:=XML.EA(aa)){
+		WinSetTitle(1,"Scanning: " ea.FileName)
+		ScanFile.Scan(aa,1)
+	}
 	Code_Explorer.Refresh_Code_Explorer(),WinSetTitle()
+	return
 }
 Refresh_Plugins(){
 	Plug(1)
@@ -8857,7 +8842,7 @@ Right_Click_Menu_Editor(menu){
 				before.ParentNode.InsertBefore(current.CloneNode(1),before)
 			Goto,RCME
 		}
-	}	
+	}
 	return
 	RCME:
 	if(A_GuiEvent~="Normal|I"|update){
@@ -9182,7 +9167,7 @@ Scan_Line(text:=""){
 								TVC.Delete(2,tv)
 							RemoveNode.ParentNode.RemoveChild(RemoveNode)
 					}}while(Item:=AddItems.Pop())
-						cexml.Under(Item.Parent,"info",Item.Obj)
+					cexml.Under(Item.Parent,"info",Item.Obj)
 					Continue
 				}Parent:=Current(5) ;might be able to get rid of this one
 				while(RegExMatch(AfterText,d.Regex,Found)){
@@ -9426,7 +9411,10 @@ SelectFile(FileName:="",Title:="New File",Ext:="",Options:="S16",Force:=0){
 		Folder:=SSN(Node,"@folder").text
 	else
 		Folder:=SSN(Top,"@folder").text
-	Dir:=Trim(Dir "\" Folder,"\"),FileName:=Dir "\" BackupFileName
+	Dir:=Trim(Dir "\" Folder,"\")
+	/*
+		FileName:=Dir "\" BackupFileName
+	*/
 	if(!FileExist(Dir))
 		FileCreateDir,%Dir%
 	FileName:=DLG_FileSave(hwnd(1),1,Title,FileName,,Force)
@@ -10283,7 +10271,7 @@ Show_Class_Methods(object,search:=""){
 }
 Show_Scintilla_Code_In_Line(){
 	Scintilla(),sc:=csc()
-   	text:=sc.TextRange(sc.2128(sc.2166(sc.2008)),sc.2136(sc.2166(sc.2008))),pos:=1
+	text:=sc.TextRange(sc.2128(sc.2166(sc.2008)),sc.2136(sc.2166(sc.2008))),pos:=1
 	while(RegExMatch(text,"O)(\d\d\d\d)",found,pos),pos:=found.pos(1)+found.len(1)){
 		codes:=scintilla.SN("//*[@code='" found.1 "']"),list.="Code : " found.1 " = "
 		while(c:=codes.item(A_Index-1))
@@ -10608,7 +10596,7 @@ Toolbar_Editor(control){
 			while(Settings.SSN("//toolbar/bar[@id='" LastID "']/descendant::*[@id='" ++start "']")){
 			}new:=Settings.Under(Settings.SSN("//toolbar/bar[@id='" LastID "']"),"button",{file:"shell32.dll",func:ea.clean,icon:2,id:start,state:4,text:RegExReplace(ea.clean,"_"," "),vis:1}),tb.Add(nea:=XML.EA(new)),tb.AddButton(start),Default("SysTreeView321","Toolbar_Editor"),TV_Modify(A_EventInfo,"Select")
 	}}else if(node:=Settings.SSN("//toolbar/bar[@id='" LastID "']/button[@func='" ea.clean "']"))
-		tb.Delete(XML.EA(node)),node.ParentNode.RemoveChild(node)
+	tb.Delete(XML.EA(node)),node.ParentNode.RemoveChild(node)
 	else if(node:=Settings.SSN("//toolbar/bar[@id='" LastID "']/button[@runfile='" ea.runfile "']"))
 		tb.Delete(XML.EA(node)),node.ParentNode.RemoveChild(node)
 	return
@@ -10748,7 +10736,7 @@ class Tracked_Notes{
 }
 tv(tv*){
 	/*
-		static fn,noredraw,tvbak,historysave
+			static fn,noredraw,tvbak,historysave
 	*/
 	static lasttv,LastExt:=[],Last
 	Default("SysTreeView321",1),ctv:=TV_GetSelection()
@@ -11049,7 +11037,7 @@ UpPos(NoContext:=0){
 		Loop,% sc.2570
 			total+=Abs(sc.2579(A_Index-1)-sc.2577(A_Index-1))
 		if(Total)
-			Text.=" Total Selected:" total 
+			Text.=" Total Selected:" total
 		Text.=" Selections: " sc.2570
 	}if(v.LineEdited.MinIndex()!=""&&!v.LineEdited.HasKey(Line)&&Line)
 		Scan_Line()
@@ -11097,8 +11085,8 @@ VarBrowser(){
 	static NewWin,treeview
 	if(!debug.VarBrowser){
 		debugwin:=NewWin:=new GUIKeep(98),NewWin.Add("TreeView,w450 h200 gvalue vtreeview AltSubmit hwndtreeview,,wh","ListView,w450 r4 AltSubmit gVBGoto,Stack|File|Line,wy","Text,w200 Section,Debug Controls:,y"
-			,"Button,gRun_Program,&Run,y","Button,x+M gStep_Into,Step &Into,y","Button,x+M gStep_Out,Step &Out,y"
-			,"Button,x+M gStep_Over,Step O&ver,y","Button,x+M gVarBrowserRefresh,R&efresh Variables,y","Button,x+M gStop_Debugger,&Stop,y"),NewWin.show("Variable Browser"),hwnd:=NewWin.XML.SSN("//*/@hwnd").text,debug.VarBrowser:=1
+		,"Button,gRun_Program,&Run,y","Button,x+M gStep_Into,Step &Into,y","Button,x+M gStep_Out,Step &Out,y"
+		,"Button,x+M gStep_Over,Step O&ver,y","Button,x+M gVarBrowserRefresh,R&efresh Variables,y","Button,x+M gStop_Debugger,&Stop,y"),NewWin.show("Variable Browser"),hwnd:=NewWin.XML.SSN("//*/@hwnd").text,debug.VarBrowser:=1
 	}
 	SetTimer,ProcessDebugXML,-100
 	return
@@ -11348,10 +11336,14 @@ Allowed(){
 }
 Create_Comment(){
 	static
+	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!         Have Delete          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Be Replace Selected Instead  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	if(!CommentChar:=Settings.SSN("//comment").text)
 		CommentChar:=KeyWords.GetXML((Lang:=Current(3).Lang)).SSN("//Comments/@Single").text
 	NewWin:=new GuiKeep("Create_Comment"),sc:=csc(),IndentWidth:=Settings.Get("//tab",5)
-	NewWin.Add("Text,,Comment","Edit,w500 h200 vComment -Wrap","Text,,Comment Width","Edit,w500 vWidth,100","Text,,Fill Character","Edit,w500 vFill,-","Button,gCreateComment,Create C&omment","Button,x+M gDeleteSelectedComment,&Delete Selected"),NewWin.Show("Create Comment")
+	NewWin.Add("Text,,Comment","Edit,w500 h200 vComment -Wrap","Text,,Comment Width","Edit,w500 vWidth,100","Text,,Fill Character","Edit,w500 vFill,-","Button,gCreateComment,Create C&omment","Button,x+M gDeleteSelectedComment,&Replace Selected Comment"),NewWin.Show("Create Comment")
 	for a,b in Obj:=Settings.EA("//Create_Comment")
 		NewWin.SetValue(a,b)
 	if(Text:=sc.GetSelText()){
@@ -11360,14 +11352,12 @@ Create_Comment(){
 			if(NewLine:=Trim(b))
 				AddText.=NewLine "`r`n"
 		NewWin.SetValue("Comment",Trim(AddText,"`r`n"))
-	}
+	}else
+		GuiControl,Create_Comment:Hide,% NewWin.XML.SSN("//*[@label='DeleteSelectedComment']/@hwnd").text
 	return
 	DeleteSelectedComment:
 	if(sc.2008!=sc.2009)
 		sc.2326()
-	else
-		m("Nothing is selected")
-	return
 	CreateComment:
 	Values:=NewWin[],Comment:=Values.Comment,Fill:=Values.Fill,Indent:=sc.2127(sc.2166(sc.2008)),Width:=Values.Width,AddTabs:=Floor(Indent/IndentWidth)
 	if(!Comment){
@@ -11419,6 +11409,8 @@ Create_Comment(){
 			Total.="`t"
 		sc.2003(sc.2008,Total),sc.2025(sc.2008+StrPut(Total,"UTF-8")-1)
 	}
+	if(A_ThisLabel="DeleteSelectedComment")
+		NewWin.Close()
 	return
 	Create_CommentClose:
 	Create_CommentEscape:
@@ -11428,6 +11420,414 @@ Create_Comment(){
 			Node.SetAttribute(a,b)
 	NewWin.Exit()
 	return
+}
+Class Version_Tracker{
+	__New(){
+		if(!IsObject(VVersion))
+			VVersion:=new XML("versions",(FileExist("lib\Github.xml")?"lib\Github.xml":"lib\Versions.xml"))
+		xx:=VVersion
+		if((All:=xx.SN("//version[text()]")).Length)
+			return this.ConvertStyle()
+		this.OtherThings()
+	}ConvertStyle(){
+		static
+		xx:=VVersion
+		All:=xx.SN("//version[text()]"),Headings:=[],Users:=[]
+		while(aa:=All.Item[A_Index-1]){
+			if(InStr(aa.Text,"`n"))
+				aa.Text:=RegExReplace(aa.Text,"\R",Chr(127))
+			for a,Text in StrSplit(aa.Text,Chr(127)){
+				Pos:=LastPos:=1
+				while(RegExMatch(Text,"Oim`n)^\s*(?<Text>(\w|[^\x00-\x7F])+):(.*)$",Found),Pos:=Found.Pos("Text")+Found.Len("Text")){
+					if(Pos=LastPos),LastPos:=Pos
+						Break
+					RegExMatch(Found.0,"Oi)by(.*)",User)
+					Headings[Found.Text]:=1
+					if(UserName:=Trim(RegExReplace(User.1,"(\s*#.*)")))
+						Users[UserName]:=1
+			}}
+		}
+		ListCon:=new GUIKeep("ListCon")
+		ListCon.Add("Text,,Press:`nDelete to remove an item`nEnter to edit an item","ListView,w300 h500 vSysListView321,Headings","ListView,x+M w300 h500 vSysListView322,Users","Button,xm gSaveVersionHeaders,&Save Information")
+		ListCon.Show("Confirm Headings And Users")
+		Hotkey,IfWinActive,% ListCon.ID
+		for a,b in {Delete:"PreVersionDelete",Enter:"PreVersionChange"}
+			Hotkey,%a%,%b%
+		Gui,ListCon:ListView,SysListView321
+		for a in Headings
+			LV_Add("",a)
+		LV_Modify(1,"Select Vis Focus")
+		Gui,ListCon:ListView,SysListView322
+		for a in Users
+			LV_Add("",a)
+		LV_Modify(1,"Select Vis Focus")
+		return
+		PreVersionChange:
+		ControlGetFocus,Focus,% ListCon.ID
+		ListCon.Default(Focus)
+		if(Next:=LV_GetNext()){
+			LV_GetText(ItemText,Next),Value:=InputBox(ListCon.HWND,"Replace","Replace this text",ItemText)
+			if(Value)
+				LV_Modify(Next,"",Value)
+		}else
+			return m("Select an item to change")
+		return
+		PreVersionDelete:
+		ControlGetFocus,Focus,% ListCon.ID
+		Gui,ListCon:Default
+		Gui,ListCon:ListView,%Focus%
+		if(Next:=LV_GetNext())
+			LV_Delete(Next)
+		return
+		SaveVersionHeaders:
+		xx:=VVersion
+		Default("SysListView321","ListCon"),Next:=1,HeadingsList:=""
+		Loop,% LV_GetCount()
+		{
+			LV_GetText(Text,A_Index)
+			if(!Text)
+				Break
+			HeadingsList.=Text "|"
+		}Find:=Trim(HeadingsList,"|")
+		Default("SysListView322","ListCon"),Next:=1
+		Loop,% LV_GetCount()
+		{
+			LV_GetText(Text,A_Index)
+			if(!Text)
+				Break
+		}Find:=Trim(HeadingsList,"|"),All:=xx.SN("//version[text()]")
+		while(aa:=All.Item[A_Index-1]){
+			OXML:=aa.xml,Text:=aa.Text,LastPos:=Pos:=1,Fixed:=0,aa.Text:=""
+			while(RegExMatch(Text,"OUi)\b(" Find ")\b:\s*(.*)(\b(" Find ")\b:|$)",Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
+				Fixed:=1
+				if(Pos=LastPos),LastPos:=Pos
+					Break
+				User:="",NewText:="",CheckUser:=StrSplit(Found.2,Chr(127)).1
+				if(InStr(CheckUser,"#")){
+					if(RegExMatch(CheckUser,"OUi)^((.*)by(.*)(#\d+)\b)",User))
+						NewText:=Trim(RegExReplace(Found.2,"\Q" User.0 "\E"),Chr(127))
+				}else if(RegExMatch(CheckUser,"OUi)^((.*)\bby\b(.*))$",User)){
+					NewText:=Trim(RegExReplace(Found.2,"\Q" User.0 "\E"),Chr(127))
+				}else{
+					New:=xx.Under(aa,"info",{type:Found.1,action:"",issue:"",user:""},NewText:=Trim(RegExReplace(Found.2,"\Q" User.0 "\E"),Chr(127)))
+					Continue
+				}
+				for a,b in UserSub{
+					Replace:=""
+					if(InStr(Found.0,b)){
+						Replace:=b
+						Break
+					}
+				}
+				xx.Under(aa,"info",{type:Found.1,action:Trim(User.2),issue:User.4,user:trim(RegExReplace(User.3,"(#.*)"))},(NewText?NewText:Trim(Trim(Found.2,Chr(127)))))
+			}if(!Fixed){
+				New:=xx.Under(aa,"info",{type:"",action:"",issue:"",user:""},Text)
+			}
+		}xx.Transform(2),ListCon.Close()
+		return new Version_Tracker()
+	}GetNode(VersionNode:=""){
+		Version_Tracker.NewWin.Default("VT"),Node:=VVersion.SSN("//*[@tv='" TV_GetSelection() "']" (VersionNode=1?"ancestor-or-self::version":VersionNode?VersionNode:""))
+		return Node
+	}OtherThings(){
+		static
+		xx:=VVersion
+		if(!Root:=xx.Find("//info/@file",Current(2).File)){
+			Info:=xx.Under(xx.Under((Branch:=xx.Under((Root:=xx.Add("info",{file:Current(2).File},,1)),"branch",{name:"master"})),"version",{name:"1",draft:"false",prerelease:"true",target_commitish:"master"}),"info",{type:"",action:"",issue:"",user:""}),Select:=Info
+			/*
+				Root:=xx.Add("info",{file:Current(2).File},,1)
+				Branch:=xx.Under(Root,"branch",{name:"master"})
+				Version:=xx.Under(Branch,"version",{name:"1",draft:"false",prerelease:"true",target_commitish:"master"})
+				Info:=xx.Under(Version,"info",{type:"",action:"",issue:"",user:""}),Select:=Info
+			*/
+		}Version_Tracker.Root:=Root
+		VersionGUI:
+		NewWin:=new GUIKeep("Version"),Version_Tracker.NewWin:=NewWin
+		NewWin.Add("TreeView,w350 h500 vVT gVersionShowVersion vTVVersion AltSubmit,,h"
+		,"Edit,x+M w500 h500 gVerEdit vEdit,,wh")
+		NewWin.Show((Settings.SSN("//github")?"Github ":"")"Version Tracker")
+		NewWin.Hotkeys({Delete:"VarDelete","!a":"VersionAddAction",F1:"VersionCompileCurrent","!Up":"VersionMove"
+		,"!Down":"VersionMove",Enter:"VersionEdit","!n":"NewVersionBranch"
+		,"^Up":"AddNewVersion","^Down":"AddNewVersion"})
+		if(Select)
+			return Version_Tracker.Select(Select)
+		return Version_Tracker.Populate()
+		;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		;~ !!!! MAKE SURE TO NOT REMOVE ANYTHING IF/WHEN THE USER RE-DOWNLOADS EVERYTHING FROM GITHUB  !!!!!
+		;~ !!!!                         RUN IT THROUGH HERE AFTER DOWNLOADING                          !!!!!
+		;~ !!!!                                                                                        !!!!!
+		;~ !!!!                                         Need:                                          !!!!!
+		;~ !!!!                                       Drag/Drop:                                       !!!!!
+		;~ !!!!                             -Make it like Github basically                             !!!!!
+		;~ !!!!                                                                                        !!!!!
+		;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		AddNewVersion:
+		Direction:=SubStr(A_ThisHotkey,2)
+		Node:=Version_Tracker.GetNode(1)
+		if(Direction="Down"){
+			NewWin.Default("VT")
+			Name:=SSN(Node,"@name").text
+			if(RegExMatch(Name,"OU)(.*\.)(-?\d+)$",Found)){
+				Name:=Found.1 Format("{:0" StrLen(Found.2) "}",(Found.2>=0?Found.2-1:Found.2+-1))
+			}else if(RegExMatch(Name,"OU)(.*)(-?\d+)$",Found))
+				Name:=Found.1 Format("{:0" StrLen(Found.2) "}",(Found.2>=0?Found.2-1:Found.2+-1))
+			else
+				Name:=Name " 0"
+			m(Name)
+			TV_Modify(SSN(Node,"@tv").text,"-Expand")
+			New:=VVersion.Under((Parent:=VVersion.Under(Node.ParentNode,"version",{name:Name,draft:"false",prerelease:"false",target_commitish:SSN(Node,"ancestor::branch/@name").text})),"info",{action:"",issue:"",type:"",user:""})
+			if(Next:=Node.NextSibling)
+				Node.ParentNode.InsertBefore(Parent,Next)
+			Version_Tracker.Select(New)
+		}else{
+			Name:=SSN(Node,"@name").text
+			if(RegExMatch(Name,"OU)(.*\.)(\d+)$",Found)){
+				Name:=Found.1 Format("{:0" StrLen(Found.2) "}",Found.2+1)
+			}else if(RegExMatch(Name,"OU)(.*)(\d+)$",Found))
+				Name:=Found.1 Format("{:0" StrLen(Found.2) "}",Found.2+1)
+			else
+				Name:=Name " 1"
+			TV_Modify(SSN(Node,"@tv").text,"-Expand")
+			New:=VVersion.Under((Parent:=VVersion.Under(Node.ParentNode,"version",{name:Name,draft:"false",prerelease:"false",target_commitish:SSN(Node,"ancestor::branch/@name").text})),"info",{action:"",issue:"",type:"",user:""})
+			Node.ParentNode.InsertBefore(Parent,Node)
+			Version_Tracker.Select(New)
+		}
+		return
+		NewVersionBranch:
+		Node:=Version_Tracker.GetNode()
+		Root:=SSN(Node,"ancestor::info")
+		if(Repo:=SSN(Root,"@repo").text){
+			;here
+			m("Create the actual Branch on Github",Repo)
+		}
+		Branch:=InputBox(NewWin.HWND,"New Branch","Enter the name for this new branch`nSpaces will be replaced with -`nAnything other than [A-Za-z0-9_-] will be removed")
+		Branch:=RegExReplace(RegExReplace(Branch,"\s","-"),"[^a-zA-Z-_]")
+		if(SSN(Root,"//branch[@name='" Branch "']"))
+			return m("Branch already exists")
+		New:=VVersion.Under(Root,"branch",{name:Branch}),OneMore:=VVersion.Under(New,"version",{draft:"false",name:"1",prerelease:"true",target_commitish:Branch}),Last:=VVersion.Under(OneMore,"info",{action:"",issue:"",type:"",user:""}),Version_Tracker.Select(Last)
+		return
+		VersionEdit:
+		ControlGetFocus,Focus,% NewWin.ID
+		if(Focus="SysTreeView321"){
+			if((Node:=Version_Tracker.GetNode()).NodeName="Version"){
+				Number:=InputBox(NewWin.HWND,"Edit Version Number","Enter A New Version Number",SSN(Node,"@name").text)
+				if(!Number)
+					return m("A Version Number Needs To Be Assigned")
+				if(SSN(Node.ParentNode,"descendant::*[@name='" Number "']"))
+					return m("Version already exists")
+				Node.SetAttribute("name",Number),Version_Tracker.Populate(1)
+				return
+			}else if(SSN(Node,"ancestor-or-self::Github")){
+				Key:=Node.NodeName,Node:=Settings.SSN("//github")
+				if(Value:=InputBox(NewWin.ID,"Enter A New Value","Enter A New Value For: " Format("{:T}",Key),SSN(Node,"@" Key).text))
+					Node.SetAttribute(Key,Value)
+				Version_Tracker.Populate(1)
+				return
+			}
+			return Version_Tracker.VersionAddAction()
+		}
+		Send,{Enter}
+		return
+		VersionMove:
+		Direction:=SubStr(A_ThisHotkey,2),Node:=Version_Tracker.GetNode()
+		if(Next:=Direction="Down"?Node.NextSibling.NextSibling:Node.PreviousSibling){
+			Node.ParentNode.InsertBefore(Node,Next),All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::*[@select]")
+			while(aa:=All.Item[A_Index-1])
+				aa.RemoveAttribute("select")
+			Node.SetAttribute("select",1)
+			Version_Tracker.Populate()
+		}else if(Direction="Down"){
+			Node.ParentNode.AppendChild(Node)
+			Version_Tracker.Populate()
+		}
+		return
+		VersionCompileCurrent:
+		NewWin.Default("VT"),Node:=Version_Tracker.GetNode(1)
+		if(!Node)
+			Version_Tracker.NewWin.Default("VT"),Node:=VVersion.SSN("//*[@tv='" TV_GetSelection() "']"),All:=SN(Node,"descendant::*"),Info:=""
+		else
+			All:=SN(Node,"descendant-or-self::*"),Info:=""
+		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
+			if(aa.NodeName="Version")
+				Info.=(Info?":`r`n":"") ea.Name
+			else
+				Info.=(Info?"`r`n":"") (ea.Type?ea.Type ":":"") (ea.Action?" " ea.Action " by " ea.User:"") (ea.Issue?" " ea.Issue:"") (ea.Type?"`r`n":"") RegExReplace(aa.Text,Chr(127),"`r`n")
+		}
+		m("Information has been added to your Clipboard:","",Clipboard:=Info)
+		return
+		VerEdit:
+		Edit:=NewWin[].Edit
+		NewWin.Default("VT"),Node:=xx.SSN("//*[@tv='" TV_GetSelection() "']")
+		Node.Text:=RegExReplace(Edit,"\R",Chr(127))
+		return
+		VersionShowVersion:
+		if(A_GuiEvent="S"){
+			NewWin.Default("TVVersion")
+			Node:=VVersion.SSN("//*[@tv='" TV_GetSelection() "']")
+			if(!SSN(Node,"*")){
+				GuiControl,Version:,Edit1,% RegExReplace(Node.Text,Chr(127),"`r`n")
+				NewWin.Disable("VerEdit",0)
+			}else if(Node.NodeName="Version"){
+				All:=SN(Node,"descendant::*"),Info:=""
+				while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
+					Info.=(Info?"`r`n":"") ea.Type ":" (ea.Action?" " ea.Action " by " ea.User:"") "`r`n" RegExReplace(aa.Text,Chr(127),"`r`n")
+				}GuiControl,Version:,Edit1,%Info%
+				NewWin.Disable("VerEdit",1)
+			}else
+				NewWin.Disable("VerEdit",1)
+		}
+		return
+		VersionEscape:
+		VersionClose:
+		if(!Version_Tracker.GetNode())
+			return NewWin.Exit()
+		All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::*[@select]")
+		while(aa:=All.Item[A_Index-1])
+			aa.RemoveAttribute("select")
+		NewWin.Default("VT"),Node:=xx.SSN("//*[@tv='" TV_GetSelection() "']"),Node.SetAttribute("select",1),Version_Tracker.TVState(),NewWin.Exit(),All:=VVersion.SN("//*[@tv]")
+		while(aa:=All.Item[A_Index-1])
+			aa.RemoveAttribute("tv")
+		VVersion.Transform()
+		return
+	}VersionAddAction(){
+		static
+		EditNode:=Version_Tracker.GetNode()
+		VersionAddAction:
+		NewWin:=Version_Tracker.NewWin,xx:=VVersion
+		Node:=Version_Tracker.GetNode(1)
+		if(Node.NodeName!="Version")
+			return m("Please Select A Version")
+		All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::info"),Actions:={"":1},Users:={"":1},Type:={"":1},Issues:={"":1}
+		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
+			Actions[ea.Action]:=1,Users[ea.User]:=1,Type[ea.Type]:=1,Issues[ea.Issue]:=1
+		AddWin:=new GUIKeep("AddWin")
+		AddWin.Add("ListView,w300 h200 vType -Multi,Type (Added Removed Changed Etc)","ListView,x+M w300 h200 vAction -Multi,Action (Requested Reported Etc)","ListView,x+M w300 h200 vUser -Multi,User (If Action Is Set)","ListView,x+M w300 h200 vIssue -Multi,Issue #"
+		,"Edit,xm w300 vEdit1","Edit,x+M w300 vEdit2","Edit,x+M w300 vEdit3","Edit,x+M w300 vEdit4","Button,xm gVersionHelp,&Help"),AddWin.Show("Add Action")
+		ControlGetPos,x,y,w,h,SysListView324,% AddWin.ID
+		if(v.Options.Add_Margins_To_Windows){
+			ControlGetPos,x1,,,,SysListView321,% AddWin.ID
+			GuiControl,AddWin:Move,Button1,% "w" x+w-x1
+		}else
+			GuiControl,AddWin:Move,Button1,% "w" x+w-3
+		AddWin.Hotkeys({Enter:"AddWinEnter",Delete:"AddWinDelete","!t":"VersionSelect","!a":"VersionSelect","!u":"VersionSelect","!i":"VersionSelect"})
+		for c,d in {Type:Type,Action:Actions,User:Users,Issue:Issues}{
+			AddWin.Default(c),Match:=Select:=""
+			if(EditNode)
+				Match:=SSN(EditNode,"@" Format("{:L}",c)).text
+			for a in d
+				Index:=LV_Add((Match=a?"Select Vis Focus":""),a),Select:=(Match=a?Index:Select)
+			LV_Modify((Select?Select:1),"Select Vis Focus"),Select:=""
+		}
+		return
+		VersionHelp:
+		m("Alt+T/A/U/I will focus on the items below their ListViews")
+		return
+		VersionSelect:
+		static Order:={"!t":1,"!a":2,"!u":3,"!i":4}
+		ControlFocus,% "Edit" Order[A_ThisHotkey],% AddWin.ID
+		return
+		AddWinEnter:
+		NewWin.Default("VT"),Node:=Version_Tracker.GetNode(1)
+		if(Node.NodeName!="Version")
+			return m("Please Select A Version")
+		Info:=[],Values:=AddWin[]
+		for a,b in ["type","action","user","issue"]{
+			Gui,AddWin:Default
+			Gui,AddWin:ListView,% "SysListView32" A_Index
+			Value:=Info[b]:=Values["Edit" A_Index]
+			if(!Info[b])
+				LV_GetText(Value,LV_GetNext())Info[b]:=Value
+			else if(!Info[b]&&A_Index=1)
+				return m("Please Select or Enter an Entry Type")
+			else if(!Info.User&&Info.Action&&A_Index=3)
+				return m("Please Enter a User who prompted this Action")
+			else if(Info.User&&!Info.Action&&A_Index=3)
+				return m("Please enter an Action that " Info.User " requested")
+			if(A_Index=4)
+				Info[b]:=(SubStr(Value,1,1)="#"?Value:"#" Value)
+		}if(Info.Issue="#")
+			Info.Issue:=""
+		WinActivate,% NewWin.ID
+		if(EditNode){
+			for a,b in Info
+				EditNode.SetAttribute(a,b)
+			return Version_Tracker.Populate(1),AddWin.Exit(),EditNode:=""
+		}
+		New:=xx.Under(Node,"info",Info)
+		All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::*[@select]")
+		while(aa:=All.Item[A_Index-1])
+			aa.RemoveAttribute("select")
+		New.SetAttribute("select",1)
+		Version_Tracker.Populate(),AddWin.Exit()
+		return
+		AddWinEscape:
+		AddWinClose:
+		hwnd({Rem:"AddWin"}),EditNode:=""
+		WinActivate,% NewWin.ID
+		return
+		AddWinDelete:
+		ControlGetFocus,Focus,% AddWin.ID
+		m(Focus " Is focused, Delete something within it.")
+		return
+		VarDelete:
+		NewWin:=Version_Tracker.NewWin
+		ControlGetFocus,Focus,% NewWin.ID
+		if(Focus="SysTreeView321"){
+			Node:=Version_Tracker.GetNode()
+			if(SSN(Node,"@id"))
+				return m("Can not delete a Pushed version just yet")
+			if(Node.NodeName~="i)\b(version|info)"=0)
+				return m("You can only delete Versions or Actions currently")
+			if(m("Are you sure you want to delete this?","btn:ync","def:2")="Yes"){
+				Next:=Node.NextSibling?Node.NextSibling:Node.PreviousSibling?Node.PreviousSibling:Node.ParentNode,All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::*[@select]")
+				while(aa:=All.Item[A_Index-1])
+					aa.RemoveAttribute("select")
+				Next.SetAttribute("select",1),Node.ParentNode.RemoveChild(Node),Version_Tracker.Populate()
+			}
+		}else
+			Send,{Delete}
+		return
+	}Populate(SetCurrent:=0){
+		Root:=Version_Tracker.Root,NewWin:=Version_Tracker.NewWin,xx:=VVersion
+		if(SetCurrent){
+			Node:=Version_Tracker.GetNode(),All:=SN(SSN(Node,"ancestor::info"),"descendant::*[@select]")
+			while(aa:=All.Item[A_Index-1])
+				aa.RemoveAttribute("select")
+			Node.SetAttribute("select",1)
+		}GuiControl,Version:-Redraw,SysTreeView321
+		NewWin.Default("VT"),TV_Delete(),All:=SN(Root,"descendant::*")
+		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
+			if(aa.NodeName="Users")
+				Break
+			if(aa.NodeName~="\b(files|file)\b")
+				Continue
+			aa.SetAttribute("tv",TV_Add((aa.NodeName~="i)\b(branch|version)\b"?ea.Name:aa.NodeName="info"?(ea.Type?ea.Type (ea.Action?" - " ea.Action " by " ea.User:"")(ea.Issue?" " ea.Issue:""):"(Enter to change this)"):aa.xml),SSN(aa.ParentNode,"@tv").text))
+		}for a,b in Settings.EA("//github"){
+			if(A_Index=1)
+				VVersion.Add("Github").SetAttribute("tv",TVRoot:=TV_Add("Github"))
+			VVersion.Add("Github/" a).SetAttribute("tv",TV_Add(Format("{:T}",a) ": " (a!="token"?b:"Entered"),TVRoot,"Vis"))
+		}Instructions:=TV_Add("Instructions")
+		for a,b in ["Delete will delete a version","Alt+A Will Add An Action","Enter Will Edit Whatever Is Selected","F1 Will Compile The Current Version/Branch","Alt+N To Create A New Branch"]
+			TV_Add(b,Instructions,"Vis")
+		if(tv:=xx.SSN("//*[@select]/@tv").text)
+			TV_Modify(tv,"Select Vis Focus")
+		All:=xx.SN("//*[@expand]")
+		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
+			TV_Modify(ea.tv,"Expand")
+		GuiControl,Version:+Redraw,SysTreeView321
+	}Select(Node){
+		All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::*[@select]")
+		while(aa:=All.Item[A_Index-1])
+			aa.RemoveAttribute("select")
+		Node.SetAttribute("select",1),Version_Tracker.Populate()
+	}TVState(){
+		Version_Tracker.NewWin.Default("VT"),All:=VVersion.SN("//*[@tv]")
+		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
+			if(TV_Get(ea.TV,"Expand"))
+				aa.SetAttribute("expand",1)
+			else if(ea.Expand)
+				aa.RemoveAttribute("expand")
+		}
+	}
 }
 DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0,MsgBox:=0){
 	x:=ComObjActive("{DBD5A90A-A85C-11E4-B0C7-43449580656B}"),x.DebugWindow(Text,Clear,LineBreak,Sleep,AutoHide,MsgBox)
