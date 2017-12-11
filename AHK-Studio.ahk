@@ -19,17 +19,6 @@ return
 SplashDestroy:
 Gui,Splash:Destroy
 return
-CheckOpen(){
-	All:=Settings.SN("//open/*")
-	while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
-		if(!cexml.Find("//main/@file",aa.Text))
-			Open(aa.Text,1)
-	}
-}
-/*
-	if((Folder:=Settings.SSN("//DefaultFolder")).text)
-		Folder.SetAttribute("folder",Folder.text),Folder.text:=""
-*/
 /*
 	Hotkey,End,EndThing,On
 	RegExMatch()
@@ -176,9 +165,10 @@ AddBookmark(line,search){
 }
 AddInclude(FileName:="",text:="",pos:="",Show:=1){
 	static new
-	file:=FileOpen(FileName,"RW","UTF-8"),File.Write(text),File.Length(File.Position),rel:=RelativePath(Current(2).file,FileName),sc:=csc(),current:=Current(4)
-	SplitPath,FileName,fn,dir,ext,nne,drive
-	FileGetTime,time,%FileName%
+	file:=FileOpen(FileName,"RW","UTF-8"),File.Write(text),File.Length(File.Position),rel:=RelativePath(Current(2).file,FileName),sc:=csc()
+	Current:=Current(4)
+	SplitPath,FileName,FN,Dir,Ext,NNE,Drive
+	FileGetTime,Time,%FileName%
 	if(v.Options.Includes_In_Place){
 		line:=sc.2166(sc.2008)
 		if(Trim(RegExReplace(sc.GetLine(line),"\R"))){
@@ -188,10 +178,10 @@ AddInclude(FileName:="",text:="",pos:="",Show:=1){
 		}else
 			sc.2003(sc.2008,"#Include " rel)
 	}else{
-		if(SSN(current,"@file").text=Current(3).file)
+		if(SSN(Current,"@file").text=Current(3).file)
 			sc.2003(sc.2006,"`n#Include " rel)
 		else
-			Update({file:Current(2).file,text:Update({get:Current(2).file}) "`n#Include " rel}),current.RemoveAttribute("sc")
+			Update({file:Current(2).file,text:Update({get:Current(2).file}) "`n#Include " rel}),Current.RemoveAttribute("sc")
 	}
 	;#[Needs to check to see if it is in a folder first]
 	Relative:=StrSplit(rel,"\"),Parent:=Current(1),TV:=SSN(Parent,"descendant::*/@tv").text
@@ -209,12 +199,18 @@ AddInclude(FileName:="",text:="",pos:="",Show:=1){
 			else
 				TV:=SSN(Node,"@tv").text
 	}}else
-		TV:=SSN(current,"@tv").text
-	new:=cexml.Under(current,"file",{id:GetID(),encoding:"UTF-8",file:FileName,include:"#Include " rel,inside:SSN(current,"@file").text,dir:dir,FileName:fn,github:fn,nne:nne,time:time,encoding:"UTF-8",scan:1,ext:Ext,tv:TVC.Add(1,fn,TV,"Sort"),lang:LanguageFromFileExt(Ext)})
-	add:=Current(7).AppendChild(new.CloneNode(1))
+		TV:=SSN(Current,"@tv").text
+	Current:=SSN(Current(),"ancestor::main/file")
+	new:=cexml.Under(Current,"file",{id:(ID:=GetID()),encoding:"UTF-8",type:"File",lower:Format("{:L}",FileName),file:FileName,include:"#Include " rel,inside:SSN(Current,"@file").text,dir:Dir,filename:fn,github:fn,nne:NNE,time:Time,encoding:"UTF-8",ext:Ext,tv:TVC.Add(1,fn,TV,"Sort"),lang:LanguageFromFileExt(Ext)})
+	/*
+		add:=Current(7).AppendChild(new.CloneNode(1))
+	*/
 	add.SetAttribute("type","File")
-	Update({file:FileName,text:text,encoding:"UTF-8",node:current})
-	ScanFiles()
+	Update({file:FileName,text:text,encoding:"UTF-8",node:Current})
+	ScanFile.Scan(New,1)
+	/*
+		ScanFiles()
+	*/
 	Default("SysTreeView321")
 	if(Show)
 		tv(SSN(new,"@tv").text,pos)
@@ -1890,8 +1886,7 @@ class ScanFile{
 			All:=SN(Node,"descendant::info")
 			while(aa:=All.Item[A_Index-1])
 				aa.ParentNode.RemoveChild(aa)
-		}
-		this.ScanText(Node)
+		}this.ScanText(Node)
 	}ScanText(Node){
 		static ScanTextXML:=new XML("ScanFile")
 		Oea:=ea:=XML.EA(Node),this.RemoveComments(ea),Before:=ScanFile.Before,OText:=ScanFile.CurrentText,Node:=cexml.SSN("//file[@id='" ea.ID "']"),all:=SN(Node,"info")
@@ -10471,6 +10466,7 @@ Testing(){
 /*
 	put this in there and use it for A_TickCount stuffs.
 */
+
 Class TimerClass{ ;Thanks Run1e
 	static Timers:=[]
 	Init(){
@@ -11983,6 +11979,13 @@ Class Version_Tracker{
 }
 Version_Tracker(){
 	new Version_Tracker()
+}
+CheckOpen(){
+	All:=Settings.SN("//open/*")
+	while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
+		if(!cexml.Find("//main/@file",aa.Text))
+			Open(aa.Text,1)
+	}
 }
 DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0,MsgBox:=0){
 	x:=ComObjActive("{DBD5A90A-A85C-11E4-B0C7-43449580656B}"),x.DebugWindow(Text,Clear,LineBreak,Sleep,AutoHide,MsgBox)
