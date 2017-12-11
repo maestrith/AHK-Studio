@@ -21,8 +21,6 @@ Gui,Splash:Destroy
 return
 /*
 	Hotkey,End,EndThing,On
-	RegExMatch()
-	GuiContextMenu()
 */
 return
 /*
