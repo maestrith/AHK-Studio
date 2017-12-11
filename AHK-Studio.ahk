@@ -4469,7 +4469,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20171122084657,XMLFiles:={menus:[20171210000133,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20171122084657,XMLFiles:={menus:[20171211121015,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20171122084436,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -10464,9 +10464,6 @@ Test_Plugin(){
 	Exit(1)
 }
 Testing(){
-	
-	
-	return new Version_Tracker()
 	if(A_UserName!="maest")
 		return m("Testing")
 	return m("I'm sleepy.")
@@ -11983,6 +11980,9 @@ Class Version_Tracker{
 				aa.RemoveAttribute("expand")
 		}
 	}
+}
+Version_Tracker(){
+	new Version_Tracker()
 }
 DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0,MsgBox:=0){
 	x:=ComObjActive("{DBD5A90A-A85C-11E4-B0C7-43449580656B}"),x.DebugWindow(Text,Clear,LineBreak,Sleep,AutoHide,MsgBox)
