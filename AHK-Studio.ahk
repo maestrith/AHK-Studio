@@ -1739,6 +1739,9 @@ Class PluginClass{
 		SetPos(TV_GetSelection()),csc(1)
 	}Get(name){
 		return _:=%name%
+	}GetTV(Control,Window){
+		Default(Control,Window)
+		return TV_GetSelection()
 	}GetDebugPane(){
 		return new OutPutDebugPane()
 	}GuiControl(Info*){
@@ -2768,9 +2771,11 @@ Context(return=""){
 	}if(Delimiter.Delimiter){
 		if(Regex:=Delimiter.RemoveAll){
 			Pos:=LastPos:=1
-			while(RegExMatch(NewString,Regex,Found))
+			while(Pos:=RegExMatch(NewString,Regex,Found)){
+				if(Pos=LastPos),LastPos:=Pos
+					Break
 				StringReplace,NewString,NewString,% Found.0,% (InStr(Found.0,Chr(127))?Chr(127):"")
-		}if(Regex:=Delimiter.Preserve){
+		}}if(Regex:=Delimiter.Preserve){
 			Pos:=LastPos:=1,Place:={1:"Preserve"},LastCondition:="Preserve",Total:=""
 			while(RegExMatch(NewString,Regex,Found,Pos)){
 				for a,b in ["Open","Close","PreserveOpen","PreserveClose"]{
@@ -2807,8 +2812,10 @@ Context(return=""){
 				if(Chr~="(\w|\.)"=0)
 					Break
 				Word:=(Chr) Word
-			}if(!Word&&Pos>0)
+			}if(!Word&&Pos>0){
+				Pos--
 				Continue
+			}
 			String:=SubStr(String,(Pos=1?1:Pos+1)),PositionInString:=Pos
 			Break
 		}Pos--
@@ -2823,7 +2830,7 @@ Context(return=""){
 	if(Pos>1){
 		String2:=SubStr(Trim(LineText),1,Pos)
 		Pos1:=Pos
-		while((Pos1-=1)>0){
+		while((Pos1--)>0){
 			Letter:=SubStr(String2,Pos1,1)
 			if(Letter~="(\s|\W)")
 				Break
@@ -2871,11 +2878,11 @@ Context(return=""){
 					}else if(Syntax)
 						Matches.Push({att:Att.1,ea:XML.EA(Node),syntax:(Syntax:=SSN(Node,"@replace")?Syntax:Word Syntax),type:SSN(Node,"@type").text})
 			}}if(Top:=Keywords.Languages[Language].SSN("//Context/" WW)){
-				Del:=(DD:=SSN(Top,"@delimiter").text)?DD:Delimiter.Delimiter,list:=SN(top,"list"),Build:=WW Del,Pos:=1,SearchWord:=WW
+				Del:=(DD:=SSN(Top,"@delimiter").text)?DD:Delimiter.Delimiter,list:=SN(top,"list"),Build:=WW Del,Pos:=LastPos:=1,SearchWord:=WW
 				while(RegExMatch(String,"OUi)\b(" RegExReplace(SSN(Top,"*[text()='" SearchWord "']/@list").text," ","|") ")\b",Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
-					if(Pos=LastPos)
+					if(Pos=LastPos),LastPos:=Pos
 						Break
-					Build.=Found.1 Del,SearchWord:=Found.1,LastPos:=Pos
+					Build.=Found.1 Del,SearchWord:=Found.1
 				}Pos:=LastPos:=1
 				while(RegExMatch(Build,"O)(\w+)",Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
 					LastWord:=Found.1
@@ -9446,9 +9453,7 @@ SelectFile(FileName:="",Title:="New File",Ext:="",Options:="S16",Force:=0){
 	else
 		Folder:=SSN(Top,"@folder").text
 	Dir:=Trim(Dir "\" Folder,"\")
-	/*
-		FileName:=Dir "\" BackupFileName
-	*/
+	FileName:=FileName?FileName:Dir "\" BackupFileName
 	if(!FileExist(Dir))
 		FileCreateDir,%Dir%
 	FileName:=DLG_FileSave(hwnd(1),1,Title,FileName,,Force)
@@ -9510,7 +9515,7 @@ Set_As_Default_Editor(){
 }
 Set_New_Include_File_Default_Folder(){
 	static
-	Top:=Settings.SSN("//DefaultFolder"),Node:=Settings.Find(Top,"descendant::Folder/@file",(MainFile:=Current(2).File)),NewWin:=new GUIKeep("SetNewFile"),NewWin.Add("Text,,Global Default:","Edit,w500 vGlobal gSNFDFG," SSN(Top,"@folder").text,"Text,,Current Project: " SplitPath(MainFile).FileName,"Edit,w500 vCurrent gSNFDFCF," SSN(Node,"@folder").text),NewWin.Show("Set New Include File Default Folder")
+	Top:=Settings.Add("DefaultFolder"),Node:=Settings.Find(Top,"descendant::Folder/@file",(MainFile:=Current(2).File)),NewWin:=new GUIKeep("SetNewFile"),NewWin.Add("Text,,Global Default:","Edit,w500 vGlobal gSNFDFG," SSN(Top,"@folder").text,"Text,,Current Project: " SplitPath(MainFile).FileName,"Edit,w500 vCurrent gSNFDFCF," SSN(Node,"@folder").text),NewWin.Show("Set New Include File Default Folder")
 	return
 	SNFDFCF:
 	Info:=NewWin[].Current
@@ -11490,7 +11495,7 @@ Class Version_Tracker{
 		xx:=VVersion
 		if((All:=xx.SN("//version[text()]")).Length)
 			return this.ConvertStyle()
-		this.OtherThings()
+		this.VersionWindow()
 	}ConvertStyle(){
 		static
 		xx:=VVersion
@@ -11595,7 +11600,7 @@ Class Version_Tracker{
 		if(!Root:=Version_Tracker.GetNode("ancestor::info"))
 			Root:=xx.Find("//info/@file",Current(2).File)
 		return Root
-	}OtherThings(){
+	}VersionWindow(){
 		static
 		xx:=VVersion
 		if(!Root:=xx.Find("//info/@file",Current(2).File))
@@ -11603,7 +11608,7 @@ Class Version_Tracker{
 		VersionGUI:
 		NewWin:=new GUIKeep("Version"),Version_Tracker.NewWin:=NewWin
 		NewWin.Add("TreeView,w350 h500 vVT gVersionShowVersion vTVVersion AltSubmit,,h"
-			,"Edit,x+M w500 h500 gVerEdit vEdit,,wh")
+			,"Edit,x+M w500 h500 gVerEdit vEdit,,wh","Button,xm gLaunchExternalFile,&Launch External File","Checkbox,gVersionOneFile vCommitAsOne,Commit As &One File")
 		NewWin.Show((Settings.SSN("//github")?"Github ":"")"Version Tracker")
 		NewWin.Hotkeys({Delete:"VerDelete","!a":"VersionAddAction",F1:"VersionCompileCurrent","!Up":"VersionMove"
 					,"!Down":"VersionMove",Enter:"VersionEdit","!n":"NewVersionBranch"
@@ -11611,6 +11616,22 @@ Class Version_Tracker{
 		if(Select)
 			return Version_Tracker.Select(Select)
 		return Version_Tracker.Populate()
+		VersionOneFile:
+		if(!Node:=Version_Tracker.GetNode("ancestor-or-self::branch")){
+			m("Please select a version to apply this to")
+			GuiControl,Version:,% NewWin.XML.SSN("//*[@var='CommitAsOne']/@hwnd").text,0
+			return
+		}
+		if(NewWin[].CommitAsOne)
+			Node.SetAttribute("onefile",1)
+		else
+			Node.RemoveAttribute("onefile")
+		return
+		LaunchExternalFile:
+		Version_Tracker.SetSelected()
+		Save()
+		Run,"D:\AHK\AHK-Studio\Projects\GitHub\GitHub Test.ahk"
+		return
 		;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		;~ !!!! MAKE SURE TO NOT REMOVE ANYTHING IF/WHEN THE USER RE-DOWNLOADS EVERYTHING FROM GITHUB  !!!!!
 		;~ !!!!                         RUN IT THROUGH HERE AFTER DOWNLOADING                          !!!!!
@@ -11763,6 +11784,7 @@ Class Version_Tracker{
 				NewWin.Disable("VerEdit")
 			}else
 				NewWin.Disable("VerEdit")
+			GuiControl,Version:,% NewWin.XML.SSN("//*[@var='CommitAsOne']/@hwnd").text,% SSN(Node,"ancestor-or-self::branch/@onefile")?1:0
 		}
 		return
 		VersionEscape:
@@ -11906,6 +11928,13 @@ Class Version_Tracker{
 		}else
 			Send,{Delete}
 		return
+	}SetSelected(){
+		if(!Root:=Version_Tracker.GetNode("ancestor::info")),NewWin:=Version_Tracker.NewWin,xx:=VVersion
+			Root:=xx.Find("//info/@file",Current(2).File)
+		Node:=Version_Tracker.GetNode(),All:=SN(Root,"//Github/descendant::*[@select]|descendant::*[@select]")
+		while(aa:=All.Item[A_Index-1])
+			aa.RemoveAttribute("select")
+		Node.SetAttribute("select",1)
 	}Populate(SetCurrent:=0){
 		if(!Root:=Version_Tracker.GetNode("ancestor::info")),NewWin:=Version_Tracker.NewWin,xx:=VVersion
 			Root:=xx.Find("//info/@file",Current(2).File)
