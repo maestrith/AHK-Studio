@@ -53,8 +53,7 @@ return
 	Joe_Glines{
 		Check Edited Files On Focus:
 		have it so that it asks first to replace the text rather than automatically
-	}
-	Misc Ideas:
+	}Misc Ideas:
 	more languages (spoken)
 	When you edit/add a line with an include:{
 		have it scan that line (add a thing in the Scan_Line() for it)
