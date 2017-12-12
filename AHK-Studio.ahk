@@ -2614,19 +2614,21 @@ Combine(Atts,Found){
 	}return Atts
 }
 Command_Help(){
-	static stuff,hwnd,ifurl:={between:"commands/IfBetween.htm",in:"commands/IfIn.htm",contains:"commands/IfIn.htm",is:"commands/IfIs.htm"}
+	static stuff,Last,hwnd,ifurl:={between:"commands/IfBetween.htm",in:"commands/IfIn.htm",contains:"commands/IfIn.htm",is:"commands/IfIs.htm"}
 	if((Language:=Current(3).Lang)!="ahk")
 		return m("Sorry but I can only help with AutoHotkey at the moment")
 	RegRead,outdir,HKEY_LOCAL_MACHINE,SOFTWARE\AutoHotkey,InstallDir
 	if(!outdir)
 		SplitPath,A_AhkPath,,outdir
-	url:="mk:@MSITStore:" outdir "/AutoHotkey.chm::/docs/",CurrentWord:=sc.GetWord()
+	CurrentWord:=sc.GetWord()
 	sc:=csc(),info:=Context(1),line:=sc.GetLine((LineNo:=sc.2166(sc.2008))),found1:=info.word
 	if(word:=sc.GetSelText())
 		found1:=word
 	if(!found1)
 		RegExMatch(line,"[\s+]?(\w+)",found)
 	xx:=Keywords.GetXML(Language)
+	CommandHelpLoop:
+	Base:=url:="mk:@MSITStore:" outdir "/AutoHotkey.chm::/docs/"
 	if(Text:=xx.SSN("//*[contains(translate(text(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),'" Format("{:L}",Found1) "')]").text){
 		RegExMatch(Text,"Oi)(" Found1 ")",Find)
 		if(Find.1)
@@ -2660,23 +2662,32 @@ Command_Help(){
 				url.=ifurl[info.last]?ifurl[info.last]:"commands/IfExpression.htm"
 		}else{
 			url.="commands/" found1:=RegExReplace(found1,"#","_") ".htm"
-			if(InStr(stuff.document.body.innerhtml,"//ieframe.dll/dnserrordiagoff.htm#")){
-				url.="Functions.htm#" found1
-				if(found1="object")
-					url.="Objects.htm#Usage_Associative_Arrays"
-				Else if(found1="_ltrim")
-					url.="Scripts.htm#LTrim"
-				Else
-					url.="Functions.htm#" found1
-			}
-		}OpenHelpFile(url)
+		}
 	}
 	else{
 		if(!Settings.SSN("//HelpNag").text)
 			if(m("The word: " Chr(34) found1 Chr(34) " was found and was not handled by AHK Studio.","If this is a command please let maestrith know.","btn:ync","Opening the help file","","Show again?")="No")
 				Settings.Add("HelpNag",,1)
 		OpenHelpFile("mk:@MSITStore:C:\Program%20Files%20(x86)\AutoHotkey\AutoHotkey.chm::/docs/AutoHotkey.htm")
-	}
+	}OpenHelpFile(url)
+	while(Stuff:=GetWebBrowser()){
+		if(A_Index=10)
+			Break
+		Sleep,50
+	}if(InStr(stuff.document.body.innerhtml,"//ieframe.dll/dnserrordiagoff.htm#")){
+		if(Last){
+			Last:=""
+			return Stuff.Navigate("mk:@MSITStore:D:\Program%20Files\AutoHotkey\AutoHotkey.chm::/docs/AutoHotkey.htm")
+		}url.="Functions.htm#" found1
+		if(found1="object")
+			url.="Objects.htm#Usage_Associative_Arrays"
+		else if(found1="_ltrim")
+			url.="Scripts.htm#LTrim"
+		else
+			url.="Functions.htm#" found1
+		Last:=1,OpenHelpFile(url),RegExMatch(Line,"OU)^\s*\b(\w+)\b",fff),Found1:=fff.1
+		Goto,CommandHelpLoop
+	}Last:=""
 	return
 }
 Compile_AHK_Studio(){

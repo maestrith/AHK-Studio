@@ -39,6 +39,7 @@ Added: Suggested by Joe Glines
 -New Language Setup
 -New Theme Setup to include multiple programming languages
 -Words In Document: Fixed
+-Command Help: It will attempt to get the right word a few times
 Added: Suggested by Joe Glines
 -DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0) Plugin method to display text in the debug window in Studio
 Fixed: Reported by Joe Glines
