@@ -3931,7 +3931,7 @@ Edit_Hotkeys(ret:=""){
 		return ea:=XML.EA(ret),Default("SysTreeView321","Edit_Hotkeys"),TV_Modify(TV_GetSelection(),"",RegExReplace(ea.clean,"_"," ")(ea.hotkey?" - " Convert_Hotkey(ea.hotkey):""))
 	NewWin:=new GUIKeep("Edit_Hotkeys")
 	;NewWin.Add("ComboBox,w400 gehfind vfind,,w","TreeView,w400 h400,,wh","Button,gehgo,C&hange Hotkey,y"),all:=menus.SN("//main/descendant::*")
-	NewWin.Add("Edit,w400 gEHFind vfind,Search For Menu Item {Enter to find next},w","TreeView,w400 h400,,wh","Button,gehgo,C&hange Hotkey,y","Button,x+M Default gEHNext,&Next Found,y"),all:=menus.SN("//main/descendant::*")
+	NewWin.Add("Edit,w400 gEHFind vfind -Multi,Search For Menu Item {Enter to find next},w","TreeView,w400 h400,,wh","Button,gehgo,C&hange Hotkey,y","Button,x+M Default gEHNext,&Next Found,y"),all:=menus.SN("//main/descendant::*")
 	Attributes:=[]
 	Default("SysTreeView321","Edit_Hotkeys")
 	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
