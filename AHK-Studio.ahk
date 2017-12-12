@@ -122,7 +122,7 @@ OR PERFORMANCE OF THIS SOFTWARE.
 	Run,https://github.com/maestrith/AHK-Studio
 	return
 }
-Activate(a,b,c,d){
+Activate(a,b,c,d*){
 	if(A_Gui=1&&a=1){
 		if(a&&v.Options.Check_For_Edited_Files_On_Focus=1)
 			Check_For_Edited()
@@ -130,7 +130,9 @@ Activate(a,b,c,d){
 		if(sc.sc=v.Debug.sc||sc.sc=MainWin.tnsc.sc)
 			sc:=csc({last:1})
 		sc.2400
-	}return 0
+	}
+	Sleep,20
+	return 0
 }
 Add_Selected_To_Personal_Variables(){
 	sc:=csc()
@@ -998,6 +1000,7 @@ Class ExtraScintilla{
 	static ctrl:=[],main:=[],temp:=[],hidden:=[]
 	__New(window,info:="{Notify:Pos}"){ ;keep adding valid things in the Default
 		Notify:=info.Notify,win:=window?window:1,pos:=info.pos?info.pos:"x0 y0 w0 h0"
+		Notify:=Notify?Notify:"Spoons"
 		Gui,%win%:Add,custom,%pos% classScintilla +%mask% hwndsc g%Notify% ;g%Notify% ; +1387331584
 		for a,b in {fn:2184,ptr:2185}
 			this[a]:=DllCall("SendMessageA",UInt,sc,int,b,int,0,int,0)
@@ -1014,6 +1017,11 @@ Class ExtraScintilla{
 			return
 		return DllCall(this.fn,"Ptr",this.ptr,"UInt",code,lp,lparam,wp,wparam,"Cdecl")
 }}
+Spoons(a*){
+	Info:=A_EventInfo,Code:=NumGet(Info+8)
+	if(Code=2028)
+		SetTimer("LButton",-50)
+}
 Class Icon_Browser{
 	static start:="",keep:=[]
 	__New(obj,hwnd,win,pos:="xy",min:=300,Function:="",Reload:=""){
@@ -1766,8 +1774,8 @@ Class PluginClass{
 		return A_ScriptDir
 	}Plugin(action,hwnd){
 		SetTimer,%action%,-10
-	}Publish(Info:=1,Branch:="master",Version:=""){
-		return,Publish(Info,Branch,Version)
+	}Publish(Info:=1){
+		return,Publish(Info,Branch:="",Version:="")
 	}ReplaceSelected(text){
 		Encode(text,return),csc().2170(0,&return)
 	}Save(){
@@ -2275,7 +2283,7 @@ Class XML{
 		}else
 			this.XML:=this.CreateElement(New,Root)
 		if(Param.3)
-			this.XML.LoadXML(Param.3),m("Loaded: " this.XML.XML,"Param.3: " Param.3)
+			this.XML.LoadXML(Param.3)
 		this.OriginalText:=Info
 		SplitPath,File,,dir
 		if(!FileExist(dir))
@@ -6027,7 +6035,7 @@ Class Keywords{
 				if(xx.SSN("//date").text!=Date){
 					SplashTextOn,200,100,Downloading %NNE%.xml,Please Wait...
 					if(!(TempXML:=new XML(Language,"",(XMLText:=URLDownloadToVar(URL))))[]){
-						NoUpdate:=1,xx:=new XML(Language,a),xx.XML.LoadXML(Clipboard:=XMLText),TempXML:="",m("Should have xml: " xx[])
+						NoUpdate:=1,xx:=new XML(Language,a),xx.XML.LoadXML(Clipboard:=XMLText),TempXML:=""
 					}else
 						xx:=TempXML,xx.File:=a
 				}if(!Node:=xx.SSN("//date"))
@@ -7050,7 +7058,6 @@ Notify(csc*){
 			debug.XML.Transform()
 			CoordMode,ToolTip,Screen
 			ToolTip,% (debug.xml[]) "`n`n`n`n" word,0,0,4
-			
 		*/
 		while(ll:=list.item[A_Index-1]),ea:=XML.EA(ll)
 			info:=ea.type="object"?"Object: Use List Variables (Alt+M LV) to see more info":info.=SSN(ll,"ancestor::*/@name").text " = " ll.text "`n"
@@ -7068,20 +7075,13 @@ Notify(csc*){
 	}else if(Code=2028){
 		if(s.ctrl[Ctrl])
 			sc:=csc({hwnd:hwnd})
-		/*
-			MouseGetPos,x,y
-			SysGet,Caption,31
-			SysGet,Menu,15
-			SysGet,Border,7
-			t(Pos:=sc.2022(x,y-(Caption+(Menu)+Border)),"time:1","Menu Height: " Menu,"Border: " Border)
-		*/
 		if(sc.sc=MainWin.tnsc.sc)
 			WinSetTitle(1,"Tracked Notes")
 		else
 			WinSetTitle(1,ea:=cexml.EA("//*[@sc='" sc.2357 "']"))
 		MouseGetPos,,,win
 		if(win=hwnd(1))
-			SetTimer("LButton",-100)
+			SetTimer("LButton",-50)
 		TVC.Disable(1)
 		if(ea.tv)
 			TV_Modify(ea.tv,"Select Vis Focus")
@@ -7389,15 +7389,14 @@ Notify(csc*){
 					}
 					Context()
 					Continue
-				}else if(All:=cexml.SN("//main[@id='" Current(2).ID "']/descendant::*[@text='" v.word "']")){
-					while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
-						if(ea.Type~="Class|Instance")
-							return SetTimer("AutoClass",-100)
-						else if(Add:=Keywords.GetXML(Current(3).Lang).SSN("//Code/descendant::" Type "/@autoadd").text)
-							if(Add="(")
-								return SetTimer("AutoParen",-40)
-					}
-				}else
+				}else if(node:=cexml.SSN("//main[@id='" Current(2).ID "']/descendant::*[@text='" v.word "']")){
+					Type:=SSN(node,"@type").text
+					if(Type~="Class|Instance")
+						SetTimer("AutoClass",-100)
+					else if(Add:=Keywords.GetXML(Current(3).Lang).SSN("//Code/descendant::" Type "/@autoadd").text){
+						if(Add="(")
+							SetTimer("AutoParen",-40)
+				}}else
 					SetTimer("AutoMenu",-50)
 		}}
 	}for a,sc in Edited
@@ -8195,7 +8194,7 @@ Add_Selected_To_Project_Specific_AutoComplete(){
 		lastpos:=pos
 	}m("Added:",SubStr(list,1,300)(StrLen(list)>300?"...":""),"To " Current(2).file)
 }
-Publish(Return="",Bcranch:="",Version:=""){
+Publish(Return="",Branch:="",Version:=""){
 	static Init
 	sc:=csc(),Text:=Update("get").1,Save(),MainFile:=Current(2).file,Publish:=Update({Get:MainFile}),includes:=SN(Current(1),"descendant::*/@include/..")
 	ea:=XML.EA(Keywords.GetXML(Current(3).Lang).SSN("//AutoReplace"))
@@ -8218,24 +8217,17 @@ Publish(Return="",Bcranch:="",Version:=""){
 	;~ !!!!!!!!!!          There will be Clipboard, oh and there can be plugins...           !!!!!!!!!!!
 	;~ !!!!!!!!!!                                And Junk...                                 !!!!!!!!!!!
 	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	if(RegExMatch(Publish,ea.Version&&ea.Version)){
-		/*
-			if(Version&&VVersion.SSN("//*[@select]/ancestor::info/@file").text!=Current(2).File&&!Version)
-				return m("Auto Version is present and a version is not set")
-		*/
-		if(!Version:=SSN(VVersion.Find("//info/@file",Current(2).File),"descendant::*[@select]/ancestor-or-self::version/@name").text)
-			return m("Version not set or selected for this Project.","Please select the version in the window that is about to show in order for this to work"),new Version_Tracker()
+	if(RegExMatch(Publish,ea.Version)&&ea.Version){
+		if(!Version)
+			if(!Version:=SSN(VVersion.Find("//info/@file",Current(2).File),"descendant::*[@select]/ancestor-or-self::version/@name").text)
+				return m("Version not set or selected for this Project.","Please select the version in the window that is about to show in order for this to work"),new Version_Tracker()
 		Change:=Settings.SSN("//auto_version").Text?Settings.SSN("//auto_version").Text:"Version:=""" Version """"
 		Publish:=RegExReplace(Publish,"\x3Bauto_version",RegExReplace(Change,"\Q$v\E",Version))
 	}if(RegExMatch(Publish,ea.Branch)&&ea.Branch){
-		/*
-			if(VVersion.SSN("//*[@select]/ancestor::info/@file").text!=Current(2).File)
-				return m("Branch not set for this Project.","Please select the version in the window that is about to show in order for this to work"),new Version_Tracker()
-		*/
-		if(!Branch:=SSN(VVersion.Find("//info/@file",Current(2).File),"descendant::*[@select]/ancestor::branch/@name").text)
-			return m("Branch not set for this Project."),new Version_Tracker()
-		Change:=(AutoBranch:=Settings.SSN("//auto_branch").Text)?AutoBranch:"Branch:=""" Branch """"
-		Publish:=RegExReplace(Publish,"\x3Bauto_branch",(Change:=RegExReplace(Change,"\Q$v\E",Branch)))
+		if(!Branch)
+			if(!Branch:=SSN(VVersion.Find("//info/@file",Current(2).File),"descendant::*[@select]/ancestor::branch/@name").text)
+				return m("Branch not set for this Project."),new Version_Tracker()
+		Change:=(AutoBranch:=Settings.SSN("//auto_branch").Text)?AutoBranch:"Branch:=""" Branch """",Publish:=RegExReplace(Publish,"\x3Bauto_branch",(Change:=RegExReplace(Change,"\Q$v\E",Branch)))
 	}Publish:=RegExReplace(Publish,"U)^\s*(;{.*\R|;}.*\R)","`n")
 	if(!Publish)
 		return sc.GetEnc()
@@ -8690,7 +8682,11 @@ Replace_Selected(){
 		return
 	for a,b in StrSplit("``r,``n,``r``n,\r,\n,\r\n",",")
 		replace:=RegExReplace(replace,"i)\Q" b "\E","`n")
-	Clipboard:=replace,sc.2614(1),sc.2179,Clipboard:=clip,OnMessage(6,"Activate"),SetStatus("Total Replaced: " TotalReplaced,3)
+	Clipboard:=replace,sc.2614(1),sc.2179,Clipboard:=clip
+	/*
+		OnMessage(6,"Activate")
+	*/
+	SetStatus("Total Replaced: " TotalReplaced,3)
 }
 Replace(){
 	sc:=csc(),CP:=sc.2008,Indent:=sc.2128(Line:=sc.2166(CP))
