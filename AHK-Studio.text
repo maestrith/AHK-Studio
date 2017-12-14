@@ -40,8 +40,8 @@ Added: Suggested by Joe Glines
 -New Theme Setup to include multiple programming languages
 -Words In Document: Fixed
 -Command Help: It will attempt to get the right word a few times
-Added: Suggested by Joe Glines
 -DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0) Plugin method to display text in the debug window in Studio
+--Ctrl+A now works in the Debug Window
 Fixed: Reported by Joe Glines
 - ;~ { was causing indent. Only ;{ and ;
 -Debug Window: Odd behavior when clicking on anything when the Debug Window is active

@@ -3291,8 +3291,7 @@ Copy(){
 	if(sc.sc!=hwnd){
 		SendMessage,0x301,0,0,%Focus%,% hwnd([1])
 		return
-	}
-	csc().2178(),Clipboard:=RegExReplace(Clipboard,"\R","`r`n")
+	}csc().2178(),Clipboard:=RegExReplace(Clipboard,"\R","`r`n")
 }
 Create_Toolbar(){
 	FormatTime,date,%A_Now%,longdate
@@ -9424,7 +9423,10 @@ Select_Next_Duplicate(){
 }}}
 SelectAll(){
 	SelectAll:
-	ControlGetFocus,Focus,A
+	ControlGetFocus,Focus,% hwnd([1])
+	ControlGet,hwnd,hwnd,,%Focus%,% hwnd([1])
+	if(v.Debug.SC=hwnd)
+		return v.Debug.2013
 	if(!InStr(Focus,"Scintilla")){
 		Send,^A
 		return
