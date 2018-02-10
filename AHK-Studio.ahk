@@ -2064,7 +2064,6 @@ class s{
 			else
 				this.2402(0x04|0x01,0)
 		*/
-		this.2264(300)
 		this.2359(0x1|0x2|0x800|0x400)
 		this.2359(0x400|0x20|0x40|0x800|0x02|0x01)
 		return this
@@ -2633,7 +2632,6 @@ Color(con:="",Language:="",FromFunc:=""){
 		con[b.1](b.2,b.3)
 	if(!v.Options.Match_Any_Word)
 		con.2198(0x2)
-	con.2409(60,1)
 	if(debug.socket)
 		debug.Caret(1)
 	Lexer:=con.4002(),con.4001(0),con.4001(Lexer)
