@@ -3702,8 +3702,21 @@ Display(PopulateVarBrowser:=0){
 									if((tv:=SSN(Node,"@tv").text)&&tv!=TV_GetSelection())
 										tv(tv)
 								}
+								/*								
+								 * The Default() call above is resetting the Default Gui/ListView, 
+								 * so the upcoming LV_Add() and LV_ModifyCol() calls will fail, 
+								 * unless we update the Default Gui with the following line
+								*/
+								Default("SysListView321",98)
 							}
-							LV_Add("",ea.where,"|" filename "|",ea.lineno)
+							/* 
+							 * 1) The filename variable used previously is not updated as we travel down the call stack.
+							 *    This quick fix just converts the stackframe's file url to a file path 
+							 * 2) Removed the pipe characters surrounding the filename. 
+							 *    The pipe characters should only be needed for the `Gui, Add, ListView` command 
+							*/
+							stack_filename 	:= RegExReplace(RegExReplace(URIDecode(ea.filename),"file:\/\/\/"),"\/","\")
+							LV_Add("",ea.where, stack_filename, ea.lineno)
 						}
 						Loop,3
 							LV_ModifyCol(A_Index,"AutoHDR")
