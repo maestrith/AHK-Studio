@@ -3,3 +3,4 @@ Fixed:
 - Duplicate #Includes were being added
 Added: Suggested by maltaannon
 - Insert Color Code: Add in a Color Code
+- Hex colors have a CallTip that shows the color when your Caret is within the color text

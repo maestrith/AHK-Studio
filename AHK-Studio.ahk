@@ -2064,6 +2064,7 @@ class s{
 			else
 				this.2402(0x04|0x01,0)
 		*/
+		this.2264(300)
 		this.2359(0x1|0x2|0x800|0x400)
 		this.2359(0x400|0x20|0x40|0x800|0x02|0x01)
 		return this
@@ -2632,6 +2633,7 @@ Color(con:="",Language:="",FromFunc:=""){
 		con[b.1](b.2,b.3)
 	if(!v.Options.Match_Any_Word)
 		con.2198(0x2)
+	con.2409(60,1)
 	if(debug.socket)
 		debug.Caret(1)
 	Lexer:=con.4002(),con.4001(0),con.4001(Lexer)
@@ -2804,13 +2806,27 @@ CompileFont(XMLObject,RGB:=1){
 	}return styletext
 }
 Context(return=""){
-	Static FindFirst:="O)^[\s|}]*((\w|[^\x00-\x7F])+)"
+	static FindFirst:="O)^[\s|}]*((\w|[^\x00-\x7F])+)",ColorShow:=0
 	if(v.ShowTT)
 		t("It is getting here","time:1",v.ShowTT.="Context,")
 	ControlGetFocus,Focus,% HWND([1])
 	if(!InStr(Focus,"Scintilla"))
 		return
 	Tick:=A_TickCount,sc:=CSC(),cp:=sc.2008,Line:=sc.2166(cp),LineIndent:=Start:=sc.2128(Line)
+	if(sc.2010(cp)=60){
+		Start:=End:=cp,ColorShow:=1
+		while(sc.2010(--Start)=60){
+		}
+		while(sc.2010(++End)=60){
+		}
+		if(Start<End&&Start!=""&&End!=""){
+			if(sc.2202)
+				sc.2201
+			Text:=RegExReplace(sc.TextRange(Start,End),"[^a-f0-9xA-F]")
+			return sc.2207(RGB(Text)),sc.2200(Start,"Color: " Text),sc.2204(7,7+(End-Start)),sc.2205(0)
+		}
+	}if(ColorShow)
+		ColorShow:=0,sc.2206(0xAAAAAA),sc.2205(0xFFFFFF)
 	if(cp<=LineIndent)
 		return sc.2201
 	PFL:=sc.2167(Line),OLineText:=LineText:=sc.GetLine(Line),NewString:=Trim(SubStr(LineText,1,cp-PFL) Chr(127) SubStr(LineText,cp-PFL+1)),Language:=Current(3).Lang,Delimiter:=Keywords.Delimiter[Language]
@@ -7341,6 +7357,20 @@ Notify(csc*){
 			fn[a]:=NumGet(Info+(A_PtrSize*b))
 	}if(fn.Code)
 		Mem.Push(fn)
+	/*
+		if(Code=2016){
+			Start:=End:=fn.Position
+			while(sc.2010(--Start)=60){
+			}
+			while(sc.2010(++End)=60){
+			}
+			if(Start>End&&Start+1&&End+1){
+				Text:=RegExReplace(sc.TextRange(Start,End),"[^a-f0-9xA-F]")
+			}
+			sc.2411(1,Text),t(Text),Flan:=0xff00ff,0xffff00
+			return
+		}
+	*/
 	SetTimer("ReadLater",-50)
 	return 0
 	ReadLater:
