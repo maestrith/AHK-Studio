@@ -2813,18 +2813,12 @@ Context(return=""){
 	if(!InStr(Focus,"Scintilla"))
 		return
 	Tick:=A_TickCount,sc:=CSC(),cp:=sc.2008,Line:=sc.2166(cp),LineIndent:=Start:=sc.2128(Line)
-	if(sc.2010(cp)=60){
+	Word:=sc.GetWord(cp)
+	if(Word~="[0-9xa-fA-F]"&&StrLen(Word)<10&&SubStr(Word,1,2)="0x"){
 		Start:=End:=cp,ColorShow:=1
-		while(sc.2010(--Start)=60){
-		}
-		while(sc.2010(++End)=60){
-		}
-		if(Start<End&&Start!=""&&End!=""){
-			if(sc.2202)
-				sc.2201
-			Text:=RegExReplace(sc.TextRange(Start,End),"[^a-f0-9xA-F]")
-			return sc.2207(RGB(Text)),sc.2200(Start,"Color: " Text),sc.2204(7,7+(End-Start)),sc.2205(0)
-		}
+		if(sc.2202)
+			sc.2201
+		return sc.2207(RGB(Word)),sc.2200(Start,"Color: " Word),sc.2204(7,7+StrLen(Word)),sc.2205(0)
 	}if(ColorShow)
 		ColorShow:=0,sc.2206(0xAAAAAA),sc.2205(0xFFFFFF)
 	if(cp<=LineIndent)
