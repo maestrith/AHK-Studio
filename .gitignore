@@ -1,0 +1,19 @@
+# Ignore Automated Backups by AHK-Studio 
+lib/XML Backup/
+AHK-Studio Backup/
+
+# Ignore User Settings in lib/
+lib/Tracked Notes.xml
+lib/Versions.xml
+lib/RCM.xml
+lib/Settings.xml
+lib/Positions.xml
+lib/GUI.xml
+lib/CEXML.xml
+
+# Don't include Compiled Script 
+AHK-Studio.exe
+
+# Ignore Downloaded Plugins and Saved Themes 
+Plugins/
+Themes/
