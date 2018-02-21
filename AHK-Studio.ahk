@@ -8918,7 +8918,7 @@ Refresh_Code_Explorer(){
 		Extract(GetMainNode(aa.Text))
 	if(Before)
 		Before:=cexml.Find("//main/@file",Before),Node:=cexml.Find("//main/@file",CurrentFile),Node.ParentNode.InsertBefore(Node,Before)
-	ScanFiles(1),Code_Explorer.Refresh_Code_Explorer(),FEUpdate(1),TV(SSN(cexml.Find("//file/@file",FileName),"@tv").Text)
+	Index_Lib_Files(),ScanFiles(1),Code_Explorer.Refresh_Code_Explorer(),FEUpdate(1),TV(SSN(cexml.Find("//file/@file",FileName),"@tv").Text)
 }Refresh_Project_Explorer(){
 	Refresh_Code_Explorer()
 }
