@@ -111,7 +111,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.07"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.08"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -600,7 +600,7 @@ Check_For_Update(startup:=""){
 		if(Auto.Reset>A_Now)
 			return
 	}
-	Version:="1.005.07"
+	Version:="1.005.08"
 	NewWin:=new GUIKeep("CFU"),NewWin.Add("Edit,w400 h400 ReadOnly,No New Version,wh"
 								  ,"Radio,gSwitchBranch Checked vmaster,Master Branch,y"
 								  ,"Radio,x+M gSwitchBranch vBeta,Beta Branch,y"
@@ -767,39 +767,35 @@ class Code_Explorer{
 		if(!MainWin.Gui.SSN("//*[@type='Code Explorer']"))
 			return
 		SplashTextOff
-		TVC.Disable(2),TVC.Delete(2,0),fz:=cexml.SN("//main"),rem:=cexml.SN("//*[@cetv]")
+		TVC.Disable(2),TVC.Delete(2,0),rem:=cexml.SN("//*[@cetv]")
 		while(rr:=rem.item[A_Index-1])
 			rr.RemoveAttribute("cetv")
 		rem:=cexml.SN("//header")
 		while(rr:=rem.item[A_Index-1])
 			rr.ParentNode.RemoveChild(rr)
-		while(fn:=fz.Item[A_Index-1]){
-			if(v.Options.Hide_Library_Files_In_Code_Explorer&&SSN(fn,"ancestor::Libraries"))
-				Continue
-			Exempt:=Keywords.CodeExplorerExempt[Settings.SSN("//Extensions/Extension[text()='" Format("{:L}",SSN(fn,"file/@ext").text) "']/@language").text],things:=SN(fn,"descendant::info"),filename:=SSN(fn,"@file").text
-			SplitPath,filename,file
-			TVC.Default(2),fn.SetAttribute("cetv",(main:=TVC.Add(2,file,0,"Sort")))
-			while(tt:=things.Item[A_Index-1],ea:=XML.EA(tt)){
-				if(v.Options.Hide_Library_Files_In_Code_Explorer&&SSN(tt,"ancestor::Libraries"))
+		for a,fz in [cexml.SN("//files/main"),cexml.SN("//Libraries/main")]{
+			if(A_Index=2){
+				if(v.Options.Hide_Library_Files_In_Code_Explorer)
 					Continue
-				/*
-					if(SSN(tt,"ancestor::Libraries"))
-						Header("Library")
-				*/
-				/*
-					this whole thing needs re-done anyway...
-					it needs to follow the <Code> form
-					so yea...
-					
-				*/
-				if(!top:=SSN(fn,"descendant::header[@type='" ea.type "']"))
-					if(ea.type~="(" Exempt ")"=0)
-						top:=cexml.Under(fn,"header",{type:ea.type,cetv:TVC.Add(2,ea.type,SSN(fn,"@cetv").text,"Sort" (SSN(tt,"ancestor::main[@file='Libraries']")?"":" Vis"))})
-				if(ea.type~="(" Exempt ")")
-					tt.SetAttribute("cetv",TVC.Add(2,ea.text,((tv:=SSN(tt.ParentNode,"@cetv").text)?tv:SSN(top,"@cetv").text),"Sort"))
-				else
-					last:=tt,tt.SetAttribute("cetv",TVC.Add(2,ea.text,((tv:=SSN(tt.ParentNode,"@cetv").text)?tv:SSN(top,"@cetv").text),(ea.type="Class"?"Sort":"Sort")))
-		}}TVC.Enable(2)
+				LibHeader:=cexml.SSN("//Libraries"),LibHeader.SetAttribute("cetv",TV_Add("Libraries"))
+			}while(fn:=fz.Item[A_Index-1]){
+				LibTV:=SSN(fn,"ancestor::Libraries/@cetv").text
+				Exempt:=Keywords.CodeExplorerExempt[Settings.SSN("//Extensions/Extension[text()='" Format("{:L}",SSN(fn,"file/@ext").text) "']/@language").text],things:=SN(fn,"descendant::info"),filename:=SSN(fn,"@file").text
+				SplitPath,filename,file
+				if(LibFile)
+					m("Lib")
+				TVC.Default(2),fn.SetAttribute("cetv",(main:=TVC.Add(2,file,(LibTV?LibTV:0),"Sort")))
+				while(tt:=things.Item[A_Index-1],ea:=XML.EA(tt)){
+					if(v.Options.Hide_Library_Files_In_Code_Explorer&&SSN(tt,"ancestor::Libraries"))
+						Continue
+					if(!top:=SSN(fn,"descendant::header[@type='" ea.type "']"))
+						if(ea.type~="(" Exempt ")"=0)
+							top:=cexml.Under(fn,"header",{type:ea.type,cetv:TVC.Add(2,ea.type,SSN(fn,"@cetv").text,"Sort" (SSN(tt,"ancestor::main[@file='Libraries']")?"":" Vis"))})
+					if(ea.type~="(" Exempt ")")
+						tt.SetAttribute("cetv",TVC.Add(2,ea.text,((tv:=SSN(tt.ParentNode,"@cetv").text)?tv:SSN(top,"@cetv").text),"Sort"))
+					else
+						last:=tt,tt.SetAttribute("cetv",TVC.Add(2,ea.text,((tv:=SSN(tt.ParentNode,"@cetv").text)?tv:SSN(top,"@cetv").text),(ea.type="Class"?"Sort":"Sort")))
+		}}}TVC.Modify(2,,cexml.SSN("//Libraries/@cetv").text,"-Expand"),TVC.Enable(2)
 	}RemoveTV(nodes){
 		type:=SSN(nodes.item[0],"@type").text
 		while(nn:=nodes.item[A_Index-1]),ea:=XML.EA(nn){
@@ -1859,7 +1855,7 @@ Class PluginClass{
 	}m(Info*){
 		m(Info*)
 	}MoveStudio(){
-		Version:="1.005.07"
+		Version:="1.005.08"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(Info){
@@ -1904,7 +1900,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.005.07"
+		Version:="1.005.08"
 		return version
 	}
 }
@@ -8907,20 +8903,39 @@ Redo(){
 Redraw(){
 	WinSet,Redraw,,% MainWin.ID
 }
-Refresh_Code_Explorer(){
-	GetPos(),Before:=SSN(Current(1).NextSibling,"@file").text,CurrentFile:=Current(2).File
+Refresh_Code_Explorer(Project:=0){
+	static NewWin
+	NewWin:=new GUIKeep("Refresh_Code_Explorer")
+	NewWin.Add("Text,,Re-Index all of the open Projects"
+			,"Button,gRCEP Default,&Projects (Hit Enter)"
+			,"Text,,Re-Index the Library files"
+			,"Button,gRCEL,&Libraries"
+			,"Text,,Re-Index Both"
+			,"Button,gRCEA,&Both")
+	NewWin.Show("Refresh " (Project=1?"Project":"Code") " Explorer")
+	return
+	RCEL:
+	RCEP:
+	RCEA:
+	SplashTextOn,200,100,Refreshing Files,Please Wait....
+	NewWin.Close(),GetPos(),Before:=SSN(Current(1).NextSibling,"@file").text,CurrentFile:=Current(2).File
 	FileName:=Current(3).File,Save(),Scanfile.Once:=0,TVC.Delete(1,0),TVC.Delete(2,0),TVC.Add(2,"Please Wait..."),TVC.Add(1,"Please Wait..."),sc:=CSC(),sc.2358(0,0),sc.2181(0,"Reloading, Please Wait...")
 	All:=cexml.SN("//*[@sc]")
 	while(aa:=All.item[A_Index-1],ea:=XML.EA(aa))
-		sc.2377(0,ea.sc)
-	cexml.XML.LoadXML("<cexml/>"),GetID(1),Omni_Search_Class.Menus(),All:=Settings.SN("//open/file")
-	while(aa:=All.item[A_Index-1])
-		Extract(GetMainNode(aa.Text))
-	if(Before)
-		Before:=cexml.Find("//main/@file",Before),Node:=cexml.Find("//main/@file",CurrentFile),Node.ParentNode.InsertBefore(Node,Before)
-	Index_Lib_Files(),ScanFiles(1),Code_Explorer.Refresh_Code_Explorer(),FEUpdate(1),TV(SSN(cexml.Find("//file/@file",FileName),"@tv").Text)
+		sc.2377(0,ea.sc),aa.RemoveAttribute("sc")
+	if(A_ThisLabel="RCEL"||A_ThisLabel="RCEA"){
+		Rem:=cexml.SSN("//Libraries"),Rem.ParentNode.RemoveChild(Rem)
+		Index_Lib_Files(),Code_Explorer.Refresh_Code_Explorer()
+	}else if(A_ThisLabel="RCEP"||A_ThisLabel="RCEA"){
+		Rem:=cexml.SSN("//files"),Rem.ParentNode.RemoveChild(Rem)
+		All:=Settings.SN("//open/file")
+		while(aa:=All.item[A_Index-1])
+			Extract(GetMainNode(aa.Text))
+	}ScanFiles(1),Code_Explorer.Refresh_Code_Explorer(),FEUpdate(1),TV(SSN(cexml.Find("//file/@file",FileName),"@tv").Text)
+	SplashTextOff
+	return
 }Refresh_Project_Explorer(){
-	Refresh_Code_Explorer()
+	Refresh_Code_Explorer(1)
 }
 Refresh_Current_File(){
 	Refresh(cexml.SN("//*[@id='" Current(3).ID "']"))

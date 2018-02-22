@@ -1,7 +1,8 @@
-1.005.07:
-Fixed:
-- Duplicate #Includes were being added
-- Refresh Project/Code Explorer: Caret "Should" stay in the position where it was before the Refresh
-Added: Suggested by maltaannon
-- Insert Color Code: Add in a Color Code
-- Hex colors have a CallTip that shows the color when your Caret is within the color text
+1.005.08:
+Changed:
+- Code Explorer:
+- - Libraries now have their own Tree
+- Libraries:
+- - Will not Re-Index every time you open Studio
+- Refresh Code/Project Explorer:
+- - Will ask if you want to refresh your Projects, Libraries, or Both
