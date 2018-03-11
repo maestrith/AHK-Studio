@@ -13553,7 +13553,7 @@ Highlight_Selected_Area(){
 }
 Start_Select_Character(){
 	StartSelect:=InputBox(HWND(1),"Start Select Character","Enter a list of characters you want to add to the DoubleClick selection",Settings.SSN("//StartSelect").text)
-	Settings.SSN("//StartSelect").text:=StartSelect
+	Settings.Add("StartSelect").text:=StartSelect
 }
 DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0,MsgBox:=0){
 	x:=ComObjActive("{DBD5A90A-A85C-11E4-B0C7-43449580656B}"),x.DebugWindow(Text,Clear,LineBreak,Sleep,AutoHide,MsgBox)
