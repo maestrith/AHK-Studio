@@ -7,3 +7,4 @@ Fixed: Reported by DaveT1
 - Breakpoints for Debugging were not working
 Changed: Requested by autocart
 - Added Start Select Character: You can add in extra characters that start words to have double click select include them in the selection
+- Hopefully fixed the UTF character issue

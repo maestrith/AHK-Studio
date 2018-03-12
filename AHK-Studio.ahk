@@ -4638,10 +4638,9 @@ Extract(Main){
 	ExtractNext:
 	id:=GetID(),q:=FileOpen(file,"R")
 	if(q.Encoding="CP1252"){
-		if(RegExMatch((Text:=q.Read()),"OU)([^\x00-\x7F])",Found)){
-			q:=FileOpen(file,"R","UTF-8"),Text:=q.Read()
-			Encoding:="UTF-8"
-		}else
+		if(RegExMatch((Text:=q.Read()),"OU)([^\x00-\x7F])",Found))
+			q:=FileOpen(File,"W","UTF-8"),q.Write(Text),q.Close(),Encoding:="UTF-8"
+		else
 			Encoding:=q.Encoding
 	}else
 		Encoding:=q.Encoding,Text:=q.Read()
