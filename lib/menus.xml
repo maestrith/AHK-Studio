@@ -295,7 +295,7 @@
 			<menu clean="Forward" name="Forward" hotkey="!RIGHT"></menu>
 			<menu name="File History Back" clean="File_History_Back"></menu>
 			<menu name="File History Forward" clean="File_History_Forward"></menu>
-			<menu name="Clear File History" clean="Clear_File_History"></menu>
+			<menu name="Clear History" clean="Clear_History"></menu>
 			<menu name="Highlight to Matching Brace" clean="Highlight_to_Matching_Brace" hotkey="^!M"></menu>
 			<menu name="Tab To Next Comma" clean="Tab_To_Next_Comma" hotkey="^TAB"></menu>
 			<menu name="Tab To Previous Comma" clean="Tab_To_Previous_Comma" hotkey="+^TAB"></menu></menu>
