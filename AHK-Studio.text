@@ -1,10 +1,3 @@
-1.005.11
-Fixed:
-- Sometimes when you pressed Alt+F it would select the entire document (Still not sure why it does it, or when it would do it)
-Changed:
-- Refresh Code/Project Explorer: Default {Enter} action is now Refresh Current Project
-Added: Suggested by Kelvin
-- Duplicate Line: If you have a selection that spans multiple lines it will duplicate those lines
-- - Works with Multiple Carets
-Added:
-- Clear History
+1.005.12
+Fixed: Reported by chocnmint
+- Characters like ¿, ¡, ñ, á were getting messed up.

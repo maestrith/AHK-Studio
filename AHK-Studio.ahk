@@ -116,7 +116,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.11"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.12"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -605,7 +605,7 @@ Check_For_Update(startup:=""){
 		if(Auto.Reset>A_Now)
 			return
 	}
-	Version:="1.005.11"
+	Version:="1.005.12"
 	NewWin:=new GUIKeep("CFU"),NewWin.Add("Edit,w400 h400 ReadOnly,No New Version,wh"
 								  ,"Radio,gSwitchBranch Checked vmaster,Master Branch,y"
 								  ,"Radio,x+M gSwitchBranch vBeta,Beta Branch,y"
@@ -1891,7 +1891,7 @@ Class PluginClass{
 	}m(Info*){
 		m(Info*)
 	}MoveStudio(){
-		Version:="1.005.11"
+		Version:="1.005.12"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(Info){
@@ -1936,7 +1936,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.005.11"
+		Version:="1.005.12"
 		return version
 	}
 }
@@ -4373,7 +4373,7 @@ Enable(Control,label:="",win:=1){
 }
 Encode(tt,ByRef text,encoding:="UTF-8"){
 	len:=VarSetCapacity(text,(StrPut(tt,encoding)*((encoding="utf-16"||encoding="cp1200")?2:1))),StrPut(tt,&text,len,"UTF-8")
-	return len-1
+	return Len-1
 }
 Enter(){
 	static map:=new XML("map"),NotIndent:={IfEqual:1,IfNotEqual:1,IfGreater:1,IfGreaterOrEqual:1,IfLess:1,IfLessOrEqual:1,IfInString:1}
@@ -4657,9 +4657,9 @@ Extract(Main){
 	ExtractNext:
 	id:=GetID(),q:=FileOpen(file,"R")
 	if(q.Encoding="CP1252"){
-		if(RegExMatch((Text:=q.Read()),"OU)([^\x00-\x7F])",Found))
+		if(RegExMatch((Text:=q.Read()),"OU)([^\x00-\x7F])",Found)){
 			q:=FileOpen(File,"W","UTF-8"),q.Write(Text),q.Close(),Encoding:="UTF-8"
-		else
+		}else
 			Encoding:=q.Encoding
 	}else
 		Encoding:=q.Encoding,Text:=q.Read()
@@ -11636,7 +11636,22 @@ tv(tv*){
 			if(!ea.sc){
 				sc.2358(0,0)
 				Sleep,80
-				doc:=sc.2357,sc.2376(0,doc),Node.SetAttribute("sc",doc),tt:=Update({Get:ea.file}),encoding:=ea.encoding,sc.2037(65001),Len:=Encode(tt,text,encoding),sc.Enable(),sc.2181(0,&text),sc.2175(),Language:=Settings.SSN("//Extensions/Extension[text()='" ea.ext "']/@language").text,Language:=Language?Language:"ahk",sc.4006(0,Language),Color(sc,GetLanguage(sc))
+				doc:=sc.2357
+				sc.2376(0,doc)
+				Node.SetAttribute("sc",doc)
+				tt:=Update({Get:ea.file})
+				encoding:=ea.encoding
+				Encoding:=Encoding?Encoding:"UTF-8"
+				sc.2037(65001)
+				VarSetCapacity(Text,(Len:=StrPut(tt,Encoding)-1))
+				StrPut(tt,&Text,Len,Encoding)
+				sc.Enable()
+				sc.2181(0,&text)
+				sc.2175()
+				Language:=Settings.SSN("//Extensions/Extension[text()='" ea.ext "']/@language").text
+				Language:=Language?Language:"ahk"
+				sc.4006(0,Language)
+				Color(sc,GetLanguage(sc))
 				Sleep,50
 				sc.Enable(1)
 			}else
@@ -13588,7 +13603,7 @@ Start_Select_Character(){
 }
 Clear_History(){
 	History.XML.XML.LoadXML("<History/>"),sc:=CSC(),History.Add(cexml.EA("//*[@sc='" sc.2357 "']"),sc,1)
-}
+}g
 DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0,MsgBox:=0){
 	x:=ComObjActive("{DBD5A90A-A85C-11E4-B0C7-43449580656B}"),x.DebugWindow(Text,Clear,LineBreak,Sleep,AutoHide,MsgBox)
 }
