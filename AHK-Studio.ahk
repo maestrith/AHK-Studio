@@ -11636,22 +11636,7 @@ tv(tv*){
 			if(!ea.sc){
 				sc.2358(0,0)
 				Sleep,80
-				doc:=sc.2357
-				sc.2376(0,doc)
-				Node.SetAttribute("sc",doc)
-				tt:=Update({Get:ea.file})
-				encoding:=ea.encoding
-				Encoding:=Encoding?Encoding:"UTF-8"
-				sc.2037(65001)
-				VarSetCapacity(Text,(Len:=StrPut(tt,Encoding)-1))
-				StrPut(tt,&Text,Len,Encoding)
-				sc.Enable()
-				sc.2181(0,&text)
-				sc.2175()
-				Language:=Settings.SSN("//Extensions/Extension[text()='" ea.ext "']/@language").text
-				Language:=Language?Language:"ahk"
-				sc.4006(0,Language)
-				Color(sc,GetLanguage(sc))
+				doc:=sc.2357,sc.2376(0,doc),Node.SetAttribute("sc",doc),tt:=Update({Get:ea.file}),encoding:=ea.encoding,Encoding:=Encoding?Encoding:"UTF-8",sc.2037(65001),Encode(tt,Text,Encoding),sc.Enable(),sc.2181(0,&text),sc.2175(),Language:=Settings.SSN("//Extensions/Extension[text()='" ea.ext "']/@language").text,Language:=Language?Language:"ahk",sc.4006(0,Language),Color(sc,GetLanguage(sc))
 				Sleep,50
 				sc.Enable(1)
 			}else
@@ -13604,7 +13589,6 @@ Start_Select_Character(){
 Clear_History(){
 	History.XML.XML.LoadXML("<History/>"),sc:=CSC(),History.Add(cexml.EA("//*[@sc='" sc.2357 "']"),sc,1)
 }
-
 DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0,MsgBox:=0){
 	x:=ComObjActive("{DBD5A90A-A85C-11E4-B0C7-43449580656B}"),x.DebugWindow(Text,Clear,LineBreak,Sleep,AutoHide,MsgBox)
 }
