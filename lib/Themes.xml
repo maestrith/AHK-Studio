@@ -687,4 +687,46 @@
 		<custom control="SysTreeView321" gui="1" color="16777215"></custom>
 		<custom control="msctls_statusbar321" gui="1" bold="0" color="0" font="" italic="0" size="12" strikeout="0" underline="0"></custom>
 	</fonts>
+	<fonts>
+		<author>Graushwein</author>
+		<name>NuclearDragon</name>
+		<font background="0x1D160B" bold="0" color="0xF8F8F2" font="Consolas" size="10" style="5" italic="0" strikeout="0" underline="0"></font>
+		<font background="0x36342E" style="33" color="0xECEEEE"></font>
+		<font style="13" color="0x2929EF" bold="0"></font>
+		<font style="3" color="6350967" bold="0"></font>
+		<font style="1" color="0xE09A1E" font="Consolas" italic="1" bold="0"></font>
+		<font style="2" color="10908159" font="Consolas" italic="0" bold="0"></font>
+		<font style="4" color="33023"></font>
+		<font style="15" color="0x0080FF"></font>
+		<font style="18" color="0x00AAFF"></font>
+		<font style="19" color="0x9A93EB" font="Consolas" italic="0"></font>
+		<font style="22" color="33023"></font>
+		<font style="21" color="0x0080FF" italic="1"></font>
+		<font style="11" color="0xE09A1E" bold="0" font="Consolas" italic="1" size="10" strikeout="0" underline="0"></font>
+		<font style="17" color="0x00AAFF" italic="1"></font>
+		<font bool="1" code="2068" color="6507301"></font>
+		<font code="2069" color="16751515"></font>
+		<font code="2098" color="4337677"></font>
+		<font style="20" color="0x0000FF" italic="1"></font>
+		<font style="23" color="0x00AAFF" italic="1"></font>
+		<font style="24" color="0xFF00FF"></font>
+		<font style="9" color="0x4B9AFB"></font>
+		<font style="8" color="0x00AAFF"></font>
+		<font style="10" color="0x2929EF"></font>
+		<font code="2188" value="2"></font>
+		<custom control="msctls_statusbar321" gui="1"></custom>
+		<indicator indic="3" background="16777215"></indicator>
+		<font code="2601" color="7819520"></font>
+		<custom control="SysTreeView322" gui="1" color="16777215"></custom>
+		<font background="4718737" style="48">-2147352572</font>
+		<font style="42" color="2491063"></font>
+		<font style="41" color="16777215"></font>
+		<font style="40"></font>
+		<font style="57" color="4882943"></font>
+		<font style="34" background="0x1D160B" bold="0" color="0xF8F8F2" font="Consolas" italic="0" size="10" strikeout="0" underline="0"></font>
+		<font style="55" color="191"></font>
+		<font style="56" color="65280"></font>
+		<font style="97" color="33023"></font>
+		<font style="99" color="33023"></font>
+	</fonts>
 </themes>
