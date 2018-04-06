@@ -116,7 +116,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.12"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.13"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -605,7 +605,7 @@ Check_For_Update(startup:=""){
 		if(Auto.Reset>A_Now)
 			return
 	}
-	Version:="1.005.12"
+	Version:="1.005.13"
 	NewWin:=new GUIKeep("CFU"),NewWin.Add("Edit,w400 h400 ReadOnly,No New Version,wh"
 								  ,"Radio,gSwitchBranch Checked vmaster,Master Branch,y"
 								  ,"Radio,x+M gSwitchBranch vBeta,Beta Branch,y"
@@ -1891,7 +1891,7 @@ Class PluginClass{
 	}m(Info*){
 		m(Info*)
 	}MoveStudio(){
-		Version:="1.005.12"
+		Version:="1.005.13"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(Info){
@@ -1936,7 +1936,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.005.12"
+		Version:="1.005.13"
 		return version
 	}
 }
@@ -6481,7 +6481,9 @@ Class Keywords{
 					while(SubStr(Data,1,1)!="<")
 						Data:=SubStr(Data,2)
 					xx:=new XML(NNE,a,Data,URL)
-				}else if(xx.SSN("//date").text!=Date){
+				}if(!Node:=xx.SSN("//date"))
+					Node:=xx.Add("date")
+				else if(xx.SSN("//date").text!=Date){
 					SplashTextOn,200,100,Downloading %NNE%.xml,Please Wait...
 					Data:=URLDownloadToVar(Url)
 					while(SubStr(Data,1,1)!="<")
@@ -6489,9 +6491,7 @@ Class Keywords{
 					TempXML:=new XML(Language:=Format("{:L}",NNE)),TempXML.XML.LoadXML(Data)
 					if(TempXML[])
 						xx:=TempXML,xx.File:=a
-				}if(!Node:=xx.SSN("//date"))
-					Node:=xx.Add("date")
-				if(!NoUpdate),NoUpdate:=0
+				}if(!NoUpdate),NoUpdate:=0
 					Node.text:=Date,xx.Save(1)
 				SplashTextOff
 			}LEA:=XML.EA(Lexer:=xx.SSN("//FileTypes")),Keywords.Languages[(Language:=Format("{:L}",LEA.Language))]:=xx
