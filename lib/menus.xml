@@ -155,7 +155,6 @@
 				<menu clean="Update_Repository" hotkey="" name="Update Repository" option="" plugin="plugins\Update Repository.ahk"></menu></menu>
 			<menu clean="Custom_Commands" hotkey="" name="Custom Commands" option="" plugin="plugins\Custom Commands.ahk"></menu>
 			<menu name="Personal &amp;Variable List" clean="Personal_Variable_List"></menu>
-			<menu name="Code &amp;Vault" clean="Code_Vault" hotkey="+^F1" option="" plugin="plugins\Code Vault.ahk"></menu>
 			<menu name="Ms&amp;gBox Creator" clean="MsgBox_Creator" option="" plugin="plugins\MsgBox Creator.ahk"></menu>
 			<menu name="Github Repository" hotkey="!^G" clean="Github_Repository" option="" plugin="plugins\Github Repository.ahk"></menu>
 			<menu name="Update Github Info" clean="Update_Github_Info"></menu>
