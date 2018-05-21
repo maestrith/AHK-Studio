@@ -116,7 +116,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.13"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.14"
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -605,7 +605,7 @@ Check_For_Update(startup:=""){
 		if(Auto.Reset>A_Now)
 			return
 	}
-	Version:="1.005.13"
+	Version:="1.005.14"
 	NewWin:=new GUIKeep("CFU"),NewWin.Add("Edit,w400 h400 ReadOnly,No New Version,wh"
 								  ,"Radio,gSwitchBranch Checked vmaster,Master Branch,y"
 								  ,"Radio,x+M gSwitchBranch vBeta,Beta Branch,y"
@@ -1891,7 +1891,7 @@ Class PluginClass{
 	}m(Info*){
 		m(Info*)
 	}MoveStudio(){
-		Version:="1.005.13"
+		Version:="1.005.14"
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(Info){
@@ -1936,7 +1936,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.005.13"
+		Version:="1.005.14"
 		return version
 	}
 }
@@ -5908,7 +5908,7 @@ class GUIKeep{
 			if(RegExMatch(i.2,"U)\bg(.*)\b",Label))
 				Label:=Label1
 			if(RegExMatch(i.2,"U)\bv(.*)\b",var))
-				this.var[var1]:={hwnd:HWND,type:i.1,sc:sc,label:Label}
+				this.var[var1]:={hwnd:HWND,type:i.1,sc:sc,label:Label},Var:=var1
 			this.con[hwnd]:=[]
 			if(i.4!="")
 				this.con[hwnd,"pos"]:=i.4,this.resize:=1
@@ -5932,7 +5932,10 @@ class GUIKeep{
 				}
 				
 			}
-			this.XML.Add("Control",{hwnd:HWND,id:"ahk_id" HWND,name:Name,type:i.1,label:Label},,1)
+			New:=this.XML.Add("Control",{hwnd:HWND,id:"ahk_id" HWND,name:Name,type:i.1,label:Label},,1)
+			/*
+				m("Name: " Name,"Var1: " Var1,"Label: " Label,"HERE!","",New.xml)
+			*/
 	}}Close(a:=""){
 		this:=GUIKeep.table[A_Gui]
 		if(IsFunc(func:=A_Gui "Close"))
@@ -9356,12 +9359,13 @@ RGB(c){
 Right_Click_Menu_Editor(menu){
 	static TVRCM:=new EasyView(),nw,node,lastevent,find:=[]
 	nw:=new GUIKeep("RCMEditor"),node:=RCMXML.SSN("//main[@name='" menu "']")
-	nw.Add("ListView,w300 h150 AltSubmit,Menus","TreeView,x+M w300 h400,,wh","ComboBox,x+M w300 gRCMF vfind,,x","TreeView,w300 h377,,xh","ListView,xm y150 w300 h250 gRCMEGo,Commands|Hotkey,h")
+	nw.Add("ListView,w300 h150 vl1 AltSubmit,Menus","TreeView,x+M w300 h400 vt1,,wh","ComboBox,x+M w300 gRCMF vfind,,x","TreeView,w300 h377 vt2,,xh","ListView,xm y150 w300 h250 gRCMEGo vl2,Commands|Hotkey,h")
 	for a,b in [["l1","SysListView321","RCME"],["l2","SysListView322"],["t1","SysTreeView321"],["t2","SysTreeView322"]]
-		TVRCM.Register(b.1,nw.XML.SSN("//*[@class='" b.2 "']/@hwnd").text,b.3,"RCMEditor")
+		TVRCM.Register(b.1,nw.XML.SSN("//*[@name='" b.1 "']/@hwnd").text,b.3,"RCMEditor")
 	all:=RCMXML.SN("//main")
-	while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa)
+	while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa){
 		value:=TVRCM.Add("l1",ea.name),item:=ea.name=menu?value:item
+	}
 	all:=menus.SN("//main/descendant::*"),
 	while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa){
 		if(aa.NodeName="Separator")
