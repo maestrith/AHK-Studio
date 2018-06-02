@@ -116,7 +116,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:="1.005.14"
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), ;auto_version
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -598,14 +598,14 @@ Check_For_Edited(){
 Check_For_Update(startup:=""){
 	static NewWin,master,Beta,DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/$1/AHK-Studio.ahk",URL:="https://api.github.com/repos/maestrith/AHK-Studio/commits/$1"
 	Run,RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
-	Auto:=Settings.EA("//autoupdate"), Branch:="master"
+	Auto:=Settings.EA("//autoupdate"), ;auto_branch
 	if(startup=1){
 		if(v.Options.Auto_Check_For_Update_On_Startup!=1)
 			return
 		if(Auto.Reset>A_Now)
 			return
 	}
-	Version:="1.005.14"
+	;auto_version
 	NewWin:=new GUIKeep("CFU"),NewWin.Add("Edit,w400 h400 ReadOnly,No New Version,wh"
 								  ,"Radio,gSwitchBranch Checked vmaster,Master Branch,y"
 								  ,"Radio,x+M gSwitchBranch vBeta,Beta Branch,y"
@@ -1891,7 +1891,7 @@ Class PluginClass{
 	}m(Info*){
 		m(Info*)
 	}MoveStudio(){
-		Version:="1.005.14"
+		;auto_version
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(Info){
@@ -1936,7 +1936,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:="1.005.14"
+		;auto_version
 		return version
 	}
 }
@@ -7567,8 +7567,10 @@ Notify(csc*){
 	}if(Code=2017)
 		return sc.2201
 	if(Code=2007){
-		if(NumGet(Info+88)&2)
+		if((Msg:=NumGet(Info+88))&2)
 			SetTimer("UpPos",-31)
+		if((Msg&4||Msg&8)&&sc.2102)
+			sc.2101
 		return 0,SetTimers("BraceHighlight,-10")
 	}else if(Code=2028){
 		if(s.ctrl[Ctrl])
