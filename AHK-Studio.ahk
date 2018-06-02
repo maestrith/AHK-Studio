@@ -63,7 +63,7 @@ return
 	}
 	MISC NOT WORKING:
 	Joe_Glines{
-		Check Edited Files On Focus:
+		Check Edited Files On Focus
 		have it so that it asks first to replace the text rather than automatically
 	}Misc Ideas:
 	When you edit/Add a line with an include:{
