@@ -1,5 +1,6 @@
 1.005.14
 Fixed: Reported by Gabe
 - Right Click Menu Editor: Was messed up
-Added: Suggested by Ryan Blackburn
+Added: Suggested by noticz
 - If an AutoComplete window is open when scrolling it will cancel itself
+- Version Number in Check For Update was missing
