@@ -64,7 +64,7 @@ return
 	MISC NOT WORKING:
 	Joe_Glines{
 		Check Edited Files On Focus:
-		have it so that it asks first to replace the text rather than automatically
+			have it so that it asks first to replace the text rather than automatically
 	}Misc Ideas:
 	When you edit/Add a line with an include:{
 		have it scan that line (Add a thing in the Scan_Line() for it)
