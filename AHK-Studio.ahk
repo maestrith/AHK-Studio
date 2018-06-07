@@ -4819,7 +4819,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20180209111407,XMLFiles:={menus:[20180321131229,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20180209111407,XMLFiles:={menus:[20180607053820,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20180104080414,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -5425,6 +5425,11 @@ UnFold_All(){
 }
 Toggle_Fold_All(){
 	CSC().2662(2)
+}
+Fold_Current_Block(){
+	sc:=CSC()
+	if(Parent:=sc.2225((sc.2166(sc.2008))))
+		sc.2231(Parent),sc.2025(sc.2136(Parent))
 }
 Fold_Current_Level(){
 	sc:=CSC(),level:=sc.2223(sc.2166(sc.2008))&0xff,level:=level-1>=0?level-1:level,Fold_Level_X(Level)
