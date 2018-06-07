@@ -58,7 +58,7 @@
 			<menu clean="Folding" name="Folding" top="1">
 				<menu clean="Fold_All" name="Fold All" option="all" plugin="plugins\Fold.ahk"></menu>
 				<menu clean="Fold_Current_Level" name="Fold Current Level" option="fc" plugin="plugins\Fold.ahk"></menu>
-				<menu clean="Fold_Current_Block" name="Fold Current Block"></menu>
+				<menu clean="Toggle_Fold_Current_Block" name="Toggle Fold Current Block"></menu>
 				<menu clean="Fold_Level_X" name="Fold Level X" option="fx" plugin="plugins\Fold.ahk"></menu>
 				<menu clean="Unfold_All" name="Unfold All" option="ua" plugin="plugins\Fold.ahk"></menu>
 				<menu clean="Unfold_Current_Level" name="Unfold Current Level" option="uc" plugin="plugins\Fold.ahk"></menu>
