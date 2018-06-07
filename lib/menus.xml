@@ -5,7 +5,7 @@
 			<menu name="&amp;New" hotkey="^N" clean="New"></menu>
 			<menu name="&amp;Open" clean="Open" hotkey="^O"></menu>
 			<menu name="Index Lib Files" clean="Index_Lib_Files"></menu>
-			<menu name="Open Fol&amp;der" clean="Open_Folder" hotkey="^!D"></menu>
+			<menu name="Show Fol&amp;der In Explorer" clean="Show_Folder_In_Explorer" hotkey="^!D"></menu>
 			<menu clean="Close" name="&amp;Close"></menu>
 			<menu name="Close All" clean="Close_All" hotkey=""></menu>
 			<menu name="&amp;Save" hotkey="^S" clean="Save"></menu>
