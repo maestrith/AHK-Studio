@@ -5428,8 +5428,10 @@ Toggle_Fold_All(){
 }
 Fold_Current_Block(){
 	sc:=CSC()
-	if(Parent:=sc.2225((sc.2166(sc.2008))))
+	if((Parent:=sc.2225(((Line:=sc.2166(sc.2008)))))>=0){
 		sc.2231(Parent),sc.2025(sc.2136(Parent))
+	}else
+		sc.2231(Line)
 }
 Fold_Current_Level(){
 	sc:=CSC(),level:=sc.2223(sc.2166(sc.2008))&0xff,level:=level-1>=0?level-1:level,Fold_Level_X(Level)
