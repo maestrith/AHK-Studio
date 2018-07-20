@@ -11677,7 +11677,8 @@ tv(tv*){
 			if(pos.fold!="")
 				for a,b in StrSplit(pos.fold,",")
 					sc.2237(b,0)
-			(pos.scroll!="")?sc.2613(pos.scroll):"",(pos.start||pos.end)?sc.2160(pos.start,pos.end):""
+			; (pos.scroll!="")?sc.2613(pos.scroll):"",(pos.start||pos.end)?sc.2160(pos.start,pos.end):""
+			(pos.start||pos.end)?sc.2160(pos.end,pos.start):"",(pos.scroll!="")?sc.2613(pos.scroll):"" ; FIXED - scroll pos after switching file
 		}sc.Enable(1),Node:=gui.SSN("//*[@hwnd='" sc.sc+0 "']"),Node.SetAttribute("file",ea.file)
 	}else if(tv.2.end!="")
 		pos:=tv.2,sc.2160(pos.start,pos.end),CenterSel()
