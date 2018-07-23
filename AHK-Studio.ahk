@@ -116,7 +116,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:=1.005.15
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:=1.005.16
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -605,7 +605,7 @@ Check_For_Update(startup:=""){
 		if(Auto.Reset>A_Now)
 			return
 	}
-	Version:=1.005.15
+	Version:=1.005.16
 	NewWin:=new GUIKeep("CFU"),NewWin.Add("Edit,w400 h400 ReadOnly,No New Version,wh"
 								  ,"Radio,gSwitchBranch Checked vmaster,Master Branch,y"
 								  ,"Radio,x+M gSwitchBranch vBeta,Beta Branch,y"
@@ -1891,7 +1891,7 @@ Class PluginClass{
 	}m(Info*){
 		m(Info*)
 	}MoveStudio(){
-		Version:=1.005.15
+		Version:=1.005.16
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(Info){
@@ -1936,7 +1936,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:=1.005.15
+		Version:=1.005.16
 		return version
 	}
 }
@@ -11677,7 +11677,7 @@ tv(tv*){
 			if(pos.fold!="")
 				for a,b in StrSplit(pos.fold,",")
 					sc.2237(b,0)
-			(pos.start||pos.end)?sc.2160(pos.end,pos.start):"",(pos.scroll!="")?sc.2613(pos.scroll):"" ; FIXED - scroll pos after switching file
+			(pos.start||pos.end)?sc.2160(pos.end,pos.start):"",(pos.scroll!="")?sc.2613(pos.scroll):"" ; FIXED - scroll pos after switching file by smarq8
 		}sc.Enable(1),Node:=gui.SSN("//*[@hwnd='" sc.sc+0 "']"),Node.SetAttribute("file",ea.file)
 	}else if(tv.2.end!="")
 		pos:=tv.2,sc.2160(pos.start,pos.end),CenterSel()
@@ -13613,6 +13613,6 @@ Start_Select_Character(){
 Clear_History(){
 	History.XML.XML.LoadXML("<History/>"),sc:=CSC(),History.Add(cexml.EA("//*[@sc='" sc.2357 "']"),sc,1)
 }
-DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0,MsgBox:=0){
-	x:=ComObjActive("{DBD5A90A-A85C-11E4-B0C7-43449580656B}"),x.DebugWindow(Text,Clear,LineBreak,Sleep,AutoHide,MsgBox)
+DebugWindow(x*){
+
 }
