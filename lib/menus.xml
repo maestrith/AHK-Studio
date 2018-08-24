@@ -152,7 +152,7 @@
 				<menu clean="Remove_Blank_Lines" hotkey="" name="Remove Blank Lines" option="" plugin="plugins\Remove Blank Lines.ahk"></menu>
 				<menu clean="Remove_Comments" hotkey="" name="Remove Comments" option="" plugin="plugins\Remove Comments.ahk"></menu>
 				<menu clean="Run_Current_Include" hotkey="" name="Run Current Include" option="Include" plugin="plugins\Run Selected Text.ahk"></menu>
-				<menu clean="Split_Line_By_Comma" hotkey="" name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk"></menu>
+				<menu clean="Split_Line_By_Comma" hotkey="" name="Split Line By Comma"></menu>
 				<menu clean="Toggle_Fullscreen" hotkey="" name="Toggle Fullscreen" option="" plugin="plugins\Toggle Fullscreen.ahk"></menu>
 				<menu clean="Update_Repository" hotkey="" name="Update Repository" option="" plugin="plugins\Update Repository.ahk"></menu></menu>
 			<menu clean="Custom_Commands" hotkey="" name="Custom Commands" option="" plugin="plugins\Custom Commands.ahk"></menu>
