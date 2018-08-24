@@ -143,7 +143,8 @@
 				<menu clean="Compile_Using_Unicode_32" hotkey="" name="Compile Using Unicode 32" option="" plugin="plugins\Compile Using Unicode 32.ahk"></menu>
 				<menu clean="Toggle_Fold_All" hotkey="" name="Toggle Fold All" option="tfa" plugin="plugins\Fold.ahk"></menu>
 				<menu clean="Toggle_Fold" hotkey="" name="Toggle Fold" option="tf" plugin="plugins\Fold.ahk"></menu>
-				<menu clean="Increment_Selected" hotkey="" name="Increment Selected" option="" plugin="plugins\Increment Selected.ahk"></menu>
+				<menu clean="Increment_Selected" hotkey="" name="Increment Selected"></menu>
+				<menu clean="Decrement_Selected" hotkey="" name="Decrement Selected"></menu>
 				<menu clean="Make_One_Line" hotkey="" name="Make One Line" option="" plugin="plugins\Make One Line.ahk"></menu>
 				<menu clean="Mark_All_Files_For_Update" hotkey="" name="Mark All Files For Update" option="" plugin="plugins\Mark All Files For Update.ahk"></menu>
 				<menu clean="Paste_To_p.ahkscript.org" hotkey="" name="Paste To p.ahkscript.org" option="" plugin="plugins\Paste Script.ahk"></menu>
