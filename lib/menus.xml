@@ -11,6 +11,9 @@
 			<menu name="&amp;Save" hotkey="^S" clean="Save"></menu>
 			<menu clean="Save_As" name="Save &amp;As"></menu>
 			<menu name="Export" clean="Export"></menu>
+			<menu name="Compile" clean="Compile"></menu>
+			<menu name="Compile Using U32" clean="Compile_Using_U32"></menu>
+			<menu name="Compile Using U64" clean="Compile_Using_U64"></menu>
 			<separator clean="&lt;Separator&gt;" option="1"></separator>
 			<menu name="Remove Scintilla Window" clean="Remove_Scintilla_Window"></menu>
 			<menu name="New &amp;Include" clean="New_Include"></menu>
