@@ -20,7 +20,6 @@
 			<menu name="Rename Current Include" clean="Rename_Current_Include"></menu>
 			<menu name="Version Tracker" clean="Version_Tracker"></menu>
 			<menu name="Remove Include" clean="Remove_Include"></menu>
-			<menu name="&amp;Upload" clean="Upload" option="" plugin="plugins\Upload.ahk"></menu>
 			<menu name="&amp;Publish" clean="Publish"></menu>
 			<menu name="Delete Project" clean="Delete_Project"></menu>
 			<menu name="Project Properties" clean="Project_Properties"></menu>
@@ -165,7 +164,6 @@
 			<menu name="Post &amp;Multiple Include Gist" clean="Post_Multiple_Include_Gist" no="1" delete="1"></menu>
 			<menu name="Auto Insert" clean="Auto_Insert" hide="1" option="" plugin="plugins\Auto Insert.ahk"></menu>
 			<menu clean="Settings" name="Settings" option="" plugin="plugins\Settings.ahk"></menu>
-			<menu clean="FTP_Servers" name="FT&amp;P Servers" option="" plugin="plugins\Ftp Servers.ahk"></menu>
 			<menu name="Insert Color Code" clean="Insert_Color_Code"></menu>
 			<menu clean="Google_Search_Selected" name="Google Search Selected"></menu></menu>
 		<menu name="O&amp;ptions" clean="Options" top="1">
