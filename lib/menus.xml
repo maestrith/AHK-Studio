@@ -331,26 +331,5 @@
 				<menu name="&amp;Social" clean="Social" no="1" delete="1"></menu>
 				<menu clean="Testing" name="Testing" hotkey="^K"></menu></menu>
 			<menu name="&amp;About" clean="About"></menu></menu>
-		<menu clean="Plugin" name="P&amp;lugin" top="1">
-			<menu clean="Alphabetize_XML" hotkey="" name="Alphabetize XML" option="" plugin="plugins\Alphabetize XML.ahk"></menu>
-			<menu clean="Validate_XML" hotkey="" name="Validate XML" option="Validate" plugin="plugins\Alphabetize XML.ahk"></menu>
-			<menu clean="Toggle_Current_Fold" hotkey="" name="Toggle Current Fold" option="" plugin="plugins\Code Folding.ahk"></menu>
-			<menu clean="Create_Menu_For_Github" hotkey="" name="Create Menu For Github" option="" plugin="plugins\Create Menu For Github.ahk"></menu>
-			<menu clean="Fix_Case" hotkey="" name="Fix Case" option="" plugin="plugins\Fix Case.ahk"></menu>
-			<menu clean="Fix_It" hotkey="" name="Fix It" option="" plugin="plugins\Fix It.ahk"></menu>
-			<menu clean="Fix_Lib" hotkey="" name="Fix Lib" option="" plugin="plugins\Fix Lib.ahk"></menu>
-			<menu clean="Ftp_Servers" hotkey="" name="Ftp Servers" option="" plugin="plugins\Ftp Servers.ahk"></menu>
-			<menu clean="Get_Coordinates" hotkey="" name="Get Coordinates" option="" plugin="plugins\Get Coordinates.ahk"></menu>
-			<menu clean="Goto_Testing" hotkey="" name="Goto Testing" option="" plugin="plugins\GoTo Testing.ahk"></menu>
-			<menu clean="Language_Editor" hotkey="" name="Language Editor" option="" plugin="plugins\Language Editor.ahk"></menu>
-			<menu clean="LowerCase_Selected" hotkey="" name="LowerCase Selected" option="" plugin="plugins\LowerCase Selected.ahk"></menu>
-			<menu clean="Open_Settings" hotkey="" name="Open Settings" option="" plugin="plugins\Open Settings.ahk"></menu>
-			<menu clean="OTB" hotkey="" name="OTB" option="" plugin="plugins\OTB.ahk"></menu>
-			<menu clean="Remove_Comments_From_Selected" hotkey="" name="Remove Comments From Selected" option="" plugin="plugins\Remove Comments From Selected.ahk"></menu>
-			<menu clean="Run_Current_Segment" hotkey="" name="Run Current Segment" option="segment" plugin="plugins\Run Selected Text.ahk"></menu>
-			<menu clean="Show_Style" hotkey="" name="Show Style" option="" plugin="plugins\Show Style.ahk"></menu>
-			<menu clean="Basic_Run" hotkey="" name="Basic Run" option="" plugin="plugins\Standard Run.ahk"></menu>
-			<menu clean="Swap_Key_Value" hotkey="" name="Swap Key Value" option="" plugin="plugins\Swap Key Value.ahk"></menu>
-			<menu clean="Test_Scintilla" hotkey="" name="Test Scintilla" option="" plugin="plugins\Test Scintilla.ahk"></menu></menu>
 	</main>
 </menus>
