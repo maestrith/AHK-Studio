@@ -139,7 +139,6 @@
 				<menu name="Download Plugins" clean="Download_Plugins"></menu>
 				<menu clean="Test_Plugin" name="Test Plugin" hotkey="!t"></menu>
 				<separator clean="&lt;Separator&gt;"></separator>
-				<menu clean="Additional_Publish" hotkey="" name="Additional Publish" option="" plugin="plugins\Additional Publish.ahk"></menu>
 				<menu clean="Backup" hotkey="" name="Backup" option="" plugin="plugins\Backup.ahk"></menu>
 				<menu clean="Camel" hotkey="" name="Camel" option="" plugin="plugins\Camel.ahk"></menu>
 				<menu clean="Clean_Position_Data" hotkey="" name="Clean Position Data" option="" plugin="plugins\Clean Position Data.ahk"></menu>
@@ -339,7 +338,6 @@
 			<menu clean="Alphabetize_XML" hotkey="" name="Alphabetize XML" option="" plugin="plugins\Alphabetize XML.ahk"></menu>
 			<menu clean="Validate_XML" hotkey="" name="Validate XML" option="Validate" plugin="plugins\Alphabetize XML.ahk"></menu>
 			<menu clean="Toggle_Current_Fold" hotkey="" name="Toggle Current Fold" option="" plugin="plugins\Code Folding.ahk"></menu>
-			<menu clean="Toggle_All_Folds" hotkey="" name="Toggle All Folds" option="foldall" plugin="plugins\Code Folding.ahk"></menu>
 			<menu clean="Compile_Using_Unicode_64" hotkey="" name="Compile Using Unicode 64" option="" plugin="plugins\Compile Using Unicode 64.ahk"></menu>
 			<menu clean="Create_Menu_For_Github" hotkey="" name="Create Menu For Github" option="" plugin="plugins\Create Menu For Github.ahk"></menu>
 			<menu clean="Fix_Case" hotkey="" name="Fix Case" option="" plugin="plugins\Fix Case.ahk"></menu>
