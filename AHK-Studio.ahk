@@ -780,6 +780,9 @@ class Code_Explorer{
 				new.SetAttribute("filename",Current(6).file)
 	}}AutoCList(Node:=0){
 		static list:=[]
+		/*
+			MAKE A WAY TO ONLY DO THIS WHEN UPDATES ARE DONE OR ON FIRST RUN!!!!
+		*/
 		if(Node=1){
 			all:=cexml.SN("//main|//Libraries")
 			while(aa:=all.item[A_Index-1]),mea:=XML.EA(aa){
@@ -10153,7 +10156,7 @@ RefreshThemes(RefreshColor:=0){
 						text:=CompileFont(Settings.SSN("//theme/default")),ea:=Default
 				}if(b="msctls_statusbar321")
 					Text:=CompileFont(Statusbar),ea:=XML.EA(Statusbar)
-				Gui,%win%:font,%text%,% ea.font
+				Gui,%win%:font,%text%,% (ea.font?ea.font:Settings.EA("//theme/default").Font)
 				GuiControl,% "+background" RGB(ea.Background!=""?ea.Background:default.Background) " c" RGB(ea.color!=""?ea.color:default.color),%HWND%
 				GuiControl,% "font",%HWND%
 		}}ControlGetPos,,,,h,,% "ahk_id" v.statushwnd
