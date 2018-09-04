@@ -256,6 +256,7 @@
 			<menu clean="OSD" name="OSD"></menu>
 			<menu clean="Force_UTF-8" name="Force UTF-8"></menu>
 			<menu name="Brace Match Background Match" clean="Brace_Match_Background_Match"></menu>
+			<menu clean="Additional_Library_Folders" name="Additional Library Folders"></menu>
 			<menu clean="Quick_Options" name="Quick Options"></menu></menu>
 		<menu name="Fo&amp;rmat" clean="Format" top="1">
 			<menu clean="Align_Selected_Text" hotkey="" name="Align Selected Text" option="" plugin="plugins\Align Selected Text.ahk"></menu>
