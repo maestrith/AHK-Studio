@@ -116,7 +116,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:=1.005.17
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:=1.005.19
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -605,7 +605,7 @@ Check_For_Update(startup:=""){
 		if(Auto.Reset>A_Now)
 			return
 	}
-	Version:=1.005.17
+	Version:=1.005.19
 	NewWin:=new GUIKeep("CFU"),NewWin.Add("Edit,w400 h400 ReadOnly,No New Version,wh"
 								  ,"Radio,gSwitchBranch Checked vmaster,Master Branch,y"
 								  ,"Radio,x+M gSwitchBranch vBeta,Beta Branch,y"
@@ -1891,7 +1891,7 @@ Class PluginClass{
 	}m(Info*){
 		m(Info*)
 	}MoveStudio(){
-		Version:=1.005.17
+		Version:=1.005.19
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(Info){
@@ -1936,7 +1936,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:=1.005.17
+		Version:=1.005.19
 		return version
 	}
 }
@@ -4089,10 +4089,8 @@ Download_Plugins(){
 	static plug
 	if(!FileExist(A_ScriptDir "\plugins"))
 		FileCreateDir,%A_ScriptDir%\Plugins
-	DllCall("InetCpl.cpl\ClearMyTracksByProcess",uint,8)
 	SplashTextOn,,,Downloading Plugin List,Please Wait...
-	Run,RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
-	plug:=new xml("plugins"),plug.XML.loadxml(URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio-Plugins/master/Index.xml"))
+	plug:=new xml("plugins"),plug.XML.LoadXML(URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio-Plugins/master/Index.xml?refresh=" A_Now))
 	SplashTextOff
 	if(!plug[])
 		return m("There was an error downloading the plugin list.  Please try again later")
@@ -4822,7 +4820,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20180209111407,XMLFiles:={menus:[20180607064536,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20180209111407,XMLFiles:={menus:[20180904082556,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20180104080414,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -6305,79 +6303,71 @@ Include(MainFile,File){
 }
 Increment(){
 	crement([9,1])
-}
-Decrement(){
+}Decrement(){
 	crement([0,-1])
-}crement(add){
+}crement(Add){
 	sc:=CSC(),sc.2078(),sc.Enable()
-	loop,% sc.2570
-	{
-		start:=sc.2585(A_Index-1),end:=sc.2587(A_Index-1),end:=end=start?end+1:end,begin:=0,conclude:=0,text:=sc.TextRange(start,end)
+	while(a_Index<=sc.2570){
+		Start:=sc.2585(A_Index-1),End:=sc.2587(A_Index-1),End:=End=Start?End+1:End,begin:=0,conclude:=0,text:=sc.TextRange(Start,End)
 		if(text~="(\d)"){
-			while(Chr(sc.2007(start))=add.1)
-				start--
-			text:=sc.TextRange(start,end)
+			while(Chr(sc.2007(Start))=Add.1)
+				Start--
+			text:=sc.TextRange(Start,End)
 			if(RegExReplace(text,"-")~="\D")
-				start++,text:=sc.TextRange(start,end)
-			sc.2686(start,end),sc.2194(StrLen(text+add.2),[text+add.2]),sc.2584(A_Index-1,start),sc.2586(A_Index-1,end+(StrLen(text+add.2)-StrLen(text)))
+				Start++,text:=sc.TextRange(Start,End)
+			sc.2686(Start,End),sc.2194(StrLen(text+Add.2),[text+Add.2]),sc.2584(A_Index-1,Start),sc.2586(A_Index-1,End+(StrLen(text+Add.2)-StrLen(text)))
 	}}return sc.Enable(1),sc.2079()
+}Increment_Selected(){
+	crement_Selected()
+}Decrement_Selected(){
+	crement_Selected(0)
+}crement_Selected(Add:=1){
+	sc:=CSC(),Text:=sc.GetSelText()
+	if(!Text)
+		return m("Please select some text")
+	Pos:=1,LastPos:=1,Start:=sc.2143
+	while(RegExMatch(Text,"O)(-?\d+)",Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
+		Out.=SubStr(Text,LastPos,Found.Pos(1)-LastPos) (Add?Found.1+1:Found.1-1),LastPos:=Pos
+	}
+	Out.=SubStr(Text,LastPos)
+	sc.2170(0,Out),sc.2160(Start,Start+StrPut(Out,"UTF-8")-1)
 }
-/*
-	Settings.SSN(a)
-	Activate(a,b,c)
-	text(text)text{text}text"text"
-	text(text)text{text}text"text"
-	text(text)text{text}text"text"
-	MsgBox,hello
-*/
-;comments
 IndentFrom(line){
 	sc:=CSC()
 	begin:=sc.2127(line)
 	FileText:=sc.TextRange(sc.2167(line),sc.2006)
 	;m("Start at line: " line,"Indentation: " begin,"Text:",FileText)
 }
-Index_Lib_Files(){
-	SplitPath,A_AhkPath,,ahkdir
-	ahkdir.="\lib\"
-	if(!Main:=cexml.SSN("//Libraries"))
-		Main:=cexml.Add("Libraries",{file:"Libraries",id:GetID()},,1)
-	/*
-		return
-	*/
-	for a,b in [A_MyDocuments "\AutoHotkey\Lib\",ahkdir]{
+Index_Lib_Files(Index:=""){
+	SplitPath,A_AhkPath,,AhkDir
+	AhkDir.="\lib\",Rem:=cexml.SSN("//Libraries"),Rem.ParentNode.RemoveChild(Rem),Main:=cexml.Add("Libraries"),Lib:=[],All:=Settings.SN("//OtherLib/Folder")
+	while(aa:=All.Item[A_Index-1])
+		Lib.Push(aa.Text "\")
+	for a,b in [A_MyDocuments "\AutoHotkey\Lib\",AhkDir]
+		Lib.Push(b)
+	for a,b in Lib{
 		Loop,%b%*.ahk
 		{
 			File:=A_LoopFileLongPath
-			if(InStr(File,"'"))
-				Continue
 			SplitPath,File,FileName,Dir,Ext,NNE
 			if(FileName="Studio.ahk")
 				Continue
 			FileGetTime,Time,%file%
 			/*
-				q:=FileOpen(File,"R")
-				if(q.Encoding="CP1252"){
-					if(RegExMatch((Text:=q.Read()),"OU)([^\x00-\x7F])",Found))
-						q:=FileOpen(File,"R","UTF-8"),Text:=q.Read(),Encoding:="UTF-8"
-					else
-						Encoding:=q.Encoding
-				}else
-					Encoding:=q.Encoding,Text:=q.Read()
-				q.Close(),dir:=Trim(dir,"\")
-			*/
-			/*
 				CHECK THE TIME TOO!!!!!!
 			*/
 			if(!cexml.Find(Main,"descendant::main/file/@file",File))
 				Extract(nn:=GetMainNode(File,Main))
-			/*
-				if(!New:=cexml.Find("//*/@file",File))
-					New:=cexml.Under(main,"file",{file:file,dir:dir,ext:Ext,filename:FileName,lang:LanguageFromFileExt(Ext),nne:nne,inside:"Libraries",scan:1,id:GetID()})
-			*/
 			StringReplace,Text,Text,`r`n,`n,All
-			Update({file:File,text:Text,load:1,encoding:Encoding}),new.SetAttribute("time",time),new.SetAttribute("encoding",encoding)
-}}}
+			Update({file:File,text:Text,load:1,encoding:Encoding})
+		}
+	}if(!Index){
+		GetPos()
+		SplashTextOn,200,110,Indexing Lib Folders,Please Wait...
+		Scanfile.Once:=0,FileName:=Current(3).File,ScanFiles(1),Code_Explorer.Refresh_Code_Explorer(),FEUpdate(1),TV(SSN(cexml.Find("//file/@file",FileName),"@tv").Text)
+		SplashTextOff
+	}
+}
 InputBox(Parent,Title,Prompt,Default=""){
 	sc:=CSC(),Width:=sc.2276(33,"a"),Max:=[]
 	Active:=DllCall("GetActiveWindow")
@@ -8203,8 +8193,9 @@ Show_Folder_In_Explorer(){
 				Break
 			}
 		}
-	}
-	Run,%dir%
+	}Run,%dir%
+}Open_Folder(){
+	Show_Folder_In_Explorer()
 }
 Open(FileList="",Show="",Redraw:=1){
 	static root,top
@@ -9073,14 +9064,12 @@ Refresh_Code_Explorer(Project:=0){
 	RCEP:
 	RCEA:
 	SplashTextOn,200,100,Refreshing Files,Please Wait....
-	NewWin.Close(),GetPos(),Before:=SSN(Current(1).NextSibling,"@file").text,CurrentFile:=Current(2).File
-	FileName:=Current(3).File,Save(),Scanfile.Once:=0,TVC.Delete(1,0),TVC.Delete(2,0),TVC.Add(2,"Please Wait..."),TVC.Add(1,"Please Wait..."),sc:=CSC(),sc.2358(0,0),sc.2181(0,"Reloading, Please Wait...")
-	All:=cexml.SN("//*[@sc]")
+	NewWin.Close(),GetPos(),Before:=SSN(Current(1).NextSibling,"@file").text,CurrentFile:=Current(2).File,FileName:=Current(3).File,Save(),Scanfile.Once:=0,TVC.Delete(1,0),TVC.Delete(2,0),TVC.Add(2,"Please Wait..."),TVC.Add(1,"Please Wait..."),sc:=CSC(),sc.2358(0,0),sc.2181(0,"Reloading, Please Wait..."),All:=cexml.SN("//*[@sc]")
 	while(aa:=All.item[A_Index-1],ea:=XML.EA(aa))
 		sc.2377(0,ea.sc),aa.RemoveAttribute("sc")
 	if(A_ThisLabel="RCEL"||A_ThisLabel="RCEA"){
 		Rem:=cexml.SSN("//Libraries"),Rem.ParentNode.RemoveChild(Rem)
-		Index_Lib_Files(),Code_Explorer.Refresh_Code_Explorer()
+		Index_Lib_Files(1),Code_Explorer.Refresh_Code_Explorer()
 	}else if(A_ThisLabel="RCEP"||A_ThisLabel="RCEA"){
 		Rem:=cexml.SSN("//files"),Rem.ParentNode.RemoveChild(Rem)
 		All:=Settings.SN("//open/file")
@@ -9103,8 +9092,7 @@ Refresh_Current_File(){
 	while(aa:=All.item[A_Index-1],ea:=XML.EA(aa)){
 		WinSetTitle(1,"Scanning: " ea.FileName)
 		ScanFile.Scan(aa,1)
-	}
-	Code_Explorer.Refresh_Code_Explorer(),WinSetTitle()
+	}Code_Explorer.Refresh_Code_Explorer(),WinSetTitle()
 	return
 }
 Refresh_Plugins(){
@@ -9874,11 +9862,8 @@ ScanFiles(Refresh:=0){
 	if(Visible:=MainWin.Gui.SSN("//*[@win='1']/descendant::control[@type='Code Explorer']"))
 		TVC.Delete(2,0),TVC.Add(2,"Updating Information, Please Wait...")
 	Tick:=A_TickCount
-	while(ll:=List.item[A_Index-1]){
-		WinSetTitle(1,"AHK Studio: Scanning " SSN(ll,"@file").text " Please Wait...")
-		ScanFile.Scan(ll,Refresh)
-		ll.RemoveAttribute("scan")
-	}
+	while(ll:=List.item[A_Index-1])
+		WinSetTitle(1,"AHK Studio: Scanning " SSN(ll,"@file").text " Please Wait..."),ScanFile.Scan(ll,Refresh),ll.RemoveAttribute("scan")
 	SetStatus("File Scan " A_TickCount-Tick "ms",2)
 	if(Visible)
 		Code_Explorer.Refresh_Code_Explorer()
@@ -11086,6 +11071,7 @@ Test_Plugin(){
 	Exit(1)
 }
 Testing(){
+	return m("Testing")
 	/*
 		InputBox,Out,Forward?,Forward?,,,,,,,,1
 		return SetTimer(Out?"File_History_Forward":"File_History_Back",-1)
@@ -13615,6 +13601,112 @@ Start_Select_Character(){
 }
 Clear_History(){
 	History.XML.XML.LoadXML("<History/>"),sc:=CSC(),History.Add(cexml.EA("//*[@sc='" sc.2357 "']"),sc,1)
+}
+Make_One_Line(){
+	sc:=CSC(),Text:=sc.GetSelText()
+	if(Text~="\R"=0)
+		return m("Select at least 2 lines of text to combine")
+	Text:=RegExReplace(Text,"\n",","),Text:=RegExReplace(Text,"\t"),sc.2170(0,[Text])
+}
+Split_Line_By_Comma(){
+	sc:=CSC(),Line:=sc.2166(sc.2008),oStart:=Start:=sc.2128(Line),End:=sc.2136(Line),Indent:=sc.2127(Line),Tab:=sc.2121
+	while(A_Index<=Floor(Indent/Tab))
+		Add.="`t"
+	while(Start<=End){
+		if((Chr:=sc.2007(Start))=44&&sc.2010(Start)=4)
+			Out.="`n" Add
+		else
+			Out.=Chr(Chr)
+		Start++
+	}sc.2160(oStart,End),sc.2170(0,[Trim(Out,"`n")])
+}
+Camel(){
+	sc:=CSC(),Line:=sc.2166(sc.2008),sc.2008!=sc.2009?(Text:=sc.GetSelText(Line)):(Text:=sc.GetLine(Line),sc.2160(sc.2128(Line),sc.2136(Line))),Pos:=1
+	while(RegExMatch(Text,"O)([a-zA-Z]+)(_|\W*)?",Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
+		if(!Found.Len(1))
+			Break
+		Out.=Format("{:T}",Found.1) Found.2
+	}sc.2170(0,[Trim(Out,"`n")])
+}
+Compile_Using_U32(){
+	CompileUsing(32)
+}Compile_Using_U64(){
+	CompileUsing(64)
+}
+CompileUsing(Version){
+	Save()
+	main:=Current(2).file
+	SplitPath,main,,dir,,name
+	SplitPath,A_AhkPath,file,dirr
+	Loop,%dirr%\Ahk2Exe.exe,1,1
+		file:=A_LoopFileFullPath
+	SplashTextOn,200,100,Compiling,Please wait.
+	Loop,%dir%\*.ico
+	{
+		icon:=A_LoopFileFullPath
+		Break
+	}
+	if(icon)
+		add=/icon "%icon%"
+	RunWait,%file% /in "%main%" /out "%dir%\%name%.exe" %add% /bin "%dirr%\Compiler\Unicode %Version%-bit.bin"
+	If(FileExist("upx.exe")){
+		SplashTextOn,,50,Compressing EXE,Please wait...
+		RunWait,upx.exe -9 "%dir%\%name%.exe",,Hide
+	}
+	SplashTextOff
+	Run,%dir%
+}
+Add_Space_Before_And_After_Commas(){
+	Spaces("baa")
+}Add_Space_After_Commas(){
+	Spaces("ac")
+}Add_Space_Before_Commas(){
+	Spaces("bc")
+}RemoveSpacesFromAroundCommas(){
+	Spaces("rsfac")
+}Remove_Spaces_From_Around_Commas(){
+	Spaces("rsfac")
+}Spaces(Info){
+	sc:=CSC()
+	if(!Sel:=sc.GetSelText())
+		sc.2160(sc.2128(line:=sc.2166(sc.2008)),sc.2136(line)),Sel:=sc.GetSelText()
+	Replace:={ac:[["U),(\S)",", $1"]],bc:[["U)(\S),","$1 ,"]],baa:[["U),(\S)",", $1"],["U)(\S),","$1 ,"]]}
+	if(Replace[Info])
+		sc.2170(0,ProcessText(Sel,Replace[Info]))
+	else
+		sc.2170(0,RegExReplace(Sel,"\s*,\s*",","))
+}ProcessText(text,process){
+	for c,d in process{
+		while,text:=RegExReplace(text,d.1,d.2,count){
+			if(!count)
+				break
+		}
+	}
+	return text
+}
+Additional_Library_Folders(){
+	static NewWin,Changed
+	NewWin:=new GUIKeep("Additional_Library_Folders")
+	NewWin.Add("ListView,w400 h200 vALFLV,Additional Library Folders","Button,gALFAdd Default,&Add","Button,x+m gALFRemove,&Delete"),NewWin.Show("Additional Library Folders")
+	Goto,ALFPopulate
+	return
+	ALFAdd:
+	FileSelectFolder,Folder,% "*" A_ScriptDir,,Select a folder to add to your library
+	if(ErrorLevel)
+		return
+	Settings.Add("OtherLib/Folder",,Folder,1),SetTimer("ALFPopulate")
+	return
+	ALFRemove:
+	NewWin.Default("ALFLV"),LV_GetText(Dir,LV_GetNext()),Rem:=Settings.SSN("//OtherLib/Folder[text()='" Dir "']"),Rem.ParentNode.RemoveChild(Rem),SetTimer("ALFPopulate")
+	ALFPopulate:
+	All:=Settings.SN("//OtherLib/Folder"),NewWin.Default("ALFLV"),LV_Delete()
+	while(aa:=All.Item[A_Index-1])
+		LV_Add("",aa.text)
+	return
+	Additional_Library_FoldersEscape:
+	Additional_Library_FoldersClose:
+	Index_Lib_Files(),NewWin.Exit()
+	return
 }
 DebugWindow(x*){
 
