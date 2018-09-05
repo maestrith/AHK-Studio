@@ -793,7 +793,6 @@ class Code_Explorer{
 					obj.list.=ea.text " "
 				}obj.list:=Trim(obj.list)
 			}
-			Clipboard:=Obj.List
 			return Obj.List
 		}if(Node){
 			parent:=SSN(Node,"ancestor-or-self::main/@file").text
@@ -10156,7 +10155,7 @@ RefreshThemes(RefreshColor:=0){
 						text:=CompileFont(Settings.SSN("//theme/default")),ea:=Default
 				}if(b="msctls_statusbar321")
 					Text:=CompileFont(Statusbar),ea:=XML.EA(Statusbar)
-				Gui,%win%:font,%text%,% (ea.font?ea.font:Settings.EA("//theme/default").Font)
+				Gui,%win%:font,%text%,% (ea.font?ea.font:Settings.EA("//theme/default/@font").text)
 				GuiControl,% "+background" RGB(ea.Background!=""?ea.Background:default.Background) " c" RGB(ea.color!=""?ea.color:default.color),%HWND%
 				GuiControl,% "font",%HWND%
 		}}ControlGetPos,,,,h,,% "ahk_id" v.statushwnd
