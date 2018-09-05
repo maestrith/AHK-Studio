@@ -779,32 +779,31 @@ class Code_Explorer{
 			if(type="Breakpoint")
 				new.SetAttribute("filename",Current(6).file)
 	}}AutoCList(Node:=0){
-		static list:=[]
+		static List:=[]
 		/*
 			MAKE A WAY TO ONLY DO THIS WHEN UPDATES ARE DONE OR ON FIRST RUN!!!!
 		*/
+		if(!List[Current(2).File]&&!Node)
+			Node:=1
 		if(Node=1){
-			all:=cexml.SN("//main|//Libraries")
+			all:=cexml.SN("//Libraries"),Add:=""
 			while(aa:=all.item[A_Index-1]),mea:=XML.EA(aa){
-				obj:=list[mea.file]:=[],CF:=SN(aa,"descendant::*[@type='Class' or @type='Function' or @type='Instance']")
+				CF:=SN(aa,"descendant::*[@type='Class' or @type='Function' or @type='Instance']")
 				while(cc:=CF.item[A_Index-1]),ea:=XML.EA(cc){
 					if(SSN(cc,"ancestor::Libraries"))
 						v.keywords[SubStr(ea.text,1,1)].=" " ea.text
-					obj.list.=ea.text " "
-				}obj.list:=Trim(obj.list)
-			}
-			return Obj.List
-		}if(Node){
-			parent:=SSN(Node,"ancestor-or-self::main/@file").text
-			if(!obj:=IsObject(list[parent]))
-				obj:=list[parent]:=[]
-			obj.list:=[],all:=SN(Node.ParentNode,"descendant::*[@type='Class' or @type='Function']")
+					Add.=ea.text " "
+		}}}if(Node){
+			parent:=SSN((Node:=Node.NodeName?Node:Current()),"ancestor-or-self::main/@file").text
+			if(!Obj:=IsObject(List[parent]))
+				Obj:=List[parent]:=[]
+			Obj.List:="",all:=SN(Node.ParentNode,"descendant::*[@type='Class' or @type='Function' or @type='Instance']")
 			while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa)
-				obj.list.=ea.text " "
-			obj.list:=Trim(obj.list)
-			return
+				Obj.List.=ea.text " "
+			Obj.List:=Add Trim(Obj.List)
+			return Obj.List
 		}else{
-			return list[Current(2).file].list
+			return List[Current(2).file].List
 	}}CEGO(){
 		static last
 		CEGO:
@@ -12249,6 +12248,7 @@ Test_Plugin(){
 Testing(){
 	return m("Testing")
 	/*
+		
 		InputBox,Out,Forward?,Forward?,,,,,,,,1
 		return SetTimer(Out?"File_History_Forward":"File_History_Back",-1)
 	*/
