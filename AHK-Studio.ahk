@@ -1242,10 +1242,10 @@ class Debug{
 				crap:=1
 				break
 		}}DllCall("ws2_32\recv","ptr",Socket,"ptr",&packet,"int",length,"int",0),Debug.wait:=0
-		if(!IsObject(v.displaymsg))
-			v.displaymsg:=[]
+		if(!IsObject(v.DisplayMsg))
+			v.DisplayMsg:=[]
 		if(info:=StrGet(&packet,length-1,"UTF-8")){
-			v.displaymsg.Push(info)
+			v.DisplayMsg.Push(info)
 			SetTimer,Display,-10
 		}if(crap){
 			last.=r "!=" length "`n"
@@ -1305,11 +1305,13 @@ Debug_Current_Script(){
 		Default("SysTreeView321",98),TV_Delete()
 	if(Current(2).file=A_ScriptFullPath)
 		return m("Can not Debug AHK Studio using AHK Studio.")
-	All:=SN(Current(7),"descendant::*[@type='Breakpoint']"),Nodes:=[]
-	while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
-		Nodes.Push(DebugFile:=SSN(aa,"ancestor::file"))
-	for a,b in Nodes
-		ScanFile.Scan(b,1)
+	/*
+		All:=SN(Current(7),"descendant::*[@type='Breakpoint']"),Nodes:=[]
+		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
+			Nodes.Push(DebugFile:=SSN(aa,"ancestor::file"))
+		for a,b in Nodes
+			ScanFile.Scan(b,1)
+	*/
 	All:=SN(Current(7),"descendant::*[@type='Breakpoint']"),Debug.Run(Current(2).file)
 	Sleep,500
 	while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
@@ -4479,7 +4481,6 @@ Display(PopulateVarBrowser:=0){
 		if a script has OutputDebug and it is just ran rather than debugged{
 			make it run through here but disable the Breakpoints and auto-run it
 			don't send all the BS for feature_set and such and don't show the stdout and stderr info just open the debug pannel
-			
 		}
 	*/
 	static receive:=new XML("receive"),total,width,addhotkey,lastid,StoreXML:=[],c:=[],ProcessProperties:=[],scope
@@ -4496,14 +4497,33 @@ Display(PopulateVarBrowser:=0){
 				sc.2003(sc.2006,info "`n"),sc.2025(sc.2006)
 			return
 		}if(rea.command="breakpoint_set"){
+			Debug.Send("breakpoint_get -i " receive.SSN("//*[@transaction_id]/@transaction_id").text " -d " receive.SSN("//*[@id]/@id").text)
 			if(rea.state="enabled"&&debug.AfterDebug)
 				split:=StrSplit(rea.transaction_id,"|"),debug.Breakpoints[split.1]:={line:split.2,id:rea.id},sc:=v.debug,sc.2003(sc.2006,"Breakpoint Added for file: " CEXML.SSN("//*[@id='" split.1 "']/@filename").text " on line: " split.2 "`n"),sc.2025(sc.2006)
 		}if(rea.command="breakpoint_remove"){
 			sc:=v.debug,sc.2003(sc.2006,"Breakpoint Removed`n"),sc.2025(sc.2006)
 		}if(info.NodeName="init"){
-			v.afterbug:=[],ad:=["stdout -c 1","stderr -c 1","feature_set -n max_depth -v 0","feature_set -n max_children -v 0"],bp:=CEXML.SN("//*[@id='" debug.id "']/descendant::info[@type='Breakpoint']")
-			while(bb:=bp.item[A_Index-1],bpea:=XML.EA(bb))
-				ad.Insert("breakpoint_set -t line -f " bpea.filename " -n" bpea.line+1 " -i " SSN(bb,"ancestor::file/@id").text "|" bpea.line)
+			v.afterbug:=[]
+			ad:=["stdout -c 1","stderr -c 1","feature_set -n max_depth -v 0","feature_set -n max_children -v 0"]
+			bp:=CEXML.SN("//*[@id='" debug.id "']/descendant::info[@type='Breakpoint']")
+			while(bb:=bp.item[A_Index-1],bpea:=XML.EA(bb)){
+				/*
+					m("breakpoint_set -t line -f " Chr(34) SSN(bb,"ancestor-or-self::file/@file").text Chr(34) " -n" bpea.line+1 " -i " SSN(bb,"ancestor::file/@id").text "|" bpea.line,bb.xml)
+				*/
+				/*
+					breakpoint_set -t line -f "D:\AHK\Projects\Games\Graveyard Keeper\Graveyard Keeper.ahk" -n -i 383|
+				*/
+				/*
+					m(bb.xml,"","","breakpoint_set -t line -f " Chr(34) SSN(bb,"ancestor-or-self::file/@file").text Chr(34) " -n" bpea.line+1 " -i " SSN(bb,"ancestor::file/@id").text "|" bpea.line)
+				*/
+				while(bb:=bb.ParentNode){
+					if(bb.NodeName="File")
+						Break
+				}
+				Index:=A_Index,FN:=SSN(bb,"@file").text,Pos:=1,FText:=Update({Get:FN})
+				while(RegExMatch(FText,"OU)(\x3B\*\[.*\])",Found,Pos),Pos:=Found.Pos(1)+Found.Len(1))
+					RegExReplace(SubStr(FText,1,Pos),"\R",,Count),ad.Insert("breakpoint_set -t line -f " FN " -n" Count " -i " Index)
+			}
 			for a,b in ad
 				v.afterbug.Insert(b)
 			SetTimer,AfterDebug,-300
@@ -4551,8 +4571,8 @@ Display(PopulateVarBrowser:=0){
 								* 2) Removed the pipe characters surrounding the filename. 
 								*    The pipe characters should only be needed for the `Gui, Add, ListView` command 
 							*/
-							stack_filename 	:= RegExReplace(RegExReplace(URIDecode(ea.filename),"file:\/\/\/"),"\/","\")
-							LV_Add("",ea.where, stack_filename, ea.lineno)
+							stack_filename:=RegExReplace(RegExReplace(URIDecode(ea.filename),"file:\/\/\/"),"\/","\")
+							LV_Add("",ea.where,stack_filename,ea.lineno)
 						}
 						Loop,3
 							LV_ModifyCol(A_Index,"AutoHDR")
@@ -4614,146 +4634,16 @@ Display(PopulateVarBrowser:=0){
 	}
 	return
 	AfterDebug:
-	while(info:=v.afterbug.pop())
-		debug.Send(info)
+	while(info:=v.afterbug.Pop()){
+		debug.Send(Info)
+		Sleep,20
+	}
 	InsertDebugMessage(),v.ready:=1,debug.Focus(),debug.Caret(1),debug.AfterDebug:=1
 	return
 	GetContextInfo:
 	debug.Send("stack_get")
 	return
 }
-
-
-/*
-	Display(PopulateVarBrowser:=0){
-		;~ if a script has OutputDebug and it is just ran rather than debugged{
-		;~ make it run through here but disable the Breakpoints and auto-run it
-		;~ don't send all the BS for feature_set and such and don't show the stdout and stderr info just open the debug pannel
-		;~ 
-		;~ }
-		static receive:=new XML("receive"),total,width,addhotkey,lastid,StoreXML:=[],c:=[],ProcessProperties:=[],scope
-		store:="",sc:=v.debug,xx:=debug.xml
-		while(store:=v.displaymsg.Pop()){
-			receive.XML.LoadXML(store),rea:=XML.EA(info:=receive.SSN("//*"))
-			if(v.Options.Verbose_Debug_Window)
-				receive.Transform(),receive.Transform(),DebugWindow(receive[]),t()
-			if(info.NodeName="stream"){
-				info:=debug.decode(info.text),total.=info "`n",in:=StripError(info,debug.filename)
-				if(in.line&&in.file)
-					sc.2003(sc.2006,info "`n"),sc.2025(sc.2006),SetPos({file:in.file,line:in.line}),PluginClass.CallTip(info),debug.Disconnect()
-				else
-					sc.2003(sc.2006,info "`n"),sc.2025(sc.2006)
-				return
-			}if(rea.command="breakpoint_set"){
-				if(rea.state="enabled"&&debug.AfterDebug)
-					split:=StrSplit(rea.transaction_id,"|"),debug.Breakpoints[split.1]:={line:split.2,id:rea.id},sc:=v.debug,sc.2003(sc.2006,"Breakpoint Added for file: " CEXML.SSN("//*[@id='" split.1 "']/@filename").text " on line: " split.2 "`n"),sc.2025(sc.2006)
-			}if(rea.command="breakpoint_remove"){
-				sc:=v.debug,sc.2003(sc.2006,"Breakpoint Removed`n"),sc.2025(sc.2006)
-			}if(info.NodeName="init"){
-				v.afterbug:=[],ad:=["stdout -c 1","stderr -c 1","feature_set -n max_depth -v 0","feature_set -n max_children -v 0"],bp:=CEXML.SN("//*[@id='" debug.id "']/descendant::info[@type='Breakpoint']")
-				while(bb:=bp.item[A_Index-1],bpea:=XML.EA(bb))
-					ad.Insert("breakpoint_set -t line -f " bpea.filename " -n" bpea.line+1 " -i " SSN(bb,"ancestor::file/@id").text "|" bpea.line)
-				for a,b in ad
-					v.afterbug.Insert(b)
-				SetTimer,AfterDebug,-300
-			}if(rea.status="stopped"){
-				sc:=CSC(),sc.2045(2),sc.2045(3),sc:=v.debug,sc.2003(sc.2006,"Execution Complete"),sc.2025(sc.2006),debug.Caret(0)
-				SetTimer,VarBrowserStop,-1
-				return
-			}if(rea.status="break"){
-				debug.Send("stack_get")
-				SetTimer,InsertDebugMessage,-200
-			}if(rea.command="stack_get"){
-				sc:=CSC(),stack:=receive.SN("//stack"),exist:=0,v.DebugHighlight:=[]
-				while(ss:=stack.item[A_Index-1]),ea:=XML.EA(ss){
-					filename:=RegExReplace(RegExReplace(URIDecode(ea.filename),"file:\/\/\/"),"\/","\")
-					if(!IsObject(obj:=v.DebugHighlight[filename]))
-						obj:=v.DebugHighlight[filename]:=[]
-					obj.push(ea.lineno-1)
-					if(FileExist(filename)&&exist=0){
-						if(filename!=Current(3).file)
-							tv(SSN(CEXML.Find("//file/@file",filename),"@tv").text)
-						file:=ea.filename,scope:=ea.where="Auto-execute thread"?"Global":ea.where,xx.Add("master",{scope:scope}),exist:=1,v.DebugLineNumber:=ea.lineno-1,v.CurrentScope:=scope
-						if(WinExist(debugwin.id)){
-							WinSetTitle,% debugwin.id,,% "Variable Browser : Current Scope = " ea.where
-							scope:=receive.SN("//descendant::stack"),Default("SysListView321",98),LV_Delete()
-							GuiControl,98:-Redraw,SysListView321
-							while(ss:=scope.item[A_Index-1]),ea:=XML.EA(ss){
-								if(A_Index=1){
-									Default("SysTreeView321",98)
-									if(Node:=CEXML.SSN("//*[@lower='" Format("{:L}",Filename) "']")){
-										if((tv:=SSN(Node,"@tv").text)&&tv!=TV_GetSelection())
-											tv(tv)
-									}
-								}
-								LV_Add("",ea.where,"|" filename "|",ea.lineno)
-							}
-							Loop,3
-								LV_ModifyCol(A_Index,"AutoHDR")
-							GuiControl,98:+Redraw,SysListView321
-				}}}DebugHighlight(),debug.Send("context_names -i Context_Names"),sc:=v.debug,debug.Focus()
-			}else if(rea.command="context_names"){
-				context:=receive.SN("//context")
-				while(cc:=context.item[A_Index-1]),ea:=XML.EA(cc){
-					if(!xx.SSN("//scope[@id='" ea.id "']"))
-						xx.Add("scope",ea,,1)
-					Sleep,100
-					debug.Send("context_get -c " ea.id " -i " (ea.id=0?xx.SSN("//master/@scope").text:(ea.fullname?ea.fullname:ea.name)))
-			}}else if(rea.command="context_get"){
-				all:=SN(info,"descendant-or-self::property"),pea:=XML.EA(info),xx:=debug.xml,master:=xx.SSN("//scope[@id='" pea.context "']"),scope:=xx.SSN("//master/@scope").text
-				while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa){
-					if(pea.context!=1){ ;this needs the braces.
-						if(!main:=SSN(master,"descendant::scope[@name='" pea.transaction_id "']"))
-							main:=xx.Under(master,"scope",{name:pea.transaction_id,fullname:pea.transaction_id})
-					}else
-						main:=master
-					if(!top:=SSN(main,"descendant::property[@fullname='" ea.fullname "']"))
-						top:=main.AppendChild(aa.CloneNode(0)),top.SetAttribute("new",1)
-					else{
-						for a,b in ea
-							top.SetAttribute(a,b)
-						top.SetAttribute("updated",1)
-					}
-					if(!SSN(aa,"descendant::*")){
-						if(text:=debug.Decode(aa.text))
-							top.text:=text
-					}
-				}
-				;~ this is where the thing in the Tracked Notes needs to be done
-				if((exp:=SN(main,"descendant::*[@expanded=1]")).length){
-					SetTimer,ScanChildren,-20
-				}else
-					SetTimer,ProcessDebugXML,-100
-			}else if(rea.command="property_get"){
-				master:=xx.SSN("//*[@transaction='" rea.transaction_id "']"),Properties:=receive.SN("//descendant::property")
-				while(pp:=Properties.item[A_Index-1]),ea:=XML.EA(pp){
-					if(pp.NodeName="scope")
-						Continue
-					if(!top:=SSN(master,"descendant-or-self::*[@fullname='" ea.fullname "']"))
-						top:=SSN(master,"descendant-or-self::*[@fullname='" SSN(pp.ParentNode,"@fullname").text "']"),top:=top.AppendChild(pp.CloneNode(0))
-					else{
-						tea:=XML.EA(top)
-						for a,b in ea{
-							if(a!="name")
-								top.SetAttribute(a,b)
-							top.SetAttribute("updated",1)
-					}}if(!ea.children)
-						top.text:=debug.Decode(pp.text)
-				}
-			}
-		}
-		return
-		AfterDebug:
-		while(info:=v.afterbug.pop())
-			debug.Send(info)
-		InsertDebugMessage(),v.ready:=1,debug.Focus(),debug.Caret(1),debug.AfterDebug:=1
-		return
-		GetContextInfo:
-		debug.Send("stack_get")
-		return
-	}
-*/
-*/
 DisplayStats(call){
 	static lastxml,lastfunc
 	ControlGetPos,x,y,w,h,,% "ahk_id" MainWin.gui.SSN("//*[@type='Toolbar']/@hwnd").text
