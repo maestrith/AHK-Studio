@@ -3921,9 +3921,9 @@ ContextMenu(){
 	else if(Node:=Menus.Find("//menu/@clean",Clean)){
 		if(FileExist((FileName:=SSN(Node,"@plugin").text)))
 			Run,%FileName%
-		else if(SSN(Node,"@plugin")){
+		else if(SSN(Node,"@plugin"))
 			MissingPlugin(FileName,A_ThisMenuItem)
-		}else
+		else
 			m("An error occured")
 	}else
 		m("Coming soon:",A_ThisMenu,A_ThisMenuItem,Clean)
