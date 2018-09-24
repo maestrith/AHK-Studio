@@ -1,3 +1,94 @@
 1.005.20
-Fixed: Reported by AlleyArtwork
 -Trying to launch a plugin using the Right Click Menu was causing an error even if the plugin exists.
+1.005.19
+-Additional Library Folders: Add a list of folders for your own personal library
+1.005.18
+-Built In:--Increment Selected:Works on anything that is within a selection--Make One Line: Takes a selection of text and removes all Tabs and `n and places a , between each line--Split Line By Comma - Decrement Selected: Decrements the numbers within the selection- Spaces: Was a plugin now is included in the main script- - Add Space Before And After Commas- - Add Space After Commas- - Add Space Before Commas- - RemoveSpacesFromAroundCommas -Cleaned up a bunch of out-dated plugins from the Download Plugins list and built in a-lot of them
+1.005.17
+-Open Folder in the Right Click Menu was changed but I did not account for people who still used that function
+1.005.16
+- FIXED - scroll pos after switching file by smarq8
+1.005.15
+- Toggle Fold Current Block: Folds the current block at your Carets position - Open Folder -> Show Folder In Explorer: Made more sense.  The former implied that it would open the folders contents in Studio which is not what it did.
+1.005.14
+- Right Click Menu Editor: Was messed up - If an AutoComplete window is open when scrolling it will cancel itself- Version Number in Check For Update was missing
+1.005.13
+- Downloading of control files was happening even after downloading the zip from GitHub
+1.005.12
+- Characters like ¿, ¡, ñ, á were getting messed up.
+1.005.11
+- Sometimes when you pressed Alt+F it would select the entire document (Still not sure why it does it, or when it would do it) - Refresh Code/Project Explorer: Default {Enter} action is now Refresh Current Project - Duplicate Line: If you have a selection that spans multiple lines it will duplicate those lines- - Works with Multiple Carets - Clear History
+1.005.10
+- Highlight Selected Area: Select an area and it will highlight it- Clear Selected Highlight: Select an area with highlights and it will remove them- Edit_Highlight_Colors: Change the highlight colors - Breakpoints for Debugging were not working - Added Start Select Character: You can add in extra characters that start words to have double click select include them in the selection- Hopefully fixed the UTF character issue
+1.005.09
+- Project Properties:- - You can add a default AutoHotkey.exe to use for each Project- - You can add Command Line Parameters for each Project- - Add your own Exe files to launch scripts from - Tray Icon:- - Removed Standard Menu- - Added Double-Click to Activate Stuio- - Reload- - Window Spy- - Exit
+1.005.08
+- Code Explorer:- - Libraries now have their own Tree- Libraries: Will not Re-Index every time you open Studio- Refresh Code/Project Explorer: Will ask if you want to refresh your Projects, Libraries, or Both- Version Tracker: Github Commits will soon create Releases
+1.005.07
+- Duplicate #Includes were being added- Refresh Project/Code Explorer: Caret "Should" stay in the position where it was before the Refresh - Insert Color Code: Add in a Color Code- Hex colors have a CallTip that shows the color when your Caret is within the color text
+1.005.06
+- Indent with the syntax "Function(){ ;Comment" was causing issues- History: Having duplicate entries for files - Menu Icons: If you have an icon for every Menu Item it takes about 2.5 seconds to load them all.  I changed it so that they load afterward. - ; with a { at the end of a line was causing indents - Version Number not properly updated- Removed some old XML files and README.md file - Duplicate Text Indicator (Settings): Change Style, Color, Transparency, and Border Transparency
+1.005.05
+- Jump To First Available: When jumping to Labels it was causing an extra item to be added to the history- While and If were case sensitive- Hide Library Files In Code Explorer- Multiple duplicate items in the Code Exploerer were not selecting properly
+1.005.04
+- Tracked Notes: Added Folders
+1.005.03
+- Escape:  Will now toggle weather or not AutoComplete is hidden for that line- History (Alt+Left/Right): Changed to allow it to remember cursor positions when jumping to a different part of the same file using Omni or Alt+F1- Adjusted the Width/Height of the InputBox for most uses - Untitled Files: If you close them they will be deleted, If you Exit with an untitled file still open it will save them and re-open them with the next open- Issues with Tracked Notes- Kill Current Script (RCM): Now works with Untitled files- Clean Position Data: Cleans out the Positions.xml file- AHK-Studio losing focus after a MsgBox- Refresh Plugins: Now updates them without needing to restart Studio- Find: Was having issues with it remembering the last saved search term- Dialog windows were showing up and then moving to where they belong- Non-AHK files and Omni: Wouldn't search for Menus or Files- Default Project Folder: Now will have your folder Pre-Selected- - When you save an Untitled file it will use the Default Project Folder- Close: Cleaned up the Project/Code Explorer and removed the text from files that are no longer open- Tracked Notes: I don't honestly know what I was thinking...- - Contract All- - Expand All- Some focus issues- Intellisense: FileSelectFolder and items like it with * in the attributes was causing it to stop - Fix Case In Current Include: Scans the current Include/File and looks for duplicate words with different Cases- Indent Selected Area: Will add ;{ and ;} around the selected area- Right Click Menu Editor:- - Restore Defaults- Tracked Notes:- - Closed Files now have a Sub-Menu so they aren't clogging up the TreeView- - Expand All - Will Download SciLexer.dll: Folding was really messed up. - Publish Indent: Will run the code through the indenter.- Add Space After Includes On Publish: Will add an extra `n after the include - Folding in general was messed up - AHK files in the %ProjectDir%\Lib directory are now indexed - #Include %A_ScriptDir%\lib was being left in Publish - Plugins were downloading most likely to the wrong directories or trying to run from somewhere other than the Studio folder - Compile: I changed functionality and messed it up with Icons.- Project Explorer: Issue with files appearing where they shouldn't - Brace Match Background Match- Move Matching Brace Left/Right
+1.005.02
+- Files #Included multiple times were not getting properly indexed- Publish: When publishing an Untitled.ahk file it will get the right files if you #Include a file - OSD: Will download Lib\Base Menu.xml and display the base hotkeys so that if you use it, it will have the original hotkeys - XML files are not being stored in the proper folders at times. - Github Info was in the old style- Create Function From Selected: Added Menu Item - Backspace was not updating the StatusBar- Untitled Scripts: t() and m() are added so if there is a function named t or m then it will error- Kill Process: With Untitled files was causing trouble - Paste has 2 states 1 before the fix indent, 1 after so you can Ctrl-Z to bring back the original indent- Untitled files are saved and re-opened when you open Studio - Re-Added the Scratch Pad
+1.005.01
+- A-Lot of issues surrounding Tracked Notes - Add Separators the Right Click Menus - If there is an icon with the same name as the project in the project folder it will use that icon when compiling, but if not it will use the first found icon- Kill Process will try to kill a process the nice way first, then it will kill the process another way, then if it doesn't still work it will launch the Task Manager and show a MsgBox that will tell you that it was unable to do so. - Themes with Code/Project Explorer edits were not working properly - Options bound to hotkeys were not working - I left a MsgBox in the Compile function
+1.005.00
+-Regex Replace Selected Dialog: A small GUI to use Regex to replace the selected text-Regex Replace Selected: Use the saved Regex items from the above dialogSave As and Save: Reported by derz00 #144-Saving with *.* selected still adds .ahk to the file extension-Refresh Current File:-Refresh Current Project:--Re-Scans the current File/Project and updates the Code Explorer/Omni-Search--Quick Find Ignore: A list of Styles that will be ignored by Quick Find-Edit Hotkeys: Now with a better search feature-Check For Updates: Development Branch Switch-Create Comment: For Making Comments.-SplashScreen-Version Tracker -Publish: Now does Additional Publish-Words In Document: Changed the backend so that it only will add the words related to the first 2 letters you typed rather than the entire list to improve performance-Find:--Changed how found items are displayed--Auto Show Selected--Up and Down arrows will navigate between found items-Restore Current File:--Made it a part of Studio-Jump To First Available: Numbered multiple items in the list-Creates:-%A_MyDocuments%\Lib\DebugWindow.ahk: For the function DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0) to display text in the Debug Window-Tweaked the Omni-Search a bit more-Set_New_File_Default_Folder: Now keeps track of a Global folder and Project Specific folders-Changed the backup folder to AHK-Studio Backup to make it easier to find -Omni-Search:--Title now contains instructions--Adjustment for Acronyms -Debug:--Forgot that I moved the notifications to another Function and opening the Variable Browser was not possible -Selections: When you have multiple selections it will show how many you have-Total Replaced: When using Replace Selected it will show how many items you replaced-New Language Setup-New Theme Setup to include multiple programming languages-Words In Document: Fixed-Command Help: It will attempt to get the right word a few times-DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0) Plugin method to display text in the debug window in Studio--Ctrl+A now works in the Debug Window - ;~ { was causing indent. Only ;{ and ;-Debug Window: Odd behavior when clicking on anything when the Debug Window is active -Full Tree-Exemption error causing a scroll-Refresh Current Project: Was leaving orphaned items in the Project/Code Explorer -Find: Clicking on the + to expand an item was causing it to quickly show then hide the information-Right Click on Project Explorer was not showing the information for the file you right clicked on-Moved the Debug Tip from the main GUI to the Debug Panel (where it should be) -Show Type Prefix: I never used it. -Disable Exemption Handling-Disable Match Brace Highlight On Delete -Ability to have boundaries in Replacements $[word]
+1.003.31
+--WILL download a new version of SciLexer.dll-;{ and ;
+1.003.30
+-Opening scripts from Explorer with Studio closed would not bring up that script but the previously edited script -Issue with plugin GUIs looking broken-MinSize800x600 would color 0x600 as a hex--Will Download A New Studio.ahk--Will Download A New SciLexer.dll -Words starting with a number (42word) was being colored completely as a number
+1.003.29
+-Syntax highlighter works now with spaces after the command so (Gui Add, Button) now works too.
+1.003.28
+-When adding a new Include with Options/Full Tree on it wouldn't add it into the proper folder
+1.003.27
+-Previous Scripts: Fixed Clean Up Deleted Projects button-DOWNLOAD! Commands.xml
+1.003.26
+-This Will Download New SciLexer.dll!-*/ in the middle of a line would break the /*-Hex numbers would break if you had a partial partial or full hex number and then a non-word character without a space
+1.003.25
+-Settings window with Alt+Tab and Minimize was causing it to get lost-Non-English keyboard setups #127 throwing errors and not starting
+1.003.24
+-Options/Force UTF-8: This will force Studio to open and write all files to UTF-8 -Dumb bug I had that was really messing with UTF-8 characters and a lot of other things -Check For Edited Files On Focus: Wasn't working-Themes: Line numbers were not editable
+1.003.23
+-Continuation Sections: Formatting was getting all messed up and caused errors further down the code if you use /* */--Will download a new version of SciLexer.dll (if it doesn't close AHK-Studio and delete the file manually)
+1.003.22
+-Forward and Back: When going Back it would lose the Forward history and forget the cursor position-Jump To First Available: Cursor position issues
+1.003.21
+-A slight delay for when AutoComplete pops up to help with missing keystrokes Changed to 200ms-#Include{Space
+1.003.20
+-Close All: Creates 2 new untitled files -Removed the -Caption so that the window can be moved -When you bring up the Omni-Search without a pre-entered prefix it will display Fuzzy Search find Check For Update by typing @CFU
+1.003.19
+-RCM/Split Control/Direction/Toolbar -Adding Toolbars used to cause issues when trying to edit them before reloading the script-Resizing Toolbars had some issues in some cases -lib\\Studio.ahk: Forced files to be encoded in UTF-8
+1.003.18
+-Run As U32/U64: was not saving files before running them.-Settings: Edit Replacements: Enter was not adding in a new line -lib\\Studio.ahk: XML was acting up.
+1.003.17
+-Adding ;Startup (Case Sensitive) will add a plugin to the startup of Studio -Smart Delete: I made some changes and broke it. -Some commands were not being colored correctly -Right Click: When Studio is the active window and you are right clicking outside of Studio it was giving a Studio menu
+1.003.16
+-Right Click Menu: Cut not working-Split Control then RCM Open Folder not being greyed out in the new control -Hide Tray Icon: Was not remembering from run to run -Pressing Delete was not causing the file to be edited
+1.003.15
+-Completely re-wrote the Settings dialog--Auto Insert: You can edit when you add a ( it will add the ) or anything you like--Edit Replacements: Replaces www with World Wide Web or anything you like--Manage File Types: AHK Studio can only edit text based files and I have added in a few types but if you wish to have other types, you can add them here--Menus: You can completely change the menus fonts and order--Options: AHK Studio had quite a few options and this is a way to quickly set them--Theme: Completely change the theme of AHK Studio
+1.003.13
+-Omni-Search: Removed the Omni-Search option from Omni-Search-Zoom causing line numbers to get cropped #108-Context Menu: items that are not applicable are greyed out #98-Deleting umlaut characters was causing an issue #97-Inline commands for hotkeys were not displaying parameters #96-Odd issue with resizing controls when clicking on Omni-Search #95-Error message when cancelling a plugin download from menus #93-Run Selected Text--Added Run Selected Text to the main code and changed how it works with multiple selected lines #92--Added Run Code Block to the main code Fixed the SingleInstance issue #91-Ctrl+R and Ctrl+E were adding odd control characters to the script #90-Right Click: Selection will not change when right clicking #89-Double Click on anything like #NoEnv and it will now select the # #88 -Delete/Backspace would go letter by letter when using a single caret.  Multiple carets will still do this.-If you add a space in the tab previous to the first word of a line it would crash Studi -Command Help (F1):--Directives now work--Selected words will also work if it is found by AHK Studio--No need to have the Caret after the Command
+1.003.12
+-#Include using %A_LineFile% \"Should\" work
+1.003.11
+-When moving the window to another screen or position and then maximizing it, it \"should\" remember what screen it was on and the last position it was in before maximizing -New Scintilla Window: Old code that does not work anymore. -Hotkeys with - in them were not working with the Code Explorer and Omni -Debugging: You can click on a variable and edit its contents when you are in the proper scope. -Shouldn't save positions at -32000
+1.003.10
+-Plugins on some systems were not working properly-Compiled version of AHK Studio, the run command was not working-Toolbars are not following the main background color-Toolbars can have external programs in them (was there before but forgot to re-add it)-Unchecking an external program will remove it from the toolbar-Shift+Click+Drag icons to re-arrange the icons or DoubleClick on the toolbar to bring up a GUI to sort/arrange them -Cleaned up the code a bit and fixed some of the case issues. -IfEqual and other things indent. -Collapse All for the Code Explorer.
+1.003.9
+-Setting AHK Studio as the default editor was not working on the compiled version
+1.003.8
+-Code Explorer: Clicking on an item that you have already selected was not working again
+1.003.7
+-Center Caret: Was not disabling correctly -Added -DPIScale to the file Studio.ahk -When you hit enter too quickly in Omni-Search it was causing an error
+1.003.6
+-Adding a file called HotStrings.ahk and adding all the hotstrings you want to it will make them work in AHK Studio (ONLY WORKS IN UN-COMPILED VERSION)
+1.003.5
+-Export: Having trouble with FileInstall
