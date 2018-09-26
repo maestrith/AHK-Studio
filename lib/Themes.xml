@@ -766,4 +766,41 @@
 		<keyword set="7" color="0x003086"></keyword>
 		<keyword set="8" color="0x0E9606"></keyword>
 	</fonts>
+	<fonts>
+		<name>SQL Server Dark 2</name>
+		<author>SOTE</author>
+		<caret color="0x3A3A3A" multi="0x00A5FF" lineback="0x4E5460" width="1" debug="255"></caret>
+		<default background="0xFFFFFF" color="343288" font="Consolas" size="10" underline="0" bold="1" italic="0" strikeout="0"></default>
+		<find>
+		</find>
+		<inlinecomment bold="0" color="23383" font="Consolas" italic="1" size="10" strikeout="0" underline="0"></inlinecomment>
+		<numbers color="0x00002F"></numbers>
+		<punctuation color="30444"></punctuation>
+		<multilinecomment background="0xEBEBEB" bold="0" color="4082253" font="Consolas" italic="1" size="10" strikeout="0" underline="0"></multilinecomment>
+		<completequote background="0xFFFFFF" color="0x0000FF"></completequote>
+		<incompletequote background="0xDCDCDC" color="0x0000FF"></incompletequote>
+		<backtick color="0x002EC8"></backtick>
+		<linenumbers background="0xEBEBEB" color="0x333333"></linenumbers>
+		<bracematch>
+		</bracematch>
+		<indentguide color="4227327"></indentguide>
+		<editedmarkers edited="0x0000FF" saved="0x00FF00"></editedmarkers>
+		<fold background="0xFFFFFF" color="0"></fold>
+		<projectexplorer>
+		</projectexplorer>
+		<codeexplorer>
+		</codeexplorer>
+		<selfore bool="1" code="2067" color="0xECE000"></selfore>
+		<selback bool="1" code="2068" color="9872807"></selback>
+		<additionalselback code="2601" color="6052956"></additionalselback>
+		<keyword set="0" color="5741559"></keyword>
+		<keyword set="1" color="0xCE2800"></keyword>
+		<keyword set="2" color="0xFF0000"></keyword>
+		<keyword set="3" color="0xFF2F89"></keyword>
+		<keyword set="4" color="0x958431"></keyword>
+		<keyword set="5" color="2445564"></keyword>
+		<keyword set="6" color="0xFF00FF"></keyword>
+		<keyword set="7" color="0x003086"></keyword>
+		<keyword set="8" color="0x0E9606"></keyword>
+	</fonts>
 </themes>
