@@ -116,7 +116,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:=1.005.20
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:=1.005.21
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -609,12 +609,28 @@ CenterSel(){
 	}
 }
 Check_For_Edited(){
-	static ea,sc
-	All:=CEXML.SN("//file"),sc:=CSC()
+	static ea,sc,NewWin,EditedFiles
+	if(EditedFiles.1)
+		return
+	All:=CEXML.SN("//file"),sc:=CSC(),EditedFiles:=[]
 	while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
 		FileGetTime,Time,% ea.File
 		if(Time!=ea.Time&&ea.Note!=1){
-			List.=ea.FileName ",",aa.SetAttribute("time",Time),q:=FileOpen(ea.File,"R")
+			List.=ea.FileName ","
+			if(v.Options.Ask_Before_Overwriting_Edited_Files){
+				EditedFiles.Push({File:ea.File,ea:ea,aa:aa})
+				Continue
+			}
+			
+			/*
+				REMOVE THIS AND PUT IT AFTER THE LOOP I'M GOING TO MAKE!!!!
+			*/
+			
+			
+			
+			
+			aa.SetAttribute("time",Time)
+			q:=FileOpen(ea.File,"R")
 			if(q.Encoding="CP1252"){
 				if(RegExMatch((Text:=q.Read()),"OU)([^\x00-\x7F])",Found))
 					q:=FileOpen(ea.File,"R","UTF-8"),Text:=q.Read(),Encoding:="UTF-8"
@@ -622,7 +638,9 @@ Check_For_Edited(){
 					Encoding:=q.Encoding
 			}else
 				Encoding:=q.Encoding,Text:=q.Read()
-			q.Close(),sc.Enable(0)
+			q.Close()
+			
+			sc.Enable(0)
 			Text:=RegExReplace(Text,"\r\n|\r","`n"),Encode(Text,tt,Encoding)
 			if(ea.sc=sc.2357){
 				Node:=GetPos(),sc.2181(0,&tt)
@@ -638,11 +656,72 @@ Check_For_Edited(){
 			Update({File:ea.File,Text:Text}),SetPos(),sc.Enable(1)
 	}}if(List)
 		SetStatus("Files Updated:" Trim(List,","),3)
+	if(EditedFiles.1){
+		SetTimer,CFELoop,-1
+		return
+	}
 	return 1
 	SetScrollPos2:
 	if(ea.Scroll!="")
 		sc.2613(ea.Scroll),sc.2400()
 	MarginWidth()
+	return
+	Compare_NewClose:
+	CFELoop:
+	Compare_NewEscape:
+	KeyWait,Escape,U
+	if(EditedFiles.1){
+		Gui,1:+Disabled
+		NewWin:=new GUIKeep("Compare_New",1)
+		NewWin.Add("Text,," EditedFiles.1.File,"Edit,w300 h500 vOriginal -Wrap ReadOnly Section","Button,gCFEOriginal,&Keep Original","Edit,x300 ys w300 h500 vNew -Wrap ReadOnly","Button,gCFENew,&New"),NewWin.Show("Compare Edited")
+		NewWin.SetText("New",Text)
+		NewWin.SetText("Original",Update({Get:EditedFiles.1.File}))
+		FileRead,New,% EditedFiles.1.File
+		NewWin.SetText("New",New)
+		NewWin.Show("Compare Edited Files")
+		return
+	}
+	return
+	CFEOriginal:
+	Obj:=EditedFiles.1
+	FileGetTime,Time,% Obj.File
+	Obj.aa.SetAttribute("time",Time)
+	EditedFiles.RemoveAt(1),HWND({Rem:"Compare_New"})
+	Goto,CFELoop
+	return
+	CFENew:
+	Obj:=EditedFiles.1
+	ea:=Obj.ea,sc:=CSC(),aa:=Obj.aa
+	FileGetTime,Time,% Obj.File
+	aa.SetAttribute("time",Time)
+	q:=FileOpen(ea.File,"R")
+	if(q.Encoding="CP1252"){
+		if(RegExMatch((Text:=q.Read()),"OU)([^\x00-\x7F])",Found))
+			q:=FileOpen(ea.File,"R","UTF-8"),Text:=q.Read(),Encoding:="UTF-8"
+		else
+			Encoding:=q.Encoding
+	}else
+		Encoding:=q.Encoding,Text:=q.Read()
+	q.Close()
+	
+	sc.Enable(0)
+	Text:=RegExReplace(Text,"\r\n|\r","`n"),Encode(Text,tt,Encoding)
+	if(ea.sc=sc.2357){
+		Node:=GetPos(),sc.2181(0,&tt)
+		ea:=XML.EA(Node)
+		for a,b in StrSplit(ea.Fold,",")
+			sc.2231(b)
+		if(ea.Start&&ea.End)
+			sc.2160(ea.Start,ea.End),sc.2399
+		if(ea.Scroll!="")
+			SetTimer,SetScrollPos2,-1
+	}else if(ea.sc&&ea.sc!=sc.2357)
+		sc.2377(ea.sc),aa.RemoveAttribute("sc")
+	Update({File:ea.File,Text:Text}),SetPos(),sc.Enable(1)
+	
+	EditedFiles.RemoveAt(1),HWND({Rem:"Compare_New"})
+	
+	Goto,CFELoop
 	return
 }
 Check_For_Update(startup:=""){
@@ -655,7 +734,7 @@ Check_For_Update(startup:=""){
 		if(Auto.Reset>A_Now)
 			return
 	}
-	Version:=1.005.20
+	Version:=1.005.21
 	NewWin:=new GUIKeep("CFU"),NewWin.Add("Edit,w400 h400 ReadOnly,No New Version,wh"
 								  ,"Radio,gSwitchBranch Checked vmaster,Master Branch,y"
 								  ,"Radio,x+M gSwitchBranch vBeta,Beta Branch,y"
@@ -2460,7 +2539,7 @@ Class PluginClass{
 	}m(Info*){
 		m(Info*)
 	}MoveStudio(){
-		Version:=1.005.20
+		Version:=1.005.21
 		SplitPath,A_ScriptFullPath,,,,name
 		FileMove,%A_ScriptFullPath%,%name%-%version%.ahk,1
 	}Open(Info){
@@ -2505,7 +2584,7 @@ Class PluginClass{
 	}Update(filename,text){
 		Update({file:filename,text:text})
 	}Version(){
-		Version:=1.005.20
+		Version:=1.005.21
 		return version
 	}
 }
@@ -2701,7 +2780,7 @@ class s{
 			return StrGet(&text,vv,"UTF-8")
 		}wp:=(wparam+0)!=""?"Int":"AStr",lp:=(lparam+0)!=""?"Int":"AStr"
 		if(wparam.1!="")
-			wp:="AStr",wparam:=wparam.1
+			wp:="UInt",wparam:=ET(wparam.1)
 		wparam:=wparam=""?0:wparam,lparam:=lparam=""?0:lparam
 		if(wparam=""||lparam="")
 			return
@@ -3000,13 +3079,14 @@ Class XML{
 		}
 		return New
 	}Save(x*){
+		static Shell:=ComObjCreate("Scripting.FileSystemObject")
 		if(x.1=1)
 			this.Transform()
 		FileName:=this.File?this.File:x.1.1,Text:=this.OriginalText
 		if(!this[])
 			return m("Error saving the " this.File " XML.  Please get in touch with maestrith if this happens often")
 		if(InStr(this.File,"CEXML.xml")){
-			All:=CEXML.SN("//*[@id]")
+			All:=cexml.SN("//*[@id]")
 			while(aa:=All.Item[A_Index-1])
 				aa.SetAttribute("id",A_Index)
 		}else if(InStr(this.File,"gui.xml")){
@@ -3031,14 +3111,13 @@ Class XML{
 			File:=((Folder:=A_ScriptDir "\Lib\XML Backup\"  NNE) "\" NNE " " A_Now ".xml")
 			if(!FileExist(Folder))
 				FileCreateDir,%Folder%
-			FileMove,%FileName%,%File%
+			Folder:=Shell.GetFolder(Folder),All:=Folder.Files,BackupCount:=x.2+0?x.2:5
+			for a in All{
+				if(All.Count<BackupCount)
+					Break
+				a.Delete()
+			}FileMove,%FileName%,%File%
 			File:=FileOpen(FileName,"W","UTF-8"),File.Write(this[]),File.Length(File.Position),File.Close()
-		}else{
-			/*
-				if(InStr(this.File,"Settings.xml")||InStr(this.File,"CEXML.xml")){
-					m("DIDN'T CHANGE!!!!: " this.File,SubStr(text,1,500),"","",SubStr(this[],1,500),"time:3")
-				}
-			*/
 		}
 	}SSN(XPath){
 		return this.XML.SelectSingleNode(XPath)
@@ -3921,9 +4000,9 @@ ContextMenu(){
 	else if(Node:=Menus.Find("//menu/@clean",Clean)){
 		if(FileExist((FileName:=SSN(Node,"@plugin").text)))
 			Run,%FileName%
-		else if(SSN(Node,"@plugin"))
+		else if(SSN(Node,"@plugin")){
 			MissingPlugin(FileName,A_ThisMenuItem)
-		else
+		}else
 			m("An error occured")
 	}else
 		m("Coming soon:",A_ThisMenu,A_ThisMenuItem,Clean)
@@ -5066,9 +5145,14 @@ Enable(Control,label:="",win:=1){
 	GuiControl,%win%:%value%Redraw,%Control%
 	GuiControl,%win%:+g%label%,%Control%
 }
-Encode(tt,ByRef text,encoding:="UTF-8"){
-	len:=VarSetCapacity(text,(StrPut(tt,encoding)*((encoding="utf-16"||encoding="cp1200")?2:1))),StrPut(tt,&text,len,"UTF-8")
+Encode(TT,ByRef Text,Encoding:="UTF-8"){
+	Len:=VarSetCapacity(Text,(StrPut(TT,Encoding)*((Encoding="UTF-16"||Encoding="cp1200")?2:1))),StrPut(TT,&Text,Len,"UTF-8")
 	return Len-1
+}
+ET(TT,Encoding:="UTF-8"){
+	static Text
+	Len:=VarSetCapacity(Text,(StrPut(TT,Encoding)*((Encoding="UTF-16"||Encoding="cp1200")?2:1))),StrPut(TT,&Text,Len,"UTF-8")
+	return &Text
 }
 Enter(){
 	static map:=new XML("map"),NotIndent:={IfEqual:1,IfNotEqual:1,IfGreater:1,IfGreaterOrEqual:1,IfLess:1,IfLessOrEqual:1,IfInString:1}
@@ -5514,7 +5598,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20180209111407,XMLFiles:={menus:[20180904082556,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20180209111407,XMLFiles:={menus:[20181004103037,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20180104080414,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -5620,22 +5704,34 @@ FileCheck(file:=""){
 Find_Replace(){
 	static
 	LastSC:=CSC()
-	infopos:=positions.Find("//*/@file",Current(3).file),last:=SSN(infopos,"@findreplace").text,ea:=Settings.EA("//findreplace"),nw:=new GUIKeep(30),value:=[]
+	InfoPos:=Positions.Find("//*/@file",Current(3).File),Last:=SSN(InfoPos,"@findreplace").Text,ea:=Settings.EA("//findreplace"),nw:=new GUIKeep(30),Value:=[]
 	for a,b in ea
-		value[a]:=b?"Checked":""
-	nw.Add("Text,,Find","Edit,w200 vfind","Text,,Replace","Edit,w200 vreplace","Checkbox,vregex " value.regex ",Regex","Checkbox,vcs " value.cs ",Case Sensitive","Checkbox,vgreed " value.greed ",Greed","Checkbox,vml " value.ml ",Multi-Line","Checkbox,xm vInclude " value.Include ",Current Include Only","Checkbox,xm vcurrentsel hwndcs gcurrentsel " value.currentsel ",In Current Selection","Button,gfrfind Default,&Find","Button,x+5 gfrreplace,&Replace","Button,x+5 gfrall,Replace &All"),nw.Show("Find & Replace"),sc:=CSC(),order:=[],order[sc.2585(0)]:=1,order[sc.2587(0)]:=1,last:=(order.MinIndex()!=order.MaxIndex())?sc.TextRange(order.MinIndex(),order.MaxIndex()):last,Hotkeys(30,{"!e":"frregex"})
-	if(ea.regex&&order.MinIndex()!=order.MaxIndex())
+		Value[a]:=b?"Checked":""
+	nw.Add("Text,,Find","Edit,w200 vfind"
+		 ,"Text,,Replace"
+		 ,"Edit,w200 vreplace"
+		 ,"Checkbox,vregex " Value.regex ",Regex"
+		 ,"Checkbox,vcs " Value.cs ",Case Sensitive"
+		 ,"Checkbox,vgreed " Value.greed ",Greed"
+		 ,"Checkbox,vml " Value.ml ",Multi-Line"
+		 ,"Checkbox,xm vInclude " Value.Include ",Current Include Only"
+		 ,"Checkbox,xm vcurrentsel hwndcs gcurrentsel " Value.currentsel ",In Current Selection"
+		 ,"Button,gfrfind Default,&Find"
+		 ,"Button,x+5 gfrreplace,&Replace"
+		 ,"Button,x+5 gfrall,Replace &All")
+	nw.Show("Find & Replace"),sc:=CSC(),Min:=sc.2585(0),Max:=sc.2587(0),Last:=(Min!=Max)?sc.TextRange(Min,Max):Last,Hotkeys(30,{"!e":"frregex"})
+	if(ea.regex&&Min!=Max)
 		for a,b in StrSplit("\.*?+[{|()^$")
-			if(!InStr(last,"\" b))
-				StringReplace,last,last,%b%,\%b%,All
-	if(!value.currentsel)
-		ControlSetText,Edit1,%last%,% HWND([30])
+			if(!InStr(Last,"\" b))
+				StringReplace,Last,Last,%b%,\%b%,All
+	if(!Value.currentsel)
+		ControlSetText,Edit1,%Last%,% HWND([30])
 	else
-		Gosub,checksel
+		Gosub,CheckSel
 	ControlSend,Edit1,^a,% HWND([30])
 	Gui,1:-Disabled
 	return
-	checksel:
+	CheckSel:
 	sc:=CSC()
 	if(sc.2008=sc.2009)
 		GuiControl,30:,In Current Selection,0
@@ -5653,7 +5749,7 @@ Find_Replace(){
 	info:=nw[],fr:=Settings.Add("findreplace")
 	for a,b in {regex:info.regex,cs:info.cs,greed:info.greed,ml:info.ml,Include:info.Include,currentsel:info.currentsel}
 		fr.SetAttribute(a,b)
-	fr:=positions.Find("//*/@file",Current(3).file),fr.SetAttribute("findreplace",info.find),nw.SavePos(),HWND({rem:30})
+	fr:=Positions.Find("//*/@file",Current(3).file),fr.SetAttribute("findreplace",info.find),nw.SavePos(),HWND({rem:30})
 	if(start!=""&&end!="")
 		sc.2160(start,end),start:=end:="",sc.2500(2),sc.2505(0,sc.2006)
 	return
@@ -5686,8 +5782,19 @@ Find_Replace(){
 	frrestart:
 	if(!info.find)
 		return m("Enter search text")
-	if(RegExMatch(text:=Update({Get:Current(3).File}),find,found,sc.2008+1))
-		return sc.2160(start:=StrPut(SubStr(text,1,found.Pos(0)),"utf-8")-2,start+StrPut(found.0,"utf-8")-1)
+	Text:=Update({Get:Current(3).File})
+	if(RegExMatch(Text,find,found,StrLen(sc.TextRange(0,sc.2587)))){
+		
+		
+		
+		/*
+			return sc.2025(StrPut(SubStr(text,1,found.Pos(0)),"UTF-8")-(StrPut(SubStr(Text,Found.Pos(0),1),"UTF-8"))),nw.Exit()
+		*/
+		/*
+			m(StrPut(SubStr(Text,1,found.Pos(0)),"UTF-8")-2,Found.0,StrPut(found.0,"utf-8")-1,"",start:=StrPut(SubStr(text,1,found.Pos(0)),"utf-8")-2,start+StrPut(found.0,"utf-8")-1)
+		*/
+		return sc.2160(start:=(StrPut(SubStr(text,1,found.Pos(0)),"UTF-8")-(StrPut(SubStr(Text,Found.Pos(0),1),"UTF-8"))),start+StrPut(found.0,"utf-8")-1)
+	}
 	list:=info.Include?SN(Current(),"self::*"):SN(Current(1),"descendant::file")
 	while(current:=list.Item[A_Index-1],ea:=XML.EA(current)){
 		if(ea.file!=stop&&startsearch=0)
@@ -5701,6 +5808,13 @@ Find_Replace(){
 		pos:=1
 	}current:=Current(1).firstchild,looped:=1
 	Goto,frrestart
+	/*
+		Flan:="äüö" äüöäüöäüöäüöäüöäüö
+		Flan:="äüö"
+		Flan:="äüö"
+		Flan:="äüö"
+		Flan:="äüö"
+	*/
 	return
 	FRReplace:
 	info:=nw[],sc.2170(0,[NewLines(info.replace)]),Update({sc:sc.2357})
@@ -6350,10 +6464,10 @@ GetClassText(EA,SearchText,Type:="Class",ReturnClass:=0){
 		return SubStr(FileText,start,(alt?found.Pos(1):found.Pos(0)+found.len(0))-(start-1))
 	}
 }
-GetControl(ctrl){
-	if(!node:=MainWin.gui.SSN("//*[@hwnd='" ctrl "']"))
-		node:=MainWin.gui.SSN("//*[@hwnd='" ctrl+0 "']")
-	return node
+GetControl(Ctrl){
+	if(!Node:=MainWin.Gui.SSN("//*[@hwnd='" Ctrl "']"))
+		Node:=MainWin.Gui.SSN("//*[@hwnd='" Ctrl+0 "']")
+	return Node
 }
 GetCurrentClass(){
 	ScanFile.RemoveComments(Current(3),,1),Text:=ScanFile.CurrentText,b:=v.OmniFind[Current(3).Lang].Class,Pos:=LastPos:=1
@@ -9179,7 +9293,7 @@ Options(x:=0){
 	if(x="startup"){
 		v.Options:=[]
 		disable:="Center_Caret|Disable_Autosave|Disable_Backup|Disable_Exemption_Handling|Disable_Line_Status|Disable_Match_Brace_Highlight_On_Delete|Disable_Variable_List|End_Document_At_Last_Line|Hide_File_Extensions|Hide_Horizontal_Scrollbars|Hide_Indentation_Guides|Hide_Vertical_Scrollbars|Remove_Directory_Slash|Run_As_Admin|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Virtual_Space|Warn_Overwrite_On_Export|Word_Wrap_Indicators"
-		options:="Add_Margins_To_Windows|Add_Space_After_Includes_On_Publish|Auto_Check_For_Update_On_Startup|Auto_Close_Find|Auto_Complete|Auto_Complete_In_Quotes|Auto_Complete_While_Tips_Are_Visible|Auto_Expand_Includes|Auto_Indent_Comment_Lines|Auto_Set_Area_On_Quick_Find|Auto_Space_After_Comma|Auto_Variable_Browser|Autocomplete_Enter_Newline|Brace_Match_Background_Match|Build_Comment|Case_Sensitive|Center_Caret|Check_For_Edited_Files_On_Focus|Clipboard_History|Context_Sensitive_Help|Copy_Selected_Text_on_Quick_Find|Current_Area|Disable_Auto_Advance|Disable_Auto_Complete|Disable_Auto_Delete|Disable_Auto_Indent_For_Non_Ahk_Files|Disable_Auto_Insert_Complete|Disable_Autosave|Disable_Backup|Disable_Compile_AHK|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Disable_Line_Status|Disable_Variable_List|Enable_Close_On_Save|End_Document_At_Last_Line|Focus_Studio_On_Debug_Breakpoint|Full_Auto_Indentation|Full_Backup_All_Files|Full_Tree|Global_Debug_Hotkeys|Greed|Hide_File_Extensions|Hide_Indentation_Guides|Highlight_Current_Area|Includes_In_Place|Inline_Brace|Manual_Continuation_Line|Multi_Line|New_File_Dialog|New_Include_Add_Space|Omni_Search_Stats|OSD|Publish_Indent|Regex|Remove_Directory_Slash|Require_Enter_For_Search|Run_As_Admin|Select_Current_Debug_Line|Shift_Breakpoint|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Small_Icons|Smart_Delete|Top_Find|Verbose_Debug_Window|Warn_Overwrite_On_Export|Word_Border"
+		options:="Add_Margins_To_Windows|Add_Space_After_Includes_On_Publish|Auto_Check_For_Update_On_Startup|Auto_Close_Find|Auto_Complete|Auto_Complete_In_Quotes|Auto_Complete_While_Tips_Are_Visible|Auto_Expand_Includes|Auto_Indent_Comment_Lines|Auto_Set_Area_On_Quick_Find|Auto_Space_After_Comma|Auto_Variable_Browser|Autocomplete_Enter_Newline|Brace_Match_Background_Match|Build_Comment|Case_Sensitive|Center_Caret|Check_For_Edited_Files_On_Focus|Clipboard_History|Context_Sensitive_Help|Copy_Selected_Text_on_Quick_Find|Current_Area|Disable_Auto_Advance|Disable_Auto_Complete|Disable_Auto_Delete|Disable_Auto_Indent_For_Non_Ahk_Files|Disable_Auto_Insert_Complete|Disable_Autosave|Disable_Backup|Disable_Compile_AHK|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Disable_Line_Status|Disable_Variable_List|Enable_Close_On_Save|End_Document_At_Last_Line|Focus_Studio_On_Debug_Breakpoint|Full_Auto_Indentation|Full_Backup_All_Files|Full_Tree|Global_Debug_Hotkeys|Greed|Hide_File_Extensions|Hide_Indentation_Guides|Highlight_Current_Area|Includes_In_Place|Inline_Brace|Manual_Continuation_Line|Multi_Line|New_File_Dialog|New_Include_Add_Space|Omni_Search_Stats|OSD|Publish_Indent|Regex|Remove_Directory_Slash|Require_Enter_For_Search|Run_As_Admin|Select_Current_Debug_Line|Shift_Breakpoint|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Small_Icons|Smart_Delete|Top_Find|Verbose_Debug_Window|Warn_Overwrite_On_Export|Word_Border|Ask_Before_Overwriting_Edited_Files"
 		other:="Auto_Space_After_Comma|Auto_Space_Before_Comma|Autocomplete_Enter_Newline|Disable_Auto_Delete|Disable_Auto_Insert_Complete|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Enable_Close_On_Save|Force_UTF-8|Full_Tree|Hide_Library_Files_In_Code_Explorer|Hide_Tray_Icon|Highlight_Current_Area|Manual_Continuation_Line|Match_Any_Word|Small_Icons|Top_Find"
 		special:="Word_Wrap"
 		alloptions.=disable "|" options "|" other "|" special
@@ -13581,5 +13695,4 @@ Wrap_Word_In_Quotes(){
 	sc:=CSC(),sc.2078,CPos:=sc.2008,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2003(start,Chr(34)),sc.2003(end+1,Chr(34)),sc.2025(CPos+1),sc.2079
 }
 DebugWindow(x*){
-
 }
