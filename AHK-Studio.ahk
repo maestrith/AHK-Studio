@@ -10757,6 +10757,24 @@ SanitizePath(File){
 Save_As(){
 	Send,{Alt Up}
 	Current:=Current(1),CurrentFile:=Current(2).file
+	WinGet,AList,List,ahk_class AutoHotkey
+	Loop,%AList%{
+		ID:=AList%A_Index%
+		WinGetTitle,ATitle,ahk_id%ID%
+		if(Instr(ATitle,CurrentFile)){
+			PostMessage,0x111,65405,0,,ahk_id%ID%
+			WinGet,PID,PID,ahk_id%ID%
+			Sleep,200
+			Process,Exist,%PID%
+			if(ErrorLevel)
+				WinKill,ahk_id%ID%
+			Process,Exist,%PID%
+			if(ErrorLevel){
+				Run,TaskMgr
+				m("Unable to kill this Process. Please kill this task in the Task Manager")
+			}
+		}
+	}
 	if(!NewFile:=DLG_FileSave(HWND(1),0,"Save File As...",CurrentFile))
 		return
 	SplitPath,CurrentFile,,dir
@@ -12254,6 +12272,7 @@ Test_Plugin(){
 	Exit(1)
 }
 Testing(){
+	return v.Debug.2004
 	return m("Testing")
 	/*
 		
