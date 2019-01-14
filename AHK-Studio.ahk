@@ -4803,8 +4803,7 @@ DLG_FileSave(HWND:=0,DefaultFilter=0,DialogTitle="Select file to open",DefaultFi
 	if(!DllCall("comdlg32\GetSaveFileNameA","Uint",&OFName))
 		Exit
 	FileName:=""
-	while(Char:=NumGet(lpstrFile,A_Index-1,"UChar"))
-		FileName.=Chr(Char)
+	FileName := StrGet(&lpstrFile,"cp0") ; FIXED - wrong FileName encoding
 	SplitPath,FileName,,Dir
 	Settings.Add("SaveAs").Text:=Dir
 	WinActivate,% hwnd([1])
