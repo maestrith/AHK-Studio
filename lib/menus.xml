@@ -11,13 +11,15 @@
 			<menu name="&amp;Save" hotkey="^S" clean="Save"></menu>
 			<menu clean="Save_As" name="Save &amp;As"></menu>
 			<menu name="Export" clean="Export"></menu>
+			<menu name="Compile" clean="Compile"></menu>
+			<menu name="Compile Using U32" clean="Compile_Using_U32"></menu>
+			<menu name="Compile Using U64" clean="Compile_Using_U64"></menu>
 			<separator clean="&lt;Separator&gt;" option="1"></separator>
 			<menu name="Remove Scintilla Window" clean="Remove_Scintilla_Window"></menu>
 			<menu name="New &amp;Include" clean="New_Include"></menu>
 			<menu name="Rename Current Include" clean="Rename_Current_Include"></menu>
 			<menu name="Version Tracker" clean="Version_Tracker"></menu>
 			<menu name="Remove Include" clean="Remove_Include"></menu>
-			<menu name="&amp;Upload" clean="Upload" option="" plugin="plugins\Upload.ahk"></menu>
 			<menu name="&amp;Publish" clean="Publish"></menu>
 			<menu name="Delete Project" clean="Delete_Project"></menu>
 			<menu name="Project Properties" clean="Project_Properties"></menu>
@@ -136,22 +138,20 @@
 				<menu name="Download Plugins" clean="Download_Plugins"></menu>
 				<menu clean="Test_Plugin" name="Test Plugin" hotkey="!t"></menu>
 				<separator clean="&lt;Separator&gt;"></separator>
-				<menu clean="Additional_Publish" hotkey="" name="Additional Publish" option="" plugin="plugins\Additional Publish.ahk"></menu>
 				<menu clean="Backup" hotkey="" name="Backup" option="" plugin="plugins\Backup.ahk"></menu>
 				<menu clean="Camel" hotkey="" name="Camel" option="" plugin="plugins\Camel.ahk"></menu>
 				<menu clean="Clean_Position_Data" hotkey="" name="Clean Position Data" option="" plugin="plugins\Clean Position Data.ahk"></menu>
-				<menu clean="Compile_Using_Unicode_32" hotkey="" name="Compile Using Unicode 32" option="" plugin="plugins\Compile Using Unicode 32.ahk"></menu>
 				<menu clean="Toggle_Fold_All" hotkey="" name="Toggle Fold All" option="tfa" plugin="plugins\Fold.ahk"></menu>
 				<menu clean="Toggle_Fold" hotkey="" name="Toggle Fold" option="tf" plugin="plugins\Fold.ahk"></menu>
-				<menu clean="Increment_Selected" hotkey="" name="Increment Selected" option="" plugin="plugins\Increment Selected.ahk"></menu>
+				<menu clean="Increment_Selected" hotkey="" name="Increment Selected"></menu>
+				<menu clean="Decrement_Selected" hotkey="" name="Decrement Selected"></menu>
 				<menu clean="Make_One_Line" hotkey="" name="Make One Line" option="" plugin="plugins\Make One Line.ahk"></menu>
 				<menu clean="Mark_All_Files_For_Update" hotkey="" name="Mark All Files For Update" option="" plugin="plugins\Mark All Files For Update.ahk"></menu>
 				<menu clean="Paste_To_p.ahkscript.org" hotkey="" name="Paste To p.ahkscript.org" option="" plugin="plugins\Paste Script.ahk"></menu>
 				<menu clean="Paste_Clipboard" hotkey="" name="Paste Clipboard" option="Clipboard" plugin="plugins\Paste Script.ahk"></menu>
 				<menu clean="Remove_Blank_Lines" hotkey="" name="Remove Blank Lines" option="" plugin="plugins\Remove Blank Lines.ahk"></menu>
 				<menu clean="Remove_Comments" hotkey="" name="Remove Comments" option="" plugin="plugins\Remove Comments.ahk"></menu>
-				<menu clean="Run_Current_Include" hotkey="" name="Run Current Include" option="Include" plugin="plugins\Run Selected Text.ahk"></menu>
-				<menu clean="Split_Line_By_Comma" hotkey="" name="Split Line By Comma" option="" plugin="plugins\Split By Comma.ahk"></menu>
+				<menu clean="Split_Line_By_Comma" hotkey="" name="Split Line By Comma"></menu>
 				<menu clean="Toggle_Fullscreen" hotkey="" name="Toggle Fullscreen" option="" plugin="plugins\Toggle Fullscreen.ahk"></menu>
 				<menu clean="Update_Repository" hotkey="" name="Update Repository" option="" plugin="plugins\Update Repository.ahk"></menu></menu>
 			<menu clean="Custom_Commands" hotkey="" name="Custom Commands" option="" plugin="plugins\Custom Commands.ahk"></menu>
@@ -163,7 +163,6 @@
 			<menu name="Post &amp;Multiple Include Gist" clean="Post_Multiple_Include_Gist" no="1" delete="1"></menu>
 			<menu name="Auto Insert" clean="Auto_Insert" hide="1" option="" plugin="plugins\Auto Insert.ahk"></menu>
 			<menu clean="Settings" name="Settings" option="" plugin="plugins\Settings.ahk"></menu>
-			<menu clean="FTP_Servers" name="FT&amp;P Servers" option="" plugin="plugins\Ftp Servers.ahk"></menu>
 			<menu name="Insert Color Code" clean="Insert_Color_Code"></menu>
 			<menu clean="Google_Search_Selected" name="Google Search Selected"></menu></menu>
 		<menu name="O&amp;ptions" clean="Options" top="1">
@@ -257,6 +256,8 @@
 			<menu clean="OSD" name="OSD"></menu>
 			<menu clean="Force_UTF-8" name="Force UTF-8"></menu>
 			<menu name="Brace Match Background Match" clean="Brace_Match_Background_Match"></menu>
+			<menu clean="Additional_Library_Folders" name="Additional Library Folders"></menu>
+			<menu clean="Ask_Before_Overwriting_Edited_Files" name="Ask Before Overwriting Edited Files"></menu>
 			<menu clean="Quick_Options" name="Quick Options"></menu></menu>
 		<menu name="Fo&amp;rmat" clean="Format" top="1">
 			<menu clean="Align_Selected_Text" hotkey="" name="Align Selected Text" option="" plugin="plugins\Align Selected Text.ahk"></menu>
@@ -331,28 +332,5 @@
 				<menu name="&amp;Social" clean="Social" no="1" delete="1"></menu>
 				<menu clean="Testing" name="Testing" hotkey="^K"></menu></menu>
 			<menu name="&amp;About" clean="About"></menu></menu>
-		<menu clean="Plugin" name="P&amp;lugin" top="1">
-			<menu clean="Alphabetize_XML" hotkey="" name="Alphabetize XML" option="" plugin="plugins\Alphabetize XML.ahk"></menu>
-			<menu clean="Validate_XML" hotkey="" name="Validate XML" option="Validate" plugin="plugins\Alphabetize XML.ahk"></menu>
-			<menu clean="Toggle_Current_Fold" hotkey="" name="Toggle Current Fold" option="" plugin="plugins\Code Folding.ahk"></menu>
-			<menu clean="Toggle_All_Folds" hotkey="" name="Toggle All Folds" option="foldall" plugin="plugins\Code Folding.ahk"></menu>
-			<menu clean="Compile_Using_Unicode_64" hotkey="" name="Compile Using Unicode 64" option="" plugin="plugins\Compile Using Unicode 64.ahk"></menu>
-			<menu clean="Create_Menu_For_Github" hotkey="" name="Create Menu For Github" option="" plugin="plugins\Create Menu For Github.ahk"></menu>
-			<menu clean="Fix_Case" hotkey="" name="Fix Case" option="" plugin="plugins\Fix Case.ahk"></menu>
-			<menu clean="Fix_It" hotkey="" name="Fix It" option="" plugin="plugins\Fix It.ahk"></menu>
-			<menu clean="Fix_Lib" hotkey="" name="Fix Lib" option="" plugin="plugins\Fix Lib.ahk"></menu>
-			<menu clean="Ftp_Servers" hotkey="" name="Ftp Servers" option="" plugin="plugins\Ftp Servers.ahk"></menu>
-			<menu clean="Get_Coordinates" hotkey="" name="Get Coordinates" option="" plugin="plugins\Get Coordinates.ahk"></menu>
-			<menu clean="Goto_Testing" hotkey="" name="Goto Testing" option="" plugin="plugins\GoTo Testing.ahk"></menu>
-			<menu clean="Language_Editor" hotkey="" name="Language Editor" option="" plugin="plugins\Language Editor.ahk"></menu>
-			<menu clean="LowerCase_Selected" hotkey="" name="LowerCase Selected" option="" plugin="plugins\LowerCase Selected.ahk"></menu>
-			<menu clean="Open_Settings" hotkey="" name="Open Settings" option="" plugin="plugins\Open Settings.ahk"></menu>
-			<menu clean="OTB" hotkey="" name="OTB" option="" plugin="plugins\OTB.ahk"></menu>
-			<menu clean="Remove_Comments_From_Selected" hotkey="" name="Remove Comments From Selected" option="" plugin="plugins\Remove Comments From Selected.ahk"></menu>
-			<menu clean="Run_Current_Segment" hotkey="" name="Run Current Segment" option="segment" plugin="plugins\Run Selected Text.ahk"></menu>
-			<menu clean="Show_Style" hotkey="" name="Show Style" option="" plugin="plugins\Show Style.ahk"></menu>
-			<menu clean="Basic_Run" hotkey="" name="Basic Run" option="" plugin="plugins\Standard Run.ahk"></menu>
-			<menu clean="Swap_Key_Value" hotkey="" name="Swap Key Value" option="" plugin="plugins\Swap Key Value.ahk"></menu>
-			<menu clean="Test_Scintilla" hotkey="" name="Test Scintilla" option="" plugin="plugins\Test Scintilla.ahk"></menu></menu>
 	</main>
 </menus>
