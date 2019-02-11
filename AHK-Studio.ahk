@@ -35,7 +35,6 @@ return
 /*
 	Hotkey,End,EndThing,On
 */
- 
 return
 /*
 	EndThing:
@@ -162,6 +161,42 @@ Add_Selected_To_Personal_Variables(){
 		Keywords()
 	*/
 }
+Add_Selected_To_Project_Specific_AutoComplete(){
+	text:=CSC().getseltext()
+	if(!text)
+		return m("Please select some text first")
+	if(!Node:=Settings.Find("//autocomplete/project/@file",Current(2).file))
+		Node:=Settings.Add("autocomplete/project",{file:Current(2).file},,1)
+	pos:=1
+	while(RegExMatch(text,"UO)\b(\w+)\b",found,pos)){
+		pos:=found.pos(1)+found.len(1)
+		if((!RegExMatch(Node.text,"\b\Q" found.1 "\E\b"))&&StrLen(found.1)>1)
+			Node.text:=Node.text " " found.1,list.=found.1 "`n"
+		if(pos=lastpos)
+			break
+		lastpos:=pos
+	}m("Added:",SubStr(list,1,300)(StrLen(list)>300?"...":""),"To " Current(2).file)
+}
+Add_Space_Before_And_After_Commas(){
+	Spaces("baa")
+}Add_Space_After_Commas(){
+	Spaces("ac")
+}Add_Space_Before_Commas(){
+	Spaces("bc")
+}RemoveSpacesFromAroundCommas(){
+	Spaces("rsfac")
+}Remove_Spaces_From_Around_Commas(){
+	Spaces("rsfac")
+}Spaces(Info){
+	sc:=CSC()
+	if(!Sel:=sc.GetSelText())
+		sc.2160(sc.2128(line:=sc.2166(sc.2008)),sc.2136(line)),Sel:=sc.GetSelText()
+	Replace:={ac:[["U),(\S)",", $1"]],bc:[["U)(\S),","$1 ,"]],baa:[["U),(\S)",", $1"],["U)(\S),","$1 ,"]]}
+	if(Replace[Info])
+		sc.2170(0,ProcessText(Sel,Replace[Info]))
+	else
+		sc.2170(0,RegExReplace(Sel,"\s*,\s*",","))
+}
 Add_Tracked_Folder(){
 	if(!MainWin.Gui.SSN("//*[@type='Tracked Notes']"))
 		return m("Tracked notes is not visible")
@@ -269,6 +304,25 @@ AddMissing(){
 		aa.SetAttribute("cetv",TVC.Add(2,ea.text,header,(ea.type~="Method|Property"=0?"Sort":"")))
 	}
 }
+AHK(jsObj){
+	if(jsObj.0="Object"){
+		Obj:=[],Keys:=jsObj.1.0,Values:=jsObj.1.1
+		for a,b in Keys{
+			Key:=Keys[A_Index-1],Value:=Values[A_Index-1]
+			if(!IsObject(Value.1))
+				Obj[Key]:=(Value.0="Boolean"?(Value.1?"true":"false"):Value.1)
+			else
+				Obj[Key]:=AHK(Value)
+		}
+		return Obj
+	}else if(jsObj.0="Array"){
+		Array:=[]
+		while(A_Index<=jsObj[1].length)
+			Array.Insert(AHK(jsObj[1][A_INDEX-1]))
+		return Array
+	}else
+		return (jsObj.0="Boolean"?(jsObj.1?"true":"false"):jsObj.1)
+}
 Allowed(){
 	All:=Settings.SN("//replacements/descendant::*")
 	while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
@@ -322,15 +376,6 @@ Auto_Insert(){
 	while(LV_GetNext())
 		LV_GetText(trigger,LV_GetNext()),rem:=Settings.Find("//autoadd/key/@trigger",trigger),rem.ParentNode.RemoveChild(rem),LV_Delete(LV_GetNext())
 	return BraceSetup()
-}
-SettingsDefault(id,return:=0){
-	main:=SettingsWindow.win.xml,node:=main.SSN("//*[@id='" id "']"),win:=main.SSN("//window/@name").text,ea:=XML.EA(node)
-	if(ea.type){
-		
-		Gui,%win%:Default
-		Gui,% win ":" ea.type,% ea.hwnd
-	}
-	return (return?XML.EA(node):node)
 }
 AutoClass(){
 	sc:=CSC(),line:=sc.2166(sc.2008),text:=sc.TextRange(sc.2128(line),sc.2008)
@@ -724,6 +769,37 @@ Check_For_Edited(){
 	Goto,CFELoop
 	return
 }
+Check_For_Update_Get_Info(Startup,Branch,ID){
+	static VersionTextURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/$1/AHK-Studio.text",URL:="https://api.github.com/repos/maestrith/AHK-Studio/commits/$1"
+	ControlSetText,Edit1,Getting Update Info`r`n`r`nPlease Wait...,%ID%
+	sub:=A_NowUTC
+	sub-=A_Now,hh
+	FileGetTime,Time,%A_ScriptFullPath%
+	Time+=sub,hh
+	ea:=Settings.EA("//github"),token:=ea.token?"?access_token=" ea.token:"",http:=ComObjCreate("WinHttp.WinHttpRequest.5.1"),http.Open("GET",RegExReplace(URL,"\$1",Branch) "?refresh=" A_Now token)
+	if(proxy:=Settings.SSN("//proxy").text)
+		http.SetProxy(2,proxy)
+	http.Send(),RegExMatch(http.ResponseText,"iUO)\x22date\x22:\x22(.*)\x22",found),Date:=RegExReplace(found.1,"\D")
+	if(Startup="1"){
+		if(Reset:=http.GetResponseHeader("X-RateLimit-Reset")){
+			Seventy:=19700101000000
+			for a,b in {s:Reset,h:-sub}
+				EnvAdd,Seventy,%b%,%a%
+			Settings.Add("autoupdate",{Reset:Seventy})
+			if(Time>Date)
+				return
+		}else
+			return
+	}File:=FileOpen("Lib\" Branch " ChangeLog.txt","rw"),File.Seek(0),File.Write(Update:=RegExReplace(RegExReplace(URLDownloadToVar(RegExReplace(VersionTextURL,"\$1",Branch) "?refresh=" A_Now),"\R","`r`n"),Chr(127),"`r`n")),File.Length(File.Position),File.Close()
+	if(Time<Date)
+		Update:=Update
+	else
+		Update:="No New Updates"
+	if(!found.1)
+		Update:=http.ResponseText
+	ControlSetText,Edit1,%Update%,%ID%
+	return RegExReplace(Update,"\R","`r`n")
+}
 Check_For_Update(startup:=""){
 	static NewWin,master,Beta,DownloadURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/$1/AHK-Studio.ahk",URL:="https://api.github.com/repos/maestrith/AHK-Studio/commits/$1"
 	Run,RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
@@ -793,37 +869,6 @@ Check_For_Update(startup:=""){
 	ControlSetText,Edit1,% Check_For_Update_Get_Info(0,Branch:=A_GuiControl="Master"?"master":"Beta",NewWin.ID),%ID%
 	return
 }
-Check_For_Update_Get_Info(Startup,Branch,ID){
-	static VersionTextURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/$1/AHK-Studio.text",URL:="https://api.github.com/repos/maestrith/AHK-Studio/commits/$1"
-	ControlSetText,Edit1,Getting Update Info`r`n`r`nPlease Wait...,%ID%
-	sub:=A_NowUTC
-	sub-=A_Now,hh
-	FileGetTime,Time,%A_ScriptFullPath%
-	Time+=sub,hh
-	ea:=Settings.EA("//github"),token:=ea.token?"?access_token=" ea.token:"",http:=ComObjCreate("WinHttp.WinHttpRequest.5.1"),http.Open("GET",RegExReplace(URL,"\$1",Branch) "?refresh=" A_Now token)
-	if(proxy:=Settings.SSN("//proxy").text)
-		http.SetProxy(2,proxy)
-	http.Send(),RegExMatch(http.ResponseText,"iUO)\x22date\x22:\x22(.*)\x22",found),Date:=RegExReplace(found.1,"\D")
-	if(Startup="1"){
-		if(Reset:=http.GetResponseHeader("X-RateLimit-Reset")){
-			Seventy:=19700101000000
-			for a,b in {s:Reset,h:-sub}
-				EnvAdd,Seventy,%b%,%a%
-			Settings.Add("autoupdate",{Reset:Seventy})
-			if(Time>Date)
-				return
-		}else
-			return
-	}File:=FileOpen("Lib\" Branch " ChangeLog.txt","rw"),File.Seek(0),File.Write(Update:=RegExReplace(RegExReplace(URLDownloadToVar(RegExReplace(VersionTextURL,"\$1",Branch) "?refresh=" A_Now),"\R","`r`n"),Chr(127),"`r`n")),File.Length(File.Position),File.Close()
-	if(Time<Date)
-		Update:=Update
-	else
-		Update:="No New Updates"
-	if(!found.1)
-		Update:=http.ResponseText
-	ControlSetText,Edit1,%Update%,%ID%
-	return RegExReplace(Update,"\R","`r`n")
-}
 CheckLayout(){
 	static LastLayout
 	Layout:=DllCall("GetKeyboardLayout",int,0)
@@ -839,6 +884,17 @@ CheckOpen(){
 		if(!CEXML.Find("//main/@file",aa.Text))
 			Open(aa.Text,1)
 	}
+}
+Choose_Color(Color,hwnd:=""){
+	static
+	VarSetCapacity(Custom,16*4,0),size:=VarSetCapacity(ChooseColor,9*4,0)
+	for a,b in Settings.EA("//CustomColors")
+		NumPut(Round(b),Custom,(A_Index-1)*4,"UInt")
+	NumPut(size,ChooseColor,0,"UInt"),NumPut(hwnd,ChooseColor,4,"UPtr"),NumPut(Color,ChooseColor,3*4,"UInt"),NumPut(3,ChooseColor,5*4,"UInt"),NumPut(&Custom,ChooseColor,4*4,"UPtr"),ret:=DllCall("comdlg32\ChooseColorW","UPtr",&ChooseColor,"UInt")
+	CustomColors:=Settings.Add("CustomColors")
+	if(!ret)
+		Exit
+	return NumGet(ChooseColor,3*4,"UInt")
 }
 class Code_Explorer{
 	static explore:=[]
@@ -951,33 +1007,6 @@ class Code_Explorer{
 				TVC.Delete(2,tv)
 			Node.ParentNode.RemoveChild(Node)
 }}}
-parseJson(jsonStr){
-	static SC
-	if(!IsObject(SC)){
-		Try
-			SC:=ComObjCreate("ScriptControl")
-	}SC.Language:="JScript",jsCode:="function arrangeForAhkTraversing(obj){if(obj instanceof Array){for(var i=0;i<obj.length;++i)obj[i]=arrangeForAhkTraversing(obj[i]);return ['array',obj];}else if(obj instanceof Object){var keys=[],values=[];for(var key in obj){keys.push(key);values.push(arrangeForAhkTraversing(obj[key]));}return ['object',[keys,values]];}else return [typeof obj,obj];}",SC.ExecuteStatement(jsCode ";obj=" jsonStr)
-	return AHK(SC.Eval("arrangeForAhkTraversing(obj)"))
-}
-AHK(jsObj){
-	if(jsObj.0="Object"){
-		Obj:=[],Keys:=jsObj.1.0,Values:=jsObj.1.1
-		for a,b in Keys{
-			Key:=Keys[A_Index-1],Value:=Values[A_Index-1]
-			if(!IsObject(Value.1))
-				Obj[Key]:=(Value.0="Boolean"?(Value.1?"true":"false"):Value.1)
-			else
-				Obj[Key]:=AHK(Value)
-		}
-		return Obj
-	}else if(jsObj.0="Array"){
-		Array:=[]
-		while(A_Index<=jsObj[1].length)
-			Array.Insert(AHK(jsObj[1][A_INDEX-1]))
-		return Array
-	}else
-		return (jsObj.0="Boolean"?(jsObj.1?"true":"false"):jsObj.1)
-}
 Class CommitClass{
 	Commit(){
 		Git:=new GitHub(NewWin)
@@ -1371,37 +1400,6 @@ class Debug{
 		return Debug.XML.SSN("//main")
 	}
 }
-Debug_Current_Script(){
-	Scan_Line(),Save()
-	if(Debug.Socket){
-		sc:=v.Debug,sc.2003(sc.2006,"`nKilling Current Process"),Debug.Send("stop")
-		Sleep,200
-		if(Debug.Socket){
-			Debug.Send("stop")
-			Sleep,200
-	}}new Debug()
-	if(Debug.VarBrowser)
-		Default("SysTreeView321",98),TV_Delete()
-	if(Current(2).file=A_ScriptFullPath)
-		return m("Can not Debug AHK Studio using AHK Studio.")
-	/*
-		All:=SN(Current(7),"descendant::*[@type='Breakpoint']"),Nodes:=[]
-		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
-			Nodes.Push(DebugFile:=SSN(aa,"ancestor::file"))
-		for a,b in Nodes
-			ScanFile.Scan(b,1)
-	*/
-	All:=SN(Current(7),"descendant::*[@type='Breakpoint']"),Debug.Run(Current(2).file)
-	Sleep,500
-	while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
-		DebugFile:=SSN(aa,"ancestor::file/@file").text,Text:=Update({Get:DebugFile}),Pos:=1,LastPos:=""
-		while(RegExMatch(Text,"Oi)(;*\[" ea.Text "\])",Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
-			if(Pos=LastPos),LastPos:=Pos
-				Break
-			RegExReplace(SubStr(Text,1,Found.Pos(1)),"\R",,Line),debug.Send("breakpoint_set -t line -f " DebugFile " -n " Line+1 " -i " SSN(aa,"@id").text "|" Line)
-		}
-	}
-}
 class EasyView{
 	Register(Control,HWND,Label,win:=1,ID:=""){
 		WinGetClass,class,ahk_id%HWND%
@@ -1460,68 +1458,6 @@ Class ExtraScintilla{
 			return
 		return DllCall(this.fn,"Ptr",this.ptr,"UInt",code,lp,lparam,wp,wparam,"Cdecl")
 }}
-Spoons(a*){
-	Info:=A_EventInfo,Code:=NumGet(Info+8)
-	if((ctrl:=NumGet(Info+0))=v.debug.sc&&v.debug.sc){
-		sc:=v.debug
-		if(Code=2027){
-			style:=sc.2010(sc.2008)
-			if(style=-106)
-				Run_Program()
-			else if(style=-105)
-				List_Variables()
-		}return
-	}
-	if(Code=2028)
-		SetTimer("LButton",-50)
-}
-UpdateBranches(a*){
-	m("HERE! UpdateBranches umm... Coming Soon?")
-	/*
-		;~ this downloads all the branch info so keep it
-		;~ BUT MAKE SURE TO NOT OVERWRITE ANY VERSIONS THAT ALREADY EXIST!!!!!!!!!!!!!
-		UpdateBranches(){
-			root:=this.DXML.SSN("//*"),pos:=1,node:=Node()
-			info:=git.Send("GET",git.RepoURL("git/refs/heads")),List:=[]
-			while(RegExMatch(info,"OUi)\x22ref\x22:\x22(.*)\x22",Found,pos),pos:=Found.Pos(1)+Found.len(1)){
-				List[(item:=StrSplit(Found.1,"/").Pop())]:=1
-				if(!this.DXML.Find("//branch/@name",item))
-					this.DXML.Under(root,"branch",{name:item})
-				if(!new:=vversion.Find(node,"branch/@name",item))
-					new:=vversion.Under(node,"branch",{name:item,onefile:1})
-				if(item="master"&&SSN((before:=SSN(node,"branch")),"@name").text!="master")
-					node.InsertBefore(new,before)
-			}blist:=this.DXML.SN("//branch")
-			while(bl:=blist.item[A_Index-1],ea:=XML.EA(bl))
-				if(!List[ea.name])
-					bl.ParentNode.RemoveChild(bl)
-			all:=SN(node,"branch")
-			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-				if(!List[ea.name])
-					aa.ParentNode.RemoveChild(aa)
-			pos:=1,info:=git.Send("GET",git.RepoURL("releases"))
-			while(pos:=RegExMatch(info,"{\x22url\x22:",,pos)){
-				commit:=[]
-				for a,b in {id:",",target_commitish:",",name:",",draft:",",prerelease:",",body:"\}"}
-					RegExMatch(info,"OUi)\x22" a "\x22:(.*)" b,Found,pos),commit[a]:=Trim(Found.1,Chr(34))
-				if(!top:=vversion.Find(node,"branch/@name",commit.target_commitish))
-					top:=vversion.Under(node,"branch",{name:commit.target_commitish})
-				if(!version:=vversion.Find(top,"version/@name",commit.name))
-					version:=this.DXML.Under(top,"version",{name:commit.name})
-				for a,b in commit{
-					if(a!="body")
-						version.SetAttribute(a,b)
-					else
-						version.text:=RegExReplace(b,"\R|\\n|\\r",Chr(127))
-				}
-				pos:=found.Pos(1)+found.Len(1)
-			}for a in list{
-				if(!SSN((top:=vversion.Find(node,"branch/@name",a)),"version"))
-					vversion.Under(top,"version",{name:1})
-			}PopVer()
-		}
-	*/
-}
 Class Github{
 	static url:="https://api.github.com",HTTP:=[]
 	__New(NewWin){
@@ -1699,6 +1635,293 @@ Class Github{
 		return info
 	}
 }
+class GUIKeep{
+	static table:=[],showlist:=[],Displays:=new XML("displays")
+	__Get(){
+		return this.Add()
+	}__New(win,parent:=""){
+		info:=PluginClass.Style(),owner:=WinExist("ahk_id" parent)?parent:"" ;hwnd(1)
+		if(FileExist(A_ScriptFullPath "\AHKStudio.ico"))
+			Menu,Tray,Icon,%A_ScriptFullPath%\AHKStudio.ico
+		owner:=owner?owner:1
+		Gui,%win%:Destroy
+		Gui,%win%:+owner%owner% +hwndhwnd -DPIScale
+		Gui,%win%:+ToolWindow
+		hwnd(win,hwnd)
+		if(Settings.SSN("//options/@Add_Margins_To_Windows").text!=1)
+			Gui,%win%:Margin,0,0
+		Gui,%win%:Font,% "c" info.color " s" info.size,% info.font
+		Gui,%win%:Color,% info.Background,% info.Background
+		this.XML:=new XML("gui"),this.XML.Add("window",{name:win}),this.gui:=[],this.sc:=[],this.hwnd:=hwnd,this.con:=[],this.AHKID:=this.id:="ahk_id" hwnd,this.win:=win,this.Table[win]:=this,this.var:=[],this.classcount:=[]
+		for a,b in {border:A_OSVersion~="^10"?3:0,caption:DllCall("GetSystemMetrics",int,4,"int")}
+			this[a]:=b
+		Gui,%win%:+LabelGUIKeep.
+		Gui,%win%:Default
+	}Add(info*){
+		static
+		if(!info.1){
+			var:=[]
+			Gui,% this.Win ":Submit",Nohide
+			for a,b in this.var{
+				if(b.Type="s")
+					Var[a]:=b.sc.GetUNI()
+				else
+					var[a]:=%a%
+			}return var
+		}for a,b in info{
+			i:=StrSplit(b,","),newpos:=""
+			if(i.1="ComboBox")
+				WinGet,ControlList,ControlList,% this.ID
+			if(i.1="s"){
+				Pos:=RegExReplace(i.2,"OU)\s*\b(v.+)\b")
+				sc:=new s(1,{Pos:Pos}),hwnd:=sc.sc
+			}else
+				Gui,% this.win ":Add",% i.1,% i.2 " hwndhwnd",% i.3
+			if(RegExMatch(i.2,"U)\bg(.*)\b",Label))
+				Label:=Label1
+			if(RegExMatch(i.2,"U)\bv(.*)\b",var))
+				this.var[var1]:={hwnd:HWND,type:i.1,sc:sc,label:Label},Var:=var1
+			this.con[hwnd]:=[]
+			if(i.4!="")
+				this.con[hwnd,"pos"]:=i.4,this.resize:=1
+			if(i.5)
+				this.Static.Push(hwnd)
+			Name:=Var1?Var1:Label
+			if(i.1="ListView"||i.1="TreeView")
+				this.All[Name]:={HWND:HWND,Name:Name,Type:i.1,label:Label,ID:"ahk_id" HWND}
+			if(i.1="ComboBox"){
+				WinGet,ControlList2,ControlList,% this.ID
+				Obj:=StrSplit(ControlList2,"`n"),LeftOver:=[]
+				for a,b in Obj
+					LeftOver[b]:=1
+				for a,b in Obj2:=StrSplit(ControlList,"`n")
+					LeftOver.Delete(b)
+				for a in LeftOver{
+					if(!InStr(a,"ComboBox")){
+						ControlGet,Married,HWND,,%a%,% this.ID
+						this.XML.Add("Control",{hwnd:Married,label:Label,id:"ahk_id" Married+0,name:Name,type:"Edit"},,1)
+					}
+				}
+				
+			}
+			New:=this.XML.Add("Control",{hwnd:HWND,id:"ahk_id" HWND,name:Name,type:i.1,label:Label},,1)
+			/*
+				m("Name: " Name,"Var1: " Var1,"Label: " Label,"HERE!","",New.xml)
+			*/
+	}}Close(a:=""){
+		this:=GUIKeep.table[A_Gui]
+		if(IsFunc(func:=A_Gui "Close"))
+			return %func%()
+		else if(IsLabel(label:=A_Gui "Close")){
+			SetTimer,%label%,-1
+		}else
+			this.SavePos(),this.Exit()
+	}Current(XPath,Number){
+		Node:=Settings.SSN(XPath)
+		all:=SN(Node.ParentNode,"*")
+		while(aa:=all.item[A_Index-1])
+			(A_Index=Number?aa.SetAttribute("last",1):aa.RemoveAttribute("last"))
+	}Default(Name:=""){
+		Gui,% this.Win ":Default"
+		ea:=this.XML.EA("//Control[@name='" Name "']")
+		if(ea.Type~="TreeView|ListView")
+			Gui,% this.Win ":" ea.Type,% ea.HWND
+	}Disable(Label,Disable:=1){
+		ea:=XML.EA(Node:=this.XML.SSN("//*[@label='" Label "']"))
+		if(Disable)
+			GuiControl,% this.Win ":Disable",% ea.HWND
+		else
+			GuiControl,% this.Win ":Enable",% ea.HWND
+	}DropFiles(filelist,ctrl,x,y){
+		df:="DropFiles"
+		if(IsFunc(df))
+			%df%(filelist,ctrl,x,y)
+	}Enable(Label,Enable:=1){
+		ea:=XML.EA(Node:=this.XML.SSN("//*[@label='" Label "']"))
+		if(Enable)
+			GuiControl,% this.Win ":+g" Label,% ea.HWND
+		else
+			GuiControl,% this.Win ":+g",% ea.HWND
+	}Escape(){
+		this:=GUIKeep.table[A_Gui]
+		KeyWait,Escape,U
+		if(IsFunc(func:=A_Gui "Escape"))
+			return %func%()
+		else if(IsLabel(label:=A_Gui "Escape"))
+			SetTimer,%label%,-1
+		else
+			this.SavePos(),this.Exit()
+	}Exit(){
+		this.SavePos(),hwnd({rem:this.win})
+	}GetCtrl(Name,Value:="hwnd"){
+		return this.All[Name]
+	}GetCtrlXML(Name,Value:="hwnd"){
+		return Info:=this.XML.SSN("//*[@name='" Name "']/@" Value).text
+	}GetDisplays(){
+		SysGet,mon,MonitorCount
+		Displays:=GUIKeep.Displays
+		if(Displays.SSN("//displays/@count").text!=mon){
+			rem:=Displays.SSN("//monitors"),rem.ParentNode.RemoveChild(rem),top:=Displays.Add("monitors"),Displays.SSN("//displays").SetAttribute("count",mon)
+			Loop,%mon%
+			{
+				SysGet,mon,Monitor,%A_Index%
+				Displays.Under(top,"monitor",{number:A_Index,l:monleft,t:montop,r:monright,b:monbottom})
+			}
+		}
+		return GUIKeep.Displays
+	}GetPos(){
+		Gui,% this.win ":Show",AutoSize Hide NA
+		WinGet,cl,ControlListHWND,% this.ahkid
+		pos:=this.WinPos(),ww:=pos.w,wh:=pos.h,flip:={x:"ww",y:"wh"}
+		for index,hwnd in StrSplit(cl,"`n"){
+			obj:=this.Gui[hwnd]:=[]
+			ControlGetPos,x,y,w,h,,ahk_id%hwnd%
+			for c,d in StrSplit(this.con[hwnd].pos)
+				d~="w|h"?(obj[d]:=%d%-w%d%):d~="x|y"?(obj[d]:=%d%-(d="y"?wh+this.Caption+this.Border:ww+this.Border))
+		}
+		Gui,% this.win ":+MinSize"
+	}Hotkeys(Info){
+		Hotkey,IfWinActive,% this.ID
+		for a,b in Info
+			Try
+				Hotkey,%a%,%b%,On
+	}SavePos(){
+		if(!top:=Settings.SSN("//gui/position[@window='" this.win "']"))
+			top:=Settings.Add("gui/position",,,1),top.SetAttribute("window",this.win)
+		top.text:=this.WinPos().text
+	}SetText(Control,Text:=""){
+		if((sc:=this.Var[Control].sc).sc){
+			Len:=VarSetCapacity(tt,StrPut(Text,"UTF-8")-1)
+			StrPut(Text,&tt,Len,"UTF-8")
+			sc.2181(0,&tt)
+		}else{
+			GuiControl,% this.Win ":",% this.GetCtrlXML(Control),%Text%
+		}
+	}SetValue(Control,Value){
+		GuiControl,% this.Win ":",% this.XML.SSN("//*[@var='" Control "']/@hwnd").text,%Value%
+	}SetWinPos(){
+		DllCall("SetWindowPos",int,ctrl,int,0,int,x,int,y,int,w,int,h,uint,(ea.type~="Project Explorer|Code Explorer|QF")?0x0004|0x0010|0x0020:0x0008|0x0004|0x0010|0x0020),DllCall("RedrawWindow",int,ctrl,int,0,int,0,uint,0x401|0x2)
+	}Show(name,position:="",NA:=0,Select:=0){
+		static defpos,pos,sel,nn,Displays
+		defpos:=position,this.GetPos(),pos:=this.resize=1?"":"AutoSize",this.name:=name,sel:=Select,this.NA:=NA
+		Displays:=this.GetDisplays()
+		if(this.resize=1)
+			Gui,% this.win ":+Resize"
+		GUIKeep.showlist.Push(this)
+		SetTimer,GUIKeepShow,-1
+		return
+		GUIKeepShow:
+		while(this:=GUIKeep.Showlist.pop()){
+			position:=(node:=Settings.SSN("//gui/position[@window='" this.win "']")).text,position:=position?position:defpos,win:=[]
+			for a,b in ["x","y","w","h"]
+				RegExMatch(position,"Oi)" b "(-?\d*)\b",found),win[b]:=found.1
+			if(!Displays.SSN("//*[(@l<" win.x " or @l<" win.x+win.w ") and @r>" win.x " and (@t<=" win.y " or @t<=" win.y+win.h ") and @b>" win.y "]")){
+				position:="xCenter yCenter"
+				if(win.w)
+					position.=" w" win.w
+				if(win.h)
+					position.=" h" win.h
+			}Mon:=Monitors()
+			if(Win.x<Mon.Left.MinIndex()||Win.y<Mon.Top.MinIndex()){
+				Position:="xCenter yCenter"
+			}NA:=this.NA?"NA":""
+			Gui,% this.win ":Show",% position " " pos " " NA,% this.name
+			if(sel)
+				SendMessage,0xB1,%sel%,%sel%,Edit1,% this.id
+			if(this.resize!=1)
+				Gui,% this.win ":Show",AutoSize NA
+			this.Size()
+			if(!NA)
+				WinActivate,% this.id
+		}return
+	}Size(){
+		if(!this.Gui)
+			this:=GUIKeep.table[A_Gui]
+		pos:=this.WinPos()
+		for a,b in this.gui
+			for c,d in b
+				GuiControl,% this.win ":MoveDraw",%a%,% c (c~="y|h"?pos.h:pos.w)+d
+	}WinPos(){
+		VarSetCapacity(rect,16),DllCall("GetClientRect",ptr,this.hwnd,ptr,&rect)
+		WinGetPos,x,y,,,% this.ahkid
+		w:=NumGet(rect,8,"int"),h:=NumGet(rect,12,"int"),text:=(x!=""&&y!=""&&w!=""&&h!="")?"x" x " y" y " w" w " h" h:""
+		return {x:x,y:y,w:w,h:h,text:text}
+	}
+}
+class HistoryClass{
+	__New(){
+		this.XML:=new XML("History")
+		return this
+	}Add(ea,sc){
+		if(!ea.ID)
+			return
+		if(!ea.sc)
+			return
+		if(!Top:=this.XML.SSN("//sc[@sc='" sc.sc "']"))
+			Top:=this.XML.Add("sc",{sc:sc.sc},,1)
+		Back:=History.GetBack(Top),Forward:=History.GetForward(Top),Forward.ParentNode.RemoveChild(Forward)
+		if(!HistoryItem:=SSN(Top,"descendant::item[@id='" ea.ID "' and @start='" sc.2143 "' and @end='" sc.2145 "' and @scroll='" sc.2152 "']"))
+			this.XML.Under(Back,"item",{id:ea.ID,start:sc.2143,end:sc.2145,scroll:sc.2152,time:A_Now A_MSec})
+	}ForwardBack(){
+		Back:
+		Forward:
+		Direction:=A_ThisLabel="Back"?"back":"forward",sc:=CSC(),Top:=History.XML.SSN("//sc[@sc='" sc.sc "']"),ea:=Current(3),Under:=History["Get" (A_ThisLabel="Back"?"Forward":"Back")](Top)
+		if(!Node:=SSN(Top,Direction "/item[last()]"))
+			return
+		if(!HistoryItem:=SSN(Top,"descendant::item[@id='" ea.ID "' and @start='" sc.2143 "' and @end='" sc.2145 "' and @scroll='" sc.2152 "']")){
+			New:=History.XML.Under(Under,"item",{id:ea.ID,start:sc.2143,end:sc.2145,scroll:sc.2152,time:A_Now A_MSec}),Under.AppendChild(Node)
+			if(Direction="forward")
+				Node.ParentNode.InsertBefore(Node,New),Node:=SSN(Top,Direction "/item[last()]")
+			nea:=XML.EA(Node)
+		}else{
+			if(SSN(HistoryItem,"ancestor::" Direction))
+				Under.AppendChild(HistoryItem),Node:=SSN(Top,Direction "/item[last()]"),Under.AppendChild(Node)
+			Under.AppendChild(Node),nea:=XML.EA(Node)
+		}if(Node.xml)
+			tv(CEXML.SSN("//*[@id='" nea.ID "']/@tv").text,"NoTrack"),Sleep(100),sc.2613(nea.scroll),sc.2160(nea.Start,nea.End)
+		return
+	}ForwardBackFile(){
+		File_History_Forward:
+		File_History_Back:
+		sc:=CSC(),ea:=Current(3),Top:=History.XML.SSN("//sc[@sc='" sc.sc "']")
+		if(!HistoryItem:=SSN(Top,"descendant::item[@id='" ea.ID "' and @start='" sc.2143 "' and @end='" sc.2145 "' and @scroll='" sc.2152 "']"))
+			New:=History.XML.Under(Under,"item",{id:ea.ID,start:sc.2143,end:sc.2145,scroll:sc.2152,time:A_Now A_MSec}),Under.AppendChild(Node)
+		Current:=History["Get" (A_ThisLabel="File_History_Back"?"Back":"Forward")](Top),Under:=History["Get" (A_ThisLabel="File_History_Back"?"Forward":"Back")](Top),Last:=SSN(Current,"item[last()]"),Order:=[],OID:=ID:=SSN(Last,"@id").text,Track:=A_ThisLabel="File_History_Back"?"Back":"Forward"
+		if(!SN(Current,"item").length)
+			return m("Nothing to go " Track " to.")
+		if((List:=SN(Last,"preceding-sibling::*[@id!='" ID "']")).Length){
+			Node:=List.Item[List.Length-1],MoveID:=SSN(Node,"@id").text
+			While(ll:=List.Item[List.Length-A_Index],ea:=XML.EA(ll)){
+				if(ea.ID!=MoveID)
+					Break
+				First:=ll
+			}if(Track="Forward")
+				Node:=First
+			while(First)
+				Order.InsertAt(1,First),First:=First.NextSibling
+		}else if(Last)
+			Under.AppendChild(Last),Node:=Last
+		else
+			m("Nothing to go " Track " to.")
+		for a,b in Order
+			Under.AppendChild(b)
+		nea:=XML.EA(Node)
+		if(Node.xml)
+			tv(CEXML.SSN("//*[@id='" nea.ID "']/@tv").text,"NoTrack"),Sleep(100),sc.2613(nea.scroll),sc.2160(nea.Start,nea.End)
+		return
+	}GetBack(Top){
+		if(!Back:=SSN(Top,"descendant::back"))
+			Back:=this.XML.Under(Top,"back")
+		return Back
+	}GetForward(Top){
+		if(!Forward:=SSN(Top,"forward"))
+			Forward:=History.XML.Under(Top,"forward")
+		return Forward
+	}Remove(ea){
+		while(hh:=History.XML.SSN("//*[@id='" ea.ID "']"))
+			hh.ParentNode.RemoveChild(hh)
+	}
+}
 Class Icon_Browser{
 	static start:="",keep:=[]
 	__New(obj,hwnd,win,pos:="xy",min:=300,Function:="",Reload:=""){
@@ -1749,6 +1972,141 @@ Class Icon_Browser{
 				icon:=IL_Add(il,this.file,A_Index),LV_Add("Icon" icon)
 		}SendMessage,0x1000+53,0,(47<<16)|(47&0xffff),,% "ahk_id" this.hwnd
 		GuiControl,% this.win ":+Redraw",% this.hwnd
+	}
+}
+Class Keywords{
+	__New(){
+		static Dates:={ahk:"20180118110322",xml:"20171201061116",html:"20171201061319"},BaseURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/lib/Languages/",BaseDir:=A_ScriptDir "\Lib\Languages\"
+		for a,b in StrSplit("IndentRegex,KeywordList,Suggestions,Languages,Comments,OmniOrder,CodeExplorerExempt,Words,FirstChar,Delimiter,ReplaceFirst,SearchTrigger",",")
+			Keywords[b]:=[]
+		if(!IsObject(v.OmniFind))
+			v.OmniFind:=[],v.OmniFindText2:=[]
+		if(!FileExist(A_ScriptDir "\Lib\Languages"))
+			FileCreateDir,%A_ScriptDir%\Lib\Languages
+		FileList:=[]
+		for a,b in Dates
+			FileList[BaseDir a ".xml"]:=1
+		Loop,Files,%A_ScriptDir%\Lib\Languages\*.xml
+			FileList[A_LoopFileLongPath]:=1
+		for a in FileList
+		{
+			SplitPath,a,,,,NNE
+			xx:=new XML(NNE,a)
+			if((Date:=Dates[NNE]),URL:=BaseURL Format("{:L}",NNE) ".xml?refresh=" A_Now){
+				if(!FileExist(a)){
+					Data:=URLDownloadToVar(URL)
+					while(SubStr(Data,1,1)!="<")
+						Data:=SubStr(Data,2)
+					xx:=new XML(NNE,a,Data,URL)
+				}if(!Node:=xx.SSN("//date"))
+					Node:=xx.Add("date")
+				else if(xx.SSN("//date").text!=Date){
+					SplashTextOn,200,100,Downloading %NNE%.xml,Please Wait...
+					Data:=URLDownloadToVar(Url)
+					while(SubStr(Data,1,1)!="<")
+						Data:=SubStr(Data,2)
+					TempXML:=new XML(Language:=Format("{:L}",NNE)),TempXML.XML.LoadXML(Data)
+					if(TempXML[])
+						xx:=TempXML,xx.File:=a
+				}if(!NoUpdate),NoUpdate:=0
+					Node.text:=Date,xx.Save(1)
+				SplashTextOff
+			}LEA:=XML.EA(Lexer:=xx.SSN("//FileTypes")),Keywords.Languages[(Language:=Format("{:L}",LEA.Language))]:=xx
+			for _,Ext in StrSplit(Lexer.text," "){
+				if(!Settings.SSN("//Extensions/Extension[@language='" Format("{:L}",Language) "' and text()='" Ext "']"))
+					Settings.Add("Extensions/Extension",{language:Format("{:L}",Language)},Ext,1)
+			}FileGetTime,Date,%a%
+			if(!Node:=Settings.SSN("//Languages/" Language))
+				Node:=Settings.Add("Languages/" Language)
+			if(SSN(Node,"@date").text!=Date)
+				Node:=KeyWords.Refresh(Language),Node:=Settings.SSN("//Languages/" Language),Node.SetAttribute("date",Date),Node.SetAttribute("name",LEA.Name)
+			if(!SSN(Node,"@name").text)
+				Node.SetAttribute("name",LEA.Name)
+			all:=xx.SN("//Code/*"),Find:=v.OmniFind[Language]:=[],Order:=Keywords.OmniOrder[Language]:=[],Index:=0,ExemptList:=""
+			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
+				Index++,Keywords.FirstChar[Language,ea.FirstChar].=aa.NodeName "|"
+				for a,b in ea{
+					Find[aa.NodeName,a]:=(Value:=RegExReplace(b,"\x60n","`n")),Order[Index,aa.NodeName,a]:=Value
+					if(a="Regex")
+						Find[aa.NodeName,"Find"]:=GetFind(Value)
+				}Under:=SN(aa,"*")
+				if(Under.Length)
+					Index++
+				while(UU:=Under.item[A_Index-1],ea:=XML.EA(UU)){
+					ExemptList.=UU.NodeName "|",Keywords.FirstChar[Language,ea.FirstChar].=UU.NodeName "|"
+					for a,b in ea{
+						Find[UU.NodeName,"Inside"]:=aa.NodeName,Find[UU.NodeName,a]:=(Value:=RegExReplace(b,"\x60n","`n")),Order[Index,aa.NodeName Chr(127) UU.NodeName,a]:=Value
+						if(a="Regex")
+							Find[UU.NodeName,"Find"]:=GetFind(Value)
+			}}}Keywords.CodeExplorerExempt[Language]:=Trim(ExemptList,"|")
+			for a,b in Keywords.FirstChar[Language]
+				Keywords.FirstChar[Language,a]:=Trim(b,"|")
+			for a,b in xx.EA("//Comments")
+				KeyWords.Comments[Language,a]:=b
+			Delimiter:=Keywords.Delimiter[Language]:=[]
+			for a,b in xx.EA("//Delimiter"){
+				Delimiter[a]:=b
+				if(a="Replace"){
+					if(b~="(\\|\.|\*|\?|\+|\[|\{|\||\(|\)|\^|\$)")
+						Add:="\"
+					Delimiter.ReplaceRegex:=Add b,Add:=""
+				}
+			}if(Node:=xx.SSN("//ReplaceFirst"))
+				Keywords.ReplaceFirst[Language]:=XML.EA(Node)
+			if((All:=xx.SN("//Special/Context/*")).length){
+				Special:=Keywords.Special[Language]:=[]
+				while(aa:=All.item[A_Index-1],ea:=XML.EA(aa))
+					Special.Push(ea)
+			}Keywords.SearchTrigger[Language]:=xx.SSN("//SearchTrigger").text,Keywords.SetPrefix(Language,xx)
+		}KeyWords.RefreshPersonal()
+	}BuildList(Language,Refresh:=0){
+		if(IsObject(Keywords.KeywordList[Language])&&!Refresh)
+			return
+		if(!IsObject(Obj:=Keywords.Obj))
+			Obj:=Keywords.Obj:=[]
+		Obj[Language]:=[],Lang:=this.GetXML(Language),Keywords.IndentRegex[Language]:=RegExReplace(Lang.SSN("//Indent").text," ","|")
+		if(Optional:=Settings.SSN("//CustomIndent/Language[@language='" Language "']").Text)
+			Keywords.IndentRegex[Language]:=Optional
+		else if(Keywords.IndentRegex[Language]){
+			Key:=Keywords.IndentRegex[Language]
+			Sort,Key,UD|
+			Keywords.IndentRegex[Language]:=Key
+		}
+		Obj:=Keywords.KeywordList[Language]:=[],MainXML:=Keywords.GetXML(Language),Suggestions:=Keywords.Suggestions[Language]:=[],KeywordXML:=MainXML.SN("//Styles/keyword")
+		while(kk:=KeywordXML.item[A_Index-1],ea:=XML.EA(kk)){
+			KeywordList:=kk.text
+			if(ea.add)
+				KeywordList.=" " MainXML.SSN(ea.add).text,KeywordList:=Trim(KeywordList)
+			Sort,KeywordList,UD%A_Space%
+			CamelKeywordList:=KeywordList
+			StringLower,KeywordList,KeywordList
+			Obj[ea.Set]:=RegExReplace(KeywordList,"#")
+			for a,b in StrSplit(CamelKeywordList," ")
+				Suggestions[SubStr(b,1,2)].=b " ",Keywords.Words[Language,b]:=b
+	}}GetList(Language){
+		return Keywords.KeywordList[Language]
+	}SetPrefix(Language,xx){
+		all:=xx.SN("//Code/descendant::*"),Prefix:=[]
+		for a,b in Omni_Search_Class.Prefix
+			Prefix.Push({Prefix:a,Type:b})
+		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+			Prefix.Push({Prefix:ea.Prefix,Type:aa.NodeName})
+		Keywords.Prefix[Language]:=Prefix
+	}GetOmni(Language){
+		
+	}GetSuggestions(Language,FirstTwo){
+		return Keywords.Suggestions[Language,FirstTwo]
+	}GetXML(Language){
+		return Keywords.Languages[Language]
+	}Refresh(Language){
+		Lang:=this.GetXML(Language),all:=Lang.SN("//Styles/font"),Default:=DefaultFont(1)
+		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
+			if(Color:=Default.SSN("//font[@style='" ea.style "']/@color").text)
+				ea.Color:=Color
+			if(!Settings.SSN("//Languages/" Format("{:L}",Language) "/font[@style='" ea.Style "']"))
+				ea.Delete("ex"),Settings.Add("Languages/" Format("{:L}",Language) "/font",ea,,1)
+	}}RefreshPersonal(){
+		Keywords.Personal:=Settings.SSN("//Variables").text
 	}
 }
 Class LineStatus{
@@ -1809,22 +2167,6 @@ Class LineStatus{
 			LineStatus.Add(info.Line+(A_Index-1),2)
 		return
 	}
-}
-ShowMainWindow(){
-	WinActivate,% Mainwin.ID
-}
-ShowWindowSpy(){
-	SplitPath,A_AhkPath,,Dir
-	if(FileExist(Dir "\WindowSpy.ahk"))
-		Run,%Dir%\WindowSpy.ahk
-	else
-		Run,%Dir%\AU3_Spy.exe	
-}
-ReloadStudio(){
-	Exit(1)
-}
-ExitStudio(){
-	Exit()
 }
 Class MainWindowClass{
 	static keep:=[]
@@ -2588,125 +2930,6 @@ Class PluginClass{
 		return version
 	}
 }
-class ScanFile{
-	static All:=[]
-	__New(Refresh:=0){
-		return this
-	}GetAll(ea){
-		if(!ea.ID)
-			return
-		return ScanFile.All[ea.ID]
-	}GetCEXML(ea){
-		static obj:=[]
-		if(!Node:=obj[ea.File]){
-			all:=CEXML.SN("//file")
-			while(aa:=all.item[A_Index-1],eea:=XML.EA(aa))
-				obj[eea.File]:={Node:aa,Parent:aa.ParentNode}
-			Node:=obj[ea.File]
-		}return Node
-	}RemoveComments(ea,Language:=0,SetCurrentPos:=0){
-		xx:=ScanFile.XML,ScanFile.Before:=Text:=ea.File?Update({get:ea.file}):ea,Tick:=A_TickCount,Search:=[]
-		if(SetCurrentPos)
-			sc:=CSC(),Split:=sc.TextRange(0,sc.2008),Text:=SubStr(Text,1,StrLen(Split)) Chr(127) SubStr(Text,StrLen(Split)+1)
-		for a,b in Keywords.Comments[Language?Language:(ea.Lang?ea.Lang:Language)]
-			String:=b,Add:="(\x7F\s)?",String:=(Pos:=InStr(String,"^"))?SubStr(String,1,Pos) Add SubStr(String,Pos+1):Add String,Search[a]:=RegExReplace(String,"\x60n","`n")
-		if(Search.Open){
-			while(RegExMatch(Text,Search.Open,Start)){
-				if(!RegExMatch(Text,Search.Close,End))
-					Break
-				While((RegExMatch(Text,Search.Close,End))<Start.Pos(0)){
-					if(!End)
-						Break,2
-					Text:=SubStr(Text,1,End.Pos(0)-1) SubStr(Text,End.Pos(0)+End.Len(0)),RegExMatch(Text,Search.Open,Start)
-				}Text:=SubStr(Text,1,Start.Pos(0)-1) SubStr(Text,End.Pos(0)+End.Len(0))
-			}if(Search.Line)
-				Text:=RegExReplace(Text,Search.Line)
-			Text:=RegExReplace(Text,"(\R\s*)","`n"),Text:=RegExReplace(Text,"\R\R"),ScanFile.CurrentText:=Text
-		}ScanFile.CurrentText:=Text
-		if(Language)
-			return Text
-		if(!ea.ID)
-			return
-		rem:=xx.SSN("//file[@id='" ea.ID "']")
-		if(!Language)
-			rem.ParentNode.RemoveChild(rem),Top:=xx.Add("file",{id:ea.ID,filename:ea.FileName},,1)
-		else{
-			Top:=Rem,all:=SN(Top,"comment")
-			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-				aa.ParentNode.RemoveChild(aa)
-		}LastPos:=0
-		return Top
-	}Scan(Node,Refresh:=0){
-		if(Refresh){
-			All:=SN(Node,"descendant::info")
-			while(aa:=All.Item[A_Index-1])
-				aa.ParentNode.RemoveChild(aa)
-		}this.ScanText(Node)
-	}ScanText(Node){
-		static ScanTextXML:=new XML("ScanFile")
-		Oea:=ea:=XML.EA(Node),this.RemoveComments(ea),Before:=ScanFile.Before,OText:=ScanFile.CurrentText,All:=SN(Node,"info")
-		while(aa:=All.item[A_Index-1])
-			aa.ParentNode.RemoveChild(aa)
-		Omni:=GetOmniOrder(ea.Ext),ScanTextXML.XML.LoadXML("<ScanFile/>"),No:=ScanTextXML.SSN("//*")
-		for c,d in Omni{
-			for a,b in d{
-				LastPos:="",Text:=b.Before?Before:OText
-				if(InStr(a,Chr(127))){
-					Obj:=StrSplit(a,Chr(127)),Pos:=1
-					while(RegExMatch(Text,b.Regex,FUnder,Pos),Pos:=FUnder.Pos(1)+FUnder.Len(1)){
-						if(FUnder.Text~="i)\b(" b.exclude ")\b"!=0&&FUnder.Text)
-							Continue
-						Start:=FUnder.Pos(1),NNList:=SN(No,"descendant::*[@start<'" Start "' and @end>'" Start "']")
-						if(NNList.Length)
-							NN:=NNList.item[NNList.Length-1],UnderHere:=SSN(Node,"descendant::*[@text='" SSN(NN,"@text").text "' and @type='" Obj.1 "']"),Spam:=CEXML.Under(UnderHere,"info",{type:Obj.2,att:FUnder.Att,pos:Start,text:FUnder.Text,upper:Upper(FUnder.Text)}),NN.AppendChild(Spam.CloneNode(0))
-				}}else{
-					Pos:=1
-					while(RegExMatch(Text,b.Regex,Found,Pos),Pos:=Found.Pos(0)+Found.Len(0)){
-						if(Pos=LastPos)
-							Break
-						if(b.Open){
-							Search:=b.Open,Pos1:=Found.Pos(1),Open:=0,LastPos1:=0,Bounds:=b.Bounds,Start:=Found.Pos(1)
-							Loop
-							{
-								RegExMatch(Text,b.Open,OpenObj,Pos1),RegExMatch(Text,b.Close,Close,Pos1),OP:=OpenObj.Pos(1),CP:=Close.Pos(1)
-								if(!OP||!CP)
-									Break
-								if(CP<OP)
-									Pos1:=CP+Close.Len(1),FoundSearch:=Close.0,FIS:="Close"
-								else
-									Pos1:=OP+OpenObj.Len(1),FoundSearch:=OpenObj.0,FIS:="Open"
-								RegExReplace(FoundSearch,"(" Bounds ")",,Count)
-								if(Count){
-									Open+=FIS="Open"?+Count:-Count,SavedPos:=Pos1
-									if(Open<=0)
-										Break
-								}if(Pos1=LastPos1)
-									Break
-								LastPos1:=Pos1
-							}Atts:=Combine({start:Found.Pos(1),end:SavedPos,type:a,upper:Upper(Found.Text)},Found),Start:=Found.Pos(1),Spam:=((Deepest:=SN(Node,"descendant::*[@start<'" Start "' and @end>'" Start "']")).length)?CEXML.Under(Deepest.item[Deepest.Length-1],"info",Atts):CEXML.Under(Node,"info",Atts),New:=No.AppendChild(Spam.CloneNode(0))
-							if((GoUnder:=SN(No,"descendant::*[@start<'" Start "' and @end>'" End "']")).Length)
-								GoUnder.item[GoUnder.Length-1].AppendChild(New)
-							else
-								No.AppendChild(New)
-						}else{
-							if(b.Exclude){
-								if(Found.Text~="i)\b(" b.exclude ")\b"=0&&Found.Text){
-									Start:=Found.Pos(1)
-									if(!SSN(No,"descendant::*[@start<'" Start "' and @end>'" Start "']"))
-										Spam:=CEXML.Under(Node,"info",{type:a,att:Found.Att,pos:Start,text:Found.Text,upper:Upper(Found.Text)}),No.AppendChild(Spam.CloneNode(0))
-							}}else if(Found.Text){
-								Start:=Found.Pos(1)
-								if(!SSN(No,"descendant::*[@start<'" Start "' and @end>'" Start "']")){
-									Atts:=[]
-									Loop,% Found.Count(){
-										if(NNN:=Found.Name(A_Index)){
-											if(VVV:=Found[NNN]){
-												Atts[Format("{:L}",NNN)]:=VVV
-									}}}for q,r in {type:a,upper:Upper(Found.Text)}
-										Atts[q]:=r
-									Spam:=CEXML.Under(Node,"info",Atts),No.AppendChild(Spam.CloneNode(0))
-						}}}LastPos:=Pos
-}}}}}}
 class s{
 	static ctrl:=[],main:=[],temp:=[],hidden:=[]
 	__New(window,info){
@@ -2794,6 +3017,128 @@ class s{
 		}return Return
 	}
 }
+class ScanFile{
+	static All:=[]
+	__New(Refresh:=0){
+		return this
+	}GetAll(ea){
+		if(!ea.ID)
+			return
+		return ScanFile.All[ea.ID]
+	}GetCEXML(ea){
+		static obj:=[]
+		if(!Node:=obj[ea.File]){
+			all:=CEXML.SN("//file")
+			while(aa:=all.item[A_Index-1],eea:=XML.EA(aa))
+				obj[eea.File]:={Node:aa,Parent:aa.ParentNode}
+			Node:=obj[ea.File]
+		}return Node
+	}RemoveComments(ea,Language:=0,SetCurrentPos:=0){
+		xx:=ScanFile.XML,ScanFile.Before:=Text:=ea.File?Update({get:ea.file}):ea,Tick:=A_TickCount,Search:=[]
+		if(SetCurrentPos)
+			sc:=CSC(),Split:=sc.TextRange(0,sc.2008),Text:=SubStr(Text,1,StrLen(Split)) Chr(127) SubStr(Text,StrLen(Split)+1)
+		for a,b in Keywords.Comments[Language?Language:(ea.Lang?ea.Lang:Language)]
+			String:=b,Add:="(\x7F\s)?",String:=(Pos:=InStr(String,"^"))?SubStr(String,1,Pos) Add SubStr(String,Pos+1):Add String,Search[a]:=RegExReplace(String,"\x60n","`n")
+		if(Search.Open){
+			while(RegExMatch(Text,Search.Open,Start)){
+				if(!RegExMatch(Text,Search.Close,End))
+					Break
+				While((RegExMatch(Text,Search.Close,End))<Start.Pos(0)){
+					if(!End)
+						Break,2
+					Text:=SubStr(Text,1,End.Pos(0)-1) SubStr(Text,End.Pos(0)+End.Len(0)),RegExMatch(Text,Search.Open,Start)
+				}Text:=SubStr(Text,1,Start.Pos(0)-1) SubStr(Text,End.Pos(0)+End.Len(0))
+			}if(Search.Line)
+				Text:=RegExReplace(Text,Search.Line)
+			Text:=RegExReplace(Text,"(\R\s*)","`n"),Text:=RegExReplace(Text,"\R\R"),ScanFile.CurrentText:=Text
+		}ScanFile.CurrentText:=Text
+		if(Language)
+			return Text
+		if(!ea.ID)
+			return
+		rem:=xx.SSN("//file[@id='" ea.ID "']")
+		if(!Language)
+			rem.ParentNode.RemoveChild(rem),Top:=xx.Add("file",{id:ea.ID,filename:ea.FileName},,1)
+		else{
+			Top:=Rem,all:=SN(Top,"comment")
+			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+				aa.ParentNode.RemoveChild(aa)
+		}LastPos:=0
+		return Top
+	}Scan(Node,Refresh:=0){
+		if(Refresh){
+			All:=SN(Node,"descendant::info")
+			while(aa:=All.Item[A_Index-1])
+				aa.ParentNode.RemoveChild(aa)
+		}this.ScanText(Node)
+	}ScanText(Node){
+		static ScanTextXML:=new XML("ScanFile")
+		Oea:=ea:=XML.EA(Node),this.RemoveComments(ea),Before:=ScanFile.Before,OText:=ScanFile.CurrentText,All:=SN(Node,"info")
+		if(NN:=SSN(Node,"ancestor::Libraries")){
+			return
+		}
+		while(aa:=All.item[A_Index-1])
+			aa.ParentNode.RemoveChild(aa)
+		Omni:=GetOmniOrder(ea.Ext),ScanTextXML.XML.LoadXML("<ScanFile/>"),No:=ScanTextXML.SSN("//*")
+		for c,d in Omni{
+			for a,b in d{
+				LastPos:="",Text:=b.Before?Before:OText
+				if(InStr(a,Chr(127))){
+					Obj:=StrSplit(a,Chr(127)),Pos:=1
+					while(RegExMatch(Text,b.Regex,FUnder,Pos),Pos:=FUnder.Pos(1)+FUnder.Len(1)){
+						if(FUnder.Text~="i)\b(" b.exclude ")\b"!=0&&FUnder.Text)
+							Continue
+						Start:=FUnder.Pos(1),NNList:=SN(No,"descendant::*[@start<'" Start "' and @end>'" Start "']")
+						if(NNList.Length)
+							NN:=NNList.item[NNList.Length-1],UnderHere:=SSN(Node,"descendant::*[@text='" SSN(NN,"@text").text "' and @type='" Obj.1 "']"),Spam:=CEXML.Under(UnderHere,"info",{type:Obj.2,att:FUnder.Att,pos:Start,text:FUnder.Text,upper:Upper(FUnder.Text)}),NN.AppendChild(Spam.CloneNode(0))
+				}}else{
+					Pos:=1
+					while(RegExMatch(Text,b.Regex,Found,Pos),Pos:=Found.Pos(0)+Found.Len(0)){
+						if(Pos=LastPos)
+							Break
+						if(b.Open){
+							Search:=b.Open,Pos1:=Found.Pos(1),Open:=0,LastPos1:=0,Bounds:=b.Bounds,Start:=Found.Pos(1)
+							Loop
+							{
+								RegExMatch(Text,b.Open,OpenObj,Pos1),RegExMatch(Text,b.Close,Close,Pos1),OP:=OpenObj.Pos(1),CP:=Close.Pos(1)
+								if(!OP||!CP)
+									Break
+								if(CP<OP)
+									Pos1:=CP+Close.Len(1),FoundSearch:=Close.0,FIS:="Close"
+								else
+									Pos1:=OP+OpenObj.Len(1),FoundSearch:=OpenObj.0,FIS:="Open"
+								RegExReplace(FoundSearch,"(" Bounds ")",,Count)
+								if(Count){
+									Open+=FIS="Open"?+Count:-Count,SavedPos:=Pos1
+									if(Open<=0)
+										Break
+								}if(Pos1=LastPos1)
+									Break
+								LastPos1:=Pos1
+							}Atts:=Combine({start:Found.Pos(1),end:SavedPos,type:a,upper:Upper(Found.Text)},Found),Start:=Found.Pos(1),Spam:=((Deepest:=SN(Node,"descendant::*[@start<'" Start "' and @end>'" Start "']")).length)?CEXML.Under(Deepest.item[Deepest.Length-1],"info",Atts):CEXML.Under(Node,"info",Atts),New:=No.AppendChild(Spam.CloneNode(0))
+							if((GoUnder:=SN(No,"descendant::*[@start<'" Start "' and @end>'" End "']")).Length)
+								GoUnder.item[GoUnder.Length-1].AppendChild(New)
+							else
+								No.AppendChild(New)
+						}else{
+							if(b.Exclude){
+								if(Found.Text~="i)\b(" b.exclude ")\b"=0&&Found.Text){
+									Start:=Found.Pos(1)
+									if(!SSN(No,"descendant::*[@start<'" Start "' and @end>'" Start "']"))
+										Spam:=CEXML.Under(Node,"info",{type:a,att:Found.Att,pos:Start,text:Found.Text,upper:Upper(Found.Text)}),No.AppendChild(Spam.CloneNode(0))
+							}}else if(Found.Text){
+								Start:=Found.Pos(1)
+								if(!SSN(No,"descendant::*[@start<'" Start "' and @end>'" Start "']")){
+									Atts:=[]
+									Loop,% Found.Count(){
+										if(NNN:=Found.Name(A_Index)){
+											if(VVV:=Found[NNN]){
+												Atts[Format("{:L}",NNN)]:=VVV
+									}}}for q,r in {type:a,upper:Upper(Found.Text)}
+										Atts[q]:=r
+									Spam:=CEXML.Under(Node,"info",Atts),No.AppendChild(Spam.CloneNode(0))
+						}}}LastPos:=Pos
+}}}}}}
 Class SelectionClass{
 	__New(){
 		this.XML:=new XML("selection")
@@ -2805,6 +3150,665 @@ Class SelectionClass{
 		return this.XML
 	}GetSN(){
 		return this.XML.SN("//select")
+	}
+}
+Class SettingsClass{
+	static pos:=[],Controls:=[],Sizes:=[],Node:=[],Types:=[],scc:=[],Current:=[],DefaultStyle:={"default":1,"inlinecomment":1,"numbers":1,"punctuation":1,"multilinecomment":1,"completequote":1,"incompletequote":1,"backtick":1,"linenumbers":1,"indentguide":1,"hex":1,"hexerror":1}
+	__New(Tab:=""){
+		for a,b in {HotkeyXML:new XML("hotkeys"),TempXML:new XML("temp"),SavedThemes:new XML("SavedThemes",A_ScriptDir "\Themes\SavedThemes.xml")}
+			SettingsClass[a]:=b
+		SettingsClass.Hotkeys:=[["Move Selected Item Up","^Up","MSIU"],["Move Selected Item Down","^Down","MSID"],["Move Checked Selected Menu","!M","MCTSM"],["Move Checked Items Up","!Up","MCIU"],["Move Checked Items Down","!Down","MCID"],["Insert Menu","!I","IM"],["Change Hotkey","Enter","CH"],["Insert Separator","!S","IS"],["Remove/Hide Menu Item","Delete","Delete"],["Clear Checks","!C","CC"],["Removed Checked Icons","^!I","RCI"],["Check All Child Menu Items","^A","CACMI"],["Random Icons","^!R","Random"]],Parent:=HWND(1),SettingsClass.SavedThemes:=new XML("themes",A_ScriptDir "\Themes\SavedThemes.xml")
+		if(!FileExist(A_ScriptDir "\Themes"))
+			FileCreateDir,%A_ScriptDir%\Themes
+		if(!Settings.SSN("//autoadd"))
+			Settings.Add("//autoadd")
+		DetectHiddenWindows,On
+		Gui,Settings:Destroy
+		Gui,Settings:+Resize -DPIScale +LabelSettingsClass. hwndhwnd +ToolWindow +Owner%Parent% +MinSize700x500
+		Gui,Settings:Color,0,0
+		Gui,Settings:Font,c0xFFFFFF s10,Consolas
+		Gui,Settings:Margin,0,0
+		Gui,Settings:Add,Button,Hidden,Testing
+		xx:=this.tvxml:=new XML("treeview"),this.Tabs:=[],this.Controls:=[],this.pos:=[],SettingsClass.ID:=this.ID:="ahk_id" hwnd,this.hwnd:=hwnd,SettingsClass.hwnd:=hwnd
+		ControlGetPos,,,,h,Button1,% this.ID
+		Hotkey,IfWinActive,ahk_id%hwnd%
+		Hotkey,Escape,SettingsClose,On
+		SettingsClass.Sizes.Button:=h,SettingsClass.Tabs:=[]
+		for a,b in this.WindowList:=["Auto Insert","Edit Replacements","Manage File Types","Menus","Options","Theme"]
+			tabs.=A_Index "|",SettingsClass.Tabs[RegExReplace(b," ","_")]:=A_Index
+		Gui,Settings:Add,StatusBar,hwndsb,Testing
+		ControlGetPos,,,,sbh,,ahk_id%sb%
+		this.Add("TreeView,xm ym w300 h800 AltSubmit gNotifications vTesting,,MainTV,h-" sbh),this.Add("Tab,x0 y0 w0 h0 Buttons," Trim(tabs,"|")),this.SetTab(SettingsClass.Tabs.Options),this.Add("ListView,x300 ym Checked AltSubmit gNotifications vOptions,Option,Options,w-300|h-" sbh)
+		Gui,Settings:Default
+		for a,b in v.Options
+			LV_Add((Settings.SSN("//options/@" a).text?"Check":""),RegExReplace(a,"_"," "))
+		this.SetTab(SettingsClass.Tabs.Auto_Insert),this.Add("ListView,x300 ym vAI gNotifications AltSubmit,Type|Insert,AutoInsert,w-300|h-150","Text,x302,Typed Key:,TK,y-" sbh+125,"Edit,x300,,trigger,y-" sbh+105,"Text,x302,Inserted Text:,IT,y-" sbh+80,"Edit,x300,,Add,y-" sbh+60,"Button,x300 vAddButton gNotifications,&Add,AddButton,y-" sbh+30,"Button,x+M vRemoveButton gNotifications,&Remove,RemoveButton,y-" sbh+30),this.SetTab(SettingsClass.Tabs.Edit_Replacements),this.Add("ListView,x300 h240 ym vER gNotifications AltSubmit,Input|Replacement,ERLV,w-300","Text,x302 yp+240,Input:,ERI","Edit,x300 yp+15 vERInsert gNotifications,,ERInsert","Text,x302 yp+23,Replacement:,ERR","Edit,x300 yp+15 Multi +WantReturn vERReplace gNotifications,,ERReplace,w-300|h-350","Button,x300 vERAdd gNotifications,&Add,ERAdd,y-" sbh+30,"Button,x+M vERRemove gNotifications,&Remove,ERRemove,y-" sbh+30),this.SetTab(SettingsClass.Tabs.Manage_File_Types),this.Add("ListView,x300 ym,Extension|Language,FileType,w-300|h-100","Text,,FileType:,FTT,y-" sbh+75,"Edit,w200,,FTEdit,y-" sbh+60,"Button,vFTAdd gNotifications,&Add,FTAdd,y-" sbh+35,"Button,x+M vFTRemove gNotifications,&Remove,FTRemoe,y-" sbh+35),this.SetTab(SettingsClass.Tabs.Menus),this.Add("ComboBox,x300 ym gNotifications vComboBox,,ComboBox,w-600","TreeView,x300 y+M Checked vMenuTV gNotifications AltSubmit,,MenuTV,w-600|h-323","ListView,h277 Icon vIcon gSelectIcon AltSubmit,Icon,Icon,w-300|y-" sbh+277,"Button,w110 gLoadDefault,&Default Icons,FButton,x-200|y-328","Button,w90 gLoadFile,&Load Icons,SButton,x-90|y-328","Listview,ym w300,Description|Hotkey,Hotkeys,x-300|h-328"),TV_Add("Please Wait..."),this.ILAdd("init"),ib:=new Icon_Browser("",SettingsClass.Controls.Icon,"Settings",,,"Notifications"),SettingsClass.IconID:="ahk_id" SettingsClass.Controls.Icon,this.SetTab(SettingsClass.Tabs.Theme)
+		Gui,Settings:Add,Custom,x300 ym classScintilla hwndsc gNotifications
+		this.SC({register:sc}),obj:=SettingsClass,obj.Controls.Scintilla:=sc,obj.pos["Scintilla"]:={h:-sbh,w:-300}
+		if(!node:=Settings.SSN("//gui/position[@window='Settings']"))
+			node:=Settings.Add("gui/position"),node.SetAttribute("window","Settings")
+		SettingsClass.Node:=node
+		for a,b in [[2052,32,0],[2050],[2051,5,0xFFFFFF],[2051,11,0x00AA00],[2171,1]]
+			this[b.1](b.2,b.3)
+		for a,b in this.WindowList
+			xx.Add("item",{name:b},,1)
+		parent:=xx.Under((theme:=xx.SSN("//*[@name='Theme']")),"top",{name:"Color"}),this.Default()
+		for a,b in [{"Brace Match":"Indicator Reset"},{"Duplicate Indicator":"Indicator Style,Indicator Color,Indicator Transparency,Indicator Border Transparency"},{"Caret":"Caret,Caret Line Background,Debug Caret Color,Multiple Indicator Color,Width"},{"Code Explorer":"Background,Default Background,Text Style,Default Style"},{Default:"Background Color,Font Style,Reset To Default"},{"":"Indent Guide"},{"Main Selection":"Foreground,Remove Forground"},{"Multiple Selection":"Foreground,Remove Forground"},{"Project Explorer":"Background,Default Background,Text Style,Default Style"},{"Quick Find":"Bottom Background,Bottom Forground,Quick Find Clear,Quick Find Edit Background,Top Background,Top Forground"},{"":"StatusBar Text Style"}]{
+			for c,d in b{
+				node:=c?xx.Under(parent,"parent",{name:c}):parent
+				for e,f in StrSplit(d,",")
+					xx.Under(node,"theme",{name:f})
+		}}parent:=xx.Under(theme,"top",{name:"Theme Options"})
+		for a,b in StrSplit("Edit Theme Name,Edit Author,Export Theme,Import Theme,Save Theme",",")
+			xx.Under(parent,"theme",{name:b})
+		parent:=xx.Under(theme,"top",{name:"Download Themes"}),parent:=xx.Under(theme,"top",{name:"Saved Themes"})
+		Gui,Settings:Default
+		all:=xx.SN("//treeview/descendant::*")
+		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+			aa.SetAttribute("tv",TV_Add(ea.name,SSN(aa.ParentNode,"@tv").text))
+		TV_Modify(xx.SSN("//top/@tv").text,"Expand Vis"),this.ThemeText(),SettingsClass.keep:=this,this.Color(),this.UpdateSavedThemes(),this.PopulateER(),this.PopulateAI(),this.PopulateMFT(),this.Default("Hotkeys")
+		for a,b in SettingsClass.Hotkeys
+			LV_Add("",b.1,Convert_Hotkey(b.2))
+		this.2409(0,0),LV_ModifyCol(),this.Show(),this.2188(1),TV_Modify(this.tvxml.SSN("//*[@name='" Tab "']/@tv").text,"Select Vis Focus"),ib.Populate()
+		Hotkey,IfWinActive,% this.ID
+		for a,b in SettingsClass.Hotkeys{
+			Hotkey,% b.2,SettingsHotkeys,On
+			SettingsClass.HotkeyXML.Add("Hotkey",{d:b.1,k:b.2,a:b.3},,1)
+		}Hotkey,IfWinActive,% "ahk_id" this.hwnd
+		Hotkey,F1,SettingsTest,On
+		SettingsClass.Current:=this,this.SetHighlight()
+		return this
+		SettingsTest:
+		this:=SettingsClass.Current,this.ThemeText(),SettingsClass.keep:=this,this.Color(),this.UpdateSavedThemes(),this.PopulateER(),this.PopulateAI(),this.PopulateMFT(),this.Default("Hotkeys")
+		return
+		SettingsClose:
+		Gui,Settings:Destroy
+		SettingsClass.SavedThemes.Save(1),Allowed()
+		return
+		Settings:
+		new SettingsClass("Auto Insert")
+		return
+	}__Call(info*){
+		if(info.1+0){
+			(info.2?((a:=info.2+0?"int":"str")(b:=info.2)):(a:="int",b:=0)),scc:=SettingsClass.scc,(info.3?((c:=info.3+0?"int":"str")(d:=info.3)):(c:="int",d:=0))
+			if(c="str"){
+				VarSetCapacity(var,(len:=StrPut(info.3,"UTF-8"))),StrPut(info.3,&var,len,"UTF-8"),d:=&var
+				c:="int"
+			}resp:=DllCall(scc.fn,"Ptr",scc.ptr,"UInt",info.1,a,b,c,d,"int")
+			if(info.4)
+				m(scc.fn,scc.ptr,a,b,c,d,info.1,resp)
+			return resp
+		}
+	}Add(x*){
+		static
+		for a,b in x{
+			i:=StrSplit(b,",")
+			Gui,Settings:Add,% i.1,% i.2 " hwndhwnd",% i.3
+			if(i.4)
+				SettingsClass.Controls[i.4]:=hwnd
+			if(i.5){
+				for c,d in StrSplit(i.5,"|")
+					RegExMatch(d,"(.)(.*)",found),SettingsClass.pos[i.4,found1]:=found2
+			}SettingsClass.Types[hwnd]:=i.1,SettingsClass.Types[i.4]:=i.1
+	}}AddText(text*){
+		static var
+		Obj:=[]
+		for a,b in text{
+			VarSetCapacity(var,(len:=StrPut(b.1,"UTF-8"))),StrPut(b.1,&var,len,"UTF-8"),this.2003((start:=this.2006()),&var),this.ThemeTextText.=b.1,this.2032(start),this.2033(len,b.2),Obj.Push({start:Start,len:Len-1})
+			if(b.2=255)
+				SettingsClass.OpenBrace:=this.2006()-2
+		}return Obj
+	}Close(){
+		SettingsClass.keep.Escape()
+	}Color(){
+		static list:={Font:2056,Size:2055,Color:2051,Background:2052,Bold:2053,Italic:2054,Underline:2059}
+		GuiControl,Settings:-Redraw,Scintilla1
+		this.2409(32,1),this.2050()
+		if(!Settings.SSN("//theme/font[@style='96']"))
+			this.2051(96,0xff00ff)
+		if(!Settings.SSN("//theme/font[@style='100']"))
+			this.2051(100,0x0000ff)
+		/*
+			2523() 2558() ;here
+		*/
+		for a,b in [[2080,7,6],[2523,6,Settings.Get("//DuplicateIndicator/@trans",50)],[2558,6,Settings.Get("//DuplicateIndicator/@bordertrans",50)],[2242,1,20],[2080,6,Settings.Get("//DuplicateIndicator/@style",14)],[2082,6,Settings.Get("//DuplicateIndicator/@color",0xC08080)],[2082,8,0xff00ff],[2080,8,1],[2080,6,14],[2080,2,8],[2082,2,0xff00ff],[2082,6,0xC08080],[2080,3,14],[2680,3,6],[2516,1]]
+			this[b.1](b.2,b.3)
+		text:=this.ThemeTextText,pos:=InStr(text,"(")
+		for a,b in {70:2068,71:2601}
+			this.2052(a,Settings.SSN("//theme/font[@code='" b "']/@color").text)
+		for a,b in {20:Settings.Get("//theme/font[@style='30']/@background",0x0000ff),21:Settings.Get("//theme/font[@style='31']/@background",0x00ff00)}
+			this.2040(a,26),this.2042(a,b)
+		if(node:=Settings.SSN("//theme/fold")){
+			ea:=XML.EA(node)
+			Loop,7
+				this.2041(24+A_Index,ea.color!=""?ea.color:"0"),this.2042(24+A_Index,ea.background!=""?ea.Background:"0xaaaaaa")
+		}ea:=Settings.EA("//theme/default"),this.2051(101,ea.color),this.2052(101,ea.background)
+		WinGet,cl,ControlList,% this.ID
+		for a,b in StrSplit(cl,"`n"){
+			Gui,Settings:Font,% "c" RGB(ea.color),% ea.font
+			GuiControl,% "Settings:+background" RGB(ea.Background) " c" RGB(ea.color),%b%
+			GuiControl,Settings:Font,%b%
+		}
+		/*
+			Make an RCM that you can edit the font, color, etc.
+		*/
+		this.2371(0),this.2188(1),Language:=GetLanguage(),Settings.Language:=Language
+		Gui,Settings:Color,% RGB(ea.Background),% RGB(ea.background)
+		Color(this,Language,A_ThisFunc " Settings"),ea:=Settings.EA("//theme/bracematch"),ea.Style:=255
+		if(ea.code=2082)
+			this.2082(7,ea.color),this.2498(1,7),this.2351(SettingsClass.OpenBrace,SettingsClass.OpenBrace+1)
+		else{
+			for a,b in ea{
+				if((st:=list[a]))
+					this[st](ea.Style,b)
+				if(ea.code&&ea.value!="")
+					this[ea.code](ea.value)
+				else if(ea.code&&ea.bool!=1)
+					this[ea.code](ea.color,0)
+				else if(ea.code&&ea.bool)
+					this[ea.code](ea.bool,ea.color)
+		}}this.2246(0,1),this.2409(0,0)
+		GuiControl,Settings:+Redraw,Scintilla1
+		return RefreshThemes(1),MarginWidth(this)
+	}ContextMenu(a*){
+		for a,b in Keywords.Languages
+			list.=a "`n"
+		this:=SettingsClass.Current,this.ThemeText(),SettingsClass.keep:=this,this.Color(),this.UpdateSavedThemes(),this.PopulateER(),this.PopulateAI(),this.PopulateMFT(),this.Default("Hotkeys"),m("Language List: ",list,"Please ask maestrith to finish this...he got distracted","It's called Context Menu and it is in the Settings window")
+	}Default(name:="MainTV"){
+		Gui,Settings:Default
+		Gui,% "Settings:" SettingsClass.Types[name],% SettingsClass.Controls[name]
+	}EH(){
+		static
+		SettingsClass.Default("MenuTV"),node:=menus.SSN("//*[@tv='" TV_GetSelection() "']")
+		Gui,EditHotkey:Destroy
+		Gui,EditHotkey:Default
+		Gui,Add,Text,,% "Editing hotkey for: " RegExReplace(SSN(node,"@clean").text,"_"," ")
+		Gui,Add,Text,,Hotkey
+		Gui,Add,Hotkey,w300 gDisplayDup vHotkey Limit1,% (hk:=SSN(node,"@hotkey").text)
+		Gui,Add,Text,,Non-Standard Hotkey
+		Gui,Submit,Nohide
+		Gui,Add,Edit,w300 vedit gSetNonStandard,% !hotkey?Convert_Hotkey(hk):""
+		Gui,Add,ListView,w300 h300,Duplicate Hotkey
+		Gui,Add,Button,gSetHotkey Default,Set Hotkey
+		Gui,Show,,Edit Hotkey
+		return
+		DisplayDup:
+		Gui,EditHotkey:Submit,Nohide
+		StringUpper,hotkey,hotkey
+		Gui,EditHotkey:Default
+		LV_Delete()
+		if(!hotkey)
+			return
+		all:=menus.SN("//*[@hotkey='" hotkey "']")
+		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+			LV_Add("",ea.clean)
+		return
+		SetNonStandard:
+		Gui,EditHotkey:Submit,Nohide
+		GuiControl,EditHotkey:,msctls_hotkey321,%edit%
+		return
+		EditHotkeyGuiEscape:
+		KeyWait,Escape,U
+		Gui,EditHotkey:Destroy
+		return
+		SetHotkey:
+		Gui,EditHotkey:Submit,Nohide
+		Gui,EditHotkey:Destroy
+		SettingsClass.Default("MenuTV"),node:=menus.SSN("//*[@tv='" TV_GetSelection() "']")
+		if(!hotkey&&!edit)
+			return node.RemoveAttribute("hotkey"),TV_Modify(SSN(node,"@tv").text,,SettingsClass.TVName(node))
+		if(edit){
+			Try
+				Hotkey,%edit%,deadend,On
+			Catch m
+				return m(m.message)
+			hotkey:=edit
+		}StringUpper,hotkey,hotkey
+		all:=menus.SN("//*[@hotkey='" hotkey "']")
+		if(all.length){
+			if(m("Hotkey belongs to: " SSN(all.item[0],"@clean").text,"Bind to: " SSN(node,"@clean").text "?","btn:ync")!="Yes")
+				return
+		}while(aa:=all.item[A_Index-1],ea:=xml.EA(aa))
+			aa.RemoveAttribute("hotkey"),TV_Modify(ea.tv,,SettingsClass.TVName(aa))
+		node.SetAttribute("hotkey",hotkey)
+		TV_Modify(SSN(node,"@tv").text,,SettingsClass.TVName(node))
+		return
+	}Escape(){
+		Save(),Settings.Save()
+		this:=SettingsClass.keep,this.Default("MenuTV"),menus.SSN("//*[@tv='" TV_GetSelection() "']").SetAttribute("last",1)
+		if(SettingsClass.PopulatedMenu&&!InStr(A_ScriptName,"settings"))
+			MenuWipe(),Menu(),Hotkeys()
+		WinGetPos,x,y,,,% SettingsClass.keep.ID
+		all:=menus.SN("//*[@tv]")
+		while(aa:=all.item[A_Index-1])
+			aa.RemoveAttribute("tv")
+		for a,b in {x:x,y:y,w:SettingsClass.Width,h:SettingsClass.Height}
+			pos.=a b " "
+		SettingsClass.Node.text:=Trim(pos),SettingsClass.SavedThemes.Save(1),SettingsClass.PopulatedMenu:=0
+		if(InStr(A_ScriptName,"settings"))
+			ExitApp
+		else
+			Gui,Settings:Destroy
+		SettingsClass.SavedThemes.Save(1),Allowed()
+	}GetTab(){
+		ControlGet,tab,Tab,,SysTabControl321,% SettingsClass.ID
+		return tab
+	}ILAdd(file:="Shell32.dll",icon:=0){
+		static ILOBJ:=[],init:=0,IL:=IL_Create(1,1)
+		if(file="init")
+			return this.Default("MenuTV"),ic:=IL_Add(IL,"Shell32.dll",50),ILOBJ["",""]:=0,init:=1,TV_SetImageList(IL)
+		if((ii:=ILOBJ[file,icon])="")
+			ii:=ILOBJ[file,icon]:=IL_Add(IL,file,icon)
+		return ii
+	}NN(){
+		this.Default()
+		return this.tvxml.SSN("//*[@tv='" TV_GetSelection() "']")
+	}PopulateAI(){
+		this.Default("AutoInsert"),all:=Settings.SN("//autoadd/key"),LV_Delete()
+		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+			LV_Add("",ea.trigger,ea.add)
+		Loop,2
+			LV_ModifyCol(A_Index,"AutoHDR")
+	}PopulateER(){
+		this.Default("ERLV"),all:=Settings.SN("//replacements/*"),LV_Delete()
+		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+			LV_Add("",ea.replace,aa.text)
+		Loop,2
+			LV_ModifyCol(A_Index,"AutoHDR")
+	}PopulateMenu(){
+		GuiControl,Settings:-Redraw,% SettingsClass.Controls.MenuTV
+		Sleep,10
+		this.Default("MenuTV"),SettingsClass.PopulatedMenu:=1,SettingsClass.MenuSearch:=[],all:=Menus.SN("//*/descendant::*"),TV_Delete()
+		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
+			if(name:=RegExReplace(ea.name,"&"))
+				aa.SetAttribute("tv",(tv:=TV_Add(SettingsClass.TVName(aa),SSN(aa.ParentNode,"@tv").text,SettingsClass.TVOptions(aa)))),SettingsClass.MenuSearch.text.=name "|",SettingsClass.MenuSearch[name]:=tv
+			if(ea.last)
+				last:=SSN(aa,"@tv").text,aa.RemoveAttribute("last")
+		}text:=SettingsClass.MenuSearch.text
+		Sort,text,D|
+		SettingsClass.MenuSearch.text:=text
+		GuiControl,Settings:+Redraw,% SettingsClass.Controls.MenuTV
+		GuiControl,Settings:,% SettingsClass.Controls.ComboBox,% SettingsClass.MenuSearch.text
+		if(last)
+			TV_Modify(last,"Select Vis Focus")
+	}PopulateMFT(){
+		this.Default("FileType"),all:=Settings.SN("//Extensions/*"),LV_Delete()
+		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+			LV_Add("",aa.text,ea.Language)
+		Loop,2
+			LV_ModifyCol(A_Index,"AutoHDR")
+	}SC(info*){
+		sc:=SettingsClass.scc
+		if(hwnd:=info.1.register){
+			for a,b in {fn:2184,ptr:2185}
+				sc[a]:=DllCall("SendMessageA",UInt,hwnd,int,b,int,0,int,0)
+			sc.hwnd:=hwnd
+	}}SetHighlight(){
+		this:=SettingsClass.Current,this.2052(253,Settings.SSN("//theme/selback/@color").text),this.2052(254,Settings.SSN("//theme/additionalselback/@color").text),this.2160(0,0)
+	}SetTab(tab){
+		Gui,Settings:Tab,%tab%
+	}SettingsHotkeys(){
+		static EHHotkey
+		SettingsHotkeys:
+		tab:=SettingsClass.GetTab()
+		if(SettingsClass.Tabs.Edit_Replacements=tab){
+			Send,{%A_ThisHotkey%}
+		}else if(SettingsClass.Tabs.Menus=tab){
+			StringUpper,key,A_ThisHotkey
+			xx:=SettingsClass.HotkeyXML,action:=xx.SSN("//*[@k='" key "']/@a").text,SettingsClass.Default("MenuTV"),ea:=xml.EA(node:=menus.SSN("//*[@tv='" (tv:=TV_GetSelection()) "']"))
+			if(action~="MSIU|MSID"){
+				SettingsClass.Default("MenuTV"),nodes:=[],nn:=node
+				if(action="MSIU"){
+					Loop,3
+						nodes.Push(nn),nn:=nn.previousSibling
+					if(nodes.3.xml||nodes.2.xml)
+						new:=TV_Add(SettingsClass.TVName(node),SSN(node.ParentNode,"@tv").text,(nodes.3.xml?SSN(nodes.3,"@tv").text:"First")),TV_Modify(new,"Select Vis Focus Icon" SettingsClass.ILAdd(ea.filename,ea.icon) (ea.check?" Check":"")),TV_Delete(SSN(node,"@tv").text),node.SetAttribute("tv",new),node.ParentNode.InsertBefore(node,nodes.2)
+				}else if(action="MSID"){
+					Loop,3
+						nodes.Push(nn),nn:=nn.nextSibling
+					if(nodes.3.xml||nodes.2.xml){
+						new:=TV_Add(SettingsClass.TVName(node),SSN(node.ParentNode,"@tv").text,(nodes.2.xml?SSN(nodes.2,"@tv").text:"")),TV_Modify(new,"Select Vis Focus Icon" SettingsClass.ILAdd(ea.filename,ea.icon) (ea.check?" Check":"")),TV_Delete(SSN(node,"@tv").text),node.SetAttribute("tv",new)
+						if(nodes.3.xml)
+							node.ParentNode.InsertBefore(node,nodes.3)
+						else
+							node.ParentNode.AppendChild(node)
+					}
+				}return
+			}else if(action~="MCIU|MCID"){
+				list:=[],SettingsClass.Default("MenuTV"),nodes:=[],final:=[]
+				GuiControl,Settings:-Redraw,% SettingsClass.Controls.MenuTV
+				if(action="MCIU"){
+					node:=menus.SSN("//*[@tv='" TV_GetSelection() "']"),node.SetAttribute("last",1),parent:=node.ParentNode,all:=SN(parent,"descendant::*")
+					while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
+						if(ea.check){
+							if(SN(aa,"preceding-sibling::*[@check]").length+1!=A_Index)
+								aa.ParentNode.InsertBefore(aa,aa.previousSibling)
+						}TV_Delete(ea.tv)
+				}}else{
+					node:=menus.SSN("//*[@tv='" TV_GetSelection() "']"),node.SetAttribute("last",1),parent:=node.ParentNode,all:=SN(parent,"descendant::*")
+					while(aa:=all.item[all.length-A_Index],ea:=xml.EA(aa)){
+						if(SN(aa,"following-sibling::*[@check]").length+1!=A_Index&&ea.check){
+							if(next:=aa.nextSibling.nextSibling)
+								aa.ParentNode.InsertBefore(aa,next)
+							else if(aa.nextSibling)
+								aa.ParentNode.AppendChild(aa)
+						}TV_Delete(ea.tv)
+				}}all:=SN(parent,"descendant::*")
+				while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+					aa.SetAttribute("tv",TV_Add(SettingsClass.TVName(aa),SSN(aa.ParentNode,"@tv").text,SettingsClass.TVOptions(aa)))
+				if(node:=menus.SSN("//*[@last]"))
+					TV_Modify(SSN(node,"@tv").text,"Select Vis Focus")
+				all:=menus.SN("//*[@last]")
+				while(aa:=all.item[A_Index-1])
+					aa.RemoveAttribute("last")
+				GuiControl,Settings:+Redraw,% SettingsClass.Controls.MenuTV
+			}else if(action="IM"){
+				NewMenu:=InputBox(SettingsClass.hwnd,"New Menu","Enter the name of the new menu")
+				if(menus.SSN("//*[@name='" NewMenu "']"))
+					return m("Menu item already exists")
+				tv:=TV_Add(NewMenu,SSN(node.ParentNode,"@tv").text,SSN(node,"@tv").text),new:=menus.Add("menu",{clean:RegExReplace(RegExReplace(NewMenu,"\s","_"),"&"),name:NewMenu,tv:tv,user:1},,1),(above:=node.nextSibling)?node.ParentNode.InsertBefore(new,above):node.ParentNode.AppendChild(new)
+			}else if(action="MCTSM"){
+				all:=menus.SN("//*[@check]")
+				if(!all.length)
+					return m("Please check the menu items you wish to move")
+				if(!node.HasChildNodes()&&!SSN(node,"@user"))
+					return m("Please highlight a Sub-Menu item",node.HasChildNodes())
+				while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+					TV_Delete(ea.tv),aa.SetAttribute("tv",TV_Add(SettingsClass.TVName(aa),SSN(node,"@tv").text,SettingsClass.TVOptions(aa))),node.AppendChild(aa)
+				GuiControl,Settings:+Redraw,% SettingsClass.Controls.MenuTV
+			}else if(action="CH"){
+				if(node.NodeName="separator")
+					return m("Separators can not have hotkeys")
+				if(node.HasChildNodes())
+					return m("Top level menu items can not have hotkeys")
+				SettingsClass.EH()
+			}else if(action="IS"){
+				tv:=TV_GetPrev(ea.tv)?TV_GetPrev(ea.tv):"First",new:=menus.Add("separator",{clean:"<Separator>",tv:(tv:=TV_Add("<Separator>",SSN(node.ParentNode,"@tv").text,tv))},,1),node.ParentNode.InsertBefore(new,node)
+			}else if(action="Delete"){
+				all:=SN(node.ParentNode,"*[@check]")
+				if(all.length){
+					while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
+						if(aa.NodeName!="separator")
+							(ea.Hide?aa.RemoveAttribute("hide"):aa.SetAttribute("hide",1)),TV_Modify(ea.tv,"",SettingsClass.TVName(aa))
+						else
+							aa.ParentNode.RemoveChild(aa),TV_Delete(ea.tv)
+				}}else{
+					if((ea.user&&SSN(node,"menu")))
+						return m("This menu needs to be empty before you can delete it")
+					if(ea.user)
+						TV_Delete(ea.tv),node.ParentNode.RemoveChild(node)
+					(node.NodeName="separator")?(node.ParentNode.RemoveChild(node),TV_Delete(ea.tv)):(ea.Hide?node.RemoveAttribute("hide"):node.SetAttribute("hide",1)),TV_Modify(ea.tv,"",SettingsClass.TVName(node))
+			}}else if(action="CC"){
+				all:=menus.SN("//*[@check]")
+				while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+					TV_Modify(ea.tv,"-Check"),aa.RemoveAttribute("check")
+			}else if(action="Random"){
+				all:=menus.SN("//menu[not(@filename)]")
+				while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
+					while(!Random){
+						Random,Random,1,326
+						if(A_Index=20)
+							Random,Random,1,49
+						if(Random>=50||Random<=53)
+							Continue
+					}
+					for a,b in {filename:"Shell32.dll",icon:Random}
+						aa.SetAttribute(a,b)
+					TV_Modify(ea.tv,SettingsClass.TVOptions(aa)),Random:=""
+				}
+			}else if(action="RCI"){
+				all:=menus.SN("//*[@check]")
+				while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
+					for a,b in ["filename","icon"]
+						aa.RemoveAttribute(b)
+					TV_Modify(ea.tv,"Icon" 0)
+			}}else if(action="CACMI"){
+				all:=SN(node,"descendant-or-self::*")
+				while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+					aa.SetAttribute("check",1),TV_Modify(ea.tv,"Check")
+			}else
+				m("Item Coming Soon: " action)
+		}
+		return
+	}Show(){
+		Position:=SettingsClass.Node.text,Mon:=Monitors()
+		for a,b in ["x","y","w","h"]
+			RegExMatch(position,"Oi)" b "(-?\d*)\b",found),win[b]:=found.1
+		if(Win.x<Mon.Left.MinIndex()||Win.y<Mon.Top.MinIndex())
+			Position:="xCenter yCenter"
+		Gui,Settings:Show,% (Position?Position:"w" A_ScreenWidth-200 " h" A_ScreenHeight-200),Settings
+	}Size(a,w,h){
+		for a,b in SettingsClass.pos{
+			hwnd:=SettingsClass.Controls[a],pos:=""
+			for c,d in b
+				pos.=c (c="w"?w+d:c="h"?h+d:c="x"?w+d:h+d) " "
+			GuiControl,% "Settings:" (SettingsClass.Types[hwnd]~="ListView|Treeview"?"Move":"MoveDraw"),%hwnd%,%pos%
+			SettingsClass.Width:=w,SettingsClass.Height:=h
+		}SendMessage,0x1000+22,0,0,,% SettingsClass.IconID
+	}SetColor(node,code:="",codevalue:="",attribute:="",value:=""){
+		return m("This color selecting method has changed.  Please let maestrith know what color you were trying to change so he can fix it.")
+	}SwitchTab(tv){
+		if((node:=this.tvxml.SSN("//*[@tv='" tv "']")).NodeName="item"){
+			GuiControl,Settings:Choose,SysTabControl321,% SN(node,"preceding-sibling::*").length+1
+			if(SSN(node,"@name").text="Menus"&&!SettingsClass.PopulatedMenu)
+				this.PopulateMenu()
+		}else if(node1:=SSN(node,"ancestor::item[@name='Theme']")){
+			GuiControl,Settings:Choose,SysTabControl321,% SN(node1,"preceding-sibling::*").length+1
+			if(A_GuiEvent="Normal")
+				this.ThemeSettings(node)
+	}}ThemeSettings(node){
+		static info:={Color:{Background:32}}
+		Alt:=GetKeyState("Alt","P"),Ctrl:=GetKeyState("Ctrl","P")
+		if(node.NodeName="parent")
+			return
+		parent:=SSN(node.ParentNode,"@name").text,item:=SSN(node,"@name").text
+		if(Parent="Caret"){
+			static CaretAtt:={Caret:"color","Caret Line Background":"lineback","Multiple Indicator Color":"multi","Debug Caret Color":"debug"}
+			Node:=Settings.SSN("//caret")
+			if(Attribute:=CaretAtt[Item]){
+				Dlg_Color(Node,Settings.SSN("//caret"),SettingsClass.hwnd,Attribute)
+			}else if(Item="Width"){
+				Value:=InputBox(SettingsClass.hwnd,"Caret Width","Enter the new caret width (either 1, 2, or 3)",SSN(Node,"@width").text)
+				if(Value<1||Value>3)
+					return
+				Node.SetAttribute("width",Value)
+		}}else if(RegExMatch(parent,"(\w+) Explorer",found)){
+			node.text:="",NodeName:=found1="Project"?"projectexplorer":"codeexplorer",Node:=Settings.Add("theme/" NodeName),Default:=Settings.SSN("//default")
+			if(item="Default Background")
+				Node.RemoveAttribute("background")
+			else if(item="Background")
+				Dlg_Color(Node,Default,SettingsClass.hwnd,"background")
+			else if(item="Text Style")
+				Dlg_Font(Node,Default,SettingsClass.hwnd)
+			else if(item="Default Style")
+				Node.ParentNode.RemoveChild(Node)
+		}else if(parent="Default"){
+			if(item="Background Color"){
+				all:=Settings.SN("//theme/descendant::*[@background]|//Languages/descendant::*[@background]")
+				while(aa:=all.item[A_Index-1])
+					if(aa.NodeName!="Default")
+						aa.RemoveAttribute("background")
+			}else if(item="Font Style"){
+				all:=Settings.SN("//theme/descendant::*|//Languages/descendant::*")
+				while(aa:=all.item[A_Index-1]){
+					if(aa.NodeName!="Default"){
+						for a,b in StrSplit("font,bold,italic,underline,strikeout,size",",")
+							aa.RemoveAttribute(b)
+			}}}else if(item="Reset To Default"){
+				if(m("This can not be undone, Are you sure?","btn:ync","ico:?","def:2")!="Yes")
+					Exit
+				node:=Settings.SSN("//theme"),node.ParentNode.RemoveChild(node),DefaultFont(),ConvertTheme(),this.Color()
+			}else
+				m(item " is coming soon")
+		}else if(item="Indent Guide"){
+			Dlg_Color(Settings.SSN("//indentguide"),Settings.SSN("//default"),SettingsClass.HWND)
+		}else if(parent="Main Selection"){
+			Node:=Settings.Add("theme/selfore")
+			if(Item="Foreground")
+				Dlg_Color(Node,,SettingsClass.HWND,"color"),Node.SetAttribute("bool",1),Node.SetAttribute("code",2067)
+			else if(Item="Remove Forground")
+				Node.SetAttribute("bool",0)
+		}else if(Parent="Multiple Selection"){
+			Node:=Settings.Add("theme/additionalselfore",{code:2600})
+			if(Item="Foreground")
+				Dlg_Color(Node,,SettingsClass.HWND)
+			else if(Item="Remove Foreground")
+				Node.ParentNode.RemoveChild(Node)
+		}else if(item="StatusBar Text Style"){
+			Node:=(Node:=Settings.SSN("//theme/custom[@control='msctls_statusbar321']"))?node:Settings.Add("theme/custom",{control:"msctls_statusbar321"},,1),ea:=XML.EA(node),Node.SetAttribute("gui",1),Dlg_Font(Node,,SettingsClass.hwnd)
+		}else if(parent="Duplicate Indicator"){
+			if(Item="Indicator Style"){
+				/*
+					Dlg_Color(Settings.SSN("//DuplicateIndicator"),,SettingsClass.hwnd,"style")
+				*/
+				Style:=InputBox(SettingsClass.hwnd,"Duplicate Indicator Style","Enter the number of the style you want this indicator to be 0-16 (Default 14)",Settings.Get("//DuplicateIndicator/@style",14))
+				if(Style<=16&&Style>=0)
+					Settings.Add("DuplicateIndicator").SetAttribute("style",Style)
+			}else if(Item="Indicator Color"){
+				Dlg_Color(Settings.Add("DuplicateIndicator"),,SettingsClass.hwnd,"color") ;here
+			}else if(Item="Indicator Transparency"){
+				;add in the Transparency for the border and background into both here and the Color() 2523() 2558()
+				Style:=InputBox(SettingsClass.hwnd,"Duplicate Transparency","Enter the Transparency value for the Background 0-255 (0=Opaque)",Settings.Get("//DuplicateIndicator/@trans",50)) ;here2
+				if(Style<=255&&Style>=0)
+					Settings.Add("DuplicateIndicator").SetAttribute("trans",Style)
+			}else if(Item="Indicator Border Transparency"){
+				Style:=InputBox(SettingsClass.hwnd,"Duplicate Indicator Border Transparency","Enter the Transparency value for the Border 0-255 (0=Opaque)",Settings.Get("//DuplicateIndicator/@bordertrans",50))
+				if(Style<=255&&Style>=0)
+					Settings.Add("DuplicateIndicator").SetAttribute("bordertrans",Style)
+			}
+			/*
+				Indicator Style,Indicator Color
+			*/
+		}else if(parent="Brace Match"){
+			if(item="Indicator Reset"){
+				node:=Settings.SSN("//theme/bracematch"),node.ParentNode.RemoveChild(node)
+		}}else if(item="Export Theme"){
+			name:=Settings.SSN("//theme/name").text,temp:=new XML("temp","Themes\" name ".xml"),font:=Settings.SSN("//theme"),temp.xml.LoadXML(font.xml),temp.Save(1),m("Exported to:",A_ScriptDir "\Themes\" name ".xml")
+		}else if(item="Import Theme"){
+			FileSelectFile,tt,,,,*.xml
+			if(ErrorLevel)
+				return
+			file:=FileOpen(tt,"R","UTF-8"),tt:=file.Read(file.Length),file.Close(),temp:=new XML("temp"),temp.xml.LoadXML(tt)
+			if(!(temp.SSN("//name").xml&&temp.SSN("//author").xml&&temp.SSN("//theme").xml))
+				return m("Theme not compatible")
+			rem:=Settings.SSN("//theme"),rem.ParentNode.RemoveChild(rem),node:=Settings.SSN("//settings"),nn:=temp.SSN("//theme").CloneNode(1),Settings.SSN("//settings").AppendChild(nn)
+		}else if(item="Edit Author"){
+			author:=Settings.SSN("//theme/author"),newauthor:=InputBox(theme.sc,"New Author","Enter your name",author.text)
+			if(ErrorLevel)
+				return item:=""
+			return author.text:=newauthor,this.ThemeText()
+		}else if(item="Edit Theme Name"){
+			themename:=Settings.SSN("//theme/name"),newtheme:=InputBox(theme.sc,"New Theme Name","Enter the new theme name",themename.Text)
+			if(ErrorLevel)
+				return event:=""
+			return themename.text:=newtheme,this.ThemeText()
+		}else if(item="Save Theme"){
+			xx:=SettingsClass.SavedThemes,temp:=new XML("temp"),temp.xml.LoadXML(Settings.SSN("//theme").xml)
+			if(!rem:=xx.SSN("//theme/name[text()='" Settings.SSN("//theme/name").text "']/.."))
+				xx.SSN("//*").AppendChild(temp.SSN("//*"))
+			else
+				rem.ParentNode.RemoveChild(rem),xx.SSN("//*").AppendChild(temp.SSN("//*"))
+			return Settings.Save(1),SettingsClass.SavedThemes.Save(1),m("Theme Saved","time:1"),this.UpdateSavedThemes()
+		}else if(item="Download Themes"){
+			xx:=this.tvxml
+			if(!xx.SSN("//*[@name='Download Themes']/*")){
+				Run,RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
+				nx:=ComObjCreate("Msxml2.XMLHTTP"),nx.Open("GET","https://raw.githubusercontent.com/maestrith/AHK-Studio/master/lib/Themes.xml",1),nx.Send()
+				while(nx.ReadyState!=4)
+					Sleep,200
+				nn:=SettingsClass.TempXML,nn.XML.LoadXML(nx.ResponseText),all:=xx.SN("//theme[@name='Download']/*"),this.Default(),top:=xx.SSN("//*[@name='Download Themes']")
+				while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+					aa.ParentNode.RemoveChild(aa)
+				all:=nn.SN("//fonts")
+				while(aa:=all.item[A_Index-1])
+					xx.Under(top,"DownloadedTheme",{tv:TV_Add((name:=SSN(aa,"name").text),SSN(top,"@tv").text),name:name})
+				TV_Modify(xx.SSN("//*[@name='Download Themes']/*/@tv").text,"Select Vis Focus")
+			}return
+		}else if(parent="Download Themes"||node.NodeName="SavedTheme"){
+			xx:=SettingsClass.TempXML,name:=SSN(node,"@name").text,nn:=parent="Download Themes"?xx.SSN("//name[text()='" name "']/.."):SettingsClass.SavedThemes.SSN("//name[text()='" name "']/.."),current:=Settings.SSN("//theme"),saved:=SettingsClass.SavedThemes.SSN("//name[text()='" SSN(current,"name").text "']/..")
+			for a,b in ["//theme","//fonts"]
+				rem:=Settings.SSN(b),rem.ParentNode.RemoveChild(rem)
+			Settings.SSN("//*").AppendChild(nn.CloneNode(1)),ConvertTheme(),this.ThemeText()
+			if(parent="Download Themes"&&name){
+				xx:=SettingsClass.SavedThemes
+				if(!node:=xx.SSN("//name[text()='" name "']"))
+					xx.SSN("//*").AppendChild(nn.CloneNode(1))
+				else
+					node.ParentNode.RemoveChild(node),xx.SSN("//*").AppendChild(nn.CloneNode(1))
+				this.UpdateSavedThemes()
+			}
+		}else if(InStr(parent,"Quick Find")){
+			static qfobj:={"Bottom Background":"bb","Bottom Forground":"bf","Top Background":"tb","Top Forground":"tf","Quick Find Edit Background":"qfb"}
+			if(!Top:=Settings.SSN("//theme/find"))
+				Top:=Settings.Add("theme/find")
+			attribute:=qfobj[item]
+			if(item="Quick Find Clear")
+				for a,b in qfobj
+					Top.RemoveAttribute(b)
+			else
+				ea:=xml.EA(Top),color:=Dlg_Color(Top,,SettingsClass.hwnd,qfobj[Item])
+		}SettingsClass.keep.Color(),RefreshThemes()
+		for a,b in s.Ctrl
+			Color(b,GetLanguage(b))
+	}ThemeText(){
+		GuiControl,Settings:-Redraw,Scintilla1
+		this.2171(0),this.2004(),this.ThemeTextText:="",Header:=((name:=Settings.SSN("//theme/name").text)?header:=name "`n":"")((author:=Settings.SSN("//theme/author").text)?"Theme by " author "`n":"") "Instructions at the bottom:`n",this.AddText([header,0],["Main Selection",253],[" - ",0],["Multiple Selection",254],[" <---- Additional Options in the TreeView to the Left with Main Selection * and Multiple Selection *`n`n",""]),this.AddText(["Matching Brace Style ",0],["()",255],["`n`n",0]),EditedMarker:=this.EditedMarker:=[]
+		for a,b in {edited:"<----Edited Marker (Click to change)`n",saved:"<----Saved Line`n`n"}
+			EditedMarker[(Line:=this.2154()-1)]:=a,this.AddText([b,0]),this.2043(Line,(a="Edited"?20:21))
+		this.EditedMarkerStartLine:=this.2166(this.2006())
+		if(!ControlFile:=Keywords.GetXML(Current(3).Lang))
+			ControlFile:=new XML("","lib\Languages\ahk.xml")
+		all:=ControlFile.SN("//Styles/*[@ex]")
+		Obj:=this.AddText(["Duplicate Indicator <----In Treeview under Duplicate Indicator`n`n",0])
+		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
+			if(ea.Fold)
+				Start:=this.2166(this.2006())
+			ex:=RegExReplace(RegExReplace(ea.ex,"\\n","`n"),"\\t","`t")
+			if(aa.NodeName="keyword"&&ea.ex="Personal Variables")
+				this.AddText(["Personal Variables = " Settings.SSN("//Variables").text "`n",ea.style])
+			else if(aa.NodeName="keyword"&&ea.ex!="Personal Variables"){
+				if(ea.Add)
+					Add:=ControlFile.SSN(ea.Add).text
+				this.AddText([ea.ex " = " aa.text " " Add "`n",ea.style])
+			}else if(RegExMatch(ex,"\[\d+\]")){
+				pos:=1
+				while(RegExMatch(ex,"OU)\[(\d+)\](.+)((\[\d+\])|$)",Found,pos),pos:=Found.Pos(1)+Found.Len(1))
+					this.AddText([Found.2,Found.1])
+			}else
+				this.AddText([ex,ea.style])
+			if(ea.Fold){
+				End:=this.2166(this.2006())
+				while(Start+A_Index<=End)
+					this.2043(A_Index+Start-1,(A_Index=1?31:Start+A_Index=End?28:29))
+			}
+		}this.AddText(["`n`nLeft Click to edit the fonts color`nControl+Click to edit the font style, size, italic...etc`nAlt+Click to change the Background color`nThis works for the Line Numbers as well",0]),this.2171(1)
+		this.2080(6,14),this.2082(6,0xff00ff),this.2500(6),this.2504(Obj.1.Start,Obj.1.Len)
+		GuiControl,Settings:+Redraw,Scintilla1
+	}TVName(node){
+		return RegExReplace(RegExReplace((ea:=xml.EA(node)).clean,"_"," "),"&") (ea.hotkey?"  :  " Convert_Hotkey(ea.hotkey):"") (ea.hide?"  :  Hidden":"")
+	}TVOptions(node){
+		return opt:=((ea:=xml.EA(node)).check?"Check":"") " Icon" SettingsClass.ILAdd(ea.filename,ea.icon)
+	}UpdateSavedThemes(){
+		all:=SettingsClass.SavedThemes.SN("//fonts"),xx:=this.tvxml,top:=xx.SSN("//top[@name='Saved Themes']"),this.Default()
+		while(aa:=all.item[A_Index-1]){
+			if(!SSN(top,"SavedTheme[@name='" (name:=SSN(aa,"name").text) "']")&&name)
+				xx.Under(top,"SavedTheme",{name:name,tv:TV_Add(name,SSN(top,"@tv").text,"Vis")})
+}}}
+Class TimerClass{ ;Thanks Run1e
+	static Timers:=[]
+	Init(){
+		DllCall("QueryPerformanceFrequency","Int64P",F)
+		this.Freq:=F
+	}
+	Current(){
+		DllCall("QueryPerformanceCounter","Int64P",Timer)
+		return Timer
+	}
+	Start(ID){
+		this.Timers[ID]:=this.Current()
+	}
+	Stop(ID){
+		return ((this.Current()-this.Timers[ID])/this.Freq),this.Timers.Delete(ID)
 	}
 }
 Class Toolbar{
@@ -2911,84 +3915,644 @@ Class Toolbar{
 			return 0
 		}if(code=-20){ ;left click
 			button:=this.buttons[NumGet(A_EventInfo+12)]
-		if(GetKeyState("Alt","P")&&GetKeyState("Ctrl","P")){
-			removeid:=this.id
-			if(removeid=10000||removeid=10001)
-				return m("Can not remove original toolbars only ones you create")
-			if(removeid=10002)
-				return m("Can not delete the Debug Toolbar")
-			if(m("Remove This Toolbar,This Can NOT be undone.  Are you sure?","btn:ync","def:2")="Yes"){
-				rebar.hw.1.hide(removeid)
-				for a,b in [Settings.SSN("//rebar/band[@id='" removeid "']"),Settings.SSN("//toolbar/bar[@id='" removeid "']")]
-					if(b.xml)
-						b.ParentNode.RemoveChild(b)
+			if(GetKeyState("Alt","P")&&GetKeyState("Ctrl","P")){
+				removeid:=this.id
+				if(removeid=10000||removeid=10001)
+					return m("Can not remove original toolbars only ones you create")
+				if(removeid=10002)
+					return m("Can not delete the Debug Toolbar")
+				if(m("Remove This Toolbar,This Can NOT be undone.  Are you sure?","btn:ync","def:2")="Yes"){
+					rebar.hw.1.hide(removeid)
+					for a,b in [Settings.SSN("//rebar/band[@id='" removeid "']"),Settings.SSN("//toolbar/bar[@id='" removeid "']")]
+						if(b.xml)
+							b.ParentNode.RemoveChild(b)
+				}
+				return
+			}if(GetKeyState("Ctrl","P")&&button){
+				Toolbar_Editor({hwnd:this.tb,id:this.id,button:NumGet(A_EventInfo+12)})
+			}else if(!button.runfile){
+				func:=button.func
+				if(IsFunc(func)&&!GetKeyState("Shift","P"))
+					%func%()
+				else if(IsLabel(func))
+					SetTimer,%func%,-10
+				else if(FileExist((plugin:=menus.SSN("//*[@clean='" func "']/@plugin").text))){
+					info:=menus.EA("//*[@clean='" func "']")
+					Run,% Chr(34) A_ScriptDir "\" info.plugin Chr(34) " " Chr(34) info.option Chr(34)
+				}
+				return 1
+			}else if(IsFunc(button.func)||IsLabel(button.func))
+				SetTimer,% button.func,-1
+			else if(button.runfile)
+				Run,% button.runfile
+			return 0
+		} 
+		if(code=-708) ;toolbar change
+			this.ideal()
+		if(code=-720){
+			if(info:=this.returnbutton[NumGet(A_EventInfo+12)+1]){
+				for a,b in [[info.iimage,0,"int"],[info.id,4,"int"],[info.state,8,"char"],[info.style,9,"char"],[info.index,16,"int"]]
+					NumPut(b.1,A_EventInfo+16,b.2,b.3)
+				PostMessage,1,,,,% "ahk_id" this.hwnd
 			}
-			return
-		}if(GetKeyState("Ctrl","P")&&button){
-			Toolbar_Editor({hwnd:this.tb,id:this.id,button:NumGet(A_EventInfo+12)})
-		}else if(!button.runfile){
-			func:=button.func
-			if(IsFunc(func)&&!GetKeyState("Shift","P"))
-				%func%()
-			else if(IsLabel(func))
-				SetTimer,%func%,-10
-			else if(FileExist((plugin:=menus.SSN("//*[@clean='" func "']/@plugin").text))){
-				info:=menus.EA("//*[@clean='" func "']")
-				Run,% Chr(34) A_ScriptDir "\" info.plugin Chr(34) " " Chr(34) info.option Chr(34)
-			}
-			return 1
-		}else if(IsFunc(button.func)||IsLabel(button.func))
-			SetTimer,% button.func,-1
-		else if(button.runfile)
-			Run,% button.runfile
-		return 0
-	} 
-	if(code=-708) ;toolbar change
-		this.ideal()
-	if(code=-720){
-		if(info:=this.returnbutton[NumGet(A_EventInfo+12)+1]){
-			for a,b in [[info.iimage,0,"int"],[info.id,4,"int"],[info.state,8,"char"],[info.style,9,"char"],[info.index,16,"int"]]
-				NumPut(b.1,A_EventInfo+16,b.2,b.3)
+		}
+		if(code=-723) ;TBN_INITCUSTOMIZE
 			PostMessage,1,,,,% "ahk_id" this.hwnd
+		if(code=-706) ;TBN_QUERYINSERT
+			PostMessage,1,,,,% "ahk_id" this.hwnd
+		if(code=-707) ;TBN_QUERYDELETE
+			PostMessage,1,,,,% "ahk_id" this.hwnd
+		return 1
+	}Save(){
+		VarSetCapacity(button)
+		if(!top:=Settings.SSN("//toolbar/bar[@id='" this.id "']"))
+			top:=Settings.Add("toolbar/bar",{id:this.id},,1)
+		sep:=SN(top,"descendant::separator")
+		while(ss:=sep.item[A_Index-1])
+			ss.ParentNode.RemoveChild(ss)
+		all:=SN(top,"descendant::button")
+		while(aa:=all.item[A_Index-1])
+			aa.SetAttribute("vis",0)
+		top:=Settings.SSN("//toolbar/bar[@id='" this.id "']")
+		SendMessage,0x400+24,0,0,,% "ahk_id" this.tb ;TB_BUTTONCOUNT
+		Loop,%ErrorLevel%{
+			VarSetCapacity(button,80)
+			SendMessage,0x400+23,% A_Index-1,&button,,% "ahk_id" this.tb ;TB_GETBUTTON
+			id:=NumGet(&button,4),btn:=this.buttons[id].Clone()
+			if(NumGet(&button,4)=0){
+				new:=Settings.Under(top,"separator",{vis:1},1)
+				Continue
+			}
+			if(!node:=SSN(top,"descendant::button[@id='" id "']")){
+				btn.Delete("iimage"),btn.vis:=1
+				Settings.Under(top,"button",btn)
+			}else
+				node.SetAttribute("vis",1)
+			node.ParentNode.AppendChild(node)
 		}
+	}Remove(){
+		DllCall("DestroyWindow","Ptr",this.tb),Toolbar.keep.Delete(this.tb)
 	}
-	if(code=-723) ;TBN_INITCUSTOMIZE
-		PostMessage,1,,,,% "ahk_id" this.hwnd
-	if(code=-706) ;TBN_QUERYINSERT
-		PostMessage,1,,,,% "ahk_id" this.hwnd
-	if(code=-707) ;TBN_QUERYDELETE
-		PostMessage,1,,,,% "ahk_id" this.hwnd
-	return 1
-}Save(){
-	VarSetCapacity(button)
-	if(!top:=Settings.SSN("//toolbar/bar[@id='" this.id "']"))
-		top:=Settings.Add("toolbar/bar",{id:this.id},,1)
-	sep:=SN(top,"descendant::separator")
-	while(ss:=sep.item[A_Index-1])
-		ss.ParentNode.RemoveChild(ss)
-	all:=SN(top,"descendant::button")
-	while(aa:=all.item[A_Index-1])
-		aa.SetAttribute("vis",0)
-	top:=Settings.SSN("//toolbar/bar[@id='" this.id "']")
-	SendMessage,0x400+24,0,0,,% "ahk_id" this.tb ;TB_BUTTONCOUNT
-	Loop,%ErrorLevel%{
-		VarSetCapacity(button,80)
-		SendMessage,0x400+23,% A_Index-1,&button,,% "ahk_id" this.tb ;TB_GETBUTTON
-		id:=NumGet(&button,4),btn:=this.buttons[id].Clone()
-		if(NumGet(&button,4)=0){
-			new:=Settings.Under(top,"separator",{vis:1},1)
-			Continue
-		}
-		if(!node:=SSN(top,"descendant::button[@id='" id "']")){
-			btn.Delete("iimage"),btn.vis:=1
-			Settings.Under(top,"button",btn)
-		}else
-			node.SetAttribute("vis",1)
-		node.ParentNode.AppendChild(node)
-	}
-}Remove(){
-	DllCall("DestroyWindow","Ptr",this.tb),Toolbar.keep.Delete(this.tb)
 }
+class Tracked_Notes{
+	keep:=[]
+	__New(){
+		this.XML:=new XML("Tracked_Notes",A_ScriptDir "\lib\Tracked Notes.XML")
+		if(!this.XML.SSN("//master"))
+			this.XML.Under(this.XML.Add("master",{file:"Global Notes",id:1}),"global")
+		All:=this.XML.SN("//main")
+		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
+			if(!SSN(aa,"descendant::global")){
+				if(aa.Text)
+					Text:=aa.Text,aa.Text:="",New:=this.XML.Under(aa,"global",,Text)
+		}}list:=this.XML.SN("//Tracked_Notes/descendant::*[not(@id)]")
+		while(ll:=list.item[A_Index-1]),ea:=XML.EA(ll){
+			id:=1
+			while(this.XML.SSN("//*[@id='" ++id "']")){
+			}ll.SetAttribute("id",id)
+		}this.Populate()
+		return this
+	}GetPos(){
+		sc:=MainWin.tnsc,fold:=0,Node:=this.Node,Node.RemoveAttribute("fold")
+		for a,b in {start:sc.2008,end:sc.2009,scroll:sc.2152}
+			Node.SetAttribute(a,b)
+		while(sc.2618(fold)>=0,fold:=sc.2618(fold))
+			list.=fold ",",fold++
+		if(list)
+			Node.SetAttribute("fold",list)
+	}Populate(){
+		TVC.Default(3),this.XML.SSN("//*[@tv='" TV_GetSelection() "']").SetAttribute("last",1),all:=this.XML.SN("//*"),TVC.Delete(3,0)
+		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
+			ClosedFile:=0
+			if(aa.NodeName="main"){
+				if(!CEXML.Find("//main/@file",ea.File)){
+					if(!Closed),ClosedFile:=1
+						Closed:=TVC.Add(3,"Closed Files")
+			}}if(aa.NodeName="global")
+				Continue
+			if(aa.NodeName="master"||aa.NodeName="file"||aa.NodeName="main"||aa.NodeName="folder")
+				TVC.Default(3),aa.SetAttribute("tv",TV_Add(ea.Name?ea.Name:SubStr(text:=StrSplit(ea.file,"\").Pop(),1,(InStr(text,".")?InStr(text,".")-1:StrLen(text))),ClosedFile?Closed:SSN(aa.ParentNode,"@tv").text,ea.last?"Select Vis Focus":""))
+			if(ea.last)
+				aa.RemoveAttribute("last"),First:=SSN(aa,"@tv").text
+		}All:=this.XML.SN("//*[@expand]")
+		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
+			TVC.Modify(3,,ea.TV,"Expand")
+		if(First)
+			TVC.Modify(3,"",First,"Select Vis Focus")
+	}Register(sc){
+		this.sc:=sc
+	}SaveState(){
+		All:=TNotes.XML.SN("//*[@tv]")
+		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
+			TVC.Get(3,ea.TV)?aa.SetAttribute("expand",1):aa.RemoveAttribute("expand")
+		TNotes.XML.SSN("//*[@tv='" TVC.Selection(3) "']").SetAttribute("last",1)
+	}SetNode(){
+		if(!MainWin.Gui.SSN("//*[@type='Tracked Notes']"))
+			return
+		if(!TVC.Selection(3)){
+			TVC.Modify(3,"",TV_GetChild(0),"Select Vis Focus")
+		}
+		Node:=TNotes.XML.SSN("//*[@tv='" TVC.Selection(3) "']")
+		if(Node.NodeName="Main"||Node.NodeName="Master"){
+			if(!Node:=SSN(Node,"global"))
+				Node:=TNotes.XML.Under(Node,"global")
+		}TNotes.Node:=Node
+	}SetText(){
+		static Node
+		sc:=MainWin.tnsc,last:=CSC().sc
+		if(this.Node.XML!=Node.XML&&this.Node.XML){
+			if(sc.2140)
+				sc.2171(0)
+			if(SSN(this.Node,"*"))
+				Lock:=1 ;,t("Found?",SubStr(this.Node.xml,1,200))
+			this.SetNode()
+			All:=SN(this.Node,"descendant-or-self::*"),Text:=""
+			while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
+				if(!SSN(aa,"*").NodeName)
+					Text.=(All.Length=1?"":RegExReplace(ea.Name,"\s","_") ":`n") aa.Text "`n"
+				else if(A_Index>1)
+					Text.=RegExReplace(ea.Name,"\s","_") ":`n"
+			}Encode(RegExReplace(Trim(Text,"`n"),Chr(127),"`n"),txt),sc.2181(0,&txt)
+			if(Lock)
+				sc.2171(1),Lock:=0
+			ea:=XML.EA(this.Node),sc.2160(Round(ea.start),Round(ea.end))
+			Sleep,10
+			for a,b in StrSplit(ea.fold,",")
+				sc.2237(b,0)
+			sc.2613(Round(ea.scroll)),sc.2352(-1)
+			MarginWidth(sc)
+		}
+		Node:=this.Node,CSC({hwnd:last})
+	}tn(){
+		tn:
+		if(A_GuiEvent="S"||A_GuiEvent="Normal"){
+			if(Node:=TNotes.XML.SSN("//*[@tv='" A_EventInfo "']")){
+				TNotes.GetPos(),sc:=TNotes.tnsc,TNotes.SetNode(),Node:=TNotes.Node
+				if(Node.NodeName!="master"){
+					if(tv:=SSN(CEXML.Find("//file/@file",SSN(Node,"@file").text),"@tv").text)
+						tv(tv)
+					else{
+						if((ea:=CEXML.EA("//file[translate(@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='" Format("{:L}",SSN(Node,"@file").text) "']")).tv)
+							tv(ea.TV)
+					}
+				}else
+					TNotes.SetText()
+				/*
+					if(TNotes.Node.NodeName="main"){
+						if(!Node:=SSN(TNotes.Node,"global"))
+							Node:=TNotes.XML.Under(TNotes.Node,"global")
+						TNotes.Node:=Node
+						if(sc.2140)
+							sc.2171(0)
+					}
+				*/
+				if(SSN(Node,"*").NodeName)
+					sc.2171(1),Value:=1
+				else if(sc.2140)
+					sc.2171(0),Value:=2
+				else
+					Value:=3
+				TNotes.SetText()
+		}}return
+	}Track(){
+		Project:=Current(2).file,file:=Current(3).file,id:=0
+		if(Node:=this.XML.Find("//*/@file",file))
+			return m("File already being tracked",Node.xml,"","",file)
+		if(!Project||!file)
+			return
+		if(!Master:=this.XML.Find("//main/@file",Project))
+			Master:=this.XML.Add("main",{file:Project},,1),this.XML.Under(Master,"global")
+		if(!Node:=this.XML.Find(Master,"descendant::file/@file",file))
+			Node:=this.XML.Under(Master,"file",{file:file,last:1})
+		if(!SSN(Node,"@id"))
+			while(this.XML.SSN("//*[@id='" ++id "']")){
+			}Node.SetAttribute("id",id)
+		this.XML.Transform(2)
+		Node:=this.XML.SSN("//*[@last]")
+		this.Node:=Node,this.Populate()
+	}Write(sc){
+		if(SSN(this.Node,"*"))
+			sc.2171(1),t(SubStr(this.Node,1,200),"Tracked_Notes.Write()")
+		else{
+			if(sc.2140)
+				sc.2171(0)
+			this.Node.text:=RegExReplace(sc.GetUni(),"\R",Chr(127))
+		}
+		
+	}
+}
+Class Version_Tracker Extends ConvertStyle{
+	__New(){
+		if(!IsObject(VVersion))
+			VVersion:=new XML("versions",(FileExist("lib\Github.xml")?"lib\Github.xml":"lib\Versions.xml"))
+		xx:=VVersion
+		if((All:=xx.SN("//version[text()]")).Length)
+			return this.ConvertStyle()
+		this.VersionWindow()
+	}GetNode(VersionNode:=""){
+		Version_Tracker.NewWin.Default("VT")
+		Node:=VVersion.SSN("//*[@tv='" TV_GetSelection() "']" (VersionNode=1?"ancestor-or-self::version":VersionNode?VersionNode:""))
+		return Node
+	}GetRoot(){
+		xx:=VVersion
+		if(!Root:=Version_Tracker.GetNode("ancestor::info"))
+			Root:=xx.Find("//info/@file",Current(2).File)
+		return Root
+	}VersionWindow(){
+		static
+		xx:=VVersion
+		if(!Root:=xx.Find("//info/@file",Current(2).File))
+			Info:=xx.Under(xx.Under((Branch:=xx.Under((Root:=xx.Add("info",{file:Current(2).File},,1)),"branch",{name:"master"})),"version",{name:"1",draft:"false",prerelease:"true",target_commitish:"master"}),"info",{type:"",action:"",issue:"",user:"",select:1}),Select:=Info
+		VersionGUI:
+		NewWin:=new GUIKeep("Version"),Version_Tracker.NewWin:=NewWin
+		NewWin.Add("TreeView,w350 h250 vVT gVersionShowVersion vTVVersion AltSubmit,,h"
+			,"Edit,x+M w500 h500 gVerEdit vEdit,,wh","ListView,xm w350 y250 h250 NoSortHdr,Directory|File,y"
+			,"Button,xm gCommitProject,Co&mmit Project,y","Checkbox,x+M gVersionOneFile vCommitAsOne,Commit As &One File,y")
+		NewWin.Show((Settings.SSN("//github")?"Github ":"")"Version Tracker")
+		NewWin.Hotkeys({Delete:"VerDelete","!a":"VersionAddAction",F1:"VersionCompileCurrent","!Up":"VersionMove"
+					,"!Down":"VersionMove",Enter:"VersionEdit","!n":"NewVersionBranch"
+					,"^Up":"AddNewVersion","^Down":"AddNewVersion"})
+		if(Select:=SSN(Root,"descendant::*[@select]"))
+			return Version_Tracker.Select(Select)
+		return Version_Tracker.Select(SSN(Root,"descendant::info"))
+		VersionCompileCurrent:
+		NewWin.Default("VT"),Node:=Version_Tracker.GetNode(1)
+		if(!Node)
+			Version_Tracker.NewWin.Default("VT"),Node:=VVersion.SSN("//*[@tv='" TV_GetSelection() "']"),All:=SN(Node,"descendant::*"),Info:=""
+		else
+			All:=SN(Node,"descendant-or-self::*"),Info:=""
+		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
+			if(aa.NodeName="Version")
+				Info.=(Info?":`r`n":"") ea.Name
+			else
+				Info.=(Info?"`r`n":"") (ea.Type?ea.Type ":":"") (ea.Action?" " ea.Action " by " ea.User:"") (ea.Issue?" " ea.Issue:"") (ea.Type?"`r`n":"") RegExReplace(aa.Text,Chr(127),"`r`n")
+		}
+		if(Version_Tracker.GetVersionInfo)
+			return Version_Tracker.GetVersionInfo:=Info
+		m("Information has been added to your Clipboard:","",Clipboard:=Info)
+		return
+		VersionOneFile:
+		if(!Node:=Version_Tracker.GetNode("ancestor-or-self::branch")){
+			m("Please select a version to apply this to")
+			GuiControl,Version:,% NewWin.XML.SSN("//*[@var='CommitAsOne']/@hwnd").text,0
+			return
+		}
+		if(NewWin[].CommitAsOne)
+			Node.SetAttribute("onefile",1)
+		else
+			Node.RemoveAttribute("onefile")
+		return
+		CommitProject:
+		Version_Tracker.Commit()
+		/*
+			Save()
+			Run,"D:\AHK\AHK-Studio\Projects\GitHub\GitHub Test.ahk"
+		*/
+		return
+		;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		;~ !!!! MAKE SURE TO NOT REMOVE ANYTHING IF/WHEN THE USER RE-DOWNLOADS EVERYTHING FROM GITHUB  !!!!!
+		;~ !!!!                         RUN IT THROUGH HERE AFTER DOWNLOADING                          !!!!!
+		;~ !!!!                           Have it go through ConvertStyle()                            !!!!!
+		;~ !!!!                                                                                        !!!!!
+		;~ !!!!                                         Need:                                          !!!!!
+		;~ !!!!                                       Drag/Drop:                                       !!!!!
+		;~ !!!!                             -Make it like Github basically                             !!!!!
+		;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		AddNewVersion:
+		Direction:=SubStr(A_ThisHotkey,2)
+		Node:=Version_Tracker.GetNode(1)
+		if(Direction="Down"){
+			NewWin.Default("VT")
+			Name:=SSN(Node,"@name").text
+			if(RegExMatch(Name,"OU)(.*\.)(-?\d+)$",Found)){
+				Name:=Found.1 Format("{:0" StrLen(Found.2) "}",(Found.2>=0?Found.2-1:Found.2+-1))
+			}else if(RegExMatch(Name,"OU)(.*)(-?\d+)$",Found))
+				Name:=Found.1 Format("{:0" StrLen(Found.2) "}",(Found.2>=0?Found.2-1:Found.2+-1))
+			else
+				Name:=Name " 0"
+			m(Name)
+			TV_Modify(SSN(Node,"@tv").text,"-Expand")
+			New:=VVersion.Under((Parent:=VVersion.Under(Node.ParentNode,"version",{name:Name,draft:"false",prerelease:"false",target_commitish:SSN(Node,"ancestor::branch/@name").text})),"info",{action:"",issue:"",type:"",user:""})
+			if(Next:=Node.NextSibling)
+				Node.ParentNode.InsertBefore(Parent,Next)
+			Version_Tracker.Select(New)
+		}else{
+			Name:=SSN(Node,"@name").text
+			if(RegExMatch(Name,"OU)(.*\.)(\d+)$",Found)){
+				Name:=Found.1 Format("{:0" StrLen(Found.2) "}",Found.2+1)
+			}else if(RegExMatch(Name,"OU)(.*)(\d+)$",Found))
+				Name:=Found.1 Format("{:0" StrLen(Found.2) "}",Found.2+1)
+			else
+				Name:=Name " 1"
+			TV_Modify(SSN(Node,"@tv").text,"-Expand")
+			New:=VVersion.Under((Parent:=VVersion.Under(Node.ParentNode,"version",{name:Name,draft:"false",prerelease:"false",target_commitish:SSN(Node,"ancestor::branch/@name").text})),"info",{action:"",issue:"",type:"",user:""})
+			Node.ParentNode.InsertBefore(Parent,Node)
+			Version_Tracker.Select(New)
+		}
+		return
+		NewVersionBranch:
+		Node:=Version_Tracker.GetNode()
+		Root:=SSN(Node,"ancestor::info")
+		Branch:=InputBox(NewWin.HWND,"New Branch","Enter the name for this new branch`nSpaces will be replaced with -`nAnything other than [A-Za-z0-9_-] will be removed")
+		Branch:=RegExReplace(RegExReplace(Branch,"\s","-"),"[^a-zA-Z-_]")
+		if(SSN(Root,"//branch[@name='" Branch "']"))
+			return m("Branch already exists")
+		New:=VVersion.Under(Root,"branch",{name:Branch}),OneMore:=VVersion.Under(New,"version",{draft:"false",name:"1",prerelease:"true",target_commitish:Branch}),Last:=VVersion.Under(OneMore,"info",{action:"",issue:"",type:"",user:""}),Version_Tracker.Select(Last)
+		return
+		VersionEdit:
+		ControlGetFocus,Focus,% NewWin.ID
+		if(Focus="SysTreeView321"){
+			if((Node:=Version_Tracker.GetNode()).NodeName="Version"){
+				Number:=InputBox(NewWin.HWND,"Edit Version Number","Enter A New Version Number",SSN(Node,"@name").text)
+				if(!Number)
+					return m("A Version Number Needs To Be Assigned")
+				if(SSN(Node.ParentNode,"descendant::*[@name='" Number "']"))
+					return m("Version already exists")
+				Node.SetAttribute("name",Number),Version_Tracker.Populate(1)
+				return
+			}else if(SSN(Node,"ancestor-or-self::Github")){
+				Select:=Node,Key:=Node.NodeName,Node:=Settings.SSN("//github")
+				if(Key="Repo"){
+					Root:=Version_Tracker.GetRoot()
+					if(Value:=InputBox(NewWin.ID,"Enter A New Value","Enter A New Value For: Repository (Most Non-Word Characters will be replaced)",SSN(Root,"@repo").text)){
+						Value:=Clean(Value,3)
+						;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						;~ !!!!!!!!!!!!!!! MAKE SURE THAT !!!!!!!!!!!!!!!!
+						;~ !!!!!!!!!!!!!!!    you edit    !!!!!!!!!!!!!!!!
+						;~ !!!!!!!!!!!!!!!    the name    !!!!!!!!!!!!!!!!
+						;~ !!!!!!!!!!!!!!!    of this     !!!!!!!!!!!!!!!!
+						;~ !!!!!!!!!!!!!!!      REPO      !!!!!!!!!!!!!!!!
+						;~ !!!!!!!!!!!!!!!   On GitHub    !!!!!!!!!!!!!!!!
+						;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+						Root.SetAttribute("repo",Value),Version_Tracker.Select(Select)
+						if(m("Refresh This Repo?","btn:ync","def:2")="Yes"){
+							;here
+						}
+						return
+				}}else if(Value:=InputBox(NewWin.ID,"Enter A New Value","Enter A New Value For: " Format("{:T}",Key),SSN(Node,"@" Key).text))
+					Node.SetAttribute(Key,Value)
+				Version_Tracker.Select(Select)
+				return
+			}
+			return Version_Tracker.VersionAddAction()
+		}
+		Send,{Enter}
+		return
+		VersionMove:
+		Direction:=SubStr(A_ThisHotkey,2),Node:=Version_Tracker.GetNode()
+		if(Next:=Direction="Down"?Node.NextSibling.NextSibling:Node.PreviousSibling){
+			Node.ParentNode.InsertBefore(Node,Next),All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::*[@select]")
+			while(aa:=All.Item[A_Index-1])
+				aa.RemoveAttribute("select")
+			Node.SetAttribute("select",1)
+			Version_Tracker.Populate()
+		}else if(Direction="Down"){
+			Node.ParentNode.AppendChild(Node)
+			Version_Tracker.Populate()
+		}
+		return
+		VerEdit:
+		Edit:=NewWin[].Edit
+		NewWin.Default("VT"),Node:=xx.SSN("//*[@tv='" TV_GetSelection() "']")
+		Node.Text:=RegExReplace(Edit,"\R",Chr(127))
+		return
+		VersionShowVersion:
+		if(A_GuiEvent="S"){
+			NewWin.Default("TVVersion")
+			Node:=VVersion.SSN("//*[@tv='" TV_GetSelection() "']")
+			if(!SSN(Node,"*")){
+				GuiControl,Version:,Edit1,% RegExReplace(Node.Text,Chr(127),"`r`n")
+				NewWin.Disable("VerEdit",0)
+			}else if(Node.NodeName="Version"){
+				All:=SN(Node,"descendant::*"),Info:=""
+				while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
+					Info.=(Info?"`r`n":"") ea.Type ":" (ea.Action?" " ea.Action " by " ea.User:"") "`r`n" RegExReplace(aa.Text,Chr(127),"`r`n")
+				}GuiControl,Version:,Edit1,%Info%
+				NewWin.Disable("VerEdit")
+			}else if(Node.NodeName="Branch"){
+				All:=SN(Node,"descendant::version"),VersionList:=""
+				while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
+					VersionList.=ea.Name "`n",Count:=A_Index
+				GuiControl,Version:,Edit1,% (Count=1?"Version":"Versions") ":`r`n`r`n" VersionList
+				NewWin.Disable("VerEdit")
+			}else
+				NewWin.Disable("VerEdit")
+			FileNode:=SSN(Node,"ancestor-or-self::branch")
+			if(FileNode.xml!=LastFileNode.xml){
+				LastFileNode:=FileNode,LV_Delete()
+				All:=SN(Node,"ancestor-or-self::branch/descendant::files/file")
+				while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
+					LV_Add("",ea.Folder,ea.File)
+				Loop,% LV_GetCount("Column")
+					LV_ModifyCol(A_Index,"AutoHDR")
+				LV_Modify(1,"Select Vis Focus")
+			}
+			GuiControl,Version:,% NewWin.XML.SSN("//*[@var='CommitAsOne']/@hwnd").text,% SSN(Node,"ancestor-or-self::branch/@onefile")?1:0
+		}
+		return
+		VersionEscape:
+		VersionClose:
+		Version_Tracker.Populate(1)
+		if(!Version_Tracker.GetNode())
+			return NewWin.Exit()
+		xx:=VVersion
+		/*
+			if(!Root:=Version_Tracker.GetNode("ancestor::info")),NewWin:=Version_Tracker.NewWin,xx:=VVersion
+				Root:=xx.Find("//info/@file",Current(2).File)
+			All:=SN(Root,"descendant::*[@select]|//GitHub/descendant::*[@select]")
+			while(aa:=All.Item[A_Index-1])
+				aa.RemoveAttribute("select")
+		*/
+		NewWin.Default("VT"),Node:=xx.SSN("//*[@tv='" TV_GetSelection() "']"),Node.SetAttribute("select",1),Version_Tracker.TVState(),NewWin.Exit(),All:=VVersion.SN("//*[@tv]")
+		while(aa:=All.Item[A_Index-1])
+			aa.RemoveAttribute("tv")
+		VVersion.Transform()
+		return
+	}VersionAddAction(){
+		static
+		EditNode:=Version_Tracker.GetNode()
+		VersionAddAction:
+		NewWin:=Version_Tracker.NewWin,xx:=VVersion
+		Node:=Version_Tracker.GetNode(1)
+		if(Node.NodeName!="Version")
+			return m("Please Select A Version")
+		All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::info"),Actions:={"":1},Users:={"":1},Type:={"":1},Issues:={"":1}
+		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
+			Actions[ea.Action]:=1,Users[ea.User]:=1,Type[ea.Type]:=1,Issues[ea.Issue]:=1
+		AddWin:=new GUIKeep("AddWin")
+		AddWin.Add("ListView,w300 h200 vType -Multi,Type (Added Removed Changed Etc)","ListView,x+M w300 h200 vAction -Multi,Action (Requested Reported Etc)","ListView,x+M w300 h200 vUser -Multi,User (If Action Is Set)","ListView,x+M w300 h200 vIssue -Multi,Issue #"
+			,"Edit,xm w300 vEdit1","Edit,x+M w300 vEdit2","Edit,x+M w300 vEdit3","Edit,x+M w300 vEdit4","Button,xm gVersionHelp,&Help"),AddWin.Show("Add Action")
+		ControlGetPos,x,y,w,h,SysListView324,% AddWin.ID
+		if(v.Options.Add_Margins_To_Windows){
+			ControlGetPos,x1,,,,SysListView321,% AddWin.ID
+			GuiControl,AddWin:Move,Button1,% "w" x+w-x1
+		}else
+			GuiControl,AddWin:Move,Button1,% "w" x+w-3
+		AddWin.Hotkeys({Enter:"AddWinEnter",Delete:"AddWinDelete","!t":"VersionSelect","!a":"VersionSelect","!u":"VersionSelect","!i":"VersionSelect"})
+		for c,d in {Type:Type,Action:Actions,User:Users,Issue:Issues}{
+			AddWin.Default(c),Match:=Select:=""
+			if(EditNode)
+				Match:=SSN(EditNode,"@" Format("{:L}",c)).text
+			for a in d
+				Index:=LV_Add((Match=a?"Select Vis Focus":""),a),Select:=(Match=a?Index:Select)
+			LV_Modify((Select?Select:1),"Select Vis Focus"),Select:=""
+		}if(EditNode)
+			if(!Node:=SSN(EditNode,"ancestor::info/descendant::*[@action!='' or @issue!='' or @type!='' or @user!='']"))
+				ControlFocus,Edit1,% AddWin.ID
+		return
+		VersionHelp:
+		m("Alt+T/A/U/I will focus on the items below their ListViews")
+		return
+		VersionSelect:
+		static Order:={"!t":1,"!a":2,"!u":3,"!i":4}
+		ControlFocus,% "Edit" Order[A_ThisHotkey],% AddWin.ID
+		return
+		AddWinEnter:
+		NewWin.Default("VT"),Node:=Version_Tracker.GetNode(1)
+		if(Node.NodeName!="Version")
+			return m("Please Select A Version")
+		Info:=[],Values:=AddWin[]
+		for a,b in ["type","action","user","issue"]{
+			Gui,AddWin:Default
+			Gui,AddWin:ListView,% "SysListView32" A_Index
+			Value:=Info[b]:=Values["Edit" A_Index]
+			if(!Info[b])
+				LV_GetText(Value,LV_GetNext())Info[b]:=Value
+			else if(!Info[b]&&A_Index=1)
+				return m("Please Select or Enter an Entry Type")
+			else if(!Info.User&&Info.Action&&A_Index=3)
+				return m("Please Enter a User who prompted this Action")
+			else if(Info.User&&!Info.Action&&A_Index=3)
+				return m("Please enter an Action that " Info.User " requested")
+			if(A_Index=4)
+				Info[b]:=(SubStr(Value,1,1)="#"?Value:"#" Value)
+		}if(Info.Issue="#")
+			Info.Issue:=""
+		WinActivate,% NewWin.ID
+		if(EditNode){
+			for a,b in Info
+				EditNode.SetAttribute(a,b)
+			return Version_Tracker.Populate(1),AddWin.Exit(),EditNode:=""
+		}
+		New:=xx.Under(Node,"info",Info)
+		All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::*[@select]")
+		while(aa:=All.Item[A_Index-1])
+			aa.RemoveAttribute("select")
+		New.SetAttribute("select",1)
+		Version_Tracker.Populate(),AddWin.Exit()
+		return
+		AddWinEscape:
+		AddWinClose:
+		HWND({Rem:"AddWin"}),EditNode:=""
+		WinActivate,% NewWin.ID
+		return
+		AddWinDelete:
+		ControlGetFocus,Focus,% AddWin.ID
+		m(Focus " Is focused, Delete something within it.")
+		return
+		VerDelete:
+		NewWin:=Version_Tracker.NewWin
+		ControlGetFocus,Focus,% NewWin.ID
+		if(Focus="SysTreeView321"){
+			Node:=Version_Tracker.GetNode()
+			if(SSN(Node,"@id")){
+				Repo:=Version_Tracker.GetNode("ancestor::info/@repo").text
+				Res:=m("Tags on GitHub can not be deleted through the API","","","Select:","-Yes to remove the tag from your local version after doing No","-No to go to GitHub and delete the tag","-Cancel to cancel","btn:ync","def:2")
+				if(Res="No")
+					Run,% "https://github.com/" Settings.SSN("//github/@owner").text "/" Repo "/releases/tag/" SSN(Node,"@name").text
+				else if(Res="Yes"){
+					if(m("Are you sure? This Can Not Be Undone!","btn:ync","ico:!","def:2")="Yes")
+						Next:=Node.NextSibling?Node.NextSibling:Node.PreviousSibling?Node.PreviousSibling:Node.ParentNode,Node.ParentNode.RemoveChild(Node),Version_Tracker.Select(Next)
+				}
+				return
+			}if(Node.NodeName="Branch"){
+				if(SSN(Node,"@name").text="master")
+					return m("Can not delete the master.")
+				if(Repo:=Version_Tracker.GetNode("ancestor::info/@repo").text){
+					Res:=m("This Can Not Be Undone!","This will only remove the local branch.","","To remove the cached branch from GitHub you will need to press No and it will take you to Github.com and you can manage your Branches there.","btn:ync","def:3")
+					if(Res="No")
+						Run,% "https://github.com/" Settings.EA("//github").Owner "/" Repo "/branches"
+					else if(Res="Yes"){
+						if(m("Are you sure? This Can NOT Be Undone!","btn:ync","def:2")="Yes")
+							Next:=Node.NextSibling?Node.NextSibling:Node.PreviousSibling?Node.PreviousSibling:Node.ParentNode,Node.ParentNode.RemoveChild(Node),Version_Tracker.Select(Next)
+					}
+					return
+				}if(m("This can not be undone. Are you sure?","ico:!","btn:ync","def:2")="Yes")
+					Next:=Node.NextSibling?Node.NextSibling:Node.PreviousSibling?Node.PreviousSibling:Node.ParentNode,Node.ParentNode.RemoveChild(Node),Version_Tracker.Select(Next)
+				return
+			}
+			if(Node.NodeName~="i)\b(version|info)"=0){
+				if(!Node)
+					return new Version_Tracker()
+				return m("You can only delete Versions or Actions currently")
+			}if(m("Are you sure you want to delete this?","btn:ync","def:2")="Yes"){
+				Next:=Node.NextSibling?Node.NextSibling:Node.PreviousSibling?Node.PreviousSibling:Node.ParentNode,All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::*[@select]")
+				while(aa:=All.Item[A_Index-1])
+					aa.RemoveAttribute("select")
+				Next.SetAttribute("select",1),Node.ParentNode.RemoveChild(Node),Version_Tracker.Populate()
+			}
+		}else if(Focus="SysListView321"){
+			Node:=Version_Tracker.GetNode("ancestor::branch/files")
+			Gui,Version:Default
+			Rem:=SSN(Node,"*[" LV_GetNext() "]"),Rem.ParentNode.RemoveChild(Rem),Version_Tracker.Populate()
+		}else
+			Send,{Delete}
+		return
+	}SetSelected(){
+		if(!Root:=Version_Tracker.GetNode("ancestor::info")),NewWin:=Version_Tracker.NewWin,xx:=VVersion
+			Root:=xx.Find("//info/@file",Current(2).File)
+		Node:=Version_Tracker.GetNode(),All:=SN(Root,"descendant::*[@select]")
+		while(aa:=All.Item[A_Index-1])
+			aa.RemoveAttribute("select")
+		Node.SetAttribute("select",1)
+	}Populate(SetCurrent:=0){
+		if(!Root:=Version_Tracker.GetNode("ancestor::info")),NewWin:=Version_Tracker.NewWin,xx:=VVersion
+			Root:=xx.Find("//info/@file",Current(2).File)
+		if(SetCurrent){
+			Node:=Version_Tracker.GetNode(),All:=SN(Root,"//Github/descendant::*[@select]|descendant::*[@select]")
+			while(aa:=All.Item[A_Index-1])
+				aa.RemoveAttribute("select")
+			Node.SetAttribute("select",1)
+		}GuiControl,Version:-Redraw,SysTreeView321
+		NewWin.Default("VT"),TV_Delete(),All:=SN(Root,"descendant::*"),FileRoot:="",LV_Delete()
+		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
+			if(SSN(aa,"ancestor-or-self::files"))
+				Continue
+			if(aa.NodeName="Users")
+				Break
+			aa.SetAttribute("tv",TV_Add((aa.NodeName~="i)\b(branch|version)\b"?ea.Name:aa.NodeName="info"?(ea.Type?ea.Type (ea.Action?" - " ea.Action " by " ea.User:"")(ea.Issue?" " ea.Issue:""):"(Enter to change this)"):aa.xml),SSN(aa.ParentNode,"@tv").text))
+		}for a,b in Settings.EA("//github"){
+			if(A_Index=1)
+				VVersion.Add("Github").SetAttribute("tv",TVRoot:=TV_Add("Github")),AddRepoName:=1
+			VVersion.Add("Github/" a).SetAttribute("tv",TV_Add(Format("{:T}",a) ": " (a!="token"?b:"Entered"),TVRoot,"Vis"))
+		}if(AddRepoName){
+			VVersion.Add("Github/Repo").SetAttribute("tv",TV_Add("Repository: " SSN(Root,"@repo").text,TVRoot,"Vis"))
+		}Instructions:=TV_Add("Instructions")
+		for a,b in ["Delete will delete a version","Alt+A Will Add An Action","Enter Will Edit Whatever Is Selected","F1 Will Compile The Current Version/Branch","Alt+N To Create A New Branch"]
+			TV_Add(b,Instructions,"Vis")
+		All:=xx.SN("//*[@expand]")
+		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
+			TV_Modify(ea.tv,"Expand")
+		if(tv:=SSN(Root,"descendant::*[@select]/@tv|//Github/descendant::*[@select]/@tv").text)
+			TV_Modify(tv,"Select Vis Focus")
+		GuiControl,Version:+Redraw,SysTreeView321
+	}Select(Node){
+		Version_Tracker.TVState()
+		if(!Root:=Version_Tracker.GetNode("ancestor::info")),NewWin:=Version_Tracker.NewWin,xx:=VVersion
+			Root:=xx.Find("//info/@file",Current(2).File)
+		All:=SN(Root,"descendant::*[@select]|//Github/descendant::*[@select]")
+		while(aa:=All.Item[A_Index-1])
+			aa.RemoveAttribute("select")
+		Node.SetAttribute("select",1),Version_Tracker.Populate()
+	}TVState(){
+		Version_Tracker.NewWin.Default("VT"),All:=VVersion.SN("//*[@tv]")
+		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
+			if(TV_Get(ea.TV,"Expand"))
+				aa.SetAttribute("expand",1)
+			else if(ea.Expand)
+				aa.RemoveAttribute("expand")
+		}
+	}
 }
 Class XML{
 	Keep:=[]
@@ -3146,11 +4710,9 @@ Class XML{
 			Under.SetAttribute(b,att[b])
 		return Under
 	}
-}
-SSN(Node,XPath){
+}SSN(Node,XPath){
 	return Node.SelectSingleNode(XPath)
-}
-SN(Node,XPath){
+}SN(Node,XPath){
 	return Node.SelectNodes(XPath)
 }
 Clean_Position_Data(){
@@ -3198,6 +4760,9 @@ Clear_Selected_Highlight(){
 			sc.2500(A_Index+8),sc.2505(b.Start,b.End-b.Start)
 	}
 	
+}
+Close_All(){
+	Close(1,1)
 }
 Close_Debug_Window(){
 	MainWin.NewCtrlPos:={ctrl:v.Debug.sc,win:HWND(1)},MainWin.Delete(),debug.Disconnect(),Redraw()
@@ -3249,9 +4814,6 @@ Close(x:=1,all:="",Redraw:=1){
 		CSC({set:1}).2400(),tv(tv)
 	else
 		New()
-}
-Close_All(){
-	Close(1,1)
 }
 CloseSingleUntitled(){
 	count:=CEXML.SN("//main[@file!='Libraries']")
@@ -3431,8 +4993,7 @@ Command_Help(){
 		}else{
 			url.="commands/" found1:=RegExReplace(found1,"#","_") ".htm"
 		}
-	}
-	else{
+	}else{
 		if(!Settings.SSN("//HelpNag").text)
 			if(m("The word: " Chr(34) found1 Chr(34) " was found and was not handled by AHK Studio.","If this is a command please let maestrith know.","btn:ync","Opening the help file","","Show again?")="No")
 				Settings.Add("HelpNag",,1)
@@ -3480,17 +5041,11 @@ Compile_AHK_Studio(){
 	}
 	ExitApp
 }
-Download_AHK_Studio_Source(){
-	if(StrSplit(A_ScriptFullPath,".").2="ahk")
-		return m("The file is already on your system as " A_ScriptFullPath)
-	file:=FileOpen(A_ScriptDir "\AHK-Studio.ahk","rw","UTF-8"),file.write(URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk")),file.length(file.position),file.Close()
-}
 Compile_Using_U32(){
 	CompileUsing(32)
 }Compile_Using_U64(){
 	CompileUsing(64)
-}
-CompileUsing(Version){
+}CompileUsing(Version){
 	Save()
 	main:=Current(2).file
 	SplitPath,main,,dir,,name
@@ -4117,11 +5672,11 @@ ConvertTheme(){
 		m(Settings.SSN("//theme").xml)
 	*/
 }
-Copy_Folder_Path(){
-	Clipboard:=Current(3).Dir
-}
 Copy_File_Path(){
 	Clipboard:=Current(3).File
+}
+Copy_Folder_Path(){
+	Clipboard:=Current(3).Dir
 }
 Copy(){
 	ControlGetFocus,Focus,% HWND([1])
@@ -4243,6 +5798,45 @@ Create_Function_From_Selected(){
 	sc.2400()
 	return
 }
+Create_Include_From_Selection(){
+	pos:=PosInfo(),sc:=CSC()
+	
+	if(Pos.Start=Pos.End){
+		Line:=sc.2166(sc.2008)
+		if((Parent:=sc.2225(Line))<0)
+			Parent:=sc.2225(++Line)
+		if(Parent<0)
+			ExitApp
+		Last:=sc.2224(Parent,-1)
+		sc.2160(sc.2128(Parent),sc.2136(Last))
+		Pos:=PosInfo()
+	}
+	
+	
+	
+	if(pos.start=pos.end)
+		return m("Please select some text to create a new Include from")
+	text:=sc.GetSelText(),RegExMatch(text,"^(\w+)",Include)
+	if(Include1="Class")
+		RegExMatch(Text,"^(\w+\s+\w+)",Include)
+	MainFile:=Current(2).File
+	SplitPath,MainFile,,Dir
+	if(Node:=Settings.Find("//Include/Dir/@file",MainFile))
+		Dir:=Node.text
+	FileName:=SelectFile(Dir "\" RegExReplace(Include1,"_"," ") "." Current(3).Ext,"New Include FileName",Current(3).Ext)
+	if(FileExist(FileName))
+		return m("Include name already exists. Please choose another")
+	if(CEXML.Find(Current(1),"//@file",FileName))
+		return m("This file is already included in this Project")
+	sc.2326(),AddInclude(FileName,text,{start:StrPut(Include1 "(","UTF-8")-1,end:StrPut(Include1 "(","UTF-8")-1},0)
+	SplitPath,FileName,,Dir
+	if(!Node:=Settings.Find("//Include/Dir/@file",MainFile))
+		Node:=Settings.Add("Include/Dir",{file:MainFile},,1)
+	Node.Text:=Dir
+	Line:=sc.2166(sc.2008)
+	if(sc.2128(Line)=sc.2136(Line))
+		sc.2338
+}
 Create_Toolbar(){
 	FormatTime,date,%A_Now%,longdate
 	FormatTime,time,%A_Now%,H:mm:ss
@@ -4360,6 +5954,37 @@ Cut(){
 				return
 		v.Clipboard.push(Clipboard)
 }}
+Debug_Current_Script(){
+	Scan_Line(),Save()
+	if(Debug.Socket){
+		sc:=v.Debug,sc.2003(sc.2006,"`nKilling Current Process"),Debug.Send("stop")
+		Sleep,200
+		if(Debug.Socket){
+			Debug.Send("stop")
+			Sleep,200
+	}}new Debug()
+	if(Debug.VarBrowser)
+		Default("SysTreeView321",98),TV_Delete()
+	if(Current(2).file=A_ScriptFullPath)
+		return m("Can not Debug AHK Studio using AHK Studio.")
+	/*
+		All:=SN(Current(7),"descendant::*[@type='Breakpoint']"),Nodes:=[]
+		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
+			Nodes.Push(DebugFile:=SSN(aa,"ancestor::file"))
+		for a,b in Nodes
+			ScanFile.Scan(b,1)
+	*/
+	All:=SN(Current(7),"descendant::*[@type='Breakpoint']"),Debug.Run(Current(2).file)
+	Sleep,500
+	while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
+		DebugFile:=SSN(aa,"ancestor::file/@file").text,Text:=Update({Get:DebugFile}),Pos:=1,LastPos:=""
+		while(RegExMatch(Text,"Oi)(;*\[" ea.Text "\])",Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
+			if(Pos=LastPos),LastPos:=Pos
+				Break
+			RegExReplace(SubStr(Text,1,Found.Pos(1)),"\R",,Line),debug.Send("breakpoint_set -t line -f " DebugFile " -n " Line+1 " -i " SSN(aa,"@id").text "|" Line)
+		}
+	}
+}
 DebugHighlight(){
 	sc:=CSC(),sc.2045(2),sc.2045(3)
 	for a,b in v.DebugHighlight[Current(3).file]{
@@ -4371,12 +5996,7 @@ DebugHighlight(){
 			SelectDebugLine(b)
 		}
 }}
-SelectDebugLine(line){
-	sc:=CSC()
-	if(v.Options.Select_Current_Debug_Line)
-		sc.2160(sc.2167(line),sc.2136(line))
-	else
-		first:=sc.2152,lines:=sc.2370,half:=Floor(lines/2),NewLine:=((((line)-half)>0)?(line)-half:0),sc.2613(NewLine)
+DebugWindow(x*){
 }
 Default_Project_Folder(){
 	Dir:=Settings.SSN("//directory").text
@@ -4534,25 +6154,39 @@ Delete_Project(x:=0){
 Delete(){
 	return Backspace(0)
 }
-DisplayType(type){
-	all:=SN(CEXML.Find("//main/@file",Current(2).file),"descendant-or-self::info[@type='" type "']/@text"),sc:=CSC(),word:=sc.getword(),sc.2634(1)
-	while(aa:=all.item[A_Index-1])
-		if(aa.text~="i)^" word)
-			list.=aa.text " "
-	Sort,list,list,D%A_Space%
-	if((list:=Trim(list))="")
-		return 0
-	sc.2117((type="Function"?5:8),list)
-	if(!InStr(list," "))
-		sc.2104
-}
-Display_Functions(){
-	if(DisplayType("Function")=0)
-		DisplayType("Class")
+DeleteExtraFiles(FileList,DD){
+	static DXML
+	for a,b in FileList
+		Total.=a "`n"
+	DXML:=DD
+	if(Total)
+		m("These Files May Need Deleted On GitHub:",Total)
+	return
+	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!! make a GUI to allow you to remove them !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!         and maybe checkboxes?          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
+	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	;~ !!!!!!    this throws the files here that need deleted or at the very least for review    !!!!!!!
+	;~ !!!!!! you can get the DXML and the files will be there. Maybe push DXML here so that it  !!!!!!!
+	;~ !!!!!!                                     will be ok                                     !!!!!!!
+	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
+	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!                 OH YEA!                  !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!! Doing a push without re-starting Studio  !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!     Throws an error, with no message     !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	
 }
 Display_Classes(){
 	if(DisplayType("Class")=0)
 		DisplayType("Function")
+}
+Display_Functions(){
+	if(DisplayType("Function")=0)
+		DisplayType("Class")
 }
 Display_Hotkeys(){
 	all:=menus.SN("//*[@hotkey!='']"),NewWin:=new GUIKeep("hotkeys"),NewWin.Add("ListView,w400 h600,Action|Hotkey,wh")
@@ -4740,6 +6374,18 @@ DisplayStats(call){
 	MarginWidth()
 	return
 }
+DisplayType(type){
+	all:=SN(CEXML.Find("//main/@file",Current(2).file),"descendant-or-self::info[@type='" type "']/@text"),sc:=CSC(),word:=sc.getword(),sc.2634(1)
+	while(aa:=all.item[A_Index-1])
+		if(aa.text~="i)^" word)
+			list.=aa.text " "
+	Sort,list,list,D%A_Space%
+	if((list:=Trim(list))="")
+		return 0
+	sc.2117((type="Function"?5:8),list)
+	if(!InStr(list," "))
+		sc.2104
+}
 Dlg_Color(Node,Default:="",hwnd:="",Attribute:="color"){
 	static
 	Active:=DllCall("GetActiveWindow")
@@ -4838,6 +6484,11 @@ Donate(){
 	donate:
 	Run,http://www.maestrith.com/donations/
 	return
+}
+Download_AHK_Studio_Source(){
+	if(StrSplit(A_ScriptFullPath,".").2="ahk")
+		return m("The file is already on your system as " A_ScriptFullPath)
+	file:=FileOpen(A_ScriptDir "\AHK-Studio.ahk","rw","UTF-8"),file.write(URLDownloadToVar("https://raw.githubusercontent.com/maestrith/AHK-Studio/master/AHK-Studio.ahk")),file.length(file.position),file.Close()
 }
 Download_Plugins(){
 	static plug
@@ -5052,11 +6703,42 @@ Edit_Hotkeys(ret:=""){
 	}}
 	return
 }
-XMLSearchText(Attributes,Search){
-	Search:=Format("{:L}",Search)
-	for a in Attributes
-		SearchText.="contains(translate(translate(@" a ", 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'\&','') , '" Search "') or "
-	return SearchText "contains(translate(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'\&','') , '" Search "')"
+Edit_Plugin(){
+	static NewWin,List
+	NewWin:=new GUIKeep("Edit_Plugin"),NewWin.Add("TreeView,w500 h500,,wh","Button,gEditPluginGo Default,Edit Plugin,y"),NewWin.Show("Edit Plugin")
+	Populate:
+	Default("SysTreeView321","Edit_Plugin"),TV_Delete(),List:=[]
+	Loop,Files,Plugins\*.*
+		List[TV_Add(A_LoopFileName)]:=A_LoopFileLongPath
+	return
+	EditPluginGo:
+	Default(,"Edit_Plugin"),Open((OpenFile:=List[TV_GetSelection()])),tv(SSN(CEXML.Find("//main/file/@file",OpenFile),"@tv").text),NewWin.Exit()
+	return
+}
+Edit_Proxy_Server(){
+	node:=Settings.Add("proxy")
+	InputBox,proxy,Proxy Server,Please enter your proxy server address,,,,,,,,% node.text
+	if(ErrorLevel)
+		return
+	node.text:=proxy
+}
+Edit_Replacements(){
+	new SettingsClass("Edit Replacements")
+}
+Edited(current:=""){
+	static Edited
+	current:=current?current:Current(),sc:=CSC()
+	if(MainWin.tnsc.sc=sc.sc)
+		return TNotes.Write(MainWin.tnsc)
+	if(!CEXML.SSN("//*[@sc='" sc.2357 "']"))
+		return
+	if(!SSN(current,"@edited")){
+		current.SetAttribute("edited",1),ea:=XML.EA(current),all:=CEXML.SN("//*[@id='" ea.id "']"),WinSetTitle(1,ea)
+		while(aa:=all.item[A_Index-1]),nea:=XML.EA(aa)
+			TVC.Modify(1,(v.Options.Hide_File_Extensions?"*" nea.nne:"*" nea.filename),nea.tv)
+	}list:=CEXML.SN("//*[@edited]"),items:="",WinSetTitle()
+	while(ll:=list.item[A_Index-1],ea:=XML.EA(ll))
+		items.=ea.file "`n"
 }
 EditHotkey(node,window){
 	static nw,EditNode,Win,Control
@@ -5102,43 +6784,6 @@ EditHotkey(node,window){
 	HWND({rem:"Edit_Hotkey"}),Hotkeys(1),%Win%(EditNode),WinActivate(HWND([Win]))
 	return
 }
-Edit_Plugin(){
-	static NewWin,List
-	NewWin:=new GUIKeep("Edit_Plugin"),NewWin.Add("TreeView,w500 h500,,wh","Button,gEditPluginGo Default,Edit Plugin,y"),NewWin.Show("Edit Plugin")
-	Populate:
-	Default("SysTreeView321","Edit_Plugin"),TV_Delete(),List:=[]
-	Loop,Files,Plugins\*.*
-		List[TV_Add(A_LoopFileName)]:=A_LoopFileLongPath
-	return
-	EditPluginGo:
-	Default(,"Edit_Plugin"),Open((OpenFile:=List[TV_GetSelection()])),tv(SSN(CEXML.Find("//main/file/@file",OpenFile),"@tv").text),NewWin.Exit()
-	return
-}
-Edit_Proxy_Server(){
-	node:=Settings.Add("proxy")
-	InputBox,proxy,Proxy Server,Please enter your proxy server address,,,,,,,,% node.text
-	if(ErrorLevel)
-		return
-	node.text:=proxy
-}
-Edit_Replacements(){
-	new SettingsClass("Edit Replacements")
-}
-Edited(current:=""){
-	static Edited
-	current:=current?current:Current(),sc:=CSC()
-	if(MainWin.tnsc.sc=sc.sc)
-		return TNotes.Write(MainWin.tnsc)
-	if(!CEXML.SSN("//*[@sc='" sc.2357 "']"))
-		return
-	if(!SSN(current,"@edited")){
-		current.SetAttribute("edited",1),ea:=XML.EA(current),all:=CEXML.SN("//*[@id='" ea.id "']"),WinSetTitle(1,ea)
-		while(aa:=all.item[A_Index-1]),nea:=XML.EA(aa)
-			TVC.Modify(1,(v.Options.Hide_File_Extensions?"*" nea.nne:"*" nea.filename),nea.tv)
-	}list:=CEXML.SN("//*[@edited]"),items:="",WinSetTitle()
-	while(ll:=list.item[A_Index-1],ea:=XML.EA(ll))
-		items.=ea.file "`n"
-}
 Enable(Control,label:="",win:=1){
 	value:=label?"+":"-"
 	Gui,%win%:Default
@@ -5149,10 +6794,14 @@ Encode(TT,ByRef Text,Encoding:="UTF-8"){
 	Len:=VarSetCapacity(Text,(StrPut(TT,Encoding)*((Encoding="UTF-16"||Encoding="cp1200")?2:1))),StrPut(TT,&Text,Len,"UTF-8")
 	return Len-1
 }
-ET(TT,Encoding:="UTF-8"){
-	static Text
-	Len:=VarSetCapacity(Text,(StrPut(TT,Encoding)*((Encoding="UTF-16"||Encoding="cp1200")?2:1))),StrPut(TT,&Text,Len,"UTF-8")
-	return &Text
+EncodeFile(fn,time,nn,branch){
+	FileRead,bin,*c %fn%
+	FileGetSize,size,%fn%
+	DllCall("Crypt32.dll\CryptBinaryToStringW",Ptr,&bin,UInt,size,UInt,1,UInt,0,UIntP,Bytes),VarSetCapacity(out,Bytes*2),DllCall("Crypt32.dll\CryptBinaryToStringW",Ptr,&bin,UInt,size,UInt,1,Str,out,UIntP,Bytes)
+	StringReplace,out,out,`r`n,,All
+	if(SubStr(Out,1,4)="77u/")
+		Out:=SubStr(Out,5)
+	return {text:out,encoding:"UTF-8",time:time,skip:1,node:nn,branch:branch}
 }
 Enter(){
 	static map:=new XML("map"),NotIndent:={IfEqual:1,IfNotEqual:1,IfGreater:1,IfGreaterOrEqual:1,IfLess:1,IfLessOrEqual:1,IfInString:1}
@@ -5242,6 +6891,14 @@ Enter(){
 		aa.ParentNode.RemoveChild(aa)
 	return sc.2169,MarginWidth(sc),sc.Enable(1)
 }
+ES(Script,Wait:=true){
+	SplitPath,Script,,Dir
+	Shell:=ComObjCreate("WScript.Shell"),Shell.CurrentDirectory:=Trim(Dir,Chr(34)),Exec:=Shell.Exec(A_AhkPath " /ilib * " Chr(34) RegExReplace(script,"\x22") Chr(34)),Exec.StdIn.Close()
+	if(Wait){
+		Return:=Exec.StdOut.ReadAll(),Shell.CurrentDirectory:=A_ScriptDir
+		return Return
+	}Shell.CurrentDirectory:=A_ScriptDir
+}
 Escape(a*){
 	sc:=CSC(),ShowOSD("Escape")
 	ControlGetFocus,Focus,% HWND([1])
@@ -5268,6 +6925,11 @@ Escape(a*){
 	if(InStr(Focus,"Scintilla"))
 		Send,{Escape}
 	DllCall("EndMenu"),UpPos(1)
+}
+ET(TT,Encoding:="UTF-8"){
+	static Text
+	Len:=VarSetCapacity(Text,(StrPut(TT,Encoding)*((Encoding="UTF-16"||Encoding="cp1200")?2:1))),StrPut(TT,&Text,Len,"UTF-8")
+	return &Text
 }
 ExecScript(){
 	static exec,time,script
@@ -5391,6 +7053,12 @@ Exit(ExitApp:=0){
 	CEXML.Save(1)
 	ExitApp
 	return
+}
+Exit:
+Exit()
+return
+ExitStudio(){
+	Exit()
 }
 Export(){
 	indir:=Settings.Find("//export/file/@file",SSN(Current(1),"@file").text),warn:=v.Options.Warn_Overwrite_On_Export?"S16":"S"
@@ -5841,36 +7509,6 @@ Find_Replace(){
 	info:=nw[],sc:=CSC(),pre:="O",find:="",find:=info.regex?info.find:"\Q" RegExReplace(info.find, "\\E", "\E\\E\Q") "\E",pre.=info.greed?"":"U",pre.=info.cs?"":"i",pre.=info.ml?"":"m`n",find:=pre ")" find "",replace:=NewLines(info.replace),sc.2181(0,[RegExReplace(sc.GetText(),find,replace)]),SetPos(SSN(Current(),"@tv").text)
 	return
 }
-SearchWin(node:=""){
-	static
-	Gui,1:Default
-	/*
-		nw:=new GUIKeep("Search")
-	*/
-	;hwnd:=new InternalWindow("Search")
-	Gui,Add,Edit,w200 hwndhwnd
-	Gui,Add,TreeView,w200 hwndtv
-	ControlGetPos,,,,h,,ahk_id%hwnd%
-	MainWin.FindEditHeight:=h
-	for a,b in {FindEdit:hwnd,FindTV:tv}
-		MainWin[a]:=b+0
-	/*
-		nw.Add("Edit,gFindCheck w40,,w","TreeView,w40 h40 gFindTV,,wh","Checkbox,,Test,y") ;,"Button,xm gFindTV,Placeholder,y") ;,"Button,x+M,Placeholder,y")
-		for a,b in ["FindCheck","FindTV"]
-			MainWin[b]:=nw.XML.SSN("//*[@label='" b "']/@hwnd").text+0
-	*/
-	Gui,1:Default
-	return hwnd+0
-	FindTV:
-	return
-	SearchEscape:
-	;m("HERE!!!!")
-	/*
-		MainWin.NewCtrlPos:={ctrl:nw.hwnd+0,win:HWND(1)}
-		MainWin.Delete()
-	*/
-	return
-}
 Find(){
 	static
 	/*
@@ -6284,32 +7922,13 @@ FixLines(line,total,base:=""){
 		Update({sc:sc.2357}),Edited()
 	SetStatus(A_ThisFunc " Process Time: " A_TickCount-tick "ms @ " A_TickCount " lines: " total,3)
 }
-/*
-	Focus(a*){
-		if(a.1=0){
-			sc:=CSC()
-			if(sc.sc=MainWin.tnsc.sc)
-				CSC(2),t("TOP! HERE!")
-		}
-		if(a.1=1&&A_Gui=1){
-			CSC().2400
-			t("HERE!","time:1")
-			if(a&&v.Options.Check_For_Edited_Files_On_Focus=1)
-				Check_For_Edited()
-			return 0
-		}
-	}
-*/
 Fold_All(){
 	CSC().2662
-}
-UnFold_All(){
+}UnFold_All(){
 	CSC().2662(1)
-}
-Toggle_Fold_All(){
+}Toggle_Fold_All(){
 	CSC().2662(2)
-}
-Toggle_Fold_Current_Block(){
+}Toggle_Fold_Current_Block(){
 	sc:=CSC(),Line:=sc.2166(sc.2008)
 	if(!sc.2230(Line))
 		sc.2231(Line)
@@ -6317,14 +7936,11 @@ Toggle_Fold_Current_Block(){
 		sc.2231(Parent),sc.2025(sc.2136(Parent))
 	}else
 		sc.2231(Line)
-}
-Fold_Current_Level(){
+}Fold_Current_Level(){
 	sc:=CSC(),level:=sc.2223(sc.2166(sc.2008))&0xff,level:=level-1>=0?level-1:level,Fold_Level_X(Level)
-}
-Unfold_Current_Level(){
+}Unfold_Current_Level(){
 	sc:=CSC(),level:=sc.2223(sc.2166(sc.2008))&0xff,Unfold_Level_X(Level)
-}
-Fold_Level_X(Level=""){
+}Fold_Level_X(Level=""){
 	sc:=CSC()
 	if(level="")
 		level:=InputBox(sc.sc,"Fold Levels","Enter a level to fold`n0-100")
@@ -6335,11 +7951,9 @@ Fold_Level_X(Level=""){
 			sc.2237(current,0),current:=sc.2224(current,fold)
 		current+=1
 	}
-}
-Toggle_Fold(){
+}Toggle_Fold(){
 	sc:=CSC(),sc.2231(sc.2166(sc.2008))
-}
-Unfold_Level_X(Level=""){
+}Unfold_Level_X(Level=""){
 	sc:=CSC()
 	if(level="")
 		level:=InputBox(sc.sc,"Fold Levels","Enter a level to Un-fold`n0-100")
@@ -6352,8 +7966,7 @@ Unfold_Level_X(Level=""){
 			sc.2237(fold,1)
 		fold++
 	}
-}
-FoldParent(){
+}FoldParent(){
 	sc:=CSC(),line:=find:=sc.2166(sc.2008)
 	while((find:=sc.2225(find))>=0)
 		line:=find
@@ -6399,13 +8012,6 @@ Full_Backup(Remove:=0){
 		if(!RegExMatch(A_LoopFileFullPath,"Full Backup \d{14}"))
 			FileRemoveDir,%A_LoopFileFullPath%,1
 	SplashTextOff
-}
-GetWebBrowser(){
-	SendMessage,DllCall("RegisterWindowMessage","str","WM_HTML_GETOBJECT"),0,0,Internet Explorer_Server1,AutoHotkey Help
-	if(ErrorLevel=FAIL)
-		return
-	lResult:=ErrorLevel,VarSetCapacity(GUID,16,0),CLSID:=DllCall("ole32\CLSIDFromString","wstr","{332C4425-26CB-11D0-B483-00C04FD90119}","ptr",&GUID)>=0?&GUID:"",DllCall("oleacc\ObjectFromLresult", "ptr", lResult,"ptr",CLSID,"ptr",0,"ptr*",pdoc),pweb:=ComObjQuery(pdoc,id:="{0002DF05-0000-0000-C000-000000000046}",id),ObjRelease(pdoc)
-	return ComObject(9,pweb,1)
 }
 GetClass(class,current:=""){
 	current:=current?current:Current(5),root:=SSN(current,"info[@type='Class' and @text='" class.baseclass "']")
@@ -6669,6 +8275,13 @@ GetTotal(obj,line){
 	}
 	return total
 }
+GetWebBrowser(){
+	SendMessage,DllCall("RegisterWindowMessage","str","WM_HTML_GETOBJECT"),0,0,Internet Explorer_Server1,AutoHotkey Help
+	if(ErrorLevel=FAIL)
+		return
+	lResult:=ErrorLevel,VarSetCapacity(GUID,16,0),CLSID:=DllCall("ole32\CLSIDFromString","wstr","{332C4425-26CB-11D0-B483-00C04FD90119}","ptr",&GUID)>=0?&GUID:"",DllCall("oleacc\ObjectFromLresult", "ptr", lResult,"ptr",CLSID,"ptr",0,"ptr*",pdoc),pweb:=ComObjQuery(pdoc,id:="{0002DF05-0000-0000-C000-000000000046}",id),ObjRelease(pdoc)
+	return ComObject(9,pweb,1)
+}
 Go_To_Line(){
 	sc:=CSC()
 	value:=InputBox(sc.sc,"Go To Line","Enter the Line Number you want to go to max = " sc.2154,sc.2166(sc.2008)+1)
@@ -6785,222 +8398,6 @@ Gui(){
 	}
 	return
 }
-Exit:
-Exit()
-return
-class GUIKeep{
-	static table:=[],showlist:=[],Displays:=new XML("displays")
-	__Get(){
-		return this.Add()
-	}__New(win,parent:=""){
-		info:=PluginClass.Style(),owner:=WinExist("ahk_id" parent)?parent:"" ;hwnd(1)
-		if(FileExist(A_ScriptFullPath "\AHKStudio.ico"))
-			Menu,Tray,Icon,%A_ScriptFullPath%\AHKStudio.ico
-		owner:=owner?owner:1
-		Gui,%win%:Destroy
-		Gui,%win%:+owner%owner% +hwndhwnd -DPIScale
-		Gui,%win%:+ToolWindow
-		hwnd(win,hwnd)
-		if(Settings.SSN("//options/@Add_Margins_To_Windows").text!=1)
-			Gui,%win%:Margin,0,0
-		Gui,%win%:Font,% "c" info.color " s" info.size,% info.font
-		Gui,%win%:Color,% info.Background,% info.Background
-		this.XML:=new XML("gui"),this.XML.Add("window",{name:win}),this.gui:=[],this.sc:=[],this.hwnd:=hwnd,this.con:=[],this.AHKID:=this.id:="ahk_id" hwnd,this.win:=win,this.Table[win]:=this,this.var:=[],this.classcount:=[]
-		for a,b in {border:A_OSVersion~="^10"?3:0,caption:DllCall("GetSystemMetrics",int,4,"int")}
-			this[a]:=b
-		Gui,%win%:+LabelGUIKeep.
-		Gui,%win%:Default
-	}Add(info*){
-		static
-		if(!info.1){
-			var:=[]
-			Gui,% this.Win ":Submit",Nohide
-			for a,b in this.var{
-				if(b.Type="s")
-					Var[a]:=b.sc.GetUNI()
-				else
-					var[a]:=%a%
-			}return var
-		}for a,b in info{
-			i:=StrSplit(b,","),newpos:=""
-			if(i.1="ComboBox")
-				WinGet,ControlList,ControlList,% this.ID
-			if(i.1="s"){
-				Pos:=RegExReplace(i.2,"OU)\s*\b(v.+)\b")
-				sc:=new s(1,{Pos:Pos}),hwnd:=sc.sc
-			}else
-				Gui,% this.win ":Add",% i.1,% i.2 " hwndhwnd",% i.3
-			if(RegExMatch(i.2,"U)\bg(.*)\b",Label))
-				Label:=Label1
-			if(RegExMatch(i.2,"U)\bv(.*)\b",var))
-				this.var[var1]:={hwnd:HWND,type:i.1,sc:sc,label:Label},Var:=var1
-			this.con[hwnd]:=[]
-			if(i.4!="")
-				this.con[hwnd,"pos"]:=i.4,this.resize:=1
-			if(i.5)
-				this.Static.Push(hwnd)
-			Name:=Var1?Var1:Label
-			if(i.1="ListView"||i.1="TreeView")
-				this.All[Name]:={HWND:HWND,Name:Name,Type:i.1,label:Label,ID:"ahk_id" HWND}
-			if(i.1="ComboBox"){
-				WinGet,ControlList2,ControlList,% this.ID
-				Obj:=StrSplit(ControlList2,"`n"),LeftOver:=[]
-				for a,b in Obj
-					LeftOver[b]:=1
-				for a,b in Obj2:=StrSplit(ControlList,"`n")
-					LeftOver.Delete(b)
-				for a in LeftOver{
-					if(!InStr(a,"ComboBox")){
-						ControlGet,Married,HWND,,%a%,% this.ID
-						this.XML.Add("Control",{hwnd:Married,label:Label,id:"ahk_id" Married+0,name:Name,type:"Edit"},,1)
-					}
-				}
-				
-			}
-			New:=this.XML.Add("Control",{hwnd:HWND,id:"ahk_id" HWND,name:Name,type:i.1,label:Label},,1)
-			/*
-				m("Name: " Name,"Var1: " Var1,"Label: " Label,"HERE!","",New.xml)
-			*/
-	}}Close(a:=""){
-		this:=GUIKeep.table[A_Gui]
-		if(IsFunc(func:=A_Gui "Close"))
-			return %func%()
-		else if(IsLabel(label:=A_Gui "Close")){
-			SetTimer,%label%,-1
-		}else
-			this.SavePos(),this.Exit()
-	}Current(XPath,Number){
-		Node:=Settings.SSN(XPath)
-		all:=SN(Node.ParentNode,"*")
-		while(aa:=all.item[A_Index-1])
-			(A_Index=Number?aa.SetAttribute("last",1):aa.RemoveAttribute("last"))
-	}Default(Name:=""){
-		Gui,% this.Win ":Default"
-		ea:=this.XML.EA("//Control[@name='" Name "']")
-		if(ea.Type~="TreeView|ListView")
-			Gui,% this.Win ":" ea.Type,% ea.HWND
-	}Disable(Label,Disable:=1){
-		ea:=XML.EA(Node:=this.XML.SSN("//*[@label='" Label "']"))
-		if(Disable)
-			GuiControl,% this.Win ":Disable",% ea.HWND
-		else
-			GuiControl,% this.Win ":Enable",% ea.HWND
-	}DropFiles(filelist,ctrl,x,y){
-		df:="DropFiles"
-		if(IsFunc(df))
-			%df%(filelist,ctrl,x,y)
-	}Enable(Label,Enable:=1){
-		ea:=XML.EA(Node:=this.XML.SSN("//*[@label='" Label "']"))
-		if(Enable)
-			GuiControl,% this.Win ":+g" Label,% ea.HWND
-		else
-			GuiControl,% this.Win ":+g",% ea.HWND
-	}Escape(){
-		this:=GUIKeep.table[A_Gui]
-		KeyWait,Escape,U
-		if(IsFunc(func:=A_Gui "Escape"))
-			return %func%()
-		else if(IsLabel(label:=A_Gui "Escape"))
-			SetTimer,%label%,-1
-		else
-			this.SavePos(),this.Exit()
-	}Exit(){
-		this.SavePos(),hwnd({rem:this.win})
-	}GetCtrl(Name,Value:="hwnd"){
-		return this.All[Name]
-	}GetCtrlXML(Name,Value:="hwnd"){
-		return Info:=this.XML.SSN("//*[@name='" Name "']/@" Value).text
-	}GetDisplays(){
-		SysGet,mon,MonitorCount
-		Displays:=GUIKeep.Displays
-		if(Displays.SSN("//displays/@count").text!=mon){
-			rem:=Displays.SSN("//monitors"),rem.ParentNode.RemoveChild(rem),top:=Displays.Add("monitors"),Displays.SSN("//displays").SetAttribute("count",mon)
-			Loop,%mon%
-			{
-				SysGet,mon,Monitor,%A_Index%
-				Displays.Under(top,"monitor",{number:A_Index,l:monleft,t:montop,r:monright,b:monbottom})
-			}
-		}
-		return GUIKeep.Displays
-	}GetPos(){
-		Gui,% this.win ":Show",AutoSize Hide NA
-		WinGet,cl,ControlListHWND,% this.ahkid
-		pos:=this.WinPos(),ww:=pos.w,wh:=pos.h,flip:={x:"ww",y:"wh"}
-		for index,hwnd in StrSplit(cl,"`n"){
-			obj:=this.Gui[hwnd]:=[]
-			ControlGetPos,x,y,w,h,,ahk_id%hwnd%
-			for c,d in StrSplit(this.con[hwnd].pos)
-				d~="w|h"?(obj[d]:=%d%-w%d%):d~="x|y"?(obj[d]:=%d%-(d="y"?wh+this.Caption+this.Border:ww+this.Border))
-		}
-		Gui,% this.win ":+MinSize"
-	}Hotkeys(Info){
-		Hotkey,IfWinActive,% this.ID
-		for a,b in Info
-			Try
-				Hotkey,%a%,%b%,On
-	}SavePos(){
-		if(!top:=Settings.SSN("//gui/position[@window='" this.win "']"))
-			top:=Settings.Add("gui/position",,,1),top.SetAttribute("window",this.win)
-		top.text:=this.WinPos().text
-	}SetText(Control,Text:=""){
-		if((sc:=this.Var[Control].sc).sc){
-			Len:=VarSetCapacity(tt,StrPut(Text,"UTF-8")-1)
-			StrPut(Text,&tt,Len,"UTF-8")
-			sc.2181(0,&tt)
-		}else{
-			GuiControl,% this.Win ":",% this.GetCtrlXML(Control),%Text%
-		}
-	}SetValue(Control,Value){
-		GuiControl,% this.Win ":",% this.XML.SSN("//*[@var='" Control "']/@hwnd").text,%Value%
-	}SetWinPos(){
-		DllCall("SetWindowPos",int,ctrl,int,0,int,x,int,y,int,w,int,h,uint,(ea.type~="Project Explorer|Code Explorer|QF")?0x0004|0x0010|0x0020:0x0008|0x0004|0x0010|0x0020),DllCall("RedrawWindow",int,ctrl,int,0,int,0,uint,0x401|0x2)
-	}Show(name,position:="",NA:=0,Select:=0){
-		static defpos,pos,sel,nn,Displays
-		defpos:=position,this.GetPos(),pos:=this.resize=1?"":"AutoSize",this.name:=name,sel:=Select,this.NA:=NA
-		Displays:=this.GetDisplays()
-		if(this.resize=1)
-			Gui,% this.win ":+Resize"
-		GUIKeep.showlist.Push(this)
-		SetTimer,GUIKeepShow,-1
-		return
-		GUIKeepShow:
-		while(this:=GUIKeep.Showlist.pop()){
-			position:=(node:=Settings.SSN("//gui/position[@window='" this.win "']")).text,position:=position?position:defpos,win:=[]
-			for a,b in ["x","y","w","h"]
-				RegExMatch(position,"Oi)" b "(-?\d*)\b",found),win[b]:=found.1
-			if(!Displays.SSN("//*[(@l<" win.x " or @l<" win.x+win.w ") and @r>" win.x " and (@t<=" win.y " or @t<=" win.y+win.h ") and @b>" win.y "]")){
-				position:="xCenter yCenter"
-				if(win.w)
-					position.=" w" win.w
-				if(win.h)
-					position.=" h" win.h
-			}Mon:=Monitors()
-			if(Win.x<Mon.Left.MinIndex()||Win.y<Mon.Top.MinIndex()){
-				Position:="xCenter yCenter"
-			}NA:=this.NA?"NA":""
-			Gui,% this.win ":Show",% position " " pos " " NA,% this.name
-			if(sel)
-				SendMessage,0xB1,%sel%,%sel%,Edit1,% this.id
-			if(this.resize!=1)
-				Gui,% this.win ":Show",AutoSize NA
-			this.Size()
-			if(!NA)
-				WinActivate,% this.id
-		}return
-	}Size(){
-		if(!this.Gui)
-			this:=GUIKeep.table[A_Gui]
-		pos:=this.WinPos()
-		for a,b in this.gui
-			for c,d in b
-				GuiControl,% this.win ":MoveDraw",%a%,% c (c~="y|h"?pos.h:pos.w)+d
-	}WinPos(){
-		VarSetCapacity(rect,16),DllCall("GetClientRect",ptr,this.hwnd,ptr,&rect)
-		WinGetPos,x,y,,,% this.ahkid
-		w:=NumGet(rect,8,"int"),h:=NumGet(rect,12,"int"),text:=(x!=""&&y!=""&&w!=""&&h!="")?"x" x " y" y " w" w " h" h:""
-		return {x:x,y:y,w:w,h:h,text:text}
-	}
-}
 Header(type){
 	node:=Current(7)
 	if(!header:=SSN(node,"descendant::header[@type='" type "']/@cetv").text)
@@ -7042,80 +8439,6 @@ Highlight_to_Matching_Brace(){
 		return sc.2160(start,sc.2008)
 	Else if((start:=sc.2353(sc.2008))>0)
 		sc.2160(start+1,sc.2008)
-}
-class HistoryClass{
-	__New(){
-		this.XML:=new XML("History")
-		return this
-	}Add(ea,sc){
-		if(!ea.ID)
-			return
-		if(!ea.sc)
-			return
-		if(!Top:=this.XML.SSN("//sc[@sc='" sc.sc "']"))
-			Top:=this.XML.Add("sc",{sc:sc.sc},,1)
-		Back:=History.GetBack(Top),Forward:=History.GetForward(Top),Forward.ParentNode.RemoveChild(Forward)
-		if(!HistoryItem:=SSN(Top,"descendant::item[@id='" ea.ID "' and @start='" sc.2143 "' and @end='" sc.2145 "' and @scroll='" sc.2152 "']"))
-			this.XML.Under(Back,"item",{id:ea.ID,start:sc.2143,end:sc.2145,scroll:sc.2152,time:A_Now A_MSec})
-	}ForwardBack(){
-		Back:
-		Forward:
-		Direction:=A_ThisLabel="Back"?"back":"forward",sc:=CSC(),Top:=History.XML.SSN("//sc[@sc='" sc.sc "']"),ea:=Current(3),Under:=History["Get" (A_ThisLabel="Back"?"Forward":"Back")](Top)
-		if(!Node:=SSN(Top,Direction "/item[last()]"))
-			return
-		if(!HistoryItem:=SSN(Top,"descendant::item[@id='" ea.ID "' and @start='" sc.2143 "' and @end='" sc.2145 "' and @scroll='" sc.2152 "']")){
-			New:=History.XML.Under(Under,"item",{id:ea.ID,start:sc.2143,end:sc.2145,scroll:sc.2152,time:A_Now A_MSec}),Under.AppendChild(Node)
-			if(Direction="forward")
-				Node.ParentNode.InsertBefore(Node,New),Node:=SSN(Top,Direction "/item[last()]")
-			nea:=XML.EA(Node)
-		}else{
-			if(SSN(HistoryItem,"ancestor::" Direction))
-				Under.AppendChild(HistoryItem),Node:=SSN(Top,Direction "/item[last()]"),Under.AppendChild(Node)
-			Under.AppendChild(Node),nea:=XML.EA(Node)
-		}if(Node.xml)
-			tv(CEXML.SSN("//*[@id='" nea.ID "']/@tv").text,"NoTrack"),Sleep(100),sc.2613(nea.scroll),sc.2160(nea.Start,nea.End)
-		return
-	}ForwardBackFile(){
-		File_History_Forward:
-		File_History_Back:
-		sc:=CSC(),ea:=Current(3),Top:=History.XML.SSN("//sc[@sc='" sc.sc "']")
-		if(!HistoryItem:=SSN(Top,"descendant::item[@id='" ea.ID "' and @start='" sc.2143 "' and @end='" sc.2145 "' and @scroll='" sc.2152 "']"))
-			New:=History.XML.Under(Under,"item",{id:ea.ID,start:sc.2143,end:sc.2145,scroll:sc.2152,time:A_Now A_MSec}),Under.AppendChild(Node)
-		Current:=History["Get" (A_ThisLabel="File_History_Back"?"Back":"Forward")](Top),Under:=History["Get" (A_ThisLabel="File_History_Back"?"Forward":"Back")](Top),Last:=SSN(Current,"item[last()]"),Order:=[],OID:=ID:=SSN(Last,"@id").text,Track:=A_ThisLabel="File_History_Back"?"Back":"Forward"
-		if(!SN(Current,"item").length)
-			return m("Nothing to go " Track " to.")
-		if((List:=SN(Last,"preceding-sibling::*[@id!='" ID "']")).Length){
-			Node:=List.Item[List.Length-1],MoveID:=SSN(Node,"@id").text
-			While(ll:=List.Item[List.Length-A_Index],ea:=XML.EA(ll)){
-				if(ea.ID!=MoveID)
-					Break
-				First:=ll
-			}if(Track="Forward")
-				Node:=First
-			while(First)
-				Order.InsertAt(1,First),First:=First.NextSibling
-		}else if(Last)
-			Under.AppendChild(Last),Node:=Last
-		else
-			m("Nothing to go " Track " to.")
-		for a,b in Order
-			Under.AppendChild(b)
-		nea:=XML.EA(Node)
-		if(Node.xml)
-			tv(CEXML.SSN("//*[@id='" nea.ID "']/@tv").text,"NoTrack"),Sleep(100),sc.2613(nea.scroll),sc.2160(nea.Start,nea.End)
-		return
-	}GetBack(Top){
-		if(!Back:=SSN(Top,"descendant::back"))
-			Back:=this.XML.Under(Top,"back")
-		return Back
-	}GetForward(Top){
-		if(!Forward:=SSN(Top,"forward"))
-			Forward:=History.XML.Under(Top,"forward")
-		return Forward
-	}Remove(ea){
-		while(hh:=History.XML.SSN("//*[@id='" ea.ID "']"))
-			hh.ParentNode.RemoveChild(hh)
-	}
 }
 HltLine(){
 	static ranges:=[]
@@ -7225,22 +8548,6 @@ Icons(il,icons,file,icon){
 		ricon:=icons[file,icon]:=IL_Add(il,file,icon)
 	return ricon
 }
-Create_Include_From_Selection(){
-	pos:=PosInfo(),sc:=CSC()
-	if(pos.start=pos.end)
-		return m("Please select some text to create a new Include from")
-	text:=sc.GetSelText(),RegExMatch(text,"^(\w+)",Include)
-	if(Include1="Class")
-		RegExMatch(Text,"^(\w+\s+\w+)",Include)
-	MainFile:=Current(2).File
-	SplitPath,MainFile,,Dir
-	Filename:=SelectFile(Dir "\" RegExReplace(Include1,"_"," ") "." Current(3).Ext,"New Include Filename",Current(3).Ext)
-	if(FileExist(Filename))
-		return m("Include name already exists. Please choose another")
-	if(CEXML.Find(Current(1),"//@file",Filename))
-		return m("This file is already included in this Project")
-	sc.2326(),AddInclude(Filename,text,{start:StrPut(Include1 "(","UTF-8")-1,end:StrPut(Include1 "(","UTF-8")-1},0)
-}
 Include(MainFile,File){
 	Relative:=RelativePath(MainFile,file)
 	return "#Include " (SubStr(Relative,1,InStr(Relative,"\",0,0,1))="lib\"?"<" SplitPath(file).nne ">":relative)
@@ -7342,6 +8649,68 @@ InputBox(Parent,Title,Prompt,Default=""){
 	OnMessage(6,"Activate")
 	return var
 }
+Insert_Color_Code(){
+	static
+	Static Code:=Color:=0xFF00FF
+	NewWin:=new GUIKeep("Insert_Color_Code",HWND(1))
+	NewWin.Add("Text,w200,Text"
+			,"Button,gICCCFD,Choose From Dialog"
+			,"Button,gICCCFS,Choose From Mouse Position"
+			,"Button,gIIC,Insert &Into Code"
+			,"Radio,gICCCTH vICCCTH Checked,RGB Hex"
+			,"Radio,gICCCTH vICCCTD,RGB Decimal"
+			,"Radio,gICCCTB vICCCTBGRH,BGR Hex"
+			,"Radio,gICCCTB vICCCTB,BGR Decimal"
+			,"Radio,gICCCTB vICCCTWR,#RGB (Web)"
+			,"Radio,gICCCTB vICCCTWB,#BGR (Web)")
+	NewWin.Show("Insert Color Code")
+	DisplayColorCode:
+	ICCCTH:
+	ICCCTD:
+	ICCCTB:
+	ICCCTBGRH:
+	info:=NewWin[]
+	Gui,Insert_Color_Code:Submit,Nohide
+	if(Info.ICCCTH)
+		Code:=RGB(Color)
+	else if(Info.ICCCTBGRH)
+		Code:=RGB(RGB(Color))
+	else if(Info.ICCCTD)
+		Code:=Color
+	else if(Info.ICCCTB)
+		Code:=RGB(Color)+0
+	else if(Info.ICCCTWR)
+		Code:="#" SubStr(RGB(Color),3)
+	else if(Info.ICCCTWB)
+		Code:="#" SubStr(RGB(RGB(Color)),3)
+	Gui,Insert_Color_Code:Font,% "c" RGB(Color)
+	GuiControl,Insert_Color_Code:Font,Static1
+	ControlSetText,Static1,%Code%,% NewWin.ID
+	return
+	ICCCFS:
+	while(!GetKeyState("F1","P")){
+		t("Press and hold F1 until this message goes away to keep this color")
+		MouseGetPos,x,y
+		PixelGetColor,Color,%x%,%y%,RGB
+		Color:=RGB(Color)+0
+		Gosub,DisplayColorCode
+		Sleep,300
+	}t()
+	WinActivate,% NewWin.ID
+	return
+	Goto,DisplayColorCode	
+	return
+	IIC:
+	sc:=CSC(),sc.2003(sc.2008,[Code])
+	
+	NewWin.Exit()
+	return
+	ICCCFD:
+	Color:=Choose_Color(Color,hwnd(1))
+	WinActivate,% NewWin.ID
+	Goto,DisplayColorCode
+	return
+}
 Insert_Current_Time(){
 	sc:=CSC(),sc.2003(sc.2008,[A_Now]),sc.2025(sc.2008+StrLen(A_Now))
 }
@@ -7412,141 +8781,6 @@ Jump_To_First_Available(){
 	else if((pos:=sc.2353(CPos-1))>=0)
 		sc.2025(pos+1)
 }
-Class Keywords{
-	__New(){
-		static Dates:={ahk:"20180118110322",xml:"20171201061116",html:"20171201061319"},BaseURL:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/lib/Languages/",BaseDir:=A_ScriptDir "\Lib\Languages\"
-		for a,b in StrSplit("IndentRegex,KeywordList,Suggestions,Languages,Comments,OmniOrder,CodeExplorerExempt,Words,FirstChar,Delimiter,ReplaceFirst,SearchTrigger",",")
-			Keywords[b]:=[]
-		if(!IsObject(v.OmniFind))
-			v.OmniFind:=[],v.OmniFindText2:=[]
-		if(!FileExist(A_ScriptDir "\Lib\Languages"))
-			FileCreateDir,%A_ScriptDir%\Lib\Languages
-		FileList:=[]
-		for a,b in Dates
-			FileList[BaseDir a ".xml"]:=1
-		Loop,Files,%A_ScriptDir%\Lib\Languages\*.xml
-			FileList[A_LoopFileLongPath]:=1
-		for a in FileList
-		{
-			SplitPath,a,,,,NNE
-			xx:=new XML(NNE,a)
-			if((Date:=Dates[NNE]),URL:=BaseURL Format("{:L}",NNE) ".xml?refresh=" A_Now){
-				if(!FileExist(a)){
-					Data:=URLDownloadToVar(URL)
-					while(SubStr(Data,1,1)!="<")
-						Data:=SubStr(Data,2)
-					xx:=new XML(NNE,a,Data,URL)
-				}if(!Node:=xx.SSN("//date"))
-					Node:=xx.Add("date")
-				else if(xx.SSN("//date").text!=Date){
-					SplashTextOn,200,100,Downloading %NNE%.xml,Please Wait...
-					Data:=URLDownloadToVar(Url)
-					while(SubStr(Data,1,1)!="<")
-						Data:=SubStr(Data,2)
-					TempXML:=new XML(Language:=Format("{:L}",NNE)),TempXML.XML.LoadXML(Data)
-					if(TempXML[])
-						xx:=TempXML,xx.File:=a
-				}if(!NoUpdate),NoUpdate:=0
-					Node.text:=Date,xx.Save(1)
-				SplashTextOff
-			}LEA:=XML.EA(Lexer:=xx.SSN("//FileTypes")),Keywords.Languages[(Language:=Format("{:L}",LEA.Language))]:=xx
-			for _,Ext in StrSplit(Lexer.text," "){
-				if(!Settings.SSN("//Extensions/Extension[@language='" Format("{:L}",Language) "' and text()='" Ext "']"))
-					Settings.Add("Extensions/Extension",{language:Format("{:L}",Language)},Ext,1)
-			}FileGetTime,Date,%a%
-			if(!Node:=Settings.SSN("//Languages/" Language))
-				Node:=Settings.Add("Languages/" Language)
-			if(SSN(Node,"@date").text!=Date)
-				Node:=KeyWords.Refresh(Language),Node:=Settings.SSN("//Languages/" Language),Node.SetAttribute("date",Date),Node.SetAttribute("name",LEA.Name)
-			if(!SSN(Node,"@name").text)
-				Node.SetAttribute("name",LEA.Name)
-			all:=xx.SN("//Code/*"),Find:=v.OmniFind[Language]:=[],Order:=Keywords.OmniOrder[Language]:=[],Index:=0,ExemptList:=""
-			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
-				Index++,Keywords.FirstChar[Language,ea.FirstChar].=aa.NodeName "|"
-				for a,b in ea{
-					Find[aa.NodeName,a]:=(Value:=RegExReplace(b,"\x60n","`n")),Order[Index,aa.NodeName,a]:=Value
-					if(a="Regex")
-						Find[aa.NodeName,"Find"]:=GetFind(Value)
-				}Under:=SN(aa,"*")
-				if(Under.Length)
-					Index++
-				while(UU:=Under.item[A_Index-1],ea:=XML.EA(UU)){
-					ExemptList.=UU.NodeName "|",Keywords.FirstChar[Language,ea.FirstChar].=UU.NodeName "|"
-					for a,b in ea{
-						Find[UU.NodeName,"Inside"]:=aa.NodeName,Find[UU.NodeName,a]:=(Value:=RegExReplace(b,"\x60n","`n")),Order[Index,aa.NodeName Chr(127) UU.NodeName,a]:=Value
-						if(a="Regex")
-							Find[UU.NodeName,"Find"]:=GetFind(Value)
-			}}}Keywords.CodeExplorerExempt[Language]:=Trim(ExemptList,"|")
-			for a,b in Keywords.FirstChar[Language]
-				Keywords.FirstChar[Language,a]:=Trim(b,"|")
-			for a,b in xx.EA("//Comments")
-				KeyWords.Comments[Language,a]:=b
-			Delimiter:=Keywords.Delimiter[Language]:=[]
-			for a,b in xx.EA("//Delimiter"){
-				Delimiter[a]:=b
-				if(a="Replace"){
-					if(b~="(\\|\.|\*|\?|\+|\[|\{|\||\(|\)|\^|\$)")
-						Add:="\"
-					Delimiter.ReplaceRegex:=Add b,Add:=""
-				}
-			}if(Node:=xx.SSN("//ReplaceFirst"))
-				Keywords.ReplaceFirst[Language]:=XML.EA(Node)
-			if((All:=xx.SN("//Special/Context/*")).length){
-				Special:=Keywords.Special[Language]:=[]
-				while(aa:=All.item[A_Index-1],ea:=XML.EA(aa))
-					Special.Push(ea)
-			}Keywords.SearchTrigger[Language]:=xx.SSN("//SearchTrigger").text,Keywords.SetPrefix(Language,xx)
-		}KeyWords.RefreshPersonal()
-	}BuildList(Language,Refresh:=0){
-		if(IsObject(Keywords.KeywordList[Language])&&!Refresh)
-			return
-		if(!IsObject(Obj:=Keywords.Obj))
-			Obj:=Keywords.Obj:=[]
-		Obj[Language]:=[],Lang:=this.GetXML(Language),Keywords.IndentRegex[Language]:=RegExReplace(Lang.SSN("//Indent").text," ","|")
-		if(Optional:=Settings.SSN("//CustomIndent/Language[@language='" Language "']").Text)
-			Keywords.IndentRegex[Language]:=Optional
-		else if(Keywords.IndentRegex[Language]){
-			Key:=Keywords.IndentRegex[Language]
-			Sort,Key,UD|
-			Keywords.IndentRegex[Language]:=Key
-		}
-		Obj:=Keywords.KeywordList[Language]:=[],MainXML:=Keywords.GetXML(Language),Suggestions:=Keywords.Suggestions[Language]:=[],KeywordXML:=MainXML.SN("//Styles/keyword")
-		while(kk:=KeywordXML.item[A_Index-1],ea:=XML.EA(kk)){
-			KeywordList:=kk.text
-			if(ea.add)
-				KeywordList.=" " MainXML.SSN(ea.add).text,KeywordList:=Trim(KeywordList)
-			Sort,KeywordList,UD%A_Space%
-			CamelKeywordList:=KeywordList
-			StringLower,KeywordList,KeywordList
-			Obj[ea.Set]:=RegExReplace(KeywordList,"#")
-			for a,b in StrSplit(CamelKeywordList," ")
-				Suggestions[SubStr(b,1,2)].=b " ",Keywords.Words[Language,b]:=b
-	}}GetList(Language){
-		return Keywords.KeywordList[Language]
-	}SetPrefix(Language,xx){
-		all:=xx.SN("//Code/descendant::*"),Prefix:=[]
-		for a,b in Omni_Search_Class.Prefix
-			Prefix.Push({Prefix:a,Type:b})
-		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-			Prefix.Push({Prefix:ea.Prefix,Type:aa.NodeName})
-		Keywords.Prefix[Language]:=Prefix
-	}GetOmni(Language){
-		
-	}GetSuggestions(Language,FirstTwo){
-		return Keywords.Suggestions[Language,FirstTwo]
-	}GetXML(Language){
-		return Keywords.Languages[Language]
-	}Refresh(Language){
-		Lang:=this.GetXML(Language),all:=Lang.SN("//Styles/font"),Default:=DefaultFont(1)
-		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
-			if(Color:=Default.SSN("//font[@style='" ea.style "']/@color").text)
-				ea.Color:=Color
-			if(!Settings.SSN("//Languages/" Format("{:L}",Language) "/font[@style='" ea.Style "']"))
-				ea.Delete("ex"),Settings.Add("Languages/" Format("{:L}",Language) "/font",ea,,1)
-	}}RefreshPersonal(){
-		Keywords.Personal:=Settings.SSN("//Variables").text
-	}
-}
 Kill_Process(){
 	WinGet,AList,List,ahk_class AutoHotkey
 	if(Current(3).Dir=A_ScriptDir "\Untitled"){
@@ -7594,6 +8828,39 @@ List_Variables(){
 	if(!debug.socket)
 		return m("Currently no file being debugged","time:1"),debug.off()
 	VarBrowser(),debug.Send("stack_get")
+}
+m(x*){
+	static list:={btn:{oc:1,ari:2,ync:3,yn:4,rc:5,ctc:6},ico:{"x":16,"?":32,"!":48,"i":64}},msg:=[]
+	static Title
+	list.title:="AHK Studio",list.def:=0,list.time:=0,value:=0,txt:=""
+	WinGetTitle,Title,A
+	for a,b in x
+		obj:=StrSplit(b,":"),(vv:=List[obj.1,obj.2])?(value+=vv):(list[obj.1]!="")?(List[obj.1]:=obj.2):txt.=b "`n"
+	msg:={option:value+262144+(list.def?(list.def-1)*256:0),title:list.title,time:list.time,txt:txt}
+	Sleep,120
+	MsgBox,% msg.option,% msg.title,% msg.txt,% msg.time
+	SetTimer("ActivateAfterm","-150")
+	for a,b in {OK:value?"OK":"",Yes:"YES",No:"NO",Cancel:"CANCEL",Retry:"RETRY"}
+		IfMsgBox,%a%
+			return b
+	return
+	ActivateAfterm:
+	if(InStr(Title,"Omni-Search")||!Title){
+		Loop,20
+		{
+			WinGetActiveTitle,ATitle
+			if(InStr(ATitle,"AHK Studio"))
+				Break
+			WinActivate,% HWND([1])
+			if(WinActive("A")=HWND(1))
+				Break
+			Sleep,50
+		}
+		CSC().2400
+	}else{
+		WinActivate,%Title%
+	}
+	return
 }
 Make_One_Line(){
 	sc:=CSC(),Text:=sc.GetSelText()
@@ -8063,53 +9330,6 @@ MoveSelectedWord(Add){
 			VarSetCapacity(Text,End-Start),sc.2686(Start,End),sc.2687(0,&Text),Text:=StrGet(&Text,End-Start,"UTF-8"),sc.2645(Start,End-Start),sc.2686(Start+Add,Start+Add),sc.2194(StrPut(Text,"UTF-8")-1,[Text]),sc.2584(Index,Start+Add),sc.2586(Index,End+Add)
 	}sc.2079
 }
-m(x*){
-	static list:={btn:{oc:1,ari:2,ync:3,yn:4,rc:5,ctc:6},ico:{"x":16,"?":32,"!":48,"i":64}},msg:=[]
-	static Title
-	list.title:="AHK Studio",list.def:=0,list.time:=0,value:=0,txt:=""
-	WinGetTitle,Title,A
-	for a,b in x
-		obj:=StrSplit(b,":"),(vv:=List[obj.1,obj.2])?(value+=vv):(list[obj.1]!="")?(List[obj.1]:=obj.2):txt.=b "`n"
-	msg:={option:value+262144+(list.def?(list.def-1)*256:0),title:list.title,time:list.time,txt:txt}
-	Sleep,120
-	MsgBox,% msg.option,% msg.title,% msg.txt,% msg.time
-	SetTimer("ActivateAfterm","-150")
-	for a,b in {OK:value?"OK":"",Yes:"YES",No:"NO",Cancel:"CANCEL",Retry:"RETRY"}
-		IfMsgBox,%a%
-			return b
-	return
-	ActivateAfterm:
-	if(InStr(Title,"Omni-Search")||!Title){
-		Loop,20
-		{
-			WinGetActiveTitle,ATitle
-			if(InStr(ATitle,"AHK Studio"))
-				Break
-			WinActivate,% HWND([1])
-			if(WinActive("A")=HWND(1))
-				Break
-			Sleep,50
-		}
-		CSC().2400
-	}else{
-		WinActivate,%Title%
-	}
-	return
-}
-t(x*){
-	for a,b in x{
-		if((obj:=StrSplit(b,":")).1="time"){
-			SetTimer,killtip,% "-" obj.2*1000
-			Continue
-		}
-		list.=b "`n"
-	}
-	Tooltip,% list
-	return
-	killtip:
-	ToolTip
-	return
-}
 New_Caret(add){
 	sc:=CSC(),CPos:=sc.2008,line:=sc.2166(CPos),column:=sc.2129(CPos),new:=sc.2456(line+add,column)
 	Loop,% sc.2570
@@ -8143,12 +9363,65 @@ New_File_Template(){
 	rem:=Settings.SSN("//template"),rem.ParentNode.RemoveChild(rem)
 	return
 }
+New_Include_From_Current_Word(){
+	sc:=CSC(),Word:=sc.GetWord(),file:=Current(2).file
+	if(!Word)
+		return m("Either select a word or place your caret within a word")
+	if(Context(1).Word="gui"){
+		Word:=InputBox(HWND(1),"Possible g-label detected","Confirm the new Function and File to be created",Word)
+		if(ErrorLevel||Word="")
+			return
+	}SplitPath,file,,Dir
+	FileName:=SelectFile(Dir "\" RegExReplace(Word,"_"," ") "." Current(3).Ext,"FileName for " Word,Current(3).Ext,,1)
+	if(ErrorLevel)
+		return
+	if(CEXML.Find(Current(1),"//@file",FileName))
+		return m("A file with this name is already included in this Project")
+	AddInclude(FileName,Word "(){`r`n`t`r`n}",{start:StrPut(Word "(","UTF-8")-1,end:StrPut(Word "(","UTF-8")-1})
+}
 New_Include(){
 	if((ea:=Current(3)).Dir=A_ScriptDir "\Untitled"&&SubStr(ea.FileName,1,8)="Untitled")
 		return m("You can not add Includes to Untitled documents.  Please save this project before attempting to add Includes to it.")
 	sc:=CSC(),Parent:=Current(2).File,FileName:=SelectFile("","New Include Name"),AddSpace:=v.Options.New_Include_Add_Space?" ":""
 	Function:=Clean((NNE:=SplitPath(FileName).NNE)),text:=(Function~="i)^class_")?(m("Create Class called " (RegExReplace(SubStr(NNE,InStr(NNE," ")+1)," ","_")) "?","btn:ync")="Yes"?"Class " (RegExReplace(SubStr(NNE,InStr(NNE," ")+1)," ","_")) AddSpace "{`n`t`n}":"",pos:=StrPut(NNE AddSpace "{`t","UTF-8")):(m("Create Function called " Function "?","btn:ync")="Yes"?Function "()" AddSpace "{`n`t`n}":"",pos:=StrPut(Function "(","UTF-8")-1)
 	AddInclude(FileName,text,{start:pos,end:pos})
+}
+New_Plugin(){
+	PluginName:=InputBox(HWND(1),"New Plugin Name","This will be the FileName and also the Default Menu name")
+	if(FileExist((File:=A_ScriptDir "\Plugins\" PluginName ".ahk")))
+		return m("File Already Exists.")
+	FileAppend,% "#SingleInstance,Force`n;menu " PluginName "`n;Your Plugin Code`nExitApp "";Always Exit Your App",%File%
+	Open(File,1)
+}
+New(FileName:="",text:="",Select:=1){
+	template:=GetTemplate()
+	if(v.Options.New_File_Dialog&&!FileName){
+		FileName:=DLG_FileSave(hwnd(1))
+		if(!FileName)
+			return
+		
+		file:=FileOpen(FileName,"RW"),file.Seek(0),file.Write(template),file.Length(file.Position),file.Close()
+		if(FileExist(FileName))
+			return tv(Open(FileName))
+	}else{
+		Number:=1
+		while(CEXML.SSN("//file[@file='" A_ScriptDir "\Untitled\Untitled" A_Index ".ahk']"))
+			Number:=A_Index+1
+		FileName:=A_ScriptDir "\Untitled\Untitled" Number ".ahk",Untitled:=1
+		/*
+			FileName:=(list:=CEXML.SN("//main[@untitled]").length)?"Untitled" list ".ahk":"Untitled.ahk",Untitled:=1
+		*/
+	}
+	Update({file:FileName,text:template,load:1,encoding:"UTF-8"})
+	main:=CEXML.Under(CEXML.SSN("//files"),"main",{file:FileName,id:(id:=GetID())})
+	SplitPath,FileName,mfn,maindir,Ext,mnne
+	node:=CEXML.Under(main,"file",{ext:Ext,file:FileName,type:"File",dir:maindir,filename:mfn,id:id,nne:mnne,scan:1,lang:"ahk"})
+	if(Untitled)
+		main.SetAttribute("untitled",1),node.SetAttribute("untitled",1)
+	FEUpdate(),ScanFiles()
+	if(Select)
+		tv(CEXML.SSN("//*[@id='" id "']/@tv").text)
+	return new
 }
 NewIndent(indentwidth:=""){
 	Critical
@@ -8246,59 +9519,6 @@ NewIndent(indentwidth:=""){
 			sc.2126(line,sc.2127(line-1)),sc.2025(sc.2128(line))
 	}sc.Enable(1)
 	SetStatus(A_ThisFunc " Process Time: " A_TickCount-tick "ms @ " A_TickCount " total: " totalcount ,3)
-}
-New_Plugin(){
-	PluginName:=InputBox(HWND(1),"New Plugin Name","This will be the FileName and also the Default Menu name")
-	if(FileExist((File:=A_ScriptDir "\Plugins\" PluginName ".ahk")))
-		return m("File Already Exists.")
-	FileAppend,% "#SingleInstance,Force`n;menu " PluginName "`n;Your Plugin Code`nExitApp "";Always Exit Your App",%File%
-	Open(File,1)
-}
-New(FileName:="",text:="",Select:=1){
-	template:=GetTemplate()
-	if(v.Options.New_File_Dialog&&!FileName){
-		FileName:=DLG_FileSave(hwnd(1))
-		if(!FileName)
-			return
-		
-		file:=FileOpen(FileName,"RW"),file.Seek(0),file.Write(template),file.Length(file.Position),file.Close()
-		if(FileExist(FileName))
-			return tv(Open(FileName))
-	}else{
-		Number:=1
-		while(CEXML.SSN("//file[@file='" A_ScriptDir "\Untitled\Untitled" A_Index ".ahk']"))
-			Number:=A_Index+1
-		FileName:=A_ScriptDir "\Untitled\Untitled" Number ".ahk",Untitled:=1
-		/*
-			FileName:=(list:=CEXML.SN("//main[@untitled]").length)?"Untitled" list ".ahk":"Untitled.ahk",Untitled:=1
-		*/
-	}
-	Update({file:FileName,text:template,load:1,encoding:"UTF-8"})
-	main:=CEXML.Under(CEXML.SSN("//files"),"main",{file:FileName,id:(id:=GetID())})
-	SplitPath,FileName,mfn,maindir,Ext,mnne
-	node:=CEXML.Under(main,"file",{ext:Ext,file:FileName,type:"File",dir:maindir,filename:mfn,id:id,nne:mnne,scan:1,lang:"ahk"})
-	if(Untitled)
-		main.SetAttribute("untitled",1),node.SetAttribute("untitled",1)
-	FEUpdate(),ScanFiles()
-	if(Select)
-		tv(CEXML.SSN("//*[@id='" id "']/@tv").text)
-	return new
-}
-New_Include_From_Current_Word(){
-	sc:=CSC(),Word:=sc.GetWord(),file:=Current(2).file
-	if(!Word)
-		return m("Either select a word or place your caret within a word")
-	if(Context(1).Word="gui"){
-		Word:=InputBox(HWND(1),"Possible g-label detected","Confirm the new Function and File to be created",Word)
-		if(ErrorLevel||Word="")
-			return
-	}SplitPath,file,,Dir
-	FileName:=SelectFile(Dir "\" RegExReplace(Word,"_"," ") "." Current(3).Ext,"FileName for " Word,Current(3).Ext,,1)
-	if(ErrorLevel)
-		return
-	if(CEXML.Find(Current(1),"//@file",FileName))
-		return m("A file with this name is already included in this Project")
-	AddInclude(FileName,Word "(){`r`n`t`r`n}",{start:StrPut(Word "(","UTF-8")-1,end:StrPut(Word "(","UTF-8")-1})
 }
 NewLines(text){
 	for a,b in {"``n":"`n","``r":"`n","``t":"`t","\r":"`n","\t":"`t","\n":"`n"}
@@ -9161,24 +10381,6 @@ One_Backup(){
 Online_Help(){
 	Run,https://github.com/maestrith/AHK-Studio/wiki
 }
-Show_Folder_In_Explorer(){
-	sc:=CSC()
-	file:=Current(3).file
-	SplitPath,file,,dir
-	if(!dir){
-		file:=Current(2).file
-		SplitPath,file,,dir
-	}if(!dir){
-		for a,b in s.ctrl{
-			if(File:=CEXML.SSN("//*[@sc='" b.2357 "']/@file").text){
-				SplitPath,File,,Dir
-				Break
-			}
-		}
-	}Run,%dir%
-}Open_Folder(){
-	Show_Folder_In_Explorer()
-}
 Open(FileList="",Show="",Redraw:=1){
 	static root,top
 	for a,b in [19,14,3,11]{
@@ -9369,47 +10571,13 @@ Options(x:=0){
 	}if(x="Top_Find")
 		RefreshThemes()
 }
-ShowOSD(show){
-	static List:=new XML("OSD"),top,Win:="OSD",MenuXML
-	if(!v.Options.OSD)
-		return
-	if(!IsObject(MenuXML)){
-		if(!FileExist(A_ScriptDir "\Lib\Base Menu.xml"))
-			URLDownloadToFile,https://raw.githubusercontent.com/maestrith/AHK-Studio/master/lib/menus.xml,%A_ScriptDir%\Lib\Base Menu.xml
-		MenuXML:=new XML("menus",A_ScriptDir "\Lib\Base Menu.xml")
-	}if(!HWND(Win)){
-		rem:=List.SSN("//list"),rem.ParentNode.RemoveChild(rem)
-		Gui,Win:Destroy
-		Gui,Win:Default
-		Gui,Color,0x111111,0x111111
-		Gui,+hwndhwnd +Owner1 -DPIScale
-		Gui,Margin,0,0
-		HWND(Win,hwnd)
-		Gui,Font,s12 c0xff00ff,Consolas
-		Gui,Add,ListView,w500 h300 -Hdr,info|x
-		Gui,Show,x0 y0 w0 h0 Hide NA,OSD
-		WinGetPos,x,y,w,h,% HWND([1])
-		Gui,-Caption
-		Gui,Win:Show,% "x" (x+w-MainWin.Border)-(500) " y" y+h-(300+MainWin.Border) " NA AutoSize",OSD
-		top:=List.Add("list")
-	}show:=RegExReplace(show,"_"," ")
-	Gui,Win:Default
-	Gui,Win:ListView,SysListView321
-	if((ea:=XML.EA(Node:=List.SSN("//list").LastChild())).name=show)
-		Node.SetAttribute("count",ea.count+1)
-	else
-		Node:=List.Under(top,"item",{name:show,count:1})
-	LV_Delete()
-	all:=List.SN("//item")
-	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-		LV_Add("",ea.name " " Convert_Hotkey(MenuXML.SSN("//*[@clean='" Clean(ea.Name) "']/@hotkey").text),ea.count)
-	Loop,2
-		LV_ModifyCol(A_Index,"AutoHDR")
-	SetTimer,KillOSD,-2000
-	return
-	KillOSD:
-	HWND({rem:Win,na:1}),rem:=List.SSN("//list"),rem.ParentNode.RemoveAttribute(rem)
-	return
+ParseJson(jsonStr){
+	static SC
+	if(!IsObject(SC)){
+		Try
+			SC:=ComObjCreate("ScriptControl")
+	}SC.Language:="JScript",jsCode:="function arrangeForAhkTraversing(obj){if(obj instanceof Array){for(var i=0;i<obj.length;++i)obj[i]=arrangeForAhkTraversing(obj[i]);return ['array',obj];}else if(obj instanceof Object){var keys=[],values=[];for(var key in obj){keys.push(key);values.push(arrangeForAhkTraversing(obj[key]));}return ['object',[keys,values]];}else return [typeof obj,obj];}",SC.ExecuteStatement(jsCode ";obj=" jsonStr)
+	return AHK(SC.Eval("arrangeForAhkTraversing(obj)"))
 }
 Paste(){
 	ControlGetFocus,Focus,% MainWin.ID
@@ -9644,6 +10812,15 @@ ProcessDebugXML(){
 	v.ready:=1
 	GuiControl,98:+Redraw,SysTreeView321
 }
+ProcessText(text,process){
+	for c,d in process{
+		while,text:=RegExReplace(text,d.1,d.2,count){
+			if(!count)
+				break
+		}
+	}
+	return text
+}
 Project_Properties(){
 	static NewWin
 	if(!Settings.SSN("//ExeList")){
@@ -9736,22 +10913,6 @@ Project_Specific_AutoComplete(){
 	HWND({rem:"Project_Specific_AutoComplete"})
 	return
 }
-Add_Selected_To_Project_Specific_AutoComplete(){
-	text:=CSC().getseltext()
-	if(!text)
-		return m("Please select some text first")
-	if(!Node:=Settings.Find("//autocomplete/project/@file",Current(2).file))
-		Node:=Settings.Add("autocomplete/project",{file:Current(2).file},,1)
-	pos:=1
-	while(RegExMatch(text,"UO)\b(\w+)\b",found,pos)){
-		pos:=found.pos(1)+found.len(1)
-		if((!RegExMatch(Node.text,"\b\Q" found.1 "\E\b"))&&StrLen(found.1)>1)
-			Node.text:=Node.text " " found.1,list.=found.1 "`n"
-		if(pos=lastpos)
-			break
-		lastpos:=pos
-	}m("Added:",SubStr(list,1,300)(StrLen(list)>300?"...":""),"To " Current(2).file)
-}
 Publish(Return="",Branch:="",Version:=""){
 	static Init
 	sc:=CSC(),Text:=Update("get").1,Save(),MainFile:=Current(2).file,Publish:=Update({Get:MainFile}),includes:=SN(Current(1),"descendant::*/@include[not(@nocompile)]/.."),ea:=XML.EA(Keywords.GetXML((Language:=Current(3).Lang)).SSN("//AutoReplace"))
@@ -9826,14 +10987,6 @@ Publish(Return="",Branch:="",Version:=""){
 	Clipboard:=Publish ;v.Options.Full_Auto_Indentation?PublishIndent(Publish):Publish
 	TrayTip,AHK Studio,Code copied to your clipboard
 	return
-}
-ES(Script,Wait:=true){
-	SplitPath,Script,,Dir
-	Shell:=ComObjCreate("WScript.Shell"),Shell.CurrentDirectory:=Trim(Dir,Chr(34)),Exec:=Shell.Exec(A_AhkPath " /ilib * " Chr(34) RegExReplace(script,"\x22") Chr(34)),Exec.StdIn.Close()
-	if(Wait){
-		Return:=Exec.StdOut.ReadAll(),Shell.CurrentDirectory:=A_ScriptDir
-		return Return
-	}Shell.CurrentDirectory:=A_ScriptDir
 }
 PublishIndent(Code,Indent:="`t",Newline:="`r`n"){
 	indentregex:=Keywords.IndentRegex[Current(3).ext],Lock:=[],Block:=[],ParentIndent:=Braces:=0,ParentIndentObj:=[]
@@ -10276,6 +11429,9 @@ RelativePath(main,new){
 			return SubStr(rel,3)
 		return rel
 	}
+}
+ReloadStudio(){
+	Exit(1)
 }
 Remove_Current_Selection(){
 	sc:=CSC(),main:=sc.2575,sc.2671(main),sc.2606,sc.2169
@@ -11164,6 +12320,36 @@ SearchFor(b,Pos1){
 		LastPos1:=Pos1
 	}return {Text:SubStr(Text,Start,SavedPos-Start),SavedPos:SavedPos,Pos1:Pos1}
 }
+SearchWin(node:=""){
+	static
+	Gui,1:Default
+	/*
+		nw:=new GUIKeep("Search")
+	*/
+	;hwnd:=new InternalWindow("Search")
+	Gui,Add,Edit,w200 hwndhwnd
+	Gui,Add,TreeView,w200 hwndtv
+	ControlGetPos,,,,h,,ahk_id%hwnd%
+	MainWin.FindEditHeight:=h
+	for a,b in {FindEdit:hwnd,FindTV:tv}
+		MainWin[a]:=b+0
+	/*
+		nw.Add("Edit,gFindCheck w40,,w","TreeView,w40 h40 gFindTV,,wh","Checkbox,,Test,y") ;,"Button,xm gFindTV,Placeholder,y") ;,"Button,x+M,Placeholder,y")
+		for a,b in ["FindCheck","FindTV"]
+			MainWin[b]:=nw.XML.SSN("//*[@label='" b "']/@hwnd").text+0
+	*/
+	Gui,1:Default
+	return hwnd+0
+	FindTV:
+	return
+	SearchEscape:
+	;m("HERE!!!!")
+	/*
+		MainWin.NewCtrlPos:={ctrl:nw.hwnd+0,win:HWND(1)}
+		MainWin.Delete()
+	*/
+	return
+}
 Select_Current_Word(){
 	sc:=CSC(),sc.2160(sc.2266(sc.2008),sc.2267(sc.2008))
 }
@@ -11197,6 +12383,13 @@ SelectAll(){
 			sc.2573(a+b,a)
 	}ShowOSD("Select All Ctrl+A")
 	return
+}
+SelectDebugLine(line){
+	sc:=CSC()
+	if(v.Options.Select_Current_Debug_Line)
+		sc.2160(sc.2167(line),sc.2136(line))
+	else
+		first:=sc.2152,lines:=sc.2370,half:=Floor(lines/2),NewLine:=((((line)-half)>0)?(line)-half:0),sc.2613(NewLine)
 }
 SelectFile(FileName:="",Title:="New File",Ext:="",Options:="S16",Force:=0){
 	MainFile:=Current(2).file,Ext:=Ext?Ext:Current(3).Ext,Top:=Settings.SSN("//DefaultFolder"),Dir:=SplitPath(MainFile).Dir,BackupFileName:=SplitPath(FileName).FileName
@@ -11378,648 +12571,15 @@ SetTimers(Timers*){
 		SetTimer,% Obj.1,% Obj.2
 	}
 }
-Class SettingsClass{
-	static pos:=[],Controls:=[],Sizes:=[],Node:=[],Types:=[],scc:=[],Current:=[],DefaultStyle:={"default":1,"inlinecomment":1,"numbers":1,"punctuation":1,"multilinecomment":1,"completequote":1,"incompletequote":1,"backtick":1,"linenumbers":1,"indentguide":1,"hex":1,"hexerror":1}
-	__New(Tab:=""){
-		for a,b in {HotkeyXML:new XML("hotkeys"),TempXML:new XML("temp"),SavedThemes:new XML("SavedThemes",A_ScriptDir "\Themes\SavedThemes.xml")}
-			SettingsClass[a]:=b
-		SettingsClass.Hotkeys:=[["Move Selected Item Up","^Up","MSIU"],["Move Selected Item Down","^Down","MSID"],["Move Checked Selected Menu","!M","MCTSM"],["Move Checked Items Up","!Up","MCIU"],["Move Checked Items Down","!Down","MCID"],["Insert Menu","!I","IM"],["Change Hotkey","Enter","CH"],["Insert Separator","!S","IS"],["Remove/Hide Menu Item","Delete","Delete"],["Clear Checks","!C","CC"],["Removed Checked Icons","^!I","RCI"],["Check All Child Menu Items","^A","CACMI"],["Random Icons","^!R","Random"]],Parent:=HWND(1),SettingsClass.SavedThemes:=new XML("themes",A_ScriptDir "\Themes\SavedThemes.xml")
-		if(!FileExist(A_ScriptDir "\Themes"))
-			FileCreateDir,%A_ScriptDir%\Themes
-		if(!Settings.SSN("//autoadd"))
-			Settings.Add("//autoadd")
-		DetectHiddenWindows,On
-		Gui,Settings:Destroy
-		Gui,Settings:+Resize -DPIScale +LabelSettingsClass. hwndhwnd +ToolWindow +Owner%Parent% +MinSize700x500
-		Gui,Settings:Color,0,0
-		Gui,Settings:Font,c0xFFFFFF s10,Consolas
-		Gui,Settings:Margin,0,0
-		Gui,Settings:Add,Button,Hidden,Testing
-		xx:=this.tvxml:=new XML("treeview"),this.Tabs:=[],this.Controls:=[],this.pos:=[],SettingsClass.ID:=this.ID:="ahk_id" hwnd,this.hwnd:=hwnd,SettingsClass.hwnd:=hwnd
-		ControlGetPos,,,,h,Button1,% this.ID
-		Hotkey,IfWinActive,ahk_id%hwnd%
-		Hotkey,Escape,SettingsClose,On
-		SettingsClass.Sizes.Button:=h,SettingsClass.Tabs:=[]
-		for a,b in this.WindowList:=["Auto Insert","Edit Replacements","Manage File Types","Menus","Options","Theme"]
-			tabs.=A_Index "|",SettingsClass.Tabs[RegExReplace(b," ","_")]:=A_Index
-		Gui,Settings:Add,StatusBar,hwndsb,Testing
-		ControlGetPos,,,,sbh,,ahk_id%sb%
-		this.Add("TreeView,xm ym w300 h800 AltSubmit gNotifications vTesting,,MainTV,h-" sbh),this.Add("Tab,x0 y0 w0 h0 Buttons," Trim(tabs,"|")),this.SetTab(SettingsClass.Tabs.Options),this.Add("ListView,x300 ym Checked AltSubmit gNotifications vOptions,Option,Options,w-300|h-" sbh)
-		Gui,Settings:Default
-		for a,b in v.Options
-			LV_Add((Settings.SSN("//options/@" a).text?"Check":""),RegExReplace(a,"_"," "))
-		this.SetTab(SettingsClass.Tabs.Auto_Insert),this.Add("ListView,x300 ym vAI gNotifications AltSubmit,Type|Insert,AutoInsert,w-300|h-150","Text,x302,Typed Key:,TK,y-" sbh+125,"Edit,x300,,trigger,y-" sbh+105,"Text,x302,Inserted Text:,IT,y-" sbh+80,"Edit,x300,,Add,y-" sbh+60,"Button,x300 vAddButton gNotifications,&Add,AddButton,y-" sbh+30,"Button,x+M vRemoveButton gNotifications,&Remove,RemoveButton,y-" sbh+30),this.SetTab(SettingsClass.Tabs.Edit_Replacements),this.Add("ListView,x300 h240 ym vER gNotifications AltSubmit,Input|Replacement,ERLV,w-300","Text,x302 yp+240,Input:,ERI","Edit,x300 yp+15 vERInsert gNotifications,,ERInsert","Text,x302 yp+23,Replacement:,ERR","Edit,x300 yp+15 Multi +WantReturn vERReplace gNotifications,,ERReplace,w-300|h-350","Button,x300 vERAdd gNotifications,&Add,ERAdd,y-" sbh+30,"Button,x+M vERRemove gNotifications,&Remove,ERRemove,y-" sbh+30),this.SetTab(SettingsClass.Tabs.Manage_File_Types),this.Add("ListView,x300 ym,Extension|Language,FileType,w-300|h-100","Text,,FileType:,FTT,y-" sbh+75,"Edit,w200,,FTEdit,y-" sbh+60,"Button,vFTAdd gNotifications,&Add,FTAdd,y-" sbh+35,"Button,x+M vFTRemove gNotifications,&Remove,FTRemoe,y-" sbh+35),this.SetTab(SettingsClass.Tabs.Menus),this.Add("ComboBox,x300 ym gNotifications vComboBox,,ComboBox,w-600","TreeView,x300 y+M Checked vMenuTV gNotifications AltSubmit,,MenuTV,w-600|h-323","ListView,h277 Icon vIcon gSelectIcon AltSubmit,Icon,Icon,w-300|y-" sbh+277,"Button,w110 gLoadDefault,&Default Icons,FButton,x-200|y-328","Button,w90 gLoadFile,&Load Icons,SButton,x-90|y-328","Listview,ym w300,Description|Hotkey,Hotkeys,x-300|h-328"),TV_Add("Please Wait..."),this.ILAdd("init"),ib:=new Icon_Browser("",SettingsClass.Controls.Icon,"Settings",,,"Notifications"),SettingsClass.IconID:="ahk_id" SettingsClass.Controls.Icon,this.SetTab(SettingsClass.Tabs.Theme)
-		Gui,Settings:Add,Custom,x300 ym classScintilla hwndsc gNotifications
-		this.SC({register:sc}),obj:=SettingsClass,obj.Controls.Scintilla:=sc,obj.pos["Scintilla"]:={h:-sbh,w:-300}
-		if(!node:=Settings.SSN("//gui/position[@window='Settings']"))
-			node:=Settings.Add("gui/position"),node.SetAttribute("window","Settings")
-		SettingsClass.Node:=node
-		for a,b in [[2052,32,0],[2050],[2051,5,0xFFFFFF],[2051,11,0x00AA00],[2171,1]]
-			this[b.1](b.2,b.3)
-		for a,b in this.WindowList
-			xx.Add("item",{name:b},,1)
-		parent:=xx.Under((theme:=xx.SSN("//*[@name='Theme']")),"top",{name:"Color"}),this.Default()
-		for a,b in [{"Brace Match":"Indicator Reset"},{"Duplicate Indicator":"Indicator Style,Indicator Color,Indicator Transparency,Indicator Border Transparency"},{"Caret":"Caret,Caret Line Background,Debug Caret Color,Multiple Indicator Color,Width"},{"Code Explorer":"Background,Default Background,Text Style,Default Style"},{Default:"Background Color,Font Style,Reset To Default"},{"":"Indent Guide"},{"Main Selection":"Foreground,Remove Forground"},{"Multiple Selection":"Foreground,Remove Forground"},{"Project Explorer":"Background,Default Background,Text Style,Default Style"},{"Quick Find":"Bottom Background,Bottom Forground,Quick Find Clear,Quick Find Edit Background,Top Background,Top Forground"},{"":"StatusBar Text Style"}]{
-			for c,d in b{
-				node:=c?xx.Under(parent,"parent",{name:c}):parent
-				for e,f in StrSplit(d,",")
-					xx.Under(node,"theme",{name:f})
-		}}parent:=xx.Under(theme,"top",{name:"Theme Options"})
-		for a,b in StrSplit("Edit Theme Name,Edit Author,Export Theme,Import Theme,Save Theme",",")
-			xx.Under(parent,"theme",{name:b})
-		parent:=xx.Under(theme,"top",{name:"Download Themes"}),parent:=xx.Under(theme,"top",{name:"Saved Themes"})
-		Gui,Settings:Default
-		all:=xx.SN("//treeview/descendant::*")
-		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-			aa.SetAttribute("tv",TV_Add(ea.name,SSN(aa.ParentNode,"@tv").text))
-		TV_Modify(xx.SSN("//top/@tv").text,"Expand Vis"),this.ThemeText(),SettingsClass.keep:=this,this.Color(),this.UpdateSavedThemes(),this.PopulateER(),this.PopulateAI(),this.PopulateMFT(),this.Default("Hotkeys")
-		for a,b in SettingsClass.Hotkeys
-			LV_Add("",b.1,Convert_Hotkey(b.2))
-		this.2409(0,0),LV_ModifyCol(),this.Show(),this.2188(1),TV_Modify(this.tvxml.SSN("//*[@name='" Tab "']/@tv").text,"Select Vis Focus"),ib.Populate()
-		Hotkey,IfWinActive,% this.ID
-		for a,b in SettingsClass.Hotkeys{
-			Hotkey,% b.2,SettingsHotkeys,On
-			SettingsClass.HotkeyXML.Add("Hotkey",{d:b.1,k:b.2,a:b.3},,1)
-		}Hotkey,IfWinActive,% "ahk_id" this.hwnd
-		Hotkey,F1,SettingsTest,On
-		SettingsClass.Current:=this,this.SetHighlight()
-		return this
-		SettingsTest:
-		this:=SettingsClass.Current,this.ThemeText(),SettingsClass.keep:=this,this.Color(),this.UpdateSavedThemes(),this.PopulateER(),this.PopulateAI(),this.PopulateMFT(),this.Default("Hotkeys")
-		return
-		SettingsClose:
-		Gui,Settings:Destroy
-		SettingsClass.SavedThemes.Save(1),Allowed()
-		return
-		Settings:
-		new SettingsClass("Auto Insert")
-		return
-	}__Call(info*){
-		if(info.1+0){
-			(info.2?((a:=info.2+0?"int":"str")(b:=info.2)):(a:="int",b:=0)),scc:=SettingsClass.scc,(info.3?((c:=info.3+0?"int":"str")(d:=info.3)):(c:="int",d:=0))
-			if(c="str"){
-				VarSetCapacity(var,(len:=StrPut(info.3,"UTF-8"))),StrPut(info.3,&var,len,"UTF-8"),d:=&var
-				c:="int"
-			}resp:=DllCall(scc.fn,"Ptr",scc.ptr,"UInt",info.1,a,b,c,d,"int")
-			if(info.4)
-				m(scc.fn,scc.ptr,a,b,c,d,info.1,resp)
-			return resp
-		}
-	}Add(x*){
-		static
-		for a,b in x{
-			i:=StrSplit(b,",")
-			Gui,Settings:Add,% i.1,% i.2 " hwndhwnd",% i.3
-			if(i.4)
-				SettingsClass.Controls[i.4]:=hwnd
-			if(i.5){
-				for c,d in StrSplit(i.5,"|")
-					RegExMatch(d,"(.)(.*)",found),SettingsClass.pos[i.4,found1]:=found2
-			}SettingsClass.Types[hwnd]:=i.1,SettingsClass.Types[i.4]:=i.1
-	}}AddText(text*){
-		static var
-		Obj:=[]
-		for a,b in text{
-			VarSetCapacity(var,(len:=StrPut(b.1,"UTF-8"))),StrPut(b.1,&var,len,"UTF-8"),this.2003((start:=this.2006()),&var),this.ThemeTextText.=b.1,this.2032(start),this.2033(len,b.2),Obj.Push({start:Start,len:Len-1})
-			if(b.2=255)
-				SettingsClass.OpenBrace:=this.2006()-2
-		}return Obj
-	}Close(){
-		SettingsClass.keep.Escape()
-	}Color(){
-		static list:={Font:2056,Size:2055,Color:2051,Background:2052,Bold:2053,Italic:2054,Underline:2059}
-		GuiControl,Settings:-Redraw,Scintilla1
-		this.2409(32,1),this.2050()
-		if(!Settings.SSN("//theme/font[@style='96']"))
-			this.2051(96,0xff00ff)
-		if(!Settings.SSN("//theme/font[@style='100']"))
-			this.2051(100,0x0000ff)
-		/*
-			2523() 2558() ;here
-		*/
-		for a,b in [[2080,7,6],[2523,6,Settings.Get("//DuplicateIndicator/@trans",50)],[2558,6,Settings.Get("//DuplicateIndicator/@bordertrans",50)],[2242,1,20],[2080,6,Settings.Get("//DuplicateIndicator/@style",14)],[2082,6,Settings.Get("//DuplicateIndicator/@color",0xC08080)],[2082,8,0xff00ff],[2080,8,1],[2080,6,14],[2080,2,8],[2082,2,0xff00ff],[2082,6,0xC08080],[2080,3,14],[2680,3,6],[2516,1]]
-			this[b.1](b.2,b.3)
-		text:=this.ThemeTextText,pos:=InStr(text,"(")
-		for a,b in {70:2068,71:2601}
-			this.2052(a,Settings.SSN("//theme/font[@code='" b "']/@color").text)
-		for a,b in {20:Settings.Get("//theme/font[@style='30']/@background",0x0000ff),21:Settings.Get("//theme/font[@style='31']/@background",0x00ff00)}
-			this.2040(a,26),this.2042(a,b)
-		if(node:=Settings.SSN("//theme/fold")){
-			ea:=XML.EA(node)
-			Loop,7
-				this.2041(24+A_Index,ea.color!=""?ea.color:"0"),this.2042(24+A_Index,ea.background!=""?ea.Background:"0xaaaaaa")
-		}ea:=Settings.EA("//theme/default"),this.2051(101,ea.color),this.2052(101,ea.background)
-		WinGet,cl,ControlList,% this.ID
-		for a,b in StrSplit(cl,"`n"){
-			Gui,Settings:Font,% "c" RGB(ea.color),% ea.font
-			GuiControl,% "Settings:+background" RGB(ea.Background) " c" RGB(ea.color),%b%
-			GuiControl,Settings:Font,%b%
-		}
-		/*
-			Make an RCM that you can edit the font, color, etc.
-		*/
-		this.2371(0),this.2188(1),Language:=GetLanguage(),Settings.Language:=Language
-		Gui,Settings:Color,% RGB(ea.Background),% RGB(ea.background)
-		Color(this,Language,A_ThisFunc " Settings"),ea:=Settings.EA("//theme/bracematch"),ea.Style:=255
-		if(ea.code=2082)
-			this.2082(7,ea.color),this.2498(1,7),this.2351(SettingsClass.OpenBrace,SettingsClass.OpenBrace+1)
-		else{
-			for a,b in ea{
-				if((st:=list[a]))
-					this[st](ea.Style,b)
-				if(ea.code&&ea.value!="")
-					this[ea.code](ea.value)
-				else if(ea.code&&ea.bool!=1)
-					this[ea.code](ea.color,0)
-				else if(ea.code&&ea.bool)
-					this[ea.code](ea.bool,ea.color)
-		}}this.2246(0,1),this.2409(0,0)
-		GuiControl,Settings:+Redraw,Scintilla1
-		return RefreshThemes(1),MarginWidth(this)
-	}ContextMenu(a*){
-		for a,b in Keywords.Languages
-			list.=a "`n"
-		this:=SettingsClass.Current,this.ThemeText(),SettingsClass.keep:=this,this.Color(),this.UpdateSavedThemes(),this.PopulateER(),this.PopulateAI(),this.PopulateMFT(),this.Default("Hotkeys"),m("Language List: ",list,"Please ask maestrith to finish this...he got distracted","It's called Context Menu and it is in the Settings window")
-	}Default(name:="MainTV"){
-		Gui,Settings:Default
-		Gui,% "Settings:" SettingsClass.Types[name],% SettingsClass.Controls[name]
-	}EH(){
-		static
-		SettingsClass.Default("MenuTV"),node:=menus.SSN("//*[@tv='" TV_GetSelection() "']")
-		Gui,EditHotkey:Destroy
-		Gui,EditHotkey:Default
-		Gui,Add,Text,,% "Editing hotkey for: " RegExReplace(SSN(node,"@clean").text,"_"," ")
-		Gui,Add,Text,,Hotkey
-		Gui,Add,Hotkey,w300 gDisplayDup vHotkey Limit1,% (hk:=SSN(node,"@hotkey").text)
-		Gui,Add,Text,,Non-Standard Hotkey
-		Gui,Submit,Nohide
-		Gui,Add,Edit,w300 vedit gSetNonStandard,% !hotkey?Convert_Hotkey(hk):""
-		Gui,Add,ListView,w300 h300,Duplicate Hotkey
-		Gui,Add,Button,gSetHotkey Default,Set Hotkey
-		Gui,Show,,Edit Hotkey
-		return
-		DisplayDup:
-		Gui,EditHotkey:Submit,Nohide
-		StringUpper,hotkey,hotkey
-		Gui,EditHotkey:Default
-		LV_Delete()
-		if(!hotkey)
-			return
-		all:=menus.SN("//*[@hotkey='" hotkey "']")
-		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-			LV_Add("",ea.clean)
-		return
-		SetNonStandard:
-		Gui,EditHotkey:Submit,Nohide
-		GuiControl,EditHotkey:,msctls_hotkey321,%edit%
-		return
-		EditHotkeyGuiEscape:
-		KeyWait,Escape,U
-		Gui,EditHotkey:Destroy
-		return
-		SetHotkey:
-		Gui,EditHotkey:Submit,Nohide
-		Gui,EditHotkey:Destroy
-		SettingsClass.Default("MenuTV"),node:=menus.SSN("//*[@tv='" TV_GetSelection() "']")
-		if(!hotkey&&!edit)
-			return node.RemoveAttribute("hotkey"),TV_Modify(SSN(node,"@tv").text,,SettingsClass.TVName(node))
-		if(edit){
-			Try
-				Hotkey,%edit%,deadend,On
-			Catch m
-				return m(m.message)
-			hotkey:=edit
-		}StringUpper,hotkey,hotkey
-		all:=menus.SN("//*[@hotkey='" hotkey "']")
-		if(all.length){
-			if(m("Hotkey belongs to: " SSN(all.item[0],"@clean").text,"Bind to: " SSN(node,"@clean").text "?","btn:ync")!="Yes")
-				return
-		}while(aa:=all.item[A_Index-1],ea:=xml.EA(aa))
-			aa.RemoveAttribute("hotkey"),TV_Modify(ea.tv,,SettingsClass.TVName(aa))
-		node.SetAttribute("hotkey",hotkey)
-		TV_Modify(SSN(node,"@tv").text,,SettingsClass.TVName(node))
-		return
-	}Escape(){
-		Save(),Settings.Save()
-		this:=SettingsClass.keep,this.Default("MenuTV"),menus.SSN("//*[@tv='" TV_GetSelection() "']").SetAttribute("last",1)
-		if(SettingsClass.PopulatedMenu&&!InStr(A_ScriptName,"settings"))
-			MenuWipe(),Menu(),Hotkeys()
-		WinGetPos,x,y,,,% SettingsClass.keep.ID
-		all:=menus.SN("//*[@tv]")
-		while(aa:=all.item[A_Index-1])
-			aa.RemoveAttribute("tv")
-		for a,b in {x:x,y:y,w:SettingsClass.Width,h:SettingsClass.Height}
-			pos.=a b " "
-		SettingsClass.Node.text:=Trim(pos),SettingsClass.SavedThemes.Save(1),SettingsClass.PopulatedMenu:=0
-		if(InStr(A_ScriptName,"settings"))
-			ExitApp
-		else
-			Gui,Settings:Destroy
-		SettingsClass.SavedThemes.Save(1),Allowed()
-	}GetTab(){
-		ControlGet,tab,Tab,,SysTabControl321,% SettingsClass.ID
-		return tab
-	}ILAdd(file:="Shell32.dll",icon:=0){
-		static ILOBJ:=[],init:=0,IL:=IL_Create(1,1)
-		if(file="init")
-			return this.Default("MenuTV"),ic:=IL_Add(IL,"Shell32.dll",50),ILOBJ["",""]:=0,init:=1,TV_SetImageList(IL)
-		if((ii:=ILOBJ[file,icon])="")
-			ii:=ILOBJ[file,icon]:=IL_Add(IL,file,icon)
-		return ii
-	}NN(){
-		this.Default()
-		return this.tvxml.SSN("//*[@tv='" TV_GetSelection() "']")
-	}PopulateAI(){
-		this.Default("AutoInsert"),all:=Settings.SN("//autoadd/key"),LV_Delete()
-		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-			LV_Add("",ea.trigger,ea.add)
-		Loop,2
-			LV_ModifyCol(A_Index,"AutoHDR")
-	}PopulateER(){
-		this.Default("ERLV"),all:=Settings.SN("//replacements/*"),LV_Delete()
-		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-			LV_Add("",ea.replace,aa.text)
-		Loop,2
-			LV_ModifyCol(A_Index,"AutoHDR")
-	}PopulateMenu(){
-		GuiControl,Settings:-Redraw,% SettingsClass.Controls.MenuTV
-		Sleep,10
-		this.Default("MenuTV"),SettingsClass.PopulatedMenu:=1,SettingsClass.MenuSearch:=[],all:=Menus.SN("//*/descendant::*"),TV_Delete()
-		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
-			if(name:=RegExReplace(ea.name,"&"))
-				aa.SetAttribute("tv",(tv:=TV_Add(SettingsClass.TVName(aa),SSN(aa.ParentNode,"@tv").text,SettingsClass.TVOptions(aa)))),SettingsClass.MenuSearch.text.=name "|",SettingsClass.MenuSearch[name]:=tv
-			if(ea.last)
-				last:=SSN(aa,"@tv").text,aa.RemoveAttribute("last")
-		}text:=SettingsClass.MenuSearch.text
-		Sort,text,D|
-		SettingsClass.MenuSearch.text:=text
-		GuiControl,Settings:+Redraw,% SettingsClass.Controls.MenuTV
-		GuiControl,Settings:,% SettingsClass.Controls.ComboBox,% SettingsClass.MenuSearch.text
-		if(last)
-			TV_Modify(last,"Select Vis Focus")
-	}PopulateMFT(){
-		this.Default("FileType"),all:=Settings.SN("//Extensions/*"),LV_Delete()
-		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-			LV_Add("",aa.text,ea.Language)
-		Loop,2
-			LV_ModifyCol(A_Index,"AutoHDR")
-	}SC(info*){
-		sc:=SettingsClass.scc
-		if(hwnd:=info.1.register){
-			for a,b in {fn:2184,ptr:2185}
-				sc[a]:=DllCall("SendMessageA",UInt,hwnd,int,b,int,0,int,0)
-			sc.hwnd:=hwnd
-	}}SetHighlight(){
-		this:=SettingsClass.Current,this.2052(253,Settings.SSN("//theme/selback/@color").text),this.2052(254,Settings.SSN("//theme/additionalselback/@color").text),this.2160(0,0)
-	}SetTab(tab){
-		Gui,Settings:Tab,%tab%
-	}SettingsHotkeys(){
-		static EHHotkey
-		SettingsHotkeys:
-		tab:=SettingsClass.GetTab()
-		if(SettingsClass.Tabs.Edit_Replacements=tab){
-			Send,{%A_ThisHotkey%}
-		}else if(SettingsClass.Tabs.Menus=tab){
-			StringUpper,key,A_ThisHotkey
-			xx:=SettingsClass.HotkeyXML,action:=xx.SSN("//*[@k='" key "']/@a").text,SettingsClass.Default("MenuTV"),ea:=xml.EA(node:=menus.SSN("//*[@tv='" (tv:=TV_GetSelection()) "']"))
-			if(action~="MSIU|MSID"){
-				SettingsClass.Default("MenuTV"),nodes:=[],nn:=node
-				if(action="MSIU"){
-					Loop,3
-						nodes.Push(nn),nn:=nn.previousSibling
-					if(nodes.3.xml||nodes.2.xml)
-						new:=TV_Add(SettingsClass.TVName(node),SSN(node.ParentNode,"@tv").text,(nodes.3.xml?SSN(nodes.3,"@tv").text:"First")),TV_Modify(new,"Select Vis Focus Icon" SettingsClass.ILAdd(ea.filename,ea.icon) (ea.check?" Check":"")),TV_Delete(SSN(node,"@tv").text),node.SetAttribute("tv",new),node.ParentNode.InsertBefore(node,nodes.2)
-				}else if(action="MSID"){
-					Loop,3
-						nodes.Push(nn),nn:=nn.nextSibling
-					if(nodes.3.xml||nodes.2.xml){
-						new:=TV_Add(SettingsClass.TVName(node),SSN(node.ParentNode,"@tv").text,(nodes.2.xml?SSN(nodes.2,"@tv").text:"")),TV_Modify(new,"Select Vis Focus Icon" SettingsClass.ILAdd(ea.filename,ea.icon) (ea.check?" Check":"")),TV_Delete(SSN(node,"@tv").text),node.SetAttribute("tv",new)
-						if(nodes.3.xml)
-							node.ParentNode.InsertBefore(node,nodes.3)
-						else
-							node.ParentNode.AppendChild(node)
-					}
-				}return
-			}else if(action~="MCIU|MCID"){
-				list:=[],SettingsClass.Default("MenuTV"),nodes:=[],final:=[]
-				GuiControl,Settings:-Redraw,% SettingsClass.Controls.MenuTV
-				if(action="MCIU"){
-					node:=menus.SSN("//*[@tv='" TV_GetSelection() "']"),node.SetAttribute("last",1),parent:=node.ParentNode,all:=SN(parent,"descendant::*")
-					while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
-						if(ea.check){
-							if(SN(aa,"preceding-sibling::*[@check]").length+1!=A_Index)
-								aa.ParentNode.InsertBefore(aa,aa.previousSibling)
-						}TV_Delete(ea.tv)
-				}}else{
-					node:=menus.SSN("//*[@tv='" TV_GetSelection() "']"),node.SetAttribute("last",1),parent:=node.ParentNode,all:=SN(parent,"descendant::*")
-					while(aa:=all.item[all.length-A_Index],ea:=xml.EA(aa)){
-						if(SN(aa,"following-sibling::*[@check]").length+1!=A_Index&&ea.check){
-							if(next:=aa.nextSibling.nextSibling)
-								aa.ParentNode.InsertBefore(aa,next)
-							else if(aa.nextSibling)
-								aa.ParentNode.AppendChild(aa)
-						}TV_Delete(ea.tv)
-				}}all:=SN(parent,"descendant::*")
-				while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-					aa.SetAttribute("tv",TV_Add(SettingsClass.TVName(aa),SSN(aa.ParentNode,"@tv").text,SettingsClass.TVOptions(aa)))
-				if(node:=menus.SSN("//*[@last]"))
-					TV_Modify(SSN(node,"@tv").text,"Select Vis Focus")
-				all:=menus.SN("//*[@last]")
-				while(aa:=all.item[A_Index-1])
-					aa.RemoveAttribute("last")
-				GuiControl,Settings:+Redraw,% SettingsClass.Controls.MenuTV
-			}else if(action="IM"){
-				NewMenu:=InputBox(SettingsClass.hwnd,"New Menu","Enter the name of the new menu")
-				if(menus.SSN("//*[@name='" NewMenu "']"))
-					return m("Menu item already exists")
-				tv:=TV_Add(NewMenu,SSN(node.ParentNode,"@tv").text,SSN(node,"@tv").text),new:=menus.Add("menu",{clean:RegExReplace(RegExReplace(NewMenu,"\s","_"),"&"),name:NewMenu,tv:tv,user:1},,1),(above:=node.nextSibling)?node.ParentNode.InsertBefore(new,above):node.ParentNode.AppendChild(new)
-			}else if(action="MCTSM"){
-				all:=menus.SN("//*[@check]")
-				if(!all.length)
-					return m("Please check the menu items you wish to move")
-				if(!node.HasChildNodes()&&!SSN(node,"@user"))
-					return m("Please highlight a Sub-Menu item",node.HasChildNodes())
-				while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-					TV_Delete(ea.tv),aa.SetAttribute("tv",TV_Add(SettingsClass.TVName(aa),SSN(node,"@tv").text,SettingsClass.TVOptions(aa))),node.AppendChild(aa)
-				GuiControl,Settings:+Redraw,% SettingsClass.Controls.MenuTV
-			}else if(action="CH"){
-				if(node.NodeName="separator")
-					return m("Separators can not have hotkeys")
-				if(node.HasChildNodes())
-					return m("Top level menu items can not have hotkeys")
-				SettingsClass.EH()
-			}else if(action="IS"){
-				tv:=TV_GetPrev(ea.tv)?TV_GetPrev(ea.tv):"First",new:=menus.Add("separator",{clean:"<Separator>",tv:(tv:=TV_Add("<Separator>",SSN(node.ParentNode,"@tv").text,tv))},,1),node.ParentNode.InsertBefore(new,node)
-			}else if(action="Delete"){
-				all:=SN(node.ParentNode,"*[@check]")
-				if(all.length){
-					while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
-						if(aa.NodeName!="separator")
-							(ea.Hide?aa.RemoveAttribute("hide"):aa.SetAttribute("hide",1)),TV_Modify(ea.tv,"",SettingsClass.TVName(aa))
-						else
-							aa.ParentNode.RemoveChild(aa),TV_Delete(ea.tv)
-				}}else{
-					if((ea.user&&SSN(node,"menu")))
-						return m("This menu needs to be empty before you can delete it")
-					if(ea.user)
-						TV_Delete(ea.tv),node.ParentNode.RemoveChild(node)
-					(node.NodeName="separator")?(node.ParentNode.RemoveChild(node),TV_Delete(ea.tv)):(ea.Hide?node.RemoveAttribute("hide"):node.SetAttribute("hide",1)),TV_Modify(ea.tv,"",SettingsClass.TVName(node))
-			}}else if(action="CC"){
-				all:=menus.SN("//*[@check]")
-				while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-					TV_Modify(ea.tv,"-Check"),aa.RemoveAttribute("check")
-			}else if(action="Random"){
-				all:=menus.SN("//menu[not(@filename)]")
-				while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
-					while(!Random){
-						Random,Random,1,326
-						if(A_Index=20)
-							Random,Random,1,49
-						if(Random>=50||Random<=53)
-							Continue
-					}
-					for a,b in {filename:"Shell32.dll",icon:Random}
-						aa.SetAttribute(a,b)
-					TV_Modify(ea.tv,SettingsClass.TVOptions(aa)),Random:=""
-				}
-			}else if(action="RCI"){
-				all:=menus.SN("//*[@check]")
-				while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
-					for a,b in ["filename","icon"]
-						aa.RemoveAttribute(b)
-					TV_Modify(ea.tv,"Icon" 0)
-			}}else if(action="CACMI"){
-				all:=SN(node,"descendant-or-self::*")
-				while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-					aa.SetAttribute("check",1),TV_Modify(ea.tv,"Check")
-			}else
-				m("Item Coming Soon: " action)
-		}
-		return
-	}Show(){
-		Position:=SettingsClass.Node.text,Mon:=Monitors()
-		for a,b in ["x","y","w","h"]
-			RegExMatch(position,"Oi)" b "(-?\d*)\b",found),win[b]:=found.1
-		if(Win.x<Mon.Left.MinIndex()||Win.y<Mon.Top.MinIndex())
-			Position:="xCenter yCenter"
-		Gui,Settings:Show,% (Position?Position:"w" A_ScreenWidth-200 " h" A_ScreenHeight-200),Settings
-	}Size(a,w,h){
-		for a,b in SettingsClass.pos{
-			hwnd:=SettingsClass.Controls[a],pos:=""
-			for c,d in b
-				pos.=c (c="w"?w+d:c="h"?h+d:c="x"?w+d:h+d) " "
-			GuiControl,% "Settings:" (SettingsClass.Types[hwnd]~="ListView|Treeview"?"Move":"MoveDraw"),%hwnd%,%pos%
-			SettingsClass.Width:=w,SettingsClass.Height:=h
-		}SendMessage,0x1000+22,0,0,,% SettingsClass.IconID
-	}SetColor(node,code:="",codevalue:="",attribute:="",value:=""){
-		return m("This color selecting method has changed.  Please let maestrith know what color you were trying to change so he can fix it.")
-	}SwitchTab(tv){
-		if((node:=this.tvxml.SSN("//*[@tv='" tv "']")).NodeName="item"){
-			GuiControl,Settings:Choose,SysTabControl321,% SN(node,"preceding-sibling::*").length+1
-			if(SSN(node,"@name").text="Menus"&&!SettingsClass.PopulatedMenu)
-				this.PopulateMenu()
-		}else if(node1:=SSN(node,"ancestor::item[@name='Theme']")){
-			GuiControl,Settings:Choose,SysTabControl321,% SN(node1,"preceding-sibling::*").length+1
-			if(A_GuiEvent="Normal")
-				this.ThemeSettings(node)
-	}}ThemeSettings(node){
-		static info:={Color:{Background:32}}
-		Alt:=GetKeyState("Alt","P"),Ctrl:=GetKeyState("Ctrl","P")
-		if(node.NodeName="parent")
-			return
-		parent:=SSN(node.ParentNode,"@name").text,item:=SSN(node,"@name").text
-		if(Parent="Caret"){
-			static CaretAtt:={Caret:"color","Caret Line Background":"lineback","Multiple Indicator Color":"multi","Debug Caret Color":"debug"}
-			Node:=Settings.SSN("//caret")
-			if(Attribute:=CaretAtt[Item]){
-				Dlg_Color(Node,Settings.SSN("//caret"),SettingsClass.hwnd,Attribute)
-			}else if(Item="Width"){
-				Value:=InputBox(SettingsClass.hwnd,"Caret Width","Enter the new caret width (either 1, 2, or 3)",SSN(Node,"@width").text)
-				if(Value<1||Value>3)
-					return
-				Node.SetAttribute("width",Value)
-		}}else if(RegExMatch(parent,"(\w+) Explorer",found)){
-			node.text:="",NodeName:=found1="Project"?"projectexplorer":"codeexplorer",Node:=Settings.Add("theme/" NodeName),Default:=Settings.SSN("//default")
-			if(item="Default Background")
-				Node.RemoveAttribute("background")
-			else if(item="Background")
-				Dlg_Color(Node,Default,SettingsClass.hwnd,"background")
-			else if(item="Text Style")
-				Dlg_Font(Node,Default,SettingsClass.hwnd)
-			else if(item="Default Style")
-				Node.ParentNode.RemoveChild(Node)
-		}else if(parent="Default"){
-			if(item="Background Color"){
-				all:=Settings.SN("//theme/descendant::*[@background]|//Languages/descendant::*[@background]")
-				while(aa:=all.item[A_Index-1])
-					if(aa.NodeName!="Default")
-						aa.RemoveAttribute("background")
-			}else if(item="Font Style"){
-				all:=Settings.SN("//theme/descendant::*|//Languages/descendant::*")
-				while(aa:=all.item[A_Index-1]){
-					if(aa.NodeName!="Default"){
-						for a,b in StrSplit("font,bold,italic,underline,strikeout,size",",")
-							aa.RemoveAttribute(b)
-			}}}else if(item="Reset To Default"){
-				if(m("This can not be undone, Are you sure?","btn:ync","ico:?","def:2")!="Yes")
-					Exit
-				node:=Settings.SSN("//theme"),node.ParentNode.RemoveChild(node),DefaultFont(),ConvertTheme(),this.Color()
-			}else
-				m(item " is coming soon")
-		}else if(item="Indent Guide"){
-			Dlg_Color(Settings.SSN("//indentguide"),Settings.SSN("//default"),SettingsClass.HWND)
-		}else if(parent="Main Selection"){
-			Node:=Settings.Add("theme/selfore")
-			if(Item="Foreground")
-				Dlg_Color(Node,,SettingsClass.HWND,"color"),Node.SetAttribute("bool",1),Node.SetAttribute("code",2067)
-			else if(Item="Remove Forground")
-				Node.SetAttribute("bool",0)
-		}else if(Parent="Multiple Selection"){
-			Node:=Settings.Add("theme/additionalselfore",{code:2600})
-			if(Item="Foreground")
-				Dlg_Color(Node,,SettingsClass.HWND)
-			else if(Item="Remove Foreground")
-				Node.ParentNode.RemoveChild(Node)
-		}else if(item="StatusBar Text Style"){
-			Node:=(Node:=Settings.SSN("//theme/custom[@control='msctls_statusbar321']"))?node:Settings.Add("theme/custom",{control:"msctls_statusbar321"},,1),ea:=XML.EA(node),Node.SetAttribute("gui",1),Dlg_Font(Node,,SettingsClass.hwnd)
-		}else if(parent="Duplicate Indicator"){
-			if(Item="Indicator Style"){
-				/*
-					Dlg_Color(Settings.SSN("//DuplicateIndicator"),,SettingsClass.hwnd,"style")
-				*/
-				Style:=InputBox(SettingsClass.hwnd,"Duplicate Indicator Style","Enter the number of the style you want this indicator to be 0-16 (Default 14)",Settings.Get("//DuplicateIndicator/@style",14))
-				if(Style<=16&&Style>=0)
-					Settings.Add("DuplicateIndicator").SetAttribute("style",Style)
-			}else if(Item="Indicator Color"){
-				Dlg_Color(Settings.Add("DuplicateIndicator"),,SettingsClass.hwnd,"color") ;here
-			}else if(Item="Indicator Transparency"){
-				;add in the Transparency for the border and background into both here and the Color() 2523() 2558()
-				Style:=InputBox(SettingsClass.hwnd,"Duplicate Transparency","Enter the Transparency value for the Background 0-255 (0=Opaque)",Settings.Get("//DuplicateIndicator/@trans",50)) ;here2
-				if(Style<=255&&Style>=0)
-					Settings.Add("DuplicateIndicator").SetAttribute("trans",Style)
-			}else if(Item="Indicator Border Transparency"){
-				Style:=InputBox(SettingsClass.hwnd,"Duplicate Indicator Border Transparency","Enter the Transparency value for the Border 0-255 (0=Opaque)",Settings.Get("//DuplicateIndicator/@bordertrans",50))
-				if(Style<=255&&Style>=0)
-					Settings.Add("DuplicateIndicator").SetAttribute("bordertrans",Style)
-			}
-			/*
-				Indicator Style,Indicator Color
-			*/
-		}else if(parent="Brace Match"){
-			if(item="Indicator Reset"){
-				node:=Settings.SSN("//theme/bracematch"),node.ParentNode.RemoveChild(node)
-		}}else if(item="Export Theme"){
-			name:=Settings.SSN("//theme/name").text,temp:=new XML("temp","Themes\" name ".xml"),font:=Settings.SSN("//theme"),temp.xml.LoadXML(font.xml),temp.Save(1),m("Exported to:",A_ScriptDir "\Themes\" name ".xml")
-		}else if(item="Import Theme"){
-			FileSelectFile,tt,,,,*.xml
-			if(ErrorLevel)
-				return
-			file:=FileOpen(tt,"R","UTF-8"),tt:=file.Read(file.Length),file.Close(),temp:=new XML("temp"),temp.xml.LoadXML(tt)
-			if(!(temp.SSN("//name").xml&&temp.SSN("//author").xml&&temp.SSN("//theme").xml))
-				return m("Theme not compatible")
-			rem:=Settings.SSN("//theme"),rem.ParentNode.RemoveChild(rem),node:=Settings.SSN("//settings"),nn:=temp.SSN("//theme").CloneNode(1),Settings.SSN("//settings").AppendChild(nn)
-		}else if(item="Edit Author"){
-			author:=Settings.SSN("//theme/author"),newauthor:=InputBox(theme.sc,"New Author","Enter your name",author.text)
-			if(ErrorLevel)
-				return item:=""
-			return author.text:=newauthor,this.ThemeText()
-		}else if(item="Edit Theme Name"){
-			themename:=Settings.SSN("//theme/name"),newtheme:=InputBox(theme.sc,"New Theme Name","Enter the new theme name",themename.Text)
-			if(ErrorLevel)
-				return event:=""
-			return themename.text:=newtheme,this.ThemeText()
-		}else if(item="Save Theme"){
-			xx:=SettingsClass.SavedThemes,temp:=new XML("temp"),temp.xml.LoadXML(Settings.SSN("//theme").xml)
-			if(!rem:=xx.SSN("//theme/name[text()='" Settings.SSN("//theme/name").text "']/.."))
-				xx.SSN("//*").AppendChild(temp.SSN("//*"))
-			else
-				rem.ParentNode.RemoveChild(rem),xx.SSN("//*").AppendChild(temp.SSN("//*"))
-			return Settings.Save(1),SettingsClass.SavedThemes.Save(1),m("Theme Saved","time:1"),this.UpdateSavedThemes()
-		}else if(item="Download Themes"){
-			xx:=this.tvxml
-			if(!xx.SSN("//*[@name='Download Themes']/*")){
-				Run,RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8
-				nx:=ComObjCreate("Msxml2.XMLHTTP"),nx.Open("GET","https://raw.githubusercontent.com/maestrith/AHK-Studio/master/lib/Themes.xml",1),nx.Send()
-				while(nx.ReadyState!=4)
-					Sleep,200
-				nn:=SettingsClass.TempXML,nn.XML.LoadXML(nx.ResponseText),all:=xx.SN("//theme[@name='Download']/*"),this.Default(),top:=xx.SSN("//*[@name='Download Themes']")
-				while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
-					aa.ParentNode.RemoveChild(aa)
-				all:=nn.SN("//fonts")
-				while(aa:=all.item[A_Index-1])
-					xx.Under(top,"DownloadedTheme",{tv:TV_Add((name:=SSN(aa,"name").text),SSN(top,"@tv").text),name:name})
-				TV_Modify(xx.SSN("//*[@name='Download Themes']/*/@tv").text,"Select Vis Focus")
-			}return
-		}else if(parent="Download Themes"||node.NodeName="SavedTheme"){
-			xx:=SettingsClass.TempXML,name:=SSN(node,"@name").text,nn:=parent="Download Themes"?xx.SSN("//name[text()='" name "']/.."):SettingsClass.SavedThemes.SSN("//name[text()='" name "']/.."),current:=Settings.SSN("//theme"),saved:=SettingsClass.SavedThemes.SSN("//name[text()='" SSN(current,"name").text "']/..")
-			for a,b in ["//theme","//fonts"]
-				rem:=Settings.SSN(b),rem.ParentNode.RemoveChild(rem)
-			Settings.SSN("//*").AppendChild(nn.CloneNode(1)),ConvertTheme(),this.ThemeText()
-			if(parent="Download Themes"&&name){
-				xx:=SettingsClass.SavedThemes
-				if(!node:=xx.SSN("//name[text()='" name "']"))
-					xx.SSN("//*").AppendChild(nn.CloneNode(1))
-				else
-					node.ParentNode.RemoveChild(node),xx.SSN("//*").AppendChild(nn.CloneNode(1))
-				this.UpdateSavedThemes()
-			}
-		}else if(InStr(parent,"Quick Find")){
-			static qfobj:={"Bottom Background":"bb","Bottom Forground":"bf","Top Background":"tb","Top Forground":"tf","Quick Find Edit Background":"qfb"}
-			if(!Top:=Settings.SSN("//theme/find"))
-				Top:=Settings.Add("theme/find")
-			attribute:=qfobj[item]
-			if(item="Quick Find Clear")
-				for a,b in qfobj
-					Top.RemoveAttribute(b)
-			else
-				ea:=xml.EA(Top),color:=Dlg_Color(Top,,SettingsClass.hwnd,qfobj[Item])
-		}SettingsClass.keep.Color(),RefreshThemes()
-		for a,b in s.Ctrl
-			Color(b,GetLanguage(b))
-	}ThemeText(){
-		GuiControl,Settings:-Redraw,Scintilla1
-		this.2171(0),this.2004(),this.ThemeTextText:="",Header:=((name:=Settings.SSN("//theme/name").text)?header:=name "`n":"")((author:=Settings.SSN("//theme/author").text)?"Theme by " author "`n":"") "Instructions at the bottom:`n",this.AddText([header,0],["Main Selection",253],[" - ",0],["Multiple Selection",254],[" <---- Additional Options in the TreeView to the Left with Main Selection * and Multiple Selection *`n`n",""]),this.AddText(["Matching Brace Style ",0],["()",255],["`n`n",0]),EditedMarker:=this.EditedMarker:=[]
-		for a,b in {edited:"<----Edited Marker (Click to change)`n",saved:"<----Saved Line`n`n"}
-			EditedMarker[(Line:=this.2154()-1)]:=a,this.AddText([b,0]),this.2043(Line,(a="Edited"?20:21))
-		this.EditedMarkerStartLine:=this.2166(this.2006())
-		if(!ControlFile:=Keywords.GetXML(Current(3).Lang))
-			ControlFile:=new XML("","lib\Languages\ahk.xml")
-		all:=ControlFile.SN("//Styles/*[@ex]")
-		Obj:=this.AddText(["Duplicate Indicator <----In Treeview under Duplicate Indicator`n`n",0])
-		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
-			if(ea.Fold)
-				Start:=this.2166(this.2006())
-			ex:=RegExReplace(RegExReplace(ea.ex,"\\n","`n"),"\\t","`t")
-			if(aa.NodeName="keyword"&&ea.ex="Personal Variables")
-				this.AddText(["Personal Variables = " Settings.SSN("//Variables").text "`n",ea.style])
-			else if(aa.NodeName="keyword"&&ea.ex!="Personal Variables"){
-				if(ea.Add)
-					Add:=ControlFile.SSN(ea.Add).text
-				this.AddText([ea.ex " = " aa.text " " Add "`n",ea.style])
-			}else if(RegExMatch(ex,"\[\d+\]")){
-				pos:=1
-				while(RegExMatch(ex,"OU)\[(\d+)\](.+)((\[\d+\])|$)",Found,pos),pos:=Found.Pos(1)+Found.Len(1))
-					this.AddText([Found.2,Found.1])
-			}else
-				this.AddText([ex,ea.style])
-			if(ea.Fold){
-				End:=this.2166(this.2006())
-				while(Start+A_Index<=End)
-					this.2043(A_Index+Start-1,(A_Index=1?31:Start+A_Index=End?28:29))
-			}
-		}this.AddText(["`n`nLeft Click to edit the fonts color`nControl+Click to edit the font style, size, italic...etc`nAlt+Click to change the Background color`nThis works for the Line Numbers as well",0]),this.2171(1)
-		this.2080(6,14),this.2082(6,0xff00ff),this.2500(6),this.2504(Obj.1.Start,Obj.1.Len)
-		GuiControl,Settings:+Redraw,Scintilla1
-	}TVName(node){
-		return RegExReplace(RegExReplace((ea:=xml.EA(node)).clean,"_"," "),"&") (ea.hotkey?"  :  " Convert_Hotkey(ea.hotkey):"") (ea.hide?"  :  Hidden":"")
-	}TVOptions(node){
-		return opt:=((ea:=xml.EA(node)).check?"Check":"") " Icon" SettingsClass.ILAdd(ea.filename,ea.icon)
-	}UpdateSavedThemes(){
-		all:=SettingsClass.SavedThemes.SN("//fonts"),xx:=this.tvxml,top:=xx.SSN("//top[@name='Saved Themes']"),this.Default()
-		while(aa:=all.item[A_Index-1]){
-			if(!SSN(top,"SavedTheme[@name='" (name:=SSN(aa,"name").text) "']")&&name)
-				xx.Under(top,"SavedTheme",{name:name,tv:TV_Add(name,SSN(top,"@tv").text,"Vis")})
-}}}
+SettingsDefault(id,return:=0){
+	main:=SettingsWindow.win.xml,node:=main.SSN("//*[@id='" id "']"),win:=main.SSN("//window/@name").text,ea:=XML.EA(node)
+	if(ea.type){
+		
+		Gui,%win%:Default
+		Gui,% win ":" ea.type,% ea.hwnd
+	}
+	return (return?XML.EA(node):node)
+}
 Setup(window,nodisable=""){
 	ea:=Settings.EA(Settings.SSN("//theme/default")),size:=10,Background:=RGB(ea.Background),font:=ea.font,color:=RGB(ea.color),Background:=Background?Background:0
 	Gui,%window%:Destroy
@@ -12072,6 +12632,24 @@ Show_Class_Methods(object,search:=""){
 		sc.2117(3,Total)
 	return sc.2102?1:0
 }
+Show_Folder_In_Explorer(){
+	sc:=CSC()
+	file:=Current(3).file
+	SplitPath,file,,dir
+	if(!dir){
+		file:=Current(2).file
+		SplitPath,file,,dir
+	}if(!dir){
+		for a,b in s.ctrl{
+			if(File:=CEXML.SSN("//*[@sc='" b.2357 "']/@file").text){
+				SplitPath,File,,Dir
+				Break
+			}
+		}
+	}Run,%dir%
+}Open_Folder(){
+	Show_Folder_In_Explorer()
+}
 Show_Scintilla_Code_In_Line(){
 	Scintilla(),sc:=CSC()
    	text:=sc.TextRange(sc.2128(sc.2166(sc.2008)),sc.2136(sc.2166(sc.2008))),pos:=1
@@ -12115,36 +12693,60 @@ ShowLabels(x:=0){
 	if(List)
 		sc.2100(0,Trim(list))
 }
+ShowMainWindow(){
+	WinActivate,% Mainwin.ID
+}
+ShowOSD(show){
+	static List:=new XML("OSD"),top,Win:="OSD",MenuXML
+	if(!v.Options.OSD)
+		return
+	if(!IsObject(MenuXML)){
+		if(!FileExist(A_ScriptDir "\Lib\Base Menu.xml"))
+			URLDownloadToFile,https://raw.githubusercontent.com/maestrith/AHK-Studio/master/lib/menus.xml,%A_ScriptDir%\Lib\Base Menu.xml
+		MenuXML:=new XML("menus",A_ScriptDir "\Lib\Base Menu.xml")
+	}if(!HWND(Win)){
+		rem:=List.SSN("//list"),rem.ParentNode.RemoveChild(rem)
+		Gui,Win:Destroy
+		Gui,Win:Default
+		Gui,Color,0x111111,0x111111
+		Gui,+hwndhwnd +Owner1 -DPIScale
+		Gui,Margin,0,0
+		HWND(Win,hwnd)
+		Gui,Font,s12 c0xff00ff,Consolas
+		Gui,Add,ListView,w500 h300 -Hdr,info|x
+		Gui,Show,x0 y0 w0 h0 Hide NA,OSD
+		WinGetPos,x,y,w,h,% HWND([1])
+		Gui,-Caption
+		Gui,Win:Show,% "x" (x+w-MainWin.Border)-(500) " y" y+h-(300+MainWin.Border) " NA AutoSize",OSD
+		top:=List.Add("list")
+	}show:=RegExReplace(show,"_"," ")
+	Gui,Win:Default
+	Gui,Win:ListView,SysListView321
+	if((ea:=XML.EA(Node:=List.SSN("//list").LastChild())).name=show)
+		Node.SetAttribute("count",ea.count+1)
+	else
+		Node:=List.Under(top,"item",{name:show,count:1})
+	LV_Delete()
+	all:=List.SN("//item")
+	while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+		LV_Add("",ea.name " " Convert_Hotkey(MenuXML.SSN("//*[@clean='" Clean(ea.Name) "']/@hotkey").text),ea.count)
+	Loop,2
+		LV_ModifyCol(A_Index,"AutoHDR")
+	SetTimer,KillOSD,-2000
+	return
+	KillOSD:
+	HWND({rem:Win,na:1}),rem:=List.SSN("//list"),rem.ParentNode.RemoveAttribute(rem)
+	return
+}
+ShowWindowSpy(){
+	SplitPath,A_AhkPath,,Dir
+	if(FileExist(Dir "\WindowSpy.ahk"))
+		Run,%Dir%\WindowSpy.ahk
+	else
+		Run,%Dir%\AU3_Spy.exe	
+}
 Sleep(Time:="-10"){
 	Sleep,%Time%
-}
-Add_Space_Before_And_After_Commas(){
-	Spaces("baa")
-}Add_Space_After_Commas(){
-	Spaces("ac")
-}Add_Space_Before_Commas(){
-	Spaces("bc")
-}RemoveSpacesFromAroundCommas(){
-	Spaces("rsfac")
-}Remove_Spaces_From_Around_Commas(){
-	Spaces("rsfac")
-}Spaces(Info){
-	sc:=CSC()
-	if(!Sel:=sc.GetSelText())
-		sc.2160(sc.2128(line:=sc.2166(sc.2008)),sc.2136(line)),Sel:=sc.GetSelText()
-	Replace:={ac:[["U),(\S)",", $1"]],bc:[["U)(\S),","$1 ,"]],baa:[["U),(\S)",", $1"],["U)(\S),","$1 ,"]]}
-	if(Replace[Info])
-		sc.2170(0,ProcessText(Sel,Replace[Info]))
-	else
-		sc.2170(0,RegExReplace(Sel,"\s*,\s*",","))
-}ProcessText(text,process){
-	for c,d in process{
-		while,text:=RegExReplace(text,d.1,d.2,count){
-			if(!count)
-				break
-		}
-	}
-	return text
 }
 Split_Line_By_Comma(){
 	sc:=CSC(),Line:=sc.2166(sc.2008),oStart:=Start:=sc.2128(Line),End:=sc.2136(Line),Indent:=sc.2127(Line),Tab:=sc.2121
@@ -12162,6 +12764,21 @@ SplitPath(File){
 	SplitPath,File,FileName,Dir,Ext,NNE,Drive
 	return {File:File,FileName:FileName,Dir:Dir,Ext:Ext,NNE:NNE,Drive:Drive}
 }
+Spoons(a*){
+	Info:=A_EventInfo,Code:=NumGet(Info+8)
+	if((ctrl:=NumGet(Info+0))=v.debug.sc&&v.debug.sc){
+		sc:=v.debug
+		if(Code=2027){
+			style:=sc.2010(sc.2008)
+			if(style=-106)
+				Run_Program()
+			else if(style=-105)
+				List_Variables()
+		}return
+	}
+	if(Code=2028)
+		SetTimer("LButton",-50)
+}
 Start_Select_Character(){
 	StartSelect:=InputBox(HWND(1),"Start Select Character","Enter a list of characters you want to add to the DoubleClick selection",Settings.SSN("//StartSelect").text)
 	Settings.Add("StartSelect").text:=StartSelect
@@ -12171,15 +12788,15 @@ Step_Into(){
 		return m("There is currently no script being debugged","time:1")
 	debug.Send("step_into")
 }
-Step_Over(){
-	if(!debug.socket)
-		return m("There is currently no script being debugged","time:1")
-	debug.Send("step_over")
-}
 Step_Out(){
 	if(!debug.socket)
 		return m("There is currently no script being debugged","time:1")
 	debug.Send("step_out")
+}
+Step_Over(){
+	if(!debug.socket)
+		return m("There is currently no script being debugged","time:1")
+	debug.Send("step_over")
 }
 Stop_Debugger(){
 	if(!debug.socket)
@@ -12230,6 +12847,20 @@ Switch_Focus(){
 		return s.ctrl[v.jts[list]].2400()
 	sc.2106(44),sc.2117(7,Trim(list,",")),sc.2106(32)
 }
+t(x*){
+	for a,b in x{
+		if((obj:=StrSplit(b,":")).1="time"){
+			SetTimer,killtip,% "-" obj.2*1000
+			Continue
+		}
+		list.=b "`n"
+	}
+	Tooltip,% list
+	return
+	killtip:
+	ToolTip
+	return
+}
 Tab_To_Next_Comma(){
 	sc:=CSC()
 	Loop,% sc.2570{
@@ -12275,7 +12906,7 @@ Testing(){
 	return v.Debug.2004
 	return m("Testing")
 	/*
-		
+			
 		InputBox,Out,Forward?,Forward?,,,,,,,,1
 		return SetTimer(Out?"File_History_Forward":"File_History_Back",-1)
 	*/
@@ -12339,99 +12970,6 @@ Testing(){
 		return m("Testing")
 	return m("I'm sleepy.")
 }
-Insert_Color_Code(){
-	static
-	Static Code:=Color:=0xFF00FF
-	NewWin:=new GUIKeep("Insert_Color_Code",HWND(1))
-	NewWin.Add("Text,w200,Text"
-			,"Button,gICCCFD,Choose From Dialog"
-			,"Button,gICCCFS,Choose From Mouse Position"
-			,"Button,gIIC,Insert &Into Code"
-			,"Radio,gICCCTH vICCCTH Checked,RGB Hex"
-			,"Radio,gICCCTH vICCCTD,RGB Decimal"
-			,"Radio,gICCCTB vICCCTBGRH,BGR Hex"
-			,"Radio,gICCCTB vICCCTB,BGR Decimal"
-			,"Radio,gICCCTB vICCCTWR,#RGB (Web)"
-			,"Radio,gICCCTB vICCCTWB,#BGR (Web)")
-	NewWin.Show("Insert Color Code")
-	DisplayColorCode:
-	ICCCTH:
-	ICCCTD:
-	ICCCTB:
-	ICCCTBGRH:
-	info:=NewWin[]
-	Gui,Insert_Color_Code:Submit,Nohide
-	if(Info.ICCCTH)
-		Code:=RGB(Color)
-	else if(Info.ICCCTBGRH)
-		Code:=RGB(RGB(Color))
-	else if(Info.ICCCTD)
-		Code:=Color
-	else if(Info.ICCCTB)
-		Code:=RGB(Color)+0
-	else if(Info.ICCCTWR)
-		Code:="#" SubStr(RGB(Color),3)
-	else if(Info.ICCCTWB)
-		Code:="#" SubStr(RGB(RGB(Color)),3)
-	Gui,Insert_Color_Code:Font,% "c" RGB(Color)
-	GuiControl,Insert_Color_Code:Font,Static1
-	ControlSetText,Static1,%Code%,% NewWin.ID
-	return
-	ICCCFS:
-	while(!GetKeyState("F1","P")){
-		t("Press and hold F1 until this message goes away to keep this color")
-		MouseGetPos,x,y
-		PixelGetColor,Color,%x%,%y%,RGB
-		Color:=RGB(Color)+0
-		Gosub,DisplayColorCode
-		Sleep,300
-	}t()
-	WinActivate,% NewWin.ID
-	return
-	Goto,DisplayColorCode	
-	return
-	IIC:
-	sc:=CSC(),sc.2003(sc.2008,[Code])
-	
-	NewWin.Exit()
-	return
-	ICCCFD:
-	Color:=Choose_Color(Color,hwnd(1))
-	WinActivate,% NewWin.ID
-	Goto,DisplayColorCode
-	return
-}
-Choose_Color(Color,hwnd:=""){
-	static
-	VarSetCapacity(Custom,16*4,0),size:=VarSetCapacity(ChooseColor,9*4,0)
-	for a,b in Settings.EA("//CustomColors")
-		NumPut(Round(b),Custom,(A_Index-1)*4,"UInt")
-	NumPut(size,ChooseColor,0,"UInt"),NumPut(hwnd,ChooseColor,4,"UPtr"),NumPut(Color,ChooseColor,3*4,"UInt"),NumPut(3,ChooseColor,5*4,"UInt"),NumPut(&Custom,ChooseColor,4*4,"UPtr"),ret:=DllCall("comdlg32\ChooseColorW","UPtr",&ChooseColor,"UInt")
-	CustomColors:=Settings.Add("CustomColors")
-	if(!ret)
-		Exit
-	return NumGet(ChooseColor,3*4,"UInt")
-}
-/*
-	put this in there and use it for A_TickCount stuffs.
-*/
-Class TimerClass{ ;Thanks Run1e
-	static Timers:=[]
-	Init(){
-		DllCall("QueryPerformanceFrequency", "Int64P", F)
-		this.Freq := F
-	}
-	Current(){
-		DllCall("QueryPerformanceCounter","Int64P",Timer)
-		return Timer
-	}
-	Start(ID){
-		this.Timers[ID]:=this.Current()
-	}
-	Stop(ID){
-		return ((this.Current()-this.Timers[ID])/this.Freq),this.Timers.Delete(ID)
-	}
-}
 Theme(){
 	new SettingsClass("Theme")
 }
@@ -12453,13 +12991,6 @@ Toggle_Comment_Line(){
 			sc.2003(LineStart,Replace),SelectionEnd+=Len
 	}(Single?"":sc.2160(PI.Start,SelectionEnd))
 	sc.2079
-}
-ToggleMenu(Label){
-	if(!Label)
-		return
-	Menu,main,UseErrorLevel
-	top:=menus.SSN("//*[@clean='" label "']"),ea:=XML.EA(top),pea:=XML.EA(top.ParentNode)
-	Menu,% pea.name (pea.hotkey?"`t" Convert_Hotkey(pea.hotkey):""),% (v.Options[label]?"Check":"Uncheck"),% ea.name (ea.hotkey?"`t" Convert_Hotkey(ea.Hotkey):"")
 }
 Toggle_Multiple_Line_Comment(){
 	sc:=CSC(),TopStyle:=sc.2010(sc.2143),BottomStyle:=sc.2010(sc.2145),CommentStyle:=Keywords.GetXML(Current(3).ext).SSN("//Styles/multilinecomment/@style").text
@@ -12508,6 +13039,13 @@ ToggleDuplicate(){
 			return sc.2671(A_Index-1),Duplicates()
 	}sc.2573(Select.end,Select.Start),Duplicates()
 	return
+}
+ToggleMenu(Label){
+	if(!Label)
+		return
+	Menu,main,UseErrorLevel
+	top:=menus.SSN("//*[@clean='" label "']"),ea:=XML.EA(top),pea:=XML.EA(top.ParentNode)
+	Menu,% pea.name (pea.hotkey?"`t" Convert_Hotkey(pea.hotkey):""),% (v.Options[label]?"Check":"Uncheck"),% ea.name (ea.hotkey?"`t" Convert_Hotkey(ea.Hotkey):"")
 }
 Toolbar_Editor(control){
 	static oea,LastID,OControl,nw,tb,ExternalTV,ea
@@ -12653,153 +13191,6 @@ Toolbar_Editor(control){
 	if(m("Are you sure you want to delete: " ea.text,"btn:ync","def:2")="Yes")
 		TV_Delete(bummer.tv),tb.Delete(bummer)
 	return
-}
-class Tracked_Notes{
-	keep:=[]
-	__New(){
-		this.XML:=new XML("Tracked_Notes",A_ScriptDir "\lib\Tracked Notes.XML")
-		if(!this.XML.SSN("//master"))
-			this.XML.Under(this.XML.Add("master",{file:"Global Notes",id:1}),"global")
-		All:=this.XML.SN("//main")
-		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
-			if(!SSN(aa,"descendant::global")){
-				if(aa.Text)
-					Text:=aa.Text,aa.Text:="",New:=this.XML.Under(aa,"global",,Text)
-		}}list:=this.XML.SN("//Tracked_Notes/descendant::*[not(@id)]")
-		while(ll:=list.item[A_Index-1]),ea:=XML.EA(ll){
-			id:=1
-			while(this.XML.SSN("//*[@id='" ++id "']")){
-			}ll.SetAttribute("id",id)
-		}this.Populate()
-		return this
-	}GetPos(){
-		sc:=MainWin.tnsc,fold:=0,Node:=this.Node,Node.RemoveAttribute("fold")
-		for a,b in {start:sc.2008,end:sc.2009,scroll:sc.2152}
-			Node.SetAttribute(a,b)
-		while(sc.2618(fold)>=0,fold:=sc.2618(fold))
-			list.=fold ",",fold++
-		if(list)
-			Node.SetAttribute("fold",list)
-	}Populate(){
-		TVC.Default(3),this.XML.SSN("//*[@tv='" TV_GetSelection() "']").SetAttribute("last",1),all:=this.XML.SN("//*"),TVC.Delete(3,0)
-		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
-			ClosedFile:=0
-			if(aa.NodeName="main"){
-				if(!CEXML.Find("//main/@file",ea.File)){
-					if(!Closed),ClosedFile:=1
-						Closed:=TVC.Add(3,"Closed Files")
-			}}if(aa.NodeName="global")
-				Continue
-			if(aa.NodeName="master"||aa.NodeName="file"||aa.NodeName="main"||aa.NodeName="folder")
-				TVC.Default(3),aa.SetAttribute("tv",TV_Add(ea.Name?ea.Name:SubStr(text:=StrSplit(ea.file,"\").Pop(),1,(InStr(text,".")?InStr(text,".")-1:StrLen(text))),ClosedFile?Closed:SSN(aa.ParentNode,"@tv").text,ea.last?"Select Vis Focus":""))
-			if(ea.last)
-				aa.RemoveAttribute("last"),First:=SSN(aa,"@tv").text
-		}All:=this.XML.SN("//*[@expand]")
-		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
-			TVC.Modify(3,,ea.TV,"Expand")
-		if(First)
-			TVC.Modify(3,"",First,"Select Vis Focus")
-	}Register(sc){
-		this.sc:=sc
-	}SaveState(){
-		All:=TNotes.XML.SN("//*[@tv]")
-		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
-			TVC.Get(3,ea.TV)?aa.SetAttribute("expand",1):aa.RemoveAttribute("expand")
-		TNotes.XML.SSN("//*[@tv='" TVC.Selection(3) "']").SetAttribute("last",1)
-	}SetNode(){
-		if(!MainWin.Gui.SSN("//*[@type='Tracked Notes']"))
-			return
-		if(!TVC.Selection(3)){
-			TVC.Modify(3,"",TV_GetChild(0),"Select Vis Focus")
-		}
-		Node:=TNotes.XML.SSN("//*[@tv='" TVC.Selection(3) "']")
-		if(Node.NodeName="Main"||Node.NodeName="Master"){
-			if(!Node:=SSN(Node,"global"))
-				Node:=TNotes.XML.Under(Node,"global")
-		}TNotes.Node:=Node
-	}SetText(){
-		static Node
-		sc:=MainWin.tnsc,last:=CSC().sc
-		if(this.Node.XML!=Node.XML&&this.Node.XML){
-			if(sc.2140)
-				sc.2171(0)
-			if(SSN(this.Node,"*"))
-				Lock:=1 ;,t("Found?",SubStr(this.Node.xml,1,200))
-			this.SetNode()
-			All:=SN(this.Node,"descendant-or-self::*"),Text:=""
-			while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
-				if(!SSN(aa,"*").NodeName)
-					Text.=(All.Length=1?"":RegExReplace(ea.Name,"\s","_") ":`n") aa.Text "`n"
-				else if(A_Index>1)
-					Text.=RegExReplace(ea.Name,"\s","_") ":`n"
-			}Encode(RegExReplace(Trim(Text,"`n"),Chr(127),"`n"),txt),sc.2181(0,&txt)
-			if(Lock)
-				sc.2171(1),Lock:=0
-			ea:=XML.EA(this.Node),sc.2160(Round(ea.start),Round(ea.end))
-			Sleep,10
-			for a,b in StrSplit(ea.fold,",")
-				sc.2237(b,0)
-			sc.2613(Round(ea.scroll)),sc.2352(-1)
-			MarginWidth(sc)
-		}
-		Node:=this.Node,CSC({hwnd:last})
-	}tn(){
-		tn:
-		if(A_GuiEvent="S"||A_GuiEvent="Normal"){
-			if(Node:=TNotes.XML.SSN("//*[@tv='" A_EventInfo "']")){
-				TNotes.GetPos(),sc:=TNotes.tnsc,TNotes.SetNode(),Node:=TNotes.Node
-				if(Node.NodeName!="master"){
-					if(tv:=SSN(CEXML.Find("//file/@file",SSN(Node,"@file").text),"@tv").text)
-						tv(tv)
-					else{
-						if((ea:=CEXML.EA("//file[translate(@file, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='" Format("{:L}",SSN(Node,"@file").text) "']")).tv)
-							tv(ea.TV)
-					}
-				}else
-					TNotes.SetText()
-				/*
-					if(TNotes.Node.NodeName="main"){
-						if(!Node:=SSN(TNotes.Node,"global"))
-							Node:=TNotes.XML.Under(TNotes.Node,"global")
-						TNotes.Node:=Node
-						if(sc.2140)
-							sc.2171(0)
-					}
-				*/
-				if(SSN(Node,"*").NodeName)
-					sc.2171(1),Value:=1
-				else if(sc.2140)
-					sc.2171(0),Value:=2
-				else
-					Value:=3
-				TNotes.SetText()
-		}}return
-	}Track(){
-		Project:=Current(2).file,file:=Current(3).file,id:=0
-		if(Node:=this.XML.Find("//*/@file",file))
-			return m("File already being tracked",Node.xml,"","",file)
-		if(!Project||!file)
-			return
-		if(!Master:=this.XML.Find("//main/@file",Project))
-			Master:=this.XML.Add("main",{file:Project},,1),this.XML.Under(Master,"global")
-		if(!Node:=this.XML.Find(Master,"descendant::file/@file",file))
-			Node:=this.XML.Under(Master,"file",{file:file,last:1})
-		if(!SSN(Node,"@id"))
-			while(this.XML.SSN("//*[@id='" ++id "']")){
-			}Node.SetAttribute("id",id)
-		this.XML.Transform(2)
-		Node:=this.XML.SSN("//*[@last]")
-		this.Node:=Node,this.Populate()
-	}Write(sc){
-		if(SSN(this.Node,"*"))
-			sc.2171(1),t(SubStr(this.Node,1,200),"Tracked_Notes.Write()")
-		else{
-			if(sc.2140)
-				sc.2171(0)
-			this.Node.text:=RegExReplace(sc.GetUni(),"\R",Chr(127))
-		}
-		
-	}
 }
 tv(tv*){
 	static lasttv,LastExt:=[],Last
@@ -13052,6 +13443,53 @@ Update(Info){
 		return Encoding[Info.File]:=Info.Encoding
 	return
 }
+UpdateBranches(a*){
+	m("HERE! UpdateBranches umm... Coming Soon?")
+	/*
+		;~ this downloads all the branch info so keep it
+		;~ BUT MAKE SURE TO NOT OVERWRITE ANY VERSIONS THAT ALREADY EXIST!!!!!!!!!!!!!
+		UpdateBranches(){
+			root:=this.DXML.SSN("//*"),pos:=1,node:=Node()
+			info:=git.Send("GET",git.RepoURL("git/refs/heads")),List:=[]
+			while(RegExMatch(info,"OUi)\x22ref\x22:\x22(.*)\x22",Found,pos),pos:=Found.Pos(1)+Found.len(1)){
+				List[(item:=StrSplit(Found.1,"/").Pop())]:=1
+				if(!this.DXML.Find("//branch/@name",item))
+					this.DXML.Under(root,"branch",{name:item})
+				if(!new:=vversion.Find(node,"branch/@name",item))
+					new:=vversion.Under(node,"branch",{name:item,onefile:1})
+				if(item="master"&&SSN((before:=SSN(node,"branch")),"@name").text!="master")
+					node.InsertBefore(new,before)
+			}blist:=this.DXML.SN("//branch")
+			while(bl:=blist.item[A_Index-1],ea:=XML.EA(bl))
+				if(!List[ea.name])
+					bl.ParentNode.RemoveChild(bl)
+			all:=SN(node,"branch")
+			while(aa:=all.item[A_Index-1],ea:=XML.EA(aa))
+				if(!List[ea.name])
+					aa.ParentNode.RemoveChild(aa)
+			pos:=1,info:=git.Send("GET",git.RepoURL("releases"))
+			while(pos:=RegExMatch(info,"{\x22url\x22:",,pos)){
+				commit:=[]
+				for a,b in {id:",",target_commitish:",",name:",",draft:",",prerelease:",",body:"\}"}
+					RegExMatch(info,"OUi)\x22" a "\x22:(.*)" b,Found,pos),commit[a]:=Trim(Found.1,Chr(34))
+				if(!top:=vversion.Find(node,"branch/@name",commit.target_commitish))
+					top:=vversion.Under(node,"branch",{name:commit.target_commitish})
+				if(!version:=vversion.Find(top,"version/@name",commit.name))
+					version:=this.DXML.Under(top,"version",{name:commit.name})
+				for a,b in commit{
+					if(a!="body")
+						version.SetAttribute(a,b)
+					else
+						version.text:=RegExReplace(b,"\R|\\n|\\r",Chr(127))
+				}
+				pos:=found.Pos(1)+found.Len(1)
+			}for a in list{
+				if(!SSN((top:=vversion.Find(node,"branch/@name",a)),"version"))
+					vversion.Under(top,"version",{name:1})
+			}PopVer()
+		}
+	*/
+}
 UpdateMethod(Add,node){
 	for a,b in {text:add.1,upper:Upper(add.1)}
 		node.SetAttribute(a,b)
@@ -13209,454 +13647,6 @@ VarBrowser(){
 Version_Tracker(){
 	new Version_Tracker()
 }
-DeleteExtraFiles(FileList,DD){
-	static DXML
-	for a,b in FileList
-		Total.=a "`n"
-	DXML:=DD
-	if(Total)
-		m("These Files May Need Deleted On GitHub:",Total)
-	return
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!! make a GUI to allow you to remove them !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!         and maybe checkboxes?          !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	;~ !!!!!!    this throws the files here that need deleted or at the very least for review    !!!!!!!
-	;~ !!!!!! you can get the DXML and the files will be there. Maybe push DXML here so that it  !!!!!!!
-	;~ !!!!!!                                     will be ok                                     !!!!!!!
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!                 OH YEA!                  !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!! Doing a push without re-starting Studio  !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!     Throws an error, with no message     !!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	
-}
-EncodeFile(fn,time,nn,branch){
-	FileRead,bin,*c %fn%
-	FileGetSize,size,%fn%
-	DllCall("Crypt32.dll\CryptBinaryToStringW",Ptr,&bin,UInt,size,UInt,1,UInt,0,UIntP,Bytes),VarSetCapacity(out,Bytes*2),DllCall("Crypt32.dll\CryptBinaryToStringW",Ptr,&bin,UInt,size,UInt,1,Str,out,UIntP,Bytes)
-	StringReplace,out,out,`r`n,,All
-	if(SubStr(Out,1,4)="77u/")
-		Out:=SubStr(Out,5)
-	return {text:out,encoding:"UTF-8",time:time,skip:1,node:nn,branch:branch}
-}
-Class Version_Tracker Extends ConvertStyle{
-	__New(){
-		if(!IsObject(VVersion))
-			VVersion:=new XML("versions",(FileExist("lib\Github.xml")?"lib\Github.xml":"lib\Versions.xml"))
-		xx:=VVersion
-		if((All:=xx.SN("//version[text()]")).Length)
-			return this.ConvertStyle()
-		this.VersionWindow()
-	}GetNode(VersionNode:=""){
-		Version_Tracker.NewWin.Default("VT")
-		Node:=VVersion.SSN("//*[@tv='" TV_GetSelection() "']" (VersionNode=1?"ancestor-or-self::version":VersionNode?VersionNode:""))
-		return Node
-	}GetRoot(){
-		xx:=VVersion
-		if(!Root:=Version_Tracker.GetNode("ancestor::info"))
-			Root:=xx.Find("//info/@file",Current(2).File)
-		return Root
-	}VersionWindow(){
-		static
-		xx:=VVersion
-		if(!Root:=xx.Find("//info/@file",Current(2).File))
-			Info:=xx.Under(xx.Under((Branch:=xx.Under((Root:=xx.Add("info",{file:Current(2).File},,1)),"branch",{name:"master"})),"version",{name:"1",draft:"false",prerelease:"true",target_commitish:"master"}),"info",{type:"",action:"",issue:"",user:"",select:1}),Select:=Info
-		VersionGUI:
-		NewWin:=new GUIKeep("Version"),Version_Tracker.NewWin:=NewWin
-		NewWin.Add("TreeView,w350 h250 vVT gVersionShowVersion vTVVersion AltSubmit,,h"
-			,"Edit,x+M w500 h500 gVerEdit vEdit,,wh","ListView,xm w350 y250 h250 NoSortHdr,Directory|File,y"
-			,"Button,xm gCommitProject,Co&mmit Project,y","Checkbox,x+M gVersionOneFile vCommitAsOne,Commit As &One File,y")
-		NewWin.Show((Settings.SSN("//github")?"Github ":"")"Version Tracker")
-		NewWin.Hotkeys({Delete:"VerDelete","!a":"VersionAddAction",F1:"VersionCompileCurrent","!Up":"VersionMove"
-					,"!Down":"VersionMove",Enter:"VersionEdit","!n":"NewVersionBranch"
-					,"^Up":"AddNewVersion","^Down":"AddNewVersion"})
-		if(Select:=SSN(Root,"descendant::*[@select]"))
-			return Version_Tracker.Select(Select)
-		return Version_Tracker.Select(SSN(Root,"descendant::info"))
-		VersionCompileCurrent:
-		NewWin.Default("VT"),Node:=Version_Tracker.GetNode(1)
-		if(!Node)
-			Version_Tracker.NewWin.Default("VT"),Node:=VVersion.SSN("//*[@tv='" TV_GetSelection() "']"),All:=SN(Node,"descendant::*"),Info:=""
-		else
-			All:=SN(Node,"descendant-or-self::*"),Info:=""
-		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
-			if(aa.NodeName="Version")
-				Info.=(Info?":`r`n":"") ea.Name
-			else
-				Info.=(Info?"`r`n":"") (ea.Type?ea.Type ":":"") (ea.Action?" " ea.Action " by " ea.User:"") (ea.Issue?" " ea.Issue:"") (ea.Type?"`r`n":"") RegExReplace(aa.Text,Chr(127),"`r`n")
-		}
-		if(Version_Tracker.GetVersionInfo)
-			return Version_Tracker.GetVersionInfo:=Info
-		m("Information has been added to your Clipboard:","",Clipboard:=Info)
-		return
-		VersionOneFile:
-		if(!Node:=Version_Tracker.GetNode("ancestor-or-self::branch")){
-			m("Please select a version to apply this to")
-			GuiControl,Version:,% NewWin.XML.SSN("//*[@var='CommitAsOne']/@hwnd").text,0
-			return
-		}
-		if(NewWin[].CommitAsOne)
-			Node.SetAttribute("onefile",1)
-		else
-			Node.RemoveAttribute("onefile")
-		return
-		CommitProject:
-		Version_Tracker.Commit()
-		/*
-			Save()
-			Run,"D:\AHK\AHK-Studio\Projects\GitHub\GitHub Test.ahk"
-		*/
-		return
-		;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		;~ !!!! MAKE SURE TO NOT REMOVE ANYTHING IF/WHEN THE USER RE-DOWNLOADS EVERYTHING FROM GITHUB  !!!!!
-		;~ !!!!                         RUN IT THROUGH HERE AFTER DOWNLOADING                          !!!!!
-		;~ !!!!                           Have it go through ConvertStyle()                            !!!!!
-		;~ !!!!                                                                                        !!!!!
-		;~ !!!!                                         Need:                                          !!!!!
-		;~ !!!!                                       Drag/Drop:                                       !!!!!
-		;~ !!!!                             -Make it like Github basically                             !!!!!
-		;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		AddNewVersion:
-		Direction:=SubStr(A_ThisHotkey,2)
-		Node:=Version_Tracker.GetNode(1)
-		if(Direction="Down"){
-			NewWin.Default("VT")
-			Name:=SSN(Node,"@name").text
-			if(RegExMatch(Name,"OU)(.*\.)(-?\d+)$",Found)){
-				Name:=Found.1 Format("{:0" StrLen(Found.2) "}",(Found.2>=0?Found.2-1:Found.2+-1))
-			}else if(RegExMatch(Name,"OU)(.*)(-?\d+)$",Found))
-				Name:=Found.1 Format("{:0" StrLen(Found.2) "}",(Found.2>=0?Found.2-1:Found.2+-1))
-			else
-				Name:=Name " 0"
-			m(Name)
-			TV_Modify(SSN(Node,"@tv").text,"-Expand")
-			New:=VVersion.Under((Parent:=VVersion.Under(Node.ParentNode,"version",{name:Name,draft:"false",prerelease:"false",target_commitish:SSN(Node,"ancestor::branch/@name").text})),"info",{action:"",issue:"",type:"",user:""})
-			if(Next:=Node.NextSibling)
-				Node.ParentNode.InsertBefore(Parent,Next)
-			Version_Tracker.Select(New)
-		}else{
-			Name:=SSN(Node,"@name").text
-			if(RegExMatch(Name,"OU)(.*\.)(\d+)$",Found)){
-				Name:=Found.1 Format("{:0" StrLen(Found.2) "}",Found.2+1)
-			}else if(RegExMatch(Name,"OU)(.*)(\d+)$",Found))
-				Name:=Found.1 Format("{:0" StrLen(Found.2) "}",Found.2+1)
-			else
-				Name:=Name " 1"
-			TV_Modify(SSN(Node,"@tv").text,"-Expand")
-			New:=VVersion.Under((Parent:=VVersion.Under(Node.ParentNode,"version",{name:Name,draft:"false",prerelease:"false",target_commitish:SSN(Node,"ancestor::branch/@name").text})),"info",{action:"",issue:"",type:"",user:""})
-			Node.ParentNode.InsertBefore(Parent,Node)
-			Version_Tracker.Select(New)
-		}
-		return
-		NewVersionBranch:
-		Node:=Version_Tracker.GetNode()
-		Root:=SSN(Node,"ancestor::info")
-		Branch:=InputBox(NewWin.HWND,"New Branch","Enter the name for this new branch`nSpaces will be replaced with -`nAnything other than [A-Za-z0-9_-] will be removed")
-		Branch:=RegExReplace(RegExReplace(Branch,"\s","-"),"[^a-zA-Z-_]")
-		if(SSN(Root,"//branch[@name='" Branch "']"))
-			return m("Branch already exists")
-		New:=VVersion.Under(Root,"branch",{name:Branch}),OneMore:=VVersion.Under(New,"version",{draft:"false",name:"1",prerelease:"true",target_commitish:Branch}),Last:=VVersion.Under(OneMore,"info",{action:"",issue:"",type:"",user:""}),Version_Tracker.Select(Last)
-		return
-		VersionEdit:
-		ControlGetFocus,Focus,% NewWin.ID
-		if(Focus="SysTreeView321"){
-			if((Node:=Version_Tracker.GetNode()).NodeName="Version"){
-				Number:=InputBox(NewWin.HWND,"Edit Version Number","Enter A New Version Number",SSN(Node,"@name").text)
-				if(!Number)
-					return m("A Version Number Needs To Be Assigned")
-				if(SSN(Node.ParentNode,"descendant::*[@name='" Number "']"))
-					return m("Version already exists")
-				Node.SetAttribute("name",Number),Version_Tracker.Populate(1)
-				return
-			}else if(SSN(Node,"ancestor-or-self::Github")){
-				Select:=Node,Key:=Node.NodeName,Node:=Settings.SSN("//github")
-				if(Key="Repo"){
-					Root:=Version_Tracker.GetRoot()
-					if(Value:=InputBox(NewWin.ID,"Enter A New Value","Enter A New Value For: Repository (Most Non-Word Characters will be replaced)",SSN(Root,"@repo").text)){
-						Value:=Clean(Value,3)
-						;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-						;~ !!!!!!!!!!!!!!! MAKE SURE THAT !!!!!!!!!!!!!!!!
-						;~ !!!!!!!!!!!!!!!    you edit    !!!!!!!!!!!!!!!!
-						;~ !!!!!!!!!!!!!!!    the name    !!!!!!!!!!!!!!!!
-						;~ !!!!!!!!!!!!!!!    of this     !!!!!!!!!!!!!!!!
-						;~ !!!!!!!!!!!!!!!      REPO      !!!!!!!!!!!!!!!!
-						;~ !!!!!!!!!!!!!!!   On GitHub    !!!!!!!!!!!!!!!!
-						;~ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-						Root.SetAttribute("repo",Value),Version_Tracker.Select(Select)
-						if(m("Refresh This Repo?","btn:ync","def:2")="Yes"){
-							;here
-						}
-						return
-				}}else if(Value:=InputBox(NewWin.ID,"Enter A New Value","Enter A New Value For: " Format("{:T}",Key),SSN(Node,"@" Key).text))
-					Node.SetAttribute(Key,Value)
-				Version_Tracker.Select(Select)
-				return
-			}
-			return Version_Tracker.VersionAddAction()
-		}
-		Send,{Enter}
-		return
-		VersionMove:
-		Direction:=SubStr(A_ThisHotkey,2),Node:=Version_Tracker.GetNode()
-		if(Next:=Direction="Down"?Node.NextSibling.NextSibling:Node.PreviousSibling){
-			Node.ParentNode.InsertBefore(Node,Next),All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::*[@select]")
-			while(aa:=All.Item[A_Index-1])
-				aa.RemoveAttribute("select")
-			Node.SetAttribute("select",1)
-			Version_Tracker.Populate()
-		}else if(Direction="Down"){
-			Node.ParentNode.AppendChild(Node)
-			Version_Tracker.Populate()
-		}
-		return
-		VerEdit:
-		Edit:=NewWin[].Edit
-		NewWin.Default("VT"),Node:=xx.SSN("//*[@tv='" TV_GetSelection() "']")
-		Node.Text:=RegExReplace(Edit,"\R",Chr(127))
-		return
-		VersionShowVersion:
-		if(A_GuiEvent="S"){
-			NewWin.Default("TVVersion")
-			Node:=VVersion.SSN("//*[@tv='" TV_GetSelection() "']")
-			if(!SSN(Node,"*")){
-				GuiControl,Version:,Edit1,% RegExReplace(Node.Text,Chr(127),"`r`n")
-				NewWin.Disable("VerEdit",0)
-			}else if(Node.NodeName="Version"){
-				All:=SN(Node,"descendant::*"),Info:=""
-				while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
-					Info.=(Info?"`r`n":"") ea.Type ":" (ea.Action?" " ea.Action " by " ea.User:"") "`r`n" RegExReplace(aa.Text,Chr(127),"`r`n")
-				}GuiControl,Version:,Edit1,%Info%
-				NewWin.Disable("VerEdit")
-			}else if(Node.NodeName="Branch"){
-				All:=SN(Node,"descendant::version"),VersionList:=""
-				while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
-					VersionList.=ea.Name "`n",Count:=A_Index
-				GuiControl,Version:,Edit1,% (Count=1?"Version":"Versions") ":`r`n`r`n" VersionList
-				NewWin.Disable("VerEdit")
-			}else
-				NewWin.Disable("VerEdit")
-			FileNode:=SSN(Node,"ancestor-or-self::branch")
-			if(FileNode.xml!=LastFileNode.xml){
-				LastFileNode:=FileNode,LV_Delete()
-				All:=SN(Node,"ancestor-or-self::branch/descendant::files/file")
-				while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
-					LV_Add("",ea.Folder,ea.File)
-				Loop,% LV_GetCount("Column")
-					LV_ModifyCol(A_Index,"AutoHDR")
-				LV_Modify(1,"Select Vis Focus")
-			}
-			GuiControl,Version:,% NewWin.XML.SSN("//*[@var='CommitAsOne']/@hwnd").text,% SSN(Node,"ancestor-or-self::branch/@onefile")?1:0
-		}
-		return
-		VersionEscape:
-		VersionClose:
-		Version_Tracker.Populate(1)
-		if(!Version_Tracker.GetNode())
-			return NewWin.Exit()
-		xx:=VVersion
-		/*
-			if(!Root:=Version_Tracker.GetNode("ancestor::info")),NewWin:=Version_Tracker.NewWin,xx:=VVersion
-				Root:=xx.Find("//info/@file",Current(2).File)
-			All:=SN(Root,"descendant::*[@select]|//GitHub/descendant::*[@select]")
-			while(aa:=All.Item[A_Index-1])
-				aa.RemoveAttribute("select")
-		*/
-		NewWin.Default("VT"),Node:=xx.SSN("//*[@tv='" TV_GetSelection() "']"),Node.SetAttribute("select",1),Version_Tracker.TVState(),NewWin.Exit(),All:=VVersion.SN("//*[@tv]")
-		while(aa:=All.Item[A_Index-1])
-			aa.RemoveAttribute("tv")
-		VVersion.Transform()
-		return
-	}VersionAddAction(){
-		static
-		EditNode:=Version_Tracker.GetNode()
-		VersionAddAction:
-		NewWin:=Version_Tracker.NewWin,xx:=VVersion
-		Node:=Version_Tracker.GetNode(1)
-		if(Node.NodeName!="Version")
-			return m("Please Select A Version")
-		All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::info"),Actions:={"":1},Users:={"":1},Type:={"":1},Issues:={"":1}
-		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
-			Actions[ea.Action]:=1,Users[ea.User]:=1,Type[ea.Type]:=1,Issues[ea.Issue]:=1
-		AddWin:=new GUIKeep("AddWin")
-		AddWin.Add("ListView,w300 h200 vType -Multi,Type (Added Removed Changed Etc)","ListView,x+M w300 h200 vAction -Multi,Action (Requested Reported Etc)","ListView,x+M w300 h200 vUser -Multi,User (If Action Is Set)","ListView,x+M w300 h200 vIssue -Multi,Issue #"
-			,"Edit,xm w300 vEdit1","Edit,x+M w300 vEdit2","Edit,x+M w300 vEdit3","Edit,x+M w300 vEdit4","Button,xm gVersionHelp,&Help"),AddWin.Show("Add Action")
-		ControlGetPos,x,y,w,h,SysListView324,% AddWin.ID
-		if(v.Options.Add_Margins_To_Windows){
-			ControlGetPos,x1,,,,SysListView321,% AddWin.ID
-			GuiControl,AddWin:Move,Button1,% "w" x+w-x1
-		}else
-			GuiControl,AddWin:Move,Button1,% "w" x+w-3
-		AddWin.Hotkeys({Enter:"AddWinEnter",Delete:"AddWinDelete","!t":"VersionSelect","!a":"VersionSelect","!u":"VersionSelect","!i":"VersionSelect"})
-		for c,d in {Type:Type,Action:Actions,User:Users,Issue:Issues}{
-			AddWin.Default(c),Match:=Select:=""
-			if(EditNode)
-				Match:=SSN(EditNode,"@" Format("{:L}",c)).text
-			for a in d
-				Index:=LV_Add((Match=a?"Select Vis Focus":""),a),Select:=(Match=a?Index:Select)
-			LV_Modify((Select?Select:1),"Select Vis Focus"),Select:=""
-		}if(EditNode)
-			if(!Node:=SSN(EditNode,"ancestor::info/descendant::*[@action!='' or @issue!='' or @type!='' or @user!='']"))
-				ControlFocus,Edit1,% AddWin.ID
-		return
-		VersionHelp:
-		m("Alt+T/A/U/I will focus on the items below their ListViews")
-		return
-		VersionSelect:
-		static Order:={"!t":1,"!a":2,"!u":3,"!i":4}
-		ControlFocus,% "Edit" Order[A_ThisHotkey],% AddWin.ID
-		return
-		AddWinEnter:
-		NewWin.Default("VT"),Node:=Version_Tracker.GetNode(1)
-		if(Node.NodeName!="Version")
-			return m("Please Select A Version")
-		Info:=[],Values:=AddWin[]
-		for a,b in ["type","action","user","issue"]{
-			Gui,AddWin:Default
-			Gui,AddWin:ListView,% "SysListView32" A_Index
-			Value:=Info[b]:=Values["Edit" A_Index]
-			if(!Info[b])
-				LV_GetText(Value,LV_GetNext())Info[b]:=Value
-			else if(!Info[b]&&A_Index=1)
-				return m("Please Select or Enter an Entry Type")
-			else if(!Info.User&&Info.Action&&A_Index=3)
-				return m("Please Enter a User who prompted this Action")
-			else if(Info.User&&!Info.Action&&A_Index=3)
-				return m("Please enter an Action that " Info.User " requested")
-			if(A_Index=4)
-				Info[b]:=(SubStr(Value,1,1)="#"?Value:"#" Value)
-		}if(Info.Issue="#")
-			Info.Issue:=""
-		WinActivate,% NewWin.ID
-		if(EditNode){
-			for a,b in Info
-				EditNode.SetAttribute(a,b)
-			return Version_Tracker.Populate(1),AddWin.Exit(),EditNode:=""
-		}
-		New:=xx.Under(Node,"info",Info)
-		All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::*[@select]")
-		while(aa:=All.Item[A_Index-1])
-			aa.RemoveAttribute("select")
-		New.SetAttribute("select",1)
-		Version_Tracker.Populate(),AddWin.Exit()
-		return
-		AddWinEscape:
-		AddWinClose:
-		HWND({Rem:"AddWin"}),EditNode:=""
-		WinActivate,% NewWin.ID
-		return
-		AddWinDelete:
-		ControlGetFocus,Focus,% AddWin.ID
-		m(Focus " Is focused, Delete something within it.")
-		return
-		VerDelete:
-		NewWin:=Version_Tracker.NewWin
-		ControlGetFocus,Focus,% NewWin.ID
-		if(Focus="SysTreeView321"){
-			Node:=Version_Tracker.GetNode()
-			if(SSN(Node,"@id")){
-				Repo:=Version_Tracker.GetNode("ancestor::info/@repo").text
-				Res:=m("Tags on GitHub can not be deleted through the API","","","Select:","-Yes to remove the tag from your local version after doing No","-No to go to GitHub and delete the tag","-Cancel to cancel","btn:ync","def:2")
-				if(Res="No")
-					Run,% "https://github.com/" Settings.SSN("//github/@owner").text "/" Repo "/releases/tag/" SSN(Node,"@name").text
-				else if(Res="Yes"){
-					if(m("Are you sure? This Can Not Be Undone!","btn:ync","ico:!","def:2")="Yes")
-						Next:=Node.NextSibling?Node.NextSibling:Node.PreviousSibling?Node.PreviousSibling:Node.ParentNode,Node.ParentNode.RemoveChild(Node),Version_Tracker.Select(Next)
-				}
-				return
-			}if(Node.NodeName="Branch"){
-				if(SSN(Node,"@name").text="master")
-					return m("Can not delete the master.")
-				if(Repo:=Version_Tracker.GetNode("ancestor::info/@repo").text){
-					Res:=m("This Can Not Be Undone!","This will only remove the local branch.","","To remove the cached branch from GitHub you will need to press No and it will take you to Github.com and you can manage your Branches there.","btn:ync","def:3")
-					if(Res="No")
-						Run,% "https://github.com/" Settings.EA("//github").Owner "/" Repo "/branches"
-					else if(Res="Yes"){
-						if(m("Are you sure? This Can NOT Be Undone!","btn:ync","def:2")="Yes")
-							Next:=Node.NextSibling?Node.NextSibling:Node.PreviousSibling?Node.PreviousSibling:Node.ParentNode,Node.ParentNode.RemoveChild(Node),Version_Tracker.Select(Next)
-					}
-					return
-				}if(m("This can not be undone. Are you sure?","ico:!","btn:ync","def:2")="Yes")
-					Next:=Node.NextSibling?Node.NextSibling:Node.PreviousSibling?Node.PreviousSibling:Node.ParentNode,Node.ParentNode.RemoveChild(Node),Version_Tracker.Select(Next)
-				return
-			}
-			if(Node.NodeName~="i)\b(version|info)"=0){
-				if(!Node)
-					return new Version_Tracker()
-				return m("You can only delete Versions or Actions currently")
-			}if(m("Are you sure you want to delete this?","btn:ync","def:2")="Yes"){
-				Next:=Node.NextSibling?Node.NextSibling:Node.PreviousSibling?Node.PreviousSibling:Node.ParentNode,All:=SN(Version_Tracker.GetNode("ancestor::info"),"descendant::*[@select]")
-				while(aa:=All.Item[A_Index-1])
-					aa.RemoveAttribute("select")
-				Next.SetAttribute("select",1),Node.ParentNode.RemoveChild(Node),Version_Tracker.Populate()
-			}
-		}else if(Focus="SysListView321"){
-			Node:=Version_Tracker.GetNode("ancestor::branch/files")
-			Gui,Version:Default
-			Rem:=SSN(Node,"*[" LV_GetNext() "]"),Rem.ParentNode.RemoveChild(Rem),Version_Tracker.Populate()
-		}else
-			Send,{Delete}
-		return
-	}SetSelected(){
-		if(!Root:=Version_Tracker.GetNode("ancestor::info")),NewWin:=Version_Tracker.NewWin,xx:=VVersion
-			Root:=xx.Find("//info/@file",Current(2).File)
-		Node:=Version_Tracker.GetNode(),All:=SN(Root,"descendant::*[@select]")
-		while(aa:=All.Item[A_Index-1])
-			aa.RemoveAttribute("select")
-		Node.SetAttribute("select",1)
-	}Populate(SetCurrent:=0){
-		if(!Root:=Version_Tracker.GetNode("ancestor::info")),NewWin:=Version_Tracker.NewWin,xx:=VVersion
-			Root:=xx.Find("//info/@file",Current(2).File)
-		if(SetCurrent){
-			Node:=Version_Tracker.GetNode(),All:=SN(Root,"//Github/descendant::*[@select]|descendant::*[@select]")
-			while(aa:=All.Item[A_Index-1])
-				aa.RemoveAttribute("select")
-			Node.SetAttribute("select",1)
-		}GuiControl,Version:-Redraw,SysTreeView321
-		NewWin.Default("VT"),TV_Delete(),All:=SN(Root,"descendant::*"),FileRoot:="",LV_Delete()
-		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
-			if(SSN(aa,"ancestor-or-self::files"))
-				Continue
-			if(aa.NodeName="Users")
-				Break
-			aa.SetAttribute("tv",TV_Add((aa.NodeName~="i)\b(branch|version)\b"?ea.Name:aa.NodeName="info"?(ea.Type?ea.Type (ea.Action?" - " ea.Action " by " ea.User:"")(ea.Issue?" " ea.Issue:""):"(Enter to change this)"):aa.xml),SSN(aa.ParentNode,"@tv").text))
-		}for a,b in Settings.EA("//github"){
-			if(A_Index=1)
-				VVersion.Add("Github").SetAttribute("tv",TVRoot:=TV_Add("Github")),AddRepoName:=1
-			VVersion.Add("Github/" a).SetAttribute("tv",TV_Add(Format("{:T}",a) ": " (a!="token"?b:"Entered"),TVRoot,"Vis"))
-		}if(AddRepoName){
-			VVersion.Add("Github/Repo").SetAttribute("tv",TV_Add("Repository: " SSN(Root,"@repo").text,TVRoot,"Vis"))
-		}Instructions:=TV_Add("Instructions")
-		for a,b in ["Delete will delete a version","Alt+A Will Add An Action","Enter Will Edit Whatever Is Selected","F1 Will Compile The Current Version/Branch","Alt+N To Create A New Branch"]
-			TV_Add(b,Instructions,"Vis")
-		All:=xx.SN("//*[@expand]")
-		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa))
-			TV_Modify(ea.tv,"Expand")
-		if(tv:=SSN(Root,"descendant::*[@select]/@tv|//Github/descendant::*[@select]/@tv").text)
-			TV_Modify(tv,"Select Vis Focus")
-		GuiControl,Version:+Redraw,SysTreeView321
-	}Select(Node){
-		Version_Tracker.TVState()
-		if(!Root:=Version_Tracker.GetNode("ancestor::info")),NewWin:=Version_Tracker.NewWin,xx:=VVersion
-			Root:=xx.Find("//info/@file",Current(2).File)
-		All:=SN(Root,"descendant::*[@select]|//Github/descendant::*[@select]")
-		while(aa:=All.Item[A_Index-1])
-			aa.RemoveAttribute("select")
-		Node.SetAttribute("select",1),Version_Tracker.Populate()
-	}TVState(){
-		Version_Tracker.NewWin.Default("VT"),All:=VVersion.SN("//*[@tv]")
-		while(aa:=All.Item[A_Index-1],ea:=XML.EA(aa)){
-			if(TV_Get(ea.TV,"Expand"))
-				aa.SetAttribute("expand",1)
-			else if(ea.Expand)
-				aa.RemoveAttribute("expand")
-		}
-	}
-}
 VersionDropFiles(FileList,Ctrl,x,y,Object){
 	Gui,Version:Default
 	Node:=VVersion.SSN("//*[@tv='" TV_GetSelection() "']/ancestor-or-self::branch")
@@ -13713,5 +13703,9 @@ Words_In_Document(NoDisplay:=0,Text:="",Remove:="",AllowLastWord:=0){
 Wrap_Word_In_Quotes(){
 	sc:=CSC(),sc.2078,CPos:=sc.2008,start:=sc.2266(sc.2008,1),end:=sc.2267(sc.2008,1),sc.2003(start,Chr(34)),sc.2003(end+1,Chr(34)),sc.2025(CPos+1),sc.2079
 }
-DebugWindow(x*){
+XMLSearchText(Attributes,Search){
+	Search:=Format("{:L}",Search)
+	for a in Attributes
+		SearchText.="contains(translate(translate(@" a ", 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'\&','') , '" Search "') or "
+	return SearchText "contains(translate(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'\&','') , '" Search "')"
 }
