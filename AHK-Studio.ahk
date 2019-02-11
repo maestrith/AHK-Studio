@@ -822,9 +822,9 @@ Check_For_Update(startup:=""){
 	GuiControl,,%Branch%,1
 	Check_For_Update_Get_Info(Startup,Branch,NewWin.ID)
 	return
-	AutoUpdate: ;testing
+	AutoUpdate:
 	Master:=NewWin[].Master,Branch:=(Master?"master":"Beta")
-	URL:=RegExReplace(DownloadURL,"\$1",Branch)
+	URL:=RegExReplace(DownloadURL,"\$1&refresh=" A_Now,Branch)
 	Save(),Settings.Save(1),menus.Save(1),Studio:=URLDownloadToVar(URL)
 	if(!InStr(Studio,";download complete"))
 		URL:=RegExReplace(DownloadURL,"\$1","master"),Studio:=URLDownloadToVar(URL)
