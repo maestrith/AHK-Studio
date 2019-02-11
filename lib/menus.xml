@@ -258,7 +258,8 @@
 			<menu name="Brace Match Background Match" clean="Brace_Match_Background_Match"></menu>
 			<menu clean="Additional_Library_Folders" name="Additional Library Folders"></menu>
 			<menu clean="Ask_Before_Overwriting_Edited_Files" name="Ask Before Overwriting Edited Files"></menu>
-			<menu clean="Quick_Options" name="Quick Options"></menu></menu>
+			<menu clean="Quick_Options" name="Quick Options"></menu>
+			<menu clean="Hide_Context_Sensitive_Help" name="Hide Context Sensitive Help"></menu></menu>
 		<menu name="Fo&amp;rmat" clean="Format" top="1">
 			<menu clean="Align_Selected_Text" hotkey="" name="Align Selected Text" option="" plugin="plugins\Align Selected Text.ahk"></menu>
 			<menu name="Clear Line Status" clean="Clear_Line_Status"></menu>
