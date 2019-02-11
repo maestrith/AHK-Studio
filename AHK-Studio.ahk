@@ -2553,6 +2553,11 @@ Class MainWindowClass{
 			aa.RemoveAttribute("top"),aa.RemoveAttribute("left"),aa.RemoveAttribute("resize")
 		obj.ChangePointer(1,1,1)
 	}SetWinPos(hwnd,x,y,w,h,ea="",flags:="",set:=0){
+		if(){
+			static Types:=[]
+			Types[ea.Type,Flags]:=1
+			t(Obj2String(Types))
+		}
 		y:=v.Options.Top_Find?y+=this.qfheight:y
 		DllCall("SetWindowPos",int,hwnd,int,0,int,x,int,y,int,w,int,h,uint,flags),DllCall("RedrawWindow",int,hwnd,int,0,int,0,uint,0x401|0x2)
 		if(set){
@@ -5119,7 +5124,11 @@ CompileFont(XMLObject,RGB:=1){
 }
 Context(return=""){
 	static FindFirst:="O)^[\s|}]*((\w|[^\x00-\x7F])+)",ColorShow:=0
-	if(v.ShowTT)
+	if(v.Options.Hide_Context_Sensitive_Help){
+		if((sc:=CSC()).2202)
+			sc.2201
+		return
+	}if(v.ShowTT)
 		t("It is getting here","time:1",v.ShowTT.="Context,")
 	ControlGetFocus,Focus,% HWND([1])
 	if(!InStr(Focus,"Scintilla"))
@@ -7090,6 +7099,9 @@ Extract(Main){
 		node:=CEXML.Under(main,"file",{file:file,dir:MainDir,filename:MFN,id:GetID(),nne:mnne,scan:1,lower:Format("{:L}",file),ext:Ext,lang:Language,type:"File"})
 	if(Ext="ahk"&&!SSN(Main,"ancestor-or-self::Libraries")){
 		if(Extra:=ES(MainFile)){
+			/*
+				m(Extra)
+			*/
 			for a,b in StrSplit(Extra,"`n","`r`n"){
 				IncludeFile:=RegExReplace(b,"i)(#Include.*\b\s+)")
 				if(!InStr(FileExist(IncludeFile),"D")&&FileExist(IncludeFile)&&IncludeFile){
@@ -7266,7 +7278,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20180209111407,XMLFiles:={menus:[20181004103037,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20180209111407,XMLFiles:={menus:[20190210225248,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20180104080414,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -7476,13 +7488,6 @@ Find_Replace(){
 		pos:=1
 	}current:=Current(1).firstchild,looped:=1
 	Goto,frrestart
-	/*
-		Flan:="äüö" äüöäüöäüöäüöäüöäüö
-		Flan:="äüö"
-		Flan:="äüö"
-		Flan:="äüö"
-		Flan:="äüö"
-	*/
 	return
 	FRReplace:
 	info:=nw[],sc.2170(0,[NewLines(info.replace)]),Update({sc:sc.2357})
@@ -10416,7 +10421,7 @@ Open(FileList="",Show="",Redraw:=1){
 		if(ff:=CEXML.Find("//main/@file",FileName))
 			return tv(SSN(ff,"descendant::file/@tv").text)
 		fff:=FileOpen(FileName,"RW","utf-8"),file1:=file:=fff.Read(fff.length)
-		Gosub,addfile
+		Gosub,AddFile
 		if(CloseID)
 			Close(CEXML.SN("//*[@id='" CloseID "']"),,0),CloseID:=""
 		TVC.Default(1)
@@ -10438,7 +10443,7 @@ Open(FileList="",Show="",Redraw:=1){
 			}if(CEXML.Find("//main/@file",b))
 				Continue
 			fff:=FileOpen(b,"RW","utf-8"),file1:=file:=fff.Read(fff.Length),FileName:=b
-			Gosub,addfile
+			Gosub,AddFile
 		}
 		SetTimer,ScanFiles,-1000
 		tv:=SSN(CEXML.Find("//main/@file",StrSplit(FileList,"`n").1),"descendant::file/@tv").text,PERefresh(),v.TNGui.Populate(),Settings.Add("open/file",,FileName,1)
@@ -10456,16 +10461,12 @@ Open(FileList="",Show="",Redraw:=1){
 			TV_Modify(ea.tv,"+Expand")
 	TVState(1),TV_Modify(current,"Select Vis Focus")
 	return
-	addfile:
+	AddFile:
 	Gui,1:Default
 	SplitPath,FileName,fn,dir,,nne
 	FileGetTime,time,%FileName%
 	TVC.Disable(1)
 	Extract(GetMainNode(FileName)),FEUpdate()
-	/*
-		if(!Settings.SSN("//open/file[text()='" FileName "']"))
-			Settings.Add("open/file",,FileName,1)
-	*/
 	Gui,1:Default
 	if(Redraw)
 		TVC.Redraw(1)
@@ -10495,7 +10496,7 @@ Options(x:=0){
 	if(x="startup"){
 		v.Options:=[]
 		disable:="Center_Caret|Disable_Autosave|Disable_Backup|Disable_Exemption_Handling|Disable_Line_Status|Disable_Match_Brace_Highlight_On_Delete|Disable_Variable_List|End_Document_At_Last_Line|Hide_File_Extensions|Hide_Horizontal_Scrollbars|Hide_Indentation_Guides|Hide_Vertical_Scrollbars|Remove_Directory_Slash|Run_As_Admin|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Virtual_Space|Warn_Overwrite_On_Export|Word_Wrap_Indicators"
-		options:="Add_Margins_To_Windows|Add_Space_After_Includes_On_Publish|Auto_Check_For_Update_On_Startup|Auto_Close_Find|Auto_Complete|Auto_Complete_In_Quotes|Auto_Complete_While_Tips_Are_Visible|Auto_Expand_Includes|Auto_Indent_Comment_Lines|Auto_Set_Area_On_Quick_Find|Auto_Space_After_Comma|Auto_Variable_Browser|Autocomplete_Enter_Newline|Brace_Match_Background_Match|Build_Comment|Case_Sensitive|Center_Caret|Check_For_Edited_Files_On_Focus|Clipboard_History|Context_Sensitive_Help|Copy_Selected_Text_on_Quick_Find|Current_Area|Disable_Auto_Advance|Disable_Auto_Complete|Disable_Auto_Delete|Disable_Auto_Indent_For_Non_Ahk_Files|Disable_Auto_Insert_Complete|Disable_Autosave|Disable_Backup|Disable_Compile_AHK|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Disable_Line_Status|Disable_Variable_List|Enable_Close_On_Save|End_Document_At_Last_Line|Focus_Studio_On_Debug_Breakpoint|Full_Auto_Indentation|Full_Backup_All_Files|Full_Tree|Global_Debug_Hotkeys|Greed|Hide_File_Extensions|Hide_Indentation_Guides|Highlight_Current_Area|Includes_In_Place|Inline_Brace|Manual_Continuation_Line|Multi_Line|New_File_Dialog|New_Include_Add_Space|Omni_Search_Stats|OSD|Publish_Indent|Regex|Remove_Directory_Slash|Require_Enter_For_Search|Run_As_Admin|Select_Current_Debug_Line|Shift_Breakpoint|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Small_Icons|Smart_Delete|Top_Find|Verbose_Debug_Window|Warn_Overwrite_On_Export|Word_Border|Ask_Before_Overwriting_Edited_Files"
+		Options:="Add_Margins_To_Windows|Add_Space_After_Includes_On_Publish|Auto_Check_For_Update_On_Startup|Auto_Close_Find|Auto_Complete|Auto_Complete_In_Quotes|Auto_Complete_While_Tips_Are_Visible|Auto_Expand_Includes|Auto_Indent_Comment_Lines|Auto_Set_Area_On_Quick_Find|Auto_Space_After_Comma|Auto_Variable_Browser|Autocomplete_Enter_Newline|Brace_Match_Background_Match|Build_Comment|Case_Sensitive|Center_Caret|Check_For_Edited_Files_On_Focus|Clipboard_History|Context_Sensitive_Help|Copy_Selected_Text_on_Quick_Find|Current_Area|Disable_Auto_Advance|Disable_Auto_Complete|Disable_Auto_Delete|Disable_Auto_Indent_For_Non_Ahk_Files|Disable_Auto_Insert_Complete|Disable_Autosave|Disable_Backup|Disable_Compile_AHK|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Disable_Line_Status|Disable_Variable_List|Enable_Close_On_Save|End_Document_At_Last_Line|Focus_Studio_On_Debug_Breakpoint|Full_Auto_Indentation|Full_Backup_All_Files|Full_Tree|Global_Debug_Hotkeys|Greed|Hide_File_Extensions|Hide_Indentation_Guides|Highlight_Current_Area|Includes_In_Place|Inline_Brace|Manual_Continuation_Line|Multi_Line|New_File_Dialog|New_Include_Add_Space|Omni_Search_Stats|OSD|Publish_Indent|Regex|Remove_Directory_Slash|Require_Enter_For_Search|Run_As_Admin|Select_Current_Debug_Line|Shift_Breakpoint|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Small_Icons|Smart_Delete|Top_Find|Verbose_Debug_Window|Warn_Overwrite_On_Export|Word_Border|Ask_Before_Overwriting_Edited_Files|Hide_Context_Sensitive_Help"
 		other:="Auto_Space_After_Comma|Auto_Space_Before_Comma|Autocomplete_Enter_Newline|Disable_Auto_Delete|Disable_Auto_Insert_Complete|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Enable_Close_On_Save|Force_UTF-8|Full_Tree|Hide_Library_Files_In_Code_Explorer|Hide_Tray_Icon|Highlight_Current_Area|Manual_Continuation_Line|Match_Any_Word|Small_Icons|Top_Find"
 		special:="Word_Wrap"
 		alloptions.=disable "|" options "|" other "|" special
@@ -10570,6 +10571,8 @@ Options(x:=0){
 		GuiControl,1:,%control%,%OnOff%
 	}if(x="Top_Find")
 		RefreshThemes()
+	if(x="Hide_Context_Sensitive_Help")
+		Context()
 }
 ParseJson(jsonStr){
 	static SC
@@ -12764,21 +12767,6 @@ SplitPath(File){
 	SplitPath,File,FileName,Dir,Ext,NNE,Drive
 	return {File:File,FileName:FileName,Dir:Dir,Ext:Ext,NNE:NNE,Drive:Drive}
 }
-Spoons(a*){
-	Info:=A_EventInfo,Code:=NumGet(Info+8)
-	if((ctrl:=NumGet(Info+0))=v.debug.sc&&v.debug.sc){
-		sc:=v.debug
-		if(Code=2027){
-			style:=sc.2010(sc.2008)
-			if(style=-106)
-				Run_Program()
-			else if(style=-105)
-				List_Variables()
-		}return
-	}
-	if(Code=2028)
-		SetTimer("LButton",-50)
-}
 Start_Select_Character(){
 	StartSelect:=InputBox(HWND(1),"Start Select Character","Enter a list of characters you want to add to the DoubleClick selection",Settings.SSN("//StartSelect").text)
 	Settings.Add("StartSelect").text:=StartSelect
@@ -12899,9 +12887,6 @@ Tab_Width(){
 	tabwidth:=tabwidth?tabwidth:5,CSC().2036(tabwidth),Settings.Add("tab").text:=tabwidth
 	return
 }
-Test_Plugin(){
-	Exit(1)
-}
 Testing(){
 	return v.Debug.2004
 	return m("Testing")
@@ -12969,6 +12954,9 @@ Testing(){
 	if(A_UserName!="maest")
 		return m("Testing")
 	return m("I'm sleepy.")
+}
+Test_Plugin(){
+	Exit(1)
 }
 Theme(){
 	new SettingsClass("Theme")
@@ -13708,4 +13696,38 @@ XMLSearchText(Attributes,Search){
 	for a in Attributes
 		SearchText.="contains(translate(translate(@" a ", 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'\&','') , '" Search "') or "
 	return SearchText "contains(translate(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'\&','') , '" Search "')"
+}
+Spoons(a*){
+	Info:=A_EventInfo,Code:=NumGet(Info+8)
+	if((ctrl:=NumGet(Info+0))=v.debug.sc&&v.debug.sc){
+		sc:=v.debug
+		if(Code=2027){
+			style:=sc.2010(sc.2008)
+			if(style=-106)
+				Run_Program()
+			else if(style=-105)
+				List_Variables()
+		}return
+	}
+	if(Code=2028)
+		SetTimer("LButton",-50)
+}
+Obj2String(Obj,FullPath:=1,BottomBlank:=0){
+	static String,Blank
+	if(FullPath=1)
+		String:=FullPath:=Blank:=""
+	if(IsObject(Obj)){
+		for a,b in Obj{
+			if(IsObject(b))
+				Obj2String(b,FullPath "." a,BottomBlank)
+			else{
+				if(BottomBlank=0)
+					String.=FullPath "." a " = " b "`n"
+				else if(b!="")
+					String.=FullPath "." a " = " b "`n"
+				else
+					Blank.=FullPath "." a " =`n"
+			}
+	}}
+	return String Blank
 }
