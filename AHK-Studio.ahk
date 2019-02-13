@@ -4778,10 +4778,10 @@ Close(x:=1,all:="",Redraw:=1){
 		TVC.Disable(A_Index)
 	if(x.length)
 		Nodes:=x
-	Save(),Update:=Update("Get").1,RemoveFileList:=[]
+	Save(),Update:=Update("Get").1,RemoveFileList:=[],Default:=Settings.SSN("//directory").text
 	while(nn:=Nodes.item[A_Index-1]),pea:=XML.EA(nn){
 		Fea:=XML.EA(SSN(nn,"descendant::file"))
-		if(Fea.Dir=A_ScriptDir "\Untitled"&&SubStr(Fea.FileName,1,8)="Untitled"),Untitled:=0
+		if(Fea.Dir=(Default?Default:A_ScriptDir) "\Untitled"&&SubStr(Fea.FileName,1,8)="Untitled"),Untitled:=0
 			Untitled:=1
 		RemoveFile:=nn.NodeName="main"?SSN(nn,"file/@file").text:pea.File,RemoveFileList.Push(RemoveFile)
 		if((!Node:=Settings.Find("//previous_scripts/script/text()",pea.file))&&!Untitled)
@@ -9404,15 +9404,17 @@ New(FileName:="",text:="",Select:=1){
 		FileName:=DLG_FileSave(hwnd(1))
 		if(!FileName)
 			return
-		
 		file:=FileOpen(FileName,"RW"),file.Seek(0),file.Write(template),file.Length(file.Position),file.Close()
 		if(FileExist(FileName))
 			return tv(Open(FileName))
 	}else{
 		Number:=1
-		while(CEXML.SSN("//file[@file='" A_ScriptDir "\Untitled\Untitled" A_Index ".ahk']"))
+		Default:=Settings.SSN("//directory").text
+		while(CEXML.SSN("//file[@file='" (Default?Default:A_ScriptDir) "\Untitled\Untitled" A_Index ".ahk']"))
 			Number:=A_Index+1
-		FileName:=A_ScriptDir "\Untitled\Untitled" Number ".ahk",Untitled:=1
+		FileName:=(Default?Default:A_ScriptDir) "\Untitled\Untitled" Number ".ahk",Untitled:=1
+		if(!FileExist(Default "\Untitled"))
+			FileCreateDir,%Default%\Untitled
 		/*
 			FileName:=(list:=CEXML.SN("//main[@untitled]").length)?"Untitled" list ".ahk":"Untitled.ahk",Untitled:=1
 		*/
@@ -11226,13 +11228,24 @@ Quick_Scintilla_Code_Lookup(){
 		return
 	sc.2117(1,Trim(ll)),sc.2160(start,end)
 }
-RButton(){
-	MouseGetPos,,,win
-	if(MainWin.hwnd!=win){
-		MouseClick,Right
-		return
-	}
-	MainWin.ContextMenu(1)
+Obj2String(Obj,FullPath:=1,BottomBlank:=0){
+	static String,Blank
+	if(FullPath=1)
+		String:=FullPath:=Blank:=""
+	if(IsObject(Obj)){
+		for a,b in Obj{
+			if(IsObject(b))
+				Obj2String(b,FullPath "." a,BottomBlank)
+			else{
+				if(BottomBlank=0)
+					String.=FullPath "." a " = " b "`n"
+				else if(b!="")
+					String.=FullPath "." a " = " b "`n"
+				else
+					Blank.=FullPath "." a " =`n"
+			}
+	}}
+	return String Blank
 }
 Redo(){
 	CSC().2011
@@ -11860,8 +11873,8 @@ Run(){
 	if(file=A_ScriptFullPath){
 		Run,%A_ScriptFullPath%
 		Exit(1)
-	}SetStatus("Run Script: " SplitPath(Current(2).file).Filename " @ " FormatTime("hh:mm:ss",A_Now),3)
-	if(Current(3).Dir=A_ScriptDir "\Untitled")
+	}SetStatus("Run Script: " SplitPath(Current(2).file).Filename " @ " FormatTime("hh:mm:ss",A_Now),3),Default:=Settings.SSN("//directory").text
+	if(Current(3).Dir=(Default?Default:A_ScriptDir) "\Untitled")
 		return DynaRun(Update({Get:Current(3).file}),1,Current(2).File)
 	SplitPath,file,,dir,ext
 	if(ext!="ahk")
@@ -11958,20 +11971,22 @@ Save_As(){
 	}SplashTextOff
 	Open(NewFile),Close(CEXML.SN("//main[@id='" Current(2).ID "']")),tv(SSN(CEXML.Find("//file/@file",NewFile),"@tv").text)
 }
-Save(option=""){
+Save(Option=""){
 	sc:=CSC(),Update({sc:sc.2357}),info:=Update("get"),Now:=A_Now
-	SavedFiles:=[],saveas:=[],all:=CEXML.SN("//*[@edited]")
+	SavedFiles:=[],saveas:=[],all:=CEXML.SN("//*[@edited]"),Default:=Settings.SSN("//directory").text
 	while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa){
 		SavedFiles.Push(1),text:=RegExReplace(info.1[ea.file],"\R","`r`n"),SetStatus("Saving " ea.FileName,3),updirty:=CEXML.SN("//*[@id='" ea.id "']")
-		if(ea.Dir=A_ScriptDir "\Untitled"&&SubStr(ea.FileName,1,8)="Untitled"&&Option!=3)
+		if(ea.Dir=(Default?Default:A_ScriptDir) "\Untitled"&&SubStr(ea.FileName,1,8)="Untitled"&&Option!=3){
 			Continue
+		}
 		while(uu:=updirty.item[A_Index-1]),dea:=XML.EA(uu)
 			TVC.Modify(1,(v.Options.Hide_File_Extensions?dea.nne:dea.FileName),dea.tv)
 		if(!SplitPath(ea.file).dir)
 			Continue
-		if(ea.untitled)
+		if(ea.untitled){
+			fl:=FileOpen(ea.file,"W","UTF-8"),fl.Write(text),fl.Length(fl.Position),fl.Close(),aa.SetAttribute("encoding","UTF-8")
 			Continue
-		if(!v.Options.Disable_Backup){
+		}if(!v.Options.Disable_Backup){
 			parent:=SSN(aa,"ancestor::main/@file").text
 			SplitPath,parent,,Dir
 			FilePath:=SanitizePath(RelativePath(Current(2).File,ea.File))
@@ -13711,23 +13726,4 @@ Spoons(a*){
 	}
 	if(Code=2028)
 		SetTimer("LButton",-50)
-}
-Obj2String(Obj,FullPath:=1,BottomBlank:=0){
-	static String,Blank
-	if(FullPath=1)
-		String:=FullPath:=Blank:=""
-	if(IsObject(Obj)){
-		for a,b in Obj{
-			if(IsObject(b))
-				Obj2String(b,FullPath "." a,BottomBlank)
-			else{
-				if(BottomBlank=0)
-					String.=FullPath "." a " = " b "`n"
-				else if(b!="")
-					String.=FullPath "." a " = " b "`n"
-				else
-					Blank.=FullPath "." a " =`n"
-			}
-	}}
-	return String Blank
 }
