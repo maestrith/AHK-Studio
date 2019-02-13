@@ -11228,24 +11228,13 @@ Quick_Scintilla_Code_Lookup(){
 		return
 	sc.2117(1,Trim(ll)),sc.2160(start,end)
 }
-Obj2String(Obj,FullPath:=1,BottomBlank:=0){
-	static String,Blank
-	if(FullPath=1)
-		String:=FullPath:=Blank:=""
-	if(IsObject(Obj)){
-		for a,b in Obj{
-			if(IsObject(b))
-				Obj2String(b,FullPath "." a,BottomBlank)
-			else{
-				if(BottomBlank=0)
-					String.=FullPath "." a " = " b "`n"
-				else if(b!="")
-					String.=FullPath "." a " = " b "`n"
-				else
-					Blank.=FullPath "." a " =`n"
-			}
-	}}
-	return String Blank
+RButton(){
+	MouseGetPos,,,win
+	if(MainWin.hwnd!=win){
+		MouseClick,Right
+		return
+	}
+	MainWin.ContextMenu(1)
 }
 Redo(){
 	CSC().2011
@@ -13726,4 +13715,23 @@ Spoons(a*){
 	}
 	if(Code=2028)
 		SetTimer("LButton",-50)
+}
+Obj2String(Obj,FullPath:=1,BottomBlank:=0){
+	static String,Blank
+	if(FullPath=1)
+		String:=FullPath:=Blank:=""
+	if(IsObject(Obj)){
+		for a,b in Obj{
+			if(IsObject(b))
+				Obj2String(b,FullPath "." a,BottomBlank)
+			else{
+				if(BottomBlank=0)
+					String.=FullPath "." a " = " b "`n"
+				else if(b!="")
+					String.=FullPath "." a " = " b "`n"
+				else
+					Blank.=FullPath "." a " =`n"
+			}
+	}}
+	return String Blank
 }
