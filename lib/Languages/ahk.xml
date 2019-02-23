@@ -290,6 +290,7 @@
 		<syntax syntax="([GuiHwnd, FileArray, CtrlHwnd, X, Y])">GuiDropFiles</syntax>
 		<syntax syntax="([GuiHwnd])`nCalled when the GUI is closed via Escape key. Return a non-zero value to prevent closing.">GuiEscape</syntax>
 		<syntax syntax="([GuiHwnd, EventInfo, Width, Height])">GuiSize</syntax>
+		<syntax syntax="(String [, Replacement, OnOffToggle])">Hotstring</syntax>
 		<syntax syntax="(ImageListID, Filename [, IconNumber, ResizeNonIcon?])">IL_Add</syntax>
 		<syntax syntax="([, InitialCount, GrowCount, LargeIcons?])">IL_Create</syntax>
 		<syntax syntax="(ImageListID)">IL_Destroy</syntax>
