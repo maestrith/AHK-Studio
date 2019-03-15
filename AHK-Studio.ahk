@@ -115,7 +115,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:=1.005.21
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.22
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -476,8 +476,12 @@ BookEnd(add,hotkey){
 	sc.2079
 }
 BraceHighlight(){
-	static LastBackground:=0
+	static LastBackground:=0,Bad:=0
 	sc:=CSC()
+	if((sc.2007((Pos:=sc.2008-1))="123"||sc.2007(Pos)="125")&&sc.2353(sc.2008-1)=-1)
+		return sc.2352(Pos),Bad:=1
+	if(Bad)
+		Bad:=0,sc.2351(-1,-1)
 	if(sc.2353(sc.2008-1)>0)
 		sc.2351(v.BraceStart:=sc.2008-1,v.BraceEnd:=sc.2353(sc.2008-1)),v.HighLight:=1
 	else if(sc.2353(sc.2008)>0)
@@ -2233,7 +2237,7 @@ Class MainWindowClass{
 				ll.RemoveAttribute("tp")
 	}}ChangePointer(a,b,c){
 		if(this!=18&&a!=1)
-			return
+			return ;#[Find Me]
 		obj:=MainWin,pos:=obj.MousePos(),x:=pos.x,y:=pos.y,tnea:=obj.Gui.EA("//win[@win='Tracked_Notes']")
 		if((node:=obj.Gui.SSN("//*[@type='Tracked Notes' and (@x+4<" x " and @x+@w+-4>" x ")and(@y<" y " and @y+@h>" y ")]"))&&((tnea.x<x+4&&tnea.x>x-4)||(tnea.y<y+4&&tnea.y>y-4))){
 			obj.ResizeInfo:=obj.Gui.SSN("//win[@win='Tracked_Notes']"),DllCall("SetCursor","UInt",SSN(node,"@vertical")?obj.cursns:obj.cursew)
@@ -2409,7 +2413,7 @@ Class MainWindowClass{
 			Gui,-MinSize
 		}
 	}MousePos(){
-		CoordMode,mouse,Relative
+		CoordMode,Mouse,Relative
 		MouseGetPos,x,y,win,Control,2
 		obj:=MainWin,x:=x-obj.Border,y:=y-obj.Border-obj.Caption-obj.Menu-(v.Options.Top_Find?obj.QFHeight:0)
 		if(!obj.Gui.SSN("//*[@hwnd='" Control+0 "']")&&Control=obj.tnsc.sc)
@@ -5808,22 +5812,26 @@ Create_Function_From_Selected(){
 	return
 }
 Create_Include_From_Selection(){
-	pos:=PosInfo(),sc:=CSC()
-	
+	Pos:=PosInfo(),sc:=CSC()
 	if(Pos.Start=Pos.End){
 		Line:=sc.2166(sc.2008)
 		if((Parent:=sc.2225(Line))<0)
 			Parent:=sc.2225(++Line)
 		if(Parent<0)
-			ExitApp
+			return
 		Last:=sc.2224(Parent,-1)
 		sc.2160(sc.2128(Parent),sc.2136(Last))
 		Pos:=PosInfo()
-	}
-	
-	
-	
-	if(pos.start=pos.end)
+	}else if(sc.2007(sc.2008)=123||sc.2007(sc.2008-1)=123){
+		Line:=sc.2166(sc.2008),Start:=sc.2009
+		if((Parent:=sc.2225(Line))<0)
+			Parent:=sc.2225(++Line)
+		if(Parent<0)
+			return
+		Last:=sc.2224(Parent,-1)
+		sc.2160(Start,sc.2136(Last))
+		Pos:=PosInfo()
+	}if(Pos.Start=Pos.End)
 		return m("Please select some text to create a new Include from")
 	text:=sc.GetSelText(),RegExMatch(text,"^(\w+)",Include)
 	if(Include1="Class")
@@ -5837,7 +5845,7 @@ Create_Include_From_Selection(){
 		return m("Include name already exists. Please choose another")
 	if(CEXML.Find(Current(1),"//@file",FileName))
 		return m("This file is already included in this Project")
-	sc.2326(),AddInclude(FileName,text,{start:StrPut(Include1 "(","UTF-8")-1,end:StrPut(Include1 "(","UTF-8")-1},0)
+	sc.2326(),AddInclude(FileName,text,{Start:StrPut(Include1 "(","UTF-8")-1,End:StrPut(Include1 "(","UTF-8")-1},0)
 	SplitPath,FileName,,Dir
 	if(!Node:=Settings.Find("//Include/Dir/@file",MainFile))
 		Node:=Settings.Add("Include/Dir",{file:MainFile},,1)
@@ -7029,9 +7037,9 @@ Exit(ExitApp:=0){
 	}}last:=MainWin.Gui.SN("//*[@last]")
 	WinGet,max,MinMax,% HWND([1])
 	if(max!=1){
-		pos:=MainWin.WinPos().text
-		if(!InStr(pos,"-32000"))
-			Node.SetAttribute("pos",pos)
+		Pos:=(Win:=MainWin.WinPos()).text
+		if(Win.W&&Win.H)
+			Node.SetAttribute("pos",Pos)
 	}while(ll:=last.item[A_Index-1])
 		ll.RemoveAttribute("last")
 	RCMXML.Save(1),MainWin.Gui.SSN("//*[@hwnd='" CSC().sc "']").SetAttribute("last",1),MainWin.Gui.Save(1),menus.Save(1),GetPos(),Positions.Save(1),TNotes.GetPos(),TNotes.SaveState(),TNotes.XML.Save(1)
@@ -12581,7 +12589,6 @@ SetTimers(Timers*){
 SettingsDefault(id,return:=0){
 	main:=SettingsWindow.win.xml,node:=main.SSN("//*[@id='" id "']"),win:=main.SSN("//window/@name").text,ea:=XML.EA(node)
 	if(ea.type){
-		
 		Gui,%win%:Default
 		Gui,% win ":" ea.type,% ea.hwnd
 	}
@@ -13532,8 +13539,7 @@ UpPos(NoContext:=0){
 		if(v.ShowTT)
 			t("UpPos Here","time:1",v.ShowTT.="UpPos,")
 		SetTimer,Context,-500
-	}
-	BraceHighlight()
+	}BraceHighlight()
 }
 URIDecode(str){
 	Loop{ ;by Titam
@@ -13734,4 +13740,4 @@ Obj2String(Obj,FullPath:=1,BottomBlank:=0){
 			}
 	}}
 	return String Blank
-} ;End
+}
