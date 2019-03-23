@@ -7166,10 +7166,14 @@ Extract(Main){
 				check:=RegExReplace(info,"i)%A_AppDataCommon%",A_AppDataCommon)
 				if(FileExist(check)="D"&&!Pool[check])
 					Pool[check]:=1
+			}if(InStr(Info,"%A_UserName%")){
+				check:=RegExReplace(info,"i)%A_UserName%",A_UserName)
+				if(FileExist(check)="D"&&!Pool[check])
+					Pool[Check]:=1
 			}if(FileExist(check)="A"){
-				FileList[check]:={file:check,include:found.0,inside:file},added:=1
-				Continue
-			}info:=check
+					FileList[check]:={file:check,include:found.0,inside:file},added:=1
+					Continue
+				}info:=check
 		}if(InStr(info,"<")){
 			info:=RegExReplace(info,"\<|\>")
 			for a in Pool{
