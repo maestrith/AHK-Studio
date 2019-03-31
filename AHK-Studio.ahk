@@ -4755,7 +4755,7 @@ Clean(Clean,tab=""){
 	return Clean
 }
 Clear_History(){
-	History.XML.XML.LoadXML("<History/>"),sc:=CSC(),History.Add(CEXML.EA("//*[@sc='" sc.2357 "']"),sc,1)
+	History.XML.XML.LoadXML("<History/>"),sc:=CSC(),History.Add(CEXML.EA("//*[@sc='" sc.2357 "']"),sc,1),SetStatus("History Cleared",2)
 }
 Clear_Line_Status(){
 	LineStatus.Clear()
@@ -7146,6 +7146,10 @@ Extract(Main){
 	while(RegExMatch(text,"iOm`nU)^\s*\x23Include\s*,?\s*(.*)(\s+;.*)?$",found,pos)),pos:=found.pos(1)+found.len(1){
 		if(InStr(Found.2,";NoIndex"))
 			Continue
+		/*
+			Make sure to take better care of <incname>
+			Add in any/all %a_whatever% to the searches
+		*/
 		info:=found.1,info:=RegExReplace(Trim(found.1,", `t`r`n"),"i)\Q*i\E\s*"),added:=0,orig:=info
 		if(FileExist(info)="D")
 			Pool[Trim(info,"\")]:=1
@@ -7290,7 +7294,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20180209111407,XMLFiles:={menus:[20190210225248,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20180209111407,XMLFiles:={menus:[20190331121057,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20180104080414,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -10510,7 +10514,7 @@ Options(x:=0){
 	if(x="startup"){
 		v.Options:=[]
 		disable:="Center_Caret|Disable_Autosave|Disable_Backup|Disable_Exemption_Handling|Disable_Line_Status|Disable_Match_Brace_Highlight_On_Delete|Disable_Variable_List|End_Document_At_Last_Line|Hide_File_Extensions|Hide_Horizontal_Scrollbars|Hide_Indentation_Guides|Hide_Vertical_Scrollbars|Remove_Directory_Slash|Run_As_Admin|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Virtual_Space|Warn_Overwrite_On_Export|Word_Wrap_Indicators"
-		Options:="Add_Margins_To_Windows|Add_Space_After_Includes_On_Publish|Auto_Check_For_Update_On_Startup|Auto_Close_Find|Auto_Complete|Auto_Complete_In_Quotes|Auto_Complete_While_Tips_Are_Visible|Auto_Expand_Includes|Auto_Indent_Comment_Lines|Auto_Set_Area_On_Quick_Find|Auto_Space_After_Comma|Auto_Variable_Browser|Autocomplete_Enter_Newline|Brace_Match_Background_Match|Build_Comment|Case_Sensitive|Center_Caret|Check_For_Edited_Files_On_Focus|Clipboard_History|Context_Sensitive_Help|Copy_Selected_Text_on_Quick_Find|Current_Area|Disable_Auto_Advance|Disable_Auto_Complete|Disable_Auto_Delete|Disable_Auto_Indent_For_Non_Ahk_Files|Disable_Auto_Insert_Complete|Disable_Autosave|Disable_Backup|Disable_Compile_AHK|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Disable_Line_Status|Disable_Variable_List|Enable_Close_On_Save|End_Document_At_Last_Line|Focus_Studio_On_Debug_Breakpoint|Full_Auto_Indentation|Full_Backup_All_Files|Full_Tree|Global_Debug_Hotkeys|Greed|Hide_File_Extensions|Hide_Indentation_Guides|Highlight_Current_Area|Includes_In_Place|Inline_Brace|Manual_Continuation_Line|Multi_Line|New_File_Dialog|New_Include_Add_Space|Omni_Search_Stats|OSD|Publish_Indent|Regex|Remove_Directory_Slash|Require_Enter_For_Search|Run_As_Admin|Select_Current_Debug_Line|Shift_Breakpoint|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Small_Icons|Smart_Delete|Top_Find|Verbose_Debug_Window|Warn_Overwrite_On_Export|Word_Border|Ask_Before_Overwriting_Edited_Files|Hide_Context_Sensitive_Help"
+		Options:="Add_Margins_To_Windows|Add_Space_After_Includes_On_Publish|Auto_Check_For_Update_On_Startup|Auto_Close_Find|Auto_Complete|Auto_Complete_In_Quotes|Auto_Complete_While_Tips_Are_Visible|Auto_Expand_Includes|Auto_Indent_Comment_Lines|Auto_Set_Area_On_Quick_Find|Auto_Space_After_Comma|Auto_Variable_Browser|Autocomplete_Enter_Newline|Brace_Match_Background_Match|Build_Comment|Case_Sensitive|Center_Caret|Check_For_Edited_Files_On_Focus|Clipboard_History|Context_Sensitive_Help|Copy_Selected_Text_on_Quick_Find|Current_Area|Disable_Auto_Advance|Disable_Auto_Complete|Disable_Auto_Delete|Disable_Auto_Indent_For_Non_Ahk_Files|Disable_Auto_Insert_Complete|Disable_Autosave|Disable_Backup|Disable_Compile_AHK|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Disable_Line_Status|Disable_Variable_List|Enable_Close_On_Save|End_Document_At_Last_Line|Focus_Studio_On_Debug_Breakpoint|Full_Auto_Indentation|Full_Backup_All_Files|Full_Tree|Global_Debug_Hotkeys|Greed|Hide_File_Extensions|Hide_Indentation_Guides|Highlight_Current_Area|Includes_In_Place|Inline_Brace|Manual_Continuation_Line|Multi_Line|New_File_Dialog|New_Include_Add_Space|Omni_Search_Stats|OSD|Publish_Indent|Regex|Remove_Directory_Slash|Require_Enter_For_Search|Run_As_Admin|Select_Current_Debug_Line|Shift_Breakpoint|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Small_Icons|Smart_Delete|Top_Find|Verbose_Debug_Window|Warn_Overwrite_On_Export|Word_Border|Ask_Before_Overwriting_Edited_Files|Hide_Context_Sensitive_Help|Clear_Debug_On_Run"
 		other:="Auto_Space_After_Comma|Auto_Space_Before_Comma|Autocomplete_Enter_Newline|Disable_Auto_Delete|Disable_Auto_Insert_Complete|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Enable_Close_On_Save|Force_UTF-8|Full_Tree|Hide_Library_Files_In_Code_Explorer|Hide_Tray_Icon|Highlight_Current_Area|Manual_Continuation_Line|Match_Any_Word|Small_Icons|Top_Find"
 		special:="Word_Wrap"
 		alloptions.=disable "|" options "|" other "|" special
@@ -11856,7 +11860,9 @@ Run(){
 	KeyWait,Alt,U
 	sc:=csc(),Save(4),file:=Current(2).file
 	Fyle:="N:\Scintilla\bin\Cmd.bat"
-	if(InStr(file,"LexAHK.cxx")&&FileExist(Fyle)){
+	if(v.Options.Clear_Debug_On_Run){
+		v.Debug.2004
+	}if(InStr(file,"LexAHK.cxx")&&FileExist(Fyle)){
 		if(FileExist(Fyle))
 			m(Foo(Fyle))
 		return
