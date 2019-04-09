@@ -7350,7 +7350,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20180209111407,XMLFiles:={menus:[20190331121057,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20180209111407,XMLFiles:={menus:[20190409130350,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20180104080414,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -12985,7 +12985,12 @@ Tab_Width(){
 	return
 }
 Testing(){
-	(sc:=CSC()).ClipboardRTF(0,sc.2006)
+	return m("Nothing to test at this time.")
+	sc:=CSC()
+	m(sc.2010(sc.2008),sc.2007(sc.2008))
+	/*
+		我
+	*/
 	return v.Debug.2004
 	return m("Testing")
 	/*
@@ -13810,13 +13815,21 @@ Spoons(a*){
 		SetTimer("LButton",-50)
 }
 MakeRTF(Text,Colors){
-	return Chr(123) "\rtf1\ansicpg65001" Chr(123) "\fonttbl" Chr(123) "\f0\fcharset0 Calibri;" Chr(125) "" Chr(123) "\f1\fcharset0 Tahoma;" Chr(125) Chr(125) Colors  Text Chr(125)
+	;~ return Chr(123) "\rtf1\ansi\ansicpg1252" Chr(123) "\fonttbl" Chr(123) "\f0\fcharset0 Calibri;" Chr(125) "" Chr(123) "\f1\fcharset0 Tahoma;" Chr(125) Chr(125) Colors  Text Chr(125)
+	return Chr(123) "\rtf1\ansi\ansicpg65001" Chr(123) "\fonttbl" Chr(123) "\f0\fcharset0 Calibri;" Chr(125) "" Chr(123) "\f1\fcharset0 Tahoma;" Chr(125) Chr(125) Colors  Text Chr(125)
+}
+Copy_Selected_Text_To_RTF(){
+	sc:=CSC()
+	if(sc.2008=sc.2009)
+		sc.ClipboardRTF(0,sc.2006)
+	else
+		sc.ClipboardRTF(sc.2585(0),sc.2587(0))
 }
 ClipboardRTF(Text){
 	DllCall("OpenClipboard","UInt",0)
 	DllCall("EmptyClipboard")
-	VarSetCapacity(SS,StrPut(Text,"UTF-8"))
-	StrPut(Text,&SS,"UTF-8")
+	VarSetCapacity(SS,StrPut(Text,"cp1252"))
+	StrPut(Text,&SS,"cp1252")
 	DllCall("lstrcpy","UInt",(DllCall("GlobalLock","UInt",(Mem:=DllCall("GlobalAlloc","UInt",2,"UInt",(DataLen:=StrPut(Text,"UTF-8")))))),"UPtr",&SS)
 	DllCall("GlobalUnlock","UInt",Mem)
 	DllCall("SetClipboardData","UInt",DllCall("RegisterClipboardFormat","Str","Rich Text Format"),"UPtr",Mem)
