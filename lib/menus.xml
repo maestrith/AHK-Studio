@@ -36,6 +36,7 @@
 			<menu name="Red&amp;o" clean="Redo"></menu>
 			<menu name="Cut" clean="Cut" hotkey="^X"></menu>
 			<menu name="Copy" clean="Copy" hotkey="^C"></menu>
+			<menu name="Copy Selected Text To RTF" clean="Copy_Selected_Text_To_RTF"></menu>
 			<menu name="Paste" clean="Paste" hotkey="^V"></menu>
 			<menu name="Add Selected To Personal Variables" clean="Add_Selected_To_Personal_Variables"></menu>
 			<menu name="&amp;Duplicate Line" hotkey="F2" clean="Duplicate_Line"></menu>
