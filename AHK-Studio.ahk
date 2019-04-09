@@ -115,7 +115,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.22
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.23
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -2939,6 +2939,7 @@ Class PluginClass{
 		return version
 	}
 }
+;我
 class s{
 	static ctrl:=[],main:=[],temp:=[],hidden:=[]
 	__New(window,info){
@@ -3007,6 +3008,61 @@ class s{
 		}else if(code="GetText"){
 			cap:=VarSetCapacity(text,vv:=this.2182),this.2182(vv,&text),t:=strget(&text,vv,"UTF-8")
 			return t
+		}else if(Code="ClipboardRTF"){
+			
+			
+			/*
+				sc:=CSC()
+				m(Background:=ColorInt(sc.2482(5)))
+				
+				return
+			*/
+			cap:=VarSetCapacity(Styled,Abs(lparam-wparam)*2+2),VarSetCapacity(TextRange,12,0),NumPut(lparam,TextRange,0),NumPut(wparam,TextRange,4),NumPut(&Styled,TextRange,8),Cap:=this.2015(0,&TextRange)
+			Count:=0,Style:=[]
+			Loop,%Cap%
+			{
+				Char:=NumGet(&Styled,A_Index-1)
+				Mod:=Mod(A_Index,2)
+				if(Mod)
+					Style.Push(Obj:=[])
+				Obj[Mod?"Char":"Style"]:=Char&0xFF
+			}
+			
+			Font:=1,Styles:=[],Colors:="{\colortbl;",ColorIndex:=0,ColorObj:=[]
+			StyleList:=[],CO:=[],ColorKey:=[],StyleKey:=[]
+			for a,b in Style{
+				if(b.Style!=Last&&!Styles[b.Style]){
+					Styles[b.Style]:=1
+					Font:=FontInfo(b.Style)
+					for c,d in {Color:Font.Color,Background:Font.Background}{
+						if(!CO[d]){
+							CO[d]:=++ColorIndex
+							Colors.=d
+					}}
+					StyleKey[b.Style]:="\cf" CO[Font.Color] "\highlight" CO[Font.Background]
+				}
+				Last:=b.Style
+			}Last:=""
+			Colors.="}"
+			/*
+				return m(StyleKey)
+			*/
+			SetFormat,INTEGER,H
+			for a,b in Style{
+				if(b.Style!=Last){
+					SetFormat,INTEGER,D
+					Total.=StyleKey[b.Style]
+					SetFormat,INTEGER,H
+				}
+				Total.="\'" Format("{:02}",SubStr(b.Char,3))
+				Last:=b.Style
+			}
+			SetFormat,INTEGER,D
+			ClipboardRTF(MakeRTF(Total,Colors))
+			/*
+				m(Style)
+			*/
+			return
 		}else if(code="GetUni"){
 			VarSetCapacity(text,vv:=this.2182),this.2182(vv,&text)
 			return StrGet(&text,vv,"UTF-8")
@@ -8856,7 +8912,8 @@ m(x*){
 	list.title:="AHK Studio",list.def:=0,list.time:=0,value:=0,txt:=""
 	WinGetTitle,Title,A
 	for a,b in x
-		obj:=StrSplit(b,":"),(vv:=List[obj.1,obj.2])?(value+=vv):(list[obj.1]!="")?(List[obj.1]:=obj.2):txt.=b "`n"
+		Obj:=StrSplit(b,":"),(Obj.1="Bottom"?(Bottom:=1):""),(VV:=List[Obj.1,Obj.2])?(Value+=VV):(List[Obj.1]!="")?(List[Obj.1]:=Obj.2):TXT.=(b.XML?b.XML:IsObject(b)?Obj2String(b,,Bottom):b) "`n"
+	;~ obj:=StrSplit(b,":"),(vv:=List[obj.1,obj.2])?(value+=vv):(list[obj.1]!="")?(List[obj.1]:=obj.2):txt.=b "`n"
 	msg:={option:value+262144+(list.def?(list.def-1)*256:0),title:list.title,time:list.time,txt:txt}
 	Sleep,120
 	MsgBox,% msg.option,% msg.title,% msg.txt,% msg.time
@@ -8882,6 +8939,25 @@ m(x*){
 		WinActivate,%Title%
 	}
 	return
+}
+Obj2String(Obj,FullPath:=1,BottomBlank:=0){
+	static String,Blank
+	if(FullPath=1)
+		String:=FullPath:=Blank:=""
+	if(IsObject(Obj)){
+		for a,b in Obj{
+			if(IsObject(b)&&!b.XML)
+				Obj2String(b,FullPath "." a,BottomBlank)
+			else{
+				if(BottomBlank=0)
+					String.=FullPath "." a " = " (b.XML?b.XML:b) "`n"
+				else if(b!="")
+					String.=FullPath "." a " = " (b.XML?b.XML:b) "`n"
+				else
+					Blank.=FullPath "." a " =`n"
+			}
+	}}
+	return String Blank
 }
 Make_One_Line(){
 	sc:=CSC(),Text:=sc.GetSelText()
@@ -12909,10 +12985,11 @@ Tab_Width(){
 	return
 }
 Testing(){
+	(sc:=CSC()).ClipboardRTF(0,sc.2006)
 	return v.Debug.2004
 	return m("Testing")
 	/*
-			
+		
 		InputBox,Out,Forward?,Forward?,,,,,,,,1
 		return SetTimer(Out?"File_History_Forward":"File_History_Back",-1)
 	*/
@@ -13732,22 +13809,25 @@ Spoons(a*){
 	if(Code=2028)
 		SetTimer("LButton",-50)
 }
-Obj2String(Obj,FullPath:=1,BottomBlank:=0){
-	static String,Blank
-	if(FullPath=1)
-		String:=FullPath:=Blank:=""
-	if(IsObject(Obj)){
-		for a,b in Obj{
-			if(IsObject(b))
-				Obj2String(b,FullPath "." a,BottomBlank)
-			else{
-				if(BottomBlank=0)
-					String.=FullPath "." a " = " b "`n"
-				else if(b!="")
-					String.=FullPath "." a " = " b "`n"
-				else
-					Blank.=FullPath "." a " =`n"
-			}
-	}}
-	return String Blank
+MakeRTF(Text,Colors){
+	return Chr(123) "\rtf1\ansicpg65001" Chr(123) "\fonttbl" Chr(123) "\f0\fcharset0 Calibri;" Chr(125) "" Chr(123) "\f1\fcharset0 Tahoma;" Chr(125) Chr(125) Colors  Text Chr(125)
+}
+ClipboardRTF(Text){
+	DllCall("OpenClipboard","UInt",0)
+	DllCall("EmptyClipboard")
+	VarSetCapacity(SS,StrPut(Text,"UTF-8"))
+	StrPut(Text,&SS,"UTF-8")
+	DllCall("lstrcpy","UInt",(DllCall("GlobalLock","UInt",(Mem:=DllCall("GlobalAlloc","UInt",2,"UInt",(DataLen:=StrPut(Text,"UTF-8")))))),"UPtr",&SS)
+	DllCall("GlobalUnlock","UInt",Mem)
+	DllCall("SetClipboardData","UInt",DllCall("RegisterClipboardFormat","Str","Rich Text Format"),"UPtr",Mem)
+	DllCall("CloseClipboard")
+}
+FontInfo(Style){
+	sc:=CSC(),VarSetCapacity(Text,sc.2486(Style,0),0),sc.2486(Style,&Text),Font:=StrGet(&Text,"UTF-8"),Size:=sc.2485(Style),Bold:=sc.2483(Style),Italic:=sc.2484(Style),Underline:=sc.2488(Style)
+	Background:=ColorInt((sc.2482(Style))),Color:=ColorInt((sc.2481(Style)))
+	return {Font:Font,Background:"\red" Background.Red "\green" Background.Green "\blue" Background.Blue ";",Color:"\red" Color.Red "\green" Color.Green "\blue" Color.Blue ";",Size:Size*2,Bold:Bold,Italic:Italic,Underline:Underline}
+}
+ColorInt(Color){
+	Color:=RGB(Color),Red:="0x" SubStr(Color,3,2),Green:="0x" SubStr(Color,5,2),Blue:="0x" SubStr(Color,7,2)
+	return {Red:Red+0,Green:Green+0,Blue:Blue+0}
 }
