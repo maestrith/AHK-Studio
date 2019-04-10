@@ -13800,7 +13800,6 @@ Spoons(a*){
 		SetTimer("LButton",-50)
 }
 MakeRTF(Text,Colors){
-	;~ return Chr(123) "\rtf1\ansi\ansicpg1252" Chr(123) "\fonttbl" Chr(123) "\f0\fcharset0 Calibri;" Chr(125) "" Chr(123) "\f1\fcharset0 Tahoma;" Chr(125) Chr(125) Colors  Text Chr(125)
 	return Chr(123) "\rtf1\ansi\ansicpg65001" Chr(123) "\fonttbl" Chr(123) "\f0\fcharset0 Calibri;" Chr(125) "" Chr(123) "\f1\fcharset0 Tahoma;" Chr(125) Chr(125) Colors  Text Chr(125)
 }
 Copy_Selected_Text_To_RTF(){
@@ -13813,15 +13812,13 @@ Copy_Selected_Text_To_RTF(){
 ClipboardRTF(File){
 	static ;https://www.autohotkey.com/boards/viewtopic.php?t=45481&p=265295
 	if(!TomDoc){
-		RE_Dll:=DllCall("LoadLibrary","Str","Msftedit.dll","Ptr")
-		Flags:=0x1004+0x80+0x300000
-		Gui,Rich:Add, Custom, ClassRICHEDIT50W w400 h400 hwndHRE +VScroll +%Flags% ; ES_MULTILINE | ES_READONLY
-		IID_ITextDocument:="{8CC497C0-A1DF-11CE-8098-00AA0047BE5D}"
+		RE_Dll:=DllCall("LoadLibrary","Str","Msftedit.dll","Ptr"),Flags:=0x1004+0x80+0x300000,IID_ITextDocument:="{8CC497C0-A1DF-11CE-8098-00AA0047BE5D}"
+		Gui,Rich:Add, Custom, ClassRICHEDIT50W w400 h400 hwndHRE +VScroll +%Flags%
 		if(DllCall("SendMessage","Ptr",HRE,"UInt",0x043C,"Ptr",0,"PtrP",IRichEditOle,"UInt")) ; EM_GETOLEINTERFACE
 			v.TomDoc:=TomDoc:=ComObject(9,ComObjQuery(IRichEditOle,IID_ITextDocument),1),ObjRelease(IRichEditOle)
-	}
-	FileRead,TT,%File%
-	TomDoc.Open(File, 0x01, 0),Range:=TomDoc.Range(0,StrLen(TT)),Range.Copy(1)
+	}FO:=FileOpen(File,"R"),Length:=FO.Length(),FO.Close()
+	TomDoc.Open(File,0x01,0),Range:=TomDoc.Range(0,Length),Range.Copy(1)
+	
 }
 FontInfo(Style){
 	sc:=CSC(),VarSetCapacity(Text,sc.2486(Style,0),0),sc.2486(Style,&Text),Font:=StrGet(&Text,"UTF-8"),Size:=sc.2485(Style),Bold:=sc.2483(Style),Italic:=sc.2484(Style),Underline:=sc.2488(Style)
