@@ -2939,7 +2939,6 @@ Class PluginClass{
 		return version
 	}
 }
-;我
 class s{
 	static ctrl:=[],main:=[],temp:=[],hidden:=[]
 	__New(window,info){
@@ -3009,60 +3008,44 @@ class s{
 			cap:=VarSetCapacity(text,vv:=this.2182),this.2182(vv,&text),t:=strget(&text,vv,"UTF-8")
 			return t
 		}else if(Code="ClipboardRTF"){
-			
-			
-			/*
-				sc:=CSC()
-				m(Background:=ColorInt(sc.2482(5)))
-				
-				return
-			*/
 			cap:=VarSetCapacity(Styled,Abs(lparam-wparam)*2+2),VarSetCapacity(TextRange,12,0),NumPut(lparam,TextRange,0),NumPut(wparam,TextRange,4),NumPut(&Styled,TextRange,8),Cap:=this.2015(0,&TextRange)
 			Count:=0,Style:=[]
 			Loop,%Cap%
 			{
-				Char:=NumGet(&Styled,A_Index-1)
-				Mod:=Mod(A_Index,2)
+				Char:=NumGet(&Styled,A_Index-1),Mod:=Mod(A_Index,2)
 				if(Mod)
 					Style.Push(Obj:=[])
 				Obj[Mod?"Char":"Style"]:=Char&0xFF
-			}
-			
-			Font:=1,Styles:=[],Colors:="{\colortbl;",ColorIndex:=0,ColorObj:=[]
-			StyleList:=[],CO:=[],ColorKey:=[],StyleKey:=[]
+			}Font:=1,Styles:=[],Colors:="{\colortbl;",ColorIndex:=0,ColorObj:=[],StyleList:=[],CO:=[],ColorKey:=[],StyleKey:=[]
 			for a,b in Style{
 				if(b.Style!=Last&&!Styles[b.Style]){
 					Styles[b.Style]:=1
 					Font:=FontInfo(b.Style)
-					for c,d in {Color:Font.Color,Background:Font.Background}{
-						if(!CO[d]){
-							CO[d]:=++ColorIndex
-							Colors.=d
-					}}
+					for c,d in {Color:Font.Color,Background:Font.Background}
+						if(!CO[d])
+							CO[d]:=++ColorIndex,Colors.=d
 					StyleKey[b.Style]:="\cf" CO[Font.Color] "\highlight" CO[Font.Background]
 				}
 				Last:=b.Style
 			}Last:=""
 			Colors.="}"
-			/*
-				return m(StyleKey)
-			*/
 			SetFormat,INTEGER,H
 			for a,b in Style{
 				if(b.Style!=Last){
 					SetFormat,INTEGER,D
 					Total.=StyleKey[b.Style]
 					SetFormat,INTEGER,H
-				}
-				Total.="\'" Format("{:02}",SubStr(b.Char,3))
-				Last:=b.Style
+				}Total.="\'" Format("{:02}",SubStr(b.Char,3)),Last:=b.Style
 			}
 			SetFormat,INTEGER,D
-			ClipboardRTF(MakeRTF(Total,Colors))
-			/*
-				m(Style)
-			*/
+			if(!FileExist(Folder:=A_ScriptDir "\TempFiles"))
+				FileCreateDir,%Folder%
+			File:=Folder "\Temp.rtf"
+			FileDelete,%File%
+			FileAppend,% MakeRTF(Total,Colors),%File%
+			ClipboardRTF(File)
 			return
+			return ClipboardRTF(MakeRTF(Total,Colors))
 		}else if(code="GetUni"){
 			VarSetCapacity(text,vv:=this.2182),this.2182(vv,&text)
 			return StrGet(&text,vv,"UTF-8")
@@ -7124,6 +7107,8 @@ Exit(ExitApp:=0){
 	}if(ExitApp)
 		Reload
 	CEXML.Save(1)
+	if(v.TomDoc)
+		ObjRelease(v.TomDoc)
 	ExitApp
 	return
 }
@@ -13825,15 +13810,18 @@ Copy_Selected_Text_To_RTF(){
 	else
 		sc.ClipboardRTF(sc.2585(0),sc.2587(0))
 }
-ClipboardRTF(Text){
-	DllCall("OpenClipboard","UInt",0)
-	DllCall("EmptyClipboard")
-	VarSetCapacity(SS,StrPut(Text,"cp1252"))
-	StrPut(Text,&SS,"cp1252")
-	DllCall("lstrcpy","UInt",(DllCall("GlobalLock","UInt",(Mem:=DllCall("GlobalAlloc","UInt",2,"UInt",(DataLen:=StrPut(Text,"UTF-8")))))),"UPtr",&SS)
-	DllCall("GlobalUnlock","UInt",Mem)
-	DllCall("SetClipboardData","UInt",DllCall("RegisterClipboardFormat","Str","Rich Text Format"),"UPtr",Mem)
-	DllCall("CloseClipboard")
+ClipboardRTF(File){
+	static ;https://www.autohotkey.com/boards/viewtopic.php?t=45481&p=265295
+	if(!TomDoc){
+		RE_Dll:=DllCall("LoadLibrary","Str","Msftedit.dll","Ptr")
+		Flags:=0x1004+0x80+0x300000
+		Gui,Rich:Add, Custom, ClassRICHEDIT50W w400 h400 hwndHRE +VScroll +%Flags% ; ES_MULTILINE | ES_READONLY
+		IID_ITextDocument:="{8CC497C0-A1DF-11CE-8098-00AA0047BE5D}"
+		if(DllCall("SendMessage","Ptr",HRE,"UInt",0x043C,"Ptr",0,"PtrP",IRichEditOle,"UInt")) ; EM_GETOLEINTERFACE
+			v.TomDoc:=TomDoc:=ComObject(9,ComObjQuery(IRichEditOle,IID_ITextDocument),1),ObjRelease(IRichEditOle)
+	}
+	FileRead,TT,%File%
+	TomDoc.Open(File, 0x01, 0),Range:=TomDoc.Range(0,StrLen(TT)),Range.Copy(1)
 }
 FontInfo(Style){
 	sc:=CSC(),VarSetCapacity(Text,sc.2486(Style,0),0),sc.2486(Style,&Text),Font:=StrGet(&Text,"UTF-8"),Size:=sc.2485(Style),Bold:=sc.2483(Style),Italic:=sc.2484(Style),Underline:=sc.2488(Style)
