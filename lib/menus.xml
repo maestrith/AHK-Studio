@@ -261,6 +261,7 @@
 			<menu clean="Ask_Before_Overwriting_Edited_Files" name="Ask Before Overwriting Edited Files"></menu>
 			<menu clean="Quick_Options" name="Quick Options"></menu>
 			<menu clean="Clear_Debug_On_Run" name="Clear Debug On Run"></menu>
+			<menu clean="Disable_Exemption_Handling" name="Disable Exemption Handling"></menu>
 			<menu clean="Hide_Context_Sensitive_Help" name="Hide Context Sensitive Help"></menu></menu>
 		<menu name="Fo&amp;rmat" clean="Format" top="1">
 			<menu clean="Align_Selected_Text" hotkey="" name="Align Selected Text" option="" plugin="plugins\Align Selected Text.ahk"></menu>
