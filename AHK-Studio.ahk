@@ -115,7 +115,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.23
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.24
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -13813,11 +13813,11 @@ ClipboardRTF(File){
 	static ;https://www.autohotkey.com/boards/viewtopic.php?t=45481&p=265295
 	if(!TomDoc){
 		RE_Dll:=DllCall("LoadLibrary","Str","Msftedit.dll","Ptr"),Flags:=0x1004+0x80+0x300000,IID_ITextDocument:="{8CC497C0-A1DF-11CE-8098-00AA0047BE5D}"
-		Gui,Rich:Add, Custom, ClassRICHEDIT50W w400 h400 hwndHRE +VScroll +%Flags%
+		Gui,Rich:Add,Custom,ClassRICHEDIT50W w400 h400 hwndHRE +VScroll +%Flags%
 		if(DllCall("SendMessage","Ptr",HRE,"UInt",0x043C,"Ptr",0,"PtrP",IRichEditOle,"UInt")) ; EM_GETOLEINTERFACE
 			v.TomDoc:=TomDoc:=ComObject(9,ComObjQuery(IRichEditOle,IID_ITextDocument),1),ObjRelease(IRichEditOle)
 	}FO:=FileOpen(File,"R"),Length:=FO.Length(),FO.Close()
-	TomDoc.Open(File,0x01,0),Range:=TomDoc.Range(0,Length),Range.Copy(1)
+	TomDoc.Open(File,0x01,0),Range:=TomDoc.Range(0,Length),Range.Copy(1),TomDoc.Save(1)
 	
 }
 FontInfo(Style){
