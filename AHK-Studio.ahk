@@ -115,7 +115,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.24
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.25
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -12720,20 +12720,40 @@ Show_Class_Methods(object,search:=""){
 Show_Folder_In_Explorer(){
 	sc:=CSC()
 	file:=Current(3).file
-	SplitPath,file,,dir
-	if(!dir){
+	SplitPath,file,,Dir
+	if(!Dir){
 		file:=Current(2).file
-		SplitPath,file,,dir
-	}if(!dir){
+		SplitPath,file,,Dir
+	}if(!Dir){
 		for a,b in s.ctrl{
 			if(File:=CEXML.SSN("//*[@sc='" b.2357 "']/@file").text){
 				SplitPath,File,,Dir
 				Break
 			}
 		}
-	}Run,%dir%
+	}
+	if((EA:=Settings.EA("//Explorer/Box")).X!="")
+		NewExplorer(Dir,EA)
+	else
+		Run,%Dir%
 }Open_Folder(){
 	Show_Folder_In_Explorer()
+}NewExplorer(NewDestination,EA){
+	WinGet,Before,List,ahk_class CabinetWClass ahk_exe explorer.exe
+	Run,%NewDestination%
+	List:=Before,Y:=EA.Y
+	while(Before=List){
+		WinGet,List,List,ahk_class CabinetWClass ahk_exe explorer.exe
+		Sleep,100
+	}Height:=Floor((EA.H-EA.Y)/List)
+	while(ID:=List%A_Index%){
+		Count:=List
+		WinMove,ahk_id%ID%,,-7,%Y%,681,%Height%
+		WinSet,AlwaysOnTop,On,ahk_id%ID%
+		WinSet,AlwaysOnTop,Off,ahk_id%ID%
+		Y+=Height-8
+	}
+	return
 }
 Show_Scintilla_Code_In_Line(){
 	Scintilla(),sc:=CSC()
@@ -13060,7 +13080,9 @@ Toggle_Comment_Line(){
 				LineComment[Line]:=0,AllComment:=0
 				Break
 	}}}for a,b in LineComment{
-		LineStart:=sc.2128(a)
+		LineStart:=sc.2128(a),LineEnd:=sc.2136(a)
+		if(LineStart=LineEnd)
+			Continue
 		if((b&&AllComment)||(b&&!v.Options.Build_Comment))
 			sc.2645(LineStart,Len),SelectionEnd-=Len
 		else
