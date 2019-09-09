@@ -11898,12 +11898,6 @@ Foo(Script,Wait:=true){
 	SplitPath,Script,,Dir
 	Exec2.Terminate()
 	Shell:=ComObjCreate("WScript.Shell")
-	/*
-		Shell.CurrentDirectory:=Trim(Dir,Chr(34))
-	*/
-	/*
-		Shell.CurrentDirectory:="N:\Scintilla\Win32\"
-	*/
 	Shell.CurrentDirectory:="N:\MinGW\bin"
 	Exec:=Shell.Exec(Script)
 	Exec.StdIn.Close()
@@ -11919,8 +11913,13 @@ Run(){
 	if(v.opening)
 		return
 	KeyWait,Alt,U
-	sc:=csc(),Save(4),file:=Current(2).file
+	sc:=csc(),Save(4),File:=Current(2).File
 	Fyle:="N:\Scintilla\bin\Cmd.bat"
+	Ext:=SplitPath(File).Ext
+	if(FileExist(Run:=A_ScriptDir "\Compile\c.ahk")&&Ext="c"){
+		Run,%Run% "%File%"
+		return
+	}
 	if(v.Options.Clear_Debug_On_Run){
 		v.Debug.2004
 	}if(InStr(file,"LexAHK.cxx")&&FileExist(Fyle)){
