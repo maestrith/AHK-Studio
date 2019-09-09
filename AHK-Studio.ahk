@@ -7152,7 +7152,7 @@ Extract(Main){
 				m(Extra)
 			*/
 			for a,b in StrSplit(Extra,"`n","`r`n"){
-				IncludeFile:=RegExReplace(b,"i)(#Include.*\b\s+)")
+				IncludeFile:=RegExReplace(b,"iU)(#Include.*\b\s+)")
 				if(!InStr(FileExist(IncludeFile),"D")&&FileExist(IncludeFile)&&IncludeFile){
 					SplitPath,IncludeFile,FileName,Dir,Ext,NNE
 					Language:=LanguageFromFileExt(Ext),obj.ext:=Ext,obj.lang:=Language,New:=CEXML.Under(CEXML.Find(node,"descendant-or-self::file/@file",MainFile),"file",obj)
