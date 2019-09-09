@@ -7148,9 +7148,6 @@ Extract(Main){
 		node:=CEXML.Under(main,"file",{file:file,dir:MainDir,filename:MFN,id:GetID(),nne:mnne,scan:1,lower:Format("{:L}",file),ext:Ext,lang:Language,type:"File"})
 	if(Ext="ahk"&&!SSN(Main,"ancestor-or-self::Libraries")){
 		if(Extra:=ES(MainFile)){
-			/*
-				m(Extra)
-			*/
 			for a,b in StrSplit(Extra,"`n","`r`n"){
 				IncludeFile:=RegExReplace(b,"iU)(#Include.*\b\s+)")
 				if(!InStr(FileExist(IncludeFile),"D")&&FileExist(IncludeFile)&&IncludeFile){
