@@ -115,7 +115,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.25
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.26
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -6900,6 +6900,8 @@ Enter(){
 			root.AppendChild(b)
 		all:=map.SN("descendant::*[@line]"),add:=0,state:=GetKeyState("Shift","P"),IndentRegex:=Keywords.IndentRegex[Current(3).ext]
 		while(aa:=all.item[A_Index-1],ea:=XML.EA(aa)){
+			if(sc.2166(sc.2008)=sc.2166(sc.2006))
+				State:=0
 			if(!state){
 				if(ea.between)
 					InsertMultiple(ea.caret,ea.pos,"`n`n",ea.pos+1),Indent:=sc.2127(ea.Line),sc.2126(ea.Line+1,Indent+Ind),sc.2126(ea.Line+2,Indent),GotoPos(ea.caret,sc.2128(ea.Line+1))
