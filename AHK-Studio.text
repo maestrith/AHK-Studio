@@ -1,3 +1,3 @@
 1.005.26
 Fixed: Reported by Joe Glines
--Shift+Enter: When you did it on the last line of code between {} it would not place the } where it should be
+-Some files were not offering Auto-Complete

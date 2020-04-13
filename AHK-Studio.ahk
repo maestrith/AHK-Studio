@@ -635,12 +635,13 @@ BraceSetup(Win:=1){
 	}
 }
 Camel(){
-	sc:=CSC(),Line:=sc.2166(sc.2008),sc.2008!=sc.2009?(Text:=sc.GetSelText(Line)):(Text:=sc.GetLine(Line),sc.2160(sc.2128(Line),sc.2136(Line))),Pos:=1
-	while(RegExMatch(Text,"O)([a-zA-Z]+)(_|\W*)?",Found,Pos),Pos:=Found.Pos(1)+Found.Len(1)){
-		if(!Found.Len(1))
-			Break
-		Out.=Format("{:T}",Found.1) Found.2
-	}sc.2170(0,[Trim(Out,"`n")])
+	sc:=CSC(),Line:=sc.2166(sc.2008),Start:=sc.2143,End:=sc.2145,(Start=End)?(Start:=sc.2128(Line),End:=sc.2136(Line)):"",LastWordStart:=Start,Words:=[]
+	while(Start<End)
+		WordEnd:=sc.2267(Start,1),WordStart:=sc.2266(Start,1),(WordStart!=WordEnd&&!Words[WordStart])?Words[WordStart]:=WordEnd:"",Start:=WordStart=WordEnd||WordStart=LastWordStart?WordEnd+1:WordEnd,LastWordStart:=WordStart
+	sc.2078
+	for a,b in Words
+		Word:=sc.TextRange(a,b),sc.2686(a,b),sc.2194(StrPut(Word,"UTF-8")-1,ET(Format("{:T}",Word)))
+	sc.2079
 }
 Center(win){
 	Gui,%win%:Show,Hide
@@ -3061,7 +3062,7 @@ class s{
 		}Return:=DllCall(this.fn,"Ptr",this.ptr,"UInt",code,lp,lparam,wp,wparam,"Cdecl")
 		if(Code=2181){
 			GuiControl,1:+Redraw,% this.sc
-			GuiControl,1:+gnotify,% this.sc
+			GuiControl,1:+gNotify,% this.sc
 		}return Return
 	}
 }
@@ -5933,7 +5934,7 @@ CSC(set:=0){
 	return Current
 }
 Current(Parent=""){
-	Node:=CEXML.SSN("//*[@tv='" TVC.Selection(1) "']"),id:=SSN(Node,"@id").text,ParentNode:=SSN(Node,"ancestor-or-self::main"),pid:=SSN(ParentNode,"@id").text
+	Node:=CEXML.SSN("//*[@tv='" TVC.Selection(1) "']"),ID:=SSN(Node,"@id").Text,ParentNode:=SSN(Node,"ancestor-or-self::main"),PID:=SSN(ParentNode,"@id").Text
 	if(Parent=1)
 		return ParentNode
 	else if(Parent=2)
@@ -5943,15 +5944,15 @@ Current(Parent=""){
 	else if(Parent=4)
 		return SSN(Node,"ancestor-or-self::main/file")
 	else if(Parent=5)
-		return CEXML.SSN("//main[@id='" pid "']/descendant::file[@id='" id "']")
+		return CEXML.SSN("//main[@id='" PID "']/descendant::file[@id='" id "']")
 	else if(Parent=6)
-		return CEXML.EA("//main[@id='" pid "']/descendant::file[@id='" id "']")
+		return CEXML.EA("//main[@id='" PID "']/descendant::file[@id='" id "']")
 	else if(Parent=7)
-		return SSN(CEXML.SSN("//main[@id='" pid "']/descendant::file[@id='" id "']"),"ancestor-or-self::main")
+		return SSN(CEXML.SSN("//main[@id='" PID "']/descendant::file[@id='" id "']"),"ancestor-or-self::main")
 	else if(Parent=8)
 		return id
 	else if(Parent=9)
-		return SSN(CEXML.SSN("//main[@id='" pid "']/descendant::file[@id='" id "']"),"ancestor::main/@id").text
+		return SSN(CEXML.SSN("//main[@id='" PID "']/descendant::file[@id='" id "']"),"ancestor::main/@id").Text
 	return Node
 }
 Custom_Indent(){
@@ -7156,7 +7157,7 @@ Extract(Main){
 					SplitPath,IncludeFile,FileName,Dir,Ext,NNE
 					Language:=LanguageFromFileExt(Ext),obj.ext:=Ext,obj.lang:=Language,New:=CEXML.Under(CEXML.Find(node,"descendant-or-self::file/@file",MainFile),"file",obj)
 					Relative:=RelativePath(MainFile,IncludeFile)
-					for a,b in {file:IncludeFile,type:"File",id:GetID(),filename:FileName,dir:Dir,nne:NNE,github:(MainDir=dir?FileName:!InStr(Relative,"..")?Relative:"lib\" filename),scan:1,lower:Format("{:L}",FileName),nocompile:1}
+					for a,b in {lang:Language,file:IncludeFile,type:"File",id:GetID(),filename:FileName,dir:Dir,nne:NNE,github:(MainDir=dir?FileName:!InStr(Relative,"..")?Relative:"lib\" filename),scan:1,lower:Format("{:L}",FileName),nocompile:1}
 						New.SetAttribute(a,b)
 				}
 			}
@@ -7178,6 +7179,8 @@ Extract(Main){
 	FileGetTime,time,%file%
 	SplitPath,file,filename,dir,Ext,nne
 	Language:=LanguageFromFileExt(Ext),set:=CEXML.Find(node,"descendant-or-self::file/@file",file),set.SetAttribute("time",time),set.SetAttribute("encoding",encoding),pos:=1
+	if(!Language)
+		m(Node)
 	if(!SSN(set,"@id"))
 		set.SetAttribute("id",id)
 	StringReplace,text,text,`r`n,`n,All
@@ -7334,7 +7337,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20180209111407,XMLFiles:={menus:[20190509153041,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20180209111407,XMLFiles:={menus:[20200316081726,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20180104080414,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -7366,7 +7369,8 @@ FileCheck(file:=""){
 			if(!Settings.SSN("//open/file[text()='" file "']"))
 				Settings.Add("open/file",{select:1},file,1)
 		}
-	}for a,b in XMLFiles{
+	}
+	for a,b in XMLFiles{
 		if(!FileExist(b.3)){
 			SplashTextOn,200,100,% "Downloading " b.2,Please Wait...
 			UrlDownloadToFile,% base b.2 "?refresh=" A_Now,% b.3
@@ -7377,7 +7381,7 @@ FileCheck(file:=""){
 		if(new.SSN("//date").text!=b.1){
 			SplashTextOn,200,100,% "Downloading " b.2,Please Wait...
 			if(a="menus"){
-				temp:=new XML("temp"),temp.XML.LoadXML(URLDownloadToVar(base b.2 "?refresh=" A_Now)),all:=temp.SN("//*[@clean]")
+				temp:=new XML("temp"),temp.XML.LoadXML(Foo:=URLDownloadToVar(base b.2 "?refresh=" A_Now)),all:=temp.SN("//*[@clean]")
 				while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa){
 					if(aa.HasChildNodes())
 						lastea:=ea
@@ -8032,6 +8036,15 @@ Fold_All(){
 	while((find:=sc.2225(find))>=0)
 		line:=find
 	return line
+}
+FontInfo(Style){
+	sc:=CSC(),VarSetCapacity(Text,sc.2486(Style,0),0),sc.2486(Style,&Text),Font:=StrGet(&Text,"UTF-8"),Size:=sc.2485(Style),Bold:=sc.2483(Style),Italic:=sc.2484(Style),Underline:=sc.2488(Style)
+	Background:=ColorInt((sc.2482(Style))),Color:=ColorInt((sc.2481(Style)))
+	return {Font:Font,Background:"\red" Background.Red "\green" Background.Green "\blue" Background.Blue ";",Color:"\red" Color.Red "\green" Color.Green "\blue" Color.Blue ";",Size:Size*2,Bold:Bold,Italic:Italic,Underline:Underline}
+}
+ColorInt(Color){
+	Color:=RGB(Color),Red:="0x" SubStr(Color,3,2),Green:="0x" SubStr(Color,5,2),Blue:="0x" SubStr(Color,7,2)
+	return {Red:Red+0,Green:Green+0,Blue:Blue+0}
 }
 FormatTime(format,time){
 	FormatTime,out,%time%,%format%
@@ -8949,6 +8962,27 @@ Make_One_Line(){
 		return m("Select at least 2 lines of text to combine")
 	Text:=RegExReplace(Text,"\n",","),Text:=RegExReplace(Text,"\t"),sc.2170(0,[Text])
 }
+MakeRTF(Text,Colors){
+	return Chr(123) "\rtf1\ansi\ansicpg65001" Chr(123) "\fonttbl" Chr(123) "\f0\fcharset0 Calibri;" Chr(125) "" Chr(123) "\f1\fcharset0 Tahoma;" Chr(125) Chr(125) Colors  Text Chr(125)
+}
+Copy_Selected_Text_To_RTF(){
+	sc:=CSC()
+	if(sc.2008=sc.2009)
+		sc.ClipboardRTF(0,sc.2006)
+	else
+		sc.ClipboardRTF(sc.2585(0),sc.2587(0))
+}
+ClipboardRTF(File){
+	static ;https://www.autohotkey.com/boards/viewtopic.php?t=45481&p=265295
+	if(!TomDoc){
+		RE_Dll:=DllCall("LoadLibrary","Str","Msftedit.dll","Ptr"),Flags:=0x1004+0x80+0x300000,IID_ITextDocument:="{8CC497C0-A1DF-11CE-8098-00AA0047BE5D}"
+		Gui,Rich:Add,Custom,ClassRICHEDIT50W w400 h400 hwndHRE +VScroll +%Flags%
+		if(DllCall("SendMessage","Ptr",HRE,"UInt",0x043C,"Ptr",0,"PtrP",IRichEditOle,"UInt")) ; EM_GETOLEINTERFACE
+			v.TomDoc:=TomDoc:=ComObject(9,ComObjQuery(IRichEditOle,IID_ITextDocument),1),ObjRelease(IRichEditOle)
+	}FO:=FileOpen(File,"R"),Length:=FO.Length(),FO.Close()
+	TomDoc.Open(File,0x01,0),Range:=TomDoc.Range(0,Length),Range.Copy(1),TomDoc.Save(1)
+	
+}
 Manage_File_Types(){
 	new SettingsClass("Manage File Types")
 }
@@ -8965,6 +8999,43 @@ Margin_Left(set:=0){
 }
 MarginWidth(sc=""){
 	sc:=sc?sc:CSC(),sc.2242(0,sc.2276(33,"a" sc.2154()))
+}
+Match_Case(){
+	sc:=CSC(),Line:=sc.2166(sc.2008),Start:=sc.2143,End:=sc.2145,(Start=End)?(Start:=0,End:=sc.2006):"",LastWordStart:=Start,Words:=[],Match:=[],sc.2078,Save()
+	/*
+		Gui,2:Destroy
+		Gui,2:Default
+		Gui,Add,Text,HWNDTextHWND w400 h200
+	*/
+	GuiControl,1:-Redraw,% sc.sc
+	GuiControl,1:+g,% sc.sc
+	IgnoreCase:=(IC:=Settings.SSN("//MatchCaseIgnoreStyle").Text)?IC:3
+	while(Start<End){
+		/*
+			GuiControl,,%TextHWND%,Matching Case,Working on Position %Start% of %End%
+		*/
+		WordStart:=sc.2266(Start,1)
+		WordEnd:=sc.2267(Start,1)
+		Style:=sc.2010(WordStart)
+		if(Style~="(" IgnoreCase ")"){
+			Start:=WordEnd+1
+			Continue
+		}Text:=sc.TextRange(WordStart,WordEnd)
+		if(WordStart=WordEnd||Text+0){
+			Start++
+			Continue
+		}if(!Word:=Match[Text,Style])
+			Word:=Match[Text,Style]:=Chr(34) Text Chr(34)
+		else
+			sc.2686(WordStart,WordEnd),sc.2194(StrPut((WW:=RegExReplace(Word,"\x22")),"UTF-8")-1,ET(WW))
+		Start:=WordStart=WordEnd||WordStart=LastWordStart?WordEnd+1:WordEnd+1,LastWordStart:=WordStart
+	}sc.2079
+	GuiControl,1:+Redraw,% sc.sc
+	GuiControl,1:+gNotify,% sc.sc
+	Update({sc:sc.2357}),Edited()
+	/*
+		Gui,2:Destroy
+	*/
 }
 Menu_Help(){
 	static help,NewWin
@@ -10245,8 +10316,7 @@ Omni_Search(start=""){
 	OmniSearch:
 	Gui,20:Default
 	GuiControl,20:-Redraw,SysListView321
-	Language:=Current(3).Lang
-	FileSearch:=OSearch:=Search:=NewWin[].Search,SearchString:="",Select:=[],LV_Delete(),Sort:=[],stext:=[],fsearch:=Search="^"?1:0,NewWin.Instructions:=0
+	Language:=Current(3).Lang,FileSearch:=OSearch:=Search:=NewWin[].Search,SearchString:="",Select:=[],LV_Delete(),Sort:=[],stext:=[],fsearch:=Search="^"?1:0,NewWin.Instructions:=0
 	if(InStr(Search,")")){
 		if(!v.Options.Clipboard_History){
 			Options("Clipboard_History")
@@ -12867,6 +12937,21 @@ SplitPath(File){
 	SplitPath,File,FileName,Dir,Ext,NNE,Drive
 	return {File:File,FileName:FileName,Dir:Dir,Ext:Ext,NNE:NNE,Drive:Drive}
 }
+Spoons(a*){
+	Info:=A_EventInfo,Code:=NumGet(Info+8)
+	if((ctrl:=NumGet(Info+0))=v.debug.sc&&v.debug.sc){
+		sc:=v.debug
+		if(Code=2027){
+			style:=sc.2010(sc.2008)
+			if(style=-106)
+				Run_Program()
+			else if(style=-105)
+				List_Variables()
+		}return
+	}
+	if(Code=2028)
+		SetTimer("LButton",-50)
+}
 Start_Select_Character(){
 	StartSelect:=InputBox(HWND(1),"Start Select Character","Enter a list of characters you want to add to the DoubleClick selection",Settings.SSN("//StartSelect").text)
 	Settings.Add("StartSelect").text:=StartSelect
@@ -12988,12 +13073,10 @@ Tab_Width(){
 	return
 }
 Testing(){
-	return m("Nothing to test at this time.")
 	sc:=CSC()
+	return m(sc.2010(sc.2008))
+	return m("Nothing to test at this time.")
 	m(sc.2010(sc.2008),sc.2007(sc.2008))
-	/*
-		我
-	*/
 	return v.Debug.2004
 	return m("Testing")
 	/*
@@ -13496,13 +13579,13 @@ Update(Info){
 	if(Info.Delete)
 		return Update.Delete(Info.Delete),Updated.Delete(Info.Delete)
 	else if(Info.sc){
-		return Update[CEXML.SSN("//*[@sc='" Info.sc "']/@file").text]:=CSC().GetUNI()
-	}else if(Info.remove)
-		return Update.Delete(Info.remove),Updated.Delete(Info.remove)
+		return Update[CEXML.SSN("//*[@sc='" Info.sc "']/@file").Text]:=CSC().GetUNI()
+	}else if(Info.Remove)
+		return Update.Delete(Info.Remove),Updated.Delete(Info.Remove)
 	else if(Info="Updated")
 		return Updated
-	else if(Info.edited)
-		return Updated[Info.edited]:=1
+	else if(Info.Edited)
+		return Updated[Info.Edited]:=1
 	else if(Info="ClearUpdated")
 		return Updated:=[]
 	else if(Info="Get")
@@ -13529,11 +13612,11 @@ Update(Info){
 			q.Close(),Text:=Update[Info.Get]:=RegExReplace(Text,"\R","`n"),Encoding[Info.Get]:=Encoding
 		}
 		return Text
-	}else if(Info.encoded){
-		if(!Update[Info.encoded])
+	}else if(Info.Encoded){
+		if(!Update[Info.Encoded])
 			return
-		Encode(Update[Info.encoded],tt,Encoding[Info.encoded])
-		return StrGet(&tt,"utf-8")
+		Encode(Update[Info.Encoded],tt,Encoding[Info.Encoded])
+		return StrGet(&tt,"UTF-8")
 	}
 	else if(Info.Encoding)
 		return Encoding[Info.File]:=Info.Encoding
@@ -13647,15 +13730,6 @@ URIDecode(str){
 	return, str
 }
 URLDownloadToVar(URL){
-	/*
-		req:=ComObjCreate("Msxml2.XMLHTTP")
-		if(proxy:=Settings.SSN("//proxy").text)
-			req.SetProxy(2,proxy)
-		req.Open("GET",URL)
-		req.Send()
-		m(req.ResponseText)
-		return req.ResponseText
-	*/
 	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
 	if(proxy:=Settings.SSN("//proxy").text)
 		http.SetProxy(2,proxy)
@@ -13803,49 +13877,4 @@ XMLSearchText(Attributes,Search){
 	for a in Attributes
 		SearchText.="contains(translate(translate(@" a ", 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'\&','') , '" Search "') or "
 	return SearchText "contains(translate(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'\&','') , '" Search "')"
-}
-Spoons(a*){
-	Info:=A_EventInfo,Code:=NumGet(Info+8)
-	if((ctrl:=NumGet(Info+0))=v.debug.sc&&v.debug.sc){
-		sc:=v.debug
-		if(Code=2027){
-			style:=sc.2010(sc.2008)
-			if(style=-106)
-				Run_Program()
-			else if(style=-105)
-				List_Variables()
-		}return
-	}
-	if(Code=2028)
-		SetTimer("LButton",-50)
-}
-MakeRTF(Text,Colors){
-	return Chr(123) "\rtf1\ansi\ansicpg65001" Chr(123) "\fonttbl" Chr(123) "\f0\fcharset0 Calibri;" Chr(125) "" Chr(123) "\f1\fcharset0 Tahoma;" Chr(125) Chr(125) Colors  Text Chr(125)
-}
-Copy_Selected_Text_To_RTF(){
-	sc:=CSC()
-	if(sc.2008=sc.2009)
-		sc.ClipboardRTF(0,sc.2006)
-	else
-		sc.ClipboardRTF(sc.2585(0),sc.2587(0))
-}
-ClipboardRTF(File){
-	static ;https://www.autohotkey.com/boards/viewtopic.php?t=45481&p=265295
-	if(!TomDoc){
-		RE_Dll:=DllCall("LoadLibrary","Str","Msftedit.dll","Ptr"),Flags:=0x1004+0x80+0x300000,IID_ITextDocument:="{8CC497C0-A1DF-11CE-8098-00AA0047BE5D}"
-		Gui,Rich:Add,Custom,ClassRICHEDIT50W w400 h400 hwndHRE +VScroll +%Flags%
-		if(DllCall("SendMessage","Ptr",HRE,"UInt",0x043C,"Ptr",0,"PtrP",IRichEditOle,"UInt")) ; EM_GETOLEINTERFACE
-			v.TomDoc:=TomDoc:=ComObject(9,ComObjQuery(IRichEditOle,IID_ITextDocument),1),ObjRelease(IRichEditOle)
-	}FO:=FileOpen(File,"R"),Length:=FO.Length(),FO.Close()
-	TomDoc.Open(File,0x01,0),Range:=TomDoc.Range(0,Length),Range.Copy(1),TomDoc.Save(1)
-	
-}
-FontInfo(Style){
-	sc:=CSC(),VarSetCapacity(Text,sc.2486(Style,0),0),sc.2486(Style,&Text),Font:=StrGet(&Text,"UTF-8"),Size:=sc.2485(Style),Bold:=sc.2483(Style),Italic:=sc.2484(Style),Underline:=sc.2488(Style)
-	Background:=ColorInt((sc.2482(Style))),Color:=ColorInt((sc.2481(Style)))
-	return {Font:Font,Background:"\red" Background.Red "\green" Background.Green "\blue" Background.Blue ";",Color:"\red" Color.Red "\green" Color.Green "\blue" Color.Blue ";",Size:Size*2,Bold:Bold,Italic:Italic,Underline:Underline}
-}
-ColorInt(Color){
-	Color:=RGB(Color),Red:="0x" SubStr(Color,3,2),Green:="0x" SubStr(Color,5,2),Blue:="0x" SubStr(Color,7,2)
-	return {Red:Red+0,Green:Green+0,Blue:Blue+0}
 }
