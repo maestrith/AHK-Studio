@@ -2916,8 +2916,7 @@ Class PluginClass{
 		period:=period>0?-period:period
 		SetTimer,%timer%,%period%
 	}Show(){
-		sc:=CSC()
-		WinActivate(HWND([1]))
+		sc:=CSC(),WinActivate(HWND([1]))
 		GuiControl,+Redraw,% sc.sc
 		SetPos(sc.2357),sc.2400
 	}SSN(Node,XPath){
