@@ -2933,7 +2933,7 @@ Class PluginClass{
 		}else{
 			FileDelete,%File%
 			FileAppend,%Text%,%File%
-			Open(File)
+			Open(File,1)
 		}
 	}TrayTip(Info){
 		TrayTip,AHK Studio,%Info%,2
@@ -7190,8 +7190,6 @@ Extract(Main){
 	FileGetTime,time,%file%
 	SplitPath,file,filename,dir,Ext,nne
 	Language:=LanguageFromFileExt(Ext),set:=CEXML.Find(node,"descendant-or-self::file/@file",file),set.SetAttribute("time",time),set.SetAttribute("encoding",encoding),pos:=1
-	if(!Language)
-		m(Node)
 	if(!SSN(set,"@id"))
 		set.SetAttribute("id",id)
 	StringReplace,text,text,`r`n,`n,All
