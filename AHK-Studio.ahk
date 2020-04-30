@@ -2798,7 +2798,6 @@ Class OutPutDebugPane{
 }
 Class PluginClass{
 	__Call(x*){
-		;~ m(x)
 	}__New(){
 		return this
 	}Activate(){
