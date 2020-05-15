@@ -7160,19 +7160,18 @@ Extract(Main){
 	Pool[MainDir]:=1,Pool[ahkdir]:=1,out:=SplitPath(MainFile),Language:=LanguageFromFileExt(Ext)
 	if(!node:=CEXML.Find(main,"descendant::file/@file",file))
 		node:=CEXML.Under(main,"file",{file:file,dir:MainDir,filename:MFN,id:GetID(),nne:mnne,scan:1,lower:Format("{:L}",file),ext:Ext,lang:Language,type:"File"})
-	if(Ext="ahk"&&!SSN(Main,"ancestor-or-self::Libraries")){
-		if(Extra:=ES(MainFile)){
-			for a,b in StrSplit(Extra,"`n","`r`n"){
-				IncludeFile:=RegExReplace(b,"iU)(#Include.*\b\s+)")
-				if(!InStr(FileExist(IncludeFile),"D")&&FileExist(IncludeFile)&&IncludeFile){
-					SplitPath,IncludeFile,FileName,Dir,Ext,NNE
-					Language:=LanguageFromFileExt(Ext),obj.ext:=Ext,obj.lang:=Language,New:=CEXML.Under(CEXML.Find(node,"descendant-or-self::file/@file",MainFile),"file",obj)
-					Relative:=RelativePath(MainFile,IncludeFile)
-					for a,b in {lang:Language,file:IncludeFile,type:"File",id:GetID(),filename:FileName,dir:Dir,nne:NNE,github:(MainDir=dir?FileName:!InStr(Relative,"..")?Relative:"lib\" filename),scan:1,lower:Format("{:L}",FileName),nocompile:1}
-						New.SetAttribute(a,b)
-				}
+	if(Extra:=ES(MainFile)){
+		for a,b in StrSplit(Extra,"`n","`r`n"){
+			IncludeFile:=RegExReplace(b,"iU)(#Include.*\b\s+)")
+			if(!InStr(FileExist(IncludeFile),"D")&&FileExist(IncludeFile)&&IncludeFile){
+				SplitPath,IncludeFile,FileName,Dir,Ext,NNE
+				Language:=LanguageFromFileExt(Ext),obj.ext:=Ext,obj.lang:=Language,New:=CEXML.Under(CEXML.Find(node,"descendant-or-self::file/@file",MainFile),"file",obj)
+				Relative:=RelativePath(MainFile,IncludeFile)
+				for a,b in {lang:Language,file:IncludeFile,type:"File",id:GetID(),filename:FileName,dir:Dir,nne:NNE,github:(MainDir=dir?FileName:!InStr(Relative,"..")?Relative:"lib\" filename),scan:1,lower:Format("{:L}",FileName),nocompile:1}
+					New.SetAttribute(a,b)
 			}
-	}}
+		}
+	}
 	ExtractNext:
 	id:=GetID(),q:=FileOpen(file,"R")
 	if(q.Encoding="CP1252"){
@@ -7227,9 +7226,9 @@ Extract(Main){
 				if(FileExist(check)="D"&&!Pool[check])
 					Pool[Check]:=1
 			}if(FileExist(check)="A"){
-					FileList[check]:={file:check,include:found.0,inside:file},added:=1
-					Continue
-				}info:=check
+				FileList[check]:={file:check,include:found.0,inside:file},added:=1
+				Continue
+			}info:=check
 		}if(InStr(info,"<")){
 			info:=RegExReplace(info,"\<|\>")
 			for a in Pool{
