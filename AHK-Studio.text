@@ -1,5 +1,3 @@
-1.005.27
-Added: Requested by Joe Glines
--Plugin Method TempFile(Text,[FilePath])
---Creates %Studio%\Untitled\Dump File.txt or whatever path you give it.
--Includes in the Install\Lib directory that you do not #Include but call to by function name were not getting indexed
+1.005.28
+Fixed: Reported by Tigerlily
+-Save As: When you save a file over itself bad things happen.

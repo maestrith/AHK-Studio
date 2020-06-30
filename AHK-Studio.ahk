@@ -115,7 +115,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.27
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.28
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -12041,9 +12041,10 @@ Save_As(){
 		SplitPath,filename,file
 		if(v.Options["Force_UTF-8"])
 			fl.SetAttribute("encoding","UTF-8"),ea.encoding:="UTF-8"
-		if(A_Index=1)
-			FileAppend,% Update({get:filename}),%NewDir%\%NewFN%,% ea.encoding
-		else if !FileExist(NewDir "\" file)
+		if(A_Index=1){
+			FF:=FileOpen((NewDir)"\"(NewFN),"RW",ea.Encoding),FF.Write(Update({get:filename})),FF.Length(FF.Position),FF.Close()
+			;~ FileAppend,% Update({get:filename}),%NewDir%\%NewFN%,% ea.encoding
+		}else if !FileExist(NewDir "\" file)
 			FileAppend,% Update({get:filename}),%NewDir%\%file%
 	}SplashTextOff
 	Open(NewFile),Close(CEXML.SN("//main[@id='" Current(2).ID "']")),tv(SSN(CEXML.Find("//file/@file",NewFile),"@tv").text)
@@ -13838,7 +13839,6 @@ ClipboardRTF(File){
 			v.TomDoc:=TomDoc:=ComObject(9,ComObjQuery(IRichEditOle,IID_ITextDocument),1),ObjRelease(IRichEditOle)
 	}FO:=FileOpen(File,"R"),Length:=FO.Length(),FO.Close()
 	TomDoc.Open(File,0x01,0),Range:=TomDoc.Range(0,Length),Range.Copy(1),TomDoc.Save(1)
-	
 }
 FontInfo(Style){
 	sc:=CSC(),VarSetCapacity(Text,sc.2486(Style,0),0),sc.2486(Style,&Text),Font:=StrGet(&Text,"UTF-8"),Size:=sc.2485(Style),Bold:=sc.2483(Style),Italic:=sc.2484(Style),Underline:=sc.2488(Style)
