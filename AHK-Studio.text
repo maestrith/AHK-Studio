@@ -1,3 +1,3 @@
-1.005.28
-Fixed: Reported by Tigerlily
--Save As: When you save a file over itself bad things happen.
+1.005.29
+Fixed: Reported by mattcrf
+-DebugWindow: Wasn't handling UTF-8 characters

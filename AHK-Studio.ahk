@@ -115,7 +115,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.28
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.29
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -2456,7 +2456,7 @@ Class MainWindowClass{
 				sc:=new ExtraScintilla(1,{pos:"x" ea.x " y" ea.y " w" ea.w " h" ea.h}),hwnd:=sc.sc+0,v.debug:=sc,Color(sc)
 				Loop,4
 					sc.2242(A_Index-1,0)
-				sc.2403(0x08,0)
+				sc.2403(0x08,0),sc.2268(1)
 			}else if(ea.type="Search"){
 				hwnd:=SearchWin(ll)
 			}else
@@ -2835,7 +2835,7 @@ Class PluginClass{
 			sc.2003(sc.2006,"`n")
 		if(Sleep)
 			Sleep,%Sleep%
-		sc.2003(sc.2006,Text),sc.2025(sc.2006)
+		Length:=VarSetCapacity(TT,StrPut(Text,"UTF-8")),StrPut(Text,&TT,Length,"UTF-8"),sc.2003(sc.2006,&TT),sc.2025(sc.2006)
 		if(MsgBox)
 			m(MsgBox=1?"Pause":MsgBox)
 		if(AutoHide)
@@ -6064,7 +6064,9 @@ DebugHighlight(){
 			SelectDebugLine(b)
 		}
 }}
-DebugWindow(x*){
+DebugWindow(Text,Clear:=0,LineBreak:=0,Sleep:=0,AutoHide:=0){
+	x:=ComObjActive("{DBD5A90A-A85C-11E4-B0C7-43449580656B}")
+	x.DebugWindow(Text,Clear,LineBreak,Sleep,AutoHide)
 }
 Default_Project_Folder(){
 	Dir:=Settings.SSN("//directory").text
