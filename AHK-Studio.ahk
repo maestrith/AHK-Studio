@@ -115,7 +115,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.29
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.30
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -10435,6 +10435,8 @@ Omni_Search(start=""){
 			if((tv:=SSN(FileNode,"@tv").text)!=TVC.Selection(1))
 				tv(tv),Sleep(400)
 			Search:=RegExReplace(TypeInfo.Regex,"\x60n","`n"),sc:=CSC(),Text:=sc.GetUNI(),Pre:=SN(Node,"preceding-sibling::*[@type='" item.Type "' and @text='" item.text "']").Length,Pos:=0
+			if(Item.Text)
+				Search:=RegExReplace(Search,"i)\?<Text>\.\*","\Q"(Item.Text)"\E")
 			Loop,% 1+Pre
 				Pos:=RegExMatch(Text,Search,,Pos+1)
 			if(TypeInfo.SelectLine){
