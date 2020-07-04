@@ -115,7 +115,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.30
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.31
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -10245,6 +10245,7 @@ Omni_Search(start=""){
 	NewWin:=new GUIKeep(20),NewWin.Add("Edit,goss w600 vsearch,,w","ListView,w600 h200 -hdr -Multi gosgo,Menu C|A|1|2|R|I,wh")
 	Gui,1:-Disabled
 	GuiControl,20:,Edit1,%start%
+	Gui,20:-ToolWindow
 	Hotkey,IfWinActive,% NewWin.ID
 	for a,b in {up:"OmniKey",down:"OmniKey",PgUp:"OmniKey",PgDn:"OmniKey","^Backspace":"deleteback",Enter:"OSGo",NumpadEnter:"OSGo"}{
 		Try
@@ -10384,6 +10385,13 @@ Omni_Search(start=""){
 	20Escape:
 	20Close:
 	NewWin.Exit()
+	if(A_ThisLabel="20Close"){
+		SetTimer,OSClz,-40
+		return
+		OSClz:
+		WinActivate,% MainWin.ID
+		return
+	}
 	return
 	OSGo:
 	if(Running)
