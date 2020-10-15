@@ -12,7 +12,7 @@ v.WordsObj:=[],v.Tick:=A_TickCount,new ScanFile(),History:=new HistoryClass()
 if(!settings[]){
 	Run,lib\Settings.xml
 	m("Oh boy...Check the settings file to see what's up.")
-}v.LineEdited:=[],v.LinesEdited:=[],v.RunObject,ComObjError(0),new Keywords(),FileCheck(%True%)
+}v.LineEdited:=[],v.LinesEdited:=[],v.RunObject,ComObjError(0),new Keywords(),(FileExist("NoUpdate.txt")?"":FileCheck(%True%))
 Options("startup"),Menus:=new XML("menus",A_ScriptDir "\Lib\Menus.xml"),Gui(),DefaultRCM(),CheckLayout(),Allowed(),SetTimer("RemoveXMLBackups",-1000),CheckOpen()
 SetTimer("SplashDestroy",-1000)
 SetTimer("MenuIcons",-1)
@@ -115,7 +115,7 @@ WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
 TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE
 OR PERFORMANCE OF THIS SOFTWARE.
 )
-	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.31
+	Setup(11),Hotkeys(11,{"Esc":"11Close"}), Version:= Version:=1.005.32
 	Gui,Margin,0,0
 	sc:=new s(11,{pos:"x0 y0 w700 h500"}),CSC({hwnd:sc})
 	Gui,Add,Button,gdonate,Donate
@@ -5208,15 +5208,18 @@ Context(return=""){
 		return
 	else
 		v.DisableContext:=""
-	if(Line<(FirstVis:=sc.2152)){
-		if(sc.2202)
-			return sc.2201
-		return
-	}else if(FirstVis+sc.2370<Line){
-		if(sc.2202)
-			return sc.2201
-		return
-	}if(Delimiter.Delimiter){
+	/*
+		if(Line<(FirstVis:=sc.2152)){
+			if(sc.2202)
+				return sc.2201
+			return
+		}else if(FirstVis+sc.2370<Line){
+			if(sc.2202)
+				return sc.2201
+			return
+		}
+	*/
+	if(Delimiter.Delimiter){
 		if(Regex:=Delimiter.RemoveAll){
 			Pos:=LastPos:=1
 			while(Pos:=RegExMatch(NewString,Regex,Found)){
@@ -7347,7 +7350,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20180209111407,XMLFiles:={menus:[20201005085332,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20180209111407,XMLFiles:={menus:[20200316081726,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20180104080414,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
