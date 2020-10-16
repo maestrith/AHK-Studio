@@ -2005,7 +2005,7 @@ Class Keywords{
 					xx:=new XML(NNE,a,Data,URL)
 				}if(!Node:=xx.SSN("//date"))
 					Node:=xx.Add("date")
-				else if(xx.SSN("//date").text!=Date){
+				else if(xx.SSN("//date").text!=Date&&!FileExist("NoUpdate.txt")){
 					SplashTextOn,200,100,Downloading %NNE%.xml,Please Wait...
 					Data:=URLDownloadToVar(Url)
 					while(SubStr(Data,1,1)!="<")
