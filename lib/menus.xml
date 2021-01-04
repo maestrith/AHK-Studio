@@ -44,7 +44,7 @@
 			<menu name="Replace &amp;Selected" clean="Replace_Selected"></menu>
 			<menu name="Ed&amp;it Replacements" clean="Edit_Replacements"></menu>
 			<menu name="Create Include From Selection" hotkey="+^n" clean="Create_Include_From_Selection"></menu>
-			<menu name="Create Include From Selection Dialog" clean="Create_Include_From_Selection_Dialog"></menu>
+			<menu name="Disable Create Include From Selection Dialog" clean="Disable_Create_Include_From_Selection_Dialog"></menu>
 			<menu name="New Include From Current Word" clean="New_Include_From_Current_Word" Option="1"></menu>
 			<menu name="Togg&amp;le Comment Line" hotkey="^J" clean="Toggle_Comment_Line"></menu>
 			<menu name="Edit Proxy Server" clean="Edit_Proxy_Server"></menu>
