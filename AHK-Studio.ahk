@@ -7,7 +7,7 @@ SetControlDelay,-1
 SetWinDelay,-1
 DetectHiddenWindows,On
 CoordMode,ToolTip,Screen
-global v:=[],MainWin,Settings:=new XML("settings",A_ScriptDir "\lib\Settings.xml"),Positions:=new XML("positions",A_ScriptDir "\lib\Positions.xml"),cexml:=new XML("cexml",A_ScriptDir "\Lib\CEXML.xml"),History,VVersion,scintilla,TVC:=new EasyView(),RCMXML:=new XML("RCM",A_ScriptDir "\lib\RCM.xml"),TNotes,DebugWin,Selection:=new SelectionClass(),Menus,Vault:=new XML("vault",A_ScriptDir "\lib\Vault.xml")
+global v:=[],MainWin,Settings:=new XML("settings",A_ScriptDir "\lib\Settings.xml"),Positions:=new XML("positions",A_ScriptDir "\lib\Positions.xml"),cexml:=new XML("cexml",A_ScriptDir "\Lib\CEXML.xml"),History,VVersion,scintilla,TVC:=new EasyView(),RCMXML:=new XML("RCM",A_ScriptDir "\lib\RCM.xml"),TNotes,DebugWin,Selection:=new SelectionClass(),Menus,Vault:=new XML("vault",A_ScriptDir "\lib\Vault.xml"),blnWholeLine:=false
 v.WordsObj:=[],v.Tick:=A_TickCount,new ScanFile(),History:=new HistoryClass()
 if(!settings[]){
 	Run,lib\Settings.xml
@@ -5752,7 +5752,7 @@ Copy(){
 	if(sc.sc!=hwnd){
 		SendMessage,0x301,0,0,%Focus%,% HWND([1])
 		return
-	}CSC().2178(),Clipboard:=RegExReplace(Clipboard,"\R","`r`n")
+	}CSC().2519(),Clipboard:=RegExReplace(Clipboard,"\R","`r`n"),blnWholeLine:=(CSC().2143=CSC().2145)
 }
 Create_Comment(){
 	static
@@ -10691,13 +10691,29 @@ Paste(){
 	if(Focus="Edit1"){
 		SendMessage,0x302,0,0,Edit1,% MainWin.ID
 		return
-	}sc:=CSC(),Line:=sc.2166(sc.2008),sc.2078(),sc.2179(),MarginWidth(sc),Edited(),RegExReplace(Clipboard,"\n",,Count)
+	}
+	
+	sc:=CSC()
+	blnSelectedNothing:=(CSC().2143=CSC().2145)
+	if(!blnWholeLine or !blnSelectedNothing){
+		Line:=sc.2166(sc.2008)+1
+	}
+	else {
+		CarPos:=sc.2008
+		Line:=sc.2166(sc.2008)
+		sc.2024(Line)
+	}
+	sc.2078(),sc.2179(),MarginWidth(sc),Edited(),RegExReplace(Clipboard,"\n",,Count)
 	Loop,% Count+1
 		LineStatus.Add(Line+(A_Index-1),2)
 	sc.2079
 	sc.2078
 	if(v.Options.Full_Auto_Indentation&&Current(3).Lang="ahk")
 		FixIndentArea()
+	if(CarPos){
+		sc.2024(Line+1)
+		sc.2025(CarPos+StrLen(Clipboard)-1)
+	}
 	sc.2079
 	SetTimer,Scan_Line,-1
 }
