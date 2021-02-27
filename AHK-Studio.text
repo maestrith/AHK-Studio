@@ -1,3 +1,2 @@
-1.005.32
-Added: Reported by Hurt Onya (Discord)
--If you have a file called NoUpdate.txt in the main AHK-Studio folder it will not check for updated files on launch
+1.005.33
+- Changed the default branch to "main" because Github changed it from "master" to "main"

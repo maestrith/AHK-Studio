@@ -71,6 +71,9 @@ return
 */
 #IfWinActive
 #IfWinActive,AHK Studio
+Exit:
+Exit()
+return
 About(){
 	about=
 (
@@ -1027,22 +1030,6 @@ Class CommitClass{
 			return m("Please setup a repo name in the GUI by clicking Repository Name:")
 		if(!VersionNode:=SSN((HeadNode:=Git.Node()),"descendant::*[@select]/ancestor-or-self::version"))
 			return m("Please Select A Version")
-		
-		/*
-			Branch:=SSN(VersionNode,"ancestor::branch/@name").text
-		*/
-		/*
-			m(Git.BaseURL "git/refs")
-		*/
-		/*
-			GET /repos/:owner/:repo/releases/:id
-		*/
-		/*
-			
-		*/
-		/*
-			m(SSN(VersionNode,"@name").text)
-		*/
 		Current:=main:=file:=Current(2).File,ea:=Settings.EA("//github"),Delete:=[],Path:=A_ScriptDir "\Github\" git.repo,Version:=SSN(VersionNode,"@name").text,All:=SN(VersionNode,"descendant-or-self::*"),Info:=""
 		while(aa:=All.Item[A_Index-1],MEA:=XML.EA(aa)){
 			if(aa.NodeName="Version")
@@ -1072,6 +1059,7 @@ Class CommitClass{
 			if(ea.sha)
 				DeleteList[ea.File]:={node:aa,ea:ea}
 		SplitPath,Current,FileName,,,NNE
+		Main_File:=[]
 		if(!FileExist(Path))
 			FileCreateDir,%Path%
 		if(SSN(Version_Tracker.GetNode(),"ancestor-or-self::branch/@onefile")){
@@ -1087,9 +1075,20 @@ Class CommitClass{
 					ii:=DXML.Under(Top,"file",{file:GithubFile})
 				FileGetTime,time,%fn%
 				DeleteList.Delete(GithubFile)
+				if(ea.File=Main){
+					file:=FileOpen(fn,"RW",ea.encoding),file.Seek(0),text:=file.Read(file.Length),file.Close(),Main_File:={text:text,time:time,node:ii,local:ea.file},MainFileText:=Text,MainGithubFileName:=RegExReplace(GithubFile,"\\","/")
+					if(SSN(ii,"@time").text!=time)
+						UpdateMain:=1
+				}else if(!ea.Include){
+					SplitPath,GitHubFile,,,,NNE
+					AddInclude.="`r`n#Include <"(NNE)">",GitHubFile:="Lib/"(GitHubFile)
+				}else if(InStr(ea.Include,"<"))
+					GitHubFile:="Lib/"(GitHubFile)
 				if(SSN(ii,"@time").text!=time)
 					file:=FileOpen(fn,"RW",ea.encoding),file.Seek(0),text:=file.Read(file.Length),file.Close(),Uploads[RegExReplace(GithubFile,"\\","/")]:={text:text,time:time,node:ii,local:ea.file}
 		}}Version_Tracker.GetVersionInfo:=1,SetTimer("VersionCompileCurrent",-1),Sleep(100),VersionText:=Version_Tracker.GetVersionInfo
+		if(AddInclude&&UpdateMain)
+			Uploads[MainGithubFileName].Text:=(MainFileText)(AddInclude)
 		while(aa:=AllFiles.item[A_Index-1],ea:=XML.EA(aa)){
 			fn:=ea.FilePath
 			FileGetTime,time,%fn%
@@ -1138,7 +1137,10 @@ Class CommitClass{
 				Sleep,250
 			}
 			Upload[a]:=blob
-		}Tree:=Git.Tree(Git.Repo,Current_Commit,Upload),Commit:=Git.Commit(Git.Repo,Tree,Current_Commit,CommitMsg,Git.Name,Git.EMail),Info:=Git.Ref(Git.Repo,Commit)
+		}
+		Tree:=Git.Tree(Git.Repo,Current_Commit,Upload)
+		Commit:=Git.Commit(Git.Repo,Tree,Current_Commit,CommitMsg,Git.Name,Git.EMail)
+		Info:=Git.Ref(Git.Repo,Commit)
 		if(Info=200){
 			Top:=DXML.Find("//branch/@name",Branch)
 			for a,b in Uploads{
@@ -1466,6 +1468,10 @@ Class ExtraScintilla{
 Class Github{
 	static url:="https://api.github.com",HTTP:=[]
 	__New(NewWin){
+		/*
+			ANYTHING THAT IS INCLUDED USING <> MAKE SURE TO PUT IT INTO A LIB FOLDER!!!!!!!!
+			REMOVE ALL OF THE this.HTTP.send() stuff and just send it normal through the Send() method
+		*/
 		ea:=Settings.EA("//github")
 		if(!(ea.owner&&ea.token))
 			return m("Please setup your Github info"),Update_Github_Info()
@@ -1474,7 +1480,7 @@ Class Github{
 			HTTP.setProxy(2,proxy)
 		for a,b in Settings.EA("//github")
 			this[a]:=b
-		this.NewWin:=NewWin,Node:=this.Node(),this.BaseURL:=this.url "/repos/" this.owner "/" this.repo "/",this.repo:=SSN(Node,"ancestor-or-self::info/@repo").text,this.Token:="?access_token=" ea.token,this.Refresh()
+		this.NewWin:=NewWin,Node:=this.Node(),this.BaseURL:=this.url "/repos/" this.owner "/" this.repo "/",this.repo:=SSN(Node,"ancestor-or-self::info/@repo").text,this.Token:="",this.GithubToken:=ea.Token,this.Refresh()
 		return this
 	}Blob(repo,text,skip:=""){
 		if(!skip)
@@ -1492,7 +1498,7 @@ Class Github{
 		SplitPath,filefullpath,filename
 		url:=this.url "/repos/" this.owner "/" repo "/contents/" filename this.Token,file:=this.utf8(text)
 		json={"message":"%commit%","committer":{"name":"%realname%","email":"%email%"},"content": "%file%"}
-		this.HTTP.Open("PUT",url),this.HTTP.send(json),RegExMatch(this.HTTP.ResponseText,"U)"Chr(34) "sha" Chr(34) ":(.*),",found)
+		this.Send("PUT",URL,JSON)
 	}CreateRepo(name,description="",homepage="",private="false",issues="true",wiki="true",downloads="true"){
 		url:=this.url "/user/repos" this.Token
 		for a,b in {homepage:this.UTF8(homepage),description:this.UTF8(description)}
@@ -1500,9 +1506,6 @@ Class Github{
 				aa="%a%":"%b%",
 				add.=aa
 			}
-		/*
-			json={"name":"%name%",%add% "private":%private%,"has_issues":%issues%,"has_wiki":%wiki%,"has_downloads":%downloads%,"auto_init":true}
-		*/
 		return this.Send("POST",url,this.json({name:name,private:private,has_issues:issues,has_wiki:wiki,has_downloads:Downloads,auto_init:"true",homepage:this.UTF8(homepage),description:this.UTF8(description)}))
 	}Delete(filenames){
 		node:=this.DXML.Find("//branch/@name",this.Branch())
@@ -1513,9 +1516,12 @@ Class Github{
 			url:=this.url "/repos/" this.owner "/" this.repo "/contents/" cc this.Token,sha:=SSN(node,"descendant::*[@file='" c "']/@sha").text
 			if(!sha)
 				Continue
-			this.HTTP.Open("DELETE",url),this.HTTP.send(this.json({"message":"Deleted","sha":sha,"branch":this.Branch()}))
+			/*
+				this.HTTP.Open("DELETE",url)
+				this.HTTP.send(this.json({"message":"Deleted","sha":sha,"branch":this.Branch()}))
+			*/
+			this.Send("DELETE",URL,this.json({"message":"Deleted","sha":sha,"branch":this.Branch()}))
 			d.ParentNode.RemoveChild(d)
-			return this.HTTP
 	}}EncodeGF(text){
 		if(text="")
 			return
@@ -1578,15 +1584,22 @@ Class Github{
 			node:=vversion.Under(vversion.SSN("//*"),"info"),node.SetAttribute("file",Current(2).file)
 		this.repo:=SSN(Node,"ancestor-or-self::info/@repo").text
 		if(this.repo){
-			if(!SSN(node,"descendant::branch[@name='master']"))
+			if(!SSN(node,"descendant::branch[@name='main']")&&!SSN(node,"descendant::branch[@name='master']"))
 				UpdateBranches()
 		}
 		return node
 	}Ref(repo,sha){
-		url:=this.url "/repos/" this.owner "/" repo "/git/refs/heads/" this.Branch() this.Token,this.HTTP.Open("PATCH",url)
+		url:=this.url "/repos/" this.owner "/" repo "/git/refs/heads/" this.Branch() this.Token
+		/*
+			this.HTTP.Open("PATCH",url)
+		*/
 		json={"sha":"%sha%","force":true}
-		this.HTTP.Send(json)
+		/*
+			this.HTTP.SetRequestHeader("Authorization",Foo:="token "(this.GithubToken))
+			this.HTTP.Send(json)
+		*/
 		SplashTextOff
+		this.Send("PATCH",URL,JSON)
 		return this.HTTP.Status
 	}Refresh(){
 		this.repo:=SSN(this.Node(),"@repo").text
@@ -1601,11 +1614,13 @@ Class Github{
 		return this.BaseURL:=this.url "/repos/" this.owner "/" this.repo (Path?"/" Path:"") this.Token Extra
 	}Send(verb,url,data=""){
 		this.HTTP.Open(verb,url)
-		/*
-			m("Verb: " Verb,"URL: " URL,"Data: " IsObject(data)?this.json(data):data)
-		*/
+		this.HTTP.SetRequestHeader("Authorization",Foo:="token "(this.GithubToken))
 		this.HTTP.Send(IsObject(data)?this.json(data):data)
 		SB_SetText("Remaining API Calls: " this.remain:=this.HTTP.GetResponseHeader("X-RateLimit-Remaining"))
+		
+		/*
+			m("Function: " A_ThisFunc,"Line: " A_LineNumber,"Here!",Clipboard:=Verb "`n`n" URL "`n`n" Data "`n`n" this.http.ResponseText)
+		*/
 		return this.HTTP.ResponseText
 	}SetTitle(Text:="Github Version Tracker"){
 		WinSetTitle,% this.NewWin.ID,,%Text%
@@ -4222,7 +4237,7 @@ Class Version_Tracker Extends ConvertStyle{
 		static
 		xx:=VVersion
 		if(!Root:=xx.Find("//info/@file",Current(2).File))
-			Info:=xx.Under(xx.Under((Branch:=xx.Under((Root:=xx.Add("info",{file:Current(2).File},,1)),"branch",{name:"master"})),"version",{name:"1",draft:"false",prerelease:"true",target_commitish:"master"}),"info",{type:"",action:"",issue:"",user:"",select:1}),Select:=Info
+			Info:=xx.Under(xx.Under((Branch:=xx.Under((Root:=xx.Add("info",{file:Current(2).File},,1)),"branch",{name:"main"})),"version",{name:"1",draft:"false",prerelease:"true",target_commitish:"main"}),"info",{type:"",action:"",issue:"",user:"",select:1}),Select:=Info
 		VersionGUI:
 		NewWin:=new GUIKeep("Version"),Version_Tracker.NewWin:=NewWin
 		NewWin.Add("TreeView,w350 h250 vVT gVersionShowVersion vTVVersion AltSubmit,,h"
@@ -4526,8 +4541,8 @@ Class Version_Tracker Extends ConvertStyle{
 				}
 				return
 			}if(Node.NodeName="Branch"){
-				if(SSN(Node,"@name").text="master")
-					return m("Can not delete the master.")
+				if(SSN(Node,"@name").text="main")
+					return m("Can not delete the main.")
 				if(Repo:=Version_Tracker.GetNode("ancestor::info/@repo").text){
 					Res:=m("This Can Not Be Undone!","This will only remove the local branch.","","To remove the cached branch from GitHub you will need to press No and it will take you to Github.com and you can manage your Branches there.","btn:ync","def:3")
 					if(Res="No")
@@ -4821,6 +4836,16 @@ Clear_Selected_Highlight(){
 	}
 	
 }
+ClipboardRTF(File){
+	static ;https://www.autohotkey.com/boards/viewtopic.php?t=45481&p=265295
+	if(!TomDoc){
+		RE_Dll:=DllCall("LoadLibrary","Str","Msftedit.dll","Ptr"),Flags:=0x1004+0x80+0x300000,IID_ITextDocument:="{8CC497C0-A1DF-11CE-8098-00AA0047BE5D}"
+		Gui,Rich:Add,Custom,ClassRICHEDIT50W w400 h400 hwndHRE +VScroll +%Flags%
+		if(DllCall("SendMessage","Ptr",HRE,"UInt",0x043C,"Ptr",0,"PtrP",IRichEditOle,"UInt")) ; EM_GETOLEINTERFACE
+			v.TomDoc:=TomDoc:=ComObject(9,ComObjQuery(IRichEditOle,IID_ITextDocument),1),ObjRelease(IRichEditOle)
+	}FO:=FileOpen(File,"R"),Length:=FO.Length(),FO.Close()
+	TomDoc.Open(File,0x01,0),Range:=TomDoc.Range(0,Length),Range.Copy(1),TomDoc.Save(1)
+}
 Close_All(){
 	Close(1,1)
 }
@@ -4995,6 +5020,10 @@ Color(con:="",Language:="",FromFunc:=""){
 	for a,b in Keywords.GetList(Language)
 		con.4005(a,b)
 	return con.Enable(1)
+}
+ColorInt(Color){
+	Color:=RGB(Color),Red:="0x" SubStr(Color,3,2),Green:="0x" SubStr(Color,5,2),Blue:="0x" SubStr(Color,7,2)
+	return {Red:Red+0,Green:Green+0,Blue:Blue+0}
 }
 Combine(Atts,Found){
 	Loop,% Found.Count(){
@@ -5745,6 +5774,13 @@ Copy_File_Path(){
 Copy_Folder_Path(){
 	Clipboard:=Current(3).Dir
 }
+Copy_Selected_Text_To_RTF(){
+	sc:=CSC()
+	if(sc.2008=sc.2009)
+		sc.ClipboardRTF(0,sc.2006)
+	else
+		sc.ClipboardRTF(sc.2585(0),sc.2587(0))
+}
 Copy(){
 	ControlGetFocus,Focus,% HWND([1])
 	ControlGet,hwnd,hwnd,,%Focus%,% HWND([1])
@@ -5894,16 +5930,19 @@ Create_Include_From_Selection(){
 	SplitPath,MainFile,,Dir
 	if(Node:=Settings.Find("//Include/Dir/@file",MainFile))
 		Dir:=Node.text
-	FileName:=SelectFile(Dir "\" RegExReplace(Include1,"_"," ") "." Current(3).Ext,"New Include FileName",Current(3).Ext)
+	if(v.Options.Disable_Create_Include_From_Selection_Dialog&&Dir)
+		FileName:=Dir "\" RegExReplace(Include1,"_"," ") "." Current(3).Ext
+	else
+		FileName:=SelectFile(Dir "\" RegExReplace(Include1,"_"," ") "." Current(3).Ext,"New Include FileName",Current(3).Ext)
+	if(!Node:=Settings.Find("//Include/Dir/@file",MainFile))
+		Node:=Settings.Add("Include/Dir",{file:MainFile},,1)
+	SplitPath,FileName,,Dir
+	Node.Text:=Dir
 	if(FileExist(FileName))
 		return m("Include name already exists. Please choose another")
 	if(CEXML.Find(Current(1),"//@file",FileName))
 		return m("This file is already included in this Project")
 	sc.2326(),AddInclude(FileName,text,{Start:StrPut(Include1 "(","UTF-8")-1,End:StrPut(Include1 "(","UTF-8")-1},0)
-	SplitPath,FileName,,Dir
-	if(!Node:=Settings.Find("//Include/Dir/@file",MainFile))
-		Node:=Settings.Add("Include/Dir",{file:MainFile},,1)
-	Node.Text:=Dir
 	Line:=sc.2166(sc.2008)
 	if(sc.2128(Line)=sc.2136(Line))
 		sc.2338
@@ -7131,9 +7170,6 @@ Exit(ExitApp:=0){
 	ExitApp
 	return
 }
-Exit:
-Exit()
-return
 ExitStudio(){
 	Exit()
 }
@@ -7350,7 +7386,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20180209111407,XMLFiles:={menus:[20200316081726,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20180209111407,XMLFiles:={menus:[20210104133500,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20180104080414,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -8049,6 +8085,27 @@ Fold_All(){
 	while((find:=sc.2225(find))>=0)
 		line:=find
 	return line
+}
+FontInfo(Style){
+	sc:=CSC(),VarSetCapacity(Text,sc.2486(Style,0),0),sc.2486(Style,&Text),Font:=StrGet(&Text,"UTF-8"),Size:=sc.2485(Style),Bold:=sc.2483(Style),Italic:=sc.2484(Style),Underline:=sc.2488(Style)
+	Background:=ColorInt((sc.2482(Style))),Color:=ColorInt((sc.2481(Style)))
+	return {Font:Font,Background:"\red" Background.Red "\green" Background.Green "\blue" Background.Blue ";",Color:"\red" Color.Red "\green" Color.Green "\blue" Color.Blue ";",Size:Size*2,Bold:Bold,Italic:Italic,Underline:Underline}
+}
+Foo(Script,Wait:=true){
+	static Shell2:=ComObjCreate("WScript.Shell"),Exec2
+	SplitPath,Script,,Dir
+	Exec2.Terminate()
+	Shell:=ComObjCreate("WScript.Shell")
+	Shell.CurrentDirectory:="N:\MinGW\bin"
+	Exec:=Shell.Exec(Script)
+	Exec.StdIn.Close()
+	Run="%A_AhkPath%" "N:\Scintilla\bin\Testing.ahk"
+	while(!Exec.Status)
+		Sleep,100
+	Exec2:=Shell2.Exec(Run)
+	Exec2.StdIn.Close()
+	if(Wait)
+		return Exec.StdOut.ReadAll()
 }
 FormatTime(format,time){
 	FormatTime,out,%time%,%format%
@@ -8941,30 +8998,14 @@ m(x*){
 	}
 	return
 }
-Obj2String(Obj,FullPath:=1,BottomBlank:=0){
-	static String,Blank
-	if(FullPath=1)
-		String:=FullPath:=Blank:=""
-	if(IsObject(Obj)){
-		for a,b in Obj{
-			if(IsObject(b)&&!b.XML)
-				Obj2String(b,FullPath "." a,BottomBlank)
-			else{
-				if(BottomBlank=0)
-					String.=FullPath "." a " = " (b.XML?b.XML:b) "`n"
-				else if(b!="")
-					String.=FullPath "." a " = " (b.XML?b.XML:b) "`n"
-				else
-					Blank.=FullPath "." a " =`n"
-			}
-	}}
-	return String Blank
-}
 Make_One_Line(){
 	sc:=CSC(),Text:=sc.GetSelText()
 	if(Text~="\R"=0)
 		return m("Select at least 2 lines of text to combine")
 	Text:=RegExReplace(Text,"\n",","),Text:=RegExReplace(Text,"\t"),sc.2170(0,[Text])
+}
+MakeRTF(Text,Colors){
+	return Chr(123) "\rtf1\ansi\ansicpg65001" Chr(123) "\fonttbl" Chr(123) "\f0\fcharset0 Calibri;" Chr(125) "" Chr(123) "\f1\fcharset0 Tahoma;" Chr(125) Chr(125) Colors  Text Chr(125)
 }
 Manage_File_Types(){
 	new SettingsClass("Manage File Types")
@@ -9414,11 +9455,11 @@ Move_Selected_Lines_Up(){
 		FixIndentArea()
 	sc.Enable(1),LineStatus.UpdateRange(),sc.2079
 }
-Move_Selected_Word_Right(){
-	MoveSelectedWord(1)
-}
 Move_Selected_Word_Left(){
 	MoveSelectedWord(-1)
+}
+Move_Selected_Word_Right(){
+	MoveSelectedWord(1)
 }
 MoveSelectedWord(Add){
 	sc:=CSC(),sc.2078
@@ -9428,18 +9469,18 @@ MoveSelectedWord(Add){
 			VarSetCapacity(Text,End-Start),sc.2686(Start,End),sc.2687(0,&Text),Text:=StrGet(&Text,End-Start,"UTF-8"),sc.2645(Start,End-Start),sc.2686(Start+Add,Start+Add),sc.2194(StrPut(Text,"UTF-8")-1,[Text]),sc.2584(Index,Start+Add),sc.2586(Index,End+Add)
 	}sc.2079
 }
+New_Caret_Above(){
+	New_Caret(-1)
+}
+New_Caret_Below(){
+	New_Caret(1)
+}
 New_Caret(add){
 	sc:=CSC(),CPos:=sc.2008,line:=sc.2166(CPos),column:=sc.2129(CPos),new:=sc.2456(line+add,column)
 	Loop,% sc.2570
 		if(sc.2166(sc.2577(A_Index-1))=line+add)
 			return sc.2574(A_Index-1)
 	sc.2573(new,new)
-}
-New_Caret_Above(){
-	New_Caret(-1)
-}
-New_Caret_Below(){
-	New_Caret(1)
 }
 New_File_Template(){
 	NewWin:=new GUIKeep(28),NewWin.Add("Edit,w500 r30,,wh","Button,gNFTDefault,Default Template,y","Button,gNFTClose Default,Save,y"),NewWin.show("New File Template")
@@ -10220,6 +10261,25 @@ Notify(csc*){
 		Update({sc:sc.2357}),Edited()
 	return
 }
+Obj2String(Obj,FullPath:=1,BottomBlank:=0){
+	static String,Blank
+	if(FullPath=1)
+		String:=FullPath:=Blank:=""
+	if(IsObject(Obj)){
+		for a,b in Obj{
+			if(IsObject(b)&&!b.XML)
+				Obj2String(b,FullPath "." a,BottomBlank)
+			else{
+				if(BottomBlank=0)
+					String.=FullPath "." a " = " (b.XML?b.XML:b) "`n"
+				else if(b!="")
+					String.=FullPath "." a " = " (b.XML?b.XML:b) "`n"
+				else
+					Blank.=FullPath "." a " =`n"
+			}
+	}}
+	return String Blank
+}
 ObjRegisterActive(Object,CLSID:="{DBD5A90A-A85C-11E4-B0C7-43449580656B}",Flags:=0){ ;http://ahkscript.org/boards/viewtopic.php?f=6&t=6148
 	static cookieJar:={}
 	if(!CLSID){
@@ -10600,7 +10660,7 @@ Options(x:=0){
 	if(x="startup"){
 		v.Options:=[]
 		disable:="Center_Caret|Disable_Autosave|Disable_Backup|Disable_Exemption_Handling|Disable_Line_Status|Disable_Match_Brace_Highlight_On_Delete|Disable_Variable_List|End_Document_At_Last_Line|Hide_File_Extensions|Hide_Horizontal_Scrollbars|Hide_Indentation_Guides|Hide_Vertical_Scrollbars|Remove_Directory_Slash|Run_As_Admin|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Virtual_Space|Warn_Overwrite_On_Export|Word_Wrap_Indicators"
-		Options:="Add_Margins_To_Windows|Add_Space_After_Includes_On_Publish|Auto_Check_For_Update_On_Startup|Auto_Close_Find|Auto_Complete|Auto_Complete_In_Quotes|Auto_Complete_While_Tips_Are_Visible|Auto_Expand_Includes|Auto_Indent_Comment_Lines|Auto_Set_Area_On_Quick_Find|Auto_Space_After_Comma|Auto_Variable_Browser|Autocomplete_Enter_Newline|Brace_Match_Background_Match|Build_Comment|Case_Sensitive|Center_Caret|Check_For_Edited_Files_On_Focus|Clipboard_History|Context_Sensitive_Help|Copy_Selected_Text_on_Quick_Find|Current_Area|Disable_Auto_Advance|Disable_Auto_Complete|Disable_Auto_Delete|Disable_Auto_Indent_For_Non_Ahk_Files|Disable_Auto_Insert_Complete|Disable_Autosave|Disable_Backup|Disable_Compile_AHK|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Disable_Line_Status|Disable_Variable_List|Enable_Close_On_Save|End_Document_At_Last_Line|Focus_Studio_On_Debug_Breakpoint|Full_Auto_Indentation|Full_Backup_All_Files|Full_Tree|Global_Debug_Hotkeys|Greed|Hide_File_Extensions|Hide_Indentation_Guides|Highlight_Current_Area|Includes_In_Place|Inline_Brace|Manual_Continuation_Line|Multi_Line|New_File_Dialog|New_Include_Add_Space|Omni_Search_Stats|OSD|Publish_Indent|Regex|Remove_Directory_Slash|Require_Enter_For_Search|Run_As_Admin|Select_Current_Debug_Line|Shift_Breakpoint|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Small_Icons|Smart_Delete|Top_Find|Verbose_Debug_Window|Warn_Overwrite_On_Export|Word_Border|Ask_Before_Overwriting_Edited_Files|Hide_Context_Sensitive_Help|Clear_Debug_On_Run"
+		Options:="Add_Margins_To_Windows|Add_Space_After_Includes_On_Publish|Auto_Check_For_Update_On_Startup|Auto_Close_Find|Auto_Complete|Auto_Complete_In_Quotes|Auto_Complete_While_Tips_Are_Visible|Auto_Expand_Includes|Auto_Indent_Comment_Lines|Auto_Set_Area_On_Quick_Find|Auto_Space_After_Comma|Auto_Variable_Browser|Autocomplete_Enter_Newline|Brace_Match_Background_Match|Build_Comment|Case_Sensitive|Center_Caret|Check_For_Edited_Files_On_Focus|Clipboard_History|Context_Sensitive_Help|Copy_Selected_Text_on_Quick_Find|Current_Area|Disable_Auto_Advance|Disable_Auto_Complete|Disable_Auto_Delete|Disable_Auto_Indent_For_Non_Ahk_Files|Disable_Auto_Insert_Complete|Disable_Autosave|Disable_Backup|Disable_Compile_AHK|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Disable_Line_Status|Disable_Variable_List|Enable_Close_On_Save|End_Document_At_Last_Line|Focus_Studio_On_Debug_Breakpoint|Full_Auto_Indentation|Full_Backup_All_Files|Full_Tree|Global_Debug_Hotkeys|Greed|Hide_File_Extensions|Hide_Indentation_Guides|Highlight_Current_Area|Includes_In_Place|Inline_Brace|Manual_Continuation_Line|Multi_Line|New_File_Dialog|New_Include_Add_Space|Omni_Search_Stats|OSD|Publish_Indent|Regex|Remove_Directory_Slash|Require_Enter_For_Search|Run_As_Admin|Select_Current_Debug_Line|Shift_Breakpoint|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Small_Icons|Smart_Delete|Top_Find|Verbose_Debug_Window|Warn_Overwrite_On_Export|Word_Border|Ask_Before_Overwriting_Edited_Files|Hide_Context_Sensitive_Help|Clear_Debug_On_Run|Disable_Create_Include_From_Selection_Dialog"
 		other:="Auto_Space_After_Comma|Auto_Space_Before_Comma|Autocomplete_Enter_Newline|Disable_Auto_Delete|Disable_Auto_Insert_Complete|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Enable_Close_On_Save|Force_UTF-8|Full_Tree|Hide_Library_Files_In_Code_Explorer|Hide_Tray_Icon|Highlight_Current_Area|Manual_Continuation_Line|Match_Any_Word|Small_Icons|Top_Find"
 		special:="Word_Wrap"
 		alloptions.=disable "|" options "|" other "|" special
@@ -10683,7 +10743,7 @@ ParseJson(jsonStr){
 	if(!IsObject(SC)){
 		Try
 			SC:=ComObjCreate("ScriptControl")
-	}SC.Language:="JScript",jsCode:="function arrangeForAhkTraversing(obj){if(obj instanceof Array){for(var i=0;i<obj.length;++i)obj[i]=arrangeForAhkTraversing(obj[i]);return ['array',obj];}else if(obj instanceof Object){var keys=[],values=[];for(var key in obj){keys.push(key);values.push(arrangeForAhkTraversing(obj[key]));}return ['object',[keys,values]];}else return [typeof obj,obj];}",SC.ExecuteStatement(jsCode ";obj=" jsonStr)
+	}SC.Language:="JScript",jsCode:="function arrangeForAhkTraversing(obj){if(obj instanceof Array){for(var i=0;i<obj.length;++i)obj[i]=arrangeForAhkTraversing(obj[i]);return ['array',obj]; }else if(obj instanceof Object){var keys=[],values=[];for(var key in obj){keys.push(key);values.push(arrangeForAhkTraversing(obj[key])); }return ['object',[keys,values]]; }else return [typeof obj,obj]; }",SC.ExecuteStatement(jsCode ";obj=" jsonStr)
 	return AHK(SC.Eval("arrangeForAhkTraversing(obj)"))
 }
 Paste(){
@@ -11893,6 +11953,25 @@ Right_Click_Menu_Editor(menu){
 			rr.RemoveAttribute("tv")
 	return
 }
+Run_As_Ansii(){
+	Run_As("AutoHotkeyA32")
+}
+Run_As_U32(){
+	Run_As("AutoHotkeyU32")
+}
+Run_As_U64(){
+	Run_As("AutoHotkeyU64")
+}
+Run_As(exe){
+	file:=Current(2).file
+	Save()
+	SplitPath,A_AhkPath,,dir
+	SplitPath,file,,fdir
+	Run,%dir%\%exe% "%file%",%fdir%,,pid
+	if(!IsObject(v.runpid))
+		v.runpid:=[]
+	v.runpid[pid]:=1
+}
 Run_Comment_Block(){
 	sc:=CSC(),tab:=sc.2121,Line:=sc.2166(sc.2008),sc.2045(2),sc.2045(3)
 	if (sc.2127(Line)>0){
@@ -11917,22 +11996,6 @@ Run_Selected_Text(){
 		Loop,% sc.2570
 			tt:=sc.TextRange(sc.2585(A_Index-1),sc.2587(A_Index-1)),text.=tt "`n"
 	DynaRun(text)
-}
-Foo(Script,Wait:=true){
-	static Shell2:=ComObjCreate("WScript.Shell"),Exec2
-	SplitPath,Script,,Dir
-	Exec2.Terminate()
-	Shell:=ComObjCreate("WScript.Shell")
-	Shell.CurrentDirectory:="N:\MinGW\bin"
-	Exec:=Shell.Exec(Script)
-	Exec.StdIn.Close()
-	Run="%A_AhkPath%" "N:\Scintilla\bin\Testing.ahk"
-	while(!Exec.Status)
-		Sleep,100
-	Exec2:=Shell2.Exec(Run)
-	Exec2.StdIn.Close()
-	if(Wait)
-		return Exec.StdOut.ReadAll()
 }
 Run(){
 	if(v.opening)
@@ -11995,25 +12058,6 @@ Run(){
 		Settings.Add("last/file").text:=Current(3).file,Positions.Save(1),Settings.Save(1)
 		ExitApp
 	}
-}
-Run_As_U32(){
-	Run_As("AutoHotkeyU32")
-}
-Run_As_U64(){
-	Run_As("AutoHotkeyU64")
-}
-Run_As_Ansii(){
-	Run_As("AutoHotkeyA32")
-}
-Run_As(exe){
-	file:=Current(2).file
-	Save()
-	SplitPath,A_AhkPath,,dir
-	SplitPath,file,,fdir
-	Run,%dir%\%exe% "%file%",%fdir%,,pid
-	if(!IsObject(v.runpid))
-		v.runpid:=[]
-	v.runpid[pid]:=1
 }
 SanitizePath(File){
 	return RegExReplace(File,"(\\|\/|:|\*|\?|<|>|\|)","_")
@@ -12894,6 +12938,21 @@ SplitPath(File){
 	SplitPath,File,FileName,Dir,Ext,NNE,Drive
 	return {File:File,FileName:FileName,Dir:Dir,Ext:Ext,NNE:NNE,Drive:Drive}
 }
+Spoons(a*){
+	Info:=A_EventInfo,Code:=NumGet(Info+8)
+	if((ctrl:=NumGet(Info+0))=v.debug.sc&&v.debug.sc){
+		sc:=v.debug
+		if(Code=2027){
+			style:=sc.2010(sc.2008)
+			if(style=-106)
+				Run_Program()
+			else if(style=-105)
+				List_Variables()
+		}return
+	}
+	if(Code=2028)
+		SetTimer("LButton",-50)
+}
 Start_Select_Character(){
 	StartSelect:=InputBox(HWND(1),"Start Select Character","Enter a list of characters you want to add to the DoubleClick selection",Settings.SSN("//StartSelect").text)
 	Settings.Add("StartSelect").text:=StartSelect
@@ -13014,6 +13073,9 @@ Tab_Width(){
 	tabwidth:=tabwidth?tabwidth:5,CSC().2036(tabwidth),Settings.Add("tab").text:=tabwidth
 	return
 }
+Test_Plugin(){
+	Exit(1)
+}
 Testing(){
 	sc:=CSC()
 	return m(sc.2010(sc.2008))
@@ -13085,9 +13147,6 @@ Testing(){
 	if(A_UserName!="maest")
 		return m("Testing")
 	return m("I'm sleepy.")
-}
-Test_Plugin(){
-	Exit(1)
 }
 Theme(){
 	new SettingsClass("Theme")
@@ -13819,48 +13878,4 @@ XMLSearchText(Attributes,Search){
 	for a in Attributes
 		SearchText.="contains(translate(translate(@" a ", 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'\&','') , '" Search "') or "
 	return SearchText "contains(translate(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'),'\&','') , '" Search "')"
-}
-Spoons(a*){
-	Info:=A_EventInfo,Code:=NumGet(Info+8)
-	if((ctrl:=NumGet(Info+0))=v.debug.sc&&v.debug.sc){
-		sc:=v.debug
-		if(Code=2027){
-			style:=sc.2010(sc.2008)
-			if(style=-106)
-				Run_Program()
-			else if(style=-105)
-				List_Variables()
-		}return
-	}
-	if(Code=2028)
-		SetTimer("LButton",-50)
-}
-MakeRTF(Text,Colors){
-	return Chr(123) "\rtf1\ansi\ansicpg65001" Chr(123) "\fonttbl" Chr(123) "\f0\fcharset0 Calibri;" Chr(125) "" Chr(123) "\f1\fcharset0 Tahoma;" Chr(125) Chr(125) Colors  Text Chr(125)
-}
-Copy_Selected_Text_To_RTF(){
-	sc:=CSC()
-	if(sc.2008=sc.2009)
-		sc.ClipboardRTF(0,sc.2006)
-	else
-		sc.ClipboardRTF(sc.2585(0),sc.2587(0))
-}
-ClipboardRTF(File){
-	static ;https://www.autohotkey.com/boards/viewtopic.php?t=45481&p=265295
-	if(!TomDoc){
-		RE_Dll:=DllCall("LoadLibrary","Str","Msftedit.dll","Ptr"),Flags:=0x1004+0x80+0x300000,IID_ITextDocument:="{8CC497C0-A1DF-11CE-8098-00AA0047BE5D}"
-		Gui,Rich:Add,Custom,ClassRICHEDIT50W w400 h400 hwndHRE +VScroll +%Flags%
-		if(DllCall("SendMessage","Ptr",HRE,"UInt",0x043C,"Ptr",0,"PtrP",IRichEditOle,"UInt")) ; EM_GETOLEINTERFACE
-			v.TomDoc:=TomDoc:=ComObject(9,ComObjQuery(IRichEditOle,IID_ITextDocument),1),ObjRelease(IRichEditOle)
-	}FO:=FileOpen(File,"R"),Length:=FO.Length(),FO.Close()
-	TomDoc.Open(File,0x01,0),Range:=TomDoc.Range(0,Length),Range.Copy(1),TomDoc.Save(1)
-}
-FontInfo(Style){
-	sc:=CSC(),VarSetCapacity(Text,sc.2486(Style,0),0),sc.2486(Style,&Text),Font:=StrGet(&Text,"UTF-8"),Size:=sc.2485(Style),Bold:=sc.2483(Style),Italic:=sc.2484(Style),Underline:=sc.2488(Style)
-	Background:=ColorInt((sc.2482(Style))),Color:=ColorInt((sc.2481(Style)))
-	return {Font:Font,Background:"\red" Background.Red "\green" Background.Green "\blue" Background.Blue ";",Color:"\red" Color.Red "\green" Color.Green "\blue" Color.Blue ";",Size:Size*2,Bold:Bold,Italic:Italic,Underline:Underline}
-}
-ColorInt(Color){
-	Color:=RGB(Color),Red:="0x" SubStr(Color,3,2),Green:="0x" SubStr(Color,5,2),Blue:="0x" SubStr(Color,7,2)
-	return {Red:Red+0,Green:Green+0,Blue:Blue+0}
 }
