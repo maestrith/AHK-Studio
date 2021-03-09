@@ -7180,15 +7180,19 @@ Export(){
 		Branch:=InputBox(CSC().sc+0,"Branch","Enter the branch you wish to use for this Export","Beta")
 		Text:=RegExReplace(Text,"(\x3bauto_branch)","Branch:=" Chr(34) Branch Chr(34))
 	}
-	FileSelectFile,filename,%warn%,% indir.text,Export Compiled AHK,*.ahk
-	SplitPath,filename,,outdir
-	filename:=InStr(filename,".ahk")?filename:filename ".ahk"
-	FileDelete,%filename%
-	file:=FileOpen(filename,"rw","UTF-8"),file.Seek(0),file.Write(Text),file.Length(file.length)
+	FileSelectFile,FileName,%warn%,% indir.text,Export Compiled AHK,*.ahk
+	SplitPath,FileName,,outdir
+	FileName:=InStr(FileName,".ahk")?FileName:FileName ".ahk"
+	if(FileExist(FileName)){
+		SplitPath,FileName,,Dir,Ext,NNE
+		FormatTime,Date,%A_Now%,yyyy-MM-dd HH-mm-ss
+		FileMove,%FileName%,%Dir%\%NNE% %Date%.%Ext%
+	}
+	file:=FileOpen(FileName,"rw","UTF-8"),file.Seek(0),file.Write(Text),file.Length(file.length)
 	if(!indir)
 		indir:=Settings.Add("export/file",{file:SSN(Current(1),"@file").text},,1)
 	if(outdir)
-		indir.text:=filename
+		indir.text:=FileName
 }
 Extract(Main){
 	static ;,ADODB:=ComObjCreate("ADODB.Stream")
