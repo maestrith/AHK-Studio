@@ -7085,6 +7085,8 @@ ExecScript(){
 }
 Exit(ExitApp:=0){
 	GuiClose:
+	if(FileExist("Exit.ahk"))
+		Run,Exit.ahk
 	Save(3)
 	Node:=MainWin.Gui.SSN("//win[@win=1]"),fn:=MainWin.Gui.SN("//win[@win=1]/descendant::*[@type='Scintilla']")
 	if((List:=CEXML.SN("//file[@dir='" A_ScriptDir "\Untitled']")).Length){
