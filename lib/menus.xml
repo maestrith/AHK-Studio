@@ -199,6 +199,7 @@
 				<menu name="&amp;Set Selection" clean="Set_Selection" hotkey="^F1"></menu></menu>
 			<menu clean="Formatting_Options" name="Formatting Options" option="1" top="1">
 				<menu name="New Include Add Space" clean="New_Include_Add_Space" option="1"></menu>
+				<menu name="Add A_LineFile To Include" clean="Add_A_LineFile_To_Include" option="1"></menu>
 				<menu name="Edit Comment Insert" clean="Edit_Comment_Insert" option="1"></menu>
 				<menu name="Auto Space After Comma" clean="Auto_Space_After_Comma" option="1"></menu>
 				<menu name="Auto Space Before Comma" clean="Auto_Space_Before_Comma" option="1"></menu>
