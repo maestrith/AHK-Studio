@@ -225,7 +225,18 @@ AddBookmark(line,search){
 }
 AddInclude(FileName:="",text:="",pos:="",Show:=1){
 	static new
-	file:=FileOpen(FileName,"RW","UTF-8"),File.Write(text),File.Length(File.Position),rel:=RelativePath(Current(2).file,FileName),sc:=CSC()
+	if(v.Options.Add_A_LineFile_To_Include){
+		Rel:=RelativePath(Current(3).file,FileName)
+		if(!InStr(Rel,":"))
+			Rel:="%A_LineFile%\..\"(Rel)
+	}else{
+		rel:=RelativePath(Current(2).file,FileName)
+	}
+	File:=FileOpen(FileName,"RW","UTF-8")
+	File.Write(text)
+	File.Length(File.Position)
+	sc:=CSC()
+	;~ Rel:="%A_LineFile%\..\"(Rel)
 	Current:=Current(4)
 	SplitPath,FileName,FN,Dir,Ext,NNE,Drive
 	FileGetTime,Time,%FileName%
@@ -407,6 +418,9 @@ AutoMenu(){
 Backspace(sub:=1){
 	ControlGetFocus,Focus,A
 	Send:=sub?"Backspace":"Delete",sc:=CSC(),Start:=sc.2166(sc.2008),SetTimer("UpPos","-100")
+	if(sc.2128(Start)=sc.2008&&Start>0&&sc.2008=sc.2009){
+		return sc.2645((SPos:=sc.2136(Start-1)),sc.2008-SPos)
+	}
 	if(!v.LineEdited[Start])
 		SetScan(Start)
 	if(!InStr(Focus,"Scintilla")){
@@ -7177,6 +7191,7 @@ ExitStudio(){
 }
 Export(){
 	indir:=Settings.Find("//export/file/@file",SSN(Current(1),"@file").text),warn:=v.Options.Warn_Overwrite_On_Export?"S16":"S"
+	Refresh_Current_Project()
 	Text:=Publish(1)
 	if(RegExMatch(Text,"\x3bauto_branch")){
 		Branch:=InputBox(CSC().sc+0,"Branch","Enter the branch you wish to use for this Export","Beta")
@@ -7392,7 +7407,7 @@ FEUpdate(Redraw:=0){
 }
 FileCheck(file:=""){
 	static base:="https://raw.githubusercontent.com/maestrith/AHK-Studio/master/"
-	,scidate:=20180209111407,XMLFiles:={menus:[20210104133500,"lib/menus.xml","lib\Menus.xml"]}
+	,scidate:=20180209111407,XMLFiles:={menus:[20210511102723,"lib/menus.xml","lib\Menus.xml"]}
 	,OtherFiles:={scilexer:{date:20180104080414,loc:"SciLexer.dll",url:"SciLexer.dll",type:1},icon:{date:20150914131604,loc:"AHKStudio.ico",url:"AHKStudio.ico",type:1},Studio:{date:20170906124736,loc:A_MyDocuments "\Autohotkey\Lib\Studio.ahk",url:"lib/Studio.ahk",type:1}}
 	,DefaultOptions:="Manual_Continuation_Line,Full_Auto_Indentation,Focus_Studio_On_Debug_Breakpoint,Word_Wrap_Indicators,Context_Sensitive_Help,Auto_Complete,Auto_Complete_In_Quotes,Auto_Complete_While_Tips_Are_Visible"
 	if(!Settings.SSN("//fonts|//theme"))
@@ -7436,7 +7451,7 @@ FileCheck(file:=""){
 		if(new.SSN("//date").text!=b.1){
 			SplashTextOn,200,100,% "Downloading " b.2,Please Wait...
 			if(a="menus"){
-				temp:=new XML("temp"),temp.XML.LoadXML(Foo:=URLDownloadToVar(base b.2 "?refresh=" A_Now)),all:=temp.SN("//*[@clean]")
+				temp:=new XML("temp"),temp.XML.LoadXML(Foo:=URLDownloadToVar((base)(b.2)"?refresh="(A_TickCount))),all:=temp.SN("//*[@clean]")
 				while(aa:=all.item[A_Index-1]),ea:=XML.EA(aa){
 					if(aa.HasChildNodes())
 						lastea:=ea
@@ -9111,7 +9126,7 @@ Menu(MenuName:="main"){
 			}if(ea.no)
 				aa.RemoveAttribute("no")
 			Clean:=RegExReplace(ea.Clean,"_"," "),Launch:=IsFunc(ea.Clean)?"func":IsLabel(ea.Clean)?"label":v.Options.HasKey(ea.Clean)?"option":""
-			CEXML.Under(CXMLTop,"Item",{launch:(Launch?Launch:ea.Plugin),text:Clean,type:"Menu",sort:Clean,additional1:ConvertedHotkey,order:"text,type,additional1",clean:ea.Clean})
+			CEXML.Under(CXMLTop,"Item",{launch:(Launch?Launch:ea.Plugin),text:RegExReplace(ea.Name,"&"),type:"Menu",sort:Clean,additional1:ConvertedHotkey,order:"text,type,additional1",clean:ea.Clean})
 			Exist[parent]:=1
 		}v.Available[ea.Clean]:=1,(aa.HasChildNodes())?(Track.Push({name:ea.Name,parent:parent,clean:ea.Clean}),route:="deadend",aa.SetAttribute("top",1)):(route:="MenuRoute")
 		if(ea.Hotkey)
@@ -10667,7 +10682,7 @@ Options(x:=0){
 		v.Options:=[]
 		disable:="Center_Caret|Disable_Autosave|Disable_Backup|Disable_Exemption_Handling|Disable_Line_Status|Disable_Match_Brace_Highlight_On_Delete|Disable_Variable_List|End_Document_At_Last_Line|Hide_File_Extensions|Hide_Horizontal_Scrollbars|Hide_Indentation_Guides|Hide_Vertical_Scrollbars|Remove_Directory_Slash|Run_As_Admin|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Virtual_Space|Warn_Overwrite_On_Export|Word_Wrap_Indicators"
 		Options:="Add_Margins_To_Windows|Add_Space_After_Includes_On_Publish|Auto_Check_For_Update_On_Startup|Auto_Close_Find|Auto_Complete|Auto_Complete_In_Quotes|Auto_Complete_While_Tips_Are_Visible|Auto_Expand_Includes|Auto_Indent_Comment_Lines|Auto_Set_Area_On_Quick_Find|Auto_Space_After_Comma|Auto_Variable_Browser|Autocomplete_Enter_Newline|Brace_Match_Background_Match|Build_Comment|Case_Sensitive|Center_Caret|Check_For_Edited_Files_On_Focus|Clipboard_History|Context_Sensitive_Help|Copy_Selected_Text_on_Quick_Find|Current_Area|Disable_Auto_Advance|Disable_Auto_Complete|Disable_Auto_Delete|Disable_Auto_Indent_For_Non_Ahk_Files|Disable_Auto_Insert_Complete|Disable_Autosave|Disable_Backup|Disable_Compile_AHK|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Disable_Line_Status|Disable_Variable_List|Enable_Close_On_Save|End_Document_At_Last_Line|Focus_Studio_On_Debug_Breakpoint|Full_Auto_Indentation|Full_Backup_All_Files|Full_Tree|Global_Debug_Hotkeys|Greed|Hide_File_Extensions|Hide_Indentation_Guides|Highlight_Current_Area|Includes_In_Place|Inline_Brace|Manual_Continuation_Line|Multi_Line|New_File_Dialog|New_Include_Add_Space|Omni_Search_Stats|OSD|Publish_Indent|Regex|Remove_Directory_Slash|Require_Enter_For_Search|Run_As_Admin|Select_Current_Debug_Line|Shift_Breakpoint|Show_Caret_Line|Show_EOL|Show_WhiteSpace|Small_Icons|Smart_Delete|Top_Find|Verbose_Debug_Window|Warn_Overwrite_On_Export|Word_Border|Ask_Before_Overwriting_Edited_Files|Hide_Context_Sensitive_Help|Clear_Debug_On_Run|Disable_Create_Include_From_Selection_Dialog"
-		other:="Auto_Space_After_Comma|Auto_Space_Before_Comma|Autocomplete_Enter_Newline|Disable_Auto_Delete|Disable_Auto_Insert_Complete|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Enable_Close_On_Save|Force_UTF-8|Full_Tree|Hide_Library_Files_In_Code_Explorer|Hide_Tray_Icon|Highlight_Current_Area|Manual_Continuation_Line|Match_Any_Word|Small_Icons|Top_Find"
+		other:="Auto_Space_After_Comma|Auto_Space_Before_Comma|Autocomplete_Enter_Newline|Disable_Auto_Delete|Disable_Auto_Insert_Complete|Disable_Folders_In_Project_Explorer|Disable_Include_Dialog|Enable_Close_On_Save|Force_UTF-8|Full_Tree|Hide_Library_Files_In_Code_Explorer|Hide_Tray_Icon|Highlight_Current_Area|Manual_Continuation_Line|Match_Any_Word|Small_Icons|Top_Find|Add_A_LineFile_To_Include"
 		special:="Word_Wrap"
 		alloptions.=disable "|" options "|" other "|" special
 		Sort,alloptions,UD|
@@ -11088,7 +11103,7 @@ Project_Specific_AutoComplete(){
 }
 Publish(Return="",Branch:="",Version:=""){
 	static Init
-	sc:=CSC(),Text:=Update("get").1,Save(),MainFile:=Current(2).file,Publish:=Update({Get:MainFile}),includes:=SN(Current(1),"descendant::*/@include[not(@nocompile)]/.."),ea:=XML.EA(Keywords.GetXML((Language:=Current(3).Lang)).SSN("//AutoReplace"))
+	Refresh_Current_Project(),sc:=CSC(),Text:=Update("get").1,Save(),MainFile:=Current(2).file,Publish:=Update({Get:MainFile}),includes:=SN(Current(1),"descendant::*/@include[not(@nocompile)]/.."),ea:=XML.EA(Keywords.GetXML((Language:=Current(3).Lang)).SSN("//AutoReplace"))
 	while(ii:=Includes.item[A_Index-1]){
 		if(v.Options.Add_Space_After_Includes_On_Publish){
 			Pos:=LastPos:=1
@@ -11105,9 +11120,10 @@ Publish(Return="",Branch:="",Version:=""){
 				StringReplace,Publish,Publish,% SSN(ii,"@include").Text,%Replace%
 				Pos++
 		}}else{
-			if(InStr(Publish,SSN(ii,"@include").Text)){
+			if(InStr(Publish,SSN(ii,"@include").Text))
 				StringReplace,Publish,Publish,% SSN(ii,"@include").Text,% Update({Get:SSN(ii,"@file").Text}) (v.Options.Add_Space_After_Includes_On_Publish?"`n":""),All
-	}}}rem:=SN(Current(1),"descendant::remove")
+		}
+	}rem:=SN(Current(1),"descendant::remove")
 	while(rr:=rem.Item[A_Index-1])
 		Publish:=RegExReplace(Publish,"m)^\Q" SSN(rr,"@inc").Text "\E$")
 	Publish:=RegExReplace(Publish,"\R","`r`n")
@@ -11145,7 +11161,10 @@ Publish(Return="",Branch:="",Version:=""){
 				}else if(FileExist((Load:=A_MyDocuments "\AutoHotkey\Lib\" FF.1 ".ahk"))){
 					FileRead,FileText,%Load%
 					Publish:=RegExReplace(Publish,Found.1,FileText)
-	}}}}
+				}
+			}
+		}
+	}
 	OtherInc:=ES(Chr(34) MainFile Chr(34)),OtherInc:=Trim(RegExReplace(OtherInc,"i)" Chr(35) "include(again)?\s+"),"`n")
 	for a,b in StrSplit(OtherInc,"`n","`r"){
 		if(FileExist(b)!="D"){
@@ -13737,13 +13756,20 @@ URIDecode(str){
 	return, str
 }
 URLDownloadToVar(URL){
-	http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	;~ http:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
+	http:=ComObjCreate("MSXML2.XMLHTTP.6.0")
 	if(proxy:=Settings.SSN("//proxy").text)
 		http.SetProxy(2,proxy)
 	http.Open("GET",URL,1)
 	http.SetRequestHeader("Pragma","no-cache")
 	http.SetRequestHeader("Cache-Control","no-cache")
-	http.Send(),http.WaitForResponse
+	http.Send()
+	while(http.ReadyState!=4){
+		Sleep,100
+		t("Function: " A_ThisFunc,"Label: " A_ThisLabel,"Line: " A_LineNumber,"HERE!",A_TickCount)
+	}
+	http.WaitForResponse
+	m("Function: " A_ThisFunc,"Line: " A_LineNumber,"Here!",http.Status,http.ResponseText)
 	return (http.Status=200?http.ResponseText:"Error")
 }
 VarBrowser(){

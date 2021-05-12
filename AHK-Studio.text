@@ -1,3 +1,5 @@
-1.005.35
-Added:
--Exit: If there is a file called Exit.ahk Studio will run this file on exit
+1.005.36
+Changed:
+-When using Publish or Export it will Refresh Project Explorer so that you don't miss any new #Includes
+-Add A_LineFile To Include: When creating an Include using 'Create Include From Selection' this Option will add %A_LineFile%\..\ to the #Include line
+-When pressing Backspace on a line that it tabbed in and you are at the beginning of a line and you have nothing selected, it will remove all the tabs and go to the end of the previous line
