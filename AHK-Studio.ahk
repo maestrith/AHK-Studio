@@ -13769,7 +13769,6 @@ URLDownloadToVar(URL){
 		t("Function: " A_ThisFunc,"Label: " A_ThisLabel,"Line: " A_LineNumber,"HERE!",A_TickCount)
 	}
 	http.WaitForResponse
-	m("Function: " A_ThisFunc,"Line: " A_LineNumber,"Here!",http.Status,http.ResponseText)
 	return (http.Status=200?http.ResponseText:"Error")
 }
 VarBrowser(){
