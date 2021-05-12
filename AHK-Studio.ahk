@@ -226,7 +226,7 @@ AddBookmark(line,search){
 AddInclude(FileName:="",text:="",pos:="",Show:=1){
 	static new
 	if(v.Options.Add_A_LineFile_To_Include){
-		Rel:=RelativePath(Current(3).file,FileName)
+		Rel:=RelativePath((v.Options.Includes_In_Place?Current(3).file:Current(2).file),FileName)
 		if(!InStr(Rel,":"))
 			Rel:="%A_LineFile%\..\"(Rel)
 	}else{
