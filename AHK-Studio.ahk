@@ -13765,7 +13765,6 @@ URLDownloadToVar(URL){
 	http.Send()
 	while(http.ReadyState!=4){
 		Sleep,100
-		t("Function: " A_ThisFunc,"Label: " A_ThisLabel,"Line: " A_LineNumber,"HERE!",A_TickCount)
 	}
 	http.WaitForResponse
 	return (http.Status=200?http.ResponseText:"Error")
