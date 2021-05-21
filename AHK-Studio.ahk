@@ -418,9 +418,8 @@ AutoMenu(){
 Backspace(sub:=1){
 	ControlGetFocus,Focus,A
 	Send:=sub?"Backspace":"Delete",sc:=CSC(),Start:=sc.2166(sc.2008),SetTimer("UpPos","-100")
-	if(sc.2128(Start)=sc.2008&&Start>0&&sc.2008=sc.2009&&Send="Backspace"){
+	if(sc.2128(Start)=sc.2008&&Start>0&&sc.2008=sc.2009&&Send="Backspace")
 		return sc.2645((SPos:=sc.2136(Start-1)),sc.2008-SPos)
-	}
 	if(!v.LineEdited[Start])
 		SetScan(Start)
 	if(!InStr(Focus,"Scintilla")){
