@@ -68,6 +68,7 @@
 			<menu name="&amp;Quick Find" hotkey="!q" clean="Quick_Find"></menu>
 			<menu name="&amp;Jump to Include" clean="Jump_to_Include"></menu>
 			<menu name="Jump to Proj&amp;ect" clean="Jump_to_Project" hotkey="!^S" no="1"></menu>
+			<menu name="Hide Library Files In Code Explorer" clean="Hide_Library_Files_In_Code_Explorer"></menu>
 			<menu clean="Jump_To" name="Jump To" tv="11457568">
 				<menu clean="Jump_To_Class" name="Jump To Class"></menu>
 				<menu clean="Jump_To_First_Available" name="Jump To First Available" hotkey="!F1"></menu>
