@@ -8481,7 +8481,7 @@ Gui(){
 	if(!Settings.SSN("//autoadd")){
 		layout:=DllCall("GetKeyboardLayout",int,0),AltGR:=0
 		if(layout&0xff!=9)
-			if(m("Does your keyboard contain the AltGR key (AKA Alt Graph, Alt Graphic, Alt Graphics, Alt Char)","btn:yn")="Yes")
+			if(m("Does your keyboard contain the AltGR key? (AKA Alt Graph, Alt Graphic, Alt Graphics, Alt Char)","btn:yn")="Yes")
 				AltGR:=1
 		top:=Settings.Add("autoadd",{altgr:Round(AltGR)}),layout:={0:{"[":"]","{":"}",(Chr(34)):Chr(34),"'":"'","(":")"},1:{"<^>[":"]","<^>{":"}",(Chr(34)):Chr(34),"'":"'","(":")"}}
 		for a,b in layout[AltGR]
