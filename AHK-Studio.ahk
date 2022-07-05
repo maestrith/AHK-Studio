@@ -11991,7 +11991,7 @@ Run_As(exe){
 	Save()
 	SplitPath,A_AhkPath,,dir
 	SplitPath,file,,fdir
-	Run,%dir%\%exe% "%file%",%fdir%,,pid
+	Run,"%dir%\%exe%.exe" "%file%",%fdir%,,pid
 	if(!IsObject(v.runpid))
 		v.runpid:=[]
 	v.runpid[pid]:=1
